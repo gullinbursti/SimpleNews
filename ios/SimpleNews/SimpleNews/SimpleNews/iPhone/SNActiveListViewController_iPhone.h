@@ -1,5 +1,5 @@
 //
-//  SNVideoPlayerView_iPhone.h
+//  SNActiveListViewController_iPhone.h
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 02.20.12.
@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MediaPlayer/MediaPlayer.h>
 
-@interface SNVideoPlayerView_iPhone : UIView {
-	MPMoviePlayerController *_playerController;
+@interface SNActiveListViewController_iPhone : UIViewController {
+	NSMutableArray *_items;
 }
 
 @end

@@ -7,7 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4C2CD68514F309E80058B367 /* SNVideoPlayerView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2CD68414F309E80058B367 /* SNVideoPlayerView_iPhone.m */; };
+		4CB2289A14F3529600F5618D /* HelveticaNeueLTStd-Bd.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4CB2289714F3529600F5618D /* HelveticaNeueLTStd-Bd.otf */; };
+		4CB2289B14F3529600F5618D /* HelveticaNeueLTStd-Md.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4CB2289814F3529600F5618D /* HelveticaNeueLTStd-Md.otf */; };
+		4CB2289C14F3529600F5618D /* HelveticaNeueLTStd-Roman.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4CB2289914F3529600F5618D /* HelveticaNeueLTStd-Roman.otf */; };
+		4CB228A614F36DA100F5618D /* SNActiveListViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB228A514F36DA100F5618D /* SNActiveListViewController_iPhone.m */; };
+		4CB228A914F3751200F5618D /* SNVideoItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB228A814F3751200F5618D /* SNVideoItemView_iPhone.m */; };
+		4CB228B014F39B9F00F5618D /* SNVideoListViewController_Airplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB228AF14F39B9F00F5618D /* SNVideoListViewController_Airplay.m */; };
+		4CB228B314F39DFB00F5618D /* SNCategoryListView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB228B214F39DFA00F5618D /* SNCategoryListView_iPhone.m */; };
 		4CB7763D14F3389D0064E7C9 /* SNVideoPlayerView_Airplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB7763C14F3389D0064E7C9 /* SNVideoPlayerView_Airplay.m */; };
 		4CB7764314F349090064E7C9 /* SNViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB7764214F349090064E7C9 /* SNViewController_iPhone.m */; };
 		4CB7764614F349B30064E7C9 /* SNViewController_Airplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB7764514F349B30064E7C9 /* SNViewController_Airplay.m */; };
@@ -47,14 +53,22 @@
 		4CDC8C7B14F2D83000D42EA5 /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CDC8C7A14F2D83000D42EA5 /* libz.1.2.5.dylib */; };
 		4CDC8C7D14F2D84200D42EA5 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CDC8C7C14F2D84200D42EA5 /* libsqlite3.dylib */; };
 		4CDC8C8514F2DB4000D42EA5 /* video_items.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CDC8C8414F2DB4000D42EA5 /* video_items.plist */; };
-		4CDC8C8814F2DEAC00D42EA5 /* SNVideoItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CDC8C8714F2DEAC00D42EA5 /* SNVideoItemViewController.m */; };
 		4CDC8C8A14F2E3E000D42EA5 /* Jurassic Park - Dodson & Nedry.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4CDC8C8914F2E3E000D42EA5 /* Jurassic Park - Dodson & Nedry.mp4 */; };
 		4CE1212514F2FDDE0024171A /* SNVideoItemVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE1212414F2FDDE0024171A /* SNVideoItemVO.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4C2CD68314F309E80058B367 /* SNVideoPlayerView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoPlayerView_iPhone.h; sourceTree = "<group>"; };
-		4C2CD68414F309E80058B367 /* SNVideoPlayerView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNVideoPlayerView_iPhone.m; sourceTree = "<group>"; };
+		4CB2289714F3529600F5618D /* HelveticaNeueLTStd-Bd.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeueLTStd-Bd.otf"; sourceTree = "<group>"; };
+		4CB2289814F3529600F5618D /* HelveticaNeueLTStd-Md.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeueLTStd-Md.otf"; sourceTree = "<group>"; };
+		4CB2289914F3529600F5618D /* HelveticaNeueLTStd-Roman.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeueLTStd-Roman.otf"; sourceTree = "<group>"; };
+		4CB228A414F36DA100F5618D /* SNActiveListViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNActiveListViewController_iPhone.h; sourceTree = "<group>"; };
+		4CB228A514F36DA100F5618D /* SNActiveListViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNActiveListViewController_iPhone.m; sourceTree = "<group>"; };
+		4CB228A714F3751200F5618D /* SNVideoItemView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoItemView_iPhone.h; sourceTree = "<group>"; };
+		4CB228A814F3751200F5618D /* SNVideoItemView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNVideoItemView_iPhone.m; sourceTree = "<group>"; };
+		4CB228AE14F39B9F00F5618D /* SNVideoListViewController_Airplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoListViewController_Airplay.h; sourceTree = "<group>"; };
+		4CB228AF14F39B9F00F5618D /* SNVideoListViewController_Airplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNVideoListViewController_Airplay.m; sourceTree = "<group>"; };
+		4CB228B114F39DFA00F5618D /* SNCategoryListView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNCategoryListView_iPhone.h; sourceTree = "<group>"; };
+		4CB228B214F39DFA00F5618D /* SNCategoryListView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNCategoryListView_iPhone.m; sourceTree = "<group>"; };
 		4CB7763B14F3389D0064E7C9 /* SNVideoPlayerView_Airplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoPlayerView_Airplay.h; sourceTree = "<group>"; };
 		4CB7763C14F3389D0064E7C9 /* SNVideoPlayerView_Airplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNVideoPlayerView_Airplay.m; sourceTree = "<group>"; };
 		4CB7764114F349080064E7C9 /* SNViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNViewController_iPhone.h; sourceTree = "<group>"; };
@@ -120,8 +134,6 @@
 		4CDC8C7A14F2D83000D42EA5 /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
 		4CDC8C7C14F2D84200D42EA5 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		4CDC8C8414F2DB4000D42EA5 /* video_items.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = video_items.plist; sourceTree = "<group>"; };
-		4CDC8C8614F2DEAC00D42EA5 /* SNVideoItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoItemViewController.h; sourceTree = "<group>"; };
-		4CDC8C8714F2DEAC00D42EA5 /* SNVideoItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNVideoItemViewController.m; sourceTree = "<group>"; };
 		4CDC8C8914F2E3E000D42EA5 /* Jurassic Park - Dodson & Nedry.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Jurassic Park - Dodson & Nedry.mp4"; sourceTree = "<group>"; };
 		4CE1212314F2FDDE0024171A /* SNVideoItemVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoItemVO.h; sourceTree = "<group>"; };
 		4CE1212414F2FDDE0024171A /* SNVideoItemVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNVideoItemVO.m; sourceTree = "<group>"; };
@@ -153,6 +165,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4CB2289514F3528400F5618D /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				4CB2289714F3529600F5618D /* HelveticaNeueLTStd-Bd.otf */,
+				4CB2289814F3529600F5618D /* HelveticaNeueLTStd-Md.otf */,
+				4CB2289914F3529600F5618D /* HelveticaNeueLTStd-Roman.otf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
 		4CB7763A14F3387B0064E7C9 /* Airplay */ = {
 			isa = PBXGroup;
 			children = (
@@ -160,6 +182,8 @@
 				4CB7764514F349B30064E7C9 /* SNViewController_Airplay.m */,
 				4CB7763B14F3389D0064E7C9 /* SNVideoPlayerView_Airplay.h */,
 				4CB7763C14F3389D0064E7C9 /* SNVideoPlayerView_Airplay.m */,
+				4CB228AE14F39B9F00F5618D /* SNVideoListViewController_Airplay.h */,
+				4CB228AF14F39B9F00F5618D /* SNVideoListViewController_Airplay.m */,
 			);
 			name = Airplay;
 			path = SimpleNews/Airplay;
@@ -246,10 +270,14 @@
 		4CDC8C1214F2D07000D42EA5 /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
+				4CB228A714F3751200F5618D /* SNVideoItemView_iPhone.h */,
+				4CB228A814F3751200F5618D /* SNVideoItemView_iPhone.m */,
 				4CB7764114F349080064E7C9 /* SNViewController_iPhone.h */,
 				4CB7764214F349090064E7C9 /* SNViewController_iPhone.m */,
-				4C2CD68314F309E80058B367 /* SNVideoPlayerView_iPhone.h */,
-				4C2CD68414F309E80058B367 /* SNVideoPlayerView_iPhone.m */,
+				4CB228A414F36DA100F5618D /* SNActiveListViewController_iPhone.h */,
+				4CB228A514F36DA100F5618D /* SNActiveListViewController_iPhone.m */,
+				4CB228B114F39DFA00F5618D /* SNCategoryListView_iPhone.h */,
+				4CB228B214F39DFA00F5618D /* SNCategoryListView_iPhone.m */,
 			);
 			name = iPhone;
 			path = SimpleNews/iPhone;
@@ -260,8 +288,6 @@
 			children = (
 				4CDC8C1414F2D07000D42EA5 /* SNAppDelegate.h */,
 				4CDC8C1514F2D07000D42EA5 /* SNAppDelegate.m */,
-				4CDC8C8614F2DEAC00D42EA5 /* SNVideoItemViewController.h */,
-				4CDC8C8714F2DEAC00D42EA5 /* SNVideoItemViewController.m */,
 			);
 			name = Shared;
 			path = SimpleNews/Shared;
@@ -368,6 +394,7 @@
 		4CDC8C8214F2DAF700D42EA5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4CB2289514F3528400F5618D /* Fonts */,
 				4CDC8C8314F2DB1000D42EA5 /* Testing */,
 			);
 			name = Resources;
@@ -449,6 +476,9 @@
 				4CDC8C0B14F2CDEB00D42EA5 /* SNViewController_iPad.xib in Resources */,
 				4CDC8C8514F2DB4000D42EA5 /* video_items.plist in Resources */,
 				4CDC8C8A14F2E3E000D42EA5 /* Jurassic Park - Dodson & Nedry.mp4 in Resources */,
+				4CB2289A14F3529600F5618D /* HelveticaNeueLTStd-Bd.otf in Resources */,
+				4CB2289B14F3529600F5618D /* HelveticaNeueLTStd-Md.otf in Resources */,
+				4CB2289C14F3529600F5618D /* HelveticaNeueLTStd-Roman.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,12 +506,14 @@
 				4CDC8C5714F2D71800D42EA5 /* EGOImageView.m in Sources */,
 				4CDC8C5814F2D71800D42EA5 /* MBProgressHUD.m in Sources */,
 				4CDC8C7714F2D80300D42EA5 /* Reachability.m in Sources */,
-				4CDC8C8814F2DEAC00D42EA5 /* SNVideoItemViewController.m in Sources */,
 				4CE1212514F2FDDE0024171A /* SNVideoItemVO.m in Sources */,
-				4C2CD68514F309E80058B367 /* SNVideoPlayerView_iPhone.m in Sources */,
 				4CB7763D14F3389D0064E7C9 /* SNVideoPlayerView_Airplay.m in Sources */,
 				4CB7764314F349090064E7C9 /* SNViewController_iPhone.m in Sources */,
 				4CB7764614F349B30064E7C9 /* SNViewController_Airplay.m in Sources */,
+				4CB228A614F36DA100F5618D /* SNActiveListViewController_iPhone.m in Sources */,
+				4CB228A914F3751200F5618D /* SNVideoItemView_iPhone.m in Sources */,
+				4CB228B014F39B9F00F5618D /* SNVideoListViewController_Airplay.m in Sources */,
+				4CB228B314F39DFB00F5618D /* SNCategoryListView_iPhone.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

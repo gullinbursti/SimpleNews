@@ -7,21 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MediaPlayer/MediaPlayer.h>
 
 #import "SNVideoItemVO.h"
 #import "EGOImageView.h"
 
 @interface SNVideoItemViewController : UIViewController {
-	MPMoviePlayerController *_playerController;
 	
 	EGOImageView *_imageView;
 	UILabel *_titleLabel;
+	UILabel *_infoLabel;
 	
 	SNVideoItemVO *_vo;
 }
 
 -(id)initWithVO:(SNVideoItemVO *)vo;
--(void)togglePlayback:(BOOL)isPlaying;
 
 @end

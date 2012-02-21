@@ -11,7 +11,7 @@
 @implementation SNVideoItemVO
 
 @synthesize dictionary;
-@synthesize video_id, type_id, video_title, video_url, image_url;
+@synthesize video_id, type_id, video_title, video_info, video_url, image_url;
 
 +(SNVideoItemVO *)videoItemWithDictionary:(NSDictionary *)dictionary {
 	
@@ -21,6 +21,7 @@
 	videoItemVO.video_id = [[dictionary objectForKey:@"video_id"] intValue];
 	videoItemVO.type_id = [[dictionary objectForKey:@"type_id"] intValue];
 	videoItemVO.video_title = [dictionary objectForKey:@"title"];
+	videoItemVO.video_info = [dictionary objectForKey:@"info"];
 	videoItemVO.video_url = [dictionary objectForKey:@"video"];
 	videoItemVO.image_url = [dictionary objectForKey:@"image"];
 	

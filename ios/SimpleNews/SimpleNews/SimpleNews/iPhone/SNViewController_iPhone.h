@@ -7,18 +7,25 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
-#import "SNVideoPlayerView_iPhone.h"
+#import "SNActiveListViewController_iPhone.h"
+#import "SNCategoryListView_iPhone.h"
 
-@interface SNViewController_iPhone : UIViewController <UIScrollViewDelegate> {
+@interface SNViewController_iPhone : UIViewController <UIScrollViewDelegate, UIGestureRecognizerDelegate> {
 	UIUserInterfaceIdiom _userInterfaceIdiom;
 	
-	UIScrollView *_deviceScrollView;
+	UIScrollView *_scrollView;
+	SNActiveListViewController_iPhone *_activeListViewController;
 	
 	NSMutableArray *_videoItems;
-	NSMutableArray *_viewControllers;
+	NSMutableArray *_itemViews;
 	
-	SNVideoPlayerView_iPhone *_iphoneVideoView;
+	BOOL _isSwiped;
+	CGPoint _startPt;
+	CGPoint _endPt;
+	
+	SNCategoryListView_iPhone *_categoryListView;
 }
 
 -(id)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;

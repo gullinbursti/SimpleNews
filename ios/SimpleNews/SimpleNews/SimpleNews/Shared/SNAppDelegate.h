@@ -20,9 +20,8 @@
 -(UIWindow *)createWindowForScreen:(UIScreen *)screen;
 -(void) addViewController:(UIViewController *)controller toWindow:(UIWindow *)window;
 
-+(UIFont *)snHelveticaFontRegular;
-+(UIFont *)snHelveticaFontBold;
-+(UIFont *)snHelveticaFontItalic;
-+(UIFont *)snHelveticaFontBoldItalic;
++(UIFont *)snHelveticaNeueFontRegular;
++(UIFont *)snHelveticaNeueFontBold;
++(UIFont *)snHelveticaNeueFontMedium;
 
 @end

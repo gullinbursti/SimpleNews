@@ -58,5 +58,11 @@
 			<string>com.sparklemountain.simplenews</string>
 		</dict>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>HelveticaNeueLTStd-Roman.otf</string>
+		<string>HelveticaNeueLTStd-Md.otf</string>
+		<string>HelveticaNeueLTStd-Bd.otf</string>
+	</array>
 </dict>
 </plist>

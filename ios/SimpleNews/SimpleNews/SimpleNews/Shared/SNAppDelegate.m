@@ -35,6 +35,18 @@
 }
 
 
++(UIFont *)snHelveticaNeueFontRegular {
+	return [UIFont fontWithName:@"HelveticaNeue-Roman" size:14.0];
+}
+
++(UIFont *)snHelveticaNeueFontBold {
+	return [UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0];
+}
+
++(UIFont *)snHelveticaNeueFontMedium {
+	return [UIFont fontWithName:@"HelveticaNeue-Medium" size:14.0];
+}
+
 
 -(void)dealloc {
 	//[_window release];

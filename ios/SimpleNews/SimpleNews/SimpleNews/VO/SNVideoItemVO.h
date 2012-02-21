@@ -17,6 +17,7 @@
 @property (nonatomic) int video_id;
 @property (nonatomic) int type_id;
 @property (nonatomic, retain) NSString *video_title;
+@property (nonatomic, retain) NSString *video_info;
 @property (nonatomic, retain) NSString *image_url;
 @property (nonatomic, retain) NSString *video_url;
 
