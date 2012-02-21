@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>video_id</key>
+		<integer>1</integer>
+		<key>type_id</key>
+		<integer>1</integer>
+		<key>title</key>
+		<string>Wash my little Smart Car!</string>
+		<key>description</key>
+		<string>I need someone to come wash my Smart Car today!</string>
+		<key>image</key>
+		<string>http://dev.gullinbursti.cc/projs/diddit/app/images/fpo_app-001.jpg</string>
+		<key>video</key>
+		<string></string>
+		<key>date</key>
+		<date>2011-08-28T00:00:00Z</date>
+	</dict>
+	<dict>
+		<key>video_id</key>
+		<integer>2</integer>
+		<key>type_id</key>
+		<integer>2</integer>
+		<key>title</key>
+		<string>Catering Help Wanted!</string>
+		<key>description</key>
+		<string>Need multiple people to help cater a wedding.</string>
+		<key>image</key>
+		<string>http://dev.gullinbursti.cc/projs/diddit/app/images/fpo_app-003.jpg</string>
+		<key>video</key>
+		<string></string>
+		<key>date</key>
+		<date>2011-08-28T00:00:00Z</date>
+	</dict>
+	<dict>
+		<key>video_id</key>
+		<integer>3</integer>
+		<key>type_id</key>
+		<integer>1</integer>
+		<key>title</key>
+		<string>Dog Walker WANTED!</string>
+		<key>description</key>
+		<string>I need someone to walk my two Jack Russells. One is named peter the other is named jackson.</string>
+		<key>image</key>
+		<string>http://dev.gullinbursti.cc/projs/diddit/app/images/fpo_app-001.jpg</string>
+		<key>video</key>
+		<string></string>
+		<key>date</key>
+		<date>2011-08-28T00:00:00Z</date>
+	</dict>
+	<dict>
+		<key>video_id</key>
+		<integer>4</integer>
+		<key>type_id</key>
+		<integer>3</integer>
+		<key>title</key>
+		<string>Hauling Junk</string>
+		<key>description</key>
+		<string>5 strong individuals are needed to move my belongings.</string>
+		<key>image</key>
+		<string>http://dev.gullinbursti.cc/projs/diddit/app/images/fpo_app-002.jpg</string>
+		<key>video</key>
+		<string></string>
+		<key>date</key>
+		<date>2011-08-28T00:00:00Z</date>
+	</dict>
+	<dict>
+		<key>video_id</key>
+		<integer>5</integer>
+		<key>type_id</key>
+		<integer>1</integer>
+		<key>title</key>
+		<string>Clean my house!</string>
+		<key>description</key>
+		<string>I need someone to come over and clean my dirty house.</string>
+		<key>image</key>
+		<string>http://dev.gullinbursti.cc/projs/diddit/app/images/fpo_app-003.jpg</string>
+		<key>video</key>
+		<string></string>
+		<key>date</key>
+		<date>2011-08-28T00:00:00Z</date>
+	</dict>
+	<dict>
+		<key>video_id</key>
+		<integer>6</integer>
+		<key>type_id</key>
+		<integer>2</integer>
+		<key>title</key>
+		<string>Paint my house!</string>
+		<key>description</key>
+		<string>Can you paint my house? I need a good painter now!</string>
+		<key>image</key>
+		<string>http://dev.gullinbursti.cc/projs/diddit/app/images/fpo_app-002.jpg</string>
+		<key>video</key>
+		<string></string>
+		<key>date</key>
+		<date>2011-08-28T00:00:00Z</date>
+	</dict>
+	<dict>
+		<key>video_id</key>
+		<integer>7</integer>
+		<key>type_id</key>
+		<integer>2</integer>
+		<key>title</key>
+		<string>Live band needed at a local bar</string>
+		<key>description</key>
+		<string>Live Band needed at local Moes bar and grill. Must play rock music.</string>
+		<key>image</key>
+		<string>http://dev.gullinbursti.cc/projs/diddit/app/images/fpo_app-001.jpg</string>
+		<key>video</key>
+		<string></string>
+		<key>date</key>
+		<date>2011-08-28T00:00:00Z</date>
+	</dict>
+	<dict>
+		<key>video_id</key>
+		<integer>8</integer>
+		<key>type_id</key>
+		<integer>3</integer>
+		<key>title</key>
+		<string>Local Model Wanted!</string>
+		<key>description</key>
+		<string>I need a model to pose for me. I am not creepy.</string>
+		<key>image</key>
+		<string>http://dev.gullinbursti.cc/projs/diddit/app/images/fpo_app-001.jpg</string>
+		<key>video</key>
+		<string></string>
+		<key>date</key>
+		<date>2011-08-28T00:00:00Z</date>
+	</dict>
+	<dict>
+		<key>video_id</key>
+		<integer>9</integer>
+		<key>type_id</key>
+		<integer>3</integer>
+		<key>title</key>
+		<string>Want to be an extra!</string>
+		<key>description</key>
+		<string>Be an extra in a real Hollywood movie! Do you want to hang out on set all day drinking.</string>
+		<key>image</key>
+		<string>http://dev.gullinbursti.cc/projs/diddit/app/images/fpo_app-002.jpg</string>
+		<key>video</key>
+		<string></string>
+		<key>date</key>
+		<date>2011-08-28T00:00:00Z</date>
+	</dict>
+	<dict>
+		<key>video_id</key>
+		<integer>10</integer>
+		<key>type_id</key>
+		<integer>2</integer>
+		<key>title</key>
+		<string>BE THE SIGN GUY!</string>
+		<key>description</key>
+		<string>Ya know, that guy on the side of the road spinning the sign like he is a rock star!</string>
+		<key>image</key>
+		<string>http://dev.gullinbursti.cc/projs/diddit/app/images/fpo_app-003.jpg</string>
+		<key>video</key>
+		<string></string>
+		<key>date</key>
+		<date>2011-08-28T00:00:00Z</date>
+	</dict>
+	<dict>
+		<key>video_id</key>
+		<integer>11</integer>
+		<key>type_id</key>
+		<integer>4</integer>
+		<key>title</key>
+		<string>Share Zynga games with your friends!</string>
+		<key>description</key>
+		<string>Share any Zynga game with 30 friends and get cash!</string>
+		<key>image</key>
+		<string>http://dev.gullinbursti.cc/projs/diddit/app/images/fpo_app-001.jpg</string>
+		<key>video</key>
+		<string></string>
+		<key>date</key>
+		<date>2011-08-28T00:00:00Z</date>
+	</dict>
+</array>
+</plist>
