@@ -6,16 +6,16 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import "SNViewController_iPhone.h"
+#import "SNVideoListViewController_iPhone.h"
 #import "SNVideoItemVO.h"
 
 #import "SNVideoItemView_iPhone.h"
 
-@interface SNViewController_iPhone()
+@interface SNVideoListViewController_iPhone()
 -(NSUInteger)screenNumber;
 @end
 
-@implementation SNViewController_iPhone
+@implementation SNVideoListViewController_iPhone
 
 -(NSUInteger)screenNumber {
 	NSUInteger  result      = 1;
@@ -89,9 +89,12 @@
 	
 	else
 		[self.view setBackgroundColor:[UIColor greenColor]];
-		
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 75.0, self.view.bounds.size.width, self.view.bounds.size.height)];
+	
+	_holderView = [[UIView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)];
+	[self.view addSubview:_holderView];
+	
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 75.0, self.view.bounds.size.width, self.view.bounds.size.height - 75.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	_scrollView.opaque = NO;
 	_scrollView.scrollsToTop = NO;
@@ -101,7 +104,7 @@
 	_scrollView.showsVerticalScrollIndicator = YES;
 	_scrollView.alwaysBounceVertical = NO;
 	_scrollView.contentSize = self.view.frame.size;
-	[self.view addSubview:_scrollView];
+	[_holderView addSubview:_scrollView];
 	
 	/*
 	MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width - 50, self.view.bounds.size.height - 50, 50, 50)] autorelease];
@@ -114,14 +117,9 @@
 	
 	int tot = 0;
 	for (SNVideoItemVO *vo in _videoItems) {
-		SNVideoItemView_iPhone *itemView = [[[SNVideoItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 200.0 * tot, self.view.bounds.size.width, 150.0) videoItemVO:vo] autorelease];
-		[_itemViews addObject:itemView];
-		
+		SNVideoItemView_iPhone *itemView = [[[SNVideoItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 150.0 * tot, self.view.bounds.size.width, 150.0) videoItemVO:vo] autorelease];
+		[_itemViews addObject:itemView];		
 		[_scrollView addSubview:itemView];
-		
-		[UIView animateWithDuration:0.33 animations:^(void) {
-			itemView.frame = CGRectMake(0.0, 150.0 * tot, self.view.bounds.size.width, 150.0);
-		}];
 		
 		//NSLog(@"VIDEO ITEM:[%d] \"%@\"", vo.video_id, vo.video_title);
 		tot++;
@@ -136,11 +134,11 @@
 	[self.view addGestureRecognizer:panRecognizer];
 	
 	_activeListViewController = [[SNActiveListViewController_iPhone alloc] init];
-	[self.view addSubview:_activeListViewController.view];
+	[_holderView addSubview:_activeListViewController.view];
 	
 	
 	_categoryListView = [[SNCategoryListView_iPhone alloc] initWithFrame:CGRectMake(self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
-	[self.view addSubview:_categoryListView];
+	[_holderView addSubview:_categoryListView];
 	
 }
 -(void)viewDidLoad {
@@ -157,6 +155,10 @@
 
 -(void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_holderView.frame = CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height);
+	}];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {

@@ -8,10 +8,14 @@
 
 #import "SNViewController_Airplay.h"
 
+#import "SNVideoItemVO.h"
+
 @implementation SNViewController_Airplay
 
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super init])) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_itemTapped:) name:@"ITEM_TAPPED" object:nil];
+		
 		self.view.frame = frame;
 	}
 	
@@ -56,6 +60,15 @@
 	} completion:^(BOOL finished) {
 		//[_videoPlayerView togglePlayback:YES];
 	}];
+}
+
+
+#pragma mark - Notification handlers
+-(void)_itemTapped:(NSNotification *)notification {
+	SNVideoItemVO *vo = (SNVideoItemVO *)[notification object];
+	
+	NSLog(@"VIDEO CHANGE:[%@]", vo.video_title);
+	[_videoPlayerView togglePlayback:YES];
 }
 
 @end

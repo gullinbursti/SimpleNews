@@ -1,5 +1,5 @@
 //
-//  SNViewController_iPhone.h
+//  SNVideoListViewController_iPhone.h
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 02.20.12.
@@ -12,9 +12,10 @@
 #import "SNActiveListViewController_iPhone.h"
 #import "SNCategoryListView_iPhone.h"
 
-@interface SNViewController_iPhone : UIViewController <UIScrollViewDelegate, UIGestureRecognizerDelegate> {
+@interface SNVideoListViewController_iPhone : UIViewController <UIScrollViewDelegate, UIGestureRecognizerDelegate> {
 	UIUserInterfaceIdiom _userInterfaceIdiom;
 	
+	UIView *_holderView;
 	UIScrollView *_scrollView;
 	SNActiveListViewController_iPhone *_activeListViewController;
 	

@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SNVideoListViewController_Airplay : UIViewController
+@interface SNVideoListViewController_Airplay : UIViewController {
+	NSMutableArray *_items;
+}
 
 @end

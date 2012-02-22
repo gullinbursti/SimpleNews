@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
-@interface SNCategoryListView_iPhone : UIView
+@interface SNCategoryListView_iPhone : UIView <UIGestureRecognizerDelegate> {
+	NSMutableArray *_allViews;
+	NSMutableArray *_allItemVOs;
+	NSMutableArray *_activeItemVOs;
+	
+	UIScrollView *_scrollView;
+}
 
 @end

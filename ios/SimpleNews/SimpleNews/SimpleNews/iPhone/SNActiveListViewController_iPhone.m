@@ -43,7 +43,7 @@
 		EGOImageView *imgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(0.0, i * 75, self.view.frame.size.width, 75.0)] autorelease];
 		
 		if (i == 0)
-			[imgView setBackgroundColor:[UIColor greenColor]];
+			[imgView setBackgroundColor:[UIColor yellowColor]];
 		
 		else if (i == 1)
 			[imgView setBackgroundColor:[UIColor redColor]];

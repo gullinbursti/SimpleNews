@@ -8,7 +8,7 @@
 
 #import "SNAppDelegate.h"
 
-#import "SNViewController_iPhone.h"
+#import "SNSplashViewController_iPhone.h"
 #import "SNViewController_Airplay.h"
 
 @implementation SNAppDelegate
@@ -55,36 +55,32 @@
 }
 
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	
-	UIWindow    *_window    = nil;
-	NSArray     *_screens   = nil;
+	UIWindow *window = nil;
 	
 	windows = [[NSMutableArray alloc] init];
-	
-	_screens = [UIScreen screens];
-	NSLog(@"SCREENS:[%d]", [_screens count]);
+	NSLog(@"SCREENS:[%d]", [[UIScreen screens] count]);
 	
 	int cnt = 0;
-	for (UIScreen *screen in _screens) {
-		SNViewController_iPhone *_viewController = nil;
+	for (UIScreen *screen in [UIScreen screens]) {
+		SNSplashViewController_iPhone *_viewController = nil;
 		
 		NSLog(@":::::::]] SCREEN[%d](%f, %f)", cnt, screen.bounds.size.width, screen.bounds.size.height);
 		
 		if (cnt == 0)
-			_viewController = [[SNViewController_iPhone alloc] initWithUserInterfaceIdiom:[[UIDevice currentDevice] userInterfaceIdiom]];
+			_viewController = [[SNSplashViewController_iPhone alloc] init];
 		
 		else
 			_viewController = [[SNViewController_Airplay alloc] initWithFrame:screen.bounds];
 		
-		_window = [self createWindowForScreen:screen];
+		window = [self createWindowForScreen:screen];
 		
-		[self addViewController:_viewController toWindow:_window];
+		[self addViewController:_viewController toWindow:window];
 		[_viewController release];
 		_viewController = nil;
 		
 		// If you don't do this here, you will get the "Applications are expected to have a root view controller" message.
 		if (screen == [UIScreen mainScreen])
-			[_window makeKeyAndVisible];
+			[window makeKeyAndVisible];
 		
 		
 		cnt++;
