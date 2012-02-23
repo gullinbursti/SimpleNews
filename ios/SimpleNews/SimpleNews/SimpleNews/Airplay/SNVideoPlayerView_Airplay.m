@@ -16,10 +16,10 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_finishedCallback:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_stateChangedCallback:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
 		
-		
 		//_playerController = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:@"http://o-o.preferred.comcast-lax1.v17.lscache8.c.youtube.com/videoplayback?sparams=id%2Cexpire%2Cip%2Cipbits%2Citag%2Csource%2Cratebypass%2Ccp&fexp=902906%2C916103%2C913533&itag=22&ip=98.0.0.0&signature=4001D0E6970AB574B9264BECB835C3CA9CF597A3.75D481B6D6A72C5252F367FFF42942C14B6CAAC4&sver=3&ratebypass=yes&source=youtube&expire=1329818607&key=yt1&ipbits=8&cp=U0hRTlhMVl9FUUNOMV9QRlpHOkJiZzNwU190SVlE&id=c15baec91181fc10&title=Duke%20Nukem%20Forever%20Official%20HD%20Debut%20Trailer"]];
 		//_playerController = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:@"http://dev.gullinbursti.cc/projs/gutz/video/device-demo_[08.30.2011]-485kbs.mov"]];
 		_playerController = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Jurassic Park - Dodson & Nedry" ofType:@"mp4"]]];
+		//_playerController = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:@"rtsp://v3.cache6.c.youtube.com/CiILENy73wIaGQkEKKuVj--CKRMYDSANFEgGUgZ2aWRlb3MM/0/0/0/video.3gp"]];
 		_playerController.controlStyle = MPMovieControlStyleNone;
 		_playerController.view.frame = frame;
 		_playerController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -28,8 +28,20 @@
 		_playerController.movieSourceType = MPMovieSourceTypeFile;
 		[_playerController prepareToPlay];
 		[_playerController setFullscreen:NO];
+		
+		
 		//[_playerController play];
 		[self addSubview:_playerController.view];
+		
+		UIImage *thumbImage = [_playerController thumbnailImageAtTime:10.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
+		if (thumbImage == nil)
+			NSLog(@"NO THUMB!!");
+		
+		else {
+			UIImageView *thumbImageView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 360.0, 1280.0, 720.0)] autorelease];
+			thumbImageView.image = thumbImage;
+			//[self addSubview:thumbImageView];
+		}
 	}
 	
 	return (self);
@@ -37,22 +49,45 @@
 
 
 -(void)togglePlayback:(BOOL)isPlaying {
-	//[_playerController stop];
-	//[_playerController setContentURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Jurassic Park - Dodson & Nedry" ofType:@"mp4"]]];
-	[_playerController setContentURL:[NSURL URLWithString:@"http://dev.gullinbursti.cc/projs/gutz/video/device-demo_[08.30.2011]-485kbs.mov"]];
 	
+	if (!_isFinished)
+		[_playerController stop];
+	
+	[_playerController setContentURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Jurassic Park - Dodson & Nedry" ofType:@"mp4"]]];
+	//[_playerController setContentURL:[NSURL URLWithString:@"http://dev.gullinbursti.cc/projs/gutz/video/device-demo_[08.30.2011]-485kbs.mov"]];
 	[_playerController play];
+	
+	/*[_playerController autorelease];
+	
+	_playerController = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Jurassic Park - Dodson & Nedry" ofType:@"mp4"]]];
+	_playerController.controlStyle = MPMovieControlStyleNone;
+	_playerController.view.frame = self.frame;
+	_playerController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	_playerController.shouldAutoplay = NO;
+	_playerController.allowsAirPlay = YES;
+	_playerController.movieSourceType = MPMovieSourceTypeFile;
+	[_playerController prepareToPlay];
+	[_playerController setFullscreen:NO];
+	[self addSubview:_playerController.view];
+	[_playerController play];*/
 }
 
 
 #pragma mark - Notification handlers
 -(void)_startedCallback:(NSNotification *)notification {
-	NSLog(@"----STARTED PLAYBACK----(%f)", _playerController.endPlaybackTime);
+	NSLog(@"----STARTED PLAYBACK----(%f)", _playerController.duration);
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerNowPlayingMovieDidChangeNotification object:nil];
+	
+	_isFinished = NO;
+	_timer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_timerTick) userInfo:nil repeats:YES];
 }
 
 -(void)_finishedCallback:(NSNotification *)notification {
 	NSLog(@"----FINISHED PLAYBACK----");
+	
+	_isFinished = YES;
+	[_timer invalidate];
+	_timer = nil;
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];    
 	[_playerController autorelease];
@@ -62,6 +97,13 @@
 	NSLog(@"----STATE CHANGED----");
 	
 	//[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
+}
+
+
+
+-(void)_timerTick {
+	NSLog(@"%d, %d", (int)_playerController.duration, (int)_playerController.endPlaybackTime);
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_PROGRESSION" object:[NSNumber numberWithFloat:_playerController.currentPlaybackTime]];
 }
 
 @end

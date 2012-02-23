@@ -11,6 +11,9 @@
 
 @interface SNVideoPlayerView_Airplay : UIView {
 	MPMoviePlayerController *_playerController;
+	
+	NSTimer *_timer;
+	BOOL _isFinished;
 }
 
 -(void)togglePlayback:(BOOL)isPlaying;

@@ -50,6 +50,8 @@
 	if ((self = [super init])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_itemTapped:) name:@"ITEM_TAPPED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_categorySwiped:) name:@"CATEGORY_SWIPED" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_searchPulled:) name:@"SEARCH_PULLED" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_searchPushed:) name:@"SEARCH_PUSHED" object:nil];
 		
 		_userInterfaceIdiom = userInterfaceIdiom;
 		_videoItems = [NSMutableArray new];
@@ -89,7 +91,6 @@
 	
 	else
 		[self.view setBackgroundColor:[UIColor greenColor]];
-	
 	
 	_holderView = [[UIView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)];
 	[self.view addSubview:_holderView];
@@ -131,16 +132,19 @@
 	[panRecognizer setMinimumNumberOfTouches:1];
 	[panRecognizer setMaximumNumberOfTouches:1];
 	[panRecognizer setDelegate:self];
-	[self.view addGestureRecognizer:panRecognizer];
-	
-	_activeListViewController = [[SNActiveListViewController_iPhone alloc] init];
-	[_holderView addSubview:_activeListViewController.view];
-	
+	[_holderView addGestureRecognizer:panRecognizer];
 	
 	_categoryListView = [[SNCategoryListView_iPhone alloc] initWithFrame:CGRectMake(self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
 	[_holderView addSubview:_categoryListView];
 	
+	_activeListViewController = [[SNActiveListViewController_iPhone alloc] init];
+	[self.view addSubview:_activeListViewController.view];
+	
+	_videoSearchView = [[SNVideoSearchView_iPhone alloc] initWithFrame:CGRectMake(self.view.bounds.size.width, 0.0, self.view.bounds.size.width, 48.0)];
+	_videoSearchView.hidden = YES;
+	[self.view addSubview:_videoSearchView];
 }
+
 -(void)viewDidLoad {
 	[super viewDidLoad];
 }
@@ -158,6 +162,7 @@
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_holderView.frame = CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height);
+		_videoSearchView.frame = CGRectMake(0.0, 0.0, self.view.bounds.size.width, 64.0);
 	}];
 }
 
@@ -188,6 +193,7 @@
 			_isSwiped = YES;
 			
 			[UIView animateWithDuration:0.33 animations:^(void) {
+				_activeListViewController.view.frame = CGRectMake(-self.view.frame.size.width, 0.0, self.view.frame.size.width, _activeListViewController.view.frame.size.height);
 				_scrollView.frame = CGRectMake(-_scrollView.frame.size.width, 75.0, _scrollView.frame.size.width, _scrollView.frame.size.height);
 				_categoryListView.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
 			}];
@@ -230,9 +236,18 @@
 	_isSwiped = NO;
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
+		_activeListViewController.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, _activeListViewController.view.frame.size.height);
 		_categoryListView.frame = CGRectMake(self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height);
 		_scrollView.frame = CGRectMake(0.0, 75.0, _scrollView.frame.size.width, _scrollView.frame.size.height);
 	}];
+}
+
+-(void)_searchPulled:(NSNotification *)notification {
+	_videoSearchView.hidden = NO;
+}
+
+-(void)_searchPushed:(NSNotification *)notification {
+	_videoSearchView.hidden = YES;
 }
 
 #pragma mark - ScrollView Delegates

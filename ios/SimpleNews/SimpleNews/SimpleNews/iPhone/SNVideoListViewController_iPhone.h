@@ -11,6 +11,7 @@
 
 #import "SNActiveListViewController_iPhone.h"
 #import "SNCategoryListView_iPhone.h"
+#import "SNVideoSearchView_iPhone.h"
 
 @interface SNVideoListViewController_iPhone : UIViewController <UIScrollViewDelegate, UIGestureRecognizerDelegate> {
 	UIUserInterfaceIdiom _userInterfaceIdiom;
@@ -24,6 +25,8 @@
 	
 	BOOL _isSwiped;
 	SNCategoryListView_iPhone *_categoryListView;
+	
+	SNVideoSearchView_iPhone *_videoSearchView;
 }
 
 -(id)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;

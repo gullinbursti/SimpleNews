@@ -7,9 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MediaPlayer/MediaPlayer.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
-@interface SNActiveListViewController_iPhone : UIViewController {
+@interface SNActiveListViewController_iPhone : UIViewController <UIGestureRecognizerDelegate> {
 	NSMutableArray *_items;
+	
+	UIView *_progressBar;
 }
 
 @end
