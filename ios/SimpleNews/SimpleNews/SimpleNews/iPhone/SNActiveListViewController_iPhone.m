@@ -17,10 +17,10 @@
 	if ((self = [super init])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_itemTapped:) name:@"ITEM_TAPPED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoProgression:) name:@"VIDEO_PROGRESSION" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_searchEntered:) name:@"SEARCH_ENTERED" object:nil];
 		
 		_items = [[NSMutableArray alloc] init];
-		self.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, 75);
-		self.view.clipsToBounds = YES;
+		self.view.frame = CGRectMake(0.0, -30.0, self.view.frame.size.width, 100);
 	}
 	
 	return (self);
@@ -38,23 +38,14 @@
 #pragma mark - View lifecycle
 -(void)loadView {
 	[super loadView];
-	self.view.alpha = 0.67;
+	//self.view.alpha = 0.67;
 	
-	for (int i=0; i<3; i++) {
-		EGOImageView *imgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(0.0, i * 75, self.view.frame.size.width, 75.0)] autorelease];
-		
-		if (i == 0)
-			[imgView setBackgroundColor:[UIColor yellowColor]];
-		
-		else if (i == 1)
-			[imgView setBackgroundColor:[UIColor redColor]];
-		
-		else
-			[imgView setBackgroundColor:[UIColor blueColor]];
-		
-		[_items addObject:imgView];
-		[self.view addSubview:imgView];
-	}
+	_videoSearchView = [[SNVideoSearchView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 30.0)];
+	[self.view addSubview:_videoSearchView];
+	
+	_imgView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 30.0, self.view.frame.size.width, 70.0)];
+	[_imgView setBackgroundColor:[UIColor blueColor]];
+	[self.view addSubview:_imgView];
 	
 	_progressBar = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 8.0)];
 	[_progressBar setBackgroundColor:[UIColor greenColor]];
@@ -65,7 +56,7 @@
 	[panRecognizer setMinimumNumberOfTouches:1];
 	[panRecognizer setMaximumNumberOfTouches:1];
 	[panRecognizer setDelegate:self];
-	[self.view addGestureRecognizer:panRecognizer];
+	//[self.view addGestureRecognizer:panRecognizer];
 }
 
 -(void)viewDidLoad {
@@ -81,9 +72,7 @@
 #pragma mark - Notification handlers
 -(void)_itemTapped:(NSNotification *)notification {
 	SNVideoItemVO *vo = (SNVideoItemVO *)[notification object];
-	
-	EGOImageView *imgView = (EGOImageView *)[_items objectAtIndex:0];
-	imgView.imageURL = [NSURL URLWithString:vo.image_url];
+	_imgView.imageURL = [NSURL URLWithString:vo.image_url];
 }
 
 
@@ -95,17 +84,25 @@
 	_progressBar.frame = CGRectMake(0.0, 0.0, self.view.bounds.size.width * percent, 8.0);
 }
 
+-(void)_searchEntered:(NSNotification *)notification {
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		self.view.frame = CGRectMake(0.0, -30.0, self.view.frame.size.width, 100);
+	}];
+}
+
+
 
 -(void)_goPan:(id)sender {
 	CGPoint transPt = [(UIPanGestureRecognizer*)sender translationInView:self.view];
 	
-	NSLog(@"PULLED:[%f]", transPt.y);
-	
+	//NSLog(@"PULLED:[%f]", transPt.y);
+	/*
 	if (abs(transPt.x) < 10 && transPt.y > 30)
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"SEARCH_PULLED" object:nil];
 	
 	if (abs(transPt.x) < 10 && transPt.y < -30)
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"SEARCH_PUSHED" object:nil];
+	*/
 }
 
 @end

@@ -57,6 +57,7 @@
 		_videoItems = [NSMutableArray new];
 		_itemViews = [NSMutableArray new];
 		_isSwiped = NO;
+		_scrollOffset = 0;
 		
 		//NSLog(@"USER INTERFACE:[%d]", _userInterfaceIdiom); 0 == iPhone // 1 == iPad
 		
@@ -95,7 +96,7 @@
 	_holderView = [[UIView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)];
 	[self.view addSubview:_holderView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 75.0, self.view.bounds.size.width, self.view.bounds.size.height - 75.0)];
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 50.0, self.view.bounds.size.width, self.view.bounds.size.height - 50.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	_scrollView.opaque = NO;
 	_scrollView.scrollsToTop = NO;
@@ -105,6 +106,7 @@
 	_scrollView.showsVerticalScrollIndicator = YES;
 	_scrollView.alwaysBounceVertical = NO;
 	_scrollView.contentSize = self.view.frame.size;
+	_scrollView.contentOffset = CGPointMake(0.0, 50.0);
 	[_holderView addSubview:_scrollView];
 	
 	/*
@@ -118,7 +120,7 @@
 	
 	int tot = 0;
 	for (SNVideoItemVO *vo in _videoItems) {
-		SNVideoItemView_iPhone *itemView = [[[SNVideoItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 150.0 * tot, self.view.bounds.size.width, 150.0) videoItemVO:vo] autorelease];
+		SNVideoItemView_iPhone *itemView = [[[SNVideoItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 50 + (150.0 * tot), self.view.bounds.size.width, 150.0) videoItemVO:vo] autorelease];
 		[_itemViews addObject:itemView];		
 		[_scrollView addSubview:itemView];
 		
@@ -142,7 +144,7 @@
 	
 	_videoSearchView = [[SNVideoSearchView_iPhone alloc] initWithFrame:CGRectMake(self.view.bounds.size.width, 0.0, self.view.bounds.size.width, 48.0)];
 	_videoSearchView.hidden = YES;
-	[self.view addSubview:_videoSearchView];
+	//[self.view addSubview:_videoSearchView];
 }
 
 -(void)viewDidLoad {
@@ -254,6 +256,21 @@
 // any offset changes
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	//_iphoneVideoView.frame = CGRectMake(0.0, -scrollView.contentOffset.y, scrollView.bounds.size.width, 150.0);
+	CGRect frame = _activeListViewController.view.frame;
+	
+	NSLog(@"%f", scrollView.contentOffset.y);
+	
+	if (scrollView.contentOffset.y > 0 && scrollView.contentOffset.y < 100) {
+		if (_scrollOffset < scrollView.contentOffset.y && _activeListViewController.view.frame.origin.y >= -10.0)
+			frame.origin.y--;// -= 0.95;
+		
+		if (_scrollOffset > scrollView.contentOffset.y && _activeListViewController.view.frame.origin.y <= 10.0)
+			frame.origin.y++;// += 0.95;
+		
+		_scrollOffset = scrollView.contentOffset.y;
+		
+		_activeListViewController.view.frame = frame;
+	}
 }
 
 

@@ -30,6 +30,9 @@
 		4CB228F914F4872800F5618D /* loader_Image03_Sports-iPhone.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4CB228F114F4872800F5618D /* loader_Image03_Sports-iPhone.jpg */; };
 		4CB228FA14F4872800F5618D /* loader_Image03_Sports-iPhone@2x.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 4CB228F214F4872800F5618D /* loader_Image03_Sports-iPhone@2x.jpg */; };
 		4CB2291C14F60E1100F5618D /* SNVideoSearchView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB2291B14F60E1000F5618D /* SNVideoSearchView_iPhone.m */; };
+		4CB2293014F7013400F5618D /* TableViewPullAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB2292F14F7013400F5618D /* TableViewPullAppDelegate.m */; };
+		4CB2293414F7017D00F5618D /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB2293314F7017D00F5618D /* EGORefreshTableHeaderView.m */; };
+		4CB2293714F70A4A00F5618D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB2293514F70A2D00F5618D /* QuartzCore.framework */; };
 		4CB7763D14F3389D0064E7C9 /* SNVideoPlayerView_Airplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB7763C14F3389D0064E7C9 /* SNVideoPlayerView_Airplay.m */; };
 		4CB7764314F349090064E7C9 /* SNViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB7764214F349090064E7C9 /* SNViewController_iPhone.m */; };
 		4CB7764614F349B30064E7C9 /* SNViewController_Airplay.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB7764514F349B30064E7C9 /* SNViewController_Airplay.m */; };
@@ -106,6 +109,11 @@
 		4CB228F214F4872800F5618D /* loader_Image03_Sports-iPhone@2x.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "loader_Image03_Sports-iPhone@2x.jpg"; sourceTree = "<group>"; };
 		4CB2291A14F60E1000F5618D /* SNVideoSearchView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoSearchView_iPhone.h; sourceTree = "<group>"; };
 		4CB2291B14F60E1000F5618D /* SNVideoSearchView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNVideoSearchView_iPhone.m; sourceTree = "<group>"; };
+		4CB2292E14F7013400F5618D /* TableViewPullAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewPullAppDelegate.h; sourceTree = "<group>"; };
+		4CB2292F14F7013400F5618D /* TableViewPullAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewPullAppDelegate.m; sourceTree = "<group>"; };
+		4CB2293214F7017D00F5618D /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
+		4CB2293314F7017D00F5618D /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
+		4CB2293514F70A2D00F5618D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		4CB7763B14F3389D0064E7C9 /* SNVideoPlayerView_Airplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoPlayerView_Airplay.h; sourceTree = "<group>"; };
 		4CB7763C14F3389D0064E7C9 /* SNVideoPlayerView_Airplay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNVideoPlayerView_Airplay.m; sourceTree = "<group>"; };
 		4CB7764114F349080064E7C9 /* SNViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNViewController_iPhone.h; sourceTree = "<group>"; };
@@ -193,6 +201,7 @@
 				4CDC8C7114F2D7D100D42EA5 /* MessageUI.framework in Frameworks */,
 				4CDC8C7214F2D7D600D42EA5 /* Security.framework in Frameworks */,
 				4CDC8C7314F2D7DC00D42EA5 /* MediaPlayer.framework in Frameworks */,
+				4CB2293714F70A4A00F5618D /* QuartzCore.framework in Frameworks */,
 				4CDC8BF214F2CDEB00D42EA5 /* UIKit.framework in Frameworks */,
 				4CDC8BF414F2CDEB00D42EA5 /* Foundation.framework in Frameworks */,
 				4CDC8BF614F2CDEB00D42EA5 /* CoreGraphics.framework in Frameworks */,
@@ -236,6 +245,26 @@
 			name = "Splash Images";
 			sourceTree = "<group>";
 		};
+		4CB2292D14F7013400F5618D /* Delegate */ = {
+			isa = PBXGroup;
+			children = (
+				4CB2292E14F7013400F5618D /* TableViewPullAppDelegate.h */,
+				4CB2292F14F7013400F5618D /* TableViewPullAppDelegate.m */,
+			);
+			name = Delegate;
+			path = SimpleNews/Delegate;
+			sourceTree = "<group>";
+		};
+		4CB2293114F7017D00F5618D /* EGOTables */ = {
+			isa = PBXGroup;
+			children = (
+				4CB2293214F7017D00F5618D /* EGORefreshTableHeaderView.h */,
+				4CB2293314F7017D00F5618D /* EGORefreshTableHeaderView.m */,
+			);
+			name = EGOTables;
+			path = SimpleNews/EGOTables;
+			sourceTree = "<group>";
+		};
 		4CB7763A14F3387B0064E7C9 /* Airplay */ = {
 			isa = PBXGroup;
 			children = (
@@ -255,6 +284,7 @@
 			children = (
 				4CDC8C2414F2D71800D42EA5 /* ASI */,
 				4CDC8C3914F2D71800D42EA5 /* EGOImageLoading */,
+				4CB2293114F7017D00F5618D /* EGOTables */,
 				4CDC8C4814F2D71800D42EA5 /* MBProgressHUD */,
 				4CDC8C7414F2D80300D42EA5 /* Reachability */,
 				4CDC8BF714F2CDEB00D42EA5 /* SimpleNews */,
@@ -275,6 +305,7 @@
 		4CDC8BF014F2CDEB00D42EA5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4CB2293514F70A2D00F5618D /* QuartzCore.framework */,
 				4CDC8C6914F2D7A200D42EA5 /* CFNetwork.framework */,
 				4CDC8C6714F2D79500D42EA5 /* SystemConfiguration.framework */,
 				4CDC8C6514F2D78900D42EA5 /* MobileCoreServices.framework */,
@@ -297,6 +328,7 @@
 		4CDC8BF714F2CDEB00D42EA5 /* SimpleNews */ = {
 			isa = PBXGroup;
 			children = (
+				4CB2292D14F7013400F5618D /* Delegate */,
 				4CB7763A14F3387B0064E7C9 /* Airplay */,
 				4CDC8C1114F2D07000D42EA5 /* iPad */,
 				4CDC8C1214F2D07000D42EA5 /* iPhone */,
@@ -604,6 +636,8 @@
 				4CB228D614F4825E00F5618D /* SNVideoListViewController_iPhone.m in Sources */,
 				4CB228D914F485B800F5618D /* SNSplashViewController_iPhone.m in Sources */,
 				4CB2291C14F60E1100F5618D /* SNVideoSearchView_iPhone.m in Sources */,
+				4CB2293014F7013400F5618D /* TableViewPullAppDelegate.m in Sources */,
+				4CB2293414F7017D00F5618D /* EGORefreshTableHeaderView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

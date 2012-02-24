@@ -10,10 +10,16 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
+#import "SNVideoSearchView_iPhone.h"
+#import "EGOImageView.h"
+
 @interface SNActiveListViewController_iPhone : UIViewController <UIGestureRecognizerDelegate> {
 	NSMutableArray *_items;
 	
 	UIView *_progressBar;
+	
+	SNVideoSearchView_iPhone *_videoSearchView;
+	EGOImageView *_imgView;
 }
 
 @end

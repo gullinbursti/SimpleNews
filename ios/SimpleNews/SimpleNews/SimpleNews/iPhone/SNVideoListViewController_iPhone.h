@@ -27,6 +27,10 @@
 	SNCategoryListView_iPhone *_categoryListView;
 	
 	SNVideoSearchView_iPhone *_videoSearchView;
+	
+	CGPoint _offsetPt;
+	
+	float _scrollOffset;
 }
 
 -(id)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;

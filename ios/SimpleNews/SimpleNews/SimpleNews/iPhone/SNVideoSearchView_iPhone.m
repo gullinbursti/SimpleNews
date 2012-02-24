@@ -46,6 +46,13 @@
 }
 
 
+#pragma mark - Handlers
+-(void)onTxtDoneEditing:(id)sender {
+	[sender resignFirstResponder];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SEARCH_ENTERED" object:nil];
+}
+
+
 #pragma mark - Notifications
 -(void)_searchPulled:(NSNotification *)notifcation {
 	[_txtField becomeFirstResponder];
@@ -61,5 +68,8 @@
 	return (YES);
 }
 
+-(void)textFieldDidEndEditing:(UITextField *)textField {	
+	[textField resignFirstResponder];
+}
 
 @end
