@@ -14,17 +14,23 @@
 
 -(id)initWithFrame:(CGRect)frame withVO:(SNCategoryItemVO *)vo {
 	if ((self = [super initWithFrame:frame])) {
-		[self setBackgroundColor:[UIColor blackColor]];
+		
 		_isSelected = NO;
 		_vo = vo;
+		
+		if (_vo.category_id % 2 == 1)
+			[self setBackgroundColor:[UIColor blackColor]];
+		
+		else
+			[self setBackgroundColor:[UIColor colorWithWhite:0.1 alpha:1.0]];
 		
 		UIButton *toggleButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 		toggleButton.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
 		[toggleButton addTarget:self action:@selector(_goToggle) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:toggleButton];
 		
-		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5, 15, self.frame.size.width, 40)];
-		_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:36.0];
+		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(17.5, 0, self.frame.size.width, 64)];
+		_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16.0];
 		_titleLabel.backgroundColor = [UIColor clearColor];
 		_titleLabel.textColor = [UIColor whiteColor];
 		_titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
@@ -39,7 +45,7 @@
 		
 		UIView *lineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 63.0, self.frame.size.width, 1.0)] autorelease];
 		[lineView setBackgroundColor:[UIColor whiteColor]];
-		[self addSubview:lineView];
+		//[self addSubview:lineView];
 	}
 	
 	return (self);

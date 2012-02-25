@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "MBProgressHUD.h"
+
 @interface SNSplashViewController_iPhone : UIViewController {
 	NSMutableArray *_photoSlides;
 	
@@ -16,6 +18,11 @@
 	
 	UIImageView *_introImageView;
 	UIImageView *_outroImageView;
+	
+	UIView *_holderView;
+	UIView *_progressView;
+	
+	UIView *_logoView;
 }
 
 @end

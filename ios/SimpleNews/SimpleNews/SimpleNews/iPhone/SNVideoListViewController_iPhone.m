@@ -93,21 +93,28 @@
 	else
 		[self.view setBackgroundColor:[UIColor greenColor]];
 	
-	_holderView = [[UIView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)];
+	_holderView = [[UIView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width, 83.0, self.view.bounds.size.width, self.view.bounds.size.height - 83.0)];
 	[self.view addSubview:_holderView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 50.0, self.view.bounds.size.width, self.view.bounds.size.height - 50.0)];
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height - _holderView.frame.origin.y)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	_scrollView.opaque = NO;
+	_scrollView.opaque = YES;
 	_scrollView.scrollsToTop = NO;
 	_scrollView.pagingEnabled = NO;
 	_scrollView.delegate = self;
 	_scrollView.showsHorizontalScrollIndicator = NO;
-	_scrollView.showsVerticalScrollIndicator = YES;
+	_scrollView.showsVerticalScrollIndicator = NO;
 	_scrollView.alwaysBounceVertical = NO;
 	_scrollView.contentSize = self.view.frame.size;
-	_scrollView.contentOffset = CGPointMake(0.0, 50.0);
+	_scrollView.contentInset = UIEdgeInsetsMake(0.0, 0.0f, 0.0f, 0.0f);
+	_scrollView.contentOffset = CGPointMake(0.0, 0.0);
 	[_holderView addSubview:_scrollView];
+	
+	
+	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - _scrollView.bounds.size.height, self.view.frame.size.width, _scrollView.bounds.size.height)];
+	_refreshHeaderView.delegate = self;
+	[_scrollView addSubview:_refreshHeaderView];
+	[_refreshHeaderView refreshLastUpdatedDate];
 	
 	/*
 	MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width - 50, self.view.bounds.size.height - 50, 50, 50)] autorelease];
@@ -120,7 +127,7 @@
 	
 	int tot = 0;
 	for (SNVideoItemVO *vo in _videoItems) {
-		SNVideoItemView_iPhone *itemView = [[[SNVideoItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 50 + (150.0 * tot), self.view.bounds.size.width, 150.0) videoItemVO:vo] autorelease];
+		SNVideoItemView_iPhone *itemView = [[[SNVideoItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 150.0 * tot, self.view.bounds.size.width, 150.0) videoItemVO:vo] autorelease];
 		[_itemViews addObject:itemView];		
 		[_scrollView addSubview:itemView];
 		
@@ -137,12 +144,12 @@
 	[_holderView addGestureRecognizer:panRecognizer];
 	
 	_categoryListView = [[SNCategoryListView_iPhone alloc] initWithFrame:CGRectMake(self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
-	[_holderView addSubview:_categoryListView];
+	[self.view addSubview:_categoryListView];
 	
 	_activeListViewController = [[SNActiveListViewController_iPhone alloc] init];
 	[self.view addSubview:_activeListViewController.view];
 	
-	_videoSearchView = [[SNVideoSearchView_iPhone alloc] initWithFrame:CGRectMake(self.view.bounds.size.width, 0.0, self.view.bounds.size.width, 48.0)];
+	_videoSearchView = [[SNVideoSearchView_iPhone alloc] initWithFrame:CGRectMake(self.view.bounds.size.width, 0.0, self.view.bounds.size.width, 55.0)];
 	_videoSearchView.hidden = YES;
 	//[self.view addSubview:_videoSearchView];
 }
@@ -163,7 +170,7 @@
 	[super viewDidAppear:animated];
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_holderView.frame = CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height);
+		_holderView.frame = CGRectMake(0.0, _holderView.frame.origin.y, self.view.bounds.size.width, self.view.bounds.size.height - _holderView.frame.origin.y);
 		_videoSearchView.frame = CGRectMake(0.0, 0.0, self.view.bounds.size.width, 64.0);
 	}];
 }
@@ -195,8 +202,8 @@
 			_isSwiped = YES;
 			
 			[UIView animateWithDuration:0.33 animations:^(void) {
-				_activeListViewController.view.frame = CGRectMake(-self.view.frame.size.width, 0.0, self.view.frame.size.width, _activeListViewController.view.frame.size.height);
-				_scrollView.frame = CGRectMake(-_scrollView.frame.size.width, 75.0, _scrollView.frame.size.width, _scrollView.frame.size.height);
+				_activeListViewController.view.frame = CGRectMake(-self.view.frame.size.width, _activeListViewController.view.frame.origin.y, self.view.frame.size.width, _activeListViewController.view.frame.size.height);
+				_scrollView.frame = CGRectMake(-_scrollView.frame.size.width, 0.0, _scrollView.frame.size.width, _scrollView.frame.size.height);
 				_categoryListView.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
 			}];
 		}
@@ -238,9 +245,9 @@
 	_isSwiped = NO;
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_activeListViewController.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, _activeListViewController.view.frame.size.height);
+		_activeListViewController.view.frame = CGRectMake(0.0, _activeListViewController.view.frame.origin.y, self.view.frame.size.width, _activeListViewController.view.frame.size.height);
 		_categoryListView.frame = CGRectMake(self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height);
-		_scrollView.frame = CGRectMake(0.0, 75.0, _scrollView.frame.size.width, _scrollView.frame.size.height);
+		_scrollView.frame = CGRectMake(0.0, 0.0, _scrollView.frame.size.width, _scrollView.frame.size.height);
 	}];
 }
 
@@ -258,19 +265,32 @@
 	//_iphoneVideoView.frame = CGRectMake(0.0, -scrollView.contentOffset.y, scrollView.bounds.size.width, 150.0);
 	CGRect frame = _activeListViewController.view.frame;
 	
-	NSLog(@"%f", scrollView.contentOffset.y);
+	NSLog(@"%f][%f", scrollView.contentOffset.y, _activeListViewController.view.frame.origin.y);
 	
-	if (scrollView.contentOffset.y > 0 && scrollView.contentOffset.y < 100) {
-		if (_scrollOffset < scrollView.contentOffset.y && _activeListViewController.view.frame.origin.y >= -10.0)
+	/*
+	if (scrollView.contentOffset.y > -48 && scrollView.contentOffset.y < 150) {
+		if (_scrollOffset < scrollView.contentOffset.y && _activeListViewController.view.frame.origin.y >= -20.0)
 			frame.origin.y--;// -= 0.95;
 		
-		if (_scrollOffset > scrollView.contentOffset.y && _activeListViewController.view.frame.origin.y <= 10.0)
+		if (_scrollOffset > scrollView.contentOffset.y && _activeListViewController.view.frame.origin.y <= 30.0)
 			frame.origin.y++;// += 0.95;
 		
 		_scrollOffset = scrollView.contentOffset.y;
 		
 		_activeListViewController.view.frame = frame;
 	}
+	*/
+	
+	if (_scrollView.contentOffset.y > 0 && _scrollView.contentOffset.y < 55)
+		_activeListViewController.view.frame = CGRectMake(0.0, -_scrollView.contentOffset.y, self.view.frame.size.width, 138.0);
+	
+	if (_scrollView.contentOffset.y > 55)
+		_activeListViewController.view.frame = CGRectMake(0.0, -55.0, self.view.frame.size.width, 138.0);
+	
+	if (_scrollView.contentOffset.y < 0)
+		_activeListViewController.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, 138.0);
+	
+	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
 }
 
 
@@ -293,9 +313,9 @@
 	 */
 }
 
-
 // called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
--(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {	
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 
@@ -320,6 +340,42 @@
 // called when scroll view grinds to a halt
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
 	//int page = _scrollView.contentOffset.x / 320;	
+}
+
+
+
+- (void)reloadTableViewDataSource{
+	
+	//  should be calling your tableviews data source model to reload
+	//  put here just for demo
+	_isReloading = YES;
+	
+}
+
+- (void)doneLoadingTableViewData{
+	
+	//  model should call this when its done loading
+	_isReloading = NO;
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_scrollView];
+	
+}
+
+
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+-(void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+	
+	//[self reloadTableViewDataSource];
+	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+	
+}
+
+-(BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+	return (_isReloading); // should return if data source model is reloading
+}
+
+-(NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	return [NSDate date]; // should return date data source was last changed
 }
 
 @end

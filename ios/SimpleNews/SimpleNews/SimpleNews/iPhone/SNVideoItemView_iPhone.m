@@ -26,19 +26,21 @@
 		_imageView.clipsToBounds = YES;
 		[self addSubview:_imageView];
 		
-		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 105, self.frame.size.width, 30)];
-		_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:30.0];
+		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 100, self.frame.size.width - 35, 22)];
+		_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18.0];
 		_titleLabel.backgroundColor = [UIColor clearColor];
 		_titleLabel.textColor = [UIColor whiteColor];
+		_titleLabel.lineBreakMode = UILineBreakModeTailTruncation;
 		_titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
 		_titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 		_titleLabel.text = _vo.video_title;
 		[self addSubview:_titleLabel];
 		
-		_infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 130, self.frame.size.width, 20)];
-		_infoLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14.0];
+		_infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 122, self.frame.size.width - 35, 16)];
+		_infoLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
 		_infoLabel.backgroundColor = [UIColor clearColor];
 		_infoLabel.textColor = [UIColor whiteColor];
+		_infoLabel.lineBreakMode = UILineBreakModeTailTruncation;
 		_infoLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
 		_infoLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 		_infoLabel.text = _vo.video_info;
@@ -46,7 +48,7 @@
 		
 		UIView *lineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 149.0, self.frame.size.width, 1.0)] autorelease];
 		[lineView setBackgroundColor:[UIColor whiteColor]];
-		[self addSubview:lineView];
+		//[self addSubview:lineView];
 	}
 	
 	return (self);

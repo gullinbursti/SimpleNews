@@ -13,7 +13,9 @@
 #import "SNCategoryListView_iPhone.h"
 #import "SNVideoSearchView_iPhone.h"
 
-@interface SNVideoListViewController_iPhone : UIViewController <UIScrollViewDelegate, UIGestureRecognizerDelegate> {
+#import "EGORefreshTableHeaderView.h"
+
+@interface SNVideoListViewController_iPhone : UIViewController <EGORefreshTableHeaderDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate> {
 	UIUserInterfaceIdiom _userInterfaceIdiom;
 	
 	UIView *_holderView;
@@ -25,12 +27,14 @@
 	
 	BOOL _isSwiped;
 	SNCategoryListView_iPhone *_categoryListView;
-	
 	SNVideoSearchView_iPhone *_videoSearchView;
+	
+	EGORefreshTableHeaderView *_refreshHeaderView;
 	
 	CGPoint _offsetPt;
 	
 	float _scrollOffset;
+	BOOL _isReloading;
 }
 
 -(id)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;

@@ -9,6 +9,7 @@
 #import "SNSplashViewController_iPhone.h"
 
 #import "SNVideoListViewController_iPhone.h"
+#import "SNAppDelegate.h"
 
 @implementation SNSplashViewController_iPhone
 
@@ -28,15 +29,44 @@
 -(void)loadView {
 	[super loadView];
 	
+	_holderView = [[UIView alloc] initWithFrame:self.view.frame];
+	[self.view addSubview:_holderView];
+	
+	_progressView = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
+	_progressView.frame = CGRectMake(277, 20, 28, 28);
+	[(UIActivityIndicatorView *)_progressView startAnimating];
+	[self.view addSubview:_progressView];
+	
+	_logoView = [[UIView alloc] initWithFrame:CGRectMake(27, 374, 56, 56)];
+	[_logoView setBackgroundColor:[UIColor blueColor]];
+	[self.view addSubview:_logoView];
+	
+	UILabel *logoCharLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, -4, 56, 56)] autorelease];
+	logoCharLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:40.0];
+	logoCharLabel.backgroundColor = [UIColor clearColor];
+	logoCharLabel.textColor = [UIColor blackColor];
+	logoCharLabel.textAlignment = UITextAlignmentCenter;
+	logoCharLabel.text = @"a";
+	[_logoView addSubview:logoCharLabel];
+	
+	UILabel *logoNameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(27, 442, 200, 20)] autorelease];
+	logoNameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16.0];
+	logoNameLabel.backgroundColor = [UIColor clearColor];
+	logoNameLabel.textColor = [UIColor whiteColor];
+	logoCharLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+	logoCharLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+	logoNameLabel.text = @"news network";
+	[self.view addSubview:logoNameLabel];
+	
 	_introImageView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	_introImageView.image = [UIImage imageNamed:[_photoSlides objectAtIndex:[_photoSlides count] - 1]];
 	_introImageView.alpha = 0.0;
-	[self.view addSubview:_introImageView];
+	[_holderView addSubview:_introImageView];
 	
 	_outroImageView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	_outroImageView.image = [UIImage imageNamed:[_photoSlides objectAtIndex:_timerCount]];
 	_outroImageView.alpha = 0.0;
-	[self.view addSubview:_outroImageView];
+	[_holderView addSubview:_outroImageView];
 	
 	_timerCount = [_photoSlides count] - 1;
 	_timer = [NSTimer scheduledTimerWithTimeInterval:2.5 target:self selector:@selector(_timerTick) userInfo:nil repeats:YES];
@@ -57,7 +87,7 @@
 	_introImageView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	_introImageView.image = [UIImage imageNamed:[_photoSlides objectAtIndex:_timerCount]];
 	_introImageView.alpha = 0.0;
-	[self.view addSubview:_introImageView];
+	[_holderView addSubview:_introImageView];
 	
 	[UIView animateWithDuration:0.85 animations:^(void) {
 		_introImageView.alpha = 1.0;
@@ -66,7 +96,7 @@
 		
 		_outroImageView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 		_outroImageView.image = [UIImage imageNamed:[_photoSlides objectAtIndex:_timerCount]];
-		[self.view addSubview:_outroImageView];
+		[_holderView addSubview:_outroImageView];
 		
 		_timerCount--;
 		

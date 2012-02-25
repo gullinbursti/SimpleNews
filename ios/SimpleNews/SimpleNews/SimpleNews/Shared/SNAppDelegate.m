@@ -36,7 +36,7 @@
 
 
 +(UIFont *)snHelveticaNeueFontRegular {
-	return [UIFont fontWithName:@"HelveticaNeue-Roman" size:14.0];
+	return [UIFont fontWithName:@"HelveticaNeue" size:14.0];
 }
 
 +(UIFont *)snHelveticaNeueFontBold {

@@ -9,7 +9,11 @@
 #import <UIKit/UIKit.h>
 
 @interface SNVideoSearchView_iPhone : UIView <UITextFieldDelegate> {
+	
+	UIImageView *_cursorImgView;
+	
 	UITextField *_txtField;
+	UILabel *_txtLabel;
 }
 
 -(void)showMe;

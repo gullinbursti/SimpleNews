@@ -20,7 +20,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_searchEntered:) name:@"SEARCH_ENTERED" object:nil];
 		
 		_items = [[NSMutableArray alloc] init];
-		self.view.frame = CGRectMake(0.0, -30.0, self.view.frame.size.width, 100);
+		self.view.frame = CGRectMake(0.0, -55.0, self.view.frame.size.width, 138);
 	}
 	
 	return (self);
@@ -40,14 +40,15 @@
 	[super loadView];
 	//self.view.alpha = 0.67;
 	
-	_videoSearchView = [[SNVideoSearchView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 30.0)];
+	_videoSearchView = [[SNVideoSearchView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 55.0)];
 	[self.view addSubview:_videoSearchView];
 	
-	_imgView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 30.0, self.view.frame.size.width, 70.0)];
-	[_imgView setBackgroundColor:[UIColor blueColor]];
+	_imgView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 55.0, self.view.frame.size.width, 83.0)];
+	_imgView.imageURL = [NSURL URLWithString:@"http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-02.jpg"];
+	//[_imgView setBackgroundColor:[UIColor blueColor]];
 	[self.view addSubview:_imgView];
 	
-	_progressBar = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 8.0)];
+	_progressBar = [[UIView alloc] initWithFrame:CGRectMake(0.0, 55.0, 0.0, 8.0)];
 	[_progressBar setBackgroundColor:[UIColor greenColor]];
 	_progressBar.clipsToBounds = YES;
 	[self.view addSubview:_progressBar];
@@ -86,7 +87,7 @@
 
 -(void)_searchEntered:(NSNotification *)notification {
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		self.view.frame = CGRectMake(0.0, -30.0, self.view.frame.size.width, 100);
+		self.view.frame = CGRectMake(0.0, -55.0, self.view.frame.size.width, 138);
 	}];
 }
 
