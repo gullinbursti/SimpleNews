@@ -13,13 +13,14 @@
 #import "SNVideoSearchView_iPhone.h"
 #import "EGOImageView.h"
 
-@interface SNActiveListViewController_iPhone : UIViewController <UIGestureRecognizerDelegate> {
+@interface SNActiveListViewController_iPhone : UIViewController <UIGestureRecognizerDelegate, UIWebViewDelegate> {
 	NSMutableArray *_items;
 	
 	UIView *_progressBar;
 	
 	SNVideoSearchView_iPhone *_videoSearchView;
 	EGOImageView *_imgView;
+	UIWebView *_webView;
 }
 
 @end

@@ -11,7 +11,7 @@
 #import "SNVideoItemVO.h"
 #import "EGOImageView.h"
 
-@interface SNVideoItemView_iPhone : UIView {
+@interface SNVideoItemView_iPhone : UIView <UIGestureRecognizerDelegate> {
 	EGOImageView *_imageView;
 	UILabel *_titleLabel;
 	UILabel *_infoLabel;

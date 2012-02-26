@@ -14,6 +14,8 @@
 	
 	NSTimer *_timer;
 	BOOL _isFinished;
+	
+	UIWebView *_webView;
 }
 
 -(void)togglePlayback:(BOOL)isPlaying;

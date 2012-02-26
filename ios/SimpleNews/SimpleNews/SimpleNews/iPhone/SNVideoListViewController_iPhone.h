@@ -12,6 +12,7 @@
 #import "SNActiveListViewController_iPhone.h"
 #import "SNCategoryListView_iPhone.h"
 #import "SNVideoSearchView_iPhone.h"
+#import "SNVideoItemView_iPhone.h"
 
 #import "EGORefreshTableHeaderView.h"
 
@@ -28,13 +29,16 @@
 	BOOL _isSwiped;
 	SNCategoryListView_iPhone *_categoryListView;
 	SNVideoSearchView_iPhone *_videoSearchView;
+	SNVideoItemView_iPhone *_queuedItemView;
 	
 	EGORefreshTableHeaderView *_refreshHeaderView;
 	
 	CGPoint _offsetPt;
+	CGPoint _swipePt;
 	
 	float _scrollOffset;
 	BOOL _isReloading;
+	BOOL _isQueued;
 }
 
 -(id)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;

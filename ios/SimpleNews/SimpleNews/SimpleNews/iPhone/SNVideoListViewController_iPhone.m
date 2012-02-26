@@ -57,6 +57,7 @@
 		_videoItems = [NSMutableArray new];
 		_itemViews = [NSMutableArray new];
 		_isSwiped = NO;
+		_isQueued = NO;
 		_scrollOffset = 0;
 		
 		//NSLog(@"USER INTERFACE:[%d]", _userInterfaceIdiom); 0 == iPhone // 1 == iPad
@@ -195,10 +196,56 @@
 
 -(void)_goSwipe:(id)sender {
 	
-	if (!_isSwiped) {
-		CGPoint translatedPoint = [(UIPanGestureRecognizer*)sender translationInView:self.view];
+	CGPoint translatedPoint = [(UIPanGestureRecognizer*)sender translationInView:self.view];
+	
+	if (!_isQueued) {
+		if (translatedPoint.x > 10 && abs(translatedPoint.y) < 16.0) {
+			//_isSwiped = YES;
+			if([(UIPanGestureRecognizer*)sender state] == UIGestureRecognizerStateBegan) {
+				//_swipePt = [(UIPanGestureRecognizer*)sender translationInView:_holderView];
+				_swipePt = [(UIPanGestureRecognizer*)sender locationInView:_holderView];
+				
+				NSLog(@"SWIPE @:[%f] (%f)", _scrollView.contentOffset.y, _swipePt.y);
+				_swipePt.y = (_scrollView.contentOffset.y + _swipePt.y);
+				
+				int ind = 0;
+				for (SNVideoItemView_iPhone *view in _itemViews) {
+					if (CGRectContainsPoint(view.frame, _swipePt)) {
+						SNVideoItemVO *vo = (SNVideoItemVO *)[_videoItems objectAtIndex:ind];
+						_isQueued = YES;
+						NSLog(@"FOUND TOUCH IN:(%@)", vo.video_title);
+						
+						_queuedItemView = view;
+						[UIView animateWithDuration:0.25 animations:^(void) {
+							CGRect frame = view.frame;
+							frame.origin.x = 64.0;
+							view.frame = frame;
+						}];
+					}
+					
+					ind++;
+				}
+			}
+		}
 		
+	} else {
 		if (translatedPoint.x < -10 && abs(translatedPoint.y) < 10.0) {
+			[UIView animateWithDuration:0.25 animations:^(void) {
+				CGRect frame = _queuedItemView.frame;
+				frame.origin.x = 0.0;
+				_queuedItemView.frame = frame;
+			
+			} completion:^(BOOL finished) {
+				_queuedItemView = nil;
+				_isQueued = NO;
+			}];
+		}
+	}
+	
+	
+	
+	if (!_isSwiped && !_isQueued) {
+		if (translatedPoint.x < -80 && abs(translatedPoint.y) < 15.0) {
 			_isSwiped = YES;
 			
 			[UIView animateWithDuration:0.33 animations:^(void) {
@@ -263,9 +310,9 @@
 // any offset changes
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	//_iphoneVideoView.frame = CGRectMake(0.0, -scrollView.contentOffset.y, scrollView.bounds.size.width, 150.0);
-	CGRect frame = _activeListViewController.view.frame;
+	//CGRect frame = _activeListViewController.view.frame;
 	
-	NSLog(@"%f][%f", scrollView.contentOffset.y, _activeListViewController.view.frame.origin.y);
+	//NSLog(@"%f][%f", scrollView.contentOffset.y, _activeListViewController.view.frame.origin.y);
 	
 	/*
 	if (scrollView.contentOffset.y > -48 && scrollView.contentOffset.y < 150) {

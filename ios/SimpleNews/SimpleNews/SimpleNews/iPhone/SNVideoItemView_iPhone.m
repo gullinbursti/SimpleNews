@@ -49,6 +49,13 @@
 		UIView *lineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 149.0, self.frame.size.width, 1.0)] autorelease];
 		[lineView setBackgroundColor:[UIColor whiteColor]];
 		//[self addSubview:lineView];
+		
+		
+//		UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)];
+//		[panRecognizer setMinimumNumberOfTouches:1];
+//		[panRecognizer setMaximumNumberOfTouches:1];
+//		[panRecognizer setDelegate:self];
+//		[self addGestureRecognizer:panRecognizer];
 	}
 	
 	return (self);
