@@ -19,7 +19,8 @@
 	UIView *_progressBar;
 	
 	SNVideoSearchView_iPhone *_videoSearchView;
-	EGOImageView *_imgView;
+	EGOImageView *_currImgView;
+	EGOImageView *_nextImgView;
 	UIWebView *_webView;
 }
 

@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C48967714FB415E00C55125 /* airPlayIconButton_active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967314FB415E00C55125 /* airPlayIconButton_active.png */; };
+		4C48967814FB415E00C55125 /* airPlayIconButton_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967414FB415E00C55125 /* airPlayIconButton_active@2x.png */; };
+		4C48967914FB415E00C55125 /* airPlayIconButton_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967514FB415E00C55125 /* airPlayIconButton_nonActive.png */; };
+		4C48967A14FB415E00C55125 /* airPlayIconButton_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967614FB415E00C55125 /* airPlayIconButton_nonActive@2x.png */; };
+		4C48967D14FB470D00C55125 /* SNAirplayListView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C48967C14FB470D00C55125 /* SNAirplayListView_iPhone.m */; };
+		4C48967F14FB4E6800C55125 /* devices.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967E14FB4E6800C55125 /* devices.plist */; };
+		4C48968214FB4F0000C55125 /* SNDeviceVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C48968114FB4F0000C55125 /* SNDeviceVO.m */; };
+		4C48968514FB4FAE00C55125 /* SNDeviceItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C48968414FB4FAD00C55125 /* SNDeviceItemView_iPhone.m */; };
+		4C48968714FB755F00C55125 /* plugins.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C48968614FB755F00C55125 /* plugins.plist */; };
+		4C48968A14FB75B700C55125 /* SNPluginVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C48968914FB75B700C55125 /* SNPluginVO.m */; };
+		4C48968D14FB76DC00C55125 /* SNBaseListItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C48968C14FB76DA00C55125 /* SNBaseListItemView_iPhone.m */; };
+		4C48969014FB7AFF00C55125 /* SNPluginItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C48968F14FB7AFE00C55125 /* SNPluginItemView_iPhone.m */; };
 		4CB2289A14F3529600F5618D /* HelveticaNeueLTStd-Bd.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4CB2289714F3529600F5618D /* HelveticaNeueLTStd-Bd.otf */; };
 		4CB2289B14F3529600F5618D /* HelveticaNeueLTStd-Md.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4CB2289814F3529600F5618D /* HelveticaNeueLTStd-Md.otf */; };
 		4CB2289C14F3529600F5618D /* HelveticaNeueLTStd-Roman.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4CB2289914F3529600F5618D /* HelveticaNeueLTStd-Roman.otf */; };
@@ -79,6 +91,24 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4C48967314FB415E00C55125 /* airPlayIconButton_active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = airPlayIconButton_active.png; sourceTree = "<group>"; };
+		4C48967414FB415E00C55125 /* airPlayIconButton_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "airPlayIconButton_active@2x.png"; sourceTree = "<group>"; };
+		4C48967514FB415E00C55125 /* airPlayIconButton_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = airPlayIconButton_nonActive.png; sourceTree = "<group>"; };
+		4C48967614FB415E00C55125 /* airPlayIconButton_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "airPlayIconButton_nonActive@2x.png"; sourceTree = "<group>"; };
+		4C48967B14FB470D00C55125 /* SNAirplayListView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNAirplayListView_iPhone.h; sourceTree = "<group>"; };
+		4C48967C14FB470D00C55125 /* SNAirplayListView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNAirplayListView_iPhone.m; sourceTree = "<group>"; };
+		4C48967E14FB4E6800C55125 /* devices.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = devices.plist; sourceTree = "<group>"; };
+		4C48968014FB4F0000C55125 /* SNDeviceVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNDeviceVO.h; sourceTree = "<group>"; };
+		4C48968114FB4F0000C55125 /* SNDeviceVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNDeviceVO.m; sourceTree = "<group>"; };
+		4C48968314FB4FAD00C55125 /* SNDeviceItemView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNDeviceItemView_iPhone.h; sourceTree = "<group>"; };
+		4C48968414FB4FAD00C55125 /* SNDeviceItemView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNDeviceItemView_iPhone.m; sourceTree = "<group>"; };
+		4C48968614FB755F00C55125 /* plugins.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = plugins.plist; sourceTree = "<group>"; };
+		4C48968814FB75B700C55125 /* SNPluginVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPluginVO.h; sourceTree = "<group>"; };
+		4C48968914FB75B700C55125 /* SNPluginVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPluginVO.m; sourceTree = "<group>"; };
+		4C48968B14FB76DA00C55125 /* SNBaseListItemView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNBaseListItemView_iPhone.h; sourceTree = "<group>"; };
+		4C48968C14FB76DA00C55125 /* SNBaseListItemView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNBaseListItemView_iPhone.m; sourceTree = "<group>"; };
+		4C48968E14FB7AFE00C55125 /* SNPluginItemView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPluginItemView_iPhone.h; sourceTree = "<group>"; };
+		4C48968F14FB7AFE00C55125 /* SNPluginItemView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPluginItemView_iPhone.m; sourceTree = "<group>"; };
 		4CB2289714F3529600F5618D /* HelveticaNeueLTStd-Bd.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeueLTStd-Bd.otf"; sourceTree = "<group>"; };
 		4CB2289814F3529600F5618D /* HelveticaNeueLTStd-Md.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeueLTStd-Md.otf"; sourceTree = "<group>"; };
 		4CB2289914F3529600F5618D /* HelveticaNeueLTStd-Roman.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeueLTStd-Roman.otf"; sourceTree = "<group>"; };
@@ -215,6 +245,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C48967114FB406C00C55125 /* Buttons */ = {
+			isa = PBXGroup;
+			children = (
+				4C48967314FB415E00C55125 /* airPlayIconButton_active.png */,
+				4C48967414FB415E00C55125 /* airPlayIconButton_active@2x.png */,
+				4C48967514FB415E00C55125 /* airPlayIconButton_nonActive.png */,
+				4C48967614FB415E00C55125 /* airPlayIconButton_nonActive@2x.png */,
+			);
+			name = Buttons;
+			sourceTree = "<group>";
+		};
 		4CB2289514F3528400F5618D /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -369,6 +410,8 @@
 		4CDC8C1214F2D07000D42EA5 /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
+				4C48968B14FB76DA00C55125 /* SNBaseListItemView_iPhone.h */,
+				4C48968C14FB76DA00C55125 /* SNBaseListItemView_iPhone.m */,
 				4CB7764114F349080064E7C9 /* SNViewController_iPhone.h */,
 				4CB7764214F349090064E7C9 /* SNViewController_iPhone.m */,
 				4CB228D714F485B700F5618D /* SNSplashViewController_iPhone.h */,
@@ -383,8 +426,14 @@
 				4CB228A514F36DA100F5618D /* SNActiveListViewController_iPhone.m */,
 				4CB228B414F430FD00F5618D /* SNCategoryItemView_iPhone.h */,
 				4CB228B514F430FE00F5618D /* SNCategoryItemView_iPhone.m */,
+				4C48968E14FB7AFE00C55125 /* SNPluginItemView_iPhone.h */,
+				4C48968F14FB7AFE00C55125 /* SNPluginItemView_iPhone.m */,
 				4CB228B114F39DFA00F5618D /* SNCategoryListView_iPhone.h */,
 				4CB228B214F39DFA00F5618D /* SNCategoryListView_iPhone.m */,
+				4C48968314FB4FAD00C55125 /* SNDeviceItemView_iPhone.h */,
+				4C48968414FB4FAD00C55125 /* SNDeviceItemView_iPhone.m */,
+				4C48967B14FB470D00C55125 /* SNAirplayListView_iPhone.h */,
+				4C48967C14FB470D00C55125 /* SNAirplayListView_iPhone.m */,
 			);
 			name = iPhone;
 			path = SimpleNews/iPhone;
@@ -501,6 +550,7 @@
 		4CDC8C8214F2DAF700D42EA5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4C48967114FB406C00C55125 /* Buttons */,
 				4CB228DA14F4861E00F5618D /* Splash Images */,
 				4CB228BB14F4437500F5618D /* Elements */,
 				4CB2289514F3528400F5618D /* Fonts */,
@@ -513,6 +563,8 @@
 		4CDC8C8314F2DB1000D42EA5 /* Testing */ = {
 			isa = PBXGroup;
 			children = (
+				4C48968614FB755F00C55125 /* plugins.plist */,
+				4C48967E14FB4E6800C55125 /* devices.plist */,
 				4CB228C314F446E500F5618D /* categories.plist */,
 				4CDC8C8414F2DB4000D42EA5 /* video_items.plist */,
 				4CDC8C8914F2E3E000D42EA5 /* Jurassic Park - Dodson & Nedry.mp4 */,
@@ -527,6 +579,10 @@
 				4CE1212414F2FDDE0024171A /* SNVideoItemVO.m */,
 				4CB228C014F4456A00F5618D /* SNCategoryItemVO.h */,
 				4CB228C114F4456A00F5618D /* SNCategoryItemVO.m */,
+				4C48968014FB4F0000C55125 /* SNDeviceVO.h */,
+				4C48968114FB4F0000C55125 /* SNDeviceVO.m */,
+				4C48968814FB75B700C55125 /* SNPluginVO.h */,
+				4C48968914FB75B700C55125 /* SNPluginVO.m */,
 			);
 			name = VO;
 			path = SimpleNews/VO;
@@ -604,6 +660,12 @@
 				4CB228FA14F4872800F5618D /* loader_Image03_Sports-iPhone@2x.jpg in Resources */,
 				4CB2294214F8D8BA00F5618D /* cursorBlink.png in Resources */,
 				4CB2294314F8D8BA00F5618D /* cursorBlink@2x.png in Resources */,
+				4C48967714FB415E00C55125 /* airPlayIconButton_active.png in Resources */,
+				4C48967814FB415E00C55125 /* airPlayIconButton_active@2x.png in Resources */,
+				4C48967914FB415E00C55125 /* airPlayIconButton_nonActive.png in Resources */,
+				4C48967A14FB415E00C55125 /* airPlayIconButton_nonActive@2x.png in Resources */,
+				4C48967F14FB4E6800C55125 /* devices.plist in Resources */,
+				4C48968714FB755F00C55125 /* plugins.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -646,6 +708,12 @@
 				4CB2291C14F60E1100F5618D /* SNVideoSearchView_iPhone.m in Sources */,
 				4CB2293014F7013400F5618D /* TableViewPullAppDelegate.m in Sources */,
 				4CB2293414F7017D00F5618D /* EGORefreshTableHeaderView.m in Sources */,
+				4C48967D14FB470D00C55125 /* SNAirplayListView_iPhone.m in Sources */,
+				4C48968214FB4F0000C55125 /* SNDeviceVO.m in Sources */,
+				4C48968514FB4FAE00C55125 /* SNDeviceItemView_iPhone.m in Sources */,
+				4C48968A14FB75B700C55125 /* SNPluginVO.m in Sources */,
+				4C48968D14FB76DC00C55125 /* SNBaseListItemView_iPhone.m in Sources */,
+				4C48969014FB7AFF00C55125 /* SNPluginItemView_iPhone.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

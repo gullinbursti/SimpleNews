@@ -14,9 +14,6 @@
 
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_searchPulled:) name:@"SEARCH_PULLED" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_searchPushed:) name:@"SEARCH_PUSHED" object:nil];
-		
 		[self setBackgroundColor:[UIColor blackColor]];
 		
 		_cursorImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 5, 5, 43)] autorelease];
@@ -65,16 +62,6 @@
 	
 	[sender resignFirstResponder];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SEARCH_ENTERED" object:nil];
-}
-
-
-#pragma mark - Notifications
--(void)_searchPulled:(NSNotification *)notifcation {
-	[_txtField becomeFirstResponder];
-}
-
--(void)_searchPushed:(NSNotification *)notification {
-	[_txtField resignFirstResponder];
 }
 
 

@@ -11,6 +11,7 @@
 
 #import "SNActiveListViewController_iPhone.h"
 #import "SNCategoryListView_iPhone.h"
+#import "SNAirplayListView_iPhone.h"
 #import "SNVideoSearchView_iPhone.h"
 #import "SNVideoItemView_iPhone.h"
 
@@ -21,6 +22,7 @@
 	
 	UIView *_holderView;
 	UIScrollView *_scrollView;
+	UIButton *_airplayButton;
 	SNActiveListViewController_iPhone *_activeListViewController;
 	
 	NSMutableArray *_videoItems;
@@ -28,7 +30,7 @@
 	
 	BOOL _isSwiped;
 	SNCategoryListView_iPhone *_categoryListView;
-	SNVideoSearchView_iPhone *_videoSearchView;
+	SNAirplayListView_iPhone *_airplayListView;
 	SNVideoItemView_iPhone *_queuedItemView;
 	
 	EGORefreshTableHeaderView *_refreshHeaderView;
@@ -39,6 +41,7 @@
 	float _scrollOffset;
 	BOOL _isReloading;
 	BOOL _isQueued;
+	BOOL _isFirstScrolled;
 }
 
 -(id)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;

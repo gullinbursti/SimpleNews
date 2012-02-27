@@ -10,6 +10,9 @@
 
 #import "SNCategoryItemView_iPhone.h"
 
+#import "SNPluginVO.h"
+#import "SNPluginItemView_iPhone.h"
+
 
 @implementation SNCategoryListView_iPhone
 
@@ -20,11 +23,17 @@
 		_allItemVOs = [[NSMutableArray alloc] init];
 		_activeItemVOs = [[NSMutableArray alloc] init];
 		
+		_pluginViews = [[NSMutableArray alloc] init];
+		_pluginVOs = [[NSMutableArray alloc] init];
+		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_categorySelected:) name:@"CATEGORY_SELECTED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_categoryDeselected:) name:@"CATEGORY_DESELECTED" object:nil];
 		
 		NSString *testCategoriesPath = [[NSBundle mainBundle] pathForResource:@"categories" ofType:@"plist"];
-		NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:testCategoriesPath] options:NSPropertyListImmutable format:nil error:nil];
+		NSDictionary *categoriesPlist = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:testCategoriesPath] options:NSPropertyListImmutable format:nil error:nil];
+		
+		NSString *testPluginsPath = [[NSBundle mainBundle] pathForResource:@"plugins" ofType:@"plist"];
+		NSDictionary *pluginsPlist = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:testPluginsPath] options:NSPropertyListImmutable format:nil error:nil];
 		
 		[self setBackgroundColor:[UIColor blackColor]];
 		
@@ -40,7 +49,7 @@
 		[self addSubview:_scrollView];
 		
 		int cnt = 0;
-		for (NSDictionary *testCategory in plist) {
+		for (NSDictionary *testCategory in categoriesPlist) {
 			SNCategoryItemVO *vo = [SNCategoryItemVO categoryItemWithDictionary:testCategory];
 			SNCategoryItemView_iPhone *itemView = [[[SNCategoryItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, cnt * 64, frame.size.width, 64) withVO:vo] autorelease];
 			
@@ -55,7 +64,18 @@
 			cnt++;
 		}
 		
-		_scrollView.contentSize = CGSizeMake(frame.size.width, [_allItemVOs count] * 64);
+		
+		for (NSDictionary *testPlugin in pluginsPlist) {
+			SNPluginVO *vo = [SNPluginVO pluginWithDictionary:testPlugin];
+			SNPluginItemView_iPhone *itemView = [[[SNPluginItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, cnt * 64, frame.size.width, 64) withVO:vo] autorelease];
+			
+			[_pluginViews addObject:itemView];
+			[_pluginVOs addObject:vo];
+			[_scrollView addSubview:itemView];
+			cnt++;
+		}
+		
+		_scrollView.contentSize = CGSizeMake(frame.size.width, cnt * 64);
 		
 		UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)];
 		[panRecognizer setMinimumNumberOfTouches:1];

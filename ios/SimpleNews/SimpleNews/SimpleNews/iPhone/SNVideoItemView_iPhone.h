@@ -17,6 +17,8 @@
 	UILabel *_infoLabel;
 	
 	SNVideoItemVO *_vo;
+	
+	UIButton *_queueButton;
 }
 
 -(id)initWithFrame:(CGRect)frame videoItemVO:(SNVideoItemVO *)vo;

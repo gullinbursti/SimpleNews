@@ -9,14 +9,10 @@
 #import <UIKit/UIKit.h>
 
 #import "SNCategoryItemVO.h"
+#import "SNBaseListItemView_iPhone.h"
 
-@interface SNCategoryItemView_iPhone : UIView {
+@interface SNCategoryItemView_iPhone : SNBaseListItemView_iPhone {
 	SNCategoryItemVO *_vo;
-	
-	UILabel *_titleLabel;
-	UIImageView *_checkImageView;
-	
-	BOOL _isSelected;
 }
 
 -(id)initWithFrame:(CGRect)frame withVO:(SNCategoryItemVO *)vo;

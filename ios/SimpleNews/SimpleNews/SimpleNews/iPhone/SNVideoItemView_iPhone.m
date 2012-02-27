@@ -20,6 +20,12 @@
 		
 		[self setBackgroundColor:[UIColor blackColor]];
 		
+		UIButton *toggleButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		toggleButton.frame = CGRectMake(-48.0, 15.0, 32.0, 120.0);
+		[toggleButton setBackgroundColor:[UIColor purpleColor]];
+		[toggleButton addTarget:self action:@selector(_goQueue) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:toggleButton];
+		
 		_imageView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 150.0)];
 		_imageView.imageURL = [NSURL URLWithString:_vo.image_url];
 		_imageView.alpha = 0.33;

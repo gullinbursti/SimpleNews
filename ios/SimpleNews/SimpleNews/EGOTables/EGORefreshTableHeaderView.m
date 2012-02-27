@@ -37,7 +37,7 @@
 
 @implementation EGORefreshTableHeaderView
 
-@synthesize delegate=_delegate;
+@synthesize delegate = _delegate;
 
 
 - (id)initWithFrame:(CGRect)frame arrowImageName:(NSString *)arrow textColor:(UIColor *)textColor  {
@@ -55,7 +55,7 @@
 		label.backgroundColor = [UIColor clearColor];
 		label.textAlignment = UITextAlignmentCenter;
 		[self addSubview:label];
-		_lastUpdatedLabel=label;
+		_lastUpdatedLabel = label;
 		[label release];
 		
 		label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 48.0f, self.frame.size.width, 20.0f)];
@@ -67,7 +67,7 @@
 		label.backgroundColor = [UIColor clearColor];
 		label.textAlignment = UITextAlignmentCenter;
 		[self addSubview:label];
-		_statusLabel=label;
+		_statusLabel = label;
 		[label release];
 		
 		CALayer *layer = [CALayer layer];
@@ -82,7 +82,7 @@
 #endif
 		
 		[[self layer] addSublayer:layer];
-		_arrowImage=layer;
+		_arrowImage = layer;
 		
 		UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 		view.frame = CGRectMake(25.0f, frame.size.height - 38.0f, 20.0f, 20.0f);
@@ -122,11 +122,8 @@
 		[[NSUserDefaults standardUserDefaults] synchronize];
 		
 	} else {
-		
 		_lastUpdatedLabel.text = nil;
-		
 	}
-
 }
 
 - (void)setState:(EGOPullRefreshState)aState{

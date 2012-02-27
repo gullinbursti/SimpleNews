@@ -13,6 +13,8 @@
 	NSMutableArray *_allViews;
 	NSMutableArray *_allItemVOs;
 	NSMutableArray *_activeItemVOs;
+	NSMutableArray *_pluginViews;
+	NSMutableArray *_pluginVOs;
 	
 	UIScrollView *_scrollView;
 }

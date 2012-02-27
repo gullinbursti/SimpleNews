@@ -21,6 +21,7 @@
 		
 		_items = [[NSMutableArray alloc] init];
 		self.view.frame = CGRectMake(0.0, -55.0, self.view.frame.size.width, 138);
+		self.view.clipsToBounds = YES;
 	}
 	
 	return (self);
@@ -40,13 +41,17 @@
 	[super loadView];
 	//self.view.alpha = 0.67;
 	
+	_currImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 55.0, self.view.frame.size.width, 83.0)];
+	_currImgView.imageURL = [NSURL URLWithString:@"http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-02.jpg"];
+	
+	_nextImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 138.0, self.view.frame.size.width, 83.0)];
+	_nextImgView.imageURL = [NSURL URLWithString:@"http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-02.jpg"];
+	
+	[self.view addSubview:_currImgView];
+	[self.view addSubview:_nextImgView];
+	
 	_videoSearchView = [[SNVideoSearchView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 55.0)];
 	[self.view addSubview:_videoSearchView];
-	
-	_imgView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 55.0, self.view.frame.size.width, 83.0)];
-	_imgView.imageURL = [NSURL URLWithString:@"http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-02.jpg"];
-	//[_imgView setBackgroundColor:[UIColor blueColor]];
-	[self.view addSubview:_imgView];
 	
 	// YT
 	//NSString *videoID = @"NGC_EzojK6E";
@@ -77,10 +82,10 @@
 	_progressBar.clipsToBounds = YES;
 	[self.view addSubview:_progressBar];
 	
-	UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goPan:)];
-	[panRecognizer setMinimumNumberOfTouches:1];
-	[panRecognizer setMaximumNumberOfTouches:1];
-	[panRecognizer setDelegate:self];
+	//UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goPan:)];
+	//[panRecognizer setMinimumNumberOfTouches:1];
+	//[panRecognizer setMaximumNumberOfTouches:1];
+	//[panRecognizer setDelegate:self];
 	//[self.view addGestureRecognizer:panRecognizer];
 }
 
@@ -104,7 +109,28 @@
 #pragma mark - Notification handlers
 -(void)_itemTapped:(NSNotification *)notification {
 	SNVideoItemVO *vo = (SNVideoItemVO *)[notification object];
-	_imgView.imageURL = [NSURL URLWithString:vo.image_url];
+	
+	_nextImgView.imageURL = [NSURL URLWithString:vo.image_url];
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		CGRect currImgFrame = _currImgView.frame;
+		currImgFrame.origin.y = 28;
+		_currImgView.frame = currImgFrame;
+		
+		CGRect nextImgFrame = _nextImgView.frame;
+		nextImgFrame.origin.y = 55;
+		_nextImgView.frame = nextImgFrame;
+		
+	} completion:^(BOOL finished) {
+		_currImgView.imageURL = [NSURL URLWithString:vo.image_url];
+		CGRect currFrame = _currImgView.frame;
+		currFrame.origin.y = 55;
+		_currImgView.frame = currFrame;
+		
+		CGRect nextFrame = _nextImgView.frame;
+		nextFrame.origin.y = 138;
+		_nextImgView.frame = nextFrame;
+	}];
 }
 
 
