@@ -10,6 +10,10 @@
 
 #import "SNAppDelegate.h"
 
+@interface SNVideoSearchView_iPhone()
+-(void)_clearText;
+@end
+
 @implementation SNVideoSearchView_iPhone
 
 -(id)initWithFrame:(CGRect)frame {
@@ -45,13 +49,9 @@
 	return (self);
 }
 
-
--(void)showMe {
-	[_txtField becomeFirstResponder];
-}
-
--(void)hideMe {
-	[_txtField resignFirstResponder];
+-(void)_clearText {
+	_txtField.text = @"";
+	_txtLabel.hidden = NO;
 }
 
 
@@ -61,7 +61,8 @@
 		_txtLabel.hidden = NO;
 	
 	[sender resignFirstResponder];
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SEARCH_ENTERED" object:nil];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SEARCH_ENTERED" object:_txtField.text];
+	[self performSelector:@selector(_clearText) withObject:nil afterDelay:3.5];
 }
 
 
@@ -75,13 +76,7 @@
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
 	_txtLabel.hidden = YES;
-}
-
--(void)textFieldDidEndEditing:(UITextField *)textField {	
-	if ([textField.text length] == 0)
-		_txtLabel.hidden = NO;
-	
-	[textField resignFirstResponder];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"CANCEL_RESET" object:nil];
 }
 
 @end

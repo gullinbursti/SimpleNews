@@ -28,7 +28,7 @@
 		
 		_imageView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 150.0)];
 		_imageView.imageURL = [NSURL URLWithString:_vo.image_url];
-		_imageView.alpha = 0.33;
+		_imageView.alpha = 0.5;
 		_imageView.clipsToBounds = YES;
 		[self addSubview:_imageView];
 		
@@ -80,10 +80,16 @@
 	UITouch *touch = [touches anyObject];
 	
 	if ([touch view] == self) {
-		NSLog(@"ENDED");
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:_vo];
 		return;
 	}		
+}
+
+
+-(void)fadeTo:(float)opac {
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_imageView.alpha = opac;
+	}];
 }
 
 @end

@@ -9,9 +9,14 @@
 #import <UIKit/UIKit.h>
 
 #import "SNVideoPlayerView_Airplay.h"
+#import "SNLogoView.h"
+#import "SNClockView.h"
 
 @interface SNViewController_Airplay : UIViewController {
 	SNVideoPlayerView_Airplay *_videoPlayerView;
+	
+	SNLogoView *_logoView;
+	SNClockView *_clockView;
 }
 
 -(id)initWithFrame:(CGRect)frame;

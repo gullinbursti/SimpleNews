@@ -14,8 +14,6 @@
 
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super init])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_itemTapped:) name:@"ITEM_TAPPED" object:nil];
-		
 		self.view.frame = frame;
 	}
 	
@@ -29,11 +27,23 @@
 #pragma mark - View lifecycle
 -(void)loadView {
 	[super loadView];
-	
 	[self.view setBackgroundColor:[UIColor blackColor]];
 	
-	_videoPlayerView = [[[SNVideoPlayerView_Airplay alloc] initWithFrame:CGRectMake(0.0, 360.0, 1280.0, 720.0)] autorelease];
-	[self.view addSubview:_videoPlayerView];
+	CGRect frame = CGRectMake(0.0, 360.0, 1280.0, 720.0);
+	
+	UIView *holderView = [[[UIView alloc] initWithFrame:frame] autorelease];
+	[holderView setBackgroundColor:[UIColor yellowColor]];
+	[self.view addSubview:holderView];
+	
+	//_videoPlayerView = [[[SNVideoPlayerView_Airplay alloc] initWithFrame:CGRectMake(100.0, 360.0, 1024.0, 576.0)] autorelease];
+	_videoPlayerView = [[[SNVideoPlayerView_Airplay alloc] initWithFrame:frame] autorelease];
+	[holderView addSubview:_videoPlayerView];
+	
+	_logoView = [[SNLogoView alloc] initAtPosition:CGPointMake(27.0, 650.0)];
+	[self.view addSubview:_logoView];
+	
+	_clockView = [[SNClockView alloc] initAtPosition:CGPointMake(1290.0, 700.0)];
+	[self.view addSubview:_clockView];
 }
 
 -(void)viewDidLoad {
@@ -52,13 +62,11 @@
 	[super viewDidAppear:animated];
 	
 	[UIView animateWithDuration:1.0 animations:^(void) {
-		CGRect frame = _videoPlayerView.frame;
-		frame.origin.y = -360.0;
-		
-		_videoPlayerView.frame = frame;
-		
-	} completion:^(BOOL finished) {
-		//[_videoPlayerView togglePlayback:YES];
+		_videoPlayerView.frame = CGRectMake(_videoPlayerView.frame.origin.x, -360.0, _videoPlayerView.frame.size.width, _videoPlayerView.frame.size.height);;
+	}];
+	
+	[UIView animateWithDuration:0.5 animations:^(void) {
+		_clockView.frame = CGRectMake(1100.0, _clockView.frame.origin.y, _clockView.frame.size.width, _clockView.frame.size.height);
 	}];
 }
 
@@ -68,7 +76,7 @@
 	SNVideoItemVO *vo = (SNVideoItemVO *)[notification object];
 	
 	NSLog(@"VIDEO CHANGE:[%@]", vo.video_title);
-	[_videoPlayerView togglePlayback:YES];
+	//[_videoPlayerView togglePlayback:YES];
 }
 
 @end

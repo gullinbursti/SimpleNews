@@ -9,14 +9,20 @@
 #import <UIKit/UIKit.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-@interface SNCategoryListView_iPhone : UIView <UIGestureRecognizerDelegate> {
+#import "SNVideoSearchView_iPhone.h"
+
+@interface SNCategoryListView_iPhone : UIView <UIGestureRecognizerDelegate, UIScrollViewDelegate> {
 	NSMutableArray *_allViews;
 	NSMutableArray *_allItemVOs;
 	NSMutableArray *_activeItemVOs;
 	NSMutableArray *_pluginViews;
 	NSMutableArray *_pluginVOs;
-	
+		
 	UIScrollView *_scrollView;
+	
+	SNVideoSearchView_iPhone *_videoSearchView;
+	
+	BOOL _isSearching;
 }
 
 @end

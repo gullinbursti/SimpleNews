@@ -10,7 +10,6 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-#import "SNVideoSearchView_iPhone.h"
 #import "EGOImageView.h"
 
 @interface SNActiveListViewController_iPhone : UIViewController <UIGestureRecognizerDelegate, UIWebViewDelegate> {
@@ -18,10 +17,16 @@
 	
 	UIView *_progressBar;
 	
-	SNVideoSearchView_iPhone *_videoSearchView;
 	EGOImageView *_currImgView;
 	EGOImageView *_nextImgView;
-	UIWebView *_webView;
+	//	UIWebView *_webView;
+	
+	UIButton *_playPauseButton;
+	BOOL _isPaused;
+	float _currTime;
+	BOOL _isSrubbing;
+	NSTimer *_scrubTimer;
+	float _duration;
 }
 
 @end

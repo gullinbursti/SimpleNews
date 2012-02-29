@@ -13,6 +13,8 @@
 
 @interface SNVideoListViewController_iPhone()
 -(NSUInteger)screenNumber;
+-(void)_resetToTop;
+-(void)_resetActiveList;
 @end
 
 @implementation SNVideoListViewController_iPhone
@@ -44,13 +46,13 @@
 }
 
 
-
-
 -(id)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom {
 	if ((self = [super init])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_itemTapped:) name:@"ITEM_TAPPED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_categorySwiped:) name:@"CATEGORY_SWIPED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_airplayBack:) name:@"AIRPLAY_BACK" object:nil];
+		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cancelReset:) name:@"CANCEL_RESET" object:nil];
+		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_searchEntered:) name:@"SEARCH_ENTERED" object:nil];
 		
 		_userInterfaceIdiom = userInterfaceIdiom;
 		_videoItems = [NSMutableArray new];
@@ -58,6 +60,8 @@
 		_isSwiped = NO;
 		_isQueued = NO;
 		_isFirstScrolled = NO;
+		_isCategories = NO;
+		_isSearching = NO;
 		_scrollOffset = 0;
 		
 		//NSLog(@"USER INTERFACE:[%d]", _userInterfaceIdiom); 0 == iPhone // 1 == iPad
@@ -108,10 +112,9 @@
 	_scrollView.alwaysBounceVertical = NO;
 	_scrollView.contentSize = self.view.frame.size;
 	_scrollView.contentInset = UIEdgeInsetsMake(0.0, 0.0f, 0.0f, 0.0f);
-	_scrollView.contentOffset = CGPointMake(55.0, 0.0);
 	[_holderView addSubview:_scrollView];
 	
-	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -_scrollView.bounds.size.height + 55.0, self.view.frame.size.width, _scrollView.bounds.size.height)];
+	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -_scrollView.bounds.size.height, self.view.frame.size.width, _scrollView.bounds.size.height)];
 	_refreshHeaderView.delegate = self;
 	[_scrollView addSubview:_refreshHeaderView];
 	[_refreshHeaderView refreshLastUpdatedDate];
@@ -127,7 +130,7 @@
 	
 	int tot = 0;
 	for (SNVideoItemVO *vo in _videoItems) {
-		SNVideoItemView_iPhone *itemView = [[[SNVideoItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 55.0 + (150.0 * tot), self.view.bounds.size.width, 150.0) videoItemVO:vo] autorelease];
+		SNVideoItemView_iPhone *itemView = [[[SNVideoItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 150.0 * tot, self.view.bounds.size.width, 150.0) videoItemVO:vo] autorelease];
 		[_itemViews addObject:itemView];		
 		[_scrollView addSubview:itemView];
 		
@@ -135,7 +138,7 @@
 		tot++;
 	}
 	
-	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 55.0 + (150.0 * tot));
+	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 150.0 * tot);
 	
 	UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)];
 	[panRecognizer setMinimumNumberOfTouches:1];
@@ -143,21 +146,26 @@
 	[panRecognizer setDelegate:self];
 	[_holderView addGestureRecognizer:panRecognizer];
 	
+	
+	UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_goLongPress:)];
+	[longPressRecognizer setNumberOfTouchesRequired:1];
+	[longPressRecognizer setMinimumPressDuration:0.5];
+	[longPressRecognizer setDelegate:self];
+	[_holderView addGestureRecognizer:longPressRecognizer];
+	
+	
 	_categoryListView = [[SNCategoryListView_iPhone alloc] initWithFrame:CGRectMake(self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
 	[self.view addSubview:_categoryListView];
 	
-	_airplayListView = [[SNAirplayListView_iPhone alloc] initWithFrame:CGRectMake(-self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
-	[self.view addSubview:_airplayListView];
+	_pluginListView = [[SNPluginListView_iPhone alloc] initWithFrame:CGRectMake(-self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
+	[self.view addSubview:_pluginListView];
 	
 	_activeListViewController = [[SNActiveListViewController_iPhone alloc] init];
 	[self.view addSubview:_activeListViewController.view];
 	
-	_airplayButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_airplayButton.frame = CGRectMake(270.0, 443.0, 44.0, 44.0);
-	[_airplayButton setBackgroundImage:[[UIImage imageNamed:@"airPlayIconButton_nonActive.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0] forState:UIControlStateNormal];
-	[_airplayButton setBackgroundImage:[[UIImage imageNamed:@"airPlayIconButton_active.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0] forState:UIControlStateHighlighted];
-	[_airplayButton addTarget:self action:@selector(_goAirplay) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:_airplayButton];
+	_volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(270.0, 443.0, 44.0, 44.0)];
+	[_volumeView setShowsVolumeSlider:NO];
+	[self.view addSubview:_volumeView];
 }
 
 -(void)viewDidLoad {
@@ -200,13 +208,13 @@
 
 
 #pragma mark - Navigation
--(void)_goAirplay {
-	NSLog(@"GO AIRLPLAY");
+-(void)_goPlugins {
+	NSLog(@"GO PLUGINS");
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_activeListViewController.view.frame = CGRectMake(self.view.bounds.size.width, _activeListViewController.view.frame.origin.y, self.view.bounds.size.width, _activeListViewController.view.frame.size.height);
 		_holderView.frame = CGRectMake(self.view.bounds.size.width, _holderView.frame.origin.y, self.view.bounds.size.width, _holderView.frame.size.height);
-		_airplayButton.frame = CGRectMake(_airplayButton.frame.origin.x + self.view.bounds.size.width, _airplayButton.frame.origin.y, _airplayButton.frame.size.width, _airplayButton.frame.size.height);
-		_airplayListView.frame = CGRectMake(0.0, _airplayListView.frame.origin.y, self.view.bounds.size.width, _airplayListView.frame.size.height);
+		_volumeView.frame = CGRectMake(_volumeView.frame.origin.x + self.view.bounds.size.width, _volumeView.frame.origin.y, _volumeView.frame.size.width, _volumeView.frame.size.height);
+		_pluginListView.frame = CGRectMake(0.0, _pluginListView.frame.origin.y, self.view.bounds.size.width, _pluginListView.frame.size.height);
 	}];
 }
 
@@ -266,26 +274,49 @@
 	*/
 	
 	
-	if (!_isSwiped && !_isQueued) {
-		if (translatedPoint.x < -50 && abs(translatedPoint.y) < 30) {
+	if (!_isSwiped && !_isQueued && !_isCategories) {
+		if (translatedPoint.x < -20 && abs(translatedPoint.y) < 30) {
 			_isSwiped = YES;
 			
 			[UIView animateWithDuration:0.33 animations:^(void) {
 				_activeListViewController.view.frame = CGRectMake(-self.view.frame.size.width, _activeListViewController.view.frame.origin.y, self.view.frame.size.width, _activeListViewController.view.frame.size.height);
 				_scrollView.frame = CGRectMake(-_scrollView.frame.size.width, 0.0, _scrollView.frame.size.width, _scrollView.frame.size.height);
-				_airplayButton.frame = CGRectMake(-self.view.frame.size.width + _airplayButton.frame.origin.x, _airplayButton.frame.origin.y, _airplayButton.frame.size.width, _airplayButton.frame.size.height);
+				_volumeView.frame = CGRectMake(-self.view.frame.size.width + _volumeView.frame.origin.x, _volumeView.frame.origin.y, _volumeView.frame.size.width, _volumeView.frame.size.height);
 				_categoryListView.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
-			
+				_isCategories = YES;
 			} completion:^(BOOL finished) {
 				[self _resetToTop];
 			}];
 		}
+		
+		if (translatedPoint.x > 20 && abs(translatedPoint.y) < 20)
+			[self _goPlugins];
 	}
 }
 
 -(void)_resetSwipe {
 	_isQueued = NO;
 	_isSwiped = NO;
+}
+
+
+-(void)_goLongPress:(id)sender {
+	CGPoint holdPt = [(UIPanGestureRecognizer*)sender locationInView:_holderView];
+	holdPt.y = (_scrollView.contentOffset.y + holdPt.y);
+	
+	int ind = 0;
+	for (SNVideoItemView_iPhone *view in _itemViews) {
+		if (CGRectContainsPoint(view.frame, holdPt)) {
+			SNVideoItemVO *vo = (SNVideoItemVO *)[_videoItems objectAtIndex:ind];
+			NSLog(@"FOUND TOUCH IN:(%@)", vo.video_title);
+			[view fadeTo:1.0];
+		
+		} else {
+			[view fadeTo:0.5];
+		}
+		
+		ind++;
+	}
 }
 
 
@@ -308,8 +339,7 @@
 		ind++;
 	}
 	
-	//float lastOffset = ((SNVideoItemView_iPhone *)[_itemViews objectAtIndex:[_itemViews count] - 1]).frame.origin.y;
-	tappedView.frame = CGRectMake(0.0, 55.0 + ([_itemViews count] * 150), self.view.bounds.size.width, 150.0);
+	tappedView.frame = CGRectMake(0.0, [_itemViews count] * 150, self.view.bounds.size.width, 150.0);
 	
 	for (int i=ind; i<[_itemViews count]; i++) {
 		SNVideoItemView_iPhone *view = (SNVideoItemView_iPhone *)[_itemViews objectAtIndex:i];
@@ -319,36 +349,79 @@
 			view.frame = CGRectMake(0.0, offset, self.view.bounds.size.width, 150.0);
 		
 		} completion:^(BOOL finished) {
-//			tappedView.frame = CGRectMake(0.0, lastOffset, self.view.bounds.size.width, 150.0);
 			[_scrollView addSubview:tappedView];
 			
 			[_itemViews removeObject:tappedView];
 			[_itemViews addObject:tappedView];
 		}];
 	}
+	
+	[_resetTimer invalidate];
+	_resetTimer = nil;
+	
+	[self _resetActiveList];
+	
+	[UIView animateWithDuration:0.125 animations:^(void) {
+		self.view.frame = CGRectMake(0.0, 16.0, self.view.frame.size.width, self.view.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+		[self performSelector:@selector(_bumpDown) withObject:nil afterDelay:0.125];
+	}];
+}
+
+-(void)_bumpDown {
+	[UIView animateWithDuration:0.125 animations:^(void) {
+		self.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
+	}];
 }
 
 
 -(void)_categorySwiped:(NSNotification *)notification {
 	_isSwiped = NO;
+	_isCategories = NO;
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_activeListViewController.view.frame = CGRectMake(0.0, _activeListViewController.view.frame.origin.y, self.view.frame.size.width, _activeListViewController.view.frame.size.height);
 		_categoryListView.frame = CGRectMake(self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height);
-		_airplayButton.frame = CGRectMake(270.0, _airplayButton.frame.origin.y, _airplayButton.frame.size.width, _airplayButton.frame.size.height);
+		_volumeView.frame = CGRectMake(270.0, _volumeView.frame.origin.y, _volumeView.frame.size.width, _volumeView.frame.size.height);
 		_scrollView.frame = CGRectMake(0.0, 0.0, _scrollView.frame.size.width, _scrollView.frame.size.height);
 	}];
+	
+	_scrollView.contentOffset = CGPointMake(0.0, -66.0);
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:_scrollView];
+	//_scrollView.contentOffset = CGPointMake(0.0, 15.0);
+	//_activeListViewController.view.frame = CGRectMake(0.0, -55.0, _activeListViewController.view.frame.size.width, _activeListViewController.view.frame.size.height);
 }
 
 -(void)_airplayBack:(NSNotification *)notification {
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_activeListViewController.view.frame = CGRectMake(0.0, _activeListViewController.view.frame.origin.y, self.view.bounds.size.width, _activeListViewController.view.frame.size.height);
 		_holderView.frame = CGRectMake(0.0, _holderView.frame.origin.y, self.view.bounds.size.width, _holderView.frame.size.height);
-		_airplayButton.frame = CGRectMake(270.0, 443.0, 44.0, 44.0);
-		_airplayListView.frame = CGRectMake(-self.view.bounds.size.width, _airplayListView.frame.origin.y, self.view.bounds.size.width, _airplayListView.frame.size.height);
+		_volumeView.frame = CGRectMake(270.0, _volumeView.frame.origin.y, _volumeView.frame.size.width, _volumeView.frame.size.height);
+		_pluginListView.frame = CGRectMake(-self.view.bounds.size.width, _pluginListView.frame.origin.y, self.view.bounds.size.width, _pluginListView.frame.size.height);
 	}];
 }
 
+
+-(void)_cancelReset:(NSNotification *)notificiation {
+	NSLog(@"CANCEL");
+	
+	_isSearching = YES;
+	[_resetTimer invalidate];
+	_resetTimer = nil;
+}
+
+
+-(void)_searchEntered:(NSNotification *)notification {
+	_isSearching = NO;
+	//[self _resetActiveList];
+	
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		_scrollView.contentOffset = CGPointMake(0.0, -66.0);
+	}];
+	
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:_scrollView];
+}
 
 
 
@@ -358,7 +431,7 @@
 	//_iphoneVideoView.frame = CGRectMake(0.0, -scrollView.contentOffset.y, scrollView.bounds.size.width, 150.0);
 	//CGRect frame = _activeListViewController.view.frame;
 	
-	//NSLog(@"%f][%f", scrollView.contentOffset.y, _activeListViewController.view.frame.origin.y);
+	NSLog(@"%f][%f", scrollView.contentOffset.y, _activeListViewController.view.frame.origin.y);
 	
 	/*
 	if (scrollView.contentOffset.y > -48 && scrollView.contentOffset.y < 150) {
@@ -374,15 +447,21 @@
 	}
 	*/
 	
+	[_resetTimer invalidate];
+	_resetTimer = nil;
+	
 	if (!_isFirstScrolled && _scrollView.contentOffset.y >= 55) {
 		_isFirstScrolled = YES;
 	}
 	
+	/*
 	if (_isFirstScrolled) {
 		if (_scrollView.contentOffset.y > 0 && _scrollView.contentOffset.y < 55)
 			_activeListViewController.view.frame = CGRectMake(0.0, -_scrollView.contentOffset.y, self.view.frame.size.width, 138.0);
 	}
+	*/
 	
+	/*
 	if (_scrollView.contentOffset.y > 55)
 		_activeListViewController.view.frame = CGRectMake(0.0, -55.0, self.view.frame.size.width, 138.0);
 	
@@ -391,6 +470,7 @@
 			_activeListViewController.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, 138.0);
 		}];
 	}
+	*/
 	
 	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
 }
@@ -398,8 +478,9 @@
 
 // called on start of dragging (may require some time and or distance to move)
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-	//[_airplayButton addTarget:self action:@selector(_goAirplay) forControlEvents:UIControlEventTouchUpInside];
-	[_airplayButton removeTarget:self action:@selector(_goAirplay) forControlEvents:UIControlEventTouchUpInside];
+	[UIView animateWithDuration:0.5 animations:^(void) {
+		_volumeView.frame = CGRectMake(_volumeView.frame.origin.x, 443.0 + (self.view.bounds.size.height * 0.125), _volumeView.frame.size.width, _volumeView.frame.size.height);
+	}];
 }
 
 
@@ -443,27 +524,29 @@
 
 // called when scroll view grinds to a halt
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-	//int page = _scrollView.contentOffset.x / 320;
-	[_airplayButton addTarget:self action:@selector(_goAirplay) forControlEvents:UIControlEventTouchUpInside];
+	[UIView animateWithDuration:0.5 animations:^(void) {
+		_volumeView.frame = CGRectMake(_volumeView.frame.origin.x, 443.0, _volumeView.frame.size.width, _volumeView.frame.size.height);
+	}];
+	
+	if (_activeListViewController.view.frame.origin.y > -55) {
+		_resetTimer = [NSTimer scheduledTimerWithTimeInterval:7.0 target:self selector:@selector(_resetActiveList) userInfo:nil repeats:NO];
+		[[NSRunLoop mainRunLoop] addTimer:_resetTimer forMode:NSDefaultRunLoopMode];
+		
+	}
 }
 
 
 
-- (void)_reloadData {
-	
-	//  should be calling your tableviews data source model to reload
-	//  put here just for demo
-	_isReloading = YES;
-	
+-(void)_reloadData {
+	_isReloading = YES;	
 }
 
-- (void)_doneLoadingData {
-	
-	//  model should call this when its done loading
+-(void)_doneLoadingData {
 	_isReloading = NO;
 	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_scrollView];
 	
-	[self performSelector:@selector(_resetToTop) withObject:nil afterDelay:0.33];
+	if (!_isSearching)
+		[self performSelector:@selector(_resetActiveList) withObject:nil afterDelay:0.25];
 }
 
 
@@ -474,13 +557,23 @@
 	}];
 }
 
+-(void)_resetActiveList {
+	if (_activeListViewController.view.frame.origin.y > -55) {
+		float offset = _activeListViewController.view.frame.origin.y - -55;
+		
+		[UIView animateWithDuration:0.25 animations:^(void) {
+			_activeListViewController.view.frame = CGRectMake(_activeListViewController.view.frame.origin.x, _activeListViewController.view.frame.origin.y - offset, _activeListViewController.view.frame.size.width, _activeListViewController.view.frame.size.height);
+			_scrollView.contentOffset = CGPointMake(_scrollView.contentOffset.x, _scrollView.contentOffset.y + offset);
+		}];
+	}
+}
+
 
 #pragma mark EGORefreshTableHeaderDelegate Methods
 -(void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
 	
 	//[self reloadData];
-	[self performSelector:@selector(_doneLoadingData) withObject:nil afterDelay:3.0];
-	
+	[self performSelector:@selector(_doneLoadingData) withObject:nil afterDelay:1.33];
 }
 
 -(BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view {

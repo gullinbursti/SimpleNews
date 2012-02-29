@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale = 1.0, user-scalable = no, width = 1280"/>
+	</head>
+	<body style="background-color:black; color:white;">
+		<div style="text-align:center;">
+			<h3>WTF!!</h3>
+			<hr />
+			<video id="video1" webkit-playsinline onloadedmetadata="onMetadata()" onended="onPlaybackEnded()">
+				<source src="http://o-o.preferred.comcast-lax1.v18.lscache6.c.youtube.com/videoplayback?sparams=id%2Cexpire%2Cip%2Cipbits%2Citag%2Csource%2Cratebypass%2Ccp&fexp=902906%2C916103%2C913533&itag=22&ip=98.0.0.0&signature=3B99F8351D93AB67EE71BD591B79AD9925A46293.1D62C9F376B243CE933918F8383EE09712F405FF&sver=3&ratebypass=yes&source=youtube&expire=1330523927&key=yt1&ipbits=8&cp=U0hSRVVNUV9HUUNOMl9NR1VKOkJiZzRnUF9vTEFE&id=f1479efe6731bebc&title=I%20FINK%20U%20FREEKY%20by%20DIE%20ANTWOORD%20(Official)" type="video/mp4" onerror="onError()" />
+				Your browser does not support HTML5 video.
+			</video>
+		</div>
+		<script type="text/javascript">
+			var video_obj = document.getElementById('video1');
+			
+			video_obj.addEventListener("timeupdate", function() { 
+				sendValue('time', video_obj.currentTime);
+			}, false); 
+			
+			function onMetadata() {
+				sendValue('duration', video_obj.duration);
+			} 
+			
+			function onPlaybackEnded() {
+				sendValue('state', "ENDED");
+			} 
+			
+			function onError() {
+				sendValue('state', "ERROR");
+			} 
+			
+			function rr() {
+				if (video_obj.currentTime > 0)
+					video_obj.currentTime -= 0.5;
+			} 
+			
+			function ff() {
+				if (video_obj.currentTime < video_obj.duration)
+					video_obj.currentTime += 0.5;
+			} 
+			
+			function playPause() {
+				if (video_obj.paused) 
+					video_obj.play(); 
+					
+				else 
+					video_obj.pause();
+			}
+			
+			function loadVideo(url) {
+				var source_obj = video_obj.getElementsByTagName('source')[0];
+					source_obj.src = url;
+			}
+			
+			function sendValue(key, val) {
+				location.href = 'result://keyval/' + key + '/' + val;
+			}
+		</script>
+	</body>
+</html>

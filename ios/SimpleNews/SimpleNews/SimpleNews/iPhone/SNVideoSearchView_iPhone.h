@@ -16,7 +16,4 @@
 	UILabel *_txtLabel;
 }
 
--(void)showMe;
--(void)hideMe;
-
 @end

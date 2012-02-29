@@ -37,27 +37,9 @@
 	[(UIActivityIndicatorView *)_progressView startAnimating];
 	[self.view addSubview:_progressView];
 	
-	_logoView = [[UIView alloc] initWithFrame:CGRectMake(27, 374, 56, 56)];
-	[_logoView setBackgroundColor:[UIColor blueColor]];
+	_logoView = [[SNLogoView alloc] initAtPosition:CGPointMake(27, 374)];
 	[self.view addSubview:_logoView];
-	
-	UILabel *logoCharLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, -4, 56, 56)] autorelease];
-	logoCharLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:40.0];
-	logoCharLabel.backgroundColor = [UIColor clearColor];
-	logoCharLabel.textColor = [UIColor blackColor];
-	logoCharLabel.textAlignment = UITextAlignmentCenter;
-	logoCharLabel.text = @"a";
-	[_logoView addSubview:logoCharLabel];
-	
-	UILabel *logoNameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(27, 442, 200, 20)] autorelease];
-	logoNameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16.0];
-	logoNameLabel.backgroundColor = [UIColor clearColor];
-	logoNameLabel.textColor = [UIColor whiteColor];
-	logoCharLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-	logoCharLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-	logoNameLabel.text = @"news network";
-	[self.view addSubview:logoNameLabel];
-	
+		
 	_introImageView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	_introImageView.image = [UIImage imageNamed:[_photoSlides objectAtIndex:[_photoSlides count] - 1]];
 	_introImageView.alpha = 0.0;
@@ -116,7 +98,7 @@
 				self.view.frame = CGRectMake(-self.view.bounds.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height);
 			}];
 			
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:nil];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"START_VIDEO_PLAYBACK" object:nil];
 			[self presentViewController:[[[SNVideoListViewController_iPhone alloc] initWithUserInterfaceIdiom:[[UIDevice currentDevice] userInterfaceIdiom]] autorelease] animated:NO completion:nil];
 		}
 	}];

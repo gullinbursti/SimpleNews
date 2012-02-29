@@ -7,117 +7,145 @@
 //
 
 #import "SNVideoPlayerView_Airplay.h"
+#import "SNVideoItemVO.h"
+
+@interface SNVideoPlayerView_Airplay()
+-(void)_startPlayback:(NSNotification *)notification;
+-(void)_togglePlayback:(NSNotification *)notification;
+-(void)_ffScrub:(NSNotification *)notification;
+-(void)_rrScrub:(NSNotification *)notification;
+@end
 
 @implementation SNVideoPlayerView_Airplay
 
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startedCallback:) name:MPMoviePlayerNowPlayingMovieDidChangeNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_finishedCallback:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_stateChangedCallback:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_itemTapped:) name:@"ITEM_TAPPED" object:nil];
 		
-		//NSString *htmlString = @"<html><head><meta name=\"viewport\" content=\"initial-scale = 1.0, user-scalable = no, width = 1280\"/></head><body><div style=\"text-align:center\"><video id=\"video1\" width=\"1280\" height=\"720\" preload=\"auto\" webkit-playsinline><source src=\"http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4\" type=\"video/mp4\" />Your browser does not support HTML5 video.</video></div><script type=\"text/javascript\">var myVideo=document.getElementById('video1'); function playPause(){if (myVideo.paused) myVideo.play(); else myVideo.pause();}</script></body></html>";
-		NSString *htmlString = @"<html><head><meta name=\"viewport\" content=\"initial-scale = 1.0, user-scalable = no, width = 1280\"/></head><body><div style=\"text-align:center\"><video id=\"video1\" width=\"1280\" height=\"720\" preload=\"auto\" webkit-playsinline><source src=\"http://o-o.preferred.comcast-lax1.v17.lscache8.c.youtube.com/videoplayback?sparams=id%2Cexpire%2Cip%2Cipbits%2Citag%2Csource%2Cratebypass%2Ccp&fexp=902906%2C916103%2C913533&itag=22&ip=98.0.0.0&signature=656A52AE44545FA92C6E67BBA45846871DBA5FB3.B4D94BF11B8E5515D3828166447A79FC5C6E683F&sver=3&ratebypass=yes&source=youtube&expire=1330236207&key=yt1&ipbits=8&cp=U0hSRVJOVF9FUUNOMl9KSFhDOkJiZzRnTV9yRVlE&id=c15baec91181fc10&title=Duke%20Nukem%20Forever%20Official%20HD%20Debut%20Trailer\" type=\"video/mp4\" />Your browser does not support HTML5 video.</video></div><script type=\"text/javascript\">var myVideo=document.getElementById('video1'); function playPause(){if (myVideo.paused) myVideo.play(); else myVideo.pause();}</script></body></html>";
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startPlayback:) name:@"START_VIDEO_PLAYBACK" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_togglePlayback:) name:@"TOGGLE_VIDEO_PLAYBACK" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_ffScrub:) name:@"FF_VIDEO_TIME" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_rrScrub:) name:@"RR_VIDEO_TIME" object:nil];
+		
+		
+		// VIDEO TAG -- AUTOSTART
+		//NSString *videoURL = @"http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4";
+		//NSString *videoURL = @"http://o-o.preferred.comcast-lax1.v23.lscache6.c.youtube.com/videoplayback?sparams=id%2Cexpire%2Cip%2Cipbits%2Citag%2Csource%2Cratebypass%2Ccp&fexp=902906%2C916103%2C913533&itag=37&ip=98.0.0.0&signature=451B473A71E81FB58C74BC1444F9A54F959A968A.9A991C6C5E7987FAD10E0961783C1B7DB7C72F67&sver=3&ratebypass=yes&source=youtube&expire=1330523534&key=yt1&ipbits=8&cp=U0hSRVVNUV9ITkNOMl9NR1VGOlliZzRnUF9vSEJB&id=de14a29a6770103e&title=UMP45%20INCENDIARY%20AMMO";
+		//NSString *videoURL = @"http://o-o.preferred.comcast-lax1.v18.lscache6.c.youtube.com/videoplayback?sparams=id%2Cexpire%2Cip%2Cipbits%2Citag%2Csource%2Cratebypass%2Ccp&fexp=902906%2C916103%2C913533&itag=22&ip=98.0.0.0&signature=3B99F8351D93AB67EE71BD591B79AD9925A46293.1D62C9F376B243CE933918F8383EE09712F405FF&sver=3&ratebypass=yes&source=youtube&expire=1330523927&key=yt1&ipbits=8&cp=U0hSRVVNUV9HUUNOMl9NR1VKOkJiZzRnUF9vTEFE&id=f1479efe6731bebc&title=I%20FINK%20U%20FREEKY%20by%20DIE%20ANTWOORD%20(Official)";
+		
+
+		NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"video_player" ofType:@"html"]]];
+		
 		
 		_webView = [[UIWebView alloc] initWithFrame:frame];
 		[_webView setBackgroundColor:[UIColor redColor]];
+		_webView.delegate = self;
 		_webView.allowsInlineMediaPlayback = YES;
-		[_webView loadHTMLString:htmlString baseURL:nil];
+		_webView.mediaPlaybackRequiresUserAction = NO;
+		//[_webView loadHTMLString:htmlString baseURL:nil];
+		[_webView loadRequest:request];
 		[self addSubview:_webView];
-		
-		/*
-		//_playerController = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:@"http://o-o.preferred.comcast-lax1.v17.lscache8.c.youtube.com/videoplayback?sparams=id%2Cexpire%2Cip%2Cipbits%2Citag%2Csource%2Cratebypass%2Ccp&fexp=902906%2C916103%2C913533&itag=22&ip=98.0.0.0&signature=4001D0E6970AB574B9264BECB835C3CA9CF597A3.75D481B6D6A72C5252F367FFF42942C14B6CAAC4&sver=3&ratebypass=yes&source=youtube&expire=1329818607&key=yt1&ipbits=8&cp=U0hRTlhMVl9FUUNOMV9QRlpHOkJiZzNwU190SVlE&id=c15baec91181fc10&title=Duke%20Nukem%20Forever%20Official%20HD%20Debut%20Trailer"]];
-		//_playerController = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:@"http://dev.gullinbursti.cc/projs/gutz/video/device-demo_[08.30.2011]-485kbs.mov"]];
-		_playerController = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Jurassic Park - Dodson & Nedry" ofType:@"mp4"]]];
-		//_playerController = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:@"rtsp://v3.cache6.c.youtube.com/CiILENy73wIaGQkEKKuVj--CKRMYDSANFEgGUgZ2aWRlb3MM/0/0/0/video.3gp"]];
-		_playerController.controlStyle = MPMovieControlStyleNone;
-		_playerController.view.frame = frame;
-		_playerController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_playerController.shouldAutoplay = NO;
-		_playerController.allowsAirPlay = YES;
-		_playerController.movieSourceType = MPMovieSourceTypeFile;
-		[_playerController prepareToPlay];
-		[_playerController setFullscreen:NO];
-		
-		
-		//[_playerController play];
-		[self addSubview:_playerController.view];
-		
-		UIImage *thumbImage = [_playerController thumbnailImageAtTime:10.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
-		if (thumbImage == nil)
-			NSLog(@"NO THUMB!!");
-		
-		else {
-			UIImageView *thumbImageView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 360.0, 1280.0, 720.0)] autorelease];
-			thumbImageView.image = thumbImage;
-			//[self addSubview:thumbImageView];
-		}
-		*/
 	}
 	
 	return (self);
 }
 
+#pragma mark - Notification handlers
+-(void)_itemTapped:(NSNotification *)notification {
+	SNVideoItemVO *vo = (SNVideoItemVO *)[notification object];
+	NSLog(@"VIDEO CHANGE:[%@]", vo.video_title);
+	
+	NSString *videoURL = @"http://o-o.preferred.comcast-lax1.v18.lscache6.c.youtube.com/videoplayback?sparams=id%2Cexpire%2Cip%2Cipbits%2Citag%2Csource%2Cratebypass%2Ccp&fexp=902906%2C916103%2C913533&itag=22&ip=98.0.0.0&signature=3B99F8351D93AB67EE71BD591B79AD9925A46293.1D62C9F376B243CE933918F8383EE09712F405FF&sver=3&ratebypass=yes&source=youtube&expire=1330523927&key=yt1&ipbits=8&cp=U0hSRVVNUV9HUUNOMl9NR1VKOkJiZzRnUF9vTEFE&id=f1479efe6731bebc&title=I%20FINK%20U%20FREEKY%20by%20DIE%20ANTWOORD%20(Official)";
+	NSString *htmlString = [NSString stringWithFormat:@"<html><head><meta name=\"viewport\" content=\"initial-scale = 1.0, user-scalable = no, width = 320\"/></head><body style=\"background-color:black;\"><div style=\"text-align:center;\"><video id=\"video1\" autoplay webkit-playsinline onloadedmetadata=\"onMetadata()\" onended=\"onPlaybackEnded()\"><source src=\"%@\" type=\"video/mp4\" onerror=\"onError()\" />Your browser does not support HTML5 video.</video></div><script type=\"text/javascript\">var video_obj=document.getElementById('video1'); video_obj.addEventListener(\"timeupdate\", function(){sendValue('time', video_obj.currentTime);}, false); function onMetadata(){sendValue('duration', video_obj.duration);} function onPlaybackEnded(){sendValue('state', \"ENDED\");} function onError(){sendValue('state', \"ERROR\");} function rr(){if(video_obj.currentTime>0)video_obj.currentTime -= 0.5;} function ff(){if(video_obj.currentTime<video_obj.duration)video_obj.currentTime += 0.5;} function playPause() {if (video_obj.paused) video_obj.play(); else video_obj.pause();} function sendValue(key, val) {location.href = 'result://keyval/' + key + '/' + val;}</script></body></html>", videoURL];
+	[_webView loadHTMLString:htmlString baseURL:nil];
+}
 
--(void)togglePlayback:(BOOL)isPlaying {
-	NSLog(@"----TOGGLE PLAYBACK----");
+-(void)_startPlayback:(NSNotification *)notification {
+	NSLog(@"----START PLAYBACK-----");
+	
+	_isPaused = NO;
+	_isFinished = NO;
 	[_webView stringByEvaluatingJavaScriptFromString:@"playPause();"];
 	
-	/*
-	if (!_isFinished)
-		[_playerController stop];
+//	UIView *derpView = [[[UIView alloc] initWithFrame:CGRectMake(128.0, 128.0, 64.0, 64.0)] autorelease];
+//	[derpView setBackgroundColor:[UIColor yellowColor]];
+//	[self addSubview:derpView];
+}
+
+-(void)_togglePlayback:(NSNotification *)notification {
+	NSLog(@"----TOGGLE PLAYBACK----");
 	
-	[_playerController setContentURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Jurassic Park - Dodson & Nedry" ofType:@"mp4"]]];
-	//[_playerController setContentURL:[NSURL URLWithString:@"http://dev.gullinbursti.cc/projs/gutz/video/device-demo_[08.30.2011]-485kbs.mov"]];
-	[_playerController play];
+	BOOL isPlaying = [[notification object] isEqualToString:@"YES"];
 	
-	[_playerController autorelease];
-	
-	_playerController = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Jurassic Park - Dodson & Nedry" ofType:@"mp4"]]];
-	_playerController.controlStyle = MPMovieControlStyleNone;
-	_playerController.view.frame = self.frame;
-	_playerController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	_playerController.shouldAutoplay = NO;
-	_playerController.allowsAirPlay = YES;
-	_playerController.movieSourceType = MPMovieSourceTypeFile;
-	[_playerController prepareToPlay];
-	[_playerController setFullscreen:NO];
-	[self addSubview:_playerController.view];
-	[_playerController play];*/
+	_isPaused = !isPlaying;
+	[_webView stringByEvaluatingJavaScriptFromString:@"playPause();"];
 }
 
 
-#pragma mark - Notification handlers
--(void)_startedCallback:(NSNotification *)notification {
-	NSLog(@"----STARTED PLAYBACK----(%f)", _playerController.duration);
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerNowPlayingMovieDidChangeNotification object:nil];
+-(void)_ffScrub:(NSNotification *)notification {
+	NSLog(@"----FF SCRUB----");
 	
-	_isFinished = NO;
-	_timer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_timerTick) userInfo:nil repeats:YES];
+	[_webView stringByEvaluatingJavaScriptFromString:@"ff();"];
 }
 
--(void)_finishedCallback:(NSNotification *)notification {
-	NSLog(@"----FINISHED PLAYBACK----");
+-(void)_rrScrub:(NSNotification *)notification {
+	NSLog(@"----RR SCRUB----");
 	
-	_isFinished = YES;
-	[_timer invalidate];
-	_timer = nil;
-	
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];    
-	[_playerController autorelease];
-}
-
--(void)_stateChangedCallback:(NSNotification *)notification {
-	NSLog(@"----STATE CHANGED----");
-	
-	//[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
+	[_webView stringByEvaluatingJavaScriptFromString:@"rr();"];
 }
 
 
 
--(void)_timerTick {
-	NSLog(@"%d, %d", (int)_playerController.duration, (int)_playerController.endPlaybackTime);
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_PROGRESSION" object:[NSNumber numberWithFloat:_playerController.currentPlaybackTime]];
+
+#pragma mark - WebView delegates
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+	NSString *urlString = [[request URL] absoluteString];
+	
+	if ([urlString hasPrefix:@"result:"]) {
+		NSArray *pathComponents = [[[request URL] path] pathComponents];
+		
+		NSString *key = [pathComponents objectAtIndex:1];
+		NSString *value = [pathComponents objectAtIndex:2];
+		
+		//NSLog(@"['%@'] = \"%@\"", key, value);
+		
+		if ([key isEqualToString:@"duration"]) {
+			_duration = [value floatValue];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_DURATION" object:[NSNumber numberWithFloat:_duration]];
+			
+		} else if ([key isEqualToString:@"time"]) {
+			float currTime = [value floatValue];
+			
+			if (_duration > 0.0) {
+				[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_TIME" object:[NSNumber numberWithFloat:currTime]];
+			}
+			
+		} else if ([key isEqualToString:@"state"]) {
+			if ([value isEqualToString:@"ENDED"]) {
+				_isFinished = YES;
+				[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
+				
+			} else {
+				NSLog(@"ERROR");
+			}
+		}
+		
+		
+		return (NO);
+		
+	} else
+		return (YES);
 }
+
+
+-(void)webViewDidStartLoad:(UIWebView *)webView {
+}
+
+-(void)webViewDidFinishLoad:(UIWebView *)webView {
+}
+
+-(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {	
+}
+
 
 @end

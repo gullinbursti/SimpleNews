@@ -22,6 +22,7 @@
 }
 
 -(id)initWithFrame:(CGRect)frame videoItemVO:(SNVideoItemVO *)vo;
+-(void)fadeTo:(float)opac;
 
 @property (nonatomic, retain) SNVideoItemVO *vo;
 

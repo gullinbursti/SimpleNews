@@ -20,11 +20,5 @@
 		<key>title</key>
 		<string>Family iMac</string>
 	</dict>
-	<dict>
-		<key>type_id</key>
-		<integer>4</integer>
-		<key>title</key>
-		<string>Back</string>
-	</dict>
 </array>
 </plist>

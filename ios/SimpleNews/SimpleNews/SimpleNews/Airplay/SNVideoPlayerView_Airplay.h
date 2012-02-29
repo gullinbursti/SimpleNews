@@ -9,15 +9,15 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 
-@interface SNVideoPlayerView_Airplay : UIView {
+@interface SNVideoPlayerView_Airplay : UIView <UIWebViewDelegate> {
 	MPMoviePlayerController *_playerController;
 	
 	NSTimer *_timer;
 	BOOL _isFinished;
+	BOOL _isPaused;
+	float _duration;
 	
 	UIWebView *_webView;
 }
-
--(void)togglePlayback:(BOOL)isPlaying;
 
 @end
