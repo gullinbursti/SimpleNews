@@ -4,19 +4,21 @@
 	</head>
 	<body style="background-color:black; color:white;">
 		<div style="text-align:center;">
-			<h3>WTF!!</h3>
-			<hr />
 			<video id="video1" webkit-playsinline onloadedmetadata="onMetadata()" onended="onPlaybackEnded()">
-				<source src="http://o-o.preferred.comcast-lax1.v18.lscache6.c.youtube.com/videoplayback?sparams=id%2Cexpire%2Cip%2Cipbits%2Citag%2Csource%2Cratebypass%2Ccp&fexp=902906%2C916103%2C913533&itag=22&ip=98.0.0.0&signature=3B99F8351D93AB67EE71BD591B79AD9925A46293.1D62C9F376B243CE933918F8383EE09712F405FF&sver=3&ratebypass=yes&source=youtube&expire=1330523927&key=yt1&ipbits=8&cp=U0hSRVVNUV9HUUNOMl9NR1VKOkJiZzRnUF9vTEFE&id=f1479efe6731bebc&title=I%20FINK%20U%20FREEKY%20by%20DIE%20ANTWOORD%20(Official)" type="video/mp4" onerror="onError()" />
+				<source src="" type="video/mp4" onerror="onError()" />
 				Your browser does not support HTML5 video.
 			</video>
+			<div id="divErrorMsg"></div>
 		</div>
 		<script type="text/javascript">
 			var video_obj = document.getElementById('video1');
+			var errorMsg_obj = document.getElementById('divErrorMsg');
 			
 			video_obj.addEventListener("timeupdate", function() { 
 				sendValue('time', video_obj.currentTime);
-			}, false); 
+			}, false);
+			
+			//setTimeout('changeVideo("http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4")', 2500);
 			
 			function onMetadata() {
 				sendValue('duration', video_obj.duration);
@@ -27,7 +29,9 @@
 			} 
 			
 			function onError() {
+				errorMsg_obj.innerHTML = 'An error occured playing video';
 				sendValue('state', "ERROR");
+				sendValue('message', video_obj.error.code);
 			} 
 			
 			function rr() {
@@ -36,7 +40,8 @@
 			} 
 			
 			function ff() {
-				if (video_obj.currentTime < video_obj.duration)
+				//if (video_obj.currentTime < video_obj.duration)
+				if (video_obj.currentTime < video_obj.buffered.end(video_obj.buffered.length - 1))
 					video_obj.currentTime += 0.5;
 			} 
 			
@@ -48,9 +53,16 @@
 					video_obj.pause();
 			}
 			
-			function loadVideo(url) {
-				var source_obj = video_obj.getElementsByTagName('source')[0];
-					source_obj.src = url;
+			function flushVideo() {
+				video_obj.src = null;
+			}
+			
+			function changeVideo(url) {
+				errorMsg_obj.innerHTML = '';
+				
+				video_obj.src = url;			  
+				video_obj.load();
+				video_obj.play();
 			}
 			
 			function sendValue(key, val) {
@@ -59,3 +71,64 @@
 		</script>
 	</body>
 </html>
+
+<!-- [YOUTUBE API] http://gdata.youtube.com/feeds/api/videos/{YOUTUBE_ID}?v=2&alt=jsonc&prettyprint=true -->
+<!-- 
+ {
+ "apiVersion": "2.1",
+ "data": {
+ "id": "gzDS-Kfd5XQ",
+ "uploaded": "2008-08-06T18:56:56.000Z",
+ "updated": "2012-02-28T20:48:06.000Z",
+ "uploader": "sesamestreet",
+ "category": "Entertainment",
+ "title": "Sesame Street: Ray Charles Sings \"I Got A Song\"  With Bert & Ernie",
+ "description": "For more videos and games check out our new website at http://www.sesamestreet.org \r\n\r\nIn this video, Bert and Ernie perform with Ray Charles. \r\n\r\nSesame Street is a production of Sesame Workshop, a nonprofit educational organization which also produces Pinky Dinky Doo, The Electric Company, and other programs for children around the world.",
+ "tags": [
+ "sesame",
+ "street",
+ "celebrity",
+ "ray",
+ "charles",
+ "ernie",
+ "bert",
+ "muppet",
+ "instruments",
+ "guitar",
+ "drums",
+ "piano"
+ ],
+ "thumbnail": {
+ "sqDefault": "http://i.ytimg.com/vi/gzDS-Kfd5XQ/default.jpg",
+ "hqDefault": "http://i.ytimg.com/vi/gzDS-Kfd5XQ/hqdefault.jpg"
+ },
+ "player": {
+ "default": "http://www.youtube.com/watch?v=gzDS-Kfd5XQ&feature=youtube_gdata_player",
+ "mobile": "http://m.youtube.com/details?v=gzDS-Kfd5XQ"
+ },
+ "content": {
+ "5": "http://www.youtube.com/v/gzDS-Kfd5XQ?version=3&f=videos&app=youtube_gdata",
+ "1": "rtsp://v5.cache2.c.youtube.com/CiILENy73wIaGQl05d2n-NIwgxMYDSANFEgGUgZ2aWRlb3MM/0/0/0/video.3gp",
+ "6": "rtsp://v7.cache7.c.youtube.com/CiILENy73wIaGQl05d2n-NIwgxMYESARFEgGUgZ2aWRlb3MM/0/0/0/video.3gp"
+ },
+ "duration": 129,
+ "location": "undefined",
+ "rating": 4.9538784,
+ "likeCount": "943",
+ "ratingCount": 954,
+ "viewCount": 674015,
+ "favoriteCount": 2222,
+ "commentCount": 309,
+ "accessControl": {
+ "comment": "allowed",
+ "commentVote": "allowed",
+ "videoRespond": "denied",
+ "rate": "allowed",
+ "embed": "allowed",
+ "list": "allowed",
+ "autoPlay": "allowed",
+ "syndicate": "allowed"
+ }
+ }
+ }
+-->

@@ -11,10 +11,16 @@
 #import "SNVideoListViewController_iPhone.h"
 #import "SNAppDelegate.h"
 
+
+@interface SNSplashViewController_iPhone()
+-(void)_introComplete:(NSNotification *)notification;
+@end
+
 @implementation SNSplashViewController_iPhone
 
 -(id)init {
 	if ((self = [super init])) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_introComplete:) name:@"INTRO_COMPLETE" object:nil];
 		_photoSlides = [[NSMutableArray alloc] initWithObjects:@"loader_Image01_Business-iPhone.jpg", @"loader_Image01_Tech-iPhone.jpg", @"loader_Image01_Trending-iPhone.jpg", @"loader_Image03_Sports-iPhone.jpg", nil];
 	}
 	
@@ -88,20 +94,35 @@
 			[_timer invalidate];
 			_timer = nil;
 			
-			//[self.navigationController presentViewController:[[[SNVideoListViewController_iPhone alloc] initWithUserInterfaceIdiom:[[UIDevice currentDevice] userInterfaceIdiom]] autorelease] animated:YES completion:nil];
-			
-			//SNVideoListViewController_iPhone *videoListViewController = [[[SNVideoListViewController_iPhone alloc] initWithUserInterfaceIdiom:[[UIDevice currentDevice] userInterfaceIdiom]] autorelease];
-			//UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:videoListViewController] autorelease];
-			//[self.navigationController pushViewController:navigationController animated:YES];	
-			
-			[UIView animateWithDuration:0.33 animations:^(void) {
-				self.view.frame = CGRectMake(-self.view.bounds.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height);
-			}];
-			
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"START_VIDEO_PLAYBACK" object:nil];
-			[self presentViewController:[[[SNVideoListViewController_iPhone alloc] initWithUserInterfaceIdiom:[[UIDevice currentDevice] userInterfaceIdiom]] autorelease] animated:NO completion:nil];
+			if ([[UIScreen screens] count] == 1) {
+				[_progressView removeFromSuperview];
+				
+				_noAirplayView = [[SNNoAirplayView_iPhone alloc] init];
+				[self.view addSubview:_noAirplayView];
+				
+			} else 
+				[self _introComplete:nil];
 		}
 	}];
+}
+
+
+#pragma mark - Notification handlers
+-(void)_introComplete:(NSNotification *)notification {
+	
+	//[self.navigationController presentViewController:[[[SNVideoListViewController_iPhone alloc] initWithUserInterfaceIdiom:[[UIDevice currentDevice] userInterfaceIdiom]] autorelease] animated:YES completion:nil];
+	
+	//SNVideoListViewController_iPhone *videoListViewController = [[[SNVideoListViewController_iPhone alloc] initWithUserInterfaceIdiom:[[UIDevice currentDevice] userInterfaceIdiom]] autorelease];
+	//UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:videoListViewController] autorelease];
+	//[self.navigationController pushViewController:navigationController animated:YES];	
+	
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		self.view.frame = CGRectMake(-self.view.bounds.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height);
+	}];
+	
+	//[[NSNotificationCenter defaultCenter] postNotificationName:@"START_VIDEO_PLAYBACK" object:@"http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4"];
+	[self presentViewController:[[[SNVideoListViewController_iPhone alloc] initWithUserInterfaceIdiom:[[UIDevice currentDevice] userInterfaceIdiom]] autorelease] animated:NO completion:nil];
 }
 
 @end

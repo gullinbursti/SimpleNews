@@ -7,14 +7,18 @@
 		<integer>1</integer>
 		<key>type_id</key>
 		<integer>1</integer>
+		<key>youtube_id</key>
+		<string>snHUtykmoKE</string>
 		<key>title</key>
-		<string>John Glenn's voice in space 50 years after orbit</string>
+		<string>Off Duty: Google&apos;s Cool NY Office, &apos;America&apos;s Next Top Model&apos; </string>
 		<key>info</key>
-		<string>San Francisco Chronicle, Today</string>
+		<string></string>
 		<key>image</key>
 		<string>http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-01.jpg</string>
+		<key>thumb</key>
+		<string>http://img.youtube.com/vi/snHUtykmoKE/0.jpg</string>
 		<key>video</key>
-		<string>http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4</string>
+		<string>http://o-o.preferred.comcast-lax1.v14.lscache6.c.youtube.com/videoplayback?sparams=cp%2Cid%2Cip%2Cipbits%2Citag%2Cratebypass%2Csource%2Cexpire&amp;fexp=902906%2C916103%2C913533&amp;itag=22&amp;ip=98.0.0.0&amp;signature=8D00FC88B98DB8E9AD5BE3A88030C3EF4AB64AAD.88E0564B7B55E80CAC682EF173841D616D607FAD&amp;sver=3&amp;ratebypass=yes&amp;source=youtube&amp;expire=1330689219&amp;key=yt1&amp;ipbits=8&amp;cp=U0hSRVZTV19GU0NOMl9OTUFDOkRiZzRnUV91RVpG&amp;id=b271d4b72926a0a1&amp;title=Off%20Duty%20Googles%20Cool%20NY%20Office,%20Americas%20Next%20Top%20Model%20Judge,%20How%20to%20Tie%20a%20Tie</string>
 		<key>date</key>
 		<date>2011-08-28T00:00:00Z</date>
 	</dict>
@@ -23,14 +27,18 @@
 		<integer>2</integer>
 		<key>type_id</key>
 		<integer>2</integer>
+		<key>youtube_id</key>
+		<string>K-xf5ofGEA4</string>
 		<key>title</key>
-		<string>Catering Help Wanted!</string>
+		<string>SUNDAY ON MEET THE PRESS: Rick Santorum - Gov&apos;s Brewer &amp; Brown - Roundtable</string>
 		<key>info</key>
-		<string>Need multiple people to help cater a wedding.</string>
+		<string></string>
 		<key>image</key>
 		<string>http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-02.jpg</string>
+		<key>thumb</key>
+		<string>http://img.youtube.com/vi/K-xf5ofGEA4/0.jpg</string>
 		<key>video</key>
-		<string>http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4</string>
+		<string>http://o-o.preferred.comcast-lax1.v5.lscache7.c.youtube.com/videoplayback?sparams=cp%2Cid%2Cip%2Cipbits%2Citag%2Cratebypass%2Csource%2Cexpire&amp;fexp=902906%2C916103%2C913533&amp;itag=22&amp;ip=98.0.0.0&amp;signature=05D3B1CC693674C4F5DA5CF0AFC791839882998B.83AB07F464591063EDA8E1C930AEBC900E1826D6&amp;sver=3&amp;ratebypass=yes&amp;source=youtube&amp;expire=1330687952&amp;key=yt1&amp;ipbits=8&amp;cp=U0hSRVZTVV9KTENOMl9OTVlKOldiZzRnUV9zTERZ&amp;id=2bec5fe687c6100e&amp;title=SUNDAY%20ON%20MEET%20THE%20PRESS%20Rick%20Santorum%20-%20Govs%20Brewer%20%20Brown%20-%20Roundtable</string>
 		<key>date</key>
 		<date>2011-08-28T00:00:00Z</date>
 	</dict>
@@ -39,14 +47,18 @@
 		<integer>3</integer>
 		<key>type_id</key>
 		<integer>1</integer>
+		<key>youtube_id</key>
+		<string>uoS71sBKESI</string>
 		<key>title</key>
-		<string>Dog Walker WANTED!</string>
+		<string>Marc Newson Urban Spaceman 1/5</string>
 		<key>info</key>
 		<string>I need someone to walk my two Jack Russells. One is named peter the other is named jackson.</string>
 		<key>image</key>
 		<string>http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-03.jpg</string>
+		<key>thumb</key>
+		<string>http://img.youtube.com/vi/uoS71sBKESI/0.jpg</string>
 		<key>video</key>
-		<string>http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4</string>
+		<string>http://o-o.preferred.comcast-lax1.v12.lscache7.c.youtube.com/videoplayback?sparams=cp%2Cid%2Cip%2Cipbits%2Citag%2Cratebypass%2Csource%2Cexpire&amp;fexp=902906%2C916103%2C913533&amp;itag=18&amp;ip=98.0.0.0&amp;signature=49081A6C8C47891EF2D817944954BB46D4AB1CFB.42FB6BB5CA9DD0DB90636049D88BBE1DCCB17344&amp;sver=3&amp;ratebypass=yes&amp;source=youtube&amp;expire=1330690609&amp;key=yt1&amp;ipbits=8&amp;cp=U0hSRVZUTl9FU0NOMl9OTlJHOkRiZzRnUV9sSVlG&amp;id=ba84bbd6c04a1122&amp;title=Marc%20Newson%20Urban%20Spaceman%2015</string>
 		<key>date</key>
 		<date>2011-08-28T00:00:00Z</date>
 	</dict>
@@ -55,14 +67,18 @@
 		<integer>4</integer>
 		<key>type_id</key>
 		<integer>3</integer>
+		<key>youtube_id</key>
+		<string>lVDbeK4WCL8</string>
 		<key>title</key>
-		<string>Hauling Junk</string>
+		<string>Exhaust Notes - Lamborghini Murciélago LP640</string>
 		<key>info</key>
-		<string>5 strong individuals are needed to move my belongings.</string>
+		<string></string>
 		<key>image</key>
 		<string>http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-01.jpg</string>
+		<key>thumb</key>
+		<string>http://img.youtube.com/vi/lVDbeK4WCL8/0.jpg</string>
 		<key>video</key>
-		<string>http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4</string>
+		<string>http://o-o.preferred.comcast-lax1.v23.lscache4.c.youtube.com/videoplayback?sparams=cp%2Cid%2Cip%2Cipbits%2Citag%2Cratebypass%2Csource%2Cexpire&amp;fexp=902906%2C916103%2C913533&amp;itag=22&amp;ip=98.0.0.0&amp;signature=0E4172B91E2E7C2C0130F1A2E679960C2F4217BD.835F59C245E08A41EAD0745CCD10BDBA237C4FD2&amp;sver=3&amp;ratebypass=yes&amp;source=youtube&amp;expire=1330690261&amp;key=yt1&amp;ipbits=8&amp;cp=U0hSRVZUTl9LS0NOMl9OTlJDOlZiZzRnUV9sRUVY&amp;id=9550db78ae1608bf&amp;title=Exhaust%20Notes%20-%20Lamborghini%20Murci%C3%A9lago%20LP640</string>
 		<key>date</key>
 		<date>2011-08-28T00:00:00Z</date>
 	</dict>
@@ -71,14 +87,18 @@
 		<integer>5</integer>
 		<key>type_id</key>
 		<integer>1</integer>
+		<key>youtube_id</key>
+		<string>ntZ83q1lkCk</string>
 		<key>title</key>
-		<string>Clean my house!</string>
+		<string>Obama Salutes Iraq War Vets at White House</string>
 		<key>info</key>
-		<string>I need someone to come over and clean my dirty house.</string>
+		<string></string>
 		<key>image</key>
 		<string>http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-02.jpg</string>
+		<key>thumb</key>
+		<string>http://img.youtube.com/vi/ntZ83q1lkCk/0.jpg</string>
 		<key>video</key>
-		<string>http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4</string>
+		<string>http://o-o.preferred.comcast-lax1.v10.lscache3.c.youtube.com/videoplayback?sparams=cp%2Cid%2Cip%2Cipbits%2Citag%2Cratebypass%2Csource%2Cexpire&amp;fexp=902906%2C916103%2C913533&amp;itag=18&amp;ip=98.0.0.0&amp;signature=4A251C6578AF267B6CEDA7416199FA6CBFC67D96.2D7C8ADE85DA108A47B021C459FC710AEC8025C9&amp;sver=3&amp;ratebypass=yes&amp;source=youtube&amp;expire=1330688251&amp;key=yt1&amp;ipbits=8&amp;cp=U0hSRVZTVl9KS0NOMl9OTVpDOlZiZzRnUV90RURY&amp;id=9ed67cdead659029&amp;title=Obama%20Salutes%20Iraq%20War%20Vets%20at%20White%20House</string>
 		<key>date</key>
 		<date>2011-08-28T00:00:00Z</date>
 	</dict>
@@ -87,14 +107,18 @@
 		<integer>6</integer>
 		<key>type_id</key>
 		<integer>2</integer>
+		<key>youtube_id</key>
+		<string>ajFB2DJ_OgY</string>
 		<key>title</key>
-		<string>Paint my house!</string>
+		<string>Deadly Storms Level Midwest Towns</string>
 		<key>info</key>
-		<string>Can you paint my house? I need a good painter now!</string>
+		<string></string>
 		<key>image</key>
 		<string>http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-03.jpg</string>
+		<key>thumb</key>
+		<string>http://img.youtube.com/vi/ajFB2DJ_OgY/0.jpg</string>
 		<key>video</key>
-		<string>http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4</string>
+		<string>http://o-o.preferred.comcast-lax1.v6.lscache8.c.youtube.com/videoplayback?sparams=cp%2Cid%2Cip%2Cipbits%2Citag%2Cratebypass%2Csource%2Cexpire&amp;fexp=902906%2C916103%2C913533&amp;itag=18&amp;ip=98.0.0.0&amp;signature=56FFE44105EC1AD255FFE06791BE2E8DB131503B.556039FD1D8382D0ED1841E5ADF3CC51284C700C&amp;sver=3&amp;ratebypass=yes&amp;source=youtube&amp;expire=1330689495&amp;key=yt1&amp;ipbits=8&amp;cp=U0hSRVZTV19OT0NOMl9OTUFFOlpiZzRnUV91R0hC&amp;id=6a3141d8327f3a06&amp;title=Deadly%20Storms%20Level%20Midwest%20Towns</string>
 		<key>date</key>
 		<date>2011-08-28T00:00:00Z</date>
 	</dict>
@@ -103,14 +127,18 @@
 		<integer>7</integer>
 		<key>type_id</key>
 		<integer>2</integer>
+		<key>youtube_id</key>
+		<string>Oz7xMY1AbbI</string>
 		<key>title</key>
-		<string>Live band needed at a local bar</string>
+		<string>Wanderlust - Trailer</string>
 		<key>info</key>
-		<string>Live Band needed at local Moes bar and grill. Must play rock music.</string>
+		<string></string>
 		<key>image</key>
 		<string>http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-01.jpg</string>
+		<key>thumb</key>
+		<string>http://img.youtube.com/vi/Oz7xMY1AbbI/0.jpg</string>
 		<key>video</key>
-		<string>http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4</string>
+		<string>http://o-o.preferred.comcast-lax1.v22.lscache3.c.youtube.com/videoplayback?sparams=cp%2Cid%2Cip%2Cipbits%2Citag%2Cratebypass%2Csource%2Cexpire&amp;fexp=902906%2C916103%2C913533&amp;itag=22&amp;ip=98.0.0.0&amp;signature=510C0B29D4F9B4CEEA3C6AD0971FE447EDB13D2F.2DAD37642C01E3743600B0C8B972DA917E7FC315&amp;sver=3&amp;ratebypass=yes&amp;source=youtube&amp;expire=1330691318&amp;key=yt1&amp;ipbits=8&amp;cp=U0hSRVZUT19GUkNOMl9OTlNEOkNiZzRnUV9tRlpF&amp;id=3b3ef1318d406db2&amp;title=Wanderlust%20-%20Trailer</string>
 		<key>date</key>
 		<date>2011-08-28T00:00:00Z</date>
 	</dict>
@@ -119,14 +147,18 @@
 		<integer>8</integer>
 		<key>type_id</key>
 		<integer>3</integer>
+		<key>youtube_id</key>
+		<string>uoS9liwSsaU</string>
 		<key>title</key>
-		<string>Local Model Wanted!</string>
+		<string>Steve Jobs Most Fascinating Person</string>
 		<key>info</key>
-		<string>I need a model to pose for me. I am not creepy.</string>
+		<string></string>
 		<key>image</key>
 		<string>http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-02.jpg</string>
+		<key>thumb</key>
+		<string>http://img.youtube.com/vi/uoS9liwSsaU/0.jpg</string>
 		<key>video</key>
-		<string>http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4</string>
+		<string>http://o-o.preferred.comcast-lax1.v6.lscache7.c.youtube.com/videoplayback?sparams=cp%2Cid%2Cip%2Cipbits%2Citag%2Cratebypass%2Csource%2Cexpire&amp;fexp=902906%2C916103%2C913533&amp;itag=18&amp;ip=98.0.0.0&amp;signature=C9B57B5F5CE6015A39178C44256B71BD3725CE9A.2BC6C93330319103C4C0BC58F5F348506B986F22&amp;sver=3&amp;ratebypass=yes&amp;source=youtube&amp;expire=1330690115&amp;key=yt1&amp;ipbits=8&amp;cp=U0hSRVZUTl9GT0NOMl9OTlJCOlpiZzRnUV9sRFpC&amp;id=ba84bd962c12b1a5&amp;title=Steve%20Jobs%20Most%20Fascinating%20Person</string>
 		<key>date</key>
 		<date>2011-08-28T00:00:00Z</date>
 	</dict>
@@ -135,14 +167,18 @@
 		<integer>9</integer>
 		<key>type_id</key>
 		<integer>3</integer>
+		<key>youtube_id</key>
+		<string>LabGyWPxa2o</string>
 		<key>title</key>
-		<string>Want to be an extra!</string>
+		<string>Aerial view of storm-damaged Harrisburg</string>
 		<key>info</key>
-		<string>Be an extra in a real Hollywood movie! Do you want to hang out on set all day drinking.</string>
+		<string></string>
 		<key>image</key>
 		<string>http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-03.jpg</string>
+		<key>thumb</key>
+		<string>http://img.youtube.com/vi/LabGyWPxa2o/0.jpg</string>
 		<key>video</key>
-		<string>http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4</string>
+		<string>http://o-o.preferred.comcast-lax1.v11.lscache5.c.youtube.com/videoplayback?sparams=cp%2Cid%2Cip%2Cipbits%2Citag%2Cratebypass%2Csource%2Cexpire&amp;fexp=902906%2C916103%2C913533&amp;itag=18&amp;ip=98.0.0.0&amp;signature=0511873D10D6ABDEC4FF6A5A6B449F5A4C3408F9.1F11B806EDFF83E567EAF3473DE5632D45CA1B00&amp;sver=3&amp;ratebypass=yes&amp;source=youtube&amp;expire=1330689051&amp;key=yt1&amp;ipbits=8&amp;cp=U0hSRVZTV19KS0NOMl9OTUFBOlZiZzRnUV91Q0RY&amp;id=2da6c6c963f16b6a&amp;title=Aerial%20view%20of%20storm-damaged%20Harrisburg</string>
 		<key>date</key>
 		<date>2011-08-28T00:00:00Z</date>
 	</dict>
@@ -151,14 +187,18 @@
 		<integer>10</integer>
 		<key>type_id</key>
 		<integer>2</integer>
+		<key>youtube_id</key>
+		<string>pa14VNsdSYM</string>
 		<key>title</key>
-		<string>BE THE SIGN GUY!</string>
+		<string>Rihanna - Only Girl (In The World)</string>
 		<key>info</key>
-		<string>Ya know, that guy on the side of the road spinning the sign like he is a rock star!</string>
+		<string></string>
 		<key>image</key>
 		<string>http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-01.jpg</string>
+		<key>thumb</key>
+		<string>http://img.youtube.com/vi/pa14VNsdSYM/0.jpg</string>
 		<key>video</key>
-		<string>http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4</string>
+		<string>http://o-o.preferred.comcast-lax1.v2.lscache2.c.youtube.com/videoplayback?sparams=cp%2Cid%2Cip%2Cipbits%2Citag%2Cratebypass%2Csource%2Cexpire&amp;fexp=902906%2C916103%2C913533&amp;itag=18&amp;ip=98.0.0.0&amp;signature=D515FC187BD31F4EC4D8E5B11B0773D313B41E2B.21388B135611D6B03AE7E31D2FBB0DD9FE07235F&amp;sver=3&amp;ratebypass=yes&amp;source=youtube&amp;expire=1330680894&amp;key=yt1&amp;ipbits=8&amp;cp=U0hSRVZTTl9OTkNOMl9OTVJJOlliZzRnUV9sS0hB&amp;id=a5ad7854db1d4983&amp;title=Rihanna%20-%20Only%20Girl%20(In%20The%20World)</string>
 		<key>date</key>
 		<date>2011-08-28T00:00:00Z</date>
 	</dict>

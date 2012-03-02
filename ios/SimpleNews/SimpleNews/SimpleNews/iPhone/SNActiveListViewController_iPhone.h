@@ -16,17 +16,18 @@
 	NSMutableArray *_items;
 	
 	UIView *_progressBar;
+	UILabel *_titleLabel;
 	
 	EGOImageView *_currImgView;
 	EGOImageView *_nextImgView;
-	//	UIWebView *_webView;
 	
 	UIButton *_playPauseButton;
 	BOOL _isPaused;
-	float _currTime;
 	BOOL _isSrubbing;
-	NSTimer *_scrubTimer;
+	float _currTime;
 	float _duration;
+	
+	NSTimer *_scrubTimer;
 }
 
 @end

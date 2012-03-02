@@ -24,4 +24,6 @@
 +(UIFont *)snHelveticaNeueFontBold;
 +(UIFont *)snHelveticaNeueFontMedium;
 
++(void)playMP3:(NSString *)filename;
+
 @end

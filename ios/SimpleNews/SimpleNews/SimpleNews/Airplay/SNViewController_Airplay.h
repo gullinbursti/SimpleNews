@@ -12,11 +12,17 @@
 #import "SNLogoView.h"
 #import "SNClockView.h"
 
+#import "MBProgressHUD.h"
+#import "EGOImageView.h"
+
 @interface SNViewController_Airplay : UIViewController {
 	SNVideoPlayerView_Airplay *_videoPlayerView;
 	
 	SNLogoView *_logoView;
 	SNClockView *_clockView;
+	
+	MBProgressHUD *_hud;
+	EGOImageView *_bufferingImgView;
 }
 
 -(id)initWithFrame:(CGRect)frame;

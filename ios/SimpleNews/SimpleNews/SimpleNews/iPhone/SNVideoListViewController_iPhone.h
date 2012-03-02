@@ -10,6 +10,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 
 #import "SNActiveListViewController_iPhone.h"
+#import "SNVideoDetailsView_iPhone.h"
 #import "SNCategoryListView_iPhone.h"
 #import "SNPluginListView_iPhone.h"
 #import "SNVideoSearchView_iPhone.h"
@@ -21,14 +22,15 @@
 	UIUserInterfaceIdiom _userInterfaceIdiom;
 	
 	UIView *_holderView;
+	
+	BOOL _isReloading;
 	UIScrollView *_scrollView;
-	MPVolumeView *_volumeView;
 	SNActiveListViewController_iPhone *_activeListViewController;
+	SNVideoDetailsView_iPhone *_videoDetailsView;
 	
 	NSMutableArray *_videoItems;
 	NSMutableArray *_itemViews;
 	
-	BOOL _isSwiped;
 	SNCategoryListView_iPhone *_categoryListView;
 	SNPluginListView_iPhone *_pluginListView;
 	
@@ -37,13 +39,10 @@
 	CGPoint _offsetPt;
 	
 	float _scrollOffset;
-	BOOL _isReloading;
-	BOOL _isQueued;
-	BOOL _isFirstScrolled;
-	BOOL _isCategories;
-	BOOL _isSearching;
 	
-	NSTimer *_resetTimer;
+	BOOL _isDetails;
+	BOOL _isStore;
+	BOOL _isCategories;
 }
 
 -(id)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;

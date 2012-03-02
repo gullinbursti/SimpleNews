@@ -13,6 +13,7 @@
 
 @interface SNVideoItemView_iPhone : UIView <UIGestureRecognizerDelegate> {
 	EGOImageView *_imageView;
+	EGOImageView *_channelImageView;
 	UILabel *_titleLabel;
 	UILabel *_infoLabel;
 	

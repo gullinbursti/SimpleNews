@@ -6,10 +6,14 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "SNActiveListViewController_iPhone.h"
 #import "SNVideoItemVO.h"
 
 #import "EGOImageView.h"
+#import "SNAppDelegate.h"
+
 
 @interface SNActiveListViewController_iPhone()
 -(void)_itemTapped:(NSNotification *)notification;
@@ -31,7 +35,6 @@
 		_isSrubbing = NO;
 		_duration = -1.0;
 		
-		_items = [[NSMutableArray alloc] init];
 		self.view.frame = CGRectMake(0.0, -55.0, self.view.frame.size.width, 138);
 		self.view.clipsToBounds = YES;
 	}
@@ -51,6 +54,7 @@
 #pragma mark - View lifecycle
 -(void)loadView {
 	[super loadView];
+	[self.view setBackgroundColor:[UIColor blackColor]];
 	
 	_currImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 55.0, self.view.frame.size.width, 83.0)];
 	_currImgView.imageURL = [NSURL URLWithString:@"http://dev.gullinbursti.cc/projs/simplenews/app/images/newsPost-02.jpg"];
@@ -77,21 +81,27 @@
 	
 	//NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://dev.gullinbursti.cc/projs/simplenews/app/videos/ffvi_intro.mp4"]];
 	
-	//_webView = [[UIWebView alloc] initWithFrame:CGRectMake(0.0, 55.0, self.view.frame.size.width, 83.0)];
-	//[_webView setBackgroundColor:[UIColor blackColor]];
-	//_webView.delegate = self;
-	//_webView.allowsInlineMediaPlayback = YES;
-	//[_webView loadHTMLString:htmlString baseURL:nil];
-	//[self.view addSubview:_webView];
-	
-	
 	_playPauseButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_playPauseButton.frame = CGRectMake(144.0, 70.0, 32.0, 32.0);
+	_playPauseButton.frame = CGRectMake(144.0, 100.0, 32.0, 32.0);
 	[_playPauseButton setBackgroundColor:[UIColor purpleColor]];
 	[_playPauseButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_playPauseButton];
 	
-	_progressBar = [[UIView alloc] initWithFrame:CGRectMake(0.0, 55.0, 0.0, 4.0)];
+	UIView *bgHeaderView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 55.0, self.view.frame.size.width, 40.0)] autorelease];
+	[bgHeaderView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
+	[self.view addSubview:bgHeaderView];
+	
+	_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(4.0, 4.0, 300.0, 18.0)];
+	_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14.0];
+	_titleLabel.backgroundColor = [UIColor clearColor];
+	_titleLabel.textColor = [UIColor whiteColor];
+	_titleLabel.lineBreakMode = UILineBreakModeTailTruncation;
+	_titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+	_titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+	_titleLabel.text = @"";
+	[bgHeaderView addSubview:_titleLabel];
+	
+	_progressBar = [[UIView alloc] initWithFrame:CGRectMake(0.0, 55.0, self.view.frame.size.width, 4.0)];
 	[_progressBar setBackgroundColor:[UIColor greenColor]];
 	_progressBar.clipsToBounds = YES;
 	[self.view addSubview:_progressBar];
@@ -117,17 +127,13 @@
 -(void)_goPlayPause {
 	_isPaused = !_isPaused;
 	
-	if (_isPaused) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"TOGGLE_VIDEO_PLAYBACK" object:@"NO"];
+	if (_isPaused)
 		[_playPauseButton setBackgroundColor:[UIColor redColor]];
 	
-	} else {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"TOGGLE_VIDEO_PLAYBACK" object:@"YES"];
+	else
 		[_playPauseButton setBackgroundColor:[UIColor purpleColor]];
-	}
 	
-	
-	//[_webView stringByEvaluatingJavaScriptFromString:@"playPause();"]; 
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"TOGGLE_VIDEO_PLAYBACK" object:nil];
 }
 
 #pragma mark - Notification handlers
@@ -137,23 +143,22 @@
 
 -(void)_videoTime:(NSNotification *)notification {
 	_currTime = [[notification object] floatValue];
-	
 	float percent = _currTime / _duration;
-	_progressBar.frame = CGRectMake(0.0, 55.0, self.view.bounds.size.width * percent, 4.0);
+	
+	_progressBar.frame = CGRectMake(0.0, 55.0, self.view.frame.size.width * percent, 40.0);
 }
 
 -(void)_videoEnded:(NSNotification *)notification {	
 	_progressBar.frame = CGRectMake(0.0, 55.0, 0.0, 4.0);
 }
 
-
-
 -(void)_itemTapped:(NSNotification *)notification {
 	SNVideoItemVO *vo = (SNVideoItemVO *)[notification object];
 	
 	_nextImgView.imageURL = [NSURL URLWithString:vo.image_url];
+	_titleLabel.text = vo.video_title;
 	
-	[UIView animateWithDuration:0.33 animations:^(void) {
+	[UIView animateWithDuration:0.33 delay:0.25 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
 		CGRect currImgFrame = _currImgView.frame;
 		currImgFrame.origin.y -= currImgFrame.size.height;
 		_currImgView.frame = currImgFrame;
@@ -184,33 +189,28 @@
 		_isPaused = YES;
 		_isSrubbing = YES;
 		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"START_VIDEO_SCRUB" object:nil];
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"TOGGLE_VIDEO_PLAYBACK" object:@"NO"];
-		//[_webView stringByEvaluatingJavaScriptFromString:@"playPause();"];
-		
-		NSLog(@"PULLED:[%f, %d]", transPt.x, abs(transPt.y));
+		float offset = 0.0;
 		
 		// left
 		if (transPt.x < 0.0 && abs(transPt.y) < 10) {
-			[UIView animateWithDuration:0.25 animations:^(void) {
-				_currImgView.frame = CGRectMake(-64.0, _currImgView.frame.origin.y, _currImgView.frame.size.width, _currImgView.frame.size.height);
-				//_webView.frame = CGRectMake(-64.0, _webView.frame.origin.y, _webView.frame.size.width, _webView.frame.size.height);
-			}];
-			
+			offset = -64.0;
 			_scrubTimer = [NSTimer scheduledTimerWithTimeInterval:0.125 target:self selector:@selector(_ff) userInfo:nil repeats:YES];
-			[[NSRunLoop mainRunLoop] addTimer:_scrubTimer forMode:NSDefaultRunLoopMode];
 		}
 		
 		// right
 		if (transPt.x > 0.0 && abs(transPt.y) < 10) {
-			[UIView animateWithDuration:0.25 animations:^(void) {
-				_currImgView.frame = CGRectMake(64.0, _currImgView.frame.origin.y, _currImgView.frame.size.width, _currImgView.frame.size.height);
-				//_webView.frame = CGRectMake(64.0, _webView.frame.origin.y, _webView.frame.size.width, _webView.frame.size.height);
-			}];
-			
+			offset = 64.0;
 			_scrubTimer = [NSTimer scheduledTimerWithTimeInterval:0.125 target:self selector:@selector(_rr) userInfo:nil repeats:YES];	
-			[[NSRunLoop mainRunLoop] addTimer:_scrubTimer forMode:NSDefaultRunLoopMode];
 		}
+		
+		
+		[UIView animateWithDuration:0.25 animations:^(void) {
+			_currImgView.frame = CGRectMake(offset, _currImgView.frame.origin.y, _currImgView.frame.size.width, _currImgView.frame.size.height);
+		}];
+		
+		[[NSRunLoop mainRunLoop] addTimer:_scrubTimer forMode:NSDefaultRunLoopMode];
 	}
 	
 	
@@ -221,26 +221,23 @@
 		_isSrubbing = NO;
 		
 		[_scrubTimer invalidate];
-		//_scrubTimer = nil;
+		_scrubTimer = nil;
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"TOGGLE_VIDEO_PLAYBACK" object:@"YES"];
-		//[_webView stringByEvaluatingJavaScriptFromString:@"playPause();"];
 		[UIView animateWithDuration:0.125 animations:^(void) {
 			_currImgView.frame = CGRectMake(0.0, _currImgView.frame.origin.y, _currImgView.frame.size.width, _currImgView.frame.size.height);
-			//_webView.frame = CGRectMake(0.0, _webView.frame.origin.y, _webView.frame.size.width, _webView.frame.size.height);
 		}];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"STOP_VIDEO_SCRUB" object:nil];
 	}
 }
 
 
 -(void)_ff {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"FF_VIDEO_TIME" object:nil];
-	//[_webView stringByEvaluatingJavaScriptFromString:@"ff();"];
 }
 
 -(void)_rr {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"RR_VIDEO_TIME" object:nil];
-	//[_webView stringByEvaluatingJavaScriptFromString:@"rr();"];
 }
 
 

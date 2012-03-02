@@ -19,21 +19,25 @@
 		_vo = vo;
 		
 		[self setBackgroundColor:[UIColor blackColor]];
+		self.clipsToBounds = YES;
 		
-		UIButton *toggleButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		toggleButton.frame = CGRectMake(-48.0, 15.0, 32.0, 120.0);
-		[toggleButton setBackgroundColor:[UIColor purpleColor]];
-		[toggleButton addTarget:self action:@selector(_goQueue) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:toggleButton];
-		
-		_imageView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 150.0)];
+		_imageView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 200.0)];
 		_imageView.imageURL = [NSURL URLWithString:_vo.image_url];
+		_imageView.transform = CGAffineTransformMakeScale(1.5, 1.5);
 		_imageView.alpha = 0.5;
 		_imageView.clipsToBounds = YES;
 		[self addSubview:_imageView];
 		
-		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 100, self.frame.size.width - 35, 22)];
-		_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18.0];
+		UIView *bgView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 43.0)] autorelease];
+		[bgView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.7]];
+		[self addSubview:bgView];
+		
+		_channelImageView = [[EGOImageView alloc] initWithFrame:CGRectMake(5.0, 5.0, 33.0, 33.0)];
+		_channelImageView.imageURL = [NSURL URLWithString:_vo.image_url];
+		[self addSubview:_channelImageView];
+		
+		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(47.0, 10.0, self.frame.size.width - 52.0, 22.0)];
+		_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:16.0];
 		_titleLabel.backgroundColor = [UIColor clearColor];
 		_titleLabel.textColor = [UIColor whiteColor];
 		_titleLabel.lineBreakMode = UILineBreakModeTailTruncation;
@@ -42,26 +46,9 @@
 		_titleLabel.text = _vo.video_title;
 		[self addSubview:_titleLabel];
 		
-		_infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(17, 122, self.frame.size.width - 35, 16)];
-		_infoLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-		_infoLabel.backgroundColor = [UIColor clearColor];
-		_infoLabel.textColor = [UIColor whiteColor];
-		_infoLabel.lineBreakMode = UILineBreakModeTailTruncation;
-		_infoLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-		_infoLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-		_infoLabel.text = _vo.video_info;
-		[self addSubview:_infoLabel];
-		
-		UIView *lineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 149.0, self.frame.size.width, 1.0)] autorelease];
-		[lineView setBackgroundColor:[UIColor whiteColor]];
-		//[self addSubview:lineView];
-		
-		
-//		UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)];
-//		[panRecognizer setMinimumNumberOfTouches:1];
-//		[panRecognizer setMaximumNumberOfTouches:1];
-//		[panRecognizer setDelegate:self];
-//		[self addGestureRecognizer:panRecognizer];
+		UIImageView *hdImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(284.0, 169.0, 24.0, 24.0)] autorelease];
+		hdImgView.image = [UIImage imageNamed:@"hd.png"];
+		[self addSubview:hdImgView];
 	}
 	
 	return (self);

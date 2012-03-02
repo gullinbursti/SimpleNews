@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import <AVFoundation/AVFoundation.h>
+
 #import "SNAppDelegate.h"
 
 #import "SNSplashViewController_iPhone.h"
@@ -47,6 +49,13 @@
 	return [UIFont fontWithName:@"HelveticaNeue-Medium" size:14.0];
 }
 
++(void)playMP3:(NSString *)filename {
+	NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@.mp3", [[NSBundle mainBundle] resourcePath], filename]];
+	
+	AVAudioPlayer *audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
+	audioPlayer.numberOfLoops = 0;
+	[audioPlayer play];
+}
 
 -(void)dealloc {
 	//[_window release];
@@ -66,10 +75,15 @@
 		
 		NSLog(@":::::::]] SCREEN[%d](%f, %f)", cnt, screen.bounds.size.width, screen.bounds.size.height);
 		
-		if (cnt == 0)
-			_viewController = [[SNSplashViewController_iPhone alloc] init];
-		
-		else
+		if (cnt == 0) {
+			
+			if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+				_viewController = [[SNSplashViewController_iPhone alloc] init];
+			
+			//else
+			//	_viewController = [[[SNViewController alloc] initWithNibName:@"SNViewController_iPad" bundle:nil] autorelease];
+			
+		} else
 			_viewController = [[SNViewController_Airplay alloc] initWithFrame:screen.bounds];
 		
 		window = [self createWindowForScreen:screen];

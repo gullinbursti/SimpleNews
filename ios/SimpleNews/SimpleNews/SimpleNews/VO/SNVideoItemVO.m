@@ -11,28 +11,34 @@
 @implementation SNVideoItemVO
 
 @synthesize dictionary;
-@synthesize video_id, type_id, video_title, video_info, video_url, image_url;
+@synthesize video_id, type_id, youtube_id, video_title, video_info, video_url, image_url, thumb_url;
 
 +(SNVideoItemVO *)videoItemWithDictionary:(NSDictionary *)dictionary {
 	
-	SNVideoItemVO *videoItemVO = [[SNVideoItemVO alloc] init];
-	videoItemVO.dictionary = dictionary;
+	SNVideoItemVO *vo = [[SNVideoItemVO alloc] init];
+	vo.dictionary = dictionary;
 	
-	videoItemVO.video_id = [[dictionary objectForKey:@"video_id"] intValue];
-	videoItemVO.type_id = [[dictionary objectForKey:@"type_id"] intValue];
-	videoItemVO.video_title = [dictionary objectForKey:@"title"];
-	videoItemVO.video_info = [dictionary objectForKey:@"info"];
-	videoItemVO.video_url = [dictionary objectForKey:@"video"];
-	videoItemVO.image_url = [dictionary objectForKey:@"image"];
+	vo.video_id = [[dictionary objectForKey:@"video_id"] intValue];
+	vo.type_id = [[dictionary objectForKey:@"type_id"] intValue];
+	vo.youtube_id = [dictionary objectForKey:@"youtube_id"];
+	vo.video_title = [dictionary objectForKey:@"title"];
+	vo.video_info = [dictionary objectForKey:@"info"];
+	vo.video_url = [dictionary objectForKey:@"video"];
+	vo.image_url = [dictionary objectForKey:@"image"];
+	//vo.thumb_url = [NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", vo.youtube_id];
+	vo.thumb_url = [NSString stringWithFormat:@"http://i.ytimg.com/vi/%@/hqdefault.jpg", vo.youtube_id];
+	vo.image_url = [NSString stringWithFormat:@"http://i.ytimg.com/vi/%@/hqdefault.jpg", vo.youtube_id];
 	
-	return (videoItemVO);
+	return (vo);
 }
 
 -(void)dealloc {
 	dictionary = nil;
+	youtube_id = nil;
 	video_title = nil;
 	video_url = nil;
 	image_url = nil;
+	thumb_url = nil;
 }
 
 @end

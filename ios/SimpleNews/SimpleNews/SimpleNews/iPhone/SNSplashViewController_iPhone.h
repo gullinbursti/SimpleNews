@@ -10,6 +10,7 @@
 
 #import "MBProgressHUD.h"
 #import "SNLogoView.h"
+#import "SNNoAirplayView_iPhone.h"
 
 @interface SNSplashViewController_iPhone : UIViewController {
 	NSMutableArray *_photoSlides;
@@ -24,6 +25,7 @@
 	UIView *_progressView;
 	
 	SNLogoView *_logoView;
+	SNNoAirplayView_iPhone *_noAirplayView;
 }
 
 @end
