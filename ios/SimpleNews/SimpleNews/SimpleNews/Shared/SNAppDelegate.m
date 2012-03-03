@@ -11,6 +11,7 @@
 #import "SNAppDelegate.h"
 
 #import "SNSplashViewController_iPhone.h"
+#import "SNSplashViewController_iPad.h"
 #import "SNViewController_Airplay.h"
 
 @implementation SNAppDelegate
@@ -80,8 +81,8 @@
 			if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
 				_viewController = [[SNSplashViewController_iPhone alloc] init];
 			
-			//else
-			//	_viewController = [[[SNViewController alloc] initWithNibName:@"SNViewController_iPad" bundle:nil] autorelease];
+			else
+				_viewController = [[SNSplashViewController_iPad alloc] init];//_viewController = [[[SNSplashViewController_iPad alloc] initWithNibName:@"SNViewController_iPad" bundle:nil] autorelease];
 			
 		} else
 			_viewController = [[SNViewController_Airplay alloc] initWithFrame:screen.bounds];

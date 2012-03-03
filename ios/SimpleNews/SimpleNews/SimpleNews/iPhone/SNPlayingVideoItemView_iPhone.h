@@ -15,8 +15,12 @@
 	EGOImageView *_imageView;
 	UILabel *_titleLabel;
 	SNVideoItemVO *_vo;
+	EGOImageView *_channelImageView;
+	CGSize _textSize;
 }
 
 -(id)initWithFrame:(CGRect)frame withVO:(SNVideoItemVO *)vo;
+-(void)introMe;
+-(void)outroMe;
 
 @end

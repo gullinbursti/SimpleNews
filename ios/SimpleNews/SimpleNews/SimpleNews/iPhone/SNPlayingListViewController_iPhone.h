@@ -12,7 +12,10 @@
 	
 	UIScrollView *_scrollView;
 	NSMutableArray *_videoItems;
+	NSMutableArray *_views;
 	
+	UIButton *_backButton;
+	UIButton *_playPauseButton;
 }
 
 -(id)initWithVideos:(NSMutableArray *)videos;

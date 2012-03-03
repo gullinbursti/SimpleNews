@@ -15,6 +15,7 @@
 #import "SNPluginListView_iPhone.h"
 #import "SNVideoSearchView_iPhone.h"
 #import "SNVideoItemView_iPhone.h"
+#import "SNPlayingListViewController_iPhone.h"
 
 #import "EGORefreshTableHeaderView.h"
 
@@ -31,6 +32,7 @@
 	NSMutableArray *_videoItems;
 	NSMutableArray *_itemViews;
 	
+	SNPlayingListViewController_iPhone *_playingListViewController;
 	SNCategoryListView_iPhone *_categoryListView;
 	SNPluginListView_iPhone *_pluginListView;
 	
@@ -39,6 +41,8 @@
 	CGPoint _offsetPt;
 	
 	float _scrollOffset;
+	
+	int _playingIndex;
 	
 	BOOL _isDetails;
 	BOOL _isStore;

@@ -18,14 +18,14 @@
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
 		
+		NSLog(@"IMAGE:[%@]", _vo.thumb_url);
+		
 		[self setBackgroundColor:[UIColor blackColor]];
 		self.clipsToBounds = YES;
 		
 		_imageView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 200.0)];
-		_imageView.imageURL = [NSURL URLWithString:_vo.image_url];
-		_imageView.transform = CGAffineTransformMakeScale(1.5, 1.5);
+		_imageView.imageURL = [NSURL URLWithString:_vo.thumb_url];
 		_imageView.alpha = 0.5;
-		_imageView.clipsToBounds = YES;
 		[self addSubview:_imageView];
 		
 		UIView *bgView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 43.0)] autorelease];

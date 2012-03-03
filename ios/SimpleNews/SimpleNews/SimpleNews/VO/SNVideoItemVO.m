@@ -25,9 +25,10 @@
 	vo.video_info = [dictionary objectForKey:@"info"];
 	vo.video_url = [dictionary objectForKey:@"video"];
 	vo.image_url = [dictionary objectForKey:@"image"];
-	//vo.thumb_url = [NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", vo.youtube_id];
-	vo.thumb_url = [NSString stringWithFormat:@"http://i.ytimg.com/vi/%@/hqdefault.jpg", vo.youtube_id];
-	vo.image_url = [NSString stringWithFormat:@"http://i.ytimg.com/vi/%@/hqdefault.jpg", vo.youtube_id];
+	vo.thumb_url = [dictionary objectForKey:@"thumb"];
+	
+	//vo.thumb_url = [NSString stringWithFormat:@"http://i.ytimg.com/vi/%@/hqdefault.jpg", vo.youtube_id];
+	//vo.image_url = [NSString stringWithFormat:@"http://i.ytimg.com/vi/%@/hqdefault.jpg", vo.youtube_id];
 	
 	return (vo);
 }
@@ -40,5 +41,9 @@
 	image_url = nil;
 	thumb_url = nil;
 }
+
+
+//http://img.youtube.com/vi/pa14VNsdSYM/0.jpg
+//http://i.ytimg.com/vi/%@/hqdefault.jpg
 
 @end

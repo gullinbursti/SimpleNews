@@ -14,6 +14,7 @@
 @interface SNVideoDetailsView_iPhone()
 -(void)_videoDuration:(NSNotification *)notification;
 -(void)_videoEnded:(NSNotification *)notification;
+-(void)_changeVideo:(NSNotification *)notification;
 @end
 
 @implementation SNVideoDetailsView_iPhone
@@ -22,6 +23,7 @@
 	if ((self = [super initWithFrame:frame])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoDuration:) name:@"VIDEO_DURATION" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_changeVideo:) name:@"CHANGE_VIDEO" object:nil];
 		
 		[self setBackgroundColor:[UIColor blackColor]];
 		self.clipsToBounds = YES;
@@ -48,17 +50,18 @@
 		
 		_backButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 		_backButton.frame = CGRectMake(0.0, 0.0, 35.0, 35.0);
-		[_backButton setBackgroundImage:[UIImage imageNamed:@"closeButton.jpeg"] forState:UIControlStateNormal];
+		[_backButton setBackgroundImage:[UIImage imageNamed:@"closeButton.png"] forState:UIControlStateNormal];
 		[_backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_backButton];
-		_channelImageView = [[EGOImageView alloc] initWithFrame:CGRectMake(27.0, 200.0, 44.0, 44.0)];
-		[self addSubview:_imageView];
 		
-		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(27.0, 270.0, self.frame.size.width - 35.0, 45.0)];
+		
+		_channelImageView = [[EGOImageView alloc] initWithFrame:CGRectMake(27.0, 200.0, 44.0, 44.0)];
+		[self addSubview:_channelImageView];
+		
+		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(27.0, 270.0, self.frame.size.width - 35.0, 70.0)];
 		_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18.0];
 		_titleLabel.backgroundColor = [UIColor clearColor];
 		_titleLabel.textColor = [UIColor whiteColor];
-		_titleLabel.textAlignment = UITextAlignmentCenter;
 		_titleLabel.numberOfLines = 0;
 		_titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
 		_titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
@@ -83,17 +86,17 @@
 
 -(void)changeVideo:(SNVideoItemVO *)vo {
 	_vo = vo;
+	CGSize textSize = [_vo.video_title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18] constrainedToSize:CGSizeMake(self.frame.size.width - 35.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+	_titleLabel.frame = CGRectMake(27.0, 265.0, textSize.width, textSize.height);
 	_titleLabel.text = _vo.video_title;
-	_imageView.imageURL = [NSURL URLWithString:_vo.image_url];
 	_channelImageView.imageURL = [NSURL URLWithString:_vo.image_url];
-	//[_playPauseButton setBackgroundImage:_imageView.image forState:UIControlStateNormal];
-	//[_playPauseButton setBackgroundImage:_imageView.image forState:UIControlStateSelected];
 }
 
 
 #pragma mark - Navigation handlers
 -(void)_goBack {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"DETAILS_RETURN" object:nil];
+	_imageView.image = nil;
 }
 
 -(void)_goPlayPause {
@@ -167,6 +170,12 @@
 }
 
 -(void)_videoEnded:(NSNotification *)notification {
+	[self _goBack];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"NEXT_VIDEO" object:nil];
+}
+
+-(void)_changeVideo:(NSNotification *)notification {
+	_imageView.imageURL = [NSURL URLWithString:_vo.image_url];
 }
 
 @end

@@ -16,6 +16,7 @@
 -(id)initWithVideos:(NSMutableArray *)videos {
 	if ((self = [super init])) {
 		_videoItems = videos;
+		_views = [[NSMutableArray alloc] init];
 	}
 	
 	return (self);
@@ -25,8 +26,7 @@
 -(void)loadView {
 	[super loadView];
 	
-	self.view.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
-	[self.view setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.85]];
+	[self.view setBackgroundColor:[UIColor blackColor]];
 	
 	_scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -35,7 +35,7 @@
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width * [_videoItems count], self.view.frame.size.height);
 	_scrollView.pagingEnabled = YES;
 	_scrollView.scrollsToTop = NO;
-	_scrollView.showsHorizontalScrollIndicator = YES;
+	_scrollView.showsHorizontalScrollIndicator = NO;
 	_scrollView.showsVerticalScrollIndicator = NO;
 	_scrollView.alwaysBounceVertical = NO;
 	[self.view addSubview:_scrollView];
@@ -43,9 +43,24 @@
 	int cnt = 0;
 	for (SNVideoItemVO *vo in _videoItems) {
 		SNPlayingVideoItemView_iPhone *videoItemView = [[[SNPlayingVideoItemView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) withVO:vo] autorelease];
+		[_views addObject:videoItemView];
 		[_scrollView addSubview:videoItemView];
 		cnt++;
 	}
+	
+	_playPauseButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_playPauseButton.frame = CGRectMake(300.0, 460.0, 10.0, 10.0);
+	[_playPauseButton setBackgroundColor:[UIColor whiteColor]];
+	[_playPauseButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:_playPauseButton];
+	
+	_backButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_backButton.frame = CGRectMake(0.0, 0.0, 35.0, 35.0);
+	[_backButton setBackgroundImage:[UIImage imageNamed:@"closeButton.png"] forState:UIControlStateNormal];
+	[_backButton setBackgroundImage:[UIImage imageNamed:@"closeButton.png"] forState:UIControlStateHighlighted];
+	[_backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:_backButton];
+
 }
 
 -(void)viewDidLoad {
@@ -60,8 +75,39 @@
 
 -(void)offsetAtIndex:(int)ind {
 	_scrollView.contentOffset = CGPointMake(ind * 320.0, 0.0);
+	
+	_backButton.frame = CGRectMake(-_backButton.frame.size.width, -_backButton.frame.size.height, _backButton.frame.size.width, _backButton.frame.size.height);
+	_playPauseButton.frame = CGRectMake(10.0 + self.view.frame.size.width + _playPauseButton.frame.size.width, 10.0 + self.view.frame.size.height + _playPauseButton.frame.size.height, _playPauseButton.frame.size.width, _playPauseButton.frame.size.height);
+	
+	[UIView animateWithDuration:0.25 delay:0.33 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
+		_backButton.frame = CGRectMake(0.0, 0.0, _backButton.frame.size.width, _backButton.frame.size.height);
+		_playPauseButton.frame = CGRectMake(300.0, 460.0, _playPauseButton.frame.size.width, _playPauseButton.frame.size.height);
+	
+	} completion:^(BOOL finished) {
+		for (SNPlayingVideoItemView_iPhone *videoItemView in _views)
+			[videoItemView introMe];
+	}];
 }
 
+
+#pragma mark - Navigation
+-(void)_goBack {
+	
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		_backButton.frame = CGRectMake(-_backButton.frame.size.width, -_backButton.frame.size.height, _backButton.frame.size.width, _backButton.frame.size.height);
+		_playPauseButton.frame = CGRectMake(10.0 + self.view.frame.size.width + _playPauseButton.frame.size.width, 10.0 + self.view.frame.size.height + _playPauseButton.frame.size.height, _playPauseButton.frame.size.width, _playPauseButton.frame.size.height);
+	
+	} completion:^(BOOL finished) {
+		for (SNPlayingVideoItemView_iPhone *videoItemView in _views)
+			[videoItemView outroMe];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"DETAILS_RETURN" object:nil];
+	}];
+}
+
+-(void)_goPlayPause {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"TOGGLE_VIDEO_PLAYBACK" object:nil];
+}
 
 #pragma mark - ScrollView Delegates
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
@@ -73,6 +119,6 @@
 }
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:[_videoItems objectAtIndex:(scrollView.contentOffset.x / self.view.frame.size.width)]];	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:[_videoItems objectAtIndex:(scrollView.contentOffset.x / self.view.frame.size.width)]];	
 }
 @end

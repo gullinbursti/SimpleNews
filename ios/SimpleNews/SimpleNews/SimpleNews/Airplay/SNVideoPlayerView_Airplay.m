@@ -117,7 +117,10 @@
 	_timer = nil;
 	
 	[self.mpc.view removeFromSuperview];
-	[self setupMPC];
+	//[self setupMPC];
+	
+	if (self.mpc.currentPlaybackTime == self.mpc.duration)
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
 }
 
 -(void)_loadStateChangedCallback:(NSNotification *)notification {

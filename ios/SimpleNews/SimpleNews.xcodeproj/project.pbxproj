@@ -11,10 +11,13 @@
 		4C0C332A1500545100A3EB60 /* SNPlayingListViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0C33291500545100A3EB60 /* SNPlayingListViewController_iPhone.m */; };
 		4C0C332D150054B500A3EB60 /* SNPlayingVideoItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0C332C150054B400A3EB60 /* SNPlayingVideoItemView_iPhone.m */; };
 		4C36531715007575006A4FFE /* SNVideoDetailsView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C36531615007575006A4FFE /* SNVideoDetailsView_iPhone.m */; };
-		4C36531D1500AA64006A4FFE /* closeButton.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 4C3653191500AA64006A4FFE /* closeButton.jpeg */; };
-		4C36531E1500AA64006A4FFE /* closeButton@2x.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 4C36531A1500AA64006A4FFE /* closeButton@2x.jpeg */; };
 		4C36531F1500AA64006A4FFE /* hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C36531B1500AA64006A4FFE /* hd.png */; };
 		4C3653201500AA64006A4FFE /* hd@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C36531C1500AA64006A4FFE /* hd@2x.png */; };
+		4C36532315014545006A4FFE /* closeButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C36532115014545006A4FFE /* closeButton.png */; };
+		4C36532415014545006A4FFE /* closeButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C36532215014545006A4FFE /* closeButton@2x.png */; };
+		4C36535F15016370006A4FFE /* SNSplashViewController_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C36535E15016370006A4FFE /* SNSplashViewController_iPad.m */; };
+		4C365362150167EE006A4FFE /* SNNoAirplayView_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C365361150167EE006A4FFE /* SNNoAirplayView_iPad.m */; };
+		4C36536515016AB4006A4FFE /* SNVideoGridViewController_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C36536415016AB4006A4FFE /* SNVideoGridViewController_iPad.m */; };
 		4C48967714FB415E00C55125 /* airPlayIconButton_active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967314FB415E00C55125 /* airPlayIconButton_active.png */; };
 		4C48967814FB415E00C55125 /* airPlayIconButton_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967414FB415E00C55125 /* airPlayIconButton_active@2x.png */; };
 		4C48967914FB415E00C55125 /* airPlayIconButton_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967514FB415E00C55125 /* airPlayIconButton_nonActive.png */; };
@@ -114,10 +117,16 @@
 		4C0C332C150054B400A3EB60 /* SNPlayingVideoItemView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPlayingVideoItemView_iPhone.m; sourceTree = "<group>"; };
 		4C36531515007575006A4FFE /* SNVideoDetailsView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoDetailsView_iPhone.h; sourceTree = "<group>"; };
 		4C36531615007575006A4FFE /* SNVideoDetailsView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNVideoDetailsView_iPhone.m; sourceTree = "<group>"; };
-		4C3653191500AA64006A4FFE /* closeButton.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = closeButton.jpeg; sourceTree = "<group>"; };
-		4C36531A1500AA64006A4FFE /* closeButton@2x.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "closeButton@2x.jpeg"; sourceTree = "<group>"; };
 		4C36531B1500AA64006A4FFE /* hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hd.png; sourceTree = "<group>"; };
 		4C36531C1500AA64006A4FFE /* hd@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hd@2x.png"; sourceTree = "<group>"; };
+		4C36532115014545006A4FFE /* closeButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = closeButton.png; sourceTree = "<group>"; };
+		4C36532215014545006A4FFE /* closeButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "closeButton@2x.png"; sourceTree = "<group>"; };
+		4C36535D15016370006A4FFE /* SNSplashViewController_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSplashViewController_iPad.h; sourceTree = "<group>"; };
+		4C36535E15016370006A4FFE /* SNSplashViewController_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSplashViewController_iPad.m; sourceTree = "<group>"; };
+		4C365360150167EE006A4FFE /* SNNoAirplayView_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNNoAirplayView_iPad.h; sourceTree = "<group>"; };
+		4C365361150167EE006A4FFE /* SNNoAirplayView_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNNoAirplayView_iPad.m; sourceTree = "<group>"; };
+		4C36536315016AB4006A4FFE /* SNVideoGridViewController_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoGridViewController_iPad.h; sourceTree = "<group>"; };
+		4C36536415016AB4006A4FFE /* SNVideoGridViewController_iPad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNVideoGridViewController_iPad.m; sourceTree = "<group>"; };
 		4C48967314FB415E00C55125 /* airPlayIconButton_active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = airPlayIconButton_active.png; sourceTree = "<group>"; };
 		4C48967414FB415E00C55125 /* airPlayIconButton_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "airPlayIconButton_active@2x.png"; sourceTree = "<group>"; };
 		4C48967514FB415E00C55125 /* airPlayIconButton_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = airPlayIconButton_nonActive.png; sourceTree = "<group>"; };
@@ -286,9 +295,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C36535C15016347006A4FFE /* iPad */ = {
+			isa = PBXGroup;
+			children = (
+				4C365360150167EE006A4FFE /* SNNoAirplayView_iPad.h */,
+				4C365361150167EE006A4FFE /* SNNoAirplayView_iPad.m */,
+				4C36535D15016370006A4FFE /* SNSplashViewController_iPad.h */,
+				4C36535E15016370006A4FFE /* SNSplashViewController_iPad.m */,
+				4C36536315016AB4006A4FFE /* SNVideoGridViewController_iPad.h */,
+				4C36536415016AB4006A4FFE /* SNVideoGridViewController_iPad.m */,
+			);
+			name = iPad;
+			path = SimpleNews/iPad;
+			sourceTree = "<group>";
+		};
 		4C48967114FB406C00C55125 /* Buttons */ = {
 			isa = PBXGroup;
 			children = (
+				4C36532115014545006A4FFE /* closeButton.png */,
+				4C36532215014545006A4FFE /* closeButton@2x.png */,
 				4C48967314FB415E00C55125 /* airPlayIconButton_active.png */,
 				4C48967414FB415E00C55125 /* airPlayIconButton_active@2x.png */,
 				4C48967514FB415E00C55125 /* airPlayIconButton_nonActive.png */,
@@ -337,8 +362,6 @@
 		4CB228BB14F4437500F5618D /* Elements */ = {
 			isa = PBXGroup;
 			children = (
-				4C3653191500AA64006A4FFE /* closeButton.jpeg */,
-				4C36531A1500AA64006A4FFE /* closeButton@2x.jpeg */,
 				4C36531B1500AA64006A4FFE /* hd.png */,
 				4C36531C1500AA64006A4FFE /* hd@2x.png */,
 				4CB2294014F8D8BA00F5618D /* cursorBlink.png */,
@@ -451,7 +474,7 @@
 			children = (
 				4CB2292D14F7013400F5618D /* Delegate */,
 				4CB7763A14F3387B0064E7C9 /* Airplay */,
-				4CDC8C1114F2D07000D42EA5 /* iPad */,
+				4C36535C15016347006A4FFE /* iPad */,
 				4CDC8C1214F2D07000D42EA5 /* iPhone */,
 				4CDC8C1314F2D07000D42EA5 /* Shared */,
 				4CE1212214F2FDDE0024171A /* VO */,
@@ -473,14 +496,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		4CDC8C1114F2D07000D42EA5 /* iPad */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = iPad;
-			path = SimpleNews/iPad;
-			sourceTree = "<group>";
-		};
 		4CDC8C1214F2D07000D42EA5 /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
@@ -498,6 +513,8 @@
 				4CB228D514F4825D00F5618D /* SNVideoListViewController_iPhone.m */,
 				4CB228A414F36DA100F5618D /* SNActiveListViewController_iPhone.h */,
 				4CB228A514F36DA100F5618D /* SNActiveListViewController_iPhone.m */,
+				4C0C332B150054B400A3EB60 /* SNPlayingVideoItemView_iPhone.h */,
+				4C0C332C150054B400A3EB60 /* SNPlayingVideoItemView_iPhone.m */,
 				4C0C33281500545100A3EB60 /* SNPlayingListViewController_iPhone.h */,
 				4C0C33291500545100A3EB60 /* SNPlayingListViewController_iPhone.m */,
 				4CB2291A14F60E1000F5618D /* SNVideoSearchView_iPhone.h */,
@@ -512,8 +529,6 @@
 				4C48968F14FB7AFE00C55125 /* SNPluginItemView_iPhone.m */,
 				4C91180B14FD996E001F8FD0 /* SNPluginListView_iPhone.h */,
 				4C91180C14FD996F001F8FD0 /* SNPluginListView_iPhone.m */,
-				4C0C332B150054B400A3EB60 /* SNPlayingVideoItemView_iPhone.h */,
-				4C0C332C150054B400A3EB60 /* SNPlayingVideoItemView_iPhone.m */,
 				4C36531515007575006A4FFE /* SNVideoDetailsView_iPhone.h */,
 				4C36531615007575006A4FFE /* SNVideoDetailsView_iPhone.m */,
 			);
@@ -759,10 +774,10 @@
 				4C8B444714FEA7D300F89F7C /* fpo_tapVideo.mp3 in Resources */,
 				4C7D600E14FF02B600156054 /* fpo_startVideo.mp3 in Resources */,
 				4C0C331A14FF790400A3EB60 /* video_player.html in Resources */,
-				4C36531D1500AA64006A4FFE /* closeButton.jpeg in Resources */,
-				4C36531E1500AA64006A4FFE /* closeButton@2x.jpeg in Resources */,
 				4C36531F1500AA64006A4FFE /* hd.png in Resources */,
 				4C3653201500AA64006A4FFE /* hd@2x.png in Resources */,
+				4C36532315014545006A4FFE /* closeButton.png in Resources */,
+				4C36532415014545006A4FFE /* closeButton@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -819,6 +834,9 @@
 				4C0C332A1500545100A3EB60 /* SNPlayingListViewController_iPhone.m in Sources */,
 				4C0C332D150054B500A3EB60 /* SNPlayingVideoItemView_iPhone.m in Sources */,
 				4C36531715007575006A4FFE /* SNVideoDetailsView_iPhone.m in Sources */,
+				4C36535F15016370006A4FFE /* SNSplashViewController_iPad.m in Sources */,
+				4C365362150167EE006A4FFE /* SNNoAirplayView_iPad.m in Sources */,
+				4C36536515016AB4006A4FFE /* SNVideoGridViewController_iPad.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

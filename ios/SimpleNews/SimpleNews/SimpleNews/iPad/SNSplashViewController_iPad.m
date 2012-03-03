@@ -1,22 +1,18 @@
 //
-//  SNSplashViewController_iPhone.m
+//  SNSplashViewController_iPad.m
 //  SimpleNews
 //
-//  Created by Matthew Holcombe on 02.21.12.
+//  Created by Matthew Holcombe on 03.02.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import "SNSplashViewController_iPhone.h"
+#import "SNSplashViewController_iPad.h"
 
-#import "SNVideoListViewController_iPhone.h"
-#import "SNAppDelegate.h"
-
-
-@interface SNSplashViewController_iPhone()
+@interface SNSplashViewController_iPad()
 -(void)_introComplete:(NSNotification *)notification;
 @end
 
-@implementation SNSplashViewController_iPhone
+@implementation SNSplashViewController_iPad
 
 -(id)init {
 	if ((self = [super init])) {
@@ -39,13 +35,13 @@
 	[self.view addSubview:_holderView];
 	
 	_progressView = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
-	_progressView.frame = CGRectMake(277, 20, 28, 28);
+	_progressView.frame = CGRectMake(self.view.frame.size.width - 48, 20, 28, 28);
 	[(UIActivityIndicatorView *)_progressView startAnimating];
 	[self.view addSubview:_progressView];
 	
-	_logoView = [[SNLogoView alloc] initAtPosition:CGPointMake(27, 374)];
+	_logoView = [[SNLogoView alloc] initAtPosition:CGPointMake(27, self.view.frame.size.height - 100.0)];
 	[self.view addSubview:_logoView];
-		
+	
 	_introImageView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	_introImageView.image = [UIImage imageNamed:[_photoSlides objectAtIndex:[_photoSlides count] - 1]];
 	_introImageView.alpha = 0.0;
@@ -121,7 +117,7 @@
 		self.view.frame = CGRectMake(-self.view.bounds.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height);
 	}];
 	
-	[self presentViewController:[[[SNVideoListViewController_iPhone alloc] initWithUserInterfaceIdiom:[[UIDevice currentDevice] userInterfaceIdiom]] autorelease] animated:NO completion:nil];
+	//[self presentViewController:[[[SNVideoListViewController_iPhone alloc] initWithUserInterfaceIdiom:[[UIDevice currentDevice] userInterfaceIdiom]] autorelease] animated:NO completion:nil];
 }
 
 @end
