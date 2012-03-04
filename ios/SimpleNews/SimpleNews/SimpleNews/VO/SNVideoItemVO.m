@@ -11,7 +11,7 @@
 @implementation SNVideoItemVO
 
 @synthesize dictionary;
-@synthesize video_id, type_id, youtube_id, video_title, video_info, video_url, image_url, thumb_url;
+@synthesize video_id, type_id, youtube_id, video_title, video_info, channelImg_url, video_url, image_url, thumb_url;
 
 +(SNVideoItemVO *)videoItemWithDictionary:(NSDictionary *)dictionary {
 	
@@ -26,6 +26,7 @@
 	vo.video_url = [dictionary objectForKey:@"video"];
 	vo.image_url = [dictionary objectForKey:@"image"];
 	vo.thumb_url = [dictionary objectForKey:@"thumb"];
+	vo.channelImg_url = [dictionary objectForKey:@"channel"];
 	
 	//vo.thumb_url = [NSString stringWithFormat:@"http://i.ytimg.com/vi/%@/hqdefault.jpg", vo.youtube_id];
 	//vo.image_url = [NSString stringWithFormat:@"http://i.ytimg.com/vi/%@/hqdefault.jpg", vo.youtube_id];

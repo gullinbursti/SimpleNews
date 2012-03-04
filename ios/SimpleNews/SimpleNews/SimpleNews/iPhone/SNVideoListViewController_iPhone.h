@@ -9,28 +9,22 @@
 #import <UIKit/UIKit.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-#import "SNActiveListViewController_iPhone.h"
-#import "SNVideoDetailsView_iPhone.h"
 #import "SNCategoryListView_iPhone.h"
 #import "SNPluginListView_iPhone.h"
 #import "SNVideoSearchView_iPhone.h"
-#import "SNVideoItemView_iPhone.h"
 #import "SNPlayingListViewController_iPhone.h"
 
 #import "EGORefreshTableHeaderView.h"
 
-@interface SNVideoListViewController_iPhone : UIViewController <EGORefreshTableHeaderDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate> {
+@interface SNVideoListViewController_iPhone : UIViewController <EGORefreshTableHeaderDelegate, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate> {
 	UIUserInterfaceIdiom _userInterfaceIdiom;
 	
 	UIView *_holderView;
 	
 	BOOL _isReloading;
-	UIScrollView *_scrollView;
-	SNActiveListViewController_iPhone *_activeListViewController;
-	SNVideoDetailsView_iPhone *_videoDetailsView;
+	UITableView *_tableView;
 	
 	NSMutableArray *_videoItems;
-	NSMutableArray *_itemViews;
 	
 	SNPlayingListViewController_iPhone *_playingListViewController;
 	SNCategoryListView_iPhone *_categoryListView;

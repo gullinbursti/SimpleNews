@@ -9,9 +9,8 @@
 #import "SNVideoListViewController_iPhone.h"
 #import "SNVideoItemVO.h"
 #import "SNAppDelegate.h"
-
-#import "SNVideoItemView_iPhone.h"
-#import "SNVideoDetailsView_iPhone.h"
+#import "SNVideoListHeaderView.h"
+#import "SNVideoItemViewCell_iPhone.h"
 
 @interface SNVideoListViewController_iPhone()
 -(NSUInteger)screenNumber;
@@ -59,7 +58,6 @@
 
 		_userInterfaceIdiom = userInterfaceIdiom;
 		_videoItems = [NSMutableArray new];
-		_itemViews = [NSMutableArray new];
 		_isCategories = NO;
 		_isDetails = NO;
 		_isStore = NO;
@@ -82,7 +80,7 @@
 }
 
 -(void)dealloc {
-	[_scrollView release];
+	[_tableView release];
 	
 	[super dealloc];
 }
@@ -106,35 +104,31 @@
 	_holderView = [[UIView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)];
 	[self.view addSubview:_holderView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height - _holderView.frame.origin.y)];
-	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	_scrollView.opaque = YES;
-	_scrollView.scrollsToTop = NO;
-	_scrollView.pagingEnabled = NO;
-	_scrollView.delegate = self;
-	_scrollView.showsHorizontalScrollIndicator = NO;
-	_scrollView.showsVerticalScrollIndicator = NO;
-	_scrollView.alwaysBounceVertical = NO;
-	_scrollView.contentSize = self.view.frame.size;
-	_scrollView.contentInset = UIEdgeInsetsMake(0.0, 0.0f, 0.0f, 0.0f);
-	[_holderView addSubview:_scrollView];
+	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height - _holderView.frame.origin.y) style:UITableViewStylePlain];
+	_tableView.rowHeight = 164.0;
+	_tableView.backgroundColor = [UIColor clearColor];
+	_tableView.separatorColor = [UIColor clearColor];
+	_tableView.delegate = self;
+	_tableView.dataSource = self;
+	_tableView.scrollsToTop = NO;
+	_tableView.pagingEnabled = NO;
+	_tableView.showsHorizontalScrollIndicator = NO;
+	_tableView.showsVerticalScrollIndicator = NO;
+	_tableView.alwaysBounceVertical = NO;
+	_tableView.contentSize = self.view.frame.size;
+	_tableView.contentInset = UIEdgeInsetsMake(0.0, 0.0f, 0.0f, 0.0f);
+	[_holderView addSubview:_tableView];
 	
-	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -_scrollView.bounds.size.height, self.view.frame.size.width, _scrollView.bounds.size.height)];
+	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -_tableView.bounds.size.height, self.view.frame.size.width, _tableView.bounds.size.height)];
 	_refreshHeaderView.delegate = self;
-	[_scrollView addSubview:_refreshHeaderView];
+	[_tableView addSubview:_refreshHeaderView];
 	[_refreshHeaderView refreshLastUpdatedDate];
 	
 	int tot = 0;
-	for (SNVideoItemVO *vo in _videoItems) {
-		SNVideoItemView_iPhone *itemView = [[[SNVideoItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 200 * tot, self.view.bounds.size.width, 200.0) videoItemVO:vo] autorelease];
-		[_itemViews addObject:itemView];		
-		[_scrollView addSubview:itemView];
-		
-		//NSLog(@"VIDEO ITEM:[%d] \"%@\"", vo.video_id, vo.video_title);
+	for (SNVideoItemVO *vo in _videoItems)
 		tot++;
-	}
 	
-	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 200.0 * tot);
+	_tableView.contentSize = CGSizeMake(self.view.frame.size.width, 200.0 * tot);
 	
 	UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)];
 	[panRecognizer setMinimumNumberOfTouches:1];
@@ -152,9 +146,6 @@
 	_playingListViewController = [[SNPlayingListViewController_iPhone alloc] initWithVideos:_videoItems];
 	_playingListViewController.view.frame = CGRectMake(self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height);
 	[self.view addSubview:_playingListViewController.view];
-	
-	//_videoDetailsView = [[SNVideoDetailsView_iPhone alloc] initWithFrame:CGRectMake(self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
-	//[self.view addSubview:_videoDetailsView];
 	
 	_categoryListView = [[SNCategoryListView_iPhone alloc] initWithFrame:CGRectMake(self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
 	[self.view addSubview:_categoryListView];
@@ -196,7 +187,7 @@
 -(void)_goPlugins {
 	NSLog(@"GO PLUGINS");
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_scrollView.frame = CGRectMake(self.view.bounds.size.width, _scrollView.frame.origin.y, _scrollView.frame.size.width, _holderView.frame.size.height);
+		_tableView.frame = CGRectMake(self.view.bounds.size.width, _tableView.frame.origin.y, _tableView.frame.size.width, _tableView.frame.size.height);
 		_pluginListView.frame = CGRectMake(0.0, _pluginListView.frame.origin.y, self.view.bounds.size.width, _pluginListView.frame.size.height);
 	}];
 }
@@ -211,7 +202,7 @@
 	if (!_isCategories) {
 		if (translatedPoint.x < -20 && abs(translatedPoint.y) < 30) {
 			[UIView animateWithDuration:0.33 animations:^(void) {
-				_scrollView.frame = CGRectMake(-_scrollView.frame.size.width, 0.0, _scrollView.frame.size.width, _scrollView.frame.size.height);
+				_tableView.frame = CGRectMake(-_tableView.frame.size.width, 0.0, _tableView.frame.size.width, _tableView.frame.size.height);
 				_categoryListView.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
 				_isCategories = YES;
 			} completion:^(BOOL finished) {
@@ -226,105 +217,13 @@
 
 -(void)_goLongPress:(id)sender {
 	CGPoint holdPt = [(UIPanGestureRecognizer*)sender locationInView:_holderView];
-	holdPt.y = (_scrollView.contentOffset.y + holdPt.y);
-	
-	int ind = 0;
-	for (SNVideoItemView_iPhone *view in _itemViews) {
-		if (CGRectContainsPoint(view.frame, holdPt)) {
-			SNVideoItemVO *vo = (SNVideoItemVO *)[_videoItems objectAtIndex:ind];
-			NSLog(@"FOUND TOUCH IN:(%@)", vo.video_title);
-			[view fadeTo:1.0];
-		
-		} else {
-			[view fadeTo:0.5];
-		}
-		
-		ind++;
-	}
+	holdPt.y = (_tableView.contentOffset.y + holdPt.y);
 }
 
 
 
 #pragma mark - Notification handlers
 -(void)_itemTapped:(NSNotification *)notification {
-	
-	SNVideoItemVO *vo = (SNVideoItemVO *)[notification object];
-	SNVideoItemView_iPhone *tappedView;
-	
-	int ind = 0;
-	for (SNVideoItemView_iPhone *view in _itemViews) {
-		if ([vo isEqual:view.vo]) {
-			tappedView = view;
-			_playingIndex = ind;
-			break;
-		}
-		
-		ind++;
-	}
-	
-//	[UIView animateWithDuration:0.33 animations:^(void) {
-//		tappedView.frame = CGRectMake(self.view.frame.size.width, tappedView.frame.origin.y, tappedView.frame.size.width, tappedView.frame.size.height);
-//	
-//	} completion:^(BOOL finished) {
-//		[tappedView removeFromSuperview];
-//		tappedView.frame = CGRectMake(0.0, [_itemViews count] * 150, self.view.bounds.size.width, 150.0);
-//		
-//		for (int i=ind; i<[_itemViews count]; i++) {
-//			SNVideoItemView_iPhone *view = (SNVideoItemView_iPhone *)[_itemViews objectAtIndex:i];
-//			int offset = view.frame.origin.y - 150.0;
-//			
-//			[UIView animateWithDuration:0.33 animations:^(void) {
-//				view.frame = CGRectMake(0.0, offset, self.view.bounds.size.width, 150.0);
-//				
-//			} completion:^(BOOL finished) {
-//				[_scrollView addSubview:tappedView];
-//				
-//				[_itemViews removeObject:tappedView];
-//				[_itemViews addObject:tappedView];
-//			}];
-//		}
-//		
-//		[self _resetActiveList];
-//		
-//		
-//		[UIView animateWithDuration:0.125 animations:^(void) {
-//			self.view.frame = CGRectMake(0.0, 24.0, self.view.frame.size.width, self.view.frame.size.height);
-//			
-//		} completion:^(BOOL finished) {
-//			if ([[UIScreen screens] count] == 1) {
-//				[UIView animateWithDuration:0.25 animations:^(void) {
-//					self.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
-//				}];
-//			}
-//			
-//			[SNAppDelegate playMP3:@"fpo_startVideo"];
-//			[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];
-//		}];
-//	}];
-	
-	[SNAppDelegate playMP3:@"fpo_tapVideo"];
-	//[_videoDetailsView changeVideo:vo];
-	
-	[_playingListViewController offsetAtIndex:_playingIndex];
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_scrollView.frame = CGRectMake(-self.view.bounds.size.width, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
-		_playingListViewController.view.frame = CGRectMake(0.0, _playingListViewController.view.frame.origin.y, _playingListViewController.view.bounds.size.width, _playingListViewController.view.frame.size.height);
-		_isDetails = YES;
-		
-	} completion:^(BOOL finished) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];
-	}];
-	
-	/*
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_scrollView.frame = CGRectMake(-_scrollView.frame.size.width, 0.0, _scrollView.frame.size.width, _scrollView.frame.size.height);
-		_videoDetailsView.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
-		_isDetails = YES;
-	} completion:^(BOOL finished) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];
-	}];
-	*/
 }
 
 
@@ -333,15 +232,15 @@
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_categoryListView.frame = CGRectMake(self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height);
-		_scrollView.frame = CGRectMake(0.0,  _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
+		_tableView.frame = CGRectMake(0.0, _tableView.frame.origin.y, _tableView.frame.size.width, _tableView.frame.size.height);
 	}];
 	
-	_scrollView.contentOffset = CGPointMake(0.0, 0.0);
+	_tableView.contentOffset = CGPointMake(0.0, 0.0);
 }
 
 -(void)_airplayBack:(NSNotification *)notification {
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_scrollView.frame = CGRectMake(0.0, _holderView.frame.origin.y, _holderView.frame.size.width, _holderView.frame.size.height);
+		_tableView.frame = CGRectMake(0.0, _tableView.frame.origin.y, _tableView.frame.size.width, _tableView.frame.size.height);
 		_pluginListView.frame = CGRectMake(-self.view.bounds.size.width, _pluginListView.frame.origin.y, _pluginListView.frame.size.width, _pluginListView.frame.size.height);
 	}];
 }
@@ -359,33 +258,98 @@
 	if (_playingIndex == [_videoItems count])
 		_playingIndex = 0;
 	
+	[_playingListViewController offsetAtIndex:_playingIndex];
+	
 	SNVideoItemVO *vo = (SNVideoItemVO *)[_videoItems objectAtIndex:_playingIndex];
-	
-	[_videoDetailsView changeVideo:vo];
-	
-	[UIView animateWithDuration:0.33 delay:0.33 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
-		_scrollView.frame = CGRectMake(-_scrollView.frame.size.width, 0.0, _scrollView.frame.size.width, _scrollView.frame.size.height);
-		_videoDetailsView.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
-		_isDetails = YES;
-	} completion:^(BOOL finished) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];
-	}];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:vo];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];
 }
 
 
 -(void)_detailsReturn:(NSNotification *)notification {
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_scrollView.frame = CGRectMake(0.0, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
+		_tableView.frame = CGRectMake(0.0, _tableView.frame.origin.y, _tableView.frame.size.width, _tableView.frame.size.height);
 		_playingListViewController.view.frame = CGRectMake(self.view.bounds.size.width, _playingListViewController.view.frame.origin.y, _playingListViewController.view.bounds.size.width, _playingListViewController.view.frame.size.height);
 	}];
 }
 
 
 
+
+#pragma mark - TableView Data Source Delegates
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return ([_videoItems count]);
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	return (1);
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	SNVideoItemViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNVideoItemViewCell_iPhone cellReuseIdentifier]];
+	
+	if (cell == nil)
+		cell = [[[SNVideoItemViewCell_iPhone alloc] init] autorelease];
+	
+	cell.vo = [_videoItems objectAtIndex:indexPath.section];
+	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+	
+	return (cell);
+}
+
+
+
+#pragma mark - TableView Delegates
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+	return (34.0);
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return (166.0);
+}
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+	
+	SNVideoListHeaderView *headerView = [[[SNVideoListHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, 34.0)] autorelease];
+	headerView.vo = (SNVideoItemVO *)[_videoItems objectAtIndex:section];
+	
+	return (headerView);
+}
+
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	[SNAppDelegate playMP3:@"fpo_tapVideo"];
+	
+	[((SNVideoItemViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]) setSelected:YES animated:NO];
+	
+	SNVideoItemVO *vo = (SNVideoItemVO *)[_videoItems objectAtIndex:indexPath.section];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:vo];
+	
+	_playingIndex = indexPath.section;
+	[_playingListViewController offsetAtIndex:_playingIndex];
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_tableView.frame = CGRectMake(-self.view.bounds.size.width, _tableView.frame.origin.y, _tableView.frame.size.width, _tableView.frame.size.height);
+		_playingListViewController.view.frame = CGRectMake(0.0, _playingListViewController.view.frame.origin.y, _playingListViewController.view.bounds.size.width, _playingListViewController.view.frame.size.height);
+		_isDetails = YES;
+		
+	} completion:^(BOOL finished) {
+		[tableView deselectRowAtIndexPath:indexPath animated:NO];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];
+	}];
+	
+	//[tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
+
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+}
+
+
 #pragma mark - ScrollView Delegates
 // any offset changes
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+	[_refreshHeaderView egoRefreshScrollViewDidScroll:_tableView];
 }
 
 
@@ -400,7 +364,7 @@
 
 // called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
-	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:_tableView];
 }
 
 
@@ -424,13 +388,13 @@
 
 -(void)_doneLoadingData {
 	_isReloading = NO;
-	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_scrollView];
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_tableView];
 }
 
 
 -(void)_resetToTop {
 	[UIView animateWithDuration:0.25 animations:^(void) {
-		_scrollView.contentOffset = CGPointMake(0.0, 55.0);
+		_tableView.contentOffset = CGPointMake(0.0, 55.0);
 	}];
 }
 

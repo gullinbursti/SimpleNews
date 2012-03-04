@@ -32,6 +32,8 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_playbackStateChangedCallback:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_loadStateChangedCallback:) name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_playingChangeCallback:) name:MPMoviePlayerNowPlayingMovieDidChangeNotification object:nil];
+		 
 		
 		_videoHolderView = [[UIView alloc] initWithFrame:frame];
 		[self addSubview:_videoHolderView];
@@ -43,8 +45,6 @@
 		
 		_overlayImgView = [[EGOImageView alloc] initWithFrame:frame];
 		_overlayImgView.alpha = 0.33;
-		_overlayImgView.clipsToBounds = YES;
-		_overlayImgView.transform = CGAffineTransformMakeScale(1.33, 1.33);
 		_overlayImgView.image = [_overlayImgView.image stackBlur:4];
 		[_overlayHolderView addSubview:_overlayImgView];
 		
@@ -59,6 +59,8 @@
 			//[self addSubview:thumbImageView];
 		}
 		 */
+		
+		_isFirst = YES;
 	}
 	
 	return (self);
@@ -67,6 +69,7 @@
 -(void)setupMPC {
 	NSLog(@"----[PLAYER SETUP]----(%@)", _videoURL);
 	
+	//MPMoviePlayerController *mp = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Jurassic Park - Dodson & Nedry" ofType:@"mp4"]]];
 	MPMoviePlayerController *mp = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:_videoURL]];;
 	self.mpc = mp;
 	[mp release];
@@ -94,7 +97,8 @@
 	_hud.labelText = @"Loading…";
 	_hud.dimBackground = NO;
 	
-	_overlayHolderView.hidden = NO;
+	if (!_isFirst)
+		_overlayHolderView.hidden = NO;
 }
 
 
@@ -104,11 +108,17 @@
 	
 	_duration = -1.0;
 	_isFinished = NO;
-	_timer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_timerTick) userInfo:nil repeats:YES];
+	
+	_isFirst = NO;
+	
+	[_timer invalidate];
+	_timer = nil;
+	
+	_timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(_timerTick) userInfo:nil repeats:YES];
 }
 
 -(void)vcFinished:(NSNotification *)notification {
-	NSLog(@"----[FINISHED PLAYBACK]----");
+	NSLog(@"----[FINISHED PLAYBACK](%d)----", (self.mpc.currentPlaybackTime > self.mpc.duration - 1.5));
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
 	
 	_isFinished = YES;
@@ -119,16 +129,39 @@
 	[self.mpc.view removeFromSuperview];
 	//[self setupMPC];
 	
-	if (self.mpc.currentPlaybackTime == self.mpc.duration)
+	if (self.mpc.currentPlaybackTime > self.mpc.duration - 1.5)
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
 }
 
 -(void)_loadStateChangedCallback:(NSNotification *)notification {
 	NSLog(@"----[LOAD STATE CHANGED[%d]]----", self.mpc.loadState);
+	
+	switch (self.mpc.loadState) {
+		case MPMovieLoadStatePlayable:
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_DURATION" object:[NSNumber numberWithFloat:self.mpc.duration]];
+			
+			break;
+			
+		case 3:
+			_overlayHolderView.hidden = YES;
+			self.mpc.view.hidden = NO;
+			
+			if (_hud != nil) {
+				[_hud removeFromSuperview];
+				_hud = nil;
+			}
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_SIZE" object:[NSNumber numberWithFloat:self.mpc.naturalSize.height]];
+			break;
+	}
 }
 
 -(void)_playbackStateChangedCallback:(NSNotification *)notification {
-	NSLog(@"----[PLAYBACK STATE CHANGED[%d]]----", self.mpc.playbackState);
+	NSLog(@"----[PLAYBACK STATE CHANGED[%d]]----", self.mpc.playbackState);	
+}
+
+
+-(void)_playingChangeCallback:(NSNotification *)notification {
+	NSLog(@"----[PLAYING CHANGED[%d]]----", self.mpc.playbackState);
 }
 
 
@@ -165,6 +198,16 @@
 	
 	[self.mpc stop];
 	
+	_overlayImgView.imageURL = [NSURL URLWithString:_vo.thumb_url];
+	_overlayImgView.image = [_overlayImgView.image stackBlur:8];
+	
+	_hud = [MBProgressHUD showHUDAddedTo:_overlayHolderView animated:YES];
+	_hud.labelFont = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+	_hud.labelText = @"Loading…";
+	_hud.dimBackground = NO;
+	
+	_overlayHolderView.hidden = NO;
+	
 	_isPaused = YES;
 	_isFinished = NO;
 }
@@ -191,7 +234,6 @@
 }
 
 
-
 -(void)_startScrubbing:(NSNotification *)notification {
 	NSLog(@"----START SCRUBBING----");
 	
@@ -207,28 +249,9 @@
 
 
 
-
-
-
-
 -(void)_timerTick {
 	NSLog(@"VIDEO POS:[%f/%f]", self.mpc.currentPlaybackTime, self.mpc.duration);
-	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_TIME" object:[NSNumber numberWithFloat:self.mpc.currentPlaybackTime]];
-	if (!_overlayHolderView.hidden && self.mpc.currentPlaybackTime > 0.0) {
-		_overlayHolderView.hidden = YES;
-		self.mpc.view.hidden = NO;
-		
-		if (_hud != nil) {
-			[_hud removeFromSuperview];
-			_hud = nil;
-		}
-	}
-	
-	if (_duration == -1.0 && self.mpc.duration > 0.0) {
-		_duration = self.mpc.duration;
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_DURATION" object:[NSNumber numberWithFloat:self.mpc.duration]];
-	}
 }
 
 

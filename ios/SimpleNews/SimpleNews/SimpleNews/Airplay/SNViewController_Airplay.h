@@ -9,20 +9,19 @@
 #import <UIKit/UIKit.h>
 
 #import "SNVideoPlayerView_Airplay.h"
-#import "SNLogoView.h"
-#import "SNClockView.h"
 
+#import "SNGadgetsView_Airplay.h"
 #import "MBProgressHUD.h"
 #import "EGOImageView.h"
 
 @interface SNViewController_Airplay : UIViewController {
 	SNVideoPlayerView_Airplay *_videoPlayerView;
-	
-	SNLogoView *_logoView;
-	SNClockView *_clockView;
-	
+
+	SNGadgetsView_Airplay *_gadgetsView;
 	MBProgressHUD *_hud;
 	EGOImageView *_bufferingImgView;
+	
+	UIImageView *_hdLogoImgView;
 }
 
 -(id)initWithFrame:(CGRect)frame;

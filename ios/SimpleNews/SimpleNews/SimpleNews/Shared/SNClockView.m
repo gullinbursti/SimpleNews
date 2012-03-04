@@ -37,7 +37,7 @@
 	[NSDateFormatter setDefaultFormatterBehavior:NSDateFormatterBehaviorDefault];
 	NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
 	[dateFormatter setDateStyle:NSDateFormatterNoStyle];
-	[dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
 	
 	_label.text = [NSString stringWithFormat:@"%@", [dateFormatter stringFromDate:date]];
 }

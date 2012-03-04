@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 
 #import "SNVideoItemVO.h"
+#import "EGOImageView.h"
 
 @interface SNVideoListHeaderView : UIView {
+	EGOImageView *_imageView;
 	UILabel *_titleLabel;
 	SNVideoItemVO *_vo;
 }

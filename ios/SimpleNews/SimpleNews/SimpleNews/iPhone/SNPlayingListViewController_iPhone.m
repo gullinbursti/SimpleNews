@@ -15,6 +15,8 @@
 
 -(id)initWithVideos:(NSMutableArray *)videos {
 	if ((self = [super init])) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
+		
 		_videoItems = videos;
 		_views = [[NSMutableArray alloc] init];
 	}
@@ -49,7 +51,7 @@
 	}
 	
 	_playPauseButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_playPauseButton.frame = CGRectMake(300.0, 460.0, 10.0, 10.0);
+	_playPauseButton.frame = CGRectMake(290.0, 450.0, 20.0, 20.0);
 	[_playPauseButton setBackgroundColor:[UIColor whiteColor]];
 	[_playPauseButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_playPauseButton];
@@ -81,7 +83,7 @@
 	
 	[UIView animateWithDuration:0.25 delay:0.33 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
 		_backButton.frame = CGRectMake(0.0, 0.0, _backButton.frame.size.width, _backButton.frame.size.height);
-		_playPauseButton.frame = CGRectMake(300.0, 460.0, _playPauseButton.frame.size.width, _playPauseButton.frame.size.height);
+		_playPauseButton.frame = CGRectMake(290.0, 450.0, _playPauseButton.frame.size.width, _playPauseButton.frame.size.height);
 	
 	} completion:^(BOOL finished) {
 		for (SNPlayingVideoItemView_iPhone *videoItemView in _views)
@@ -109,6 +111,11 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TOGGLE_VIDEO_PLAYBACK" object:nil];
 }
 
+#pragma mark - Notification handlers
+-(void)_videoEnded:(NSNotification *)notification {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"NEXT_VIDEO" object:nil];
+}
+
 #pragma mark - ScrollView Delegates
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
 	//[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:[_videoItems objectAtIndex:(scrollView.contentOffset.x / self.view.frame.size.width)]];	
@@ -119,6 +126,7 @@
 }
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:[_videoItems objectAtIndex:(scrollView.contentOffset.x / self.view.frame.size.width)]];	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:[_videoItems objectAtIndex:(scrollView.contentOffset.x / self.view.frame.size.width)]];	
 }
 @end

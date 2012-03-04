@@ -19,6 +19,7 @@
 @property (nonatomic, retain) NSString *youtube_id;
 @property (nonatomic, retain) NSString *video_title;
 @property (nonatomic, retain) NSString *video_info;
+@property (nonatomic, retain) NSString *channelImg_url;
 @property (nonatomic, retain) NSString *image_url;
 @property (nonatomic, retain) NSString *thumb_url;
 @property (nonatomic, retain) NSString *video_url;

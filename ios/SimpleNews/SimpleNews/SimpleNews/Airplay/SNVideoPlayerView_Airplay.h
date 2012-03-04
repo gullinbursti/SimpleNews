@@ -19,6 +19,7 @@
 	NSTimer *_timer;
 	BOOL _isFinished;
 	BOOL _isPaused;
+	BOOL _isFirst;
 	float _duration;
 	
 	UIWebView *_webView;

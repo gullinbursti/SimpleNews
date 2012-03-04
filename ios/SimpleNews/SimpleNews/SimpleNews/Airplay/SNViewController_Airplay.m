@@ -15,7 +15,13 @@
 
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super init])) {
-		self.view.frame = frame;		
+		self.view.frame = frame;
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_itemTapped:) name:@"ITEM_TAPPED" object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoDuration:) name:@"VIDEO_DURATION" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoSize:) name:@"VIDEO_SIZE" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
 	}
 	
 	return (self);
@@ -33,11 +39,13 @@
 	_videoPlayerView = [[[SNVideoPlayerView_Airplay alloc] initWithFrame:CGRectMake(0.0, 0.0, 1280.0, 720.0)] autorelease];
 	[self.view addSubview:_videoPlayerView];
 		
-	_logoView = [[SNLogoView alloc] initAtPosition:CGPointMake(27.0, 650.0)];
-	[self.view addSubview:_logoView];
+	_gadgetsView = [[SNGadgetsView_Airplay alloc] initWithFrame:CGRectMake(0.0, 0.0, 256.0, 720.0)];
+	[self.view addSubview:_gadgetsView];
 	
-	_clockView = [[SNClockView alloc] initAtPosition:CGPointMake(1290.0, 700.0)];
-	[self.view addSubview:_clockView];
+	_hdLogoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(1200.0, 650.0, 64.0, 64.0)];
+	_hdLogoImgView.image = [UIImage imageNamed:@"hdLogo.png"];
+	_hdLogoImgView.hidden = YES;
+	[self.view addSubview:_hdLogoImgView];
 }
 
 -(void)viewDidLoad {
@@ -54,17 +62,23 @@
 
 -(void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	
-	//[UIView animateWithDuration:1.0 animations:^(void) {
-	//	_videoPlayerView.frame = CGRectMake(_videoPlayerView.frame.origin.x, -360.0, _videoPlayerView.frame.size.width, _videoPlayerView.frame.size.height);;
-	//}];
-	
-	[UIView animateWithDuration:0.5 animations:^(void) {
-		_clockView.frame = CGRectMake(1100.0, _clockView.frame.origin.y, _clockView.frame.size.width, _clockView.frame.size.height);
-	}];
 }
 
 
 #pragma mark - Notification handlers
+-(void)_itemTapped:(NSNotification *)notification {
+	_hdLogoImgView.hidden = YES;
+}
+
+-(void)_videoDuration:(NSNotification *)notification {
+}
+
+-(void)_videoSize:(NSNotification *)notification {
+	_hdLogoImgView.hidden = ( [[notification object] floatValue] < 720.0);
+}
+
+-(void)_videoEnded:(NSNotification *)notification {
+}
+
 
 @end
