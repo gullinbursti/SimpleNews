@@ -8,6 +8,33 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SNVideoGridViewController_iPad : UIViewController
+#import "EGORefreshTableHeaderView.h"
+
+@interface SNVideoGridViewController_iPad : UIViewController <EGORefreshTableHeaderDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate> {
+	UIScrollView *_scrollView;
+	
+	UIView *_holderView;
+	
+	BOOL _isReloading;
+	
+	NSMutableArray *_videoItems;
+	NSMutableArray *_views;
+	
+	//SNPlayingListViewController_iPhone *_playingListViewController;
+	//SNCategoryListView_iPhone *_categoryListView;
+	//SNPluginListView_iPhone *_pluginListView;
+	
+	EGORefreshTableHeaderView *_refreshHeaderView;
+	
+	CGPoint _offsetPt;
+	
+	float _scrollOffset;
+	
+	int _playingIndex;
+	
+	BOOL _isDetails;
+	BOOL _isStore;
+	BOOL _isCategories;
+}
 
 @end

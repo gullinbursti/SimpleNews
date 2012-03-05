@@ -1,20 +1,20 @@
 //
-//  SNVideoPlayerView_Airplay.h
+//  SNVideoPlayerViewController_iPhone.h
 //  SimpleNews
 //
-//  Created by Matthew Holcombe on 02.20.12.
+//  Created by Matthew Holcombe on 03.04.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+
 #import "SNVideoItemVO.h"
 #import "EGOImageView.h"
 
 #import "MBProgressHUD.h"
 
-@interface SNVideoPlayerView_Airplay : UIView <UIWebViewDelegate> {
-	//MPMoviePlayerController *_playerController;
+@interface SNVideoPlayerViewController_iPhone : UIViewController {
 	
 	NSTimer *_timer;
 	BOOL _isFinished;
@@ -36,5 +36,6 @@
 
 
 @property (nonatomic, retain) MPMoviePlayerController *mpc;
+
 
 @end

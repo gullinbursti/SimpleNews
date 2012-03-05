@@ -8,6 +8,8 @@
 
 #import "SNSplashViewController_iPad.h"
 
+#import "SNVideoGridViewController_iPad.h"
+
 @interface SNSplashViewController_iPad()
 -(void)_introComplete:(NSNotification *)notification;
 @end
@@ -117,7 +119,13 @@
 		self.view.frame = CGRectMake(-self.view.bounds.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height);
 	}];
 	
-	//[self presentViewController:[[[SNVideoListViewController_iPhone alloc] initWithUserInterfaceIdiom:[[UIDevice currentDevice] userInterfaceIdiom]] autorelease] animated:NO completion:nil];
+	[self presentViewController:[[[SNVideoGridViewController_iPad alloc] init] autorelease] animated:NO completion:nil];
+}
+
+
+-(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	//return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
+	return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 @end

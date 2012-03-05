@@ -10,8 +10,6 @@
 #import "SNAppDelegate.h"
 #import "UIImage+StackBlur.h"
 
-#import "SNLogoView.h"
-
 @implementation SNVideoPlayerView_Airplay
 
 @synthesize mpc;

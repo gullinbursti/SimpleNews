@@ -62,7 +62,14 @@
 	[_backButton setBackgroundImage:[UIImage imageNamed:@"closeButton.png"] forState:UIControlStateHighlighted];
 	[_backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_backButton];
+	
+	_videoPlayerViewController = [[SNVideoPlayerViewController_iPhone alloc] init];
+	_videoPlayerViewController.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
+	[self.view addSubview:_videoPlayerViewController.view];
 
+	//UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:_videoPlayerViewController] autorelease];
+	//[self.navigationController pushViewController:navigationController animated:YES];	
+	//[self.navigationController presentModalViewController:_videoPlayerViewController animated:YES];
 }
 
 -(void)viewDidLoad {
@@ -115,6 +122,7 @@
 -(void)_videoEnded:(NSNotification *)notification {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"NEXT_VIDEO" object:nil];
 }
+
 
 #pragma mark - ScrollView Delegates
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {

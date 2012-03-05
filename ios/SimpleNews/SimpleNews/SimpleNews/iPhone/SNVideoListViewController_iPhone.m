@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+
+
 #import "SNVideoListViewController_iPhone.h"
 #import "SNVideoItemVO.h"
 #import "SNAppDelegate.h"
@@ -73,7 +75,7 @@
 			[_videoItems addObject:[SNVideoItemVO videoItemWithDictionary:testVideoItem]];
 		
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"START_VIDEO_PLAYBACK" object:((SNVideoItemVO *)[_videoItems objectAtIndex:0]).video_url];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:@"START_VIDEO_PLAYBACK" object:((SNVideoItemVO *)[_videoItems objectAtIndex:0]).video_url];
 	}
 	
 	return (self);
@@ -87,6 +89,38 @@
 
 -(void)didReceiveMemoryWarning {
 	[super didReceiveMemoryWarning];
+}
+
+
+-(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	NSLog(@"ORIENTATION:[%d]", interfaceOrientation);
+	
+	
+	if (interfaceOrientation == UIInterfaceOrientationPortrait) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"ORIENTED_PORTRAIT" object:nil];
+		
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_categoryListView.frame = CGRectMake(self.view.frame.size.width, 0.0, _categoryListView.frame.size.width, _categoryListView.frame.size.height);
+			_tableView.frame = CGRectMake(-self.view.bounds.size.width, _tableView.frame.origin.y, _tableView.frame.size.width, _tableView.frame.size.height);
+			_playingListViewController.view.frame = CGRectMake(0.0, _playingListViewController.view.frame.origin.y, _playingListViewController.view.bounds.size.width, _playingListViewController.view.frame.size.height);
+			_isDetails = YES;
+			
+		} completion:nil];
+		
+	} else if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"ORIENTED_LANDSCAPE" object:nil];
+		
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_categoryListView.frame = CGRectMake(self.view.frame.size.width + 200, 0.0, _categoryListView.frame.size.width, _categoryListView.frame.size.height);
+			_tableView.frame = CGRectMake(-self.view.bounds.size.width, _tableView.frame.origin.y, _tableView.frame.size.width, _tableView.frame.size.height);
+			_playingListViewController.view.frame = CGRectMake(0.0, _playingListViewController.view.frame.origin.y, _playingListViewController.view.bounds.size.width, _playingListViewController.view.frame.size.height);
+			_isDetails = YES;
+			
+		} completion:nil];
+	}
+	
+	
+	return ((interfaceOrientation == UIInterfaceOrientationPortrait) || (interfaceOrientation == UIInterfaceOrientationLandscapeLeft));
 }
 
 #pragma mark - View lifecycle
@@ -104,7 +138,7 @@
 	_holderView = [[UIView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)];
 	[self.view addSubview:_holderView];
 	
-	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height - _holderView.frame.origin.y) style:UITableViewStylePlain];
+	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(-self.view.bounds.size.width, 0.0, self.view.bounds.size.width, self.view.bounds.size.height - _holderView.frame.origin.y) style:UITableViewStylePlain];
 	_tableView.rowHeight = 164.0;
 	_tableView.backgroundColor = [UIColor clearColor];
 	_tableView.separatorColor = [UIColor clearColor];
@@ -117,7 +151,7 @@
 	_tableView.alwaysBounceVertical = NO;
 	_tableView.contentSize = self.view.frame.size;
 	_tableView.contentInset = UIEdgeInsetsMake(0.0, 0.0f, 0.0f, 0.0f);
-	[_holderView addSubview:_tableView];
+	[self.view addSubview:_tableView];
 	
 	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -_tableView.bounds.size.height, self.view.frame.size.width, _tableView.bounds.size.height)];
 	_refreshHeaderView.delegate = self;
@@ -152,6 +186,30 @@
 	
 	_pluginListView = [[SNPluginListView_iPhone alloc] initWithFrame:CGRectMake(-self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
 	[self.view addSubview:_pluginListView];
+	
+	
+	[_playingListViewController offsetAtIndex:0];
+	SNVideoItemVO *vo = (SNVideoItemVO *)[_videoItems objectAtIndex:0];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:vo];
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_tableView.frame = CGRectMake(-self.view.bounds.size.width, _tableView.frame.origin.y, _tableView.frame.size.width, _tableView.frame.size.height);
+		_playingListViewController.view.frame = CGRectMake(0.0, _playingListViewController.view.frame.origin.y, _playingListViewController.view.bounds.size.width, _playingListViewController.view.frame.size.height);
+		_isDetails = YES;
+		
+	} completion:^(BOOL finished) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];
+	}];
+	
+	
+	
+	
+	
+	
+//	MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(280.0, 460.0, 40.0, 20.0)];
+//	[volumeView setShowsVolumeSlider:NO];
+//	[volumeView sizeToFit];
+//	[self.view addSubview:volumeView];
 }
 
 -(void)viewDidLoad {

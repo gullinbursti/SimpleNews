@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SNVideoPlayerViewController_iPhone.h"
 
 @interface SNPlayingListViewController_iPhone : UIViewController <UIScrollViewDelegate> {
 	
@@ -16,6 +17,8 @@
 	
 	UIButton *_backButton;
 	UIButton *_playPauseButton;
+	
+	SNVideoPlayerViewController_iPhone *_videoPlayerViewController;
 }
 
 -(id)initWithVideos:(NSMutableArray *)videos;
