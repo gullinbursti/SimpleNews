@@ -14,6 +14,8 @@
 #import "SNSplashViewController_iPad.h"
 #import "SNViewController_Airplay.h"
 
+#import "Reachability.h"
+
 @implementation SNAppDelegate
 
 @synthesize windows;
@@ -37,7 +39,6 @@
 	return ([UIFont fontWithName:@"Helvetica-BoldOblique" size:14.0]);
 }
 
-
 +(UIFont *)snHelveticaNeueFontRegular {
 	return [UIFont fontWithName:@"HelveticaNeue" size:14.0];
 }
@@ -58,6 +59,20 @@
 	[audioPlayer play];
 }
 
+
++(BOOL)hasWiFi {
+	Reachability *wifiReachability = [[Reachability reachabilityForLocalWiFi] retain];
+	[wifiReachability startNotifier];
+	
+	return ([wifiReachability currentReachabilityStatus] == kReachableViaWiFi);
+}
+
++(BOOL)hasAirplay {
+	return ([[[NSUserDefaults standardUserDefaults] objectForKey:@"airplay_enabled"] isEqualToString:@"YES"]);
+}
+
+
+
 -(void)dealloc {
 	//[_window release];
 	//[_viewController release];
@@ -70,11 +85,18 @@
 	windows = [[NSMutableArray alloc] init];
 	NSLog(@"SCREENS:[%d]", [[UIScreen screens] count]);
 	
+	[[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"airplay_enabled"];
+	
 	int cnt = 0;
 	for (UIScreen *screen in [UIScreen screens]) {
 		SNSplashViewController_iPhone *_viewController = nil;
 		
 		NSLog(@":::::::]] SCREEN[%d](%f, %f)", cnt, screen.bounds.size.width, screen.bounds.size.height);
+		if (![SNAppDelegate hasWiFi]) {
+			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"No Wi-Fi" message:@"Turn on network" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+			[alertView show];
+			[alertView release];
+		}
 		
 		if (cnt == 0) {
 			
@@ -100,8 +122,6 @@
 		
 		cnt++;
 	}
-	
-	
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_screenDidConnect:) name:UIScreenDidConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_screenDidDisconnect:) name:UIScreenDidDisconnectNotification object:nil];

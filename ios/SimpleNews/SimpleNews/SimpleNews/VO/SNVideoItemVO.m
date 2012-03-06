@@ -28,8 +28,8 @@
 	vo.thumb_url = [dictionary objectForKey:@"thumb"];
 	vo.channelImg_url = [dictionary objectForKey:@"channel"];
 	
-	//vo.thumb_url = [NSString stringWithFormat:@"http://i.ytimg.com/vi/%@/hqdefault.jpg", vo.youtube_id];
-	//vo.image_url = [NSString stringWithFormat:@"http://i.ytimg.com/vi/%@/hqdefault.jpg", vo.youtube_id];
+	vo.thumb_url = [NSString stringWithFormat:@"http://i.ytimg.com/vi/%@/hqdefault.jpg", vo.youtube_id];
+	vo.image_url = [NSString stringWithFormat:@"http://i.ytimg.com/vi/%@/hqdefault.jpg", vo.youtube_id];
 	
 	return (vo);
 }

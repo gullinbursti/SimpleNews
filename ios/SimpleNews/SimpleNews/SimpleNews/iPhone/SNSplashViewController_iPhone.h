@@ -11,6 +11,7 @@
 #import "MBProgressHUD.h"
 #import "SNLogoView.h"
 #import "SNNoAirplayView_iPhone.h"
+#import "Reachability.h"
 
 @interface SNSplashViewController_iPhone : UIViewController {
 	NSMutableArray *_photoSlides;
@@ -26,6 +27,7 @@
 	
 	SNLogoView *_logoView;
 	SNNoAirplayView_iPhone *_noAirplayView;
+	Reachability *_wifiReachability;
 }
 
 @end

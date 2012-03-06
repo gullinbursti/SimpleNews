@@ -16,8 +16,8 @@
 
 -(id)init {
 	if ((self = [super init])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_orientedLandscape:) name:@"ORIENTED_LANDSCAPE" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_orientedPortrait:) name:@"ORIENTED_PORTRAIT" object:nil];
+		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_orientedLandscape:) name:@"ORIENTED_LANDSCAPE" object:nil];
+		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_orientedPortrait:) name:@"ORIENTED_PORTRAIT" object:nil];
 		
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startPlayback:) name:@"START_VIDEO_PLAYBACK" object:nil];
@@ -54,7 +54,7 @@
 	
 	_overlayHolderView = [[UIView alloc] initWithFrame:self.view.frame];
 	_overlayHolderView.hidden = YES;
-	[self.view addSubview:_overlayHolderView];
+	//[self.view addSubview:_overlayHolderView];
 	
 	_overlayImgView = [[EGOImageView alloc] initWithFrame:self.view.frame];
 	_overlayImgView.alpha = 0.33;
@@ -100,9 +100,9 @@
 	[mp release];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startedCallback:) name:MPMoviePlayerNowPlayingMovieDidChangeNotification object:nil];
-	//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(vcFinished:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(vcFinished:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
 	
-	self.mpc.controlStyle = MPMovieControlStyleDefault;
+	self.mpc.controlStyle = MPMovieControlStyleNone;
 	self.mpc.view.frame = self.view.frame;
 	self.mpc.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	self.mpc.shouldAutoplay = YES;
@@ -110,18 +110,15 @@
 	self.mpc.movieSourceType = MPMovieSourceTypeFile;
 	[self.mpc prepareToPlay];
 	[self.mpc setFullscreen:YES];
-	//self.mpc.view.hidden = YES;
+	[self.mpc play];
 	
+	self.mpc.view.alpha = 0.0;
+	self.mpc.view.hidden = YES;
 	[_videoHolderView addSubview:self.mpc.view];
 	
 	_overlayImgView.imageURL = [NSURL URLWithString:_vo.thumb_url];
 	_overlayImgView.image = [_overlayImgView.image stackBlur:8];
-	
-	_hud = [MBProgressHUD showHUDAddedTo:_overlayHolderView animated:YES];
-	_hud.labelFont = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-	_hud.labelText = @"Loading…";
-	_hud.dimBackground = NO;
-	
+		
 	if (!_isFirst)
 		_overlayHolderView.hidden = NO;
 }
@@ -143,38 +140,39 @@
 }
 
 -(void)vcFinished:(NSNotification *)notification {
-	NSLog(@"----[FINISHED PLAYBACK](%d)----", (self.mpc.currentPlaybackTime > self.mpc.duration - 1.5));
+	//NSLog(@"----[FINISHED PLAYBACK](%d)----", (self.mpc.currentPlaybackTime > self.mpc.duration - 1.5));
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
 	
+	/*
 	_isFinished = YES;
 	
 	[_timer invalidate];
 	_timer = nil;
 	
 	[self.mpc.view removeFromSuperview];
-	//[self setupMPC];
 	
 	if (self.mpc.currentPlaybackTime > self.mpc.duration - 1.5)
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
+	 */
 }
 
 -(void)_loadStateChangedCallback:(NSNotification *)notification {
-	NSLog(@"----[LOAD STATE CHANGED[%d]]----", self.mpc.loadState);
+	NSLog(@"----[LOAD STATE CHANGED[%d]](%f, %f)----", self.mpc.loadState, self.mpc.naturalSize.width, self.mpc.naturalSize.height);
 	
 	switch (self.mpc.loadState) {
 		case MPMovieLoadStatePlayable:
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_DURATION" object:[NSNumber numberWithFloat:self.mpc.duration]];
 			
+			self.mpc.view.hidden = NO;
+			[UIView animateWithDuration:0.5 delay:0.125 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
+				self.mpc.view.alpha = 1.0;
+			} completion:nil];
+			
 			break;
 			
 		case 3:
 			_overlayHolderView.hidden = YES;
-			self.mpc.view.hidden = NO;
 			
-			if (_hud != nil) {
-				[_hud removeFromSuperview];
-				_hud = nil;
-			}
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_SIZE" object:[NSNumber numberWithFloat:self.mpc.naturalSize.height]];
 			break;
 	}
@@ -182,6 +180,9 @@
 
 -(void)_playbackStateChangedCallback:(NSNotification *)notification {
 	NSLog(@"----[PLAYBACK STATE CHANGED[%d]]----", self.mpc.playbackState);	
+	
+	if (self.mpc.playbackState == MPMoviePlaybackStatePlaying) {
+	}
 }
 
 
@@ -226,11 +227,6 @@
 	_overlayImgView.imageURL = [NSURL URLWithString:_vo.thumb_url];
 	_overlayImgView.image = [_overlayImgView.image stackBlur:8];
 	
-	_hud = [MBProgressHUD showHUDAddedTo:_overlayHolderView animated:YES];
-	_hud.labelFont = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-	_hud.labelText = @"Loading…";
-	_hud.dimBackground = NO;
-	
 	_overlayHolderView.hidden = NO;
 	
 	_isPaused = YES;
@@ -242,6 +238,7 @@
 	NSLog(@"---CHANGE VIDEO:[%@]---", _vo.video_url);
 	_videoURL = _vo.video_url;
 	
+	[self.mpc.view removeFromSuperview];
 	[self setupMPC];
 }
 
@@ -279,7 +276,7 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_TIME" object:[NSNumber numberWithFloat:self.mpc.currentPlaybackTime]];
 }
 
-
+/*
 -(void)_orientedLandscape:(NSNotification *)notification {
 	NSLog(@"LANDSCAPE");
 	self.view.frame = CGRectMake(0.0, 0.0, 480.0, 320.0);
@@ -293,6 +290,6 @@
 -(void)_orientedPortrait:(NSNotification *)notification {
 	self.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
 }
-
+*/
 
 @end

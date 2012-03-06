@@ -12,8 +12,6 @@
 #import "SNVideoItemVO.h"
 #import "EGOImageView.h"
 
-#import "MBProgressHUD.h"
-
 @interface SNVideoPlayerViewController_iPhone : UIViewController {
 	
 	NSTimer *_timer;
@@ -25,8 +23,6 @@
 	UIWebView *_webView;
 	SNVideoItemVO *_vo;
 	EGOImageView *_overlayImgView;
-	
-	MBProgressHUD *_hud;
 	
 	NSString *_videoURL;
 	

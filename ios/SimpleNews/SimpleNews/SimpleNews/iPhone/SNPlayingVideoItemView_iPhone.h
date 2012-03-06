@@ -11,16 +11,25 @@
 #import "EGOImageView.h"
 #import "SNVideoItemVO.h"
 
-@interface SNPlayingVideoItemView_iPhone : UIView {
-	EGOImageView *_imageView;
+@interface SNPlayingVideoItemView_iPhone : UIView <UIScrollViewDelegate> {
+	
 	UILabel *_titleLabel;
+	CGSize _titleSize;
+	
+	UILabel *_infoLabel;
+	CGSize _infoSize;
+	
 	SNVideoItemVO *_vo;
+	EGOImageView *_imageView;
 	EGOImageView *_channelImageView;
-	CGSize _textSize;
+	
+	UIScrollView *_scrollView;
 }
 
 -(id)initWithFrame:(CGRect)frame withVO:(SNVideoItemVO *)vo;
--(void)introMe;
--(void)outroMe;
+
+-(void)fadeInImage;
+-(void)fadeOutImage;
+-(void)resetScroll;
 
 @end

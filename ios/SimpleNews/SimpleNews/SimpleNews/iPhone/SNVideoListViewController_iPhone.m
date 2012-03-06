@@ -92,6 +92,7 @@
 }
 
 
+/*
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	NSLog(@"ORIENTATION:[%d]", interfaceOrientation);
 	
@@ -122,6 +123,7 @@
 	
 	return ((interfaceOrientation == UIInterfaceOrientationPortrait) || (interfaceOrientation == UIInterfaceOrientationLandscapeLeft));
 }
+*/
 
 #pragma mark - View lifecycle
 -(void)loadView {
@@ -200,16 +202,6 @@
 	} completion:^(BOOL finished) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];
 	}];
-	
-	
-	
-	
-	
-	
-//	MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(280.0, 460.0, 40.0, 20.0)];
-//	[volumeView setShowsVolumeSlider:NO];
-//	[volumeView sizeToFit];
-//	[self.view addSubview:volumeView];
 }
 
 -(void)viewDidLoad {

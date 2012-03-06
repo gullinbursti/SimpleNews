@@ -26,4 +26,7 @@
 
 +(void)playMP3:(NSString *)filename;
 
++(BOOL)hasWiFi;
++(BOOL)hasAirplay;
+
 @end

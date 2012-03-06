@@ -15,10 +15,14 @@
 	NSMutableArray *_videoItems;
 	NSMutableArray *_views;
 	
+	int _index;
+	
 	UIButton *_backButton;
-	UIButton *_playPauseButton;
 	
 	SNVideoPlayerViewController_iPhone *_videoPlayerViewController;
+	
+	BOOL _isScrollingLeft;
+	float _lastOffset;
 }
 
 -(id)initWithVideos:(NSMutableArray *)videos;

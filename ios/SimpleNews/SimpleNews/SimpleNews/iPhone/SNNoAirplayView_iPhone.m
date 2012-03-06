@@ -10,6 +10,8 @@
 
 #import "SNAppDelegate.h"
 
+#import <MediaPlayer/MediaPlayer.h>
+
 @implementation SNNoAirplayView_iPhone
 
 -(id)init {
@@ -25,13 +27,18 @@
 		[self addSubview:_messageLabel];
 		
 		_skipButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_skipButton.frame = CGRectMake(128.0, 260.0, 64.0, 32.0);
+		_skipButton.frame = CGRectMake(128.0, 400.0, 64.0, 32.0);
 		[_skipButton setBackgroundColor:[UIColor purpleColor]];
 		_skipButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
 		[_skipButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-		[_skipButton setTitle:@"SKIP" forState:UIControlStateNormal];
+		[_skipButton setTitle:@"NEXT" forState:UIControlStateNormal];
 		[_skipButton addTarget:self action:@selector(_goSkip) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_skipButton];
+		
+		MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(140.0, 300.0, 40.0, 20.0)];
+		[volumeView setShowsVolumeSlider:NO];
+		[volumeView sizeToFit];
+		[self addSubview:volumeView];
 	}
 	
 	return (self);

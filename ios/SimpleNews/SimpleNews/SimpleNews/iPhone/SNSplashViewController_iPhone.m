@@ -11,6 +11,7 @@
 #import "SNVideoListViewController_iPhone.h"
 #import "SNAppDelegate.h"
 
+#import "SNTestVideoView.h"
 
 @interface SNSplashViewController_iPhone()
 -(void)_introComplete:(NSNotification *)notification;
@@ -34,6 +35,10 @@
 #pragma mark - View lifecycle
 -(void)loadView {
 	[super loadView];
+	
+	SNTestVideoView *_testVideoView = [[[SNTestVideoView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, 0.0, 0.0)] autorelease];
+	[self.view addSubview:_testVideoView];
+	
 	
 	_holderView = [[UIView alloc] initWithFrame:self.view.frame];
 	[self.view addSubview:_holderView];
@@ -94,7 +99,7 @@
 			[_timer invalidate];
 			_timer = nil;
 			
-			if ([[UIScreen screens] count] == 1) {
+			if (![SNAppDelegate hasAirplay]) {
 				[_progressView removeFromSuperview];
 				
 				_noAirplayView = [[SNNoAirplayView_iPhone alloc] init];
@@ -115,7 +120,6 @@
 	//SNVideoListViewController_iPhone *videoListViewController = [[[SNVideoListViewController_iPhone alloc] initWithUserInterfaceIdiom:[[UIDevice currentDevice] userInterfaceIdiom]] autorelease];
 	//UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:videoListViewController] autorelease];
 	//[self.navigationController pushViewController:navigationController animated:YES];	
-	
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		self.view.frame = CGRectMake(-self.view.bounds.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height);
