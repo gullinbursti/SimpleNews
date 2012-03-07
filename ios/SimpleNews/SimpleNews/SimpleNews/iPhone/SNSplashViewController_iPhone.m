@@ -8,7 +8,7 @@
 
 #import "SNSplashViewController_iPhone.h"
 
-#import "SNVideoListViewController_iPhone.h"
+#import "SNChannelGridViewController_iPhone.h"
 #import "SNAppDelegate.h"
 
 #import "SNTestVideoView.h"
@@ -36,8 +36,8 @@
 -(void)loadView {
 	[super loadView];
 	
-	SNTestVideoView *_testVideoView = [[[SNTestVideoView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, 0.0, 0.0)] autorelease];
-	[self.view addSubview:_testVideoView];
+	//_testVideoView = [[[SNTestVideoView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, 0.0, 0.0)] autorelease];
+	//[self.view addSubview:_testVideoView];
 	
 	
 	_holderView = [[UIView alloc] initWithFrame:self.view.frame];
@@ -99,6 +99,8 @@
 			[_timer invalidate];
 			_timer = nil;
 			
+			//[_testVideoView destroy];
+			
 			if (![SNAppDelegate hasAirplay]) {
 				[_progressView removeFromSuperview];
 				
@@ -125,7 +127,7 @@
 		self.view.frame = CGRectMake(-self.view.bounds.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height);
 	}];
 	
-	[self presentViewController:[[[SNVideoListViewController_iPhone alloc] initWithUserInterfaceIdiom:[[UIDevice currentDevice] userInterfaceIdiom]] autorelease] animated:NO completion:nil];
+	[self presentViewController:[[[SNChannelGridViewController_iPhone alloc] init] autorelease] animated:NO completion:nil];
 }
 
 @end

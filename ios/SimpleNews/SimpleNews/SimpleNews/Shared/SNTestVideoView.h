@@ -14,6 +14,8 @@
 	
 }
 
+-(void)destroy;
+
 @property (nonatomic, retain) MPMoviePlayerController *mpc;
 
 @end

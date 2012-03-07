@@ -19,6 +19,8 @@
 	UILabel *_infoLabel;
 	CGSize _infoSize;
 	
+	UILabel *_dateLabel;
+	
 	SNVideoItemVO *_vo;
 	EGOImageView *_imageView;
 	EGOImageView *_channelImageView;

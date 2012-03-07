@@ -10,7 +10,6 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 #import "SNVideoItemVO.h"
-#import "EGOImageView.h"
 
 @interface SNVideoPlayerViewController_iPhone : UIViewController {
 	
@@ -18,16 +17,13 @@
 	BOOL _isFinished;
 	BOOL _isPaused;
 	BOOL _isFirst;
+	BOOL _isStalled;
 	float _duration;
 	
-	UIWebView *_webView;
 	SNVideoItemVO *_vo;
-	EGOImageView *_overlayImgView;
 	
 	NSString *_videoURL;
-	
 	UIView *_videoHolderView;
-	UIView *_overlayHolderView;
 }
 
 

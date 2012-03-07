@@ -20,6 +20,9 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_itemDetailsScroll:) name:@"ITEM_DETAILS_SCROLL" object:nil];
 		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoStalled:) name:@"VIDEO_STALLED" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoResumed:) name:@"VIDEO_RESUMED" object:nil];
+		
 		_videoItems = videos;
 		_views = [[NSMutableArray alloc] init];
 		_lastOffset = 0.0;
@@ -33,7 +36,7 @@
 -(void)loadView {
 	[super loadView];
 	
-	[self.view setBackgroundColor:[UIColor blackColor]];
+	[self.view setBackgroundColor:[UIColor colorWithWhite:0.196 alpha:1.0]];
 	
 	_videoPlayerViewController = [[SNVideoPlayerViewController_iPhone alloc] init];
 	_videoPlayerViewController.view.frame = CGRectMake(0.0, -0.0, self.view.frame.size.width, 180.0);
@@ -58,14 +61,46 @@
 		[_scrollView addSubview:videoItemView];
 		cnt++;
 	}
-		
-	_backButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_backButton.frame = CGRectMake(0.0, 0.0, 35.0, 35.0);
-	[_backButton setBackgroundImage:[UIImage imageNamed:@"closeButton.png"] forState:UIControlStateNormal];
-	[_backButton setBackgroundImage:[UIImage imageNamed:@"closeButton.png"] forState:UIControlStateHighlighted];
-	[_backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:_backButton];
 	
+	_overlayHolderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 180.0)];
+	[self.view addSubview:_overlayHolderView];
+	
+	_gridButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_gridButton.frame = CGRectMake(0.0, 0.0, 34.0, 34.0);
+	[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridButton_nonActive.png"] forState:UIControlStateNormal];
+	[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridButton_Active.png"] forState:UIControlStateHighlighted];
+	[_gridButton addTarget:self action:@selector(_goGrid) forControlEvents:UIControlEventTouchUpInside];
+	[_overlayHolderView addSubview:_gridButton];
+	
+	_playButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_playButton.frame = CGRectMake(17.0, 110.0, 64.0, 64.0);
+	_playButton.hidden = YES;
+	[_playButton setBackgroundImage:[UIImage imageNamed:@"playButton_nonActive.png"] forState:UIControlStateNormal];
+	[_playButton setBackgroundImage:[UIImage imageNamed:@"playButton_Active.png"] forState:UIControlStateHighlighted];
+	[_playButton addTarget:self action:@selector(_goPlay) forControlEvents:UIControlEventTouchUpInside];
+	[_overlayHolderView addSubview:_playButton];
+	
+	_pauseButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_pauseButton.frame = CGRectMake(17.0, 110.0, 64.0, 64.0);
+	[_pauseButton setBackgroundImage:[UIImage imageNamed:@"pauseButton_nonActive.png"] forState:UIControlStateNormal];
+	[_pauseButton setBackgroundImage:[UIImage imageNamed:@"pauseButton_Active.png"] forState:UIControlStateHighlighted];
+	[_pauseButton addTarget:self action:@selector(_goPause) forControlEvents:UIControlEventTouchUpInside];
+	[_overlayHolderView addSubview:_pauseButton];
+	
+	
+	MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(270.0, 17.0, 40.0, 20.0)];
+	[volumeView setShowsVolumeSlider:NO];
+	[volumeView sizeToFit];
+	[_overlayHolderView addSubview:volumeView];
+	
+	_paginationView = [[SNPaginationView alloc] initWithTotal:[_videoItems count] coords:CGPointMake(160.0, 450.0)];
+	[self.view addSubview:_paginationView];
+	
+	
+	UIImageView *hdImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(284.0, 200.0, 34.0, 34.0)] autorelease];
+	hdImgView.image = [UIImage imageNamed:@"hd-logo.png"];
+	[self.view addSubview:hdImgView];
+
 	
 	//UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:_videoPlayerViewController] autorelease];
 	//[self.navigationController pushViewController:navigationController animated:YES];	
@@ -85,28 +120,48 @@
 -(void)offsetAtIndex:(int)ind {
 	_index = ind;
 	
-	//SNVideoItemVO *vo = (SNVideoItemVO *)[_videoItems objectAtIndex:_index];
+	_pauseButton.hidden = YES;
+	_playButton.hidden = NO;
 	
 	_scrollView.contentOffset = CGPointMake(_index * 320.0, 0.0);	
-	_backButton.frame = CGRectMake(-_backButton.frame.size.width, -_backButton.frame.size.height, _backButton.frame.size.width, _backButton.frame.size.height);
+	_gridButton.frame = CGRectMake(-_gridButton.frame.size.width, -_gridButton.frame.size.height, _gridButton.frame.size.width, _gridButton.frame.size.height);
+	_videoPlayerViewController.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, 180.0);
+	[_paginationView updToPage:(int)(_scrollView.contentOffset.x / self.view.frame.size.width)];
 	
 	[UIView animateWithDuration:0.25 delay:0.33 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
-		_backButton.frame = CGRectMake(0.0, 0.0, _backButton.frame.size.width, _backButton.frame.size.height);
+		_gridButton.frame = CGRectMake(0.0, 0.0, _gridButton.frame.size.width, _gridButton.frame.size.height);
 	
 	} completion:nil];
 }
 
 
 #pragma mark - Navigation
--(void)_goBack {
+-(void)_goGrid {
+	[(SNPlayingVideoItemView_iPhone *)[_views objectAtIndex:0] fadeInImage];
+	
+	_pauseButton.hidden = YES;
+	_playButton.hidden = NO;
 	
 	[UIView animateWithDuration:0.25 animations:^(void) {
-		_backButton.frame = CGRectMake(-_backButton.frame.size.width, -_backButton.frame.size.height, _backButton.frame.size.width, _backButton.frame.size.height);
+		_gridButton.frame = CGRectMake(-_gridButton.frame.size.width, -_gridButton.frame.size.height, _gridButton.frame.size.width, _gridButton.frame.size.height);
 	
-	} completion:nil];
+	} completion:^(BOOL finished) {
+		[_videoPlayerViewController.mpc stop];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"DETAILS_RETURN" object:nil];	
+	}];
 }
 
--(void)_goPlayPause {
+-(void)_goPlay {
+	_playButton.hidden = YES;
+	_pauseButton.hidden = NO;
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"TOGGLE_VIDEO_PLAYBACK" object:nil];
+}
+
+-(void)_goPause {
+	_pauseButton.hidden = YES;
+	_playButton.hidden = NO;
+	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TOGGLE_VIDEO_PLAYBACK" object:nil];
 }
 
@@ -114,6 +169,19 @@
 -(void)_videoDuration:(NSNotification *)notification {
 	NSLog(@"----[AIRPLAY[%d]]----", ![SNAppDelegate hasAirplay]);
 	[(SNPlayingVideoItemView_iPhone *)[_views objectAtIndex:_index] fadeOutImage];
+	
+	_pauseButton.hidden = NO;
+	_playButton.hidden = YES;
+}
+
+-(void)_videoStalled:(NSNotification *)notification {
+	_playButton.hidden = NO;
+	_pauseButton.hidden = YES;
+}
+
+-(void)_videoResumed:(NSNotification *)notification {
+	_pauseButton.hidden = NO;
+	_playButton.hidden = YES;
 }
 
 -(void)_videoEnded:(NSNotification *)notification {
@@ -122,22 +190,17 @@
 }
 
 -(void)_itemDetailsScroll:(NSNotification *)notification {
-	//float offset = [[notification object] floatValue];
-	//_videoPlayerViewController.view.frame = CGRectMake(_videoPlayerViewController.view.frame.origin.x, -offset, _videoPlayerViewController.view.frame.size.width, _videoPlayerViewController.view.frame.size.height);
+	float offset = [[notification object] floatValue];
+	_videoPlayerViewController.view.frame = CGRectMake(_videoPlayerViewController.view.frame.origin.x, -offset, _videoPlayerViewController.view.frame.size.width, _videoPlayerViewController.view.frame.size.height);
+	_overlayHolderView.frame = CGRectMake(_overlayHolderView.frame.origin.x, -offset, _overlayHolderView.frame.size.width, _overlayHolderView.frame.size.height);
 }
 
 
 #pragma mark - ScrollView Delegates
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	
-	if (scrollView.contentOffset.x < _lastOffset)
-		_isScrollingLeft = YES;
-	
-	else
-		_isScrollingLeft = NO;
-	
+	_videoPlayerViewController.view.frame = CGRectMake((-((int)scrollView.contentOffset.x % (int)self.view.frame.size.width)) + ((int)(scrollView.contentOffset.x < _lastOffset) * self.view.frame.size.width), 0.0, self.view.frame.size.width, 180.0);
 	_lastOffset = scrollView.contentOffset.x;
-	_videoPlayerViewController.view.frame = CGRectMake((-((int)scrollView.contentOffset.x % (int)self.view.frame.size.width)) + ((int)_isScrollingLeft * self.view.frame.size.width), 0.0, self.view.frame.size.width, 180.0);
 }
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -158,18 +221,23 @@
 
 -(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
 	//[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:[_videoItems objectAtIndex:(scrollView.contentOffset.x / self.view.frame.size.width)]];	
-	[_videoPlayerViewController.mpc stop];
 }
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+	[_paginationView updToPage:(int)(_scrollView.contentOffset.x / self.view.frame.size.width)];
+	
 	if ((int)(scrollView.contentOffset.x / self.view.frame.size.width) != _index) {
 		_index = (scrollView.contentOffset.x / self.view.frame.size.width);
 		
 		_videoPlayerViewController.view.frame = CGRectMake((-((int)scrollView.contentOffset.x % (int)self.view.frame.size.width)), 0.0, self.view.frame.size.width, 180.0);
-		//SNVideoItemVO *vo = (SNVideoItemVO *)[_videoItems objectAtIndex:_index];
+		[_videoPlayerViewController.mpc stop];
+		SNVideoItemVO *vo = (SNVideoItemVO *)[_videoItems objectAtIndex:_index];
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:[_videoItems objectAtIndex:_index]];	
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:[_videoItems objectAtIndex:_index]];	
+		_playButton.hidden = YES;
+		_pauseButton.hidden = NO;
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:vo];	
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];	
 	}
 	
 }

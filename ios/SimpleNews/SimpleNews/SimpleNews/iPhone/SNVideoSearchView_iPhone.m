@@ -18,17 +18,17 @@
 
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
-		[self setBackgroundColor:[UIColor blackColor]];
+		[self setBackgroundColor:[UIColor colorWithWhite:0.145 alpha:1.0]];
 		
-		_cursorImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 5, 5, 43)] autorelease];
-		_cursorImgView.image = [UIImage imageNamed:@"cursorBlink.png"];
-		//[self addSubview:_cursorImgView];
+		_cursorImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 3.0, 8.0, 44.0)] autorelease];
+		_cursorImgView.image = [UIImage imageNamed:@"blinkingCursor.png"];
+		[self addSubview:_cursorImgView];
 		
 		_txtField = [[[UITextField alloc] initWithFrame:CGRectMake(32, 15, 256, 20)] autorelease];
 		[_txtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 		[_txtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 		[_txtField setAutocorrectionType:UITextAutocorrectionTypeNo];
-		[_txtField setBackgroundColor:[UIColor blackColor]];
+		[_txtField setBackgroundColor:[UIColor clearColor]];
 		[_txtField setReturnKeyType:UIReturnKeyDone];
 		[_txtField addTarget:self action:@selector(onTxtDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
 		_txtField.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];

@@ -52,15 +52,6 @@
 	_videoHolderView = [[UIView alloc] initWithFrame:self.view.frame];
 	[self.view addSubview:_videoHolderView];
 	
-	_overlayHolderView = [[UIView alloc] initWithFrame:self.view.frame];
-	_overlayHolderView.hidden = YES;
-	//[self.view addSubview:_overlayHolderView];
-	
-	_overlayImgView = [[EGOImageView alloc] initWithFrame:self.view.frame];
-	_overlayImgView.alpha = 0.33;
-	_overlayImgView.image = [_overlayImgView.image stackBlur:4];
-	[_overlayHolderView addSubview:_overlayImgView];
-	
 	/*
 	 UIImage *thumbImage = [_playerController thumbnailImageAtTime:10.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
 	 if (thumbImage == nil)
@@ -115,12 +106,6 @@
 	self.mpc.view.alpha = 0.0;
 	self.mpc.view.hidden = YES;
 	[_videoHolderView addSubview:self.mpc.view];
-	
-	_overlayImgView.imageURL = [NSURL URLWithString:_vo.thumb_url];
-	_overlayImgView.image = [_overlayImgView.image stackBlur:8];
-		
-	if (!_isFirst)
-		_overlayHolderView.hidden = NO;
 }
 
 
@@ -132,6 +117,7 @@
 	_isFinished = NO;
 	
 	_isFirst = NO;
+	_isStalled = NO;
 	
 	[_timer invalidate];
 	_timer = nil;
@@ -140,10 +126,9 @@
 }
 
 -(void)vcFinished:(NSNotification *)notification {
-	//NSLog(@"----[FINISHED PLAYBACK](%d)----", (self.mpc.currentPlaybackTime > self.mpc.duration - 1.5));
+	NSLog(@"----[FINISHED PLAYBACK](%f, %f)----", self.mpc.currentPlaybackTime, self.mpc.duration);
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
 	
-	/*
 	_isFinished = YES;
 	
 	[_timer invalidate];
@@ -151,9 +136,8 @@
 	
 	[self.mpc.view removeFromSuperview];
 	
-	if (self.mpc.currentPlaybackTime > self.mpc.duration - 1.5)
+	if ((self.mpc.currentPlaybackTime > self.mpc.duration - 1.5) && (self.mpc.duration > 0.0))
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
-	 */
 }
 
 -(void)_loadStateChangedCallback:(NSNotification *)notification {
@@ -171,9 +155,17 @@
 			break;
 			
 		case 3:
-			_overlayHolderView.hidden = YES;
-			
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_SIZE" object:[NSNumber numberWithFloat:self.mpc.naturalSize.height]];
+			
+			if (_isStalled) {
+				_isStalled = NO;
+				[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_RESUMED" object:nil];	
+			}
+			break;
+			
+		case 5:
+			_isStalled = YES;
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_STALLED" object:nil];
 			break;
 	}
 }
@@ -223,11 +215,6 @@
 	NSLog(@"---ITEM TAPPED:[%@]---", _vo.video_title);
 	
 	[self.mpc stop];
-	
-	_overlayImgView.imageURL = [NSURL URLWithString:_vo.thumb_url];
-	_overlayImgView.image = [_overlayImgView.image stackBlur:8];
-	
-	_overlayHolderView.hidden = NO;
 	
 	_isPaused = YES;
 	_isFinished = NO;

@@ -29,4 +29,8 @@
 +(BOOL)hasWiFi;
 +(BOOL)hasAirplay;
 
++(int)minutesAfterDate:(NSDate *)date;
++(int)hoursAfterDate:(NSDate *)date;
++(int)daysAfterDate:(NSDate *)date;
+
 @end

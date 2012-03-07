@@ -22,7 +22,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_finishedCallback:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_airplayActiveCallback:) name:MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification object:nil];
 		
-		self.mpc.controlStyle = MPMovieControlStyleDefault;
+		self.mpc.controlStyle = MPMovieControlStyleNone;
 		self.mpc.view.frame = self.frame;
 		self.mpc.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		self.mpc.shouldAutoplay = YES;
@@ -62,5 +62,16 @@
 	[self.mpc stop];
 }
 
+
+-(void)destroy {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerNowPlayingMovieDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerIsAirPlayVideoActiveDidChangeNotification object:nil];
+	
+	[self.mpc stop];
+	[self.mpc.view removeFromSuperview];
+	self.mpc = nil;
+	[self.mpc release];
+}
 
 @end

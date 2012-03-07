@@ -16,7 +16,7 @@
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
 		
-		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 180.0, self.frame.size.width, self.frame.size.height - 180.0)];
+		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height - 0.0)];
 		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_scrollView.delegate = self;
 		_scrollView.opaque = NO;
@@ -27,16 +27,49 @@
 		_scrollView.alwaysBounceVertical = NO;
 		[self addSubview:_scrollView];
 		
-		_imageView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, -22.0, self.frame.size.width, 230.0)];
-		_imageView.imageURL = [NSURL URLWithString:_vo.image_url];
-		[self addSubview:_imageView];
+		UIView *imgHolder = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 180.0)] autorelease];
+		imgHolder.clipsToBounds = YES;
+		[_scrollView addSubview:imgHolder];
 		
-		_channelImageView = [[EGOImageView alloc] initWithFrame:CGRectMake(27.0, 20.0, 44.0, 44.0)];
-		_channelImageView.imageURL = [NSURL URLWithString:_vo.image_url];
+		_imageView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, -29.0, self.frame.size.width, 240.0)];
+		_imageView.imageURL = [NSURL URLWithString:_vo.image_url];
+		[imgHolder addSubview:_imageView];
+		
+		_channelImageView = [[EGOImageView alloc] initWithFrame:CGRectMake(27.0, 200.0, 44.0, 44.0)];
+		_channelImageView.imageURL = [NSURL URLWithString:_vo.channelImg_url];
 		[_scrollView addSubview:_channelImageView];
 		
+		//int mins = [SNAppDelegate minutesAfterDate:_vo.postedDate];
+		int hours = [SNAppDelegate hoursAfterDate:_vo.postedDate];
+		int days = [SNAppDelegate daysAfterDate:_vo.postedDate];
+		
+		_dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(80.0, 215.0, 200.0, 18.0)];
+		_dateLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:14.0];
+		_dateLabel.backgroundColor = [UIColor clearColor];
+		_dateLabel.textColor = [UIColor grayColor];
+		_dateLabel.numberOfLines = 0;
+		_dateLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+		_dateLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+		[_scrollView addSubview:_dateLabel];
+		
+		if (days > 0) {
+			if (days == 1)
+				_dateLabel.text = @"1 day ago";
+			
+			else if (days > 1)
+				_dateLabel.text = [NSString stringWithFormat:@"%d days ago", days];
+			
+		} else {
+			if (hours == 1)
+				_dateLabel.text = @"1 hour ago";
+			
+			else if (hours > 1)
+				_dateLabel.text = [NSString stringWithFormat:@"%d hours ago", hours];
+		}
+		
+		
 		_titleSize = [_vo.video_title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18] constrainedToSize:CGSizeMake(self.frame.size.width - 35.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(27.0, 60.0, _titleSize.width, _titleSize.height)];
+		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(27.0, 255.0, _titleSize.width, _titleSize.height)];
 		_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18.0];
 		_titleLabel.backgroundColor = [UIColor clearColor];
 		_titleLabel.textColor = [UIColor whiteColor];
@@ -47,7 +80,7 @@
 		[_scrollView addSubview:_titleLabel];
 		
 		_infoSize = [_vo.video_info sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:14] constrainedToSize:CGSizeMake(self.frame.size.width - 35.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-		_infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(27.0, 80.0 + _titleSize.height, _infoSize.width, _infoSize.height)];
+		_infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(27.0, 275.0 + _titleSize.height, _infoSize.width, _infoSize.height)];
 		_infoLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:14.0];
 		_infoLabel.backgroundColor = [UIColor clearColor];
 		_infoLabel.textColor = [UIColor grayColor];
@@ -56,9 +89,8 @@
 		_infoLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 		_infoLabel.text = _vo.video_info;
 		[_scrollView addSubview:_infoLabel];
-		
-		
-		_scrollView.contentSize = CGSizeMake(self.frame.size.width , 80.0 + (_titleSize.height + _infoSize.height));
+				
+		_scrollView.contentSize = CGSizeMake(self.frame.size.width , 275.0 + (_titleSize.height + _infoSize.height));
 	}
 	
 	return (self);
@@ -66,6 +98,8 @@
 
 
 -(void)fadeInImage {
+	_imageView.hidden = NO;
+	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_imageView.alpha = 1.0;
 	}];
@@ -74,6 +108,9 @@
 -(void)fadeOutImage {
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_imageView.alpha = 0.0;
+	
+	} completion:^(BOOL finished) {
+		_imageView.hidden = YES;
 	}];
 }
 

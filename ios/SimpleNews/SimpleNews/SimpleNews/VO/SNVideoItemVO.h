@@ -23,5 +23,7 @@
 @property (nonatomic, retain) NSString *image_url;
 @property (nonatomic, retain) NSString *thumb_url;
 @property (nonatomic, retain) NSString *video_url;
+@property (nonatomic, retain) NSString *posted;
+@property (nonatomic, retain) NSDate *postedDate;
 
 @end

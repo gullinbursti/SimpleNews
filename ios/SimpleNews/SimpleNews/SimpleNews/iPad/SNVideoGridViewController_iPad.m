@@ -15,7 +15,6 @@
 
 -(id)init {
 	if ((self = [super init])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_categorySwiped:) name:@"CATEGORY_SWIPED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_airplayBack:) name:@"AIRPLAY_BACK" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_detailsReturn:) name:@"DETAILS_RETURN" object:nil];
 		
@@ -24,7 +23,6 @@
 		
 		_videoItems = [NSMutableArray new];
 		_views = [NSMutableArray new];
-		_isCategories = NO;
 		_isDetails = NO;
 		_isStore = NO;
 		_scrollOffset = 0;
@@ -104,11 +102,8 @@
 //	_videoDetailsView = [[SNVideoDetailsView_iPhone alloc] initWithFrame:CGRectMake(self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
 //	[self.view addSubview:_videoDetailsView];
 //	
-//	_categoryListView = [[SNCategoryListView_iPhone alloc] initWithFrame:CGRectMake(self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
-//	[self.view addSubview:_categoryListView];
-//	
-//	_pluginListView = [[SNPluginListView_iPhone alloc] initWithFrame:CGRectMake(-self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
-//	[self.view addSubview:_pluginListView];
+//	_optionsListView = [[SNOptionsListView_iPhone alloc] initWithFrame:CGRectMake(-self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
+//	[self.view addSubview:_optionsListView];
 }
 
 -(void)viewDidLoad {

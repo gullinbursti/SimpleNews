@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SNVideoPlayerViewController_iPhone.h"
+#import "SNPaginationView.h"
 
 @interface SNPlayingListViewController_iPhone : UIViewController <UIScrollViewDelegate> {
 	
@@ -17,11 +18,15 @@
 	
 	int _index;
 	
-	UIButton *_backButton;
+	UIButton *_gridButton;
+	UIButton *_playButton;
+	UIButton *_pauseButton;
+	
+	UIView *_overlayHolderView;
 	
 	SNVideoPlayerViewController_iPhone *_videoPlayerViewController;
+	SNPaginationView *_paginationView;
 	
-	BOOL _isScrollingLeft;
 	float _lastOffset;
 }
 

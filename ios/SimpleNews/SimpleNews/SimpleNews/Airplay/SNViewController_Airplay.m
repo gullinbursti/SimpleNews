@@ -34,7 +34,7 @@
 #pragma mark - View lifecycle
 -(void)loadView {
 	[super loadView];
-	[self.view setBackgroundColor:[UIColor blackColor]];
+	[self.view setBackgroundColor:[UIColor colorWithWhite:0.145 alpha:1.0]];
 	
 	_videoPlayerView = [[[SNVideoPlayerView_Airplay alloc] initWithFrame:CGRectMake(0.0, 0.0, 1280.0, 720.0)] autorelease];
 	[self.view addSubview:_videoPlayerView];
@@ -43,7 +43,7 @@
 	[self.view addSubview:_gadgetsView];
 	
 	_hdLogoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(1200.0, 650.0, 64.0, 64.0)];
-	_hdLogoImgView.image = [UIImage imageNamed:@"hdLogo.png"];
+	_hdLogoImgView.image = [UIImage imageNamed:@"hd-logo.png"];
 	_hdLogoImgView.hidden = YES;
 	[self.view addSubview:_hdLogoImgView];
 }

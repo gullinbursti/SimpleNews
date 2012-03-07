@@ -11,6 +11,7 @@
 #import "MBProgressHUD.h"
 #import "SNLogoView.h"
 #import "SNNoAirplayView_iPhone.h"
+#import "SNTestVideoView.h"
 #import "Reachability.h"
 
 @interface SNSplashViewController_iPhone : UIViewController {
@@ -28,6 +29,8 @@
 	SNLogoView *_logoView;
 	SNNoAirplayView_iPhone *_noAirplayView;
 	Reachability *_wifiReachability;
+	
+	SNTestVideoView *_testVideoView;
 }
 
 @end

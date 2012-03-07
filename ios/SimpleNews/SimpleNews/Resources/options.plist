@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>option_id</key>
+		<integer>1</integer>
+		<key>title</key>
+		<string>Push Notifications</string>
+	</dict>
+	<dict>
+		<key>option_id</key>
+		<integer>2</integer>
+		<key>title</key>
+		<string>About Assemb.ly</string>
+	</dict>
+	<dict>
+		<key>option_id</key>
+		<integer>3</integer>
+		<key>title</key>
+		<string>Privacy Policy</string>
+	</dict>
+</array>
+</plist>

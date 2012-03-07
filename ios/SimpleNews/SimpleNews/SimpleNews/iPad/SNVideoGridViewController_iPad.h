@@ -21,8 +21,7 @@
 	NSMutableArray *_views;
 	
 	//SNPlayingListViewController_iPhone *_playingListViewController;
-	//SNCategoryListView_iPhone *_categoryListView;
-	//SNPluginListView_iPhone *_pluginListView;
+	//SNOptionsListView_iPhone *_optionsListView;
 	
 	EGORefreshTableHeaderView *_refreshHeaderView;
 	
@@ -34,7 +33,6 @@
 	
 	BOOL _isDetails;
 	BOOL _isStore;
-	BOOL _isCategories;
 }
 
 @end
