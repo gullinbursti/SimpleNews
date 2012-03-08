@@ -12,6 +12,10 @@
 #import "SNPlayingVideoItemView_iPhone.h"
 #import "SNAppDelegate.h"
 
+@interface SNPlayingListViewController_iPhone()
+-(void)_resetMe;
+@end
+
 @implementation SNPlayingListViewController_iPhone
 
 -(id)initWithVideos:(NSMutableArray *)videos {
@@ -23,7 +27,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoStalled:) name:@"VIDEO_STALLED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoResumed:) name:@"VIDEO_RESUMED" object:nil];
 		
-		_videoItems = videos;
+//		_videoItems = videos;
 		_views = [[NSMutableArray alloc] init];
 		_lastOffset = 0.0;
 		_index = 0;
@@ -54,13 +58,13 @@
 	_scrollView.alwaysBounceVertical = NO;
 	[self.view addSubview:_scrollView];
 	
-	int cnt = 0;
-	for (SNVideoItemVO *vo in _videoItems) {
-		SNPlayingVideoItemView_iPhone *videoItemView = [[[SNPlayingVideoItemView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) withVO:vo] autorelease];
-		[_views addObject:videoItemView];
-		[_scrollView addSubview:videoItemView];
-		cnt++;
-	}
+//	int cnt = 0;
+//	for (SNVideoItemVO *vo in _videoItems) {
+//		SNPlayingVideoItemView_iPhone *videoItemView = [[[SNPlayingVideoItemView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) withVO:vo] autorelease];
+//		[_views addObject:videoItemView];
+//		[_scrollView addSubview:videoItemView];
+//		cnt++;
+//	}
 	
 	_overlayHolderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 180.0)];
 	[self.view addSubview:_overlayHolderView];
@@ -87,14 +91,10 @@
 	[_pauseButton addTarget:self action:@selector(_goPause) forControlEvents:UIControlEventTouchUpInside];
 	[_overlayHolderView addSubview:_pauseButton];
 	
-	
 	MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(270.0, 17.0, 40.0, 20.0)];
 	[volumeView setShowsVolumeSlider:NO];
 	[volumeView sizeToFit];
 	[_overlayHolderView addSubview:volumeView];
-	
-	_paginationView = [[SNPaginationView alloc] initWithTotal:[_videoItems count] coords:CGPointMake(160.0, 450.0)];
-	[self.view addSubview:_paginationView];
 	
 	
 	UIImageView *hdImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(284.0, 200.0, 34.0, 34.0)] autorelease];
@@ -117,19 +117,51 @@
 }
 
 
+
+-(void)_resetMe {
+	_pauseButton.hidden = YES;
+	_playButton.hidden = NO;
+	
+	_index = 0;
+	
+	_scrollView.contentOffset = CGPointMake(_index * 320.0, 0.0);
+	_gridButton.frame = CGRectMake(0.0, 0.0, _gridButton.frame.size.width, _gridButton.frame.size.height);
+	_videoPlayerViewController.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, 180.0);
+	[_paginationView updToPage:(int)(_scrollView.contentOffset.x / self.view.frame.size.width)];
+	
+	[UIView animateWithDuration:0.25 delay:0.33 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
+		_overlayHolderView.frame = CGRectMake(0.0, 0.0, _overlayHolderView.frame.size.width, _overlayHolderView.frame.size.height);
+		
+	} completion:nil];
+}
+
+-(void)changeChannelVO:(SNChannelVO *)vo {
+	
+	for (SNPlayingVideoItemView_iPhone *videoItemView in _views)
+		[videoItemView removeFromSuperview];
+	
+	_videosRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Channels.php"]]] retain];
+	[_videosRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+	[_videosRequest setPostValue:vo.youtube_id forKey:@"id"];
+	[_videosRequest setPostValue:vo.channel_title forKey:@"name"];
+	[_videosRequest setTimeOutSeconds:30];
+	[_videosRequest setDelegate:self];
+	[_videosRequest startAsynchronous];
+}
+
 -(void)offsetAtIndex:(int)ind {
 	_index = ind;
 	
 	_pauseButton.hidden = YES;
 	_playButton.hidden = NO;
 	
-	_scrollView.contentOffset = CGPointMake(_index * 320.0, 0.0);	
+	_scrollView.contentOffset = CGPointMake(_index * 320.0, 0.0);
 	_gridButton.frame = CGRectMake(-_gridButton.frame.size.width, -_gridButton.frame.size.height, _gridButton.frame.size.width, _gridButton.frame.size.height);
 	_videoPlayerViewController.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, 180.0);
 	[_paginationView updToPage:(int)(_scrollView.contentOffset.x / self.view.frame.size.width)];
 	
 	[UIView animateWithDuration:0.25 delay:0.33 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
-		_gridButton.frame = CGRectMake(0.0, 0.0, _gridButton.frame.size.width, _gridButton.frame.size.height);
+		_overlayHolderView.frame = CGRectMake(0.0, 0.0, _overlayHolderView.frame.size.width, _overlayHolderView.frame.size.height);
 	
 	} completion:nil];
 }
@@ -239,6 +271,60 @@
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:vo];	
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];	
 	}
-	
 }
+
+
+#pragma mark - ASI Delegates
+-(void)requestFinished:(ASIHTTPRequest *)request { 
+	NSLog(@"SNChannelGridViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	
+	@autoreleasepool {
+		NSError *error = nil;
+		NSArray *parsedVideos = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+		if (error != nil)
+			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+		
+		else {
+			NSMutableArray *videoList = [NSMutableArray array];
+			_views = [NSMutableArray new];
+			
+			int tot = 0;
+			for (NSDictionary *serverVideo in parsedVideos) {
+				SNVideoItemVO *vo = [SNVideoItemVO videoItemWithDictionary:serverVideo];
+				
+				NSLog(@"VIDEO \"%@\"", vo.video_title);
+				
+				if (vo != nil)
+					[videoList addObject:vo];
+				
+				SNPlayingVideoItemView_iPhone *videoItemView = [[[SNPlayingVideoItemView_iPhone alloc] initWithFrame:CGRectMake(tot * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) withVO:vo] autorelease];
+				[_views addObject:videoItemView];
+				tot++;
+			}
+			
+			_videoItems = [videoList retain];
+			_scrollView.contentSize = CGSizeMake(self.view.frame.size.width * tot, self.view.frame.size.height);
+			
+			for (SNPlayingVideoItemView_iPhone *videoItemView in _views)
+				[_scrollView addSubview:videoItemView];
+			
+			[self _resetMe];
+			
+			_paginationView = [[SNPaginationView alloc] initWithTotal:[_views count] coords:CGPointMake(160.0, 450.0)];
+			[self.view addSubview:_paginationView];			
+		}			
+	}
+}
+
+
+-(void)requestFailed:(ASIHTTPRequest *)request {
+	
+	if (request == _videosRequest) {
+		//[_delegates perform:@selector(jobList:didFailLoadWithError:) withObject:self withObject:request.error];
+		//MBL_RELEASE_SAFELY(_jobListRequest);
+	}
+	
+	//[_loadOverlay remove];
+}
+
 @end

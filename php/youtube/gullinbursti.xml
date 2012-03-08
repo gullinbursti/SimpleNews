@@ -1,0 +1,754 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns='http://www.w3.org/2005/Atom' xmlns:app='http://purl.org/atom/app#' xmlns:media='http://search.yahoo.com/mrss/' xmlns:openSearch='http://a9.com/-/spec/opensearchrss/1.0/' xmlns:gd='http://schemas.google.com/g/2005' xmlns:gml='http://www.opengis.net/gml' xmlns:yt='http://gdata.youtube.com/schemas/2007' xmlns:georss='http://www.georss.org/georss'>
+	<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads</id>
+	<updated>2012-03-08T01:06:18.204Z</updated>
+	<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+	<title type='text'>Uploads by gullinbursti</title>
+	<logo>http://www.youtube.com/img/pic_youtubelogo_123x63.gif</logo>
+	<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+	<link rel='alternate' type='text/html' href='http://www.youtube.com/user/gullinbursti/videos'/>
+	<link rel='http://schemas.google.com/g/2005#feed' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads'/>
+	<link rel='http://schemas.google.com/g/2005#batch' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/batch'/>
+	<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads?start-index=1&amp;max-results=25'/>
+	<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+	<generator version='2.1' uri='http://gdata.youtube.com'>YouTube data API</generator>
+	<openSearch:totalResults>19</openSearch:totalResults>
+	<openSearch:startIndex>1</openSearch:startIndex>
+	<openSearch:itemsPerPage>25</openSearch:itemsPerPage>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/vwd0bQotgB8</id>
+		<published>2010-01-02T23:53:13.000Z</published>
+		<updated>2010-01-03T00:51:59.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Travel' label='Travel &amp; Events'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Time lapse'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Islamorada'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Sunset'/>
+		<title type='text'>Islamorada Sunset 2009</title>
+		<content type='text'>Last sunset of 2009 in Islamorada</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=vwd0bQotgB8&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/vwd0bQotgB8/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/vwd0bQotgB8/related'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#mobile' type='text/html' href='http://m.youtube.com/details?v=vwd0bQotgB8'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/vwd0bQotgB8'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments>
+			<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/vwd0bQotgB8/comments' countHint='0'/>
+		</gd:comments>
+		<media:group>
+			<media:category label='Travel &amp; Events' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Travel</media:category>
+			<media:content url='http://www.youtube.com/v/vwd0bQotgB8?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='60' yt:format='5'/>
+			<media:content url='rtsp://v4.cache3.c.youtube.com/CigLENy73wIaHwkfgC0KbXQHvxMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='60' yt:format='1'/>
+			<media:content url='rtsp://v8.cache4.c.youtube.com/CigLENy73wIaHwkfgC0KbXQHvxMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='60' yt:format='6'/>
+			<media:description type='plain'>Last sunset of 2009 in Islamorada</media:description>
+			<media:keywords>Time lapse, Islamorada, Sunset</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=vwd0bQotgB8&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/vwd0bQotgB8/0.jpg' height='360' width='480' time='00:00:30'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/vwd0bQotgB8/1.jpg' height='90' width='120' time='00:00:15'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/vwd0bQotgB8/2.jpg' height='90' width='120' time='00:00:30'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/vwd0bQotgB8/3.jpg' height='90' width='120' time='00:00:45'/>
+			<media:title type='plain'>Islamorada Sunset 2009</media:title>
+			<yt:duration seconds='60'/>
+		</media:group>
+		<yt:statistics favoriteCount='0' viewCount='39'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/M7ySKOgf8Fg</id>
+		<published>2009-12-08T17:00:15.000Z</published>
+		<updated>2011-02-16T05:53:45.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Travel' label='Travel &amp; Events'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Utah'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='snow'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Breakbeat'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Salt'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Lake'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='City'/>
+		<title type='text'>A Proper Blizzard in Salt Lake City</title>
+		<content type='text'>1st experience driving thru Winter conditions commuting in a snowstorm w/ my windows down, 'cause the Florida Breaks were keepin' me warm!</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=M7ySKOgf8Fg&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/M7ySKOgf8Fg/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/M7ySKOgf8Fg/related'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#mobile' type='text/html' href='http://m.youtube.com/details?v=M7ySKOgf8Fg'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/M7ySKOgf8Fg'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments>
+			<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/M7ySKOgf8Fg/comments' countHint='0'/>
+		</gd:comments>
+		<georss:where><gml:Point><gml:pos>40.7472569628042 -111.884765625</gml:pos></gml:Point></georss:where>
+		<yt:location>geo:alt=4226</yt:location>
+		<media:group>
+			<media:category label='Travel &amp; Events' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Travel</media:category>
+			<media:content url='http://www.youtube.com/v/M7ySKOgf8Fg?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='357' yt:format='5'/>
+			<media:content url='rtsp://v6.cache7.c.youtube.com/CigLENy73wIaHwlY8B_oKJK8MxMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='357' yt:format='1'/>
+			<media:content url='rtsp://v4.cache2.c.youtube.com/CigLENy73wIaHwlY8B_oKJK8MxMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='357' yt:format='6'/>
+			<media:description type='plain'>1st experience driving thru Winter conditions commuting in a snowstorm w/ my windows down, 'cause the Florida Breaks were keepin' me warm!</media:description>
+			<media:keywords>Utah, snow, Breakbeat, Salt, Lake, City</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=M7ySKOgf8Fg&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/M7ySKOgf8Fg/0.jpg' height='360' width='480' time='00:02:58.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/M7ySKOgf8Fg/1.jpg' height='90' width='120' time='00:01:29.250'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/M7ySKOgf8Fg/2.jpg' height='90' width='120' time='00:02:58.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/M7ySKOgf8Fg/3.jpg' height='90' width='120' time='00:04:27.750'/>
+			<media:title type='plain'>A Proper Blizzard in Salt Lake City</media:title><yt:duration seconds='357'/>
+		</media:group>
+		<yt:recorded>2009-12-08</yt:recorded>
+		<yt:statistics favoriteCount='0' viewCount='483'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/cLkTs1cVxQM</id>
+		<published>2009-05-31T05:18:44.000Z</published>
+		<updated>2012-03-02T21:13:18.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Music' label='Music'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Jimmy Rhodes'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='We Have A Problem'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Malicious Recordings'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Malicious Mike'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Breakbeat'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Breaks'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='McIntosh'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='MC2105'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='MC-2105'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Florida Breaks'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Tampa'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Florida'/>
+		<title type='text'>Jimmy Rhodes: "We Have A Problem" rendered via the MC 2105</title>
+		<content type='text'>Yet another video w/ the McIntosh MC-2105. This track has been a fav of mine for many years. Soooo happy I picked up the EP from the Malicious Recordings site back in '03. And the amp together w/ the MX-113, it struts this Break so fine!</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=cLkTs1cVxQM&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/cLkTs1cVxQM/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/cLkTs1cVxQM/related'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/cLkTs1cVxQM'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/cLkTs1cVxQM/comments' countHint='5'/></gd:comments>
+		<media:group>
+			<media:category label='Music' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Music</media:category>
+			<media:content url='http://www.youtube.com/v/cLkTs1cVxQM?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='428' yt:format='5'/>
+			<media:content url='rtsp://v3.cache5.c.youtube.com/CigLENy73wIaHwkDxRVXsxO5cBMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='428' yt:format='1'/>
+			<media:content url='rtsp://v7.cache6.c.youtube.com/CigLENy73wIaHwkDxRVXsxO5cBMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='428' yt:format='6'/>
+			<media:description type='plain'>Yet another video w/ the McIntosh MC-2105. This track has been a fav of mine for many years. Soooo happy I picked up the EP from the Malicious Recordings site back in '03. And the amp together w/ the MX-113, it struts this Break so fine!</media:description>
+			<media:keywords>Jimmy Rhodes, We Have A Problem, Malicious Recordings, Malicious Mike, Breakbeat, Breaks, McIntosh, MC2105, MC-2105, Florida Breaks, Tampa, Florida</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=cLkTs1cVxQM&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/cLkTs1cVxQM/0.jpg' height='360' width='480' time='00:03:34'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/cLkTs1cVxQM/1.jpg' height='90' width='120' time='00:01:47'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/cLkTs1cVxQM/2.jpg' height='90' width='120' time='00:03:34'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/cLkTs1cVxQM/3.jpg' height='90' width='120' time='00:05:21'/>
+			<media:title type='plain'>Jimmy Rhodes: "We Have A Problem" rendered via the MC 2105</media:title>
+			<yt:duration seconds='428'/>
+		</media:group>
+		<gd:rating average='5.0' max='5' min='1' numRaters='3' rel='http://schemas.google.com/g/2005#overall'/>
+		<yt:statistics favoriteCount='4' viewCount='938'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/GH_vKehhWCs</id>
+		<published>2009-05-19T16:14:34.000Z</published>
+		<updated>2012-03-07T01:24:40.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Music' label='Music'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Deekline'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Ed Solo'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Stanton Warriors'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Headz Up'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Breakbeat'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Breaks'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='MC2105'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='MC-2105'/>
+		<title type='text'>Deekline &amp; Ed Solo: "Handz Up (Stanton Warrior's Remix)" rendered via the MC 2105</title>
+		<content type='text'>Another video w/ the McIntosh MC-2105, this time featuring a little UK Breaks! It looks and performs way more beautiful than anything YouTube is capable of.</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=GH_vKehhWCs&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/GH_vKehhWCs/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/GH_vKehhWCs/related'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/GH_vKehhWCs'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/GH_vKehhWCs/comments' countHint='16'/></gd:comments>
+		<media:group>
+			<media:category label='Music' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Music</media:category>
+			<media:content url='http://www.youtube.com/v/GH_vKehhWCs?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='333' yt:format='5'/>
+			<media:content url='rtsp://v4.cache4.c.youtube.com/CigLENy73wIaHwkrWGHoKe9_GBMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='333' yt:format='1'/>
+			<media:content url='rtsp://v2.cache4.c.youtube.com/CigLENy73wIaHwkrWGHoKe9_GBMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='333' yt:format='6'/>
+			<media:description type='plain'>Another video w/ the McIntosh MC-2105, this time featuring a little UK Breaks! It looks and performs way more beautiful than anything YouTube is capable of.</media:description>
+			<media:keywords>Deekline, Ed Solo, Stanton Warriors, Headz Up, Breakbeat, Breaks, MC2105, MC-2105</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=GH_vKehhWCs&amp;feature=youtube_gdata_player'/>
+			<media:restriction type='country' relationship='deny'>DE</media:restriction>
+			<media:thumbnail url='http://i.ytimg.com/vi/GH_vKehhWCs/0.jpg' height='360' width='480' time='00:02:46.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/GH_vKehhWCs/1.jpg' height='90' width='120' time='00:01:23.250'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/GH_vKehhWCs/2.jpg' height='90' width='120' time='00:02:46.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/GH_vKehhWCs/3.jpg' height='90' width='120' time='00:04:09.750'/>
+			<media:title type='plain'>Deekline &amp; Ed Solo: "Handz Up (Stanton Warrior's Remix)" rendered via the MC 2105</media:title>
+			<yt:duration seconds='333'/>
+		</media:group><gd:rating average='4.94702' max='5' min='1' numRaters='151' rel='http://schemas.google.com/g/2005#overall'/>
+		<yt:statistics favoriteCount='337' viewCount='33883'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/INJT3vuR680</id>
+		<published>2009-05-15T21:30:37.000Z</published>
+		<updated>2010-07-29T14:31:33.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Travel' label='Travel &amp; Events'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='driving'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='commute'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='beverly hills'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='hollywood'/>
+		<title type='text'>Morning Commute thru Beverly Hills to West Hollywood</title>
+		<content type='text'>Used the camera on my N95, set it on the dash and took one photo every ten seconds in sequence mode. Spliced together in Quicktime. The route via Google Maps: http://maps.google.com/m aps?f=d&amp;source=s_d&amp; ;saddr=250+S+La+Cienega+Bl vd,+Beverly+Hills,+CA+9021 1&amp;daddr=34.094108,-118 .375282+to:7533+W+Sunset+B lvd&amp;hl=en&amp;geocode= &amp;mra=dpe&amp;mrcr=0&amp;am p;mrsp=1&amp;sz=14&amp;via =1&amp;sll=34.080886,-118. 365154&amp;sspn=0.055165,0 .100679&amp;ie=UTF8&amp;ll =34.080958,-118.365326&amp; ;spn=0.055165,0.100679&amp; ;t=h&amp;z=14</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=INJT3vuR680&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/INJT3vuR680/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/INJT3vuR680/related'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/INJT3vuR680'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/INJT3vuR680/comments' countHint='0'/></gd:comments>
+		<media:group>
+			<media:category label='Travel &amp; Events' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Travel</media:category>
+			<media:content url='http://www.youtube.com/v/INJT3vuR680?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='12' yt:format='5'/>
+			<media:content url='rtsp://v7.cache4.c.youtube.com/CigLENy73wIaHwnN65H73lPSIBMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='12' yt:format='1'/>
+			<media:content url='rtsp://v4.cache6.c.youtube.com/CigLENy73wIaHwnN65H73lPSIBMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='12' yt:format='6'/>
+			<media:description type='plain'>Used the camera on my N95, set it on the dash and took one photo every ten seconds in sequence mode. Spliced together in Quicktime. The route via Google Maps: http://maps.google.com/m aps?f=d&amp;source=s_d&amp; ;saddr=250+S+La+Cienega+Bl vd,+Beverly+Hills,+CA+9021 1&amp;daddr=34.094108,-118 .375282+to:7533+W+Sunset+B lvd&amp;hl=en&amp;geocode= &amp;mra=dpe&amp;mrcr=0&amp;am p;mrsp=1&amp;sz=14&amp;via =1&amp;sll=34.080886,-118. 365154&amp;sspn=0.055165,0 .100679&amp;ie=UTF8&amp;ll =34.080958,-118.365326&amp; ;spn=0.055165,0.100679&amp; ;t=h&amp;z=14</media:description>
+			<media:keywords>driving, commute, beverly hills, hollywood</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=INJT3vuR680&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/INJT3vuR680/0.jpg' height='360' width='480' time='00:00:06'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/INJT3vuR680/1.jpg' height='90' width='120' time='00:00:03'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/INJT3vuR680/2.jpg' height='90' width='120' time='00:00:06'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/INJT3vuR680/3.jpg' height='90' width='120' time='00:00:09'/>
+			<media:title type='plain'>Morning Commute thru Beverly Hills to West Hollywood</media:title>
+			<yt:duration seconds='12'/>
+		</media:group>
+		<yt:statistics favoriteCount='0' viewCount='52'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/Sv58sApdCfg</id>
+		<published>2009-01-01T00:26:20.000Z</published>
+		<updated>2009-10-14T08:15:14.000Z</updated>
+		<app:control><app:draft>yes</app:draft></app:control>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Entertainment' label='Entertainment'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Time Lapse'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Islamorada'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Sunset'/>
+		<title type='text'>Islamorada Time Lapse Sunset</title>
+		<content type='text'>Series of photos taken during the sunset in Islamorada, FL</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=Sv58sApdCfg&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/Sv58sApdCfg/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/Sv58sApdCfg/related'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/Sv58sApdCfg'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/Sv58sApdCfg/comments' countHint='0'/></gd:comments>
+		<media:group>
+			<media:category label='Entertainment' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Entertainment</media:category>
+			<media:content url='http://www.youtube.com/v/Sv58sApdCfg?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='10' yt:format='5'/>
+			<media:content url='rtsp://v7.cache2.c.youtube.com/CigLENy73wIaHwn4CV0KsHz-ShMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='10' yt:format='1'/>
+			<media:content url='rtsp://v6.cache2.c.youtube.com/CigLENy73wIaHwn4CV0KsHz-ShMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='10' yt:format='6'/>
+			<media:description type='plain'>Series of photos taken during the sunset in Islamorada, FL</media:description>
+			<media:keywords>Time Lapse, Islamorada, Sunset</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=Sv58sApdCfg&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/Sv58sApdCfg/0.jpg' height='360' width='480' time='00:00:05'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/Sv58sApdCfg/1.jpg' height='90' width='120' time='00:00:02.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/Sv58sApdCfg/2.jpg' height='90' width='120' time='00:00:05'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/Sv58sApdCfg/3.jpg' height='90' width='120' time='00:00:07.500'/>
+			<media:title type='plain'>Islamorada Time Lapse Sunset</media:title>
+			<yt:duration seconds='10'/>
+		</media:group>
+		<yt:statistics favoriteCount='0' viewCount='46'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/9SYS_DKB_3I</id>
+		<published>2008-07-05T17:25:52.000Z</published>
+		<updated>2012-03-03T13:50:12.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Entertainment' label='Entertainment'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='mcintosh'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='2105'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='lustral'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='everytime'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='red'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='jerry'/>
+		<title type='text'>Lustral: Everytime (Red Jerry Mix) ~ McIntosh 2105</title>
+		<content type='text'>Lustral's track demonstrating the decibel meters on the MC-2105</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=9SYS_DKB_3I&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/9SYS_DKB_3I/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/9SYS_DKB_3I/related'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/9SYS_DKB_3I'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/9SYS_DKB_3I/comments' countHint='24'/></gd:comments>
+		<media:group>
+			<media:category label='Entertainment' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Entertainment</media:category>
+			<media:content url='http://www.youtube.com/v/9SYS_DKB_3I?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='403' yt:format='5'/>
+			<media:content url='rtsp://v2.cache5.c.youtube.com/CigLENy73wIaHwly_4Ey_BIm9RMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='403' yt:format='1'/>
+			<media:content url='rtsp://v8.cache6.c.youtube.com/CigLENy73wIaHwly_4Ey_BIm9RMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='403' yt:format='6'/>
+			<media:description type='plain'>Lustral's track demonstrating the decibel meters on the MC-2105</media:description>
+			<media:keywords>mcintosh, 2105, lustral, everytime, red, jerry</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=9SYS_DKB_3I&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/9SYS_DKB_3I/0.jpg' height='360' width='480' time='00:03:21.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/9SYS_DKB_3I/1.jpg' height='90' width='120' time='00:01:40.750'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/9SYS_DKB_3I/2.jpg' height='90' width='120' time='00:03:21.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/9SYS_DKB_3I/3.jpg' height='90' width='120' time='00:05:02.250'/>
+			<media:title type='plain'>Lustral: Everytime (Red Jerry Mix) ~ McIntosh 2105</media:title>
+			<yt:duration seconds='403'/>
+		</media:group>
+		<gd:rating average='5.0' max='5' min='1' numRaters='59' rel='http://schemas.google.com/g/2005#overall'/>
+		<yt:statistics favoriteCount='127' viewCount='15611'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/4XaOL11DcDI</id>
+		<published>2008-03-31T15:00:10.000Z</published>
+		<updated>2011-05-18T17:48:44.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Entertainment' label='Entertainment'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='ultra'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='umf'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='10'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='2008'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='baby'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='anne'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='rabbit'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='moon'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='buuren'/>
+		<title type='text'>ULTRA! 10 2008 Recap</title>
+		<content type='text'>UMF 10 this year was off the chain! Quite possibly the best I've seen in the past seven years. Compilation starts of with Armin van Burren, followed by Rabbit in the Moon, and ends w/ Baby Anne &amp; Darling Nikki on vocals</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=4XaOL11DcDI&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/4XaOL11DcDI/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/4XaOL11DcDI/related'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/4XaOL11DcDI'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/4XaOL11DcDI/comments' countHint='3'/></gd:comments>
+		<georss:where><gml:Point><gml:pos>25.78370095343574 -80.18792152404785</gml:pos></gml:Point></georss:where>
+		<media:group>
+			<media:category label='Entertainment' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Entertainment</media:category>
+			<media:content url='http://www.youtube.com/v/4XaOL11DcDI?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='303' yt:format='5'/>
+			<media:content url='rtsp://v7.cache1.c.youtube.com/CigLENy73wIaHwkycENdL4524RMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='303' yt:format='1'/>
+			<media:content url='rtsp://v1.cache5.c.youtube.com/CigLENy73wIaHwkycENdL4524RMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='303' yt:format='6'/>
+			<media:description type='plain'>UMF 10 this year was off the chain! Quite possibly the best I've seen in the past seven years. Compilation starts of with Armin van Burren, followed by Rabbit in the Moon, and ends w/ Baby Anne &amp; Darling Nikki on vocals</media:description>
+			<media:keywords>ultra, umf, 10, 2008, baby, anne, rabbit, moon, buuren</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=4XaOL11DcDI&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/4XaOL11DcDI/0.jpg' height='360' width='480' time='00:02:31.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/4XaOL11DcDI/1.jpg' height='90' width='120' time='00:01:15.750'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/4XaOL11DcDI/2.jpg' height='90' width='120' time='00:02:31.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/4XaOL11DcDI/3.jpg' height='90' width='120' time='00:03:47.250'/>
+			<media:title type='plain'>ULTRA! 10 2008 Recap</media:title>
+			<yt:duration seconds='303'/>
+		</media:group>
+		<gd:rating average='5.0' max='5' min='1' numRaters='3' rel='http://schemas.google.com/g/2005#overall'/>
+		<yt:recorded>2008-03-29</yt:recorded>
+		<yt:statistics favoriteCount='4' viewCount='1407'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/kqnve-YTcJs</id>
+		<published>2008-03-31T05:14:57.000Z</published>
+		<updated>2012-01-23T08:47:04.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Entertainment' label='Entertainment'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='umf'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='ultra'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='baby'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='anne'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='darling'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='nikki'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='2008'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='10'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='miami'/>
+		<title type='text'>Baby Anne w/ Darling Nikki @ ULTRA! 10 2008</title>
+		<content type='text'>Over at the Break stage w/ Baby Anne &amp; Darling Nikki @ ULTRA! 10 2008</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=kqnve-YTcJs&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/kqnve-YTcJs/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/kqnve-YTcJs/related'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#mobile' type='text/html' href='http://m.youtube.com/details?v=kqnve-YTcJs'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/kqnve-YTcJs'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/kqnve-YTcJs/comments' countHint='1'/></gd:comments>
+		<media:group>
+			<media:category label='Entertainment' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Entertainment</media:category>
+			<media:content url='http://www.youtube.com/v/kqnve-YTcJs?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='97' yt:format='5'/>
+			<media:content url='rtsp://v1.cache8.c.youtube.com/CigLENy73wIaHwmbcBPme--pkhMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='97' yt:format='1'/>
+			<media:content url='rtsp://v2.cache2.c.youtube.com/CigLENy73wIaHwmbcBPme--pkhMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='97' yt:format='6'/>
+			<media:description type='plain'>Over at the Break stage w/ Baby Anne &amp; Darling Nikki @ ULTRA! 10 2008</media:description>
+			<media:keywords>umf, ultra, baby, anne, darling, nikki, 2008, 10, miami</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=kqnve-YTcJs&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/kqnve-YTcJs/0.jpg' height='360' width='480' time='00:00:48.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/kqnve-YTcJs/1.jpg' height='90' width='120' time='00:00:24.250'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/kqnve-YTcJs/2.jpg' height='90' width='120' time='00:00:48.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/kqnve-YTcJs/3.jpg' height='90' width='120' time='00:01:12.750'/>
+			<media:title type='plain'>Baby Anne w/ Darling Nikki @ ULTRA! 10 2008</media:title><yt:duration seconds='97'/>
+		</media:group>
+		<yt:statistics favoriteCount='3' viewCount='3366'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/Hmpl1pgpvk0</id>
+		<published>2008-03-31T02:16:46.000Z</published>
+		<updated>2010-08-26T05:46:14.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Education' label='Education'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Armin'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='van'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='buuren'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='UMF'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='ultra'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='2008'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='10'/>
+		<title type='text'>Armin van Buuren @ ULTRA! 10 2008</title>
+		<content type='text'>Three great blowups from Armin van Buuren at UMF 2008 down in Miami</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=Hmpl1pgpvk0&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/Hmpl1pgpvk0/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/Hmpl1pgpvk0/related'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/Hmpl1pgpvk0'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/Hmpl1pgpvk0/comments' countHint='43'/></gd:comments>
+		<georss:where><gml:Point><gml:pos>25.7861933879646 -80.1866340637207</gml:pos></gml:Point></georss:where>
+		<media:group>
+			<media:category label='Education' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Education</media:category>
+			<media:content url='http://www.youtube.com/v/Hmpl1pgpvk0?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='312' yt:format='5'/>
+			<media:content url='rtsp://v5.cache4.c.youtube.com/CigLENy73wIaHwlNvimY1mVqHhMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='312' yt:format='1'/>
+			<media:content url='rtsp://v7.cache5.c.youtube.com/CigLENy73wIaHwlNvimY1mVqHhMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='312' yt:format='6'/>
+			<media:description type='plain'>Three great blowups from Armin van Buuren at UMF 2008 down in Miami</media:description>
+			<media:keywords>Armin, van, buuren, UMF, ultra, 2008, 10</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=Hmpl1pgpvk0&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/Hmpl1pgpvk0/0.jpg' height='360' width='480' time='00:02:36'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/Hmpl1pgpvk0/1.jpg' height='90' width='120' time='00:01:18'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/Hmpl1pgpvk0/2.jpg' height='90' width='120' time='00:02:36'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/Hmpl1pgpvk0/3.jpg' height='90' width='120' time='00:03:54'/>
+			<media:title type='plain'>Armin van Buuren @ ULTRA! 10 2008</media:title>
+			<yt:duration seconds='312'/>
+	    </media:group>
+	    <gd:rating average='5.0' max='5' min='1' numRaters='10' rel='http://schemas.google.com/g/2005#overall'/>
+    	<yt:recorded>2008-03-29</yt:recorded><yt:statistics favoriteCount='21' viewCount='9617'/>
+    </entry>
+
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/xFuQj0xjeVU</id>
+		<published>2008-03-30T21:17:29.000Z</published>
+		<updated>2012-02-26T01:29:27.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Entertainment' label='Entertainment'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='ultra'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='rabbit'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='moon'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='umf'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='2008'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='10'/>
+		<title type='text'>Rabbit in the Moon @ ULTRA! 10 2008</title>
+		<content type='text'>Compilation of Rabbit in the Moon clips from ULTRA! 10 on March 29th, 2008</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=xFuQj0xjeVU&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/xFuQj0xjeVU/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/xFuQj0xjeVU/related'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/xFuQj0xjeVU'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/xFuQj0xjeVU/comments' countHint='16'/></gd:comments>
+		<georss:where><gml:Point><gml:pos>25.784396521829105 -80.18585085868835</gml:pos></gml:Point></georss:where>
+		<media:group>
+			<media:category label='Entertainment' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Entertainment</media:category>
+			<media:content url='http://www.youtube.com/v/xFuQj0xjeVU?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='189' yt:format='5'/>
+			<media:content url='rtsp://v3.cache8.c.youtube.com/CigLENy73wIaHwlVeWNMj5BbxBMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='189' yt:format='1'/>
+			<media:content url='rtsp://v2.cache2.c.youtube.com/CigLENy73wIaHwlVeWNMj5BbxBMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='189' yt:format='6'/>
+			<media:description type='plain'>Compilation of Rabbit in the Moon clips from ULTRA! 10 on March 29th, 2008</media:description>
+			<media:keywords>ultra, rabbit, moon, umf, 2008, 10</media:keywords><media:player url='http://www.youtube.com/watch?v=xFuQj0xjeVU&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/xFuQj0xjeVU/0.jpg' height='360' width='480' time='00:01:34.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/xFuQj0xjeVU/1.jpg' height='90' width='120' time='00:00:47.250'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/xFuQj0xjeVU/2.jpg' height='90' width='120' time='00:01:34.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/xFuQj0xjeVU/3.jpg' height='90' width='120' time='00:02:21.750'/>
+			<media:title type='plain'>Rabbit in the Moon @ ULTRA! 10 2008</media:title>
+			<yt:duration seconds='189'/>
+		</media:group>
+		<gd:rating average='4.5555553' max='5' min='1' numRaters='9' rel='http://schemas.google.com/g/2005#overall'/>
+		<yt:recorded>2008-03-29</yt:recorded>
+		<yt:statistics favoriteCount='10' viewCount='14368'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/7_JsTkO_cJM</id>
+		<published>2008-03-20T19:23:01.000Z</published>
+		<updated>2012-02-02T23:01:44.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Entertainment' label='Entertainment'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='hulk'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='laser'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='green'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='350mW'/>
+		<title type='text'>Need A Light?</title>
+		<content type='text'>When you don't have a lighter handy, there's always the Hulk Ultra 350mW</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=7_JsTkO_cJM&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/7_JsTkO_cJM/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/7_JsTkO_cJM/related'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#mobile' type='text/html' href='http://m.youtube.com/details?v=7_JsTkO_cJM'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/7_JsTkO_cJM'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/7_JsTkO_cJM/comments' countHint='195'/></gd:comments>
+		<media:group>
+			<media:category label='Entertainment' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Entertainment</media:category>
+			<media:content url='http://www.youtube.com/v/7_JsTkO_cJM?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='34' yt:format='5'/>
+			<media:content url='rtsp://v6.cache1.c.youtube.com/CigLENy73wIaHwmTcL9DTmzy7xMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='34' yt:format='1'/>
+			<media:content url='rtsp://v5.cache7.c.youtube.com/CigLENy73wIaHwmTcL9DTmzy7xMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='34' yt:format='6'/>
+			<media:description type='plain'>When you don't have a lighter handy, there's always the Hulk Ultra 350mW</media:description>
+			<media:keywords>hulk, laser, green, 350mW</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=7_JsTkO_cJM&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/7_JsTkO_cJM/0.jpg' height='360' width='480' time='00:00:17'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/7_JsTkO_cJM/1.jpg' height='90' width='120' time='00:00:08.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/7_JsTkO_cJM/2.jpg' height='90' width='120' time='00:00:17'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/7_JsTkO_cJM/3.jpg' height='90' width='120' time='00:00:25.500'/>
+			<media:title type='plain'>Need A Light?</media:title>
+			<yt:duration seconds='34'/>
+		</media:group>
+		<gd:rating average='4.2765956' max='5' min='1' numRaters='94' rel='http://schemas.google.com/g/2005#overall'/>
+		<yt:statistics favoriteCount='52' viewCount='95834'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/w3NIBbS893c</id>
+		<published>2008-03-06T14:52:47.000Z</published>
+		<updated>2010-07-23T09:14:34.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Tech' label='Science &amp; Technology'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='dragonlaser'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='laser'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='hulk'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='green'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='175mW'/>
+		<title type='text'>Laser Demo</title>
+		<content type='text'>Comparing a red laser, 5mW green, and the Hulk 175mW</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=w3NIBbS893c&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/w3NIBbS893c/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/w3NIBbS893c/related'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/w3NIBbS893c'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/w3NIBbS893c/comments' countHint='3'/></gd:comments>
+		<media:group>
+			<media:category label='Science &amp; Technology' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Tech</media:category>
+			<media:content url='http://www.youtube.com/v/w3NIBbS893c?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='76' yt:format='5'/>
+			<media:description type='plain'>Comparing a red laser, 5mW green, and the Hulk 175mW</media:description>
+			<media:keywords>dragonlaser, laser, hulk, green, 175mW</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=w3NIBbS893c&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/w3NIBbS893c/0.jpg' height='360' width='480' time='00:00:38'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/w3NIBbS893c/1.jpg' height='90' width='120' time='00:00:19'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/w3NIBbS893c/2.jpg' height='90' width='120' time='00:00:38'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/w3NIBbS893c/3.jpg' height='90' width='120' time='00:00:57'/>
+			<media:title type='plain'>Laser Demo</media:title>
+			<yt:duration seconds='76'/>
+		</media:group>
+		<gd:rating average='5.0' max='5' min='1' numRaters='1' rel='http://schemas.google.com/g/2005#overall'/>
+		<yt:statistics favoriteCount='0' viewCount='346'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/crWxDAWsgsU</id>
+		<published>2008-03-02T16:55:30.000Z</published>
+		<updated>2010-08-19T16:56:35.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Tech' label='Science &amp; Technology'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='balloons'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='draglaser'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='hulk'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='green'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='laser'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='175mW'/>
+		<title type='text'>Hulk vs. Balloons</title>
+		<content type='text'>Pops a string of five balloons</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=crWxDAWsgsU&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/crWxDAWsgsU/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/crWxDAWsgsU/related'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/crWxDAWsgsU'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/crWxDAWsgsU/comments' countHint='8'/></gd:comments>
+		<media:group>
+			<media:category label='Science &amp; Technology' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Tech</media:category>
+			<media:content url='http://www.youtube.com/v/crWxDAWsgsU?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='34' yt:format='5'/>
+			<media:content url='rtsp://v7.cache5.c.youtube.com/CigLENy73wIaHwnFgqwFDLG1chMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='34' yt:format='1'/>
+			<media:content url='rtsp://v6.cache7.c.youtube.com/CigLENy73wIaHwnFgqwFDLG1chMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='34' yt:format='6'/>
+			<media:description type='plain'>Pops a string of five balloons</media:description>
+			<media:keywords>balloons, draglaser, hulk, green, laser, 175mW</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=crWxDAWsgsU&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/crWxDAWsgsU/0.jpg' height='360' width='480' time='00:00:17'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/crWxDAWsgsU/1.jpg' height='90' width='120' time='00:00:08.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/crWxDAWsgsU/2.jpg' height='90' width='120' time='00:00:17'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/crWxDAWsgsU/3.jpg' height='90' width='120' time='00:00:25.500'/>
+			<media:title type='plain'>Hulk vs. Balloons</media:title>
+			<yt:duration seconds='34'/>
+		</media:group>
+		<gd:rating average='5.0' max='5' min='1' numRaters='1' rel='http://schemas.google.com/g/2005#overall'/>
+		<yt:statistics favoriteCount='0' viewCount='545'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/16chP4XuILs</id>
+		<published>2008-02-28T20:44:43.000Z</published>
+		<updated>2010-06-28T01:49:52.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Tech' label='Science &amp; Technology'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='dragonlaser'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='hulk'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='green'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='laser'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='175mW'/>
+		<title type='text'>The Hulk vs. Match</title>
+		<content type='text'>Light a match in 10 seconds w/ the Dragon Lasers 175mW Hulk!</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=16chP4XuILs&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/16chP4XuILs/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/16chP4XuILs/related'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/16chP4XuILs'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/16chP4XuILs/comments' countHint='3'/></gd:comments>
+		<media:group>
+			<media:category label='Science &amp; Technology' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Tech</media:category>
+			<media:content url='http://www.youtube.com/v/16chP4XuILs?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='17' yt:format='5'/>
+			<media:content url='rtsp://v5.cache4.c.youtube.com/CigLENy73wIaHwm7IO6FPyGn1xMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='17' yt:format='1'/>
+			<media:content url='rtsp://v6.cache3.c.youtube.com/CigLENy73wIaHwm7IO6FPyGn1xMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='17' yt:format='6'/>
+			<media:description type='plain'>Light a match in 10 seconds w/ the Dragon Lasers 175mW Hulk!</media:description>
+			<media:keywords>dragonlaser, hulk, green, laser, 175mW</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=16chP4XuILs&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/16chP4XuILs/0.jpg' height='360' width='480' time='00:00:08.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/16chP4XuILs/1.jpg' height='90' width='120' time='00:00:04.250'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/16chP4XuILs/2.jpg' height='90' width='120' time='00:00:08.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/16chP4XuILs/3.jpg' height='90' width='120' time='00:00:12.750'/>
+			<media:title type='plain'>The Hulk vs. Match</media:title>
+			<yt:duration seconds='17'/>
+		</media:group>
+		<gd:rating average='5.0' max='5' min='1' numRaters='1' rel='http://schemas.google.com/g/2005#overall'/>
+		<yt:statistics favoriteCount='0' viewCount='404'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/NCjp57AdlH8</id>
+		<published>2008-02-25T21:06:11.000Z</published>
+		<updated>2011-05-01T18:51:24.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Tech' label='Science &amp; Technology'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='aersogel'/>
+		<title type='text'>Aerogel</title>
+		<content type='text'>The sounds of aerogel, the coolest solid!</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=NCjp57AdlH8&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/NCjp57AdlH8/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/NCjp57AdlH8/related'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/NCjp57AdlH8'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/NCjp57AdlH8/comments' countHint='7'/></gd:comments>
+		<media:group>
+			<media:category label='Science &amp; Technology' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Tech</media:category>
+			<media:content url='http://www.youtube.com/v/NCjp57AdlH8?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='10' yt:format='5'/>
+			<media:content url='rtsp://v6.cache8.c.youtube.com/CigLENy73wIaHwl_lB2w5-koNBMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='10' yt:format='1'/>
+			<media:content url='rtsp://v1.cache3.c.youtube.com/CigLENy73wIaHwl_lB2w5-koNBMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='10' yt:format='6'/>
+			<media:description type='plain'>The sounds of aerogel, the coolest solid!</media:description>
+			<media:keywords>aersogel</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=NCjp57AdlH8&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/NCjp57AdlH8/0.jpg' height='360' width='480' time='00:00:05'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/NCjp57AdlH8/1.jpg' height='90' width='120' time='00:00:02.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/NCjp57AdlH8/2.jpg' height='90' width='120' time='00:00:05'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/NCjp57AdlH8/3.jpg' height='90' width='120' time='00:00:07.500'/>
+			<media:title type='plain'>Aerogel</media:title>
+			<yt:duration seconds='10'/>
+		</media:group>
+		<gd:rating average='3.6666667' max='5' min='1' numRaters='12' rel='http://schemas.google.com/g/2005#overall'/>
+		<yt:statistics favoriteCount='2' viewCount='4652'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/kw5JMLi09Wo</id>
+		<published>2006-09-10T18:30:34.000Z</published>
+		<updated>2010-08-07T03:14:41.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Film' label='Film &amp; Animation'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Soundtrack'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Telepresence'/>
+		<title type='text'>Telepresence</title>
+		<content type='text'>Re engineered the audio track for the Telepresence trailer</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=kw5JMLi09Wo&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/kw5JMLi09Wo/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/kw5JMLi09Wo/related'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/kw5JMLi09Wo'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/kw5JMLi09Wo/comments' countHint='0'/></gd:comments>
+		<media:group>
+			<media:category label='Film &amp; Animation' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Film</media:category>
+			<media:content url='http://www.youtube.com/v/kw5JMLi09Wo?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='90' yt:format='5'/>
+			<media:content url='rtsp://v5.cache3.c.youtube.com/CigLENy73wIaHwlq9bS4MEkOkxMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='90' yt:format='1'/>
+			<media:content url='rtsp://v4.cache8.c.youtube.com/CigLENy73wIaHwlq9bS4MEkOkxMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='90' yt:format='6'/>
+			<media:description type='plain'>Re engineered the audio track for the Telepresence trailer</media:description>
+			<media:keywords>Soundtrack, Telepresence</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=kw5JMLi09Wo&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/kw5JMLi09Wo/0.jpg' height='360' width='480' time='00:00:45'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/kw5JMLi09Wo/1.jpg' height='90' width='120' time='00:00:22.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/kw5JMLi09Wo/2.jpg' height='90' width='120' time='00:00:45'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/kw5JMLi09Wo/3.jpg' height='90' width='120' time='00:01:07.500'/>
+			<media:title type='plain'>Telepresence</media:title>
+			<yt:duration seconds='90'/>
+		</media:group>
+		<yt:statistics favoriteCount='0' viewCount='344'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/Kfkslurtd8U</id>
+		<published>2006-09-10T17:40:15.000Z</published>
+		<updated>2007-11-16T17:48:51.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Entertainment' label='Entertainment'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='premiere'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='final'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='project'/>
+		<title type='text'>Lunacy</title>
+		<content type='text'>First movie made for an Art Institute project. 2001-2002</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=Kfkslurtd8U&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/Kfkslurtd8U/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/Kfkslurtd8U/related'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/Kfkslurtd8U'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/Kfkslurtd8U/comments' countHint='0'/></gd:comments>
+		<media:group>
+			<media:category label='Entertainment' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Entertainment</media:category>
+			<media:content url='http://www.youtube.com/v/Kfkslurtd8U?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='513' yt:format='5'/>
+			<media:content url='rtsp://v1.cache6.c.youtube.com/CigLENy73wIaHwnFd-3qliz5KRMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='513' yt:format='1'/>
+			<media:content url='rtsp://v6.cache2.c.youtube.com/CigLENy73wIaHwnFd-3qliz5KRMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='513' yt:format='6'/>
+			<media:description type='plain'>First movie made for an Art Institute project. 2001-2002</media:description>
+			<media:keywords>premiere, final, project</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=Kfkslurtd8U&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/Kfkslurtd8U/0.jpg' height='360' width='480' time='00:04:16.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/Kfkslurtd8U/1.jpg' height='90' width='120' time='00:02:08.250'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/Kfkslurtd8U/2.jpg' height='90' width='120' time='00:04:16.500'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/Kfkslurtd8U/3.jpg' height='90' width='120' time='00:06:24.750'/>
+			<media:title type='plain'>Lunacy</media:title>
+			<yt:duration seconds='513'/>
+		</media:group>
+		<yt:statistics favoriteCount='0' viewCount='48'/>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/videos/fYEYzKAjfpQ</id>
+		<published>2006-09-09T21:10:01.000Z</published>
+		<updated>2012-03-02T22:36:16.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/categories.cat' term='Film' label='Film &amp; Animation'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='WWI'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Thunderpuss'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Video'/>
+		<category scheme='http://gdata.youtube.com/schemas/2007/keywords.cat' term='Techno'/><
+		title type='text'>Thunderpuss - Papa's Got a Brand New Pigbag (WWI)</title>
+		<content type='text'>WWI Compilation paired up w/ Thunderpuss - Papa's Got a Brand New Pigbag</content>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/watch?v=fYEYzKAjfpQ&amp;feature=youtube_gdata'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.responses' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/fYEYzKAjfpQ/responses'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#video.related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/videos/fYEYzKAjfpQ/related'/>
+		<link rel='http://gdata.youtube.com/schemas/2007#mobile' type='text/html' href='http://m.youtube.com/details?v=fYEYzKAjfpQ'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/uploads/fYEYzKAjfpQ'/>
+		<author><name>gullinbursti</name><uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri></author>
+		<gd:comments><gd:feedLink rel='http://gdata.youtube.com/schemas/2007#comments' href='http://gdata.youtube.com/feeds/api/videos/fYEYzKAjfpQ/comments' countHint='46'/></gd:comments>
+		<media:group>
+			<media:category label='Film &amp; Animation' scheme='http://gdata.youtube.com/schemas/2007/categories.cat'>Film</media:category>
+			<media:content url='http://www.youtube.com/v/fYEYzKAjfpQ?version=3&amp;f=user_uploads&amp;app=youtube_gdata' type='application/x-shockwave-flash' medium='video' isDefault='true' expression='full' duration='556' yt:format='5'/>
+			<media:content url='rtsp://v8.cache6.c.youtube.com/CigLENy73wIaHwmUfiOgzBiBfRMYDSANFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='556' yt:format='1'/>
+			<media:content url='rtsp://v4.cache7.c.youtube.com/CigLENy73wIaHwmUfiOgzBiBfRMYESARFEgGUgx1c2VyX3VwbG9hZHMM/0/0/0/video.3gp' type='video/3gpp' medium='video' expression='full' duration='556' yt:format='6'/>
+			<media:description type='plain'>WWI Compilation paired up w/ Thunderpuss - Papa's Got a Brand New Pigbag</media:description>
+			<media:keywords>WWI, Thunderpuss, Video, Techno</media:keywords>
+			<media:player url='http://www.youtube.com/watch?v=fYEYzKAjfpQ&amp;feature=youtube_gdata_player'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/fYEYzKAjfpQ/0.jpg' height='360' width='480' time='00:04:38'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/fYEYzKAjfpQ/1.jpg' height='90' width='120' time='00:02:19'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/fYEYzKAjfpQ/2.jpg' height='90' width='120' time='00:04:38'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/fYEYzKAjfpQ/3.jpg' height='90' width='120' time='00:06:57'/>
+			<media:title type='plain'>Thunderpuss - Papa's Got a Brand New Pigbag (WWI)</media:title>
+			<yt:duration seconds='556'/>
+		</media:group>
+		<gd:rating average='4.8125' max='5' min='1' numRaters='64' rel='http://schemas.google.com/g/2005#overall'/>
+		<yt:statistics favoriteCount='131' viewCount='35293'/>
+	</entry>
+</feed>

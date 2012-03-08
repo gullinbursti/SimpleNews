@@ -68,6 +68,13 @@
 		_scrollOffset = 0;
 		_playingIndex = 0;
 		
+		_channelsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Channels.php"]]] retain];
+		[_channelsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
+		[_channelsRequest setTimeOutSeconds:30];
+		[_channelsRequest setDelegate:self];
+		[_channelsRequest startAsynchronous];
+		
+		
 		//NSLog(@"USER INTERFACE:[%d]", _userInterfaceIdiom); 0 == iPhone // 1 == iPad
 		
 		NSString *testVideoItemsPath = [[NSBundle mainBundle] pathForResource:@"video_items" ofType:@"plist"];
@@ -77,14 +84,6 @@
 			[_videoItems addObject:[SNVideoItemVO videoItemWithDictionary:testVideoItem]];
 		
 		
-		NSString *testChannelItemsPath = [[NSBundle mainBundle] pathForResource:@"channels" ofType:@"plist"];
-		NSDictionary *channelsPlist = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:testChannelItemsPath] options:NSPropertyListImmutable format:nil error:nil];
-		
-		for (NSDictionary *testChannelItem in channelsPlist)
-			[_channels addObject:[SNChannelVO channelWithDictionary:testChannelItem]];
-		
-		
-		//[[NSNotificationCenter defaultCenter] postNotificationName:@"START_VIDEO_PLAYBACK" object:((SNVideoItemVO *)[_videoItems objectAtIndex:0]).video_url];
 	}
 	
 	return (self);
@@ -168,18 +167,6 @@
 	_videoSearchView = [[SNVideoSearchView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 50.0)];
 	[_scrollView addSubview:_videoSearchView];
 	
-	int tot = 0;
-	for (SNChannelVO *vo in _channels) {
-		SNChannelItemView_iPhone *itemView = [[[SNChannelItemView_iPhone alloc] initWithFrame:CGRectMake(80.0 * (tot % 4), 50.0 + (80.0 * (int)(tot / 4)), 80.0, 80.0) channelVO:vo] autorelease];
-		[_itemViews addObject:itemView];
-		[_scrollView addSubview:itemView];
-		
-		//NSLog(@"VIDEO ITEM:[%d] \"%@\"", vo.video_id, vo.video_title);
-		tot++;
-	}
-	
-	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height + 1.0);
-	
 	UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)];
 	[panRecognizer setMinimumNumberOfTouches:1];
 	[panRecognizer setMaximumNumberOfTouches:1];
@@ -198,35 +185,6 @@
 	
 	_optionsListView = [[SNOptionsListView_iPhone alloc] initWithFrame:CGRectMake(-self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
 	[self.view addSubview:_optionsListView];
-	
-	[_playingListViewController offsetAtIndex:0];
-	
-	SNChannelVO *vo = (SNChannelVO *)[_channels objectAtIndex:0];
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANNEL_TAPPED" object:vo];
-	
-	/*
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_scrollView.frame = CGRectMake(-self.view.bounds.size.width, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
-		_playingListViewController.view.frame = CGRectMake(0.0, _playingListViewController.view.frame.origin.y, _playingListViewController.view.bounds.size.width, _playingListViewController.view.frame.size.height);
-		_isDetails = YES;
-		
-	} completion:^(BOOL finished) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];
-	}];
-	*/
-	/*
-	SNVideoItemVO *vo = (SNVideoItemVO *)[_videoItems objectAtIndex:0];
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:vo];
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_scrollView.frame = CGRectMake(-self.view.bounds.size.width, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
-		_playingListViewController.view.frame = CGRectMake(0.0, _playingListViewController.view.frame.origin.y, _playingListViewController.view.bounds.size.width, _playingListViewController.view.frame.size.height);
-		_isDetails = YES;
-		
-	} completion:^(BOOL finished) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];
-	}];
-	*/
 }
 
 -(void)viewDidLoad {
@@ -272,13 +230,10 @@
 	[SNAppDelegate playMP3:@"fpo_tapVideo"];
 	_isDetails = YES;
 	
-	if (_playingIndex == [_videoItems count])
-		_playingIndex = 0;
-	
 	_playingListViewController.view.hidden = NO;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:(SNVideoItemVO *)[_videoItems objectAtIndex:_playingIndex]];
-	[_playingListViewController offsetAtIndex:_playingIndex];
+	[_playingListViewController changeChannelVO:(SNChannelVO *)[_channels objectAtIndex:0]];
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_scrollView.frame = CGRectMake(-self.view.bounds.size.width, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
@@ -326,7 +281,7 @@
 	if (_playingIndex == [_videoItems count])
 		_playingIndex = 0;
 	
-	[_playingListViewController offsetAtIndex:_playingIndex];
+	//[_playingListViewController offsetAtIndex:_playingIndex];
 	
 	SNVideoItemVO *vo = (SNVideoItemVO *)[_videoItems objectAtIndex:_playingIndex];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:vo];
@@ -337,7 +292,9 @@
 	SNChannelVO *vo = (SNChannelVO *)[notification object];
 	
 	[SNAppDelegate playMP3:@"fpo_tapVideo"];
-	_playingIndex = vo.channel_id % 10;
+	[_playingListViewController changeChannelVO:vo];
+	
+	NSLog(@"CHANNEL TAPPED: \"%@\"", vo.channel_title);
 }
 
 -(void)_changeVideo:(NSNotification *)notification {
@@ -449,6 +406,60 @@
 
 -(NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view {
 	return [NSDate date]; // should return date data source was last changed
+}
+
+
+#pragma mark - ASI Delegates
+-(void)requestFinished:(ASIHTTPRequest *)request { 
+	NSLog(@"SNChannelGridViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	
+	@autoreleasepool {
+		NSError *error = nil;
+		NSArray *parsedChannels = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+		if (error != nil)
+			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+		
+		else {
+			NSMutableArray *channelList = [NSMutableArray array];
+			_itemViews = [NSMutableArray new];
+			
+			int tot = 0;
+			for (NSDictionary *serverChannel in parsedChannels) {
+				SNChannelVO *vo = [SNChannelVO channelWithDictionary:serverChannel];
+				
+				NSLog(@"CHANNEL \"%@\"", vo.channel_title);
+				
+				if (vo != nil)
+					[channelList addObject:vo];
+				
+				SNChannelItemView_iPhone *channelItemView = [[[SNChannelItemView_iPhone alloc] initWithFrame:CGRectMake(80.0 * (tot % 4), 50.0 + (80.0 * (int)(tot / 4)), 80.0, 80.0) channelVO:vo] autorelease];
+				[_itemViews addObject:channelItemView];
+				tot++;
+			}
+			
+			_channels = [channelList retain];
+			_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height + 1.0);
+			
+			for (SNChannelItemView_iPhone *channelItemView in _itemViews)
+				[_scrollView addSubview:channelItemView];
+			
+			SNChannelVO *vo = (SNChannelVO *)[_channels objectAtIndex:0];
+			
+			[_playingListViewController changeChannelVO:vo];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANNEL_TAPPED" object:vo];
+		}			
+	}
+}
+
+
+-(void)requestFailed:(ASIHTTPRequest *)request {
+	
+	if (request == _channelsRequest) {
+		//[_delegates perform:@selector(jobList:didFailLoadWithError:) withObject:self withObject:request.error];
+		//MBL_RELEASE_SAFELY(_jobListRequest);
+	}
+	
+	//[_loadOverlay remove];
 }
 
 @end

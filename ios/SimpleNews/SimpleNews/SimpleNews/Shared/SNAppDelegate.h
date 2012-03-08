@@ -14,8 +14,7 @@
 
 @property (nonatomic, retain) NSMutableArray *windows;
 
-//@property (strong, nonatomic) UIWindow *window;
-//@property (strong, nonatomic) SNViewController *viewController;
+#define kServerPath @"http://dev.gullinbursti.cc/projs/simplenews/services"
 
 -(UIWindow *)createWindowForScreen:(UIScreen *)screen;
 -(void) addViewController:(UIViewController *)controller toWindow:(UIWindow *)window;

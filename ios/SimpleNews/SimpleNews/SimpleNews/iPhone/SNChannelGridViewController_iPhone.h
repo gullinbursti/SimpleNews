@@ -14,8 +14,9 @@
 #import "SNPlayingListViewController_iPhone.h"
 
 #import "EGORefreshTableHeaderView.h"
+#import "ASIFormDataRequest.h"
 
-@interface SNChannelGridViewController_iPhone : UIViewController <EGORefreshTableHeaderDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate> {
+@interface SNChannelGridViewController_iPhone : UIViewController <ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate> {
 	
 	UIView *_holderView;
 	
@@ -32,6 +33,7 @@
 	SNOptionsListView_iPhone *_optionsListView;
 	
 	EGORefreshTableHeaderView *_refreshHeaderView;
+	ASIFormDataRequest *_channelsRequest;
 	
 	CGPoint _offsetPt;
 	

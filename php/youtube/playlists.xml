@@ -1,0 +1,370 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns='http://www.w3.org/2005/Atom' xmlns:media='http://search.yahoo.com/mrss/' xmlns:openSearch='http://a9.com/-/spec/opensearchrss/1.0/' xmlns:gd='http://schemas.google.com/g/2005' xmlns:yt='http://gdata.youtube.com/schemas/2007'>
+	<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists</id>
+	<updated>2012-03-07T22:21:38.928Z</updated>
+	<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+	<title type='text'>Playlists of gullinbursti</title>
+	<logo>http://www.youtube.com/img/pic_youtubelogo_123x63.gif</logo>
+	<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+	<link rel='alternate' type='text/html' href='http://www.youtube.com'/>
+	<link rel='http://schemas.google.com/g/2005#feed' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists'/>
+	<link rel='http://schemas.google.com/g/2005#batch' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/batch'/>
+	<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists?start-index=1&amp;max-results=25'/>
+	<author>
+		<name>gullinbursti</name>
+		<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+	</author>
+	<generator version='2.1' uri='http://gdata.youtube.com'>YouTube data API</generator>
+	<openSearch:totalResults>15</openSearch:totalResults>
+	<openSearch:startIndex>1</openSearch:startIndex>
+	<openSearch:itemsPerPage>25</openSearch:itemsPerPage>  
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/B772C0617AD1B8C2</id>
+		<published>2011-07-09T00:22:19.000Z</published>
+		<updated>2011-07-16T11:35:21.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>cocos</title>
+		<content type='text'/>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=B772C0617AD1B8C2'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/B772C0617AD1B8C2'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+	    </author>
+		<yt:description/>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/B772C0617AD1B8C2' countHint='17'/>
+		<media:group>
+			<media:thumbnail url='http://i.ytimg.com/vi/9QYCvSh2Tok/default.jpg' height='90' width='120' yt:name='default'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/9QYCvSh2Tok/hqdefault.jpg' height='360' width='480' yt:name='hqdefault'/>
+			<yt:duration seconds='10452'/>
+		</media:group>
+		<yt:playlistId>B772C0617AD1B8C2</yt:playlistId>
+	</entry> 
+	
+    <entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/0A3197B22DB5FDD1</id>
+		<published>2011-02-16T06:38:02.000Z</published>
+		<updated>2011-02-16T06:38:16.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>ULTRA Capz</title><content type='text'/>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=0A3197B22DB5FDD1'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/0A3197B22DB5FDD1'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+	    </author>
+		<yt:description/>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/0A3197B22DB5FDD1' countHint='4'/>
+		<media:group>
+			<media:thumbnail url='http://i.ytimg.com/vi/Hmpl1pgpvk0/default.jpg' height='90' width='120' yt:name='default'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/Hmpl1pgpvk0/hqdefault.jpg' height='360' width='480' yt:name='hqdefault'/>
+			<yt:duration seconds='97'/>
+		</media:group>
+		<yt:playlistId>0A3197B22DB5FDD1</yt:playlistId>
+	</entry> 
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/351ED84C40D61C89</id>
+		<published>2011-02-16T06:36:15.000Z</published>
+		<updated>2011-02-16T06:36:20.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>Art // Performance</title>
+		<content type='text'/>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=351ED84C40D61C89'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/351ED84C40D61C89'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+	    </author>
+		<yt:description/>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/351ED84C40D61C89' countHint='1'/>
+		<media:group>
+			<media:thumbnail url='http://i.ytimg.com/vi/bOdE0P7K0HM/default.jpg' height='90' width='120' yt:name='default'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/bOdE0P7K0HM/hqdefault.jpg' height='360' width='480' yt:name='hqdefault'/>
+			<yt:duration seconds='0'/>
+		</media:group>
+		<yt:playlistId>351ED84C40D61C89</yt:playlistId>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/B3A594A890F5B03A</id>
+		<published>2011-02-16T06:29:37.000Z</published>
+		<updated>2011-02-16T06:31:33.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>Politics</title>
+		<content type='text'/>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=B3A594A890F5B03A'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/B3A594A890F5B03A'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+		</author>
+		<yt:description/>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/B3A594A890F5B03A' countHint='16'/>
+		<media:group>
+			<media:thumbnail url='http://i.ytimg.com/vi/kanGCeSrL-U/default.jpg' height='90' width='120' yt:name='default'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/kanGCeSrL-U/hqdefault.jpg' height='360' width='480' yt:name='hqdefault'/>
+			<yt:duration seconds='3224'/>
+		</media:group>
+		<yt:playlistId>B3A594A890F5B03A</yt:playlistId>         
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/73A94087883CBDD9</id>
+		<published>2011-02-16T06:27:42.000Z</published><updated>2011-02-16T06:29:24.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>Movie Reviews</title>
+		<content type='text'/>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=73A94087883CBDD9'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/73A94087883CBDD9'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+		</author>
+		<yt:description/>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/73A94087883CBDD9' countHint='20'/>
+		<media:group>
+			<media:thumbnail url='http://i.ytimg.com/vi/Gz1PBiq-2OE/default.jpg' height='90' width='120' yt:name='default'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/Gz1PBiq-2OE/hqdefault.jpg' height='360' width='480' yt:name='hqdefault'/>
+			<yt:duration seconds='11158'/>
+		</media:group>
+		<yt:playlistId>73A94087883CBDD9</yt:playlistId>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/3EAEB3DA38625DF3</id>
+		<published>2011-02-16T06:26:56.000Z</published>
+		<updated>2011-02-16T06:27:29.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>Funny Stuff</title><content type='text'/>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=3EAEB3DA38625DF3'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/3EAEB3DA38625DF3'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+		</author><yt:description/>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/3EAEB3DA38625DF3' countHint='6'/>
+		<media:group>
+			<media:thumbnail url='http://i.ytimg.com/vi/inbnGw554Ks/default.jpg' height='90' width='120' yt:name='default'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/inbnGw554Ks/hqdefault.jpg' height='360' width='480' yt:name='hqdefault'/>
+			<yt:duration seconds='291'/>
+		</media:group>
+		<yt:playlistId>3EAEB3DA38625DF3</yt:playlistId>
+		</entry>
+		
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/8C1C19E49EFDFA4A</id>
+		<published>2011-02-16T06:26:39.000Z</published>
+		<updated>2011-07-09T10:18:29.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>EDU</title>
+		<content type='text'/>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=8C1C19E49EFDFA4A'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/8C1C19E49EFDFA4A'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+		</author>
+		<yt:description/>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/8C1C19E49EFDFA4A' countHint='2'/>
+		<media:group>
+			<media:thumbnail url='http://i.ytimg.com/vi/fFn2o0aEbRQ/default.jpg' height='90' width='120' yt:name='default'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/fFn2o0aEbRQ/hqdefault.jpg' height='360' width='480' yt:name='hqdefault'/>
+			<yt:duration seconds='304'/>
+		</media:group>
+		<yt:playlistId>8C1C19E49EFDFA4A</yt:playlistId>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/7C30272DEC547DA1</id>
+		<published>2011-02-16T06:26:15.000Z</published>
+		<updated>2011-02-16T07:32:52.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>Techno Evts</title><content type='text'/>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=7C30272DEC547DA1'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/7C30272DEC547DA1'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+		</author>
+		<yt:description/>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/7C30272DEC547DA1' countHint='2'/>
+		<media:group>
+			<media:thumbnail url='http://i.ytimg.com/vi/b3YX0yXwvsY/default.jpg' height='90' width='120' yt:name='default'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/b3YX0yXwvsY/hqdefault.jpg' height='360' width='480' yt:name='hqdefault'/>
+			<yt:duration seconds='176'/>
+		</media:group>
+		<yt:playlistId>7C30272DEC547DA1</yt:playlistId>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/5F6B1AA1EAB21FE4</id>
+		<published>2011-02-16T06:25:41.000Z</published>
+		<updated>2011-02-16T06:25:56.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>Gaming</title>
+		<content type='text'/>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=5F6B1AA1EAB21FE4'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/5F6B1AA1EAB21FE4'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+		</author>
+		<yt:description/>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/5F6B1AA1EAB21FE4' countHint='3'/>
+		<media:group>
+			<media:thumbnail url='http://i.ytimg.com/vi/K3peFD9yu0c/default.jpg' height='90' width='120' yt:name='default'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/K3peFD9yu0c/hqdefault.jpg' height='360' width='480' yt:name='hqdefault'/>
+			<yt:duration seconds='94'/>
+		</media:group>
+		<yt:playlistId>5F6B1AA1EAB21FE4</yt:playlistId>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/B4B7132402E39154</id>
+		<published>2011-02-16T06:25:24.000Z</published>
+		<updated>2011-02-16T06:40:20.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>Work</title>
+		<content type='text'/>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=B4B7132402E39154'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/B4B7132402E39154'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+		</author>
+		<yt:description/>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/B4B7132402E39154' countHint='0'/>
+		<media:group>
+			<yt:duration seconds='90'/>
+		</media:group>
+		<yt:playlistId>B4B7132402E39154</yt:playlistId>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/8F75E9F3F1A46355</id>
+		<published>2011-02-16T06:24:35.000Z</published>
+		<updated>2011-02-16T06:24:54.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>Monty Python</title>
+		<content type='text'/>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=8F75E9F3F1A46355'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/8F75E9F3F1A46355'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+		</author>
+		<yt:description/>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/8F75E9F3F1A46355' countHint='2'/>
+		<media:group>
+			<media:thumbnail url='http://i.ytimg.com/vi/1PJix23IeF8/default.jpg' height='90' width='120' yt:name='default'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/1PJix23IeF8/hqdefault.jpg' height='360' width='480' yt:name='hqdefault'/>
+			<yt:duration seconds='78'/>
+		</media:group>
+		<yt:playlistId>8F75E9F3F1A46355</yt:playlistId>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/68744EA10440A35A</id>
+		<published>2011-02-16T06:23:39.000Z</published>
+		<updated>2011-11-24T18:51:05.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>.¡Techo MTV!­­˙</title><content type='text'/>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=68744EA10440A35A'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/68744EA10440A35A'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+		</author>
+		<yt:description/>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/68744EA10440A35A' countHint='85'/>
+		<media:group>
+			<media:thumbnail url='http://i.ytimg.com/vi/d55bIYcrHKQ/default.jpg' height='90' width='120' yt:name='default'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/d55bIYcrHKQ/hqdefault.jpg' height='360' width='480' yt:name='hqdefault'/>
+			<yt:duration seconds='32815'/>
+		</media:group>
+		<yt:playlistId>68744EA10440A35A</yt:playlistId>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/543260D28C021ABF</id>
+		<published>2008-07-09T19:36:27.000Z</published>
+		<updated>2009-05-16T13:52:58.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>My Top Videos</title><content type='text'/>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=543260D28C021ABF'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/543260D28C021ABF'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+		</author>
+		<yt:description/>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/543260D28C021ABF' countHint='9'/>
+		<media:group>
+			<media:thumbnail url='http://i.ytimg.com/vi/fYEYzKAjfpQ/default.jpg' height='90' width='120' yt:name='default'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/fYEYzKAjfpQ/hqdefault.jpg' height='360' width='480' yt:name='hqdefault'/>
+			<yt:duration seconds='34'/>
+		</media:group>
+		<yt:playlistId>543260D28C021ABF</yt:playlistId>
+	</entry>
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/939818B7ED57D9FF</id>
+		<published>2008-04-15T17:51:37.000Z</published>
+		<updated>2011-02-16T06:37:39.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>LASERS!</title><content type='text'>Some videos with mah LASERs</content>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=939818B7ED57D9FF'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/939818B7ED57D9FF'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+		</author>
+		<yt:description>Some videos with mah LASERs</yt:description>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/939818B7ED57D9FF' countHint='5'/>
+		<media:group>
+			<media:thumbnail url='http://i.ytimg.com/vi/w3NIBbS893c/default.jpg' height='90' width='120' yt:name='default'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/w3NIBbS893c/hqdefault.jpg' height='360' width='480' yt:name='hqdefault'/>
+			<yt:duration seconds='102'/>
+		</media:group>
+		<yt:playlistId>939818B7ED57D9FF</yt:playlistId>
+    </entry>     
+	
+	<entry>
+		<id>http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/C4BC095F754AF555</id>
+		<published>2007-10-19T14:44:13.000Z</published><updated>2008-04-15T17:51:11.000Z</updated>
+		<category scheme='http://schemas.google.com/g/2005#kind' term='http://gdata.youtube.com/schemas/2007#playlistLink'/>
+		<title type='text'>Video Projects</title>
+		<content type='text'>Misc videos I made</content>
+		<link rel='related' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti'/>
+		<link rel='alternate' type='text/html' href='http://www.youtube.com/view_play_list?p=C4BC095F754AF555'/>
+		<link rel='self' type='application/atom+xml' href='http://gdata.youtube.com/feeds/api/users/gullinbursti/playlists/C4BC095F754AF555'/>
+		<author>
+			<name>gullinbursti</name>
+			<uri>http://gdata.youtube.com/feeds/api/users/gullinbursti</uri>
+		</author>
+		<yt:description>Misc videos I made</yt:description>
+		<gd:feedLink rel='http://gdata.youtube.com/schemas/2007#playlist' href='http://gdata.youtube.com/feeds/api/playlists/C4BC095F754AF555' countHint='3'/>
+		<media:group>
+			<media:thumbnail url='http://i.ytimg.com/vi/fYEYzKAjfpQ/default.jpg' height='90' width='120' yt:name='default'/>
+			<media:thumbnail url='http://i.ytimg.com/vi/fYEYzKAjfpQ/hqdefault.jpg' height='360' width='480' yt:name='hqdefault'/>
+			<yt:duration seconds='513'/>
+		</media:group>
+		<yt:playlistId>C4BC095F754AF555</yt:playlistId>
+	</entry>
+</feed>

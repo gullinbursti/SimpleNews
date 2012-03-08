@@ -26,7 +26,6 @@
 		4C48967814FB415E00C55125 /* airPlayIconButton_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967414FB415E00C55125 /* airPlayIconButton_active@2x.png */; };
 		4C48967914FB415E00C55125 /* airPlayIconButton_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967514FB415E00C55125 /* airPlayIconButton_nonActive.png */; };
 		4C48967A14FB415E00C55125 /* airPlayIconButton_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967614FB415E00C55125 /* airPlayIconButton_nonActive@2x.png */; };
-		4C48967F14FB4E6800C55125 /* devices.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967E14FB4E6800C55125 /* devices.plist */; };
 		4C48968D14FB76DC00C55125 /* SNBaseListItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C48968C14FB76DA00C55125 /* SNBaseListItemView_iPhone.m */; };
 		4C7D600E14FF02B600156054 /* fpo_startVideo.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4C7D600D14FF02B600156054 /* fpo_startVideo.mp3 */; };
 		4C7D601214FF0E5C00156054 /* SNNoAirplayView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D601114FF0E5C00156054 /* SNNoAirplayView_iPhone.m */; };
@@ -167,7 +166,6 @@
 		4C48967414FB415E00C55125 /* airPlayIconButton_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "airPlayIconButton_active@2x.png"; sourceTree = "<group>"; };
 		4C48967514FB415E00C55125 /* airPlayIconButton_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = airPlayIconButton_nonActive.png; sourceTree = "<group>"; };
 		4C48967614FB415E00C55125 /* airPlayIconButton_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "airPlayIconButton_nonActive@2x.png"; sourceTree = "<group>"; };
-		4C48967E14FB4E6800C55125 /* devices.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = devices.plist; sourceTree = "<group>"; };
 		4C48968B14FB76DA00C55125 /* SNBaseListItemView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNBaseListItemView_iPhone.h; sourceTree = "<group>"; };
 		4C48968C14FB76DA00C55125 /* SNBaseListItemView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNBaseListItemView_iPhone.m; sourceTree = "<group>"; };
 		4C7D600D14FF02B600156054 /* fpo_startVideo.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fpo_startVideo.mp3; sourceTree = "<group>"; };
@@ -794,7 +792,6 @@
 			children = (
 				4CEF4A6F1506D58E00A1AD7E /* options.plist */,
 				4CAF9D3F1506AFEB00AB3735 /* channels.plist */,
-				4C48967E14FB4E6800C55125 /* devices.plist */,
 				4CDC8C8414F2DB4000D42EA5 /* video_items.plist */,
 				4CDC8C8914F2E3E000D42EA5 /* Jurassic Park - Dodson & Nedry.mp4 */,
 			);
@@ -888,7 +885,6 @@
 				4C48967814FB415E00C55125 /* airPlayIconButton_active@2x.png in Resources */,
 				4C48967914FB415E00C55125 /* airPlayIconButton_nonActive.png in Resources */,
 				4C48967A14FB415E00C55125 /* airPlayIconButton_nonActive@2x.png in Resources */,
-				4C48967F14FB4E6800C55125 /* devices.plist in Resources */,
 				4C8B444714FEA7D300F89F7C /* fpo_tapVideo.mp3 in Resources */,
 				4C7D600E14FF02B600156054 /* fpo_startVideo.mp3 in Resources */,
 				4C0C331A14FF790400A3EB60 /* video_player.html in Resources */,

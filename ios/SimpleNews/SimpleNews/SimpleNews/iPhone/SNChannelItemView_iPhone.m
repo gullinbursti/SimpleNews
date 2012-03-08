@@ -18,8 +18,6 @@
 		_vo = vo;
 		_isSelected = NO;
 		
-		NSLog(@"IMAGE:[%@]", _vo.thumb_url);
-		
 		[self setBackgroundColor:[UIColor colorWithWhite:0.145 alpha:1.0]];
 		self.clipsToBounds = YES;
 		

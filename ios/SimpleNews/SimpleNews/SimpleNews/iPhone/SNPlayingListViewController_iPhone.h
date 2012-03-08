@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "SNVideoPlayerViewController_iPhone.h"
 #import "SNPaginationView.h"
+#import "ASIFormDataRequest.h"
+#import "SNChannelVO.h"
 
-@interface SNPlayingListViewController_iPhone : UIViewController <UIScrollViewDelegate> {
+@interface SNPlayingListViewController_iPhone : UIViewController <ASIHTTPRequestDelegate, UIScrollViewDelegate> {
 	
 	UIScrollView *_scrollView;
 	NSMutableArray *_videoItems;
@@ -26,11 +28,12 @@
 	
 	SNVideoPlayerViewController_iPhone *_videoPlayerViewController;
 	SNPaginationView *_paginationView;
+	ASIFormDataRequest *_videosRequest;
 	
 	float _lastOffset;
 }
 
 -(id)initWithVideos:(NSMutableArray *)videos;
--(void)offsetAtIndex:(int)ind;
+-(void)changeChannelVO:(SNChannelVO *)vo;
 
 @end
