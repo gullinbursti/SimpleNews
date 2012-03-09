@@ -39,9 +39,20 @@
 		_channelImageView.imageURL = [NSURL URLWithString:_vo.channelImg_url];
 		[_scrollView addSubview:_channelImageView];
 		
+		
 		//int mins = [SNAppDelegate minutesAfterDate:_vo.postedDate];
-		int hours = [SNAppDelegate hoursAfterDate:_vo.postedDate];
-		int days = [SNAppDelegate daysAfterDate:_vo.postedDate];
+		//int hours = [SNAppDelegate hoursAfterDate:[NSDate dateWithTimeIntervalSince1970:0]];
+		//int days = [SNAppDelegate daysAfterDate:_vo.postedDate];
+		
+		//NSLog(@"DATE:[%@] (%d, %d)", _vo.postedDate, days, hours);
+		NSLog(@"DATE:[%@]", _vo.postedDate);
+		
+		
+		[NSDateFormatter setDefaultFormatterBehavior:NSDateFormatterBehaviorDefault];
+		NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+		[dateFormatter setDateStyle:NSDateFormatterShortStyle];
+		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+		
 		
 		_dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(80.0, 215.0, 200.0, 18.0)];
 		_dateLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:14.0];
@@ -50,8 +61,11 @@
 		_dateLabel.numberOfLines = 0;
 		_dateLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
 		_dateLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+		//_dateLabel.text = [NSString stringWithFormat:@"%@", [dateFormatter stringFromDate:_vo.postedDate]];
+		_dateLabel.text = _vo.postedDate;
 		[_scrollView addSubview:_dateLabel];
 		
+		/*
 		if (days > 0) {
 			if (days == 1)
 				_dateLabel.text = @"1 day ago";
@@ -66,7 +80,7 @@
 			else if (hours > 1)
 				_dateLabel.text = [NSString stringWithFormat:@"%d hours ago", hours];
 		}
-		
+		*/
 		
 		_titleSize = [_vo.video_title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18] constrainedToSize:CGSizeMake(self.frame.size.width - 35.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(27.0, 255.0, _titleSize.width, _titleSize.height)];

@@ -7,11 +7,10 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
+#import "Reachability.h"
 
 #import "SNAppDelegate.h"
-#import "SNViewController_Airplay.h"
 
-#import "Reachability.h"
 
 @implementation SNAppDelegate
 

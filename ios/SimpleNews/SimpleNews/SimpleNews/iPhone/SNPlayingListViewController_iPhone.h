@@ -23,11 +23,11 @@
 	int _index;
 	
 	UIButton *_gridButton;
+	UIButton *_shareButton;
 	UIButton *_playButton;
 	UIButton *_pauseButton;
 	
 	UIView *_overlayHolderView;
-	//UIWebView *_webView;
 	
 	SNVideoPlayerViewController_iPhone *_videoPlayerViewController;
 	SNPaginationView *_paginationView;
@@ -36,13 +36,11 @@
 	SNVideoItemVO *_videoItemVO;
 	
 	float _lastOffset;
-	NSString *_htmlString;
 	
-	BOOL testedDOM_;
-	NSUInteger retryCount_;
-	NSInteger  domWaitCounter_;
-	UIWebView *webView_;
-	NSURLRequest *lastRequest_;
+	BOOL _isDOMTested;
+	NSUInteger _retryCount;
+	NSInteger  _domWaitCounter;
+	UIWebView *_webView;
 }
 
 -(id)initWithVO:(SNChannelVO *)vo;

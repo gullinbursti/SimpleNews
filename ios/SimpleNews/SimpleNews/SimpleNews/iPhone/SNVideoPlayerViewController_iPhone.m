@@ -29,7 +29,6 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_ffScrub:) name:@"FF_VIDEO_TIME" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_rrScrub:) name:@"RR_VIDEO_TIME" object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_itemTapped:) name:@"ITEM_TAPPED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_changeVideo:) name:@"CHANGE_VIDEO" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_playbackStateChangedCallback:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
@@ -210,22 +209,13 @@
 	}
 }
 
--(void)_itemTapped:(NSNotification *)notification {
-	_vo = (SNVideoItemVO *)[notification object];
-	NSLog(@"---ITEM TAPPED:[%@]---", _vo.video_title);
-	
-	[self.mpc stop];
+-(void)_changeVideo:(NSNotification *)notification {
+	NSLog(@"---CHANGE VIDEO:[%@]---", [notification object]);
+	_videoURL = [notification object];
 	
 	_isPaused = YES;
 	_isFinished = NO;
-}
-
--(void)_changeVideo:(NSNotification *)notification {
-	//_vo = (SNVideoItemVO *)[notification object];
-	NSLog(@"---CHANGE VIDEO:[%@]---", [notification object]);
-	_videoURL = [notification object];
-	//_videoURL = [NSString stringWithFormat:@"http://www.youtube.com/watch?v=%@", _vo.youtube_id];
-		
+	
 	[self.mpc.view removeFromSuperview];
 	[self setupMPC];
 }

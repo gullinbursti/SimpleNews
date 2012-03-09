@@ -247,7 +247,7 @@
 }
 
 -(void)_goLongPress:(id)sender {
-	CGPoint holdPt = [(UIPanGestureRecognizer*)sender locationInView:_holderView];
+	CGPoint holdPt = [(UIPanGestureRecognizer *)sender locationInView:_holderView];
 	holdPt.y = (_scrollView.contentOffset.y + holdPt.y);
 }
 
@@ -267,7 +267,6 @@
 		_playingIndex = 0;
 	
 	SNVideoItemVO *vo = (SNVideoItemVO *)[_videoItems objectAtIndex:_playingIndex];
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:vo];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];
 }
 
@@ -374,17 +373,17 @@
 
 
 #pragma mark EGORefreshTableHeaderDelegate Methods
--(void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
+-(void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
 	
 	//[self reloadData];
 	[self performSelector:@selector(_doneLoadingData) withObject:nil afterDelay:1.33];
 }
 
--(BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view {
+-(BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView *)view {
 	return (_isReloading); // should return if data source model is reloading
 }
 
--(NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view {
+-(NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView *)view {
 	return [NSDate date]; // should return date data source was last changed
 }
 

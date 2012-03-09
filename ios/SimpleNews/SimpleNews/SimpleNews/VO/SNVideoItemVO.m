@@ -33,6 +33,17 @@
 	vo.thumb_url = [NSString stringWithFormat:@"http://i.ytimg.com/vi/%@/hqdefault.jpg", vo.youtube_id];
 	vo.image_url = [NSString stringWithFormat:@"http://i.ytimg.com/vi/%@/hqdefault.jpg", vo.youtube_id];
 	
+	//NSString *tmp = [dictionary objectForKey:@"date"];
+	//tmp = [vo.posted substringToIndex:[vo.posted length] - 5];
+	//tmp = [tmp stringByReplacingOccurrencesOfString:@"T" withString:@" "];
+	
+	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+	//vo.postedDate = [dateFormat dateFromString:@"2012-03-08 10:23:00"];
+	//[dateFormat release];
+	
+	//NSLog(@"VO:[%@]", [dateFormat dateFromString:[dictionary objectForKey:@"date"]]);
+	
 	return (vo);
 }
 
