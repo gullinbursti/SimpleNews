@@ -12,6 +12,7 @@
 #import "SNOptionsListView_iPhone.h"
 #import "SNVideoSearchView_iPhone.h"
 #import "SNPlayingListViewController_iPhone.h"
+#import "SNChannelVO.h"
 
 #import "EGORefreshTableHeaderView.h"
 #import "ASIFormDataRequest.h"
@@ -44,6 +45,9 @@
 	BOOL _isDetails;
 	BOOL _isOptions;
 	BOOL _isSearching;
+	
+	int _totSelected;
+	SNChannelVO *_activeVO;
 }
 
 @end

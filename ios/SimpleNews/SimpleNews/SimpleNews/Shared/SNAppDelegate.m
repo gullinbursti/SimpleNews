@@ -9,18 +9,13 @@
 #import <AVFoundation/AVFoundation.h>
 
 #import "SNAppDelegate.h"
-
-#import "SNSplashViewController_iPhone.h"
-#import "SNSplashViewController_iPad.h"
 #import "SNViewController_Airplay.h"
 
 #import "Reachability.h"
 
 @implementation SNAppDelegate
 
-@synthesize windows;
-//@synthesize window = _window;
-//@synthesize viewController = _viewController;
+@synthesize window = _window;
 
 
 +(UIFont *)snHelveticaFontRegular {
@@ -86,73 +81,30 @@
 
 
 -(void)dealloc {
-	//[_window release];
-	//[_viewController release];
+	[_window release];
+	
 	[super dealloc];
 }
 
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-	UIWindow *window = nil;
-	
-	windows = [[NSMutableArray alloc] init];
-	NSLog(@"SCREENS:[%d]", [[UIScreen screens] count]);
 	
 	[[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"airplay_enabled"];
+	self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
 	
-	int cnt = 0;
-	for (UIScreen *screen in [UIScreen screens]) {
-		SNSplashViewController_iPhone *_viewController = nil;
-		
-		NSLog(@":::::::]] SCREEN[%d](%f, %f)", cnt, screen.bounds.size.width, screen.bounds.size.height);
-		if (![SNAppDelegate hasWiFi]) {
-			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"No Wi-Fi" message:@"Turn on network" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-			[alertView show];
-			[alertView release];
-		}
-		
-		if (cnt == 0) {
-			
-			if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
-				_viewController = [[SNSplashViewController_iPhone alloc] init];
-			
-			else
-				_viewController = [[SNSplashViewController_iPad alloc] init];//_viewController = [[[SNSplashViewController_iPad alloc] initWithNibName:@"SNViewController_iPad" bundle:nil] autorelease];
-			
-		} else
-			_viewController = [[SNViewController_Airplay alloc] initWithFrame:screen.bounds];
-		
-		window = [self createWindowForScreen:screen];
-		
-		[self addViewController:_viewController toWindow:window];
-		[_viewController release];
-		_viewController = nil;
-		
-		// If you don't do this here, you will get the "Applications are expected to have a root view controller" message.
-		if (screen == [UIScreen mainScreen])
-			[window makeKeyAndVisible];
-		
-		
-		cnt++;
+	UINavigationController *rootNavigationController;
+	
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		_gridViewController_iPhone = [[SNChannelGridViewController_iPhone alloc] init];
+		rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_gridViewController_iPhone] autorelease];
+	
+	} else {
+		_gridViewController_iPad = [[SNVideoGridViewController_iPad alloc] init];
+		rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_gridViewController_iPad] autorelease];
 	}
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_screenDidConnect:) name:UIScreenDidConnectNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_screenDidDisconnect:) name:UIScreenDidDisconnectNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_screenModeDidChange:) name:UIScreenModeDidChangeNotification object:nil];
-	
-	
-	//-self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
-	//-self.viewController = [[[SNViewController alloc] initWithUserInterfaceIdiom:[[UIDevice currentDevice] userInterfaceIdiom]] autorelease];
-	
-	/*
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
-		self.viewController = [[[SNViewController alloc] initWithNibName:@"SNViewController_iPhone" bundle:nil] autorelease];
-	
-	else
-		self.viewController = [[[SNViewController alloc] initWithNibName:@"SNViewController_iPad" bundle:nil] autorelease];
-	*/
-	
-	//-self.window.rootViewController = self.viewController;
-	//-[self.window makeKeyAndVisible];
+	[rootNavigationController setNavigationBarHidden:YES];
+	[self.window setRootViewController:rootNavigationController];
+	[self.window makeKeyAndVisible];
 	
 	return (YES);
 }
@@ -187,53 +139,6 @@
  Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
  **/
 - (void)applicationWillTerminate:(UIApplication *)application {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIScreenDidConnectNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIScreenDidDisconnectNotification object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIScreenModeDidChangeNotification object:nil];
-}
-
-
--(UIWindow *)createWindowForScreen:(UIScreen *)screen {
-	UIWindow    *_window    = nil;
-	
-	// Do we already have a window for this screen?
-	for (UIWindow *window in self.windows) {
-		if (window.screen == screen)
-			_window = window;
-	}
-	
-	// Still nil? Create a new one.
-	if (_window == nil) {
-		_window = [[[UIWindow alloc] initWithFrame:[screen bounds]] autorelease];
-		[_window setScreen:screen];
-		[self.windows addObject:_window];
-	}
-	
-	return (_window);
-}
-
--(void)addViewController:(UIViewController *)controller toWindow:(UIWindow *)window {
-	[window setRootViewController:controller];
-	[window setHidden:NO];
-}
-
-
--(void)_screenDidConnect:(NSNotification *)notification {
-	UIScreen *connectedScreen = (UIScreen *)[notification object];
-	NSLog(@":::::::]] SCREEN CONNECTED[%d](%f, %f)", [[UIScreen screens] count], connectedScreen.bounds.size.width, connectedScreen.bounds.size.height);
-	
-	UIWindow *window = [[UIWindow alloc] initWithFrame:connectedScreen.bounds];
-	
-	[window setScreen:connectedScreen];
-	window.hidden = NO;
-}
-
--(void)_screenDidDisconnect:(NSNotification *)notification {
-	NSLog(@":::::::]] SCREEN DISCONNECTED");
-}
-
--(void)_screenModeDidChange:(NSNotification *)notification {
-	NSLog(@":::::::]] SCREEN MODE CHANGED");
 }
 
 @end

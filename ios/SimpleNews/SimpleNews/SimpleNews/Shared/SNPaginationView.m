@@ -17,7 +17,6 @@
 		_totPages = total;
 		_currPage = 0.0;
 		
-		
 		_bgButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 		_bgButton.frame = CGRectMake(-(LED_SIZE * 2.0), -17.0, ((total + 1.0) * LED_SIZE) * 2.0, 34.0);
 		[_bgButton setBackgroundImage:[[UIImage imageNamed:@"paginationBG.png"] stretchableImageWithLeftCapWidth:17.0 topCapHeight:0.0] forState:UIControlStateNormal];

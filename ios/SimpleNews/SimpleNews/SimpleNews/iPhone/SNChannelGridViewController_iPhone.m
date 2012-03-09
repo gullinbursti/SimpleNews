@@ -68,6 +68,8 @@
 		_scrollOffset = 0;
 		_playingIndex = 0;
 		
+		_totSelected = 0;
+		
 		_channelsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Channels.php"]]] retain];
 		[_channelsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
 		[_channelsRequest setTimeOutSeconds:30];
@@ -143,7 +145,7 @@
 	else
 		[self.view setBackgroundColor:[UIColor greenColor]];
 	
-	_holderView = [[UIView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)];
+	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)];
 	[self.view addSubview:_holderView];
 	
 	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height - _holderView.frame.origin.y)];
@@ -179,11 +181,8 @@
 	[longPressRecognizer setDelegate:self];
 	[_holderView addGestureRecognizer:longPressRecognizer];
 	
-	_playingListViewController = [[SNPlayingListViewController_iPhone alloc] initWithVideos:_videoItems];
-	_playingListViewController.view.frame = CGRectMake(self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height);
-	[self.view addSubview:_playingListViewController.view];
-	
 	_optionsListView = [[SNOptionsListView_iPhone alloc] initWithFrame:CGRectMake(-self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
+	_optionsListView.hidden = YES;
 	[self.view addSubview:_optionsListView];
 }
 
@@ -201,10 +200,6 @@
 
 -(void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_holderView.frame = CGRectMake(0.0, _holderView.frame.origin.y, self.view.bounds.size.width, self.view.bounds.size.height - _holderView.frame.origin.y);
-	}];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -219,6 +214,7 @@
 #pragma mark - Navigation
 -(void)_goOptions {
 	_isOptions = YES;
+	_optionsListView.hidden = NO;
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_scrollView.frame = CGRectMake(self.view.bounds.size.width, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
@@ -230,18 +226,7 @@
 	[SNAppDelegate playMP3:@"fpo_tapVideo"];
 	_isDetails = YES;
 	
-	_playingListViewController.view.hidden = NO;
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:(SNVideoItemVO *)[_videoItems objectAtIndex:_playingIndex]];
-	[_playingListViewController changeChannelVO:(SNChannelVO *)[_channels objectAtIndex:0]];
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_scrollView.frame = CGRectMake(-self.view.bounds.size.width, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
-		_playingListViewController.view.frame = CGRectMake(0.0, _playingListViewController.view.frame.origin.y, _playingListViewController.view.bounds.size.width, _playingListViewController.view.frame.size.height);
-		
-	} completion:^(BOOL finished) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:(SNVideoItemVO *)[_videoItems objectAtIndex:_playingIndex]];
-	}];
+	[self.navigationController pushViewController:[[[SNPlayingListViewController_iPhone alloc] initWithVO:_activeVO] autorelease] animated:YES];
 }
 
 
@@ -281,8 +266,6 @@
 	if (_playingIndex == [_videoItems count])
 		_playingIndex = 0;
 	
-	//[_playingListViewController offsetAtIndex:_playingIndex];
-	
 	SNVideoItemVO *vo = (SNVideoItemVO *)[_videoItems objectAtIndex:_playingIndex];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ITEM_TAPPED" object:vo];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];
@@ -294,14 +277,16 @@
 	[SNAppDelegate playMP3:@"fpo_tapVideo"];
 	[_playingListViewController changeChannelVO:vo];
 	
+	_totSelected++;
+	_activeVO = vo;
+	
 	NSLog(@"CHANNEL TAPPED: \"%@\"", vo.channel_title);
 }
 
 -(void)_changeVideo:(NSNotification *)notification {
-	SNVideoItemVO *vo = (SNVideoItemVO *)[notification object];
-	_playingIndex = vo.video_id;
+	//SNVideoItemVO *vo = (SNVideoItemVO *)[notification object];
+	//_playingIndex = vo.video_id;
 }
-
 
 -(void)_optionsReturn:(NSNotification *)notification {
 	_isOptions = NO;
@@ -309,18 +294,13 @@
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_scrollView.frame = CGRectMake(0.0, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
 		_optionsListView.frame = CGRectMake(-self.view.bounds.size.width, _optionsListView.frame.origin.y, _optionsListView.frame.size.width, _optionsListView.frame.size.height);
+	} completion:^(BOOL finished) {
+		_optionsListView.hidden = YES;
 	}];
 }
 
 -(void)_detailsReturn:(NSNotification *)notification {
 	_isDetails = NO;
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_scrollView.frame = CGRectMake(0.0, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
-		_playingListViewController.view.frame = CGRectMake(self.view.bounds.size.width, _playingListViewController.view.frame.origin.y, _playingListViewController.view.bounds.size.width, _playingListViewController.view.frame.size.height);
-	} completion:^(BOOL finished) {
-		_playingListViewController.view.hidden = YES;
-	}];
 }
 
 
@@ -423,7 +403,11 @@
 			NSMutableArray *channelList = [NSMutableArray array];
 			_itemViews = [NSMutableArray new];
 			
-			int tot = 0;
+			//[channelList addObject:nil];
+			SNChannelItemView_iPhone *channelItemView = [[[SNChannelItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 50.0, 80.0, 80.0) channelVO:nil] autorelease];
+			[_itemViews addObject:channelItemView];
+			
+			int tot = 1;
 			for (NSDictionary *serverChannel in parsedChannels) {
 				SNChannelVO *vo = [SNChannelVO channelWithDictionary:serverChannel];
 				
@@ -438,7 +422,7 @@
 			}
 			
 			_channels = [channelList retain];
-			_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height + 1.0);
+			_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 50.0 + ((ceil(tot / 4) + 1) * 80.0));
 			
 			for (SNChannelItemView_iPhone *channelItemView in _itemViews)
 				[_scrollView addSubview:channelItemView];
@@ -448,6 +432,8 @@
 			[_playingListViewController changeChannelVO:vo];
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANNEL_TAPPED" object:vo];
 		}			
+		
+		[self.navigationController pushViewController:[[[SNPlayingListViewController_iPhone alloc] initWithVO:(SNChannelVO *)[_channels objectAtIndex:0]] autorelease] animated:YES];
 	}
 }
 

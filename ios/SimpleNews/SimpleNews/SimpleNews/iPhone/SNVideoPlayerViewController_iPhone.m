@@ -221,10 +221,11 @@
 }
 
 -(void)_changeVideo:(NSNotification *)notification {
-	_vo = (SNVideoItemVO *)[notification object];
-	NSLog(@"---CHANGE VIDEO:[%@]---", _vo.video_url);
-	_videoURL = _vo.video_url;
-	
+	//_vo = (SNVideoItemVO *)[notification object];
+	NSLog(@"---CHANGE VIDEO:[%@]---", [notification object]);
+	_videoURL = [notification object];
+	//_videoURL = [NSString stringWithFormat:@"http://www.youtube.com/watch?v=%@", _vo.youtube_id];
+		
 	[self.mpc.view removeFromSuperview];
 	[self setupMPC];
 }

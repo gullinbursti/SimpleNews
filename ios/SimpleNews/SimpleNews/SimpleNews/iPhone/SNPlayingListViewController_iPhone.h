@@ -11,8 +11,10 @@
 #import "SNPaginationView.h"
 #import "ASIFormDataRequest.h"
 #import "SNChannelVO.h"
+#import "SNVideoItemVO.h"
+#import "PSYouTubeExtractor.h"
 
-@interface SNPlayingListViewController_iPhone : UIViewController <ASIHTTPRequestDelegate, UIScrollViewDelegate> {
+@interface SNPlayingListViewController_iPhone : UIViewController <ASIHTTPRequestDelegate, UIScrollViewDelegate, UIWebViewDelegate> {
 	
 	UIScrollView *_scrollView;
 	NSMutableArray *_videoItems;
@@ -25,15 +27,25 @@
 	UIButton *_pauseButton;
 	
 	UIView *_overlayHolderView;
+	//UIWebView *_webView;
 	
 	SNVideoPlayerViewController_iPhone *_videoPlayerViewController;
 	SNPaginationView *_paginationView;
 	ASIFormDataRequest *_videosRequest;
 	
+	SNVideoItemVO *_videoItemVO;
+	
 	float _lastOffset;
+	NSString *_htmlString;
+	
+	BOOL testedDOM_;
+	NSUInteger retryCount_;
+	NSInteger  domWaitCounter_;
+	UIWebView *webView_;
+	NSURLRequest *lastRequest_;
 }
 
--(id)initWithVideos:(NSMutableArray *)videos;
+-(id)initWithVO:(SNChannelVO *)vo;
 -(void)changeChannelVO:(SNChannelVO *)vo;
 
 @end

@@ -7,17 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SNChannelGridViewController_iPhone.h"
+#import "SNVideoGridViewController_iPad.h"
+
 
 @class SNViewController;
 
-@interface SNAppDelegate : UIResponder <UIApplicationDelegate>
+@interface SNAppDelegate : UIResponder <UIApplicationDelegate> {
+	SNVideoGridViewController_iPad *_gridViewController_iPad;
+	SNChannelGridViewController_iPhone *_gridViewController_iPhone;
+}
 
-@property (nonatomic, retain) NSMutableArray *windows;
+@property (strong, nonatomic) UIWindow *window;
 
 #define kServerPath @"http://dev.gullinbursti.cc/projs/simplenews/services"
 
--(UIWindow *)createWindowForScreen:(UIScreen *)screen;
--(void) addViewController:(UIViewController *)controller toWindow:(UIWindow *)window;
 
 +(UIFont *)snHelveticaNeueFontRegular;
 +(UIFont *)snHelveticaNeueFontBold;
