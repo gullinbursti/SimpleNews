@@ -35,7 +35,7 @@
 		_imageView.imageURL = [NSURL URLWithString:_vo.image_url];
 		[imgHolder addSubview:_imageView];
 		
-		_channelImageView = [[EGOImageView alloc] initWithFrame:CGRectMake(27.0, 200.0, 44.0, 44.0)];
+		_channelImageView = [[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 197.0, 44.0, 44.0)];
 		_channelImageView.imageURL = [NSURL URLWithString:_vo.channelImg_url];
 		[_scrollView addSubview:_channelImageView];
 		
@@ -54,17 +54,6 @@
 		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
 		
 		
-		_dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(80.0, 215.0, 200.0, 18.0)];
-		_dateLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:14.0];
-		_dateLabel.backgroundColor = [UIColor clearColor];
-		_dateLabel.textColor = [UIColor grayColor];
-		_dateLabel.numberOfLines = 0;
-		_dateLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-		_dateLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-		//_dateLabel.text = [NSString stringWithFormat:@"%@", [dateFormatter stringFromDate:_vo.postedDate]];
-		_dateLabel.text = _vo.postedDate;
-		[_scrollView addSubview:_dateLabel];
-		
 		/*
 		if (days > 0) {
 			if (days == 1)
@@ -82,8 +71,20 @@
 		}
 		*/
 		
+		_dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(70.0, 210.0, 200.0, 18.0)];
+		_dateLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:14.0];
+		_dateLabel.backgroundColor = [UIColor clearColor];
+		_dateLabel.textColor = [UIColor grayColor];
+		_dateLabel.numberOfLines = 0;
+		_dateLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+		_dateLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+		//_dateLabel.text = [NSString stringWithFormat:@"%@", [dateFormatter stringFromDate:_vo.postedDate]];
+		_dateLabel.text = _vo.posted;
+		[_scrollView addSubview:_dateLabel];
+
+		
 		_titleSize = [_vo.video_title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18] constrainedToSize:CGSizeMake(self.frame.size.width - 35.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(27.0, 255.0, _titleSize.width, _titleSize.height)];
+		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 255.0, _titleSize.width, _titleSize.height)];
 		_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18.0];
 		_titleLabel.backgroundColor = [UIColor clearColor];
 		_titleLabel.textColor = [UIColor whiteColor];
@@ -94,7 +95,7 @@
 		[_scrollView addSubview:_titleLabel];
 		
 		_infoSize = [_vo.video_info sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:14] constrainedToSize:CGSizeMake(self.frame.size.width - 35.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-		_infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(27.0, 275.0 + _titleSize.height, _infoSize.width, _infoSize.height)];
+		_infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 270.0 + _titleSize.height, _infoSize.width, _infoSize.height)];
 		_infoLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:14.0];
 		_infoLabel.backgroundColor = [UIColor clearColor];
 		_infoLabel.textColor = [UIColor grayColor];
@@ -104,7 +105,7 @@
 		_infoLabel.text = _vo.video_info;
 		[_scrollView addSubview:_infoLabel];
 				
-		_scrollView.contentSize = CGSizeMake(self.frame.size.width , 275.0 + (_titleSize.height + _infoSize.height));
+		_scrollView.contentSize = CGSizeMake(self.frame.size.width , 320.0 + (_titleSize.height + _infoSize.height));
 	}
 	
 	return (self);

@@ -23,12 +23,12 @@
 		
 		_imageView = [[EGOImageView alloc] initWithFrame:CGRectMake(4.0, 4.0, 72.0, 72.0)];
 		_imageView.imageURL = [NSURL URLWithString:_vo.thumb_url];
-		_imageView.alpha = 0.5;
+		_imageView.alpha = 1.0;
 		[self addSubview:_imageView];
 		
-		_checkImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(4.0, 48.0, 24.0, 24.0)] autorelease];
+		_checkImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(4.0, 4.0, 72.0, 72.0)] autorelease];
 		_checkImgView.hidden = YES;
-		_checkImgView.image = [UIImage imageNamed:@"checkMark.png"];
+		_checkImgView.image = [UIImage imageNamed:@"checkMarkActive.png"];
 		[self addSubview:_checkImgView];
 	}
 	
@@ -61,14 +61,14 @@
 		[self fadeTo:1.0];
 	
 	else
-		[self fadeTo:0.5];
+		[self fadeTo:1.0];
 	
 	
 	_checkImgView.hidden = !_isSelected;
 }
 
 -(void)fadeTo:(float)opac {
-	[UIView animateWithDuration:0.33 animations:^(void) {
+	[UIView animateWithDuration:0.15 animations:^(void) {
 		_imageView.alpha = opac;
 	}];
 }

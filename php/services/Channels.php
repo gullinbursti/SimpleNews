@@ -86,7 +86,7 @@
 		
 		function getSubscriptions() {
             $channel_arr = array();
-			$subscriptions_xml = new SimpleXMLElement('http://gdata.youtube.com/feeds/api/users/getassemblytv/subscriptions', NULL, true);
+			$subscriptions_xml = new SimpleXMLElement('http://gdata.youtube.com/feeds/api/users/getassemblytv/subscriptions?max-results=50', NULL, true);
             
 			$tot = 0;
 			foreach ($subscriptions_xml -> entry as $subscription_entry) {
@@ -122,7 +122,7 @@
 		
 		function getVideosByChannel($channel_id, $channel_name) {
 			$video_arr = array();
-			$videos_xml = new SimpleXMLElement('http://gdata.youtube.com/feeds/api/users/'. strtolower($channel_name) .'/uploads', NULL, true);
+			$videos_xml = new SimpleXMLElement('http://gdata.youtube.com/feeds/api/users/'. strtolower($channel_name) .'/uploads?max-results=20', NULL, true);
 			
 			// width=\"480\" height=\"360\"
 			
@@ -138,7 +138,6 @@
 				
 				$added = substr($added, 0, strlen($added) - 5);
 				$added = str_replace("T", " ", $added);
-				$added = "2012-03-06 01:19:26";
 				
 				array_push($video_arr, array(
 					"video_id" => $tot + 1, 

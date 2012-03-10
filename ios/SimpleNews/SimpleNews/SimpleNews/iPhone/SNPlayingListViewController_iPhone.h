@@ -12,9 +12,9 @@
 #import "ASIFormDataRequest.h"
 #import "SNChannelVO.h"
 #import "SNVideoItemVO.h"
-#import "PSYouTubeExtractor.h"
+#import "SNYouTubeScraper.h"
 
-@interface SNPlayingListViewController_iPhone : UIViewController <ASIHTTPRequestDelegate, UIScrollViewDelegate, UIWebViewDelegate> {
+@interface SNPlayingListViewController_iPhone : UIViewController <SNYouTubeScraperDelegate, ASIHTTPRequestDelegate, UIScrollViewDelegate, UIActionSheetDelegate> {
 	
 	UIScrollView *_scrollView;
 	NSMutableArray *_videoItems;
@@ -30,17 +30,19 @@
 	UIView *_overlayHolderView;
 	
 	SNVideoPlayerViewController_iPhone *_videoPlayerViewController;
+	UIView *_videoLoadOverlayView;
+	
+	
 	SNPaginationView *_paginationView;
 	ASIFormDataRequest *_videosRequest;
 	
 	SNVideoItemVO *_videoItemVO;
+	SNYouTubeScraper *_youTubeScraper;
+	
+	NSMutableDictionary *_ytVideos;
+	BOOL _isFirstVideo;
 	
 	float _lastOffset;
-	
-	BOOL _isDOMTested;
-	NSUInteger _retryCount;
-	NSInteger  _domWaitCounter;
-	UIWebView *_webView;
 }
 
 -(id)initWithVO:(SNChannelVO *)vo;

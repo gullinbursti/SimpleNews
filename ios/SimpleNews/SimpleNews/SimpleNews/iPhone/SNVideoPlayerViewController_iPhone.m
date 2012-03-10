@@ -103,7 +103,7 @@
 	[self.mpc play];
 	
 	self.mpc.view.alpha = 0.0;
-	self.mpc.view.hidden = YES;
+	//self.mpc.view.hidden = YES;
 	[_videoHolderView addSubview:self.mpc.view];
 }
 
@@ -146,7 +146,7 @@
 		case MPMovieLoadStatePlayable:
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_DURATION" object:[NSNumber numberWithFloat:self.mpc.duration]];
 			
-			self.mpc.view.hidden = NO;
+			//self.mpc.view.hidden = NO;
 			[UIView animateWithDuration:0.5 delay:0.125 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
 				self.mpc.view.alpha = 1.0;
 			} completion:nil];

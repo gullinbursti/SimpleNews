@@ -14,8 +14,6 @@
 
 @interface SNPlayingListViewController_iPhone()
 -(void)_resetMe;
--(void)_cleanupScraper;
--(BOOL)_goRetryScrape;
 @end
 
 @implementation SNPlayingListViewController_iPhone
@@ -36,6 +34,9 @@
 		_views = [[NSMutableArray alloc] init];
 		_lastOffset = 0.0;
 		_index = 0;
+		_isFirstVideo = YES;
+		
+		_ytVideos = [[NSMutableDictionary alloc] init];
 		
 		_videosRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Channels.php"]]] retain];
 		[_videosRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
@@ -60,7 +61,7 @@
 	[self.view setBackgroundColor:[UIColor colorWithWhite:0.196 alpha:1.0]];
 	
 	_videoPlayerViewController = [[SNVideoPlayerViewController_iPhone alloc] init];
-	_videoPlayerViewController.view.frame = CGRectMake(0.0, -0.0, self.view.frame.size.width, 180.0);
+	_videoPlayerViewController.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, 180.0);
 	[self.view addSubview:_videoPlayerViewController.view];
 	
 	_scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
@@ -78,44 +79,80 @@
 	_overlayHolderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 180.0)];
 	[self.view addSubview:_overlayHolderView];
 	
+	_videoLoadOverlayView = [[UIView alloc] initWithFrame:_videoPlayerViewController.view.frame];
+	[_videoLoadOverlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.85]];
+	[_overlayHolderView addSubview:_videoLoadOverlayView];
+	
+	UIImageView *clockImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(153.0, 83.0, 14.0, 14.0)] autorelease];
+	clockImgView.image = [UIImage imageNamed:@"timeIcon.png"];
+	[_videoLoadOverlayView addSubview:clockImgView];
+	
 	_gridButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_gridButton.frame = CGRectMake(8.0, 8.0, 14.0, 14.0);
-	[_gridButton setBackgroundImage:[UIImage imageNamed:@"closeButton_nonActive.png"] forState:UIControlStateNormal];
-	[_gridButton setBackgroundImage:[UIImage imageNamed:@"closeButton_Active.png"] forState:UIControlStateHighlighted];
+	_gridButton.frame = CGRectMake(0.0, 0.0, 34.0, 34.0);
+	[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridButton_nonActive.png"] forState:UIControlStateNormal];
+	[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridButton_Active.png"] forState:UIControlStateHighlighted];
 	[_gridButton addTarget:self action:@selector(_goGrid) forControlEvents:UIControlEventTouchUpInside];
 	[_overlayHolderView addSubview:_gridButton];
 	
-	_shareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_shareButton.frame = CGRectMake(280.0, 195.0, 34.0, 34.0);
-	[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_nonActive.png"] forState:UIControlStateNormal];
-	[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_Active.png"] forState:UIControlStateHighlighted];
-	[_shareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-	[_overlayHolderView addSubview:_shareButton];
-	
 	_playButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_playButton.frame = CGRectMake(17.0, 110.0, 64.0, 64.0);
+	_playButton.frame = CGRectMake(244.0, 110.0, 64.0, 64.0);
 	_playButton.hidden = YES;
 	[_playButton setBackgroundImage:[UIImage imageNamed:@"playButton_nonActive.png"] forState:UIControlStateNormal];
 	[_playButton setBackgroundImage:[UIImage imageNamed:@"playButton_Active.png"] forState:UIControlStateHighlighted];
 	[_playButton addTarget:self action:@selector(_goPlay) forControlEvents:UIControlEventTouchUpInside];
-	//[_overlayHolderView addSubview:_playButton];
+	[_overlayHolderView addSubview:_playButton];
 	
 	_pauseButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_pauseButton.frame = CGRectMake(17.0, 110.0, 64.0, 64.0);
+	_pauseButton.frame = CGRectMake(244.0, 110.0, 64.0, 64.0);
 	[_pauseButton setBackgroundImage:[UIImage imageNamed:@"pauseButton_nonActive.png"] forState:UIControlStateNormal];
 	[_pauseButton setBackgroundImage:[UIImage imageNamed:@"pauseButton_Active.png"] forState:UIControlStateHighlighted];
 	[_pauseButton addTarget:self action:@selector(_goPause) forControlEvents:UIControlEventTouchUpInside];
-	//[_overlayHolderView addSubview:_pauseButton];
+	[_overlayHolderView addSubview:_pauseButton];
 	
-	MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(270.0, 17.0, 40.0, 20.0)];
+	MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(12.0, 147.0, 40.0, 20.0)];
 	[volumeView setShowsVolumeSlider:NO];
 	[volumeView sizeToFit];
 	[_overlayHolderView addSubview:volumeView];
 	
+	_shareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_shareButton.frame = CGRectMake(280.0, 192.0, 34.0, 34.0);
+	[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_nonActive.png"] forState:UIControlStateNormal];
+	[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_Active.png"] forState:UIControlStateHighlighted];
+	[_shareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:_shareButton];
+	
 //	UIImageView *hdImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(284.0, 200.0, 34.0, 34.0)] autorelease];
 //	hdImgView.image = [UIImage imageNamed:@"hd-icon.png"];
 //	[self.view addSubview:hdImgView];
+	NSString *loadHtml;
+	NSString *loadRequest;
 	
+	// CNN
+	loadHtml = @"<html><body><object width=\"416\" height=\"374\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" id=\"ep\"><param name=\"allowfullscreen\" value=\"true\" /><param name=\"allowscriptaccess\" value=\"always\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"movie\" value=\"http://i.cdn.turner.com/cnn/.element/apps/cvp/3.0/swf/cnn_416x234_embed.swf?context=embed&videoId=showbiz/2012/03/10/bts-ray-j-speaks-whitney-houston.cnn\" /><param name=\"bgcolor\" value=\"#000000\" /><embed src=\"http://i.cdn.turner.com/cnn/.element/apps/cvp/3.0/swf/cnn_416x234_embed.swf?context=embed&videoId=showbiz/2012/03/10/bts-ray-j-speaks-whitney-houston.cnn\" type=\"application/x-shockwave-flash\" bgcolor=\"#000000\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"416\" wmode=\"transparent\" height=\"374\"></embed></object></body></html>";
+	
+	// YOUTUBE
+	loadHtml = @"<html><body><object style=\"height: 390px; width: 640px\"><param name=\"movie\" value=\"http://www.youtube.com/v/rGX6szf99KA?version=3&feature=player_detailpage\"><param name=\"allowFullScreen\" value=\"true\"><param name=\"allowScriptAccess\" value=\"always\"><embed src=\"http://www.youtube.com/v/rGX6szf99KA?version=3&feature=player_detailpage\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowScriptAccess=\"always\" width=\"640\" height=\"360\"></object></body></html>";
+	loadRequest = @"http://www.youtube.com/watch?v=rGX6szf99KA";
+	
+	// ABC
+	loadHtml = @"<html><body><object name=\"kaltura_player_1331345891\" id=\"kaltura_player_1331345891\" type=\"application/x-shockwave-flash\" allowScriptAccess=\"always\" allowNetworking=\"all\" allowFullScreen=\"true\" height=\"221\" width=\"392\" data=\"http://cdnapi.kaltura.com/index.php/kwidget/wid/0_071vwvlx/uiconf_id/6501231\"> \
+	<param name=\"allowScriptAccess\" value=\"always\"/> \
+	<param name=\"allowNetworking\" value=\"all\"/> \
+	<param name=\"allowFullScreen\" value=\"true\"/> \
+	<param name=\"bgcolor\" value=\"#000000\"/> \
+	<param name=\"movie\" value=\"http://cdnapi.kaltura.com/index.php/kwidget/wid/0_071vwvlx/uiconf_id/6501231\"/> \
+	<param name=\"flashVars\" value=\"referer=http://abcnews.go.com/WNT/video/pink-slime-15873068&autoPlay=false\"/> \
+	<a href=\"http://corp.kaltura.com\">video platform</a> \
+	<a href=\"http://corp.kaltura.com/video_platform/video_management\">video management</a> \
+	<a href=\"http://corp.kaltura.com/solutions/video_solution\">video solutions</a> \
+	<a href=\"http://corp.kaltura.com/video_platform/video_publishing\">video player</a> \
+	</object></body></html>";
+	
+	
+	//UIWebView *webView = [[[UIWebView alloc] initWithFrame:self.view.frame] autorelease];
+	//[webView loadHTMLString:loadHtml baseURL:nil];
+	//[webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:loadRequest]]];
+	//[self.view addSubview:webView];
 }
 
 -(void)viewDidLoad {
@@ -136,7 +173,7 @@
 	_index = 0;
 	
 	_scrollView.contentOffset = CGPointMake(_index * 320.0, 0.0);
-	_gridButton.frame = CGRectMake(8.0, 8.0, _gridButton.frame.size.width, _gridButton.frame.size.height);
+	_gridButton.frame = CGRectMake(0.0, 0.0, _gridButton.frame.size.width, _gridButton.frame.size.height);
 	_videoPlayerViewController.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, 180.0);
 	[_paginationView updToPage:(int)(_scrollView.contentOffset.x / self.view.frame.size.width)];
 	
@@ -167,10 +204,16 @@
 
 #pragma mark - Navigation
 -(void)_goGrid {
-	[self _cleanupScraper];
+	[_youTubeScraper destroyMe];
 	[_videoPlayerViewController.mpc stop];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"DETAILS_RETURN" object:nil];	
 	[self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)_goShare {
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"video url", @"facebook", @"twitter", nil];
+	[actionSheet showInView:self.view];
+	[actionSheet release];
 }
 
 -(void)_goPlay {
@@ -187,73 +230,6 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TOGGLE_VIDEO_PLAYBACK" object:nil];
 }
 
-
--(void)_loadedDOM {
-	
-	// figure out if we can extract the youtube url!
-	NSString *youTubeMP4URL = [_webView stringByEvaluatingJavaScriptFromString:@"document.getElementsByTagName('video')[0].getAttribute('src')"];
-	NSLog(@"testing dom. query: %@", youTubeMP4URL);
-	
-	if ([youTubeMP4URL hasPrefix:@"http"]) {
-		NSLog(@"Finished extracting: %@", youTubeMP4URL);
-		
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:youTubeMP4URL];
-		[self _cleanupScraper];
-		
-	} else {
-		if (_domWaitCounter < kExtraDOMDelay * 4) {
-			_domWaitCounter++;
-			[self performSelector:@selector(_loadedDOM) withObject:nil afterDelay:0.25f]; // try often!
-			
-			return;
-		}
-		
-		if (![self _goRetryScrape]) {
-			//NSError *error = [NSError errorWithDomain:@"com.sparklemountain.simplenews" code:100 userInfo:[NSDictionary dictionaryWithObject:@"MP4 URL could not be found." forKey:NSLocalizedDescriptionKey]];
-			//if (failureBlock_) {
-			//	failureBlock_(error);
-			//}
-			[self _cleanupScraper];
-		}
-	}
-}
-
-- (void)_failedDOM:(NSError *)error {
-	if (![self _goRetryScrape]) {
-		NSLog(@"FAILED!!!");
-		
-		[self _cleanupScraper];
-	}
-}
-
-
-- (BOOL)_goRetryScrape {
-	NSLog(@"_goRetryScrape");
-	
-	if ((_retryCount <= kMaxNumberOfRetries + 1)) {
-		_retryCount++;
-		_domWaitCounter = 0;
-		
-		_webView.delegate = nil;
-		_webView = [[UIWebView alloc] init];
-		_webView.delegate = self;
-		
-		[_webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.youtube.com/watch?v=%@", _videoItemVO.youtube_id]]]];
-		[NSObject cancelPreviousPerformRequestsWithTarget:self];
-		
-		return (YES);
-	}
-	return (NO);
-}
-
-- (void)_cleanupScraper {
-	[NSObject cancelPreviousPerformRequestsWithTarget:self];
-	[_webView stopLoading];
-	_webView.delegate = nil;
-	_webView = nil;
-	_retryCount = 0;
-	_domWaitCounter = 0;
-}
 
 #pragma mark - Notification handlers
 -(void)_videoDuration:(NSNotification *)notification {
@@ -275,92 +251,68 @@
 }
 
 -(void)_videoEnded:(NSNotification *)notification {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"NEXT_VIDEO" object:nil];
 	[(SNPlayingVideoItemView_iPhone *)[_views objectAtIndex:_index] fadeInImage];
-	
 	_index++;
 	
+	NSLog(@"SCROLLVIEW:[%f]", _scrollView.contentOffset.x);
+	
+	//[self _resetMe];
+	_videoItemVO = (SNVideoItemVO *)[_videoItems objectAtIndex:_index];
+	[_youTubeScraper setYtID:_videoItemVO.youtube_id];
+	
+	//_playButton.hidden = YES;
+	//_pauseButton.hidden = YES;
+	//[UIView animateWithDuration:0.25 animations:^(void) {
+	//	_videoLoadOverlayView.alpha = 1.0;
+	//}];
+	//_scrollView.contentOffset = CGPointMake(320.0, 0.0);
 }
 
 -(void)_itemDetailsScroll:(NSNotification *)notification {
 	float offset = [[notification object] floatValue];
-	_videoPlayerViewController.view.frame = CGRectMake(_videoPlayerViewController.view.frame.origin.x, -offset, _videoPlayerViewController.view.frame.size.width, _videoPlayerViewController.view.frame.size.height);
+
+	//_videoPlayerViewController.view.frame = CGRectMake(_videoPlayerViewController.view.frame.origin.x, -offset, _videoPlayerViewController.view.frame.size.width, _videoPlayerViewController.view.frame.size.height);
 	_overlayHolderView.frame = CGRectMake(_overlayHolderView.frame.origin.x, -offset, _overlayHolderView.frame.size.width, _overlayHolderView.frame.size.height);
 }
 
 
-
-#pragma mark - WebView Delegates
--(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-	BOOL shouldLoad = YES;
-	NSURL *url = [request URL];
-	NSString *scheme = [url scheme];
+#pragma mark - YouTubeScraper Delegates
+-(void)snYouTubeScraperDidExtractMP4:(NSString *)url forYouTubeID:(NSString *)ytID{
+	NSLog(@"RETRIEVED URL:[%@] (%@)", ytID, url);
 	
-	// Check for DOM load message
-	if ([scheme isEqualToString:@"x-sswebview"]) {
-		NSString *host = [url host];
-		
-		if ([host isEqualToString:@"dom-loaded"]) {
-			NSLog(@"DOM load detected!");
-			dispatch_async(dispatch_get_main_queue(), ^{
-				[self _loadedDOM];
-			});
-		}
-		
-		return (NO);
+	//[_ytVideos setObject:url forKey:ytID];
+	//NSLog(@"YOUTUBE VIDEOS:[%@]", _ytVideos);
+	
+	//if (_isFirstVideo) {
+	//	_isFirstVideo = NO;
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		_videoLoadOverlayView.alpha = 0.0;
+	
+	} completion:^(BOOL finished) {
+	}];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:url];
+	//}
+}
+
+-(void)snYouTubeScraperFinshedQueue {
+	NSLog(@"SCRAPER QUEUE FINISHED");
+}
+
+#pragma mark ActionSheet Delegates
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	switch (buttonIndex) {
+		case 0:
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://m.youtube.com/#/watch?v=", _videoItemVO.youtube_id]]];
+			break;
+			
+		case 1:
+			break;
+			
+		case 2:
+			break;
 	}
-	
-	else
-		shouldLoad = [scheme isEqualToString:@"http"] || [scheme isEqualToString:@"https"];
-	
-	
-	if (shouldLoad == NO)
-		return (NO);
-	
-	_isDOMTested = NO;
-	
-	return (shouldLoad);
 }
-
-
--(void)webViewDidStartLoad:(UIWebView *)webView {
-
-}
-
--(void)webViewDidFinishLoad:(UIWebView *)webView {
-	
-	
-	// Check DOM
-	if (_isDOMTested == NO) {
-		_isDOMTested = YES;
-		
-		// The internal delegate will intercept this load and forward the event to the real delegate
-		[_webView stringByEvaluatingJavaScriptFromString:@"var _SSWebViewDOMLoadTimer=setInterval(function(){if(/loaded|complete/.test(document.readyState)){clearInterval(_SSWebViewDOMLoadTimer);location.href='x-sswebview://dom-loaded'}},10);"];        
-	}
-	
-	// add watchdog in case DOM never get initialized
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_loadedDOM) object:nil];
-	[self performSelector:@selector(_loadedDOM) withObject:nil afterDelay:kWatchdogDelay];
-}
-
--(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {	
-	NSLog(@"didFailLoadWithError");
-	
-	 
-	NSURL *errorURL = [error.userInfo objectForKey:@"NSErrorFailingURLKey"];
-	if ([[errorURL absoluteString] rangeOfString:@"poswidget"].length) {
-		NSLog(@"ignoring error: %@", error);
-		return; // ignore those errors
-	}
-	 
-	NSLog(@"didFailLoadWithError: %@", error);
-	 
-	// give system a little bit more time, may be an irrelevant error
-	[NSObject cancelPreviousPerformRequestsWithTarget:self];
-	[self performSelector:@selector(_failedDOM:) withObject:error afterDelay:kWatchdogDelay / 3];
-}
-
-
 
 #pragma mark - ScrollView Delegates
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -373,9 +325,9 @@
 	
 	int ind = 0;
 	for (SNPlayingVideoItemView_iPhone *videoItemView in _views) {
-		if (ind != _index)
+		if (ind != _index) {
 			[videoItemView fadeInImage];
-		
+		}
 		ind++;
 	}
 }
@@ -397,11 +349,13 @@
 		[_videoPlayerViewController.mpc stop];
 		_videoItemVO = (SNVideoItemVO *)[_videoItems objectAtIndex:_index];
 		
-		_playButton.hidden = YES;
-		_pauseButton.hidden = NO;
+		[_youTubeScraper setYtID:_videoItemVO.youtube_id];
 		
-		[self _cleanupScraper];
-		[self _goRetryScrape];
+		_playButton.hidden = YES;
+		_pauseButton.hidden = YES;
+		[UIView animateWithDuration:0.25 animations:^(void) {
+			_videoLoadOverlayView.alpha = 1.0;
+		}];
 	}
 }
 
@@ -418,6 +372,8 @@
 		
 		else {
 			NSMutableArray *videoList = [NSMutableArray array];
+			NSMutableArray *ytIDs = [NSMutableArray array];
+			
 			_views = [NSMutableArray new];
 			
 			int tot = 0;
@@ -426,8 +382,10 @@
 				
 				//NSLog(@"VIDEO \"%@\"", vo.video_title);
 				
-				if (vo != nil)
+				if (vo != nil) {
 					[videoList addObject:vo];
+					[ytIDs addObject:vo.youtube_id];
+				}
 				
 				SNPlayingVideoItemView_iPhone *videoItemView = [[[SNPlayingVideoItemView_iPhone alloc] initWithFrame:CGRectMake(tot * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) withVO:vo] autorelease];
 				[_views addObject:videoItemView];
@@ -446,7 +404,9 @@
 			[self.view addSubview:_paginationView];			
 			
 			_videoItemVO = (SNVideoItemVO *)[_videoItems objectAtIndex:0];
-			[self _goRetryScrape];
+			//_youTubeScraper = [[SNYouTubeScraper alloc] initWithYouTubeIDs:ytIDs];
+			_youTubeScraper = [[SNYouTubeScraper alloc] initWithYouTubeID:_videoItemVO.youtube_id];
+			_youTubeScraper.delegate = self;
 		}			
 	}
 }

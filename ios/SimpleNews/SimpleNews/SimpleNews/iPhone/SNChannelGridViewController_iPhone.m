@@ -54,7 +54,7 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_channelTapped:) name:@"CHANNEL_TAPPED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoDuration:) name:@"VIDEO_DURATION" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_nextVideo:) name:@"NEXT_VIDEO" object:nil];
+		//[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_nextVideo:) name:@"NEXT_VIDEO" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_changeVideo:) name:@"CHANGE_VIDEO" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cancelReset:) name:@"CANCEL_RESET" object:nil];
@@ -217,7 +217,7 @@
 	_optionsListView.hidden = NO;
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_scrollView.frame = CGRectMake(self.view.bounds.size.width, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
+		//_scrollView.frame = CGRectMake(self.view.bounds.size.width, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
 		_optionsListView.frame = CGRectMake(0.0, _optionsListView.frame.origin.y, self.view.bounds.size.width, _optionsListView.frame.size.height);
 	}];
 }
@@ -236,9 +236,9 @@
 	NSLog(@"SWIPE @:(%f)", translatedPoint.x);
 	
 	if (!_isDetails && !_isOptions) {	
-		if (translatedPoint.x > 20.0 && abs(translatedPoint.y) < 20) {
-			[self _goOptions];
-		}
+//		if (translatedPoint.x > 20.0 && abs(translatedPoint.y) < 20) {
+//			[self _goOptions];
+//		}
 		
 		if (translatedPoint.x < -20.0 && abs(translatedPoint.y) < 20) {
 			[self _goDetails];
@@ -267,7 +267,7 @@
 		_playingIndex = 0;
 	
 	SNVideoItemVO *vo = (SNVideoItemVO *)[_videoItems objectAtIndex:_playingIndex];
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];
+	//[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:vo];
 }
 
 -(void)_channelTapped:(NSNotification *)notification {
@@ -291,7 +291,7 @@
 	_isOptions = NO;
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_scrollView.frame = CGRectMake(0.0, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
+		//_scrollView.frame = CGRectMake(0.0, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
 		_optionsListView.frame = CGRectMake(-self.view.bounds.size.width, _optionsListView.frame.origin.y, _optionsListView.frame.size.width, _optionsListView.frame.size.height);
 	} completion:^(BOOL finished) {
 		_optionsListView.hidden = YES;
