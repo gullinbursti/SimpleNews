@@ -67,6 +67,9 @@
 -(void)dealloc {
 	_delegate = nil;
 	_ytID = nil;
+	_webView = nil;
+	[_youtubeIDs release];
+	
 	
 	[super dealloc];
 }
@@ -82,21 +85,32 @@
 	if ([youTubeMP4URL hasPrefix:@"http"]) {
 		//NSLog(@"Finished extracting: %@", youTubeMP4URL);
 		
-		[_delegate snYouTubeScraperDidExtractMP4:youTubeMP4URL forYouTubeID:_ytID];
-		[self _goCleanup];
+		NSRange range = [youTubeMP4URL rangeOfString:@"tag=36"];
+		NSLog(@"RANGE OF 'TAG=36' (%d)", range.location);
+		
+		if (range.location < [youTubeMP4URL length]) {
+			[self _goCleanup];
+			[self _goAttemptScrape];
+			
+		} else {
+			[_delegate snYouTubeScraperDidExtractMP4:youTubeMP4URL forYouTubeID:_ytID];
+		}
 		
 		if (_isQueued) {
 			_cnt++;
 			
-//			if (_cnt == [_youtubeIDs count]) {
-//				_isQueued = NO;
-//				[_delegate snYouTubeScraperFinshedQueue];
-//			
-//			} else {
-//				_ytID = [_youtubeIDs objectAtIndex:_cnt];
-//				[self _goAttemptScrape];
-//			}
-		}
+			if (_cnt == [_youtubeIDs count]) {
+				_isQueued = NO;
+				[_delegate snYouTubeScraperFinshedQueue];
+				[self _goCleanup];
+			
+			} else {
+				_ytID = [_youtubeIDs objectAtIndex:_cnt];
+				[self _goAttemptScrape];
+			}
+		
+		} else
+			[self _goCleanup];
 		
 	} else {
 		if (_domWaitCounter < kExtraDOMDelay * 4) {

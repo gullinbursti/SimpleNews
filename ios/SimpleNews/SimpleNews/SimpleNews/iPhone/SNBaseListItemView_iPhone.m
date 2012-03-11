@@ -37,6 +37,12 @@
 	return (self);
 }
 
+-(void)dealloc {
+	[_titleLabel release];
+	[_checkImageView release];
+	
+	[super dealloc];
+}
 
 -(void)toggleSelected:(BOOL)isSelected {
 	_isSelected = isSelected;

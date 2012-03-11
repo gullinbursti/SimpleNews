@@ -37,8 +37,8 @@
 	//tmp = [vo.posted substringToIndex:[vo.posted length] - 5];
 	//tmp = [tmp stringByReplacingOccurrencesOfString:@"T" withString:@" "];
 	
-	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+	//NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	//[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 	//vo.postedDate = [dateFormat dateFromString:@"2012-03-08 10:23:00"];
 	//[dateFormat release];
 	
@@ -51,9 +51,13 @@
 	dictionary = nil;
 	youtube_id = nil;
 	video_title = nil;
+	video_info = nil;
 	video_url = nil;
 	image_url = nil;
 	thumb_url = nil;
+	channelImg_url = nil;
+	postedDate = nil;
+	posted = nil;
 }
 
 

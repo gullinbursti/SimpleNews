@@ -49,6 +49,14 @@
 	return (self);
 }
 
+-(void)dealloc {
+	[_cursorImgView release];
+	[_txtField release];
+	[_txtLabel release];
+	
+	[super dealloc];
+}
+
 -(void)_clearText {
 	_txtField.text = @"";
 	_txtLabel.hidden = NO;

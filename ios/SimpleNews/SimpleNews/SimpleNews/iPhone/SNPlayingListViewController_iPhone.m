@@ -39,7 +39,7 @@
 		_ytVideos = [[NSMutableDictionary alloc] init];
 		
 		_videosRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Channels.php"]]] retain];
-		[_videosRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[_videosRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
 		[_videosRequest setPostValue:vo.youtube_id forKey:@"id"];
 		[_videosRequest setPostValue:vo.channel_title forKey:@"name"];
 		[_videosRequest setTimeOutSeconds:30];
@@ -51,7 +51,22 @@
 }
 
 -(void)dealloc {
-	[_videoPlayerViewController release];
+	[_scrollView release];
+	[_views release];
+	[_channelsButton release];
+	[_shareButton release];
+	[_playImgView release];
+	[_pauseImgView release];
+	[_overlayHolderView release];
+	[_videoPlayerViewController autorelease];
+	[_videoLoadOverlayView release];
+	[_paginationView release];
+	[_videosRequest release];
+	//[_videoItemVO release];
+	[_youTubeScraper release];
+	[_ytVideos release];
+	
+	[super dealloc];
 }
 
 #pragma mark - View lifecycle
@@ -83,33 +98,23 @@
 	[_videoLoadOverlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.85]];
 	[_overlayHolderView addSubview:_videoLoadOverlayView];
 	
-	UIImageView *clockImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(153.0, 83.0, 14.0, 14.0)] autorelease];
-	clockImgView.image = [UIImage imageNamed:@"timeIcon.png"];
-	[_videoLoadOverlayView addSubview:clockImgView];
+	_channelsButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_channelsButton.frame = CGRectMake(0.0, 0.0, 34.0, 34.0);
+	[_channelsButton setBackgroundImage:[UIImage imageNamed:@"gridButton_nonActive.png"] forState:UIControlStateNormal];
+	[_channelsButton setBackgroundImage:[UIImage imageNamed:@"gridButton_Active.png"] forState:UIControlStateHighlighted];
+	[_channelsButton addTarget:self action:@selector(_goGrid) forControlEvents:UIControlEventTouchUpInside];
+	[_overlayHolderView addSubview:_channelsButton];
 	
-	_gridButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_gridButton.frame = CGRectMake(0.0, 0.0, 34.0, 34.0);
-	[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridButton_nonActive.png"] forState:UIControlStateNormal];
-	[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridButton_Active.png"] forState:UIControlStateHighlighted];
-	[_gridButton addTarget:self action:@selector(_goGrid) forControlEvents:UIControlEventTouchUpInside];
-	[_overlayHolderView addSubview:_gridButton];
+	_playImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(128.0, 58.0, 64.0, 64.0)] autorelease];
+	_playImgView.image = [UIImage imageNamed:@"playButton_nonActive.png"];
+	[_overlayHolderView addSubview:_playImgView];
 	
-	_playButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_playButton.frame = CGRectMake(244.0, 110.0, 64.0, 64.0);
-	_playButton.hidden = YES;
-	[_playButton setBackgroundImage:[UIImage imageNamed:@"playButton_nonActive.png"] forState:UIControlStateNormal];
-	[_playButton setBackgroundImage:[UIImage imageNamed:@"playButton_Active.png"] forState:UIControlStateHighlighted];
-	[_playButton addTarget:self action:@selector(_goPlay) forControlEvents:UIControlEventTouchUpInside];
-	[_overlayHolderView addSubview:_playButton];
+	_pauseImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(128.0, 58.0, 64.0, 64.0)] autorelease];
+	_pauseImgView.image = [UIImage imageNamed:@"playButton_nonActive.png"];
+	[_overlayHolderView addSubview:_pauseImgView];
 	
-	_pauseButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_pauseButton.frame = CGRectMake(244.0, 110.0, 64.0, 64.0);
-	[_pauseButton setBackgroundImage:[UIImage imageNamed:@"pauseButton_nonActive.png"] forState:UIControlStateNormal];
-	[_pauseButton setBackgroundImage:[UIImage imageNamed:@"pauseButton_Active.png"] forState:UIControlStateHighlighted];
-	[_pauseButton addTarget:self action:@selector(_goPause) forControlEvents:UIControlEventTouchUpInside];
-	[_overlayHolderView addSubview:_pauseButton];
 	
-	MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(12.0, 147.0, 40.0, 20.0)];
+	MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(7.0, 147.0, 20.0, 20.0)];
 	[volumeView setShowsVolumeSlider:NO];
 	[volumeView sizeToFit];
 	[_overlayHolderView addSubview:volumeView];
@@ -124,6 +129,11 @@
 //	UIImageView *hdImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(284.0, 200.0, 34.0, 34.0)] autorelease];
 //	hdImgView.image = [UIImage imageNamed:@"hd-icon.png"];
 //	[self.view addSubview:hdImgView];
+	
+	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
+	[self.view addSubview:overlayImgView];
+	
 	NSString *loadHtml;
 	NSString *loadRequest;
 	
@@ -149,10 +159,10 @@
 	</object></body></html>";
 	
 	
-	//UIWebView *webView = [[[UIWebView alloc] initWithFrame:self.view.frame] autorelease];
+	UIWebView *webView = [[[UIWebView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 180.0)] autorelease];
 	//[webView loadHTMLString:loadHtml baseURL:nil];
-	//[webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:loadRequest]]];
-	//[self.view addSubview:webView];
+	[webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:loadRequest]]];
+	[self.view addSubview:webView];
 }
 
 -(void)viewDidLoad {
@@ -165,21 +175,30 @@
 }
 
 
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [touches anyObject];
+	
+	if ([touch view] == _overlayHolderView) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"TOGGLE_VIDEO_PLAYBACK" object:nil];
+		return;
+	}
+}
+
 
 -(void)_resetMe {
-	_pauseButton.hidden = YES;
-	_playButton.hidden = NO;
+	_pauseImgView.hidden = YES;
+	_playImgView.hidden = YES;
 	
 	_index = 0;
 	
 	_scrollView.contentOffset = CGPointMake(_index * 320.0, 0.0);
-	_gridButton.frame = CGRectMake(0.0, 0.0, _gridButton.frame.size.width, _gridButton.frame.size.height);
+	_channelsButton.frame = CGRectMake(0.0, 0.0, _channelsButton.frame.size.width, _channelsButton.frame.size.height);
 	_videoPlayerViewController.view.frame = CGRectMake(0.0, 0.0, self.view.frame.size.width, 180.0);
 	[_paginationView updToPage:(int)(_scrollView.contentOffset.x / self.view.frame.size.width)];
 	
-	[UIView animateWithDuration:0.25 delay:0.33 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
+	[UIView animateWithDuration:0.15 delay:0.33 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
 		_overlayHolderView.frame = CGRectMake(0.0, 0.0, _overlayHolderView.frame.size.width, _overlayHolderView.frame.size.height);
-		
+		_shareButton.frame = CGRectMake(_shareButton.frame.origin.x, 192.0, _shareButton.frame.size.width, _shareButton.frame.size.height);
 	} completion:nil];
 }
 
@@ -193,7 +212,7 @@
 	[_paginationView removeFromSuperview];
 	
 	_videosRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Channels.php"]]] retain];
-	[_videosRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+	[_videosRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
 	[_videosRequest setPostValue:vo.youtube_id forKey:@"id"];
 	[_videosRequest setPostValue:vo.channel_title forKey:@"name"];
 	[_videosRequest setTimeOutSeconds:30];
@@ -211,21 +230,21 @@
 }
 
 -(void)_goShare {
-	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"video url", @"facebook", @"twitter", nil];
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:@"video url", @"twitter", @"cancel", nil];
 	[actionSheet showInView:self.view];
 	[actionSheet release];
 }
 
 -(void)_goPlay {
-	_playButton.hidden = YES;
-	_pauseButton.hidden = NO;
+	_pauseImgView.hidden = YES;
+	_playImgView.hidden = YES;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TOGGLE_VIDEO_PLAYBACK" object:nil];
 }
 
 -(void)_goPause {
-	_pauseButton.hidden = YES;
-	_playButton.hidden = NO;
+	_pauseImgView.hidden = YES;
+	_playImgView.hidden = YES;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TOGGLE_VIDEO_PLAYBACK" object:nil];
 }
@@ -236,18 +255,18 @@
 	NSLog(@"----[AIRPLAY[%d]]----", ![SNAppDelegate hasAirplay]);
 	[(SNPlayingVideoItemView_iPhone *)[_views objectAtIndex:_index] fadeOutImage];
 	
-	_pauseButton.hidden = NO;
-	_playButton.hidden = YES;
+	_pauseImgView.hidden = YES;
+	_playImgView.hidden = YES;
 }
 
 -(void)_videoStalled:(NSNotification *)notification {
-	_playButton.hidden = NO;
-	_pauseButton.hidden = YES;
+	_pauseImgView.hidden = YES;
+	_playImgView.hidden = YES;
 }
 
 -(void)_videoResumed:(NSNotification *)notification {
-	_pauseButton.hidden = NO;
-	_playButton.hidden = YES;
+	_pauseImgView.hidden = YES;
+	_playImgView.hidden = YES;
 }
 
 -(void)_videoEnded:(NSNotification *)notification {
@@ -256,23 +275,24 @@
 	
 	NSLog(@"SCROLLVIEW:[%f]", _scrollView.contentOffset.x);
 	
-	//[self _resetMe];
-	_videoItemVO = (SNVideoItemVO *)[_videoItems objectAtIndex:_index];
-	[_youTubeScraper setYtID:_videoItemVO.youtube_id];
+	[self _resetMe];
+	//_videoItemVO = (SNVideoItemVO *)[_videoItems objectAtIndex:_index];
+	//[_youTubeScraper setYtID:_videoItemVO.youtube_id];
 	
 	//_playButton.hidden = YES;
 	//_pauseButton.hidden = YES;
-	//[UIView animateWithDuration:0.25 animations:^(void) {
-	//	_videoLoadOverlayView.alpha = 1.0;
-	//}];
-	//_scrollView.contentOffset = CGPointMake(320.0, 0.0);
+//	[UIView animateWithDuration:0.25 animations:^(void) {
+//		_videoLoadOverlayView.alpha = 1.0;
+//	}];
+//_scrollView.contentOffset = CGPointMake(320.0, 0.0);
 }
 
 -(void)_itemDetailsScroll:(NSNotification *)notification {
 	float offset = [[notification object] floatValue];
 
-	//_videoPlayerViewController.view.frame = CGRectMake(_videoPlayerViewController.view.frame.origin.x, -offset, _videoPlayerViewController.view.frame.size.width, _videoPlayerViewController.view.frame.size.height);
+	_videoPlayerViewController.view.frame = CGRectMake(_videoPlayerViewController.view.frame.origin.x, -offset, _videoPlayerViewController.view.frame.size.width, _videoPlayerViewController.view.frame.size.height);
 	_overlayHolderView.frame = CGRectMake(_overlayHolderView.frame.origin.x, -offset, _overlayHolderView.frame.size.width, _overlayHolderView.frame.size.height);
+	_shareButton.frame = CGRectMake(_shareButton.frame.origin.x, 192.0 - offset, _shareButton.frame.size.width, _shareButton.frame.size.height);
 }
 
 
@@ -280,19 +300,19 @@
 -(void)snYouTubeScraperDidExtractMP4:(NSString *)url forYouTubeID:(NSString *)ytID{
 	NSLog(@"RETRIEVED URL:[%@] (%@)", ytID, url);
 	
-	//[_ytVideos setObject:url forKey:ytID];
-	//NSLog(@"YOUTUBE VIDEOS:[%@]", _ytVideos);
+	[_ytVideos setObject:url forKey:ytID];
+	NSLog(@"YOUTUBE VIDEOS:[%@]", _ytVideos);
 	
-	//if (_isFirstVideo) {
-	//	_isFirstVideo = NO;
-	[UIView animateWithDuration:0.25 animations:^(void) {
-		_videoLoadOverlayView.alpha = 0.0;
+	if (_isFirstVideo) {
+		_isFirstVideo = NO;
+		[UIView animateWithDuration:0.25 animations:^(void) {
+			_videoLoadOverlayView.alpha = 0.0;
 	
-	} completion:^(BOOL finished) {
-	}];
+		} completion:^(BOOL finished) {
+		}];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:url];
-	//}
+		//[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:url];
+	}
 }
 
 -(void)snYouTubeScraperFinshedQueue {
@@ -317,7 +337,7 @@
 #pragma mark - ScrollView Delegates
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	
-	_videoPlayerViewController.view.frame = CGRectMake((-((int)scrollView.contentOffset.x % (int)self.view.frame.size.width)) + ((int)(scrollView.contentOffset.x < _lastOffset) * self.view.frame.size.width), 0.0, self.view.frame.size.width, 180.0);
+	//_videoPlayerViewController.view.frame = CGRectMake((-((int)scrollView.contentOffset.x % (int)self.view.frame.size.width)) + ((int)(scrollView.contentOffset.x < _lastOffset) * self.view.frame.size.width), 0.0, self.view.frame.size.width, 180.0);
 	_lastOffset = scrollView.contentOffset.x;
 }
 
@@ -341,7 +361,7 @@
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
 	[_paginationView updToPage:(int)(_scrollView.contentOffset.x / self.view.frame.size.width)];
-	
+
 	if ((int)(scrollView.contentOffset.x / self.view.frame.size.width) != _index) {
 		_index = (scrollView.contentOffset.x / self.view.frame.size.width);
 		
@@ -350,9 +370,10 @@
 		_videoItemVO = (SNVideoItemVO *)[_videoItems objectAtIndex:_index];
 		
 		[_youTubeScraper setYtID:_videoItemVO.youtube_id];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:nil];
 		
-		_playButton.hidden = YES;
-		_pauseButton.hidden = YES;
+		_pauseImgView.hidden = YES;
+		_playImgView.hidden = YES;
 		[UIView animateWithDuration:0.25 animations:^(void) {
 			_videoLoadOverlayView.alpha = 1.0;
 		}];
@@ -393,6 +414,7 @@
 			}
 			
 			_videoItems = [videoList retain];
+			//[videoList release];
 			_scrollView.contentSize = CGSizeMake(self.view.frame.size.width * tot, self.view.frame.size.height);
 			
 			for (SNPlayingVideoItemView_iPhone *videoItemView in _views)
@@ -405,8 +427,10 @@
 			
 			_videoItemVO = (SNVideoItemVO *)[_videoItems objectAtIndex:0];
 			//_youTubeScraper = [[SNYouTubeScraper alloc] initWithYouTubeIDs:ytIDs];
-			_youTubeScraper = [[SNYouTubeScraper alloc] initWithYouTubeID:_videoItemVO.youtube_id];
+			//_youTubeScraper = [[SNYouTubeScraper alloc] initWithYouTubeID:_videoItemVO.youtube_id];
 			_youTubeScraper.delegate = self;
+			
+			//[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:nil];
 		}			
 	}
 }

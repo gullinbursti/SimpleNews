@@ -9,11 +9,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SimpleNews/SimpleNews/iPhone/SNPlayingListViewController_iPhone.m"
-         timestampString = "353063700.7551"
+         timestampString = "353129392.941906"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "273"
-         endingLineNumber = "273"
+         startingLineNumber = "292"
+         endingLineNumber = "292"
          landmarkName = "-_itemDetailsScroll:"
          landmarkType = "5">
       </FileBreakpoint>

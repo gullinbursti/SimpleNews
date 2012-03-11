@@ -37,6 +37,8 @@
 
 -(void)dealloc {
 	_imageView = nil;
+	[_vo release];
+	[_checkImgView release];
 	
 	[super dealloc];
 }

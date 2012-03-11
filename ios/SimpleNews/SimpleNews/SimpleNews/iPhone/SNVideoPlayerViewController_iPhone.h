@@ -24,7 +24,6 @@
 	
 	NSString *_videoURL;
 	UIView *_videoHolderView;
-	UIWebView *_webView;
 }
 
 

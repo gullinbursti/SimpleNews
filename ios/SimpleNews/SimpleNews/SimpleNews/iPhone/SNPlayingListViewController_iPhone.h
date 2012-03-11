@@ -22,10 +22,10 @@
 	
 	int _index;
 	
-	UIButton *_gridButton;
+	UIButton *_channelsButton;
 	UIButton *_shareButton;
-	UIButton *_playButton;
-	UIButton *_pauseButton;
+	UIImageView *_playImgView;
+	UIImageView *_pauseImgView;
 	
 	UIView *_overlayHolderView;
 	

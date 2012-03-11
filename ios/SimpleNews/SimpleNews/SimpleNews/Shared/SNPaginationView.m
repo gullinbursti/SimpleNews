@@ -54,6 +54,8 @@
 
 -(void)dealloc {
 	[_onImgView release];
+	[_bgButton release];
+	[_offImgView release];
 	
 	[super dealloc];
 }

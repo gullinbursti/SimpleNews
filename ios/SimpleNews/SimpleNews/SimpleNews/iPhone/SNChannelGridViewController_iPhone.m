@@ -93,6 +93,16 @@
 
 -(void)dealloc {
 	[_scrollView release];
+	[_holderView release];
+	[_videoItems release];
+	[_itemViews release];
+	[_channels release];
+	[_videoSearchView release];
+	[_playingListViewController release];
+	[_optionsListView release];
+	[_refreshHeaderView release];
+	[_channelsRequest release];
+	[_activeVO release];
 	
 	[super dealloc];
 }
@@ -184,6 +194,10 @@
 	_optionsListView = [[SNOptionsListView_iPhone alloc] initWithFrame:CGRectMake(-self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
 	_optionsListView.hidden = YES;
 	[self.view addSubview:_optionsListView];
+	
+	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
+	[self.view addSubview:overlayImgView];
 }
 
 -(void)viewDidLoad {
@@ -421,6 +435,7 @@
 			}
 			
 			_channels = [channelList retain];
+			[channelList release];
 			_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 50.0 + ((ceil(tot / 4) + 1) * 80.0));
 			
 			for (SNChannelItemView_iPhone *channelItemView in _itemViews)

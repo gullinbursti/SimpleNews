@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SNSplashViewController_iPhone.h"
 #import "SNChannelGridViewController_iPhone.h"
 #import "SNVideoGridViewController_iPad.h"
 
@@ -14,6 +15,8 @@
 @class SNViewController;
 
 @interface SNAppDelegate : UIResponder <UIApplicationDelegate> {
+	SNSplashViewController_iPhone *_splashViewController_iPhone;
+	
 	SNVideoGridViewController_iPad *_gridViewController_iPad;
 	SNChannelGridViewController_iPhone *_gridViewController_iPhone;
 }

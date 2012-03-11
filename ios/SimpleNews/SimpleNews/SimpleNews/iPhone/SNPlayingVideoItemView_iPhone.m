@@ -111,6 +111,17 @@
 	return (self);
 }
 
+-(void)dealloc {
+	[_titleLabel release];
+	[_infoLabel release];
+	[_dateLabel release];
+	
+	[_vo release];
+	[_imageView release];
+	[_channelImageView release];
+	
+	[super dealloc];
+}
 
 -(void)fadeInImage {
 	_imageView.hidden = NO;

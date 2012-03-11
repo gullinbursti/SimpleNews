@@ -93,8 +93,11 @@
 	UINavigationController *rootNavigationController;
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-		_gridViewController_iPhone = [[SNChannelGridViewController_iPhone alloc] init];
-		rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_gridViewController_iPhone] autorelease];
+		_splashViewController_iPhone = [[SNSplashViewController_iPhone alloc] init];
+		rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_splashViewController_iPhone] autorelease];
+		
+		//_gridViewController_iPhone = [[SNChannelGridViewController_iPhone alloc] init];
+		//rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_gridViewController_iPhone] autorelease];
 	
 	} else {
 		_gridViewController_iPad = [[SNVideoGridViewController_iPad alloc] init];

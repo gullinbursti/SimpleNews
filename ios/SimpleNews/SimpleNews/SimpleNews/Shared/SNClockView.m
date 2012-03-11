@@ -30,6 +30,14 @@
 	return (self);
 }
 
+-(void)dealloc {
+	[_label release];
+	[_timer invalidate];
+	_timer = nil;
+	
+	[super dealloc];
+}
+
 
 -(void)_onTick {
 	NSDate *date = [NSDate date];

@@ -16,6 +16,10 @@
 		4C36538315031964006A4FFE /* twitterWidgetPic@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C36537F15031964006A4FFE /* twitterWidgetPic@2x.png */; };
 		4C36538415031964006A4FFE /* weatherWidgetSun.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C36538015031964006A4FFE /* weatherWidgetSun.png */; };
 		4C36538515031964006A4FFE /* weatherWidgetSun@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C36538115031964006A4FFE /* weatherWidgetSun@2x.png */; };
+		4C45B7A1150BD8300039F45B /* background_root.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C45B79F150BD8300039F45B /* background_root.png */; };
+		4C45B7A2150BD8300039F45B /* background_root@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C45B7A0150BD8300039F45B /* background_root@2x.png */; };
+		4C45B7A6150BD8520039F45B /* SNSplashViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C45B7A5150BD8520039F45B /* SNSplashViewController_iPhone.m */; };
+		4C45B7AD150C1F360039F45B /* SNSplashHighlightView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C45B7AC150C1F360039F45B /* SNSplashHighlightView.m */; };
 		4C48967714FB415E00C55125 /* airPlayIconButton_active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967314FB415E00C55125 /* airPlayIconButton_active.png */; };
 		4C48967814FB415E00C55125 /* airPlayIconButton_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967414FB415E00C55125 /* airPlayIconButton_active@2x.png */; };
 		4C48967914FB415E00C55125 /* airPlayIconButton_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C48967514FB415E00C55125 /* airPlayIconButton_nonActive.png */; };
@@ -178,6 +182,12 @@
 		4C36537F15031964006A4FFE /* twitterWidgetPic@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "twitterWidgetPic@2x.png"; sourceTree = "<group>"; };
 		4C36538015031964006A4FFE /* weatherWidgetSun.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = weatherWidgetSun.png; sourceTree = "<group>"; };
 		4C36538115031964006A4FFE /* weatherWidgetSun@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "weatherWidgetSun@2x.png"; sourceTree = "<group>"; };
+		4C45B79F150BD8300039F45B /* background_root.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background_root.png; sourceTree = "<group>"; };
+		4C45B7A0150BD8300039F45B /* background_root@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background_root@2x.png"; sourceTree = "<group>"; };
+		4C45B7A4150BD8520039F45B /* SNSplashViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSplashViewController_iPhone.h; sourceTree = "<group>"; };
+		4C45B7A5150BD8520039F45B /* SNSplashViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSplashViewController_iPhone.m; sourceTree = "<group>"; };
+		4C45B7AB150C1F360039F45B /* SNSplashHighlightView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSplashHighlightView.h; sourceTree = "<group>"; };
+		4C45B7AC150C1F360039F45B /* SNSplashHighlightView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSplashHighlightView.m; sourceTree = "<group>"; };
 		4C48967314FB415E00C55125 /* airPlayIconButton_active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = airPlayIconButton_active.png; sourceTree = "<group>"; };
 		4C48967414FB415E00C55125 /* airPlayIconButton_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "airPlayIconButton_active@2x.png"; sourceTree = "<group>"; };
 		4C48967514FB415E00C55125 /* airPlayIconButton_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = airPlayIconButton_nonActive.png; sourceTree = "<group>"; };
@@ -537,6 +547,8 @@
 				4C7D601114FF0E5C00156054 /* SNNoAirplayView_iPhone.m */,
 				4CAF9D391505787500AB3735 /* SNNoWifiView_iPhone.h */,
 				4CAF9D3A1505787500AB3735 /* SNNoWifiView_iPhone.m */,
+				4C45B7A4150BD8520039F45B /* SNSplashViewController_iPhone.h */,
+				4C45B7A5150BD8520039F45B /* SNSplashViewController_iPhone.m */,
 			);
 			name = Splash;
 			sourceTree = "<group>";
@@ -554,6 +566,8 @@
 		4CB228BB14F4437500F5618D /* Elements */ = {
 			isa = PBXGroup;
 			children = (
+				4C45B79F150BD8300039F45B /* background_root.png */,
+				4C45B7A0150BD8300039F45B /* background_root@2x.png */,
 				4CF63C38150B212200055EFD /* logoBootUp_iPad.png */,
 				4CF63C39150B212200055EFD /* logoBootUp_iPad@2x.png */,
 				4CF63C3A150B212200055EFD /* logoBootUp.png */,
@@ -735,6 +749,8 @@
 				4CEF4AB81506F44000A1AD7E /* SNPaginationView.m */,
 				4CF965FB150A7E0C00F47C7D /* SNYouTubeScraper.h */,
 				4CF965FC150A7E0C00F47C7D /* SNYouTubeScraper.m */,
+				4C45B7AB150C1F360039F45B /* SNSplashHighlightView.h */,
+				4C45B7AC150C1F360039F45B /* SNSplashHighlightView.m */,
 			);
 			name = Shared;
 			path = SimpleNews/Shared;
@@ -1024,6 +1040,8 @@
 				4CF63C45150B213900055EFD /* listButton-iPad_Active@2x.png in Resources */,
 				4CF63C46150B213900055EFD /* listButton-iPad_nonActive.png in Resources */,
 				4CF63C47150B213900055EFD /* listButton-iPad_nonActive@2x.png in Resources */,
+				4C45B7A1150BD8300039F45B /* background_root.png in Resources */,
+				4C45B7A2150BD8300039F45B /* background_root@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1077,6 +1095,8 @@
 				4CEF4AB91506F44000A1AD7E /* SNPaginationView.m in Sources */,
 				4C9267CB15095AEC000015D3 /* PSYouTubeExtractor.m in Sources */,
 				4CF965FD150A7E0C00F47C7D /* SNYouTubeScraper.m in Sources */,
+				4C45B7A6150BD8520039F45B /* SNSplashViewController_iPhone.m in Sources */,
+				4C45B7AD150C1F360039F45B /* SNSplashHighlightView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

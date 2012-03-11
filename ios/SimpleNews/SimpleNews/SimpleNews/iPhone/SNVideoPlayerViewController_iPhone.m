@@ -43,6 +43,14 @@
 	[super didReceiveMemoryWarning];
 }
 
+-(void)dealloc {
+	[_vo release];
+	[_videoURL release];
+	[_videoHolderView release];
+	
+	[super dealloc];
+}
+
 #pragma mark - View lifecycle
 
 -(void)loadView {

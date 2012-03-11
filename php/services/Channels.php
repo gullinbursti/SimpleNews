@@ -120,6 +120,45 @@
 		}
 		
 		
+		function getNewVideoSubscriptions() {
+			$video_arr = array();
+			$videos_xml = new SimpleXMLElement('http://gdata.youtube.com/feeds/api/users/'. strtolower($channel_name) .'/newsubscriptionvideos?max-results=20', NULL, true);
+			
+			// width=\"480\" height=\"360\"
+			
+			$tot = 0;
+			foreach ($videos_xml -> entry as $video_entry) {
+				$id_arr = explode('/', $video_entry->id);
+				
+				$video_id = $id_arr[count($id_arr) - 1];
+				$image_url = "http://i.ytimg.com/vi/". $video_id ."/0.jpg";
+				$title = (string)$video_entry->title;
+				$info = (string)$video_entry->content;
+				$added = (string)$video_entry->published;
+				
+				$added = substr($added, 0, strlen($added) - 5);
+				$added = str_replace("T", " ", $added);
+				
+				array_push($video_arr, array(
+					"video_id" => $tot + 1, 
+					"youtube_id" => $video_id, 
+					"title" => $title, 
+					"info" => $info, 
+					"channel" => "http://i4.ytimg.com/i/". $channel_id ."/1.jpg", 
+					"image" => $image_url, 
+					"thumb" => $image_url, 
+					"video" => "", 
+					"date" => $added//"2012-03-08 12:21:00"//$added
+				));
+				
+				$tot++;
+			}
+			
+			$this->sendResponse(200, json_encode($video_arr));
+			return (true);
+		}
+		
+		
 		function getVideosByChannel($channel_id, $channel_name) {
 			$video_arr = array();
 			$videos_xml = new SimpleXMLElement('http://gdata.youtube.com/feeds/api/users/'. strtolower($channel_name) .'/uploads?max-results=20', NULL, true);
@@ -177,8 +216,12 @@
 			case "0":
 				$channels->getSubscriptions();
 				break;
-				
+			
 			case "1":
+				$channels->getNewVideoSubscriptions();
+				break;
+			
+			case "2":
 				if (isset($_POST['id']) && isset($_POST['name']))
 					$channels->getVideosByChannel($_POST['id'], $_POST['name']);
 				break;
