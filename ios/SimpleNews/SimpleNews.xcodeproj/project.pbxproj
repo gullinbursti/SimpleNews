@@ -33,6 +33,7 @@
 		4C91180214FD61D5001F8FD0 /* SNLogoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C91180114FD61D5001F8FD0 /* SNLogoView.m */; };
 		4C91180614FD66BC001F8FD0 /* SNClockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C91180514FD66BC001F8FD0 /* SNClockView.m */; };
 		4C9267CB15095AEC000015D3 /* PSYouTubeExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C9267CA15095AEC000015D3 /* PSYouTubeExtractor.m */; };
+		4C9F9B9C150D56CB00E842FA /* youtube_player.html in Resources */ = {isa = PBXBuildFile; fileRef = 4C9F9B9B150D56CB00E842FA /* youtube_player.html */; };
 		4CAF9D32150429B200AB3735 /* SNVideoPlayerViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CAF9D31150429B100AB3735 /* SNVideoPlayerViewController_iPhone.m */; };
 		4CAF9D3515043FD300AB3735 /* SNVideoItemView_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CAF9D3415043FD300AB3735 /* SNVideoItemView_iPad.m */; };
 		4CAF9D381505627300AB3735 /* SNTestVideoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CAF9D371505627300AB3735 /* SNTestVideoView.m */; };
@@ -207,6 +208,7 @@
 		4C91180514FD66BC001F8FD0 /* SNClockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNClockView.m; sourceTree = "<group>"; };
 		4C9267C915095AEC000015D3 /* PSYouTubeExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSYouTubeExtractor.h; sourceTree = "<group>"; };
 		4C9267CA15095AEC000015D3 /* PSYouTubeExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSYouTubeExtractor.m; sourceTree = "<group>"; };
+		4C9F9B9B150D56CB00E842FA /* youtube_player.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = youtube_player.html; sourceTree = "<group>"; };
 		4CAF9D30150429B100AB3735 /* SNVideoPlayerViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoPlayerViewController_iPhone.h; sourceTree = "<group>"; };
 		4CAF9D31150429B100AB3735 /* SNVideoPlayerViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNVideoPlayerViewController_iPhone.m; sourceTree = "<group>"; };
 		4CAF9D3315043FD300AB3735 /* SNVideoItemView_iPad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoItemView_iPad.h; sourceTree = "<group>"; };
@@ -488,6 +490,7 @@
 		4C91181214FE1CDE001F8FD0 /* HTML */ = {
 			isa = PBXGroup;
 			children = (
+				4C9F9B9B150D56CB00E842FA /* youtube_player.html */,
 				4C0C331914FF790400A3EB60 /* video_player.html */,
 			);
 			name = HTML;
@@ -1042,6 +1045,7 @@
 				4CF63C47150B213900055EFD /* listButton-iPad_nonActive@2x.png in Resources */,
 				4C45B7A1150BD8300039F45B /* background_root.png in Resources */,
 				4C45B7A2150BD8300039F45B /* background_root@2x.png in Resources */,
+				4C9F9B9C150D56CB00E842FA /* youtube_player.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

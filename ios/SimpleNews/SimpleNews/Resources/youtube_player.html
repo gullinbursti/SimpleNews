@@ -1,0 +1,101 @@
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale = 1.0, user-scalable = no, width = 1280"/>
+		<script>
+			if (!window['YT']) {
+				var YT = {};
+			}
+			if (!YT.Player) {
+				(function() {
+					 var p = document.location.protocol == 'https:' ? 'https:' : 'http:';
+					 var s = p + '//s.ytimg.com/yt/jsbin/www-widgetapi-vfll_Uq2Q.js';
+					 var a = document.createElement('script');
+					 a.src = s;
+					 a.async = true;
+					 var b = document.getElementsByTagName('script')[0];
+					 b.parentNode.insertBefore(a, b);
+					 YT.embed_template = "\u003ciframe width=\"425\" height=\"344\" src=\"\" frameborder=\"0\"\u003e\u003c\/iframe\u003e";
+					 })
+				();
+			}
+		</script>
+	</head>
+	<body style="background-color:black; color:white;">
+		<div id="player"></div>
+		<script>
+			/*var tag = document.createElement('script');
+				tag.src = "http://www.youtube.com/player_api";
+			
+			var firstScriptTag = document.getElementsByTagName('script')[0];
+				firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+			*/
+			var player;
+			var isPaused = false;
+			
+			function onYouTubePlayerAPIReady() {
+				player = new YT.Player('player', {
+					width: '320',
+					height: '180',
+					videoId: 'rGX6szf99KA', 
+					playerVars: {
+						'fs': 0, 
+						'showinfo': 0, 
+						'autoplay': 1, 
+						'controls': 0 
+					}, events: {
+						'onReady': onPlayerReady,
+						'onStateChange': onPlayerStateChange
+					}
+				});
+			}
+			
+			function onPlayerReady(event) {
+				event.target.playVideo();
+			}
+			
+			function onPlayerStateChange(event) {
+				
+				switch (event.data) {
+					case YT.PlayerState.PLAYING:
+//						if (!isPaused) {
+//							isPaused = true;
+//							setTimeout(stopVideo, 100);
+//						}
+					break;
+					
+					case YT.PlayerState.ENDED:
+						
+						break;
+				}
+			}
+			
+			function changeVideo(ytID) {
+				player = new YT.Player('player', {
+					width: '320',
+					height: '180',
+					videoId: ytID, 
+					playerVars: {
+						'fs': 0, 
+						'showinfo': 0, 
+						'autoplay': 1, 
+						'controls': 0 
+					}, events: {
+						'onReady': onPlayerReady,
+						'onStateChange': onPlayerStateChange
+					}
+				});
+				
+				sendValue('ytID', ytID);
+			}
+			
+			function stopVideo() {
+				player.stopVideo();
+			}
+			
+			function sendValue(key, val) {
+				location.href = 'result://keyval/' + key + '/' + val;
+			}
+			
+		</script>
+	</body>
+</html>

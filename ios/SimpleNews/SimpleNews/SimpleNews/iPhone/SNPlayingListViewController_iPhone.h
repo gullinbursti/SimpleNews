@@ -14,7 +14,7 @@
 #import "SNVideoItemVO.h"
 #import "SNYouTubeScraper.h"
 
-@interface SNPlayingListViewController_iPhone : UIViewController <SNYouTubeScraperDelegate, ASIHTTPRequestDelegate, UIScrollViewDelegate, UIActionSheetDelegate> {
+@interface SNPlayingListViewController_iPhone : UIViewController <SNYouTubeScraperDelegate, ASIHTTPRequestDelegate, UIScrollViewDelegate, UIActionSheetDelegate, UIWebViewDelegate> {
 	
 	UIScrollView *_scrollView;
 	NSMutableArray *_videoItems;
@@ -41,6 +41,7 @@
 	
 	NSMutableDictionary *_ytVideos;
 	BOOL _isFirstVideo;
+	UIWebView *_webView;
 	
 	float _lastOffset;
 }

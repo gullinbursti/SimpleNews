@@ -103,6 +103,53 @@
 //	
 //	_optionsListView = [[SNOptionsListView_iPhone alloc] initWithFrame:CGRectMake(-self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
 //	[self.view addSubview:_optionsListView];
+	
+	
+	NSString *loadHtml;
+	NSString *ytRequest;
+	
+	
+	NSString *youTubeVideoHTML = @"<html><head>\
+	<body style=\"margin:0\">\
+	<embed id=\"yt\" src=\"%@\" type=\"application/x-shockwave-flash\" \
+	width=\"%0.0f\" height=\"%0.0f\"></embed>\
+	</body></html>";
+	
+	// CNN
+	loadHtml = @"<html><body><object width=\"416\" height=\"374\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" id=\"ep\"><param name=\"allowfullscreen\" value=\"true\" /><param name=\"allowscriptaccess\" value=\"always\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"movie\" value=\"http://i.cdn.turner.com/cnn/.element/apps/cvp/3.0/swf/cnn_416x234_embed.swf?context=embed&videoId=showbiz/2012/03/10/bts-ray-j-speaks-whitney-houston.cnn\" /><param name=\"bgcolor\" value=\"#000000\" /><embed src=\"http://i.cdn.turner.com/cnn/.element/apps/cvp/3.0/swf/cnn_416x234_embed.swf?context=embed&videoId=showbiz/2012/03/10/bts-ray-j-speaks-whitney-houston.cnn\" type=\"application/x-shockwave-flash\" bgcolor=\"#000000\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"416\" wmode=\"transparent\" height=\"374\"></embed></object></body></html>";
+	
+	// YOUTUBE
+	loadHtml = @"<html><body><object style=\"height: 390px; width: 640px\"><param name=\"movie\" value=\"http://www.youtube.com/v/rGX6szf99KA?version=3&feature=player_detailpage\"><param name=\"allowFullScreen\" value=\"true\"><param name=\"allowScriptAccess\" value=\"always\"><embed src=\"http://www.youtube.com/v/rGX6szf99KA?version=3&feature=player_detailpage\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowScriptAccess=\"always\" width=\"640\" height=\"360\"></object></body></html>";
+	ytRequest = @"http://www.youtube.com/watch?v=rGX6szf99KA";
+	
+	// ABC
+	loadHtml = @"<html><body><object name=\"kaltura_player_1331345891\" id=\"kaltura_player_1331345891\" type=\"application/x-shockwave-flash\" allowScriptAccess=\"always\" allowNetworking=\"all\" allowFullScreen=\"true\" height=\"221\" width=\"392\" data=\"http://cdnapi.kaltura.com/index.php/kwidget/wid/0_071vwvlx/uiconf_id/6501231\"> \
+	<param name=\"allowScriptAccess\" value=\"always\"/> \
+	<param name=\"allowNetworking\" value=\"all\"/> \
+	<param name=\"allowFullScreen\" value=\"true\"/> \
+	<param name=\"bgcolor\" value=\"#000000\"/> \
+	<param name=\"movie\" value=\"http://cdnapi.kaltura.com/index.php/kwidget/wid/0_071vwvlx/uiconf_id/6501231\"/> \
+	<param name=\"flashVars\" value=\"referer=http://abcnews.go.com/WNT/video/pink-slime-15873068&autoPlay=false\"/> \
+	<a href=\"http://corp.kaltura.com\">video platform</a> \
+	<a href=\"http://corp.kaltura.com/video_platform/video_management\">video management</a> \
+	<a href=\"http://corp.kaltura.com/solutions/video_solution\">video solutions</a> \
+	<a href=\"http://corp.kaltura.com/video_platform/video_publishing\">video player</a> \
+	</object></body></html>";
+	//[webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:ytRequest]]];
+	
+	loadHtml = @"<iframe id=\"player\" type=\"text/html\" width=\"320\" height=\"180\" src=\"http://www.youtube.com/embed/u1zgFlCw8Aw?enablejsapi=1&origin=http://example.com\" frameborder=\"0\">";
+	
+	UIWebView *webView = [[[UIWebView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 180.0)] autorelease];
+	NSURLRequest *ytPlayerRequest = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"youtube_player" ofType:@"html"]]];
+	
+	[webView setBackgroundColor:[UIColor redColor]];
+	//webView.delegate = self;
+	webView.allowsInlineMediaPlayback = YES;
+	webView.mediaPlaybackRequiresUserAction = NO;
+	//[webView loadHTMLString:[NSString stringWithFormat:youTubeVideoHTML, ytRequest, webView.frame.size.width, webView.frame.size.height] baseURL:nil];
+	//[webView loadRequest:ytPlayerRequest];	
+	[webView loadHTMLString:loadHtml baseURL:nil];
+	[self.view addSubview:webView];
 }
 
 -(void)viewDidLoad {

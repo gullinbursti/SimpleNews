@@ -134,35 +134,35 @@
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
 	
-	NSString *loadHtml;
-	NSString *loadRequest;
+	//NSString *loadHtml;
+	//NSString *ytRequest;
 	
-	// CNN
-	loadHtml = @"<html><body><object width=\"416\" height=\"374\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" id=\"ep\"><param name=\"allowfullscreen\" value=\"true\" /><param name=\"allowscriptaccess\" value=\"always\" /><param name=\"wmode\" value=\"transparent\" /><param name=\"movie\" value=\"http://i.cdn.turner.com/cnn/.element/apps/cvp/3.0/swf/cnn_416x234_embed.swf?context=embed&videoId=showbiz/2012/03/10/bts-ray-j-speaks-whitney-houston.cnn\" /><param name=\"bgcolor\" value=\"#000000\" /><embed src=\"http://i.cdn.turner.com/cnn/.element/apps/cvp/3.0/swf/cnn_416x234_embed.swf?context=embed&videoId=showbiz/2012/03/10/bts-ray-j-speaks-whitney-houston.cnn\" type=\"application/x-shockwave-flash\" bgcolor=\"#000000\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"416\" wmode=\"transparent\" height=\"374\"></embed></object></body></html>";
+	NSURLRequest *ytPlayerRequest = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"youtube_player" ofType:@"html"]]];
+	
+	//NSString *ytEmbedHTML = @"<html><head>\
+	<body style=\"margin:0\">\
+	<embed id=\"yt\" src=\"%@\" type=\"application/x-shockwave-flash\" \
+	width=\"%0.0f\" height=\"%0.0f\" allowsfullscreen=\"false\"></embed>\
+	</body></html>";
 	
 	// YOUTUBE
-	loadHtml = @"<html><body><object style=\"height: 390px; width: 640px\"><param name=\"movie\" value=\"http://www.youtube.com/v/rGX6szf99KA?version=3&feature=player_detailpage\"><param name=\"allowFullScreen\" value=\"true\"><param name=\"allowScriptAccess\" value=\"always\"><embed src=\"http://www.youtube.com/v/rGX6szf99KA?version=3&feature=player_detailpage\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowScriptAccess=\"always\" width=\"640\" height=\"360\"></object></body></html>";
-	loadRequest = @"http://www.youtube.com/watch?v=rGX6szf99KA";
+	//loadHtml = @"<html><body><object style=\"height: 390px; width: 640px\"><param name=\"movie\" value=\"http://www.youtube.com/v/rGX6szf99KA?version=3&feature=player_detailpage\"><param name=\"allowFullScreen\" value=\"true\"><param name=\"allowScriptAccess\" value=\"always\"><embed src=\"http://www.youtube.com/v/rGX6szf99KA?version=3&feature=player_detailpage\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowScriptAccess=\"always\" width=\"640\" height=\"360\"></object></body></html>";
+	//ytRequest = @"http://www.youtube.com/watch?v=rGX6szf99KA";
+		
+	// YT IFRAME
+	//loadHtml = @"<iframe id=\"player\" type=\"text/html\" width=\"320\" height=\"180\" src=\"http://www.youtube.com/embed/u1zgFlCw8Aw?enablejsapi=1&origin=http://example.com\" frameborder=\"0\">";
 	
-	// ABC
-	loadHtml = @"<html><body><object name=\"kaltura_player_1331345891\" id=\"kaltura_player_1331345891\" type=\"application/x-shockwave-flash\" allowScriptAccess=\"always\" allowNetworking=\"all\" allowFullScreen=\"true\" height=\"221\" width=\"392\" data=\"http://cdnapi.kaltura.com/index.php/kwidget/wid/0_071vwvlx/uiconf_id/6501231\"> \
-	<param name=\"allowScriptAccess\" value=\"always\"/> \
-	<param name=\"allowNetworking\" value=\"all\"/> \
-	<param name=\"allowFullScreen\" value=\"true\"/> \
-	<param name=\"bgcolor\" value=\"#000000\"/> \
-	<param name=\"movie\" value=\"http://cdnapi.kaltura.com/index.php/kwidget/wid/0_071vwvlx/uiconf_id/6501231\"/> \
-	<param name=\"flashVars\" value=\"referer=http://abcnews.go.com/WNT/video/pink-slime-15873068&autoPlay=false\"/> \
-	<a href=\"http://corp.kaltura.com\">video platform</a> \
-	<a href=\"http://corp.kaltura.com/video_platform/video_management\">video management</a> \
-	<a href=\"http://corp.kaltura.com/solutions/video_solution\">video solutions</a> \
-	<a href=\"http://corp.kaltura.com/video_platform/video_publishing\">video player</a> \
-	</object></body></html>";
-	
-	
-	UIWebView *webView = [[[UIWebView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 180.0)] autorelease];
-	//[webView loadHTMLString:loadHtml baseURL:nil];
-	[webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:loadRequest]]];
-	[self.view addSubview:webView];
+	/*
+	_webView = [[[UIWebView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 180.0)] autorelease];
+	[_webView setBackgroundColor:[UIColor redColor]];
+	_webView.delegate = self;
+	_webView.allowsInlineMediaPlayback = YES;
+	_webView.mediaPlaybackRequiresUserAction = NO;
+	[_webView loadRequest:ytPlayerRequest];	
+	//[_webView loadHTMLString:[NSString stringWithFormat:ytEmbedHTML, ytRequest, webView.frame.size.width, webView.frame.size.height] baseURL:nil];
+	//[_webView loadHTMLString:loadHtml baseURL:nil];
+	[self.view addSubview:_webView];
+	 */
 }
 
 -(void)viewDidLoad {
@@ -303,7 +303,7 @@
 	[_ytVideos setObject:url forKey:ytID];
 	NSLog(@"YOUTUBE VIDEOS:[%@]", _ytVideos);
 	
-	if (_isFirstVideo) {
+	//if (_isFirstVideo) {
 		_isFirstVideo = NO;
 		[UIView animateWithDuration:0.25 animations:^(void) {
 			_videoLoadOverlayView.alpha = 0.0;
@@ -311,8 +311,8 @@
 		} completion:^(BOOL finished) {
 		}];
 	
-		//[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:url];
-	}
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:url];
+	//}
 }
 
 -(void)snYouTubeScraperFinshedQueue {
@@ -337,7 +337,7 @@
 #pragma mark - ScrollView Delegates
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	
-	//_videoPlayerViewController.view.frame = CGRectMake((-((int)scrollView.contentOffset.x % (int)self.view.frame.size.width)) + ((int)(scrollView.contentOffset.x < _lastOffset) * self.view.frame.size.width), 0.0, self.view.frame.size.width, 180.0);
+	_videoPlayerViewController.view.frame = CGRectMake((-((int)scrollView.contentOffset.x % (int)self.view.frame.size.width)) + ((int)(scrollView.contentOffset.x < _lastOffset) * self.view.frame.size.width), 0.0, self.view.frame.size.width, 180.0);
 	_lastOffset = scrollView.contentOffset.x;
 }
 
@@ -368,6 +368,8 @@
 		_videoPlayerViewController.view.frame = CGRectMake((-((int)scrollView.contentOffset.x % (int)self.view.frame.size.width)), 0.0, self.view.frame.size.width, 180.0);
 		[_videoPlayerViewController.mpc stop];
 		_videoItemVO = (SNVideoItemVO *)[_videoItems objectAtIndex:_index];
+		
+		[_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"changeVideo('%@');", _videoItemVO.youtube_id]];
 		
 		[_youTubeScraper setYtID:_videoItemVO.youtube_id];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:nil];
@@ -427,8 +429,9 @@
 			
 			_videoItemVO = (SNVideoItemVO *)[_videoItems objectAtIndex:0];
 			//_youTubeScraper = [[SNYouTubeScraper alloc] initWithYouTubeIDs:ytIDs];
-			//_youTubeScraper = [[SNYouTubeScraper alloc] initWithYouTubeID:_videoItemVO.youtube_id];
+			_youTubeScraper = [[SNYouTubeScraper alloc] initWithYouTubeID:_videoItemVO.youtube_id];
 			_youTubeScraper.delegate = self;
+			[_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"changeVideo('%@');", _videoItemVO.youtube_id]];
 			
 			//[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_VIDEO" object:nil];
 		}			
@@ -444,6 +447,59 @@
 	}
 	
 	//[_loadOverlay remove];
+}
+
+
+
+
+#pragma mark - WebView delegates
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+	NSString *urlString = [[request URL] absoluteString];
+	
+	if ([urlString hasPrefix:@"result:"]) {
+		NSArray *pathComponents = [[[request URL] path] pathComponents];
+		
+		NSString *key = [pathComponents objectAtIndex:1];
+		NSString *value = [pathComponents objectAtIndex:2];
+		
+		//NSLog(@"['%@'] = \"%@\"", key, value);
+		
+		if ([key isEqualToString:@"duration"]) {
+			//_duration = [value floatValue];
+			//[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_DURATION" object:[NSNumber numberWithFloat:_duration]];
+			
+		} else if ([key isEqualToString:@"time"]) {
+			//float currTime = [value floatValue];
+			
+			//if (_duration > 0.0) {
+			//	[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_TIME" object:[NSNumber numberWithFloat:currTime]];
+			//}
+			
+		} else if ([key isEqualToString:@"state"]) {
+			if ([value isEqualToString:@"ENDED"]) {
+				//_isFinished = YES;
+				[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
+				
+			} else {
+				NSLog(@"ERROR");
+			}
+		}
+		
+		
+		return (NO);
+		
+	} else
+		return (YES);
+}
+
+
+-(void)webViewDidStartLoad:(UIWebView *)webView {
+}
+
+-(void)webViewDidFinishLoad:(UIWebView *)webView {
+}
+
+-(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {	
 }
 
 
