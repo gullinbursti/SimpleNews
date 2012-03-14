@@ -37,7 +37,7 @@ $result = mysql_query($query);
 	<body>
 		<table cellpadding="0" cellspacing="0" border="0" width="100%">
 			<tr>
-				<td width="320"><?php include './nav.php'; ?></td>
+				<td width="320" valign="top"><?php include './nav.php'; ?></td>
 				<td><table cellspacing="0" cellpadding="0" border="0">
 					<?php while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 						if ($row['active'] == "Y")

@@ -6,36 +6,48 @@ session_start();
 if (!isset($_SESSION['login']))  
 	header('Location: login.php');  
 	
+require './_db_open.php';
 
-// make the connection
-$db_conn = mysql_connect('internal-db.s41232.gridserver.com', 'db41232_sn_usr', 'dope911t') or die("Could not connect to database.");
-
-// select the proper db
-mysql_select_db('db41232_simplenews') or die("Could not select database.");
-
-// get the current date / time from mysql
-$ts_result = mysql_query("SELECT NOW();") or die("Couldn't get the date from MySQL");
-$row = mysql_fetch_row($ts_result);
-$sql_time = $row[0];
+$follower_id = $_GET['fID'];
+$handle = $_GET['handle'];
+$tweet_id = $_GET['tID'];
 
 
-$tweet_id = $_GET['tID'];	
+require_once('_twitter_conn.php');
+$tweet_obj = $connection->get('statuses/show', array('id' => $tweet_id));	
 
-$curl_handle = curl_init();
-curl_setopt($curl_handle, CURLOPT_URL, "https://api.twitter.com/1/statuses/show.json?id=". $tweet_id ."&include_entities=true");
-curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
-curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-$tweet_json = curl_exec($curl_handle);
-curl_close($curl_handle);
+$tweet_msg = $tweet_obj->text;
 
-$tweet_obj = json_decode("[". $tweet_json ."]");
+$tweet_html = eregi_replace('(((f|ht){1}tp://)[-a-zA-Z0-9@:%_\+.~#?&//=]+)', '<a href="\\1" target="_blank">\\1</a>', $tweet_msg); 
+$tweet_html = eregi_replace('([[:space:]()[{}])(www.[-a-zA-Z0-9@:%_\+.~#?&//=]+)', '\\1<a href="http://\\2">\\2</a>', $tweet_html); 
+$tweet_html = eregi_replace('([_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3})', '<a href="mailto:\\1">\\1</a>', $tweet_html);
 
-foreach($tweet_obj as $key => $val)
-	$tweet_msg = $tweet_obj[$key]->text;	
+$tweet_html = eregi_replace('@([_\.0-9a-z-]+)', '<a href="https://twitter.com/#!/\\1" target="_blank">@\\1</a>', $tweet_html);
 
-$tweet_msg = eregi_replace('(((f|ht){1}tp://)[-a-zA-Z0-9@:%_\+.~#?&//=]+)', '<a href="\\1" target="_blank">\\1</a>', $tweet_msg); 
-$tweet_msg = eregi_replace('([[:space:]()[{}])(www.[-a-zA-Z0-9@:%_\+.~#?&//=]+)', '\\1<a href="http://\\2">\\2</a>', $tweet_msg); 
-$tweet_msg = eregi_replace('([_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3})', '<a href="mailto:\\1">\\1</a>', $tweet_msg);
+
+if (isset($_POST['txtArticleSource'])) {
+	$type_id = 7;
+	$source_url = $_POST['txtArticleSource'];
+	$title = $_POST['txtArticleTitle'];
+	$content = $_POST['txtArticleText'];
+	$image_url = $_POST['txtImageURL_1'];
+	$video_url = $_POST['txtVideoURL'];
+	
+	if (strlen($video_url) == 0)
+		$type_id -= 4;
+		
+	if (strlen($image_url) == 0)
+		$type_id -= 2;
+		
+	$query = 'INSERT INTO `tblArticles` (';
+	$query .= '`id`, `follower_id`, `tweet_id`, `type_id`, `article_url`, `title`, `content`, `image_url`, `video_url`, `added`) ';
+	$query .= 'VALUES (NULL, "'. $follower_id .'", "'. $tweet_id .'", "'. $type_id .'", "'. $source_url .'", "'. $title .'", "'. $content .'",  "'. $image_url .'", "'. $video_url .'", NOW());';
+	$result = mysql_query($query);
+	$article_id = mysql_insert_id();
+	
+	//echo ($query);
+	header('Location: tweets.php?handle='. $handle);
+}
 	
 ?>
 
@@ -45,32 +57,36 @@ $tweet_msg = eregi_replace('([_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3})', 
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<meta http-equiv="Content-language" value="en" />
-		<script> 
+		<script type="text/javascript">
+		 function submitArticle() {
+			document.frmAddArticle.submit();
+		}
 		</script>
 	</head>
 	
-	<body>
+	<body><form name="frmAddArticle" id="frmAddArticle" method="post" action="./add_article.php?fID=<?php echo ($follower_id); ?>&handle=<?php echo ($handle); ?>&tID=<?php echo ($tweet_id); ?>">
 		<table cellpadding="0" cellspacing="0" border="0">
 			<tr>
-				<td width="320"><?php include './nav.php'; ?></td>
+				<td width="320" valign="top"><?php include './nav.php'; ?></td>
 				<td><table cellspacing="0" cellpadding="0" border="0">
 					<tr><td colspan="2"></td></tr>
-					<tr><td colspan="2"><?php foreach($tweet_obj as $key => $val) { 
-						echo ("Message: ". $tweet_msg ."<br />");
-						echo ("Created: ". $tweet_obj[$key]->created_at ."<br />");
-						echo ("Retweet Count: ". $tweet_obj[$key]->retweet_count ."<br />");
-					} ?></td></tr>
+					<tr><td colspan="2"><?php 
+						echo ("Message: ". $tweet_html ."<br />");
+						echo ("Created: ". $tweet_obj->created_at ."<br />");
+						echo ("Retweet Count: ". $tweet_obj->retweet_count ."<br />");
+					?></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
-					<tr><td>Article Source:</td><td><input type="text" id="txtArticleSource" name="txtArticleSource" size="40" /></td></tr>
-					<tr><td>Article URL:</td><td><input type="text" id="txtArticleURL" name="txtArticleURL" size="80" /></td></tr>
+					<tr><td>Article Source:</td><td><input type="text" id="txtArticleSource" name="txtArticleSource" size="80" /></td></tr>
+					<tr><td>Article Title:</td><td><input type="text" id="txtArticleTitle" name="txtArticleTitle" size="80" /></td></tr>
+					<tr><td>Article Text:</td><td><textarea id="txtArticleText" name="txtArticleText" rows="18" cols="80"></textarea></td></tr>
 					<tr><td>Image URL:</td><td><input type="text" id="txtImageURL_1" name="txtImageURL_1" size="80" /></td></tr>
-					<tr><td>Video URL:</td><td><input type="text" id="txtImageURL_1" name="txtImageURL_1" size="80" /></td></tr>
+					<tr><td>Video URL:</td><td><input type="text" id="txtVideoURL" name="txtVideoURL" size="80" /></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<tr><td colspan="2"><input type="button" id="idSubmit" name="btnSubmit" value="Add Article" onclick="submitArticle()" /></td></tr>
 				</table></td>
 			</tr>
 		</table>
-	</body>
+	</form></body>
 </html> 
 
 <?php require './_db_close.php'; ?>

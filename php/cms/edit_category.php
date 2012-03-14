@@ -41,10 +41,23 @@ $row = mysql_fetch_row(mysql_query($query));
 		<meta http-equiv="Content-language" value="en" />
 	</head>
 	
+	<script>
+		function edit() {
+			var chkbox = document.getElementById('chkActive');				
+			if (chkbox.checked)
+				chkbox.value = "Y";
+				
+			else
+				chkbox.value = "N";
+				
+			document.frmEdit.submit();
+		}
+	</script>
+	
 	<body>
 		<table cellpadding="0" cellspacing="0" border="0" width="100%">
 			<tr>
-				<td width="320"><?php include './nav.php'; ?></td>
+				<td width="320" valign="top"><?php include './nav.php'; ?></td>
 				<td><form id="frmEdit" name="frmEdit" method="post" action="./edit_category.php?id=<?php echo ($_GET['id']); ?>"><table cellspacing="0" cellpadding="0" border="0">
 					<tr><td>Name:</td><td><input type="text" id="txtName" name="txtName" value="<?php echo($row[1]); ?>" /></td></tr>
 					<tr><td>Info:</td><td><input type="text" id="txtInfo" name="txtInfo" value="<?php echo($row[2]); ?>" /></td></tr>
@@ -55,7 +68,7 @@ $row = mysql_fetch_row(mysql_query($query));
 						echo ("<tr><td>Active:</td><td><input type=\"checkbox\" id=\"chkActive\" name=\"chkActive\" value=\"N\" /></td></tr>");
 					?>
 					<tr><td colspan="2"><hr /></td></tr>
-					<tr><td colspan="2"><input type="submit" id="btnAdd" name="btnAdd" value="Edit Category" /></td></tr>
+					<tr><td colspan="2"><input type="button" id="btnAdd" name="btnAdd" value="Edit Category" onclick="edit();" /></td></tr>
 				</form></table></td>
 			</tr>
 		</table>

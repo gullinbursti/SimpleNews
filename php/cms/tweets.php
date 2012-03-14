@@ -9,33 +9,20 @@ if (!isset($_SESSION['login']))
 
 require './_db_open.php';
 
+$follower_id = $_GET['id'];
+$handle = $_GET['handle'];
 
-$handle = $_GET['handle'];	
 
-$curl_handle = curl_init();
-curl_setopt($curl_handle, CURLOPT_URL, "http://api.twitter.com/1/statuses/user_timeline.json?screen_name=". $handle ."&count=2");
-curl_setopt($curl_handle, CURLOPT_CONNECTTIMEOUT, 2);
-curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
-$timeline_json = curl_exec($curl_handle);
-curl_close($curl_handle);
+require_once('twitteroauth/twitteroauth.php');
+require_once('_oauth_cfg.php');
+require_once('_twitter_conn.php');
 
-//echo ($timeline_json);
+$tweet_obj = $connection->get('statuses/user_timeline', array('screen_name' => $handle));
+//print_r ($tweet_obj);	 
 
-$tweet_obj = json_decode($timeline_json);
+//echo ($tweet_obj->profile_image_url);
 
-/*
-foreach($tweet_obj as $key => $val) {
-	//echo "Message number: $var <br/>";    
-    //echo "Name: ". $obj[$var]->user->name ."<br/>";
-    //echo "Handle: ". $obj[$var]->user->screen_name ."<br/>";        
-    echo "Message: ". $tweet_obj[$key]->text ."<br />";        
-    echo "Created: ". $tweet_obj[$key]->created_at ."<br/>";                    
-    //echo "URL: ". $obj[$var]->user->url ."<br/>";
-    //echo "Location: ". $obj[$var]->user->location ."<br/>";       
-    echo "<br/>";
-}
-*/
-	
+
 ?>
 
 
@@ -46,7 +33,7 @@ foreach($tweet_obj as $key => $val) {
 		<meta http-equiv="Content-language" value="en" />
 		<script> 
 			function useTweet(tweet_id) {
-				location.href = "./add_article.php?tID=" + tweet_id;
+				location.href = "./add_article.php?fID=<?php echo ($follower_id); ?>&handle=<?php echo ($handle); ?>&tID=" + tweet_id;
 			}
 		</script>
 	</head>
@@ -54,12 +41,17 @@ foreach($tweet_obj as $key => $val) {
 	<body>
 		<table cellpadding="0" cellspacing="0" border="0">
 			<tr>
-				<td width="320"><?php include './nav.php'; ?></td>
+				<td width="320" valign="top"><?php include './nav.php'; ?></td>
 				<td><table cellspacing="0"cellpadding="0" border="0">
 					<tr><td></td></tr>
 					<?php foreach($tweet_obj as $key => $val) {
+						$tweet_msg = eregi_replace('(((f|ht){1}tp://)[-a-zA-Z0-9@:%_\+.~#?&//=]+)', '<a href="\\1" target="_blank">\\1</a>', $tweet_obj[$key]->text); 
+						$tweet_msg = eregi_replace('([[:space:]()[{}])(www.[-a-zA-Z0-9@:%_\+.~#?&//=]+)', '\\1<a href="http://\\2">\\2</a>', $tweet_msg); 
+						$tweet_msg = eregi_replace('([_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3})', '<a href="mailto:\\1">\\1</a>', $tweet_msg);
+						$tweet_msg = eregi_replace('@([_\.0-9a-z-]+)', '<a href="https://twitter.com/#!/\\1" target="_blank">@\\1</a>', $tweet_msg);
+						
 						echo ("<tr><td>");
-						echo ("Message: ". $tweet_obj[$key]->text ."<br />");        
+						echo ("Message: ". $tweet_msg ."<br />");        
 						echo ("Created: ". $tweet_obj[$key]->created_at ."<br/><br />");
 						echo ("<input type=\"button\" id=\"btnTweet_". $tweet_obj[$key]->id_str ."\" name=\"btnTweet_". $tweet_obj[$key]->id_str ."\" value=\"Make Article\" onclick=\"useTweet('".$tweet_obj[$key]->id_str  ."')\" /><br />");                    
 						echo ("</td></tr><tr><td><hr /></td></tr>");

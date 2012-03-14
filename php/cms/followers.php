@@ -10,7 +10,7 @@ if (!isset($_SESSION['login']))
 require './_db_open.php';
 
 	
-$query = 'SELECT * FROM `tblTwitterFollowers` WHERE `active` ="Y"';
+$query = 'SELECT * FROM `tblTwitterFollowers`;';
 $result = mysql_query($query);
 	
 ?>
@@ -30,7 +30,7 @@ $result = mysql_query($query);
 				var prompt = confirm("Delete this follower ["+ twitter_id +"]?");
 				
 				if (prompt)
-					location.href = "./delete_category.php?id=" + twitter_id;
+					location.href = "./delete_follower.php?id=" + twitter_id;
 			}
 		</script>
 	</head>
@@ -38,16 +38,18 @@ $result = mysql_query($query);
 	<body>
 		<table cellpadding="0" cellspacing="0" border="0" width="100%">
 			<tr>
-				<td width="320"><?php include './nav.php'; ?></td>
+				<td width="320" valign="top"><?php include './nav.php'; ?></td>
 				<td><table cellspacing="0" cellpadding="0" border="0">
 					<?php while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 						$pre_html = "<tr><td><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\">";
 						$post_html = "</table></td></tr>";
 						
 						echo ($pre_html);
+						echo ("<tr><td colspan=\"2\"><img src=\"". $row['avatar_url'] ."\" /></td></tr>");
 						echo ("<tr><td>Name:</td><td>". $row['name'] ."</td></tr>");
 						echo ("<tr><td>Handle:</td><td><a href=\"https://twitter.com/#!/". $row['handle'] ."\" target=\"_blank\">@". $row['handle'] ."</a></td></tr>");
-						echo ("<tr><td colspan=\"2\"><input type=\"button\" value=\"Delete\" onclick=\"remove('". $row['id'] ."');\" /><input type=\"button\" value=\"Edit\" onclick=\"edit('". $row['id'] ."');\" /><input type=\"button\" value=\"Tweets\" onclick=\"window.location='./tweets.php?handle=". $row['handle'] ."'\" /></td></tr>");
+						echo ("<tr><td><br /></td></tr>");
+						echo ("<tr><td colspan=\"2\"><input type=\"button\" value=\"Delete\" onclick=\"remove('". $row['id'] ."');\" /><input type=\"button\" value=\"Edit\" onclick=\"edit('". $row['id'] ."');\" /><input type=\"button\" value=\"Tweets\" onclick=\"window.location='./tweets.php?id=". $row['id'] ."&handle=". $row['handle'] ."'\" /></td></tr>");
 						echo ("<tr><td colspan=\"2\"><hr /></td></tr>");
 						echo ($post_html);
 						

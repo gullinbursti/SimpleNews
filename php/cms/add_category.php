@@ -39,7 +39,7 @@ if (isset($_POST['txtName'])) {
 	<body>
 		<table cellpadding="0" cellspacing="0" border="0" width="100%">
 			<tr>
-				<td width="320"><?php include './nav.php'; ?></td>
+				<td width="320" valign="top"><?php include './nav.php'; ?></td>
 				<td><form id="frmAdd" name="frmAdd" method="post" action="./add_category.php"><table cellspacing="0" cellpadding="0" border="0">
 					<tr><td>Name:</td><td><input type="text" id="txtName" name="txtName" /></td></tr>
 					<tr><td>Info:</td><td><input type="text" id="txtInfo" name="txtInfo" /></td></tr>

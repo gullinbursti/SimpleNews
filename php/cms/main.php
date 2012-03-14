@@ -19,7 +19,7 @@ if (!isset($_SESSION['login']))
 	<body>
 		<table cellpadding="0" cellspacing="0" border="0">
 			<tr>
-				<td width="320"><?php include './nav.php'; ?></td>
+				<td width="320" valign="top"><?php include './nav.php'; ?></td>
 				<td></td>
 			</tr>
 		</table>
