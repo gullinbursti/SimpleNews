@@ -7,7 +7,7 @@
 //
 
 #import "SNSplashViewController_iPhone.h"
-#import "SNChannelGridViewController_iPhone.h"
+#import "SNFollowerGridViewController_iPhone.h"
 
 @interface SNSplashViewController_iPhone()
 -(void)_goNextCell;
@@ -33,7 +33,7 @@
 }
 
 -(void)_goGrid {
-	[self.navigationController pushViewController:[[[SNChannelGridViewController_iPhone alloc] init] autorelease] animated:NO];
+	[self.navigationController pushViewController:[[[SNFollowerGridViewController_iPhone alloc] init] autorelease] animated:NO];
 }
 
 #pragma mark - View lifecycle

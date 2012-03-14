@@ -87,7 +87,7 @@
 		function getActiveChannels() {
             $channel_arr = array();
 			
-			$query = 'SELECT * FROM `tblCategories` WHERE `active` = "Y";';
+			$query = 'SELECT * FROM `tblChannels` WHERE `active` = "Y";';
 			$result = mysql_query($query);
 		    
 			$tot = 0;
@@ -105,8 +105,7 @@
 			return (true);
 		}
 		
-		
-		
+	    
 		function test() {
 			$this->sendResponse(200, json_encode(array(
 				"result" => true

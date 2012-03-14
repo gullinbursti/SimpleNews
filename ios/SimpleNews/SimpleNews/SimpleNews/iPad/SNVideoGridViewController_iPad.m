@@ -109,7 +109,7 @@
 	NSString *ytRequest;
 	
 	
-	NSString *youTubeVideoHTML = @"<html><head>\
+	//NSString *youTubeVideoHTML = @"<html><head>\
 	<body style=\"margin:0\">\
 	<embed id=\"yt\" src=\"%@\" type=\"application/x-shockwave-flash\" \
 	width=\"%0.0f\" height=\"%0.0f\"></embed>\
@@ -140,7 +140,7 @@
 	loadHtml = @"<iframe id=\"player\" type=\"text/html\" width=\"320\" height=\"180\" src=\"http://www.youtube.com/embed/u1zgFlCw8Aw?enablejsapi=1&origin=http://example.com\" frameborder=\"0\">";
 	
 	UIWebView *webView = [[[UIWebView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 180.0)] autorelease];
-	NSURLRequest *ytPlayerRequest = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"youtube_player" ofType:@"html"]]];
+	//NSURLRequest *ytPlayerRequest = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"youtube_player" ofType:@"html"]]];
 	
 	[webView setBackgroundColor:[UIColor redColor]];
 	//webView.delegate = self;

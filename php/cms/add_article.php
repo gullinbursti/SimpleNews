@@ -24,6 +24,11 @@ $tweet_html = eregi_replace('([_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3})',
 
 $tweet_html = eregi_replace('@([_\.0-9a-z-]+)', '<a href="https://twitter.com/#!/\\1" target="_blank">@\\1</a>', $tweet_html);
 
+$query = 'SELECT * FROM `tblTags`;';
+$tag_result = mysql_query($query);
+$tot = count($tag_result); 
+
+
 
 if (isset($_POST['txtArticleSource'])) {
 	$type_id = 7;
@@ -33,6 +38,13 @@ if (isset($_POST['txtArticleSource'])) {
 	$image_url = $_POST['txtImageURL_1'];
 	$video_url = $_POST['txtVideoURL'];
 	
+	
+	if ($_POST['radTint'] == "0")
+		$isDark = 'N';
+	
+	else
+		$isDark = 'Y';
+	
 	if (strlen($video_url) == 0)
 		$type_id -= 4;
 		
@@ -40,13 +52,26 @@ if (isset($_POST['txtArticleSource'])) {
 		$type_id -= 2;
 		
 	$query = 'INSERT INTO `tblArticles` (';
-	$query .= '`id`, `follower_id`, `tweet_id`, `type_id`, `article_url`, `title`, `content`, `image_url`, `video_url`, `added`) ';
-	$query .= 'VALUES (NULL, "'. $follower_id .'", "'. $tweet_id .'", "'. $type_id .'", "'. $source_url .'", "'. $title .'", "'. $content .'",  "'. $image_url .'", "'. $video_url .'", NOW());';
+	$query .= '`id`, `follower_id`, `tweet_id`, `tweet_msg`, `type_id`, `article_url`, `title`, `content`, `image_url`, `video_url`, `isDark`, `added`) ';
+	$query .= 'VALUES (NULL, "'. $follower_id .'", "'. $tweet_id .'", "'. $tweet_msg .'" "'. $type_id .'", "'. $source_url .'", "'. $title .'", "'. $content .'",  "'. $image_url .'", "'. $video_url .'", "'. $isDark .'", NOW());';
 	$result = mysql_query($query);
 	$article_id = mysql_insert_id();
 	
+	echo ($query);
+	
+	$tagID_arr = explode("|", $_POST['hidIDs']);
+
+	for ($i=0; $i<count($tagID_arr); $i++) {
+		$tag_id = $tagID_arr[$i];
+		
+		$query = 'INSERT INTO `tblArticlesTags` (';
+		$query .= '`article_id`, `tag_id`) ';
+		$query .= 'VALUES ("'. $article_id .'", "'. $tag_id .'");';
+		$result = mysql_query($query);
+	}
+	
 	//echo ($query);
-	header('Location: tweets.php?handle='. $handle);
+	//header('Location: tweets.php?id='. $follower_id .'&handle='. $handle);
 }
 	
 ?>
@@ -58,9 +83,28 @@ if (isset($_POST['txtArticleSource'])) {
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<meta http-equiv="Content-language" value="en" />
 		<script type="text/javascript">
-		 function submitArticle() {
-			document.frmAddArticle.submit();
-		}
+			function submitArticle() {
+				var tot = <?php echo ($tot); ?>;
+				var tagIDs = "";
+				var cnt = 0;
+			
+				for (var i=0; i<tot; i++) {
+					var chkbox = document.getElementById('chkTag_' + i);
+				
+					if (chkbox.checked) {
+						var tag_id = chkbox.name.substring(7);
+						
+						if (cnt > 0)
+							tagIDs += "|";
+						
+						tagIDs += tag_id;
+						cnt++;
+					}
+				}
+			
+			    document.frmAddArticle.hidIDs.value = tagIDs;
+				document.frmAddArticle.submit();
+			}
 		</script>
 	</head>
 	
@@ -80,7 +124,15 @@ if (isset($_POST['txtArticleSource'])) {
 					<tr><td>Article Title:</td><td><input type="text" id="txtArticleTitle" name="txtArticleTitle" size="80" /></td></tr>
 					<tr><td>Article Text:</td><td><textarea id="txtArticleText" name="txtArticleText" rows="18" cols="80"></textarea></td></tr>
 					<tr><td>Image URL:</td><td><input type="text" id="txtImageURL_1" name="txtImageURL_1" size="80" /></td></tr>
+					<tr><td>Image Brightness:</td><td><input type="radio" id="radTint" name="radTint" value="0" />Light<input type="radio" id="radTint" name="radTint" value="1" />Dark</td></tr>
 					<tr><td>Video URL:</td><td><input type="text" id="txtVideoURL" name="txtVideoURL" size="80" /></td></tr>
+					<tr><td>Tags:</td><td><?php 
+						$tot = 0;
+						while ($row = mysql_fetch_array($tag_result, MYSQL_BOTH)) {
+							echo ("<input type=\"checkbox\" id=\"chkTag_". $tot ."\" name=\"chkTag_". $row['id'] ."\" value=\"N\" />#". $row['title'] ."<br />");
+							$tot++;
+						}
+					?><input type="hidden" id="hidIDs" name="hidIDs" value="" /></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<tr><td colspan="2"><input type="button" id="idSubmit" name="btnSubmit" value="Add Article" onclick="submitArticle()" /></td></tr>
 				</table></td>

@@ -84,117 +84,55 @@
 		}
 	
 		
-		function getSubscriptions() {
-            $channel_arr = array();
-			$subscriptions_xml = new SimpleXMLElement('http://gdata.youtube.com/feeds/api/users/getassemblytv/subscriptions?max-results=50', NULL, true);
-            
+		function articlesByChannel($chan_id) {
+			$article_arr = array();
+			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblFollowersChannels` ON `tblArticles`.`follower_id` = `tblFollowersChannels`.`follower_id` WHERE `tblFollowersChannels`.`channel_id` = "'. $chan_id .'"';
+			$article_result = mysql_query($query);
+			
 			$tot = 0;
-			foreach ($subscriptions_xml -> entry as $subscription_entry) {
-				$attr_arr = $subscription_entry->link[1]->attributes();
-				$href_arr = explode('/', $attr_arr['href']);
-				$youtube_id = $href_arr[4];
-	
-				$title_arr = explode(': ', $subscription_entry->title);
-				$youtube_name = $title_arr[1];
-				$image_url = "http://i4.ytimg.com/i/". $youtube_id ."/1.jpg";
-				
-				//$user_xml = new SimpleXMLElement('http://gdata.youtube.com/feeds/api/users/'. strtolower($youtube_name), NULL, true);
-				$created_date = "2005-10-02T16:06:36.000Z"; //$user_xml->published;
-				$updated_date = "2005-10-02T16:06:36.000Z"; //$user_xml->updated;
-				
-				array_push($channel_arr, array(
-					"channel_id" => $tot + 1, 
-					"youtube_id" => $youtube_id, 
-					"title" => $youtube_name, 
-					"thumb" => $image_url, 
-					"image" => $image_url, 
-					"added" => $created_date, 
-					"updated" => $updated_date
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
+				array_push($article_arr, array(
+					"article_id" => $article_row['id'], 
+					"handle" => $article_row['handle'],
+					"name" => $article_row['name'], 
+					"avatar_url" => $article_row['avatar_url']
 				));
 				
 				$tot++;
 	    	}
-
-			$this->sendResponse(200, json_encode($channel_arr));
-			return (true);
+			
+			$this->sendResponse(200, json_encode($article_arr));
+			return (true);	
 		}
 		
-		
-		function getNewVideoSubscriptions() {
-			$video_arr = array();
-			$videos_xml = new SimpleXMLElement('http://gdata.youtube.com/feeds/api/users/'. strtolower($channel_name) .'/newsubscriptionvideos?max-results=20', NULL, true);
+		function articlesByFollower($follower_id) {
+			$article_arr = array();
+			$query = 'SELECT * FROM `tblArticles` WHERE `follower_id` = "'. $follower_id .'"';
+			$article_result = mysql_query($query);
 			
-			// width=\"480\" height=\"360\"
+			$query = 'SELECT `avatar_url`, `name` FROM `tblTwitterFollowers` WHERE `id` = "'. $follower_id .'";';
+			$follower_arr = mysql_fetch_row(mysql_query($query));
 			
+				
 			$tot = 0;
-			foreach ($videos_xml -> entry as $video_entry) {
-				$id_arr = explode('/', $video_entry->id);
-				
-				$video_id = $id_arr[count($id_arr) - 1];
-				$image_url = "http://i.ytimg.com/vi/". $video_id ."/0.jpg";
-				$title = (string)$video_entry->title;
-				$info = (string)$video_entry->content;
-				$added = (string)$video_entry->published;
-				
-				$added = substr($added, 0, strlen($added) - 5);
-				$added = str_replace("T", " ", $added);
-				
-				array_push($video_arr, array(
-					"video_id" => $tot + 1, 
-					"youtube_id" => $video_id, 
-					"title" => $title, 
-					"info" => $info, 
-					"channel" => "http://i4.ytimg.com/i/". $channel_id ."/1.jpg", 
-					"image" => $image_url, 
-					"thumb" => $image_url, 
-					"video" => "", 
-					"date" => $added//"2012-03-08 12:21:00"//$added
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
+				array_push($article_arr, array(
+					"article_id" => $article_row['id'], 
+					"title" => $article_row['title'], 
+					"tweet_msg" => $article_row['tweet_msg'], 
+					"twitter_name" => $follower_arr[1], 
+					"bg_url" => $article_row['image_url'], 
+					"content" => $article_row['content'], 
+					"avatar_url" => $follower_arr[0],
+					"is_dark" => $article_row['isDark'], 
+					"added" => $article_row['added']
 				));
 				
 				$tot++;
-			}
+	    	}
 			
-			$this->sendResponse(200, json_encode($video_arr));
-			return (true);
-		}
-		
-		
-		function getVideosByChannel($channel_id, $channel_name) {
-			$video_arr = array();
-			$videos_xml = new SimpleXMLElement('http://gdata.youtube.com/feeds/api/users/'. strtolower($channel_name) .'/uploads?max-results=20', NULL, true);
-			
-			// width=\"480\" height=\"360\"
-			
-			$tot = 0;
-			foreach ($videos_xml -> entry as $video_entry) {
-				$id_arr = explode('/', $video_entry->id);
-				
-				$video_id = $id_arr[count($id_arr) - 1];
-				$image_url = "http://i.ytimg.com/vi/". $video_id ."/0.jpg";
-				$title = (string)$video_entry->title;
-				$info = (string)$video_entry->content;
-				$added = (string)$video_entry->published;
-				
-				$added = substr($added, 0, strlen($added) - 5);
-				$added = str_replace("T", " ", $added);
-				
-				array_push($video_arr, array(
-					"video_id" => $tot + 1, 
-					"youtube_id" => $video_id, 
-					"title" => $title, 
-					"info" => $info, 
-					"channel" => "http://i4.ytimg.com/i/". $channel_id ."/1.jpg", 
-					"image" => $image_url, 
-					"thumb" => $image_url, 
-					"video" => "", 
-					"date" => $added//"2012-03-08 12:21:00"//$added
-				));
-				
-				$tot++;
-			}
-			
-			$this->sendResponse(200, json_encode($video_arr));			
-			return (true);
+			$this->sendResponse(200, json_encode($article_arr));
+			return (true);	
 		}
 		
 		
@@ -214,16 +152,13 @@
 		switch ($_POST['action']) {
 			
 			case "0":
-				$channels->getSubscriptions();
+				if (isset($_POST['channelID']))
+					$articles->articlesByChannel($_POST['channelID']);
 				break;
-			
+				
 			case "1":
-				$channels->getNewVideoSubscriptions();
-				break;
-			
-			case "2":
-				if (isset($_POST['id']) && isset($_POST['name']))
-					$channels->getVideosByChannel($_POST['id'], $_POST['name']);
+				if (isset($_POST['followerID']))
+					$articles->articlesByFollower($_POST['followerID']);
 				break;
     	}
 	}
