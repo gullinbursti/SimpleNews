@@ -10,7 +10,7 @@
 #import "Reachability.h"
 
 #import "SNAppDelegate.h"
-
+#import "SNSplashViewController_iPhone.h"
 
 @implementation SNAppDelegate
 
@@ -78,6 +78,15 @@
 	return ([[NSDate new] timeIntervalSinceDate:date] / 86400);
 }
 
++(UIImage *)imageWithView:(UIView *)view {
+	UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.opaque, [[UIScreen mainScreen] scale]);
+	[view.layer renderInContext:UIGraphicsGetCurrentContext()];
+	UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	
+	return (img);
+}
+
 
 -(void)dealloc {
 	[_window release];
@@ -93,20 +102,33 @@
 	UINavigationController *rootNavigationController;
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-		_splashViewController_iPhone = [[SNSplashViewController_iPhone alloc] init];
-		rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_splashViewController_iPhone] autorelease];
+		//_splashViewController_iPhone = [[SNSplashViewController_iPhone alloc] init];
+		//rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_splashViewController_iPhone] autorelease];
 		
-		//_gridViewController_iPhone = [[SNChannelGridViewController_iPhone alloc] init];
-		//rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_gridViewController_iPhone] autorelease];
+		_gridViewController_iPhone = [[SNFollowerGridViewController_iPhone alloc] init];
+		rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_gridViewController_iPhone] autorelease];
+		
+		[rootNavigationController setNavigationBarHidden:YES];
+		[self.window setRootViewController:rootNavigationController];
+		[self.window makeKeyAndVisible];
+		
+		SNSplashViewController_iPhone *splashViewController = [[[SNSplashViewController_iPhone alloc] init] autorelease];
+		UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:splashViewController] autorelease];
+		
+		[navigationController setNavigationBarHidden:YES];
+		[rootNavigationController presentModalViewController:navigationController animated:NO];
+		
+		// Show a splash screen immediately
+		//SNSplashViewController_iPhone *splashViewController = [[[SNSplashViewController_iPhone alloc] init] autorelease];
+		//UINavigationController *splashNavigationController = [[[UINavigationController alloc] initWithRootViewController:splashViewController] autorelease];
+		//[splashNavigationController setNavigationBarHidden:YES animated:NO];
+		//[rootNavigationController pushViewController:splashViewController animated:NO];
 	
 	} else {
 		_gridViewController_iPad = [[SNVideoGridViewController_iPad alloc] init];
 		rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_gridViewController_iPad] autorelease];
 	}
 	
-	[rootNavigationController setNavigationBarHidden:YES];
-	[self.window setRootViewController:rootNavigationController];
-	[self.window makeKeyAndVisible];
 	
 	return (YES);
 }

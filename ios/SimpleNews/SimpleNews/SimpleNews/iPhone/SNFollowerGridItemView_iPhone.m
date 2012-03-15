@@ -49,7 +49,7 @@
 	
 	if ([touch view] == self) {
 		[self toggleSelected:!_isSelected];
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANNEL_TAPPED" object:_vo];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"FOLLOWER_TAPPED" object:_vo];
 		
 		return;
 	}

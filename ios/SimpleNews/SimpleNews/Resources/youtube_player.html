@@ -1,91 +1,117 @@
 <html>
 	<head>
-		<meta name="viewport" content="initial-scale = 1.0, user-scalable = no, width = 1280"/>
-		<script>
-			if (!window['YT']) {
-				var YT = {};
-			}
-			if (!YT.Player) {
-				(function() {
-					 var p = document.location.protocol == 'https:' ? 'https:' : 'http:';
-					 var s = p + '//s.ytimg.com/yt/jsbin/www-widgetapi-vfll_Uq2Q.js';
-					 var a = document.createElement('script');
-					 a.src = s;
-					 a.async = true;
-					 var b = document.getElementsByTagName('script')[0];
-					 b.parentNode.insertBefore(a, b);
-					 YT.embed_template = "\u003ciframe width=\"425\" height=\"344\" src=\"\" frameborder=\"0\"\u003e\u003c\/iframe\u003e";
-					 })
-				();
-			}
-		</script>
+		<meta name="viewport" content="initial-scale = 1.0, user-scalable = no, width = 320"/>
 	</head>
-	<body style="background-color:black; color:white;">
+	<body style="background-color:black; color:white; margin:0; padding:0;">
 		<div id="player"></div>
 		<script>
-			/*var tag = document.createElement('script');
+			var tag = document.createElement('script');
 				tag.src = "http://www.youtube.com/player_api";
 			
 			var firstScriptTag = document.getElementsByTagName('script')[0];
 				firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-			*/
+			
 			var player;
 			var isPaused = false;
 			
 			function onYouTubePlayerAPIReady() {
 				player = new YT.Player('player', {
 					width: '320',
-					height: '180',
-					videoId: 'rGX6szf99KA', 
+					height: '480',
+					videoId: 'tAxQCweDucI', 
+											  
 					playerVars: {
+						'enablejsapi': 1, 
 						'fs': 0, 
+						'rel': 0, 
+						'showsearch': 0, 
 						'showinfo': 0, 
 						'autoplay': 1, 
 						'controls': 0 
+					
 					}, events: {
 						'onReady': onPlayerReady,
-						'onStateChange': onPlayerStateChange
+						'onStateChange': onPlayerStateChange, 
+						'onPlaybackQualityChange': onPlaybackQualityChange, 
+						'onError': onError
 					}
 				});
 			}
 			
 			function onPlayerReady(event) {
+				sendValue('state', "READY");
 				event.target.playVideo();
 			}
 			
-			function onPlayerStateChange(event) {
+			function onPlaybackQualityChange(event) {
+				sendValue('quality', event.data);
+			}
+			
+			function onError(event) {
+				var info;
 				
 				switch (event.data) {
-					case YT.PlayerState.PLAYING:
-//						if (!isPaused) {
-//							isPaused = true;
-//							setTimeout(stopVideo, 100);
-//						}
-					break;
+					case 2:
+						info = "invalid param";
+						break;
 					
+					case 100:
+						info = "not found";
+						break;
+					
+					case 101:
+						info = "not allowed";
+						break;
+					
+					case 150:
+						info = "not allowed";
+						break;
+				}
+				
+				sendValue('error', info);
+			}
+			
+			function onPlayerStateChange(event) {
+				sendValue('state', event.data);
+				
+				switch (event.data) {
+					case -1:
+						sendValue('state', "UNPLAYED");
+						break;
+					
+					// 0
 					case YT.PlayerState.ENDED:
+						sendValue('state', "ENDED");
 						
 						break;
+					
+					// 1
+					case YT.PlayerState.PLAYING:
+						sendValue('state', "PLAYING");
+						break;
+					
+					// 2
+					case YT.PlayerState.PAUSED:
+						sendValue('state', "PAUSED");
+						break;
+					
+					// 3
+					case YT.PlayerState.BUFFERING:
+						sendValue('state', "BUFFERING");
+						break;
+					
+					// 5
+					case YT.PlayerState.BUFFERING:
+						sendValue('state', "CUED");
+						break;
+					
+						
+					
 				}
 			}
 			
-			function changeVideo(ytID) {
-				player = new YT.Player('player', {
-					width: '320',
-					height: '180',
-					videoId: ytID, 
-					playerVars: {
-						'fs': 0, 
-						'showinfo': 0, 
-						'autoplay': 1, 
-						'controls': 0 
-					}, events: {
-						'onReady': onPlayerReady,
-						'onStateChange': onPlayerStateChange
-					}
-				});
-				
-				sendValue('ytID', ytID);
+			function playVideo() {
+				player.playVideo();
 			}
 			
 			function stopVideo() {

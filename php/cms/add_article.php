@@ -53,11 +53,11 @@ if (isset($_POST['txtArticleSource'])) {
 		
 	$query = 'INSERT INTO `tblArticles` (';
 	$query .= '`id`, `follower_id`, `tweet_id`, `tweet_msg`, `type_id`, `article_url`, `title`, `content`, `image_url`, `video_url`, `isDark`, `added`) ';
-	$query .= 'VALUES (NULL, "'. $follower_id .'", "'. $tweet_id .'", "'. $tweet_msg .'" "'. $type_id .'", "'. $source_url .'", "'. $title .'", "'. $content .'",  "'. $image_url .'", "'. $video_url .'", "'. $isDark .'", NOW());';
+	$query .= 'VALUES (NULL, "'. $follower_id .'", "'. $tweet_id .'", "'. $tweet_msg .'", "'. $type_id .'", "'. $source_url .'", "'. $title .'", "'. $content .'",  "'. $image_url .'", "'. $video_url .'", "'. $isDark .'", NOW());';
 	$result = mysql_query($query);
 	$article_id = mysql_insert_id();
 	
-	echo ($query);
+	//echo ($query);
 	
 	$tagID_arr = explode("|", $_POST['hidIDs']);
 
@@ -71,7 +71,7 @@ if (isset($_POST['txtArticleSource'])) {
 	}
 	
 	//echo ($query);
-	//header('Location: tweets.php?id='. $follower_id .'&handle='. $handle);
+	header('Location: tweets.php?id='. $follower_id .'&handle='. $handle);
 }
 	
 ?>

@@ -37,6 +37,8 @@
 	BOOL _isSearching;
 	
 	int _totSelected;
+	NSString *_selectedFollowers;
+	NSMutableArray *_selectedVOs;
 }
 
 

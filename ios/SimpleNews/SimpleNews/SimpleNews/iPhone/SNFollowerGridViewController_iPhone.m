@@ -21,6 +21,9 @@
 
 -(id)init {
 	if ((self = [super init])) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_splashDismissed:) name:@"SPLASH_DISMISSED" object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_followerTapped:) name:@"FOLLOWER_TAPPED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showNowPlaying:) name:@"SHOW_NOW_PLAYING" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_optionsReturn:) name:@"OPTIONS_RETURN" object:nil];
@@ -31,11 +34,13 @@
 		
 		_followers = [NSMutableArray new];
 		_itemViews = [NSMutableArray new];
+		_selectedVOs = [NSMutableArray new];
 		_isDetails = NO;
 		_isOptions = NO;
 		_isArticles = NO;
 		
 		_totSelected = 0;
+		_selectedFollowers = @"";
 		
 		_followersRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Followers.php"]]] retain];
 		[_followersRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
@@ -193,7 +198,15 @@
 	
 	_isArticles = YES;
 	
-	SNArticleListViewController_iPhone *articleListViewController = [[[SNArticleListViewController_iPhone alloc] init] autorelease];
+	SNArticleListViewController_iPhone *articleListViewController;
+	
+	if (_totSelected == 0)
+		articleListViewController = [[[SNArticleListViewController_iPhone alloc] initAsMostRecent] autorelease];
+	
+	else
+		articleListViewController = [[[SNArticleListViewController_iPhone alloc] init] autorelease];
+	
+	
 	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:articleListViewController] autorelease];
 	
 	[navigationController setNavigationBarHidden:YES];
@@ -265,6 +278,17 @@
 	_isArticles = NO;
 }
 
+
+-(void)_splashDismissed:(NSNotification *)notification {
+	[self _goArticles];
+}
+
+-(void)_followerTapped:(NSNotification *)notification {
+	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
+	if (![_selectedVOs containsObject:vo]) {
+		[_selectedVOs addObject:vo];
+	}
+}
 
 
 #pragma mark - ScrollView Delegates
@@ -369,7 +393,7 @@
 				[_scrollView addSubview:followerItemView];
 		}			
 		
-		//[self.navigationController pushViewController:[[[SNChannelListViewController_iPhone alloc] init] autorelease] animated:YES];
+		//[self _goArticles];
 	}
 }
 

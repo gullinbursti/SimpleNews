@@ -107,7 +107,7 @@
 		
 		function articlesByFollower($follower_id) {
 			$article_arr = array();
-			$query = 'SELECT * FROM `tblArticles` WHERE `follower_id` = "'. $follower_id .'"';
+			$query = 'SELECT * FROM `tblArticles` WHERE `follower_id` = "'. $follower_id .'";';
 			$article_result = mysql_query($query);
 			
 			$query = 'SELECT `avatar_url`, `name` FROM `tblTwitterFollowers` WHERE `id` = "'. $follower_id .'";';
@@ -115,17 +115,127 @@
 			
 				
 			$tot = 0;
-			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
+				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
+				$tag_result = mysql_query($query);
+				
+				$tag_arr = array();
+				while ($tag_row = mysql_fetch_array($tag_result, MYSQL_BOTH)) { 
+					array_push($tag_arr, array(
+						"tag_id" => $tag_row['id'], 
+						"title" => $tag_row['title']
+					));
+				}
+				
 				array_push($article_arr, array(
 					"article_id" => $article_row['id'], 
+					"type_id" => $article_row['type_id'], 
 					"title" => $article_row['title'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
 					"twitter_name" => $follower_arr[1], 
 					"bg_url" => $article_row['image_url'], 
 					"content" => $article_row['content'], 
-					"avatar_url" => $follower_arr[0],
+					"avatar_url" => $follower_arr[0], 
+					"video_url" => $article_row['video_url'], 
 					"is_dark" => $article_row['isDark'], 
-					"added" => $article_row['added']
+					"added" => $article_row['added'], 
+					"tags" => $tag_arr
+				));
+				
+				$tot++;
+	    	}
+			
+			$this->sendResponse(200, json_encode($article_arr));
+			return (true);	
+		}
+		
+		
+		function articlesByFollowers($follower_list) {
+			
+			$article_arr = array();
+			$follower_arr = explode('|', $follower_list);
+			
+			foreach ($follower_arr as $follower_id) {	
+				$query = 'SELECT * FROM `tblArticles` WHERE `follower_id` = "'. $follower_id .'";';
+				$article_result = mysql_query($query);
+			
+				$query = 'SELECT `avatar_url`, `name` FROM `tblTwitterFollowers` WHERE `id` = "'. $follower_id .'";';
+				$follower_arr = mysql_fetch_row(mysql_query($query));
+			
+				
+				$tot = 0;
+				while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
+					$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
+					$tag_result = mysql_query($query);
+				
+					$tag_arr = array();
+					while ($tag_row = mysql_fetch_array($tag_result, MYSQL_BOTH)) { 
+						array_push($tag_arr, array(
+							"tag_id" => $tag_row['id'], 
+							"title" => $tag_row['title']
+						));
+					}
+				
+					array_push($article_arr, array(
+						"article_id" => $article_row['id'], 
+						"type_id" => $article_row['type_id'], 
+						"title" => $article_row['title'], 
+						"tweet_msg" => $article_row['tweet_msg'], 
+						"twitter_name" => $follower_arr[1], 
+						"bg_url" => $article_row['image_url'], 
+						"content" => $article_row['content'], 
+						"avatar_url" => $follower_arr[0], 
+						"video_url" => $article_row['video_url'], 
+						"is_dark" => $article_row['isDark'], 
+						"added" => $article_row['added'], 
+						"tags" => $tag_arr
+					));
+				
+					$tot++;
+		    	}  
+		    }
+			
+			$this->sendResponse(200, json_encode($article_arr));
+			return (true);	
+		}
+		
+		
+		
+		function getMostRecentArticles() {
+			$article_arr = array();
+			
+			$query = 'SELECT * FROM `tblArticles` WHERE `added` >= "2012-03-14 00:00:00";';
+			$article_result = mysql_query($query); 
+			
+			$tot = 0;
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
+				$query = 'SELECT `avatar_url`, `name` FROM `tblTwitterFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
+				$follower_arr = mysql_fetch_row(mysql_query($query));
+				
+				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
+				$tag_result = mysql_query($query);
+				
+				$tag_arr = array();
+				while ($tag_row = mysql_fetch_array($tag_result, MYSQL_BOTH)) { 
+					array_push($tag_arr, array(
+						"tag_id" => $tag_row['id'], 
+						"title" => $tag_row['title']
+					));
+				}
+				
+				array_push($article_arr, array(
+					"article_id" => $article_row['id'], 
+					"type_id" => $article_row['type_id'], 
+					"title" => $article_row['title'], 
+					"tweet_msg" => $article_row['tweet_msg'], 
+					"twitter_name" => $follower_arr[1], 
+					"bg_url" => $article_row['image_url'], 
+					"content" => $article_row['content'], 
+					"avatar_url" => $follower_arr[0], 
+					"video_url" => $article_row['video_url'], 
+					"is_dark" => $article_row['isDark'], 
+					"added" => $article_row['added'], 
+					"tags" => $tag_arr
 				));
 				
 				$tot++;
@@ -159,6 +269,15 @@
 			case "1":
 				if (isset($_POST['followerID']))
 					$articles->articlesByFollower($_POST['followerID']);
+				break;
+				
+			case "2":
+				$articles->getMostRecentArticles();
+				break;
+				
+			case "3":
+				if (isset($_POST['followers']))
+					$articles->articlesByFollowers($_POST['followers']);
 				break;
     	}
 	}

@@ -35,6 +35,8 @@
 +(BOOL)hasWiFi;
 +(BOOL)hasAirplay;
 
++(UIImage *)imageWithView:(UIView *)view;
+
 +(int)minutesAfterDate:(NSDate *)date;
 +(int)hoursAfterDate:(NSDate *)date;
 +(int)daysAfterDate:(NSDate *)date;

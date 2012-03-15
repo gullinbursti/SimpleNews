@@ -9,15 +9,21 @@
 #import <UIKit/UIKit.h>
 #import "ASIFormDataRequest.h"
 
-@interface SNArticleListViewController_iPhone : UIViewController <UIScrollViewDelegate, ASIHTTPRequestDelegate> {
+@interface SNArticleListViewController_iPhone : UIViewController <UIGestureRecognizerDelegate, ASIHTTPRequestDelegate> {
 	NSMutableArray *_articles;
 	ASIFormDataRequest *_articlesRequest;
 	
 	UIView *_overlayView;
+	UIView *_cardHolderView;
 	UIButton *_gridButton;
 	
-	UIScrollView *_scrollView;
 	NSMutableArray *_cardViews;
+	NSMutableArray *_scaledImages;
+	
+	int _cardIndex;
+	BOOL _isSwiping;
 }
+
+-(id)initAsMostRecent;
 
 @end

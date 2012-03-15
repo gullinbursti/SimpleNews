@@ -33,7 +33,8 @@
 }
 
 -(void)_goGrid {
-	[self.navigationController pushViewController:[[[SNFollowerGridViewController_iPhone alloc] init] autorelease] animated:NO];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SPLASH_DISMISSED" object:nil];
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - View lifecycle
@@ -70,11 +71,11 @@
 -(void)_goNextCell {
 	_cnt++;
 	
-	if (_cnt == 2) {
+	if (_cnt == 4) {
 		[_timer invalidate];
 		_timer = nil;
 		
-		[self performSelector:@selector(_goGrid) withObject:self afterDelay:0.5];
+		[self _goGrid];
 	}
 	
 	int rndCell = arc4random() % 24;

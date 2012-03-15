@@ -10,21 +10,49 @@
 #import "SNArticleCardView_iPhone.h"
 
 #import "SNAppDelegate.h"
+#import "SNArticleVideoPlayerViewController_iPhone.h"
 
 @interface SNArticleListViewController_iPhone()
 -(void)_goBack;
+-(void)_prevCard;
+-(void)_nextCard;
 @end
 
 @implementation SNArticleListViewController_iPhone
 
+#define kImageScale 0.9
+
 -(id)init {
 	if ((self = [super init])) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startVideo:) name:@"START_VIDEO" object:nil];
+		
 		_articles = [NSMutableArray new];
 		_cardViews = [NSMutableArray new];
+		
+		_isSwiping = NO;
 		
 		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"followerID"];
+		[_articlesRequest setTimeOutSeconds:30];
+		[_articlesRequest setDelegate:self];
+		[_articlesRequest startAsynchronous];
+	}
+	
+	return (self);
+}
+
+-(id)initAsMostRecent {
+	if ((self = [super init])) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startVideo:) name:@"START_VIDEO" object:nil];
+		
+		_articles = [NSMutableArray new];
+		_cardViews = [NSMutableArray new];
+		
+		_isSwiping = NO;
+		
+		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
 		[_articlesRequest setTimeOutSeconds:30];
 		[_articlesRequest setDelegate:self];
 		[_articlesRequest startAsynchronous];
@@ -41,6 +69,7 @@
 	//[_articles release];
 	[_overlayView release];
 	[_gridButton release];
+	[_cardHolderView release];
 	
 	[super dealloc];
 }
@@ -51,17 +80,8 @@
 	
 	[self.view setBackgroundColor:[UIColor blackColor]];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
-	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	_scrollView.opaque = YES;
-	_scrollView.scrollsToTop = NO;
-	_scrollView.pagingEnabled = YES;
-	_scrollView.delegate = self;
-	_scrollView.showsHorizontalScrollIndicator = NO;
-	_scrollView.showsVerticalScrollIndicator = NO;
-	_scrollView.alwaysBounceVertical = NO;
-	_scrollView.contentInset = UIEdgeInsetsMake(0.0, 0.0f, 0.0f, 0.0f);
-	[self.view addSubview:_scrollView];
+	_cardHolderView = [[UIView alloc] initWithFrame:self.view.frame];
+	[self.view addSubview:_cardHolderView];
 	
 	//_overlayView = [[UIView alloc] initWithFrame:self.view.frame];
 	//[self.view addSubview:_overlayView];
@@ -72,6 +92,16 @@
 	[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridButton_Active.png"] forState:UIControlStateHighlighted];
 	[_gridButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_gridButton];
+	
+	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
+	[self.view addSubview:overlayImgView];
+	
+	UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)];
+	[panRecognizer setMinimumNumberOfTouches:1];
+	[panRecognizer setMaximumNumberOfTouches:1];
+	[panRecognizer setDelegate:self];
+	[_cardHolderView addGestureRecognizer:panRecognizer];
 }
 
 -(void)viewDidLoad {
@@ -90,39 +120,95 @@
 }
 
 
-#pragma mark - ScrollView Delegates
-// any offset changes
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+#pragma mark - Interaction handlers
+-(void)_goSwipe:(id)sender {
+	CGPoint translatedPoint = [(UIPanGestureRecognizer *)sender translationInView:self.view];
+	NSLog(@"SWIPE @:(%f)", translatedPoint.x);
+	
+	if (!_isSwiping && (translatedPoint.x > 20.0 && abs(translatedPoint.y) < 20)) {
+		[self _prevCard];
+	}
+		
+	if (!_isSwiping && (translatedPoint.x < -20.0 && abs(translatedPoint.y) < 20)) {
+		[self _nextCard];
+	}
+}
+
+-(void)_prevCard {
+	NSLog(@"PREV CARD");
+	
+	if (_cardIndex < [_cardViews count] - 1) {
+		SNArticleCardView_iPhone *cardView = (SNArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex + 1];
+		SNArticleCardView_iPhone *currentCardView = (SNArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
+		
+		cardView.holderView.hidden = YES;
+		cardView.scaledImgView.hidden = NO;
+		
+		_isSwiping = YES;
+		
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			cardView.frame = CGRectMake(0.0, 0.0, cardView.frame.size.width, cardView.frame.size.height);
+			currentCardView.frame = CGRectMake(self.view.frame.size.width, 0.0, currentCardView.frame.size.width, currentCardView.frame.size.height);
+			
+		} completion:^(BOOL finished) {
+			[UIView animateWithDuration:0.15 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
+				cardView.scaledImgView.frame = CGRectMake(0.0, 0.0, cardView.frame.size.width, cardView.frame.size.height);
+				
+			} completion:^(BOOL finished) {
+				cardView.scaledImgView.hidden = YES;
+				cardView.scaledImgView.frame = CGRectMake(((cardView.frame.size.width - (cardView.frame.size.width * kImageScale)) * 0.5), ((cardView.frame.size.height - (cardView.frame.size.height * kImageScale)) * 0.5), cardView.frame.size.width * kImageScale, cardView.frame.size.height * kImageScale);
+				cardView.holderView.hidden = NO;
+			}];
+			
+			_isSwiping = NO;
+			_cardIndex++;
+		}];
+	}
+}
+
+-(void)_nextCard {
+	NSLog(@"NEXT CARD");
+	
+	if (_cardIndex > 1) {
+		SNArticleCardView_iPhone *cardView = (SNArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
+		SNArticleCardView_iPhone *nextCardView = (SNArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex - 1];
+		
+		nextCardView.holderView.hidden = YES;
+		nextCardView.scaledImgView.hidden = NO;
+		nextCardView.frame = CGRectMake(0.0, 0.0, nextCardView.frame.size.width, nextCardView.frame.size.height);
+		
+		_isSwiping = YES;
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			cardView.frame = CGRectMake(-self.view.frame.size.width, 0.0, cardView.frame.size.width, cardView.frame.size.height);
+		} completion:^(BOOL finished) {
+			[UIView animateWithDuration:0.15 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
+				nextCardView.scaledImgView.frame = CGRectMake(0.0, 0.0, cardView.frame.size.width, cardView.frame.size.height);
+			
+			} completion:^(BOOL finished) {
+				nextCardView.scaledImgView.hidden = YES;
+				nextCardView.scaledImgView.frame = CGRectMake(((nextCardView.frame.size.width - (nextCardView.frame.size.width * kImageScale)) * 0.5), ((nextCardView.frame.size.height - (nextCardView.frame.size.height * kImageScale)) * 0.5), nextCardView.frame.size.width * kImageScale, nextCardView.frame.size.height * kImageScale);
+				nextCardView.holderView.hidden = NO;
+			}];
+			
+			_isSwiping = NO;
+			_cardIndex--;
+		}];
+	}
 }
 
 
-// called on start of dragging (may require some time and or distance to move)
--(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+#pragma mark - Notification handlers
+-(void)_startVideo:(NSNotification *)notification {
+	SNArticleVideoPlayerViewController_iPhone *articleListViewController = [[[SNArticleVideoPlayerViewController_iPhone alloc] init] autorelease];
+	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:articleListViewController] autorelease];
+	
+	[navigationController setNavigationBarHidden:YES];
+	[self.navigationController presentModalViewController:navigationController animated:YES];
 }
 
 
-// called on finger up if the user dragged. velocity is in points/second. targetContentOffset may be changed to adjust where the scroll view comes to rest. not called when pagingEnabled is YES
--(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
-}
-
-// called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
--(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
-}
-
-
-// called on finger up as we are moving
--(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
-}
-
-// called when setContentOffset/scrollRectVisible:animated: finishes. not called if not animating
--(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-}
-
-// called when scroll view grinds to a halt
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-}
-
-
+//CGAffineTransform transform = scaleCardView.transform;
+//scaleCardView.transform = CGAffineTransformScale(transform, 1.18f, 1.18f);
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
@@ -150,18 +236,37 @@
 				if (vo != nil)
 					[articleList addObject:vo];
 				
-				SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:CGRectMake(self.view.frame.size.width * tot, 0.0, self.view.frame.size.width, self.view.frame.size.height) articleVO:vo] autorelease];
+				
+				SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:_cardHolderView.frame articleVO:vo] autorelease];
 				[_cardViews addObject:articleCardView];
+				
+				/*
+				 UIImageView *scaledImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(((articleCardView.frame.size.width - (articleCardView.frame.size.width * kImageScale)) * 0.5), ((articleCardView.frame.size.height - (articleCardView.frame.size.height * kImageScale)) * 0.5), articleCardView.frame.size.width * kImageScale, articleCardView.frame.size.height * kImageScale)] autorelease];
+				scaledImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:articleCardView] CGImage] scale:1.0 orientation:UIImageOrientationUp];
+				[articleCardView setScaledImgView:scaledImgView];
+				*/
+				
 				tot++;
 			}
 			
 			_articles = [articleList retain];
 			[articleList release];
 			
-			for (SNArticleCardView_iPhone *cardView in _cardViews)
-				[_scrollView addSubview:cardView];
+			for (SNArticleCardView_iPhone *cardView in _cardViews) {
+				[_cardHolderView addSubview:cardView];
+			}
 			
-			_scrollView.contentSize = CGSizeMake(self.view.frame.size.width * [_articles count], self.view.frame.size.height);
+			SNArticleCardView_iPhone *articleCardView = (SNArticleCardView_iPhone *)[_cardViews objectAtIndex:[_cardViews count] - 1];
+			[UIView animateWithDuration:0.15 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
+				articleCardView.scaledImgView.frame = CGRectMake(0.0, 0.0, articleCardView.frame.size.width, articleCardView.frame.size.height);
+				
+			} completion:^(BOOL finished) {
+				articleCardView.scaledImgView.hidden = YES;
+				articleCardView.scaledImgView.frame = CGRectMake(((articleCardView.frame.size.width - (articleCardView.frame.size.width * kImageScale)) * 0.5), ((articleCardView.frame.size.height - (articleCardView.frame.size.height * kImageScale)) * 0.5), articleCardView.frame.size.width * kImageScale, articleCardView.frame.size.height * kImageScale);
+				articleCardView.holderView.hidden = NO;
+			}];
+			 
+			_cardIndex = [_cardViews count] - 1;
 		}
 	}
 }
