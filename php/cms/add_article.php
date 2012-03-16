@@ -26,7 +26,7 @@ $tweet_html = eregi_replace('@([_\.0-9a-z-]+)', '<a href="https://twitter.com/#!
 
 $query = 'SELECT * FROM `tblTags`;';
 $tag_result = mysql_query($query);
-$tot = count($tag_result); 
+$tot = mysql_num_rows($tag_result); 
 
 
 
@@ -124,7 +124,7 @@ if (isset($_POST['txtArticleSource'])) {
 					<tr><td>Article Title:</td><td><input type="text" id="txtArticleTitle" name="txtArticleTitle" size="80" /></td></tr>
 					<tr><td>Article Text:</td><td><textarea id="txtArticleText" name="txtArticleText" rows="18" cols="80"></textarea></td></tr>
 					<tr><td>Image URL:</td><td><input type="text" id="txtImageURL_1" name="txtImageURL_1" size="80" /></td></tr>
-					<tr><td>Image Brightness:</td><td><input type="radio" id="radTint" name="radTint" value="0" />Light<input type="radio" id="radTint" name="radTint" value="1" />Dark</td></tr>
+					<tr><td>App Controls:</td><td><input type="radio" id="radTint" name="radTint" value="0" checked />Light<input type="radio" id="radTint" name="radTint" value="1" />Dark</td></tr>
 					<tr><td>Video URL:</td><td><input type="text" id="txtVideoURL" name="txtVideoURL" size="80" /></td></tr>
 					<tr><td>Tags:</td><td><?php 
 						$tot = 0;

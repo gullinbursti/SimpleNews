@@ -24,11 +24,6 @@
 		_imageView.imageURL = [NSURL URLWithString:_vo.avatar_url];
 		_imageView.alpha = 1.0;
 		[self addSubview:_imageView];
-		
-		_checkImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(4.0, 4.0, 72.0, 72.0)] autorelease];
-		_checkImgView.hidden = YES;
-		_checkImgView.image = [UIImage imageNamed:@"checkMarkActive.png"];
-		[self addSubview:_checkImgView];
 	}
 	
 	return (self);
@@ -37,7 +32,6 @@
 -(void)dealloc {
 	_imageView = nil;
 	[_vo release];
-	[_checkImgView release];
 	
 	[super dealloc];
 }
@@ -64,8 +58,6 @@
 	else
 		[self fadeTo:1.0];
 	
-	
-	_checkImgView.hidden = !_isSelected;
 }
 
 -(void)fadeTo:(float)opac {

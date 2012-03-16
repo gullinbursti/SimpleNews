@@ -14,7 +14,6 @@
 @interface SNFollowerGridItemView_iPhone : UIView {
 	EGOImageView *_imageView;
 	SNFollowerVO *_vo;
-	UIImageView *_checkImgView;
 	
 	BOOL _isSelected;
 }

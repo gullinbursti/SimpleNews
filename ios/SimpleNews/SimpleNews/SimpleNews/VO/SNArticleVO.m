@@ -54,6 +54,8 @@
 	video_url = nil;
 	added = nil;
 	tags = nil;
+	
+	[super dealloc];
 }
 
 @end

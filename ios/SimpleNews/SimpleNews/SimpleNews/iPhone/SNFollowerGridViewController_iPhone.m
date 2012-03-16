@@ -9,9 +9,12 @@
 #import "SNFollowerGridViewController_iPhone.h"
 
 #import "SNAppDelegate.h"
+#import "SNTagVO.h"
 #import "SNFollowerVO.h"
 #import "SNFollowerGridItemView_iPhone.h"
 #import "SNArticleListViewController_iPhone.h"
+
+#import "SNFollowerInfoView.h"
 
 @interface SNFollowerGridViewController_iPhone()
 -(void)_resetToTop;
@@ -24,23 +27,32 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_splashDismissed:) name:@"SPLASH_DISMISSED" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_followerTapped:) name:@"FOLLOWER_TAPPED" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showNowPlaying:) name:@"SHOW_NOW_PLAYING" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_queueFollower:) name:@"QUEUE_FOLLOWER" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_followerArticles:) name:@"FOLLOWER_ARTICLES" object:nil];
+		
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_optionsReturn:) name:@"OPTIONS_RETURN" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_articlesReturn:) name:@"ARTICLES_RETURN" object:nil];
 				
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_searchCanceled:) name:@"SEARCH_CANCELED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_searchEntered:) name:@"SEARCH_ENTERED" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_tagSearch:) name:@"TAG_SEARCH" object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showNowPlaying:) name:@"SHOW_NOW_PLAYING" object:nil];
 		
 		_followers = [NSMutableArray new];
 		_itemViews = [NSMutableArray new];
-		_selectedVOs = [NSMutableArray new];
+		_tags = [NSMutableArray new];
 		_isDetails = NO;
 		_isOptions = NO;
 		_isArticles = NO;
+		_isFirst = YES;
 		
-		_totSelected = 0;
-		_selectedFollowers = @"";
+		_tagsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Tags.php"]]] retain];
+		[_tagsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
+		[_tagsRequest setTimeOutSeconds:30];
+		[_tagsRequest setDelegate:self];
+		[_tagsRequest startAsynchronous];
 		
 		_followersRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Followers.php"]]] retain];
 		[_followersRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
@@ -200,11 +212,12 @@
 	
 	SNArticleListViewController_iPhone *articleListViewController;
 	
-	if (_totSelected == 0)
+	if (_isFirst || [[SNAppDelegate subscribedFollowers] isEqualToString:@""]) {
+		_isFirst = NO;
 		articleListViewController = [[[SNArticleListViewController_iPhone alloc] initAsMostRecent] autorelease];
 	
-	else
-		articleListViewController = [[[SNArticleListViewController_iPhone alloc] init] autorelease];
+	} else
+		articleListViewController = [[[SNArticleListViewController_iPhone alloc] initWithFollowers] autorelease];
 	
 	
 	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:articleListViewController] autorelease];
@@ -215,6 +228,15 @@
 	
 	//[self.navigationController pushViewController:[[[SNChannelListViewController_iPhone alloc] init] autorelease] animated:YES];
 }
+
+-(void)_goArticlesWithTag:(id)tag_id {
+	SNArticleListViewController_iPhone *articleListViewController = [[[SNArticleListViewController_iPhone alloc] initWithTag:[tag_id intValue]] autorelease];
+	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:articleListViewController] autorelease];
+		
+	[navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:articleListViewController animated:YES];	
+}
+
 
 
 #pragma mark - Interaction handlers
@@ -256,12 +278,42 @@
 	NSLog(@"SEARCH ENTERED");
 	
 	[self _resetToTop];
+	
+	NSMutableArray *searchTags = [NSMutableArray new];
+	
+	NSArray *enteredTags = [((NSString *)[notification object]) componentsSeparatedByString:@" "];
+	
+	for (NSString *enteredTag in enteredTags) {
+		for (SNTagVO *vo in _tags) {
+			if ([[vo.title lowercaseString] isEqualToString:[enteredTag lowercaseString]]) {
+				[searchTags addObject:[NSNumber numberWithInt:vo.tag_id]];
+			}
+		}
+	}
+	
+	NSString *tagIDs = @"";
+	
+	for (NSNumber *tagID in searchTags) {
+		tagIDs = [tagIDs stringByAppendingFormat:@"|%d", [tagID intValue]];
+	}
+	
+	tagIDs = [tagIDs substringFromIndex:1];
+	
+	SNArticleListViewController_iPhone *articleListViewController = [[[SNArticleListViewController_iPhone alloc] initWithTags:tagIDs] autorelease];
+	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:articleListViewController] autorelease];
+	
+	[navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:articleListViewController animated:YES];
 }
 
 -(void)_searchCanceled:(NSNotification *)notificiation {
 	NSLog(@"SEARCH CANCELED");
 	
 	[self _resetToTop];
+}
+
+-(void)_tagSearch:(NSNotification *)notification {
+	[self performSelector:@selector(_goArticlesWithTag:) withObject:[notification object] afterDelay:0.5];
 }
 
 -(void)_optionsReturn:(NSNotification *)notification {
@@ -284,11 +336,30 @@
 }
 
 -(void)_followerTapped:(NSNotification *)notification {
+	NSLog(@"FOLLOWER TAPPED");
 	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
-	if (![_selectedVOs containsObject:vo]) {
-		[_selectedVOs addObject:vo];
-	}
+	
+	SNFollowerInfoView *followerInfoView = [[[SNFollowerInfoView alloc] initWithFrame:CGRectMake(80.0, 150.0, 170.0, 180.0) followerVO:vo] autorelease];
+	[self.view addSubview:followerInfoView];
 }
+
+-(void)_queueFollower:(NSNotification *)notification {
+	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
+	
+	[SNAppDelegate writeFollowers:[[SNAppDelegate subscribedFollowers] stringByAppendingFormat:@"|%d", vo.follower_id]];
+}
+
+-(void)_followerArticles:(NSNotification *)notification {
+	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
+	
+	SNArticleListViewController_iPhone *articleListViewController = [[[SNArticleListViewController_iPhone alloc] initWithFollower:vo.follower_id] autorelease];
+	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:articleListViewController] autorelease];
+	
+	[navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:articleListViewController animated:YES];	
+}
+
+
 
 
 #pragma mark - ScrollView Delegates
@@ -358,42 +429,72 @@
 -(void)requestFinished:(ASIHTTPRequest *)request { 
 	NSLog(@"SNFollowerGridViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
-	@autoreleasepool {
-		NSError *error = nil;
-		NSArray *parsedFollowers = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-		if (error != nil)
-			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
-		
-		else {
-			NSMutableArray *followerList = [NSMutableArray array];
-			_itemViews = [NSMutableArray new];
+	
+	if ([request isEqual:_followersRequest]) {
+	
+		@autoreleasepool {
+			NSError *error = nil;
+			NSArray *parsedFollowers = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
 			
-			SNFollowerGridItemView_iPhone *followerItemView = [[[SNFollowerGridItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 50.0, 80.0, 80.0) followerVO:nil] autorelease];
-			[_itemViews addObject:followerItemView];
+			else {
+				NSMutableArray *followerList = [NSMutableArray array];
+				_itemViews = [NSMutableArray new];
+				
+				SNFollowerGridItemView_iPhone *followerItemView = [[[SNFollowerGridItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 50.0, 80.0, 80.0) followerVO:nil] autorelease];
+				[_itemViews addObject:followerItemView];
+				
+				int tot = 1;
+				for (NSDictionary *serverFollower in parsedFollowers) {
+					SNFollowerVO *vo = [SNFollowerVO followerWithDictionary:serverFollower];
+					
+					NSLog(@"FOLLOWER \"@%@\" %d", vo.handle, vo.totalArticles);
+					
+					if (vo != nil)
+						[followerList addObject:vo];
+					
+					SNFollowerGridItemView_iPhone *channelItemView = [[[SNFollowerGridItemView_iPhone alloc] initWithFrame:CGRectMake(80.0 * (tot % 4), 50.0 + (80.0 * (int)(tot / 4)), 80.0, 80.0) followerVO:vo] autorelease];
+					[_itemViews addObject:channelItemView];
+					tot++;
+				}
+				
+				_followers = [followerList retain];
+				[followerList release];
+				_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 50.0 + ((ceil(tot / 4) + 1) * 80.0));
+				
+				for (SNFollowerGridItemView_iPhone *followerItemView in _itemViews)
+					[_scrollView addSubview:followerItemView];
+			}			
 			
-			int tot = 1;
-			for (NSDictionary *serverFollower in parsedFollowers) {
-				SNFollowerVO *vo = [SNFollowerVO followerWithDictionary:serverFollower];
+			//[self _goArticles];
+		}
+	
+	} else if ([request isEqual:_tagsRequest]) {
+		@autoreleasepool {
+			NSError *error = nil;
+			NSArray *parsedTags = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+			
+			else {
+				NSMutableArray *tagList = [NSMutableArray array];
 				
-				NSLog(@"FOLLOWER \"@%@\" %d", vo.handle, vo.totalArticles);
+				int tot = 0;
+				for (NSDictionary *serverTag in parsedTags) {
+					SNTagVO *vo = [SNTagVO tagWithDictionary:serverTag];
+					
+					NSLog(@"TAG \"@%@\" %d", vo.title, vo.articleTotal);
+					
+					if (vo != nil)
+						[tagList addObject:vo];
+					
+					tot++;
+				}
 				
-				if (vo != nil)
-					[followerList addObject:vo];
-				
-				SNFollowerGridItemView_iPhone *channelItemView = [[[SNFollowerGridItemView_iPhone alloc] initWithFrame:CGRectMake(80.0 * (tot % 4), 50.0 + (80.0 * (int)(tot / 4)), 80.0, 80.0) followerVO:vo] autorelease];
-				[_itemViews addObject:channelItemView];
-				tot++;
+				_tags = [tagList retain];
 			}
-			
-			_followers = [followerList retain];
-			[followerList release];
-			_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 50.0 + ((ceil(tot / 4) + 1) * 80.0));
-			
-			for (SNFollowerGridItemView_iPhone *followerItemView in _itemViews)
-				[_scrollView addSubview:followerItemView];
-		}			
-		
-		//[self _goArticles];
+		}
 	}
 }
 

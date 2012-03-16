@@ -81,6 +81,7 @@ while ($cat_row = mysql_fetch_array($cat_result, MYSQL_BOTH)) {
 					<tr><td colspan="2"><img src="<?php echo ($row[3]); ?>" /></td></tr>
 					<tr><td>Handle:</td><td>@<input type="text" id="txtHandle" name="txtHandle" value="<?php echo ($row[1]); ?>" disabled="disabled" /></td></tr>
 					<tr><td>Name:</td><td><input type="text" id="txtName" name="txtName" value="<?php echo ($row[2]); ?>" disabled="disabled" /></td></tr>
+					<tr><td>Info:</td><td><input type="text" id="txtBlurb" name="txtBlurb" value="<?php echo ($row[4]); ?>" disabled="disabled" /></td></tr>
 					<tr><td>Categories:</td><td><?php 
 						$query = 'SELECT * FROM `tblCategories`;';
 						$cat_result = mysql_query($query);
@@ -91,7 +92,7 @@ while ($cat_row = mysql_fetch_array($cat_result, MYSQL_BOTH)) {
 							$cnt++;
 						} 
 					?><input type="hidden" id="hidIDs" name="hidIDs" value="" /></td></tr>
-					<?php if ($row[4] == "Y")
+					<?php if ($row[5] == "Y")
 						echo ("<tr><td>Active:</td><td><input type=\"checkbox\" id=\"chkActive\" name=\"chkActive\" value=\"Y\" checked /></td></tr>");
 						
 					else

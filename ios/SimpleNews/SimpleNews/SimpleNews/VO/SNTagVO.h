@@ -16,5 +16,7 @@
 
 @property (nonatomic) int tag_id;
 @property (nonatomic, retain) NSString *title;
+@property (nonatomic, retain) NSString *blurb;
+@property (nonatomic) int articleTotal;
 
 @end

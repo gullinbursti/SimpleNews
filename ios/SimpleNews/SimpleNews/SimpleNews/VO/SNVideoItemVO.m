@@ -58,6 +58,8 @@
 	channelImg_url = nil;
 	postedDate = nil;
 	posted = nil;
+	
+	[super dealloc];
 }
 
 

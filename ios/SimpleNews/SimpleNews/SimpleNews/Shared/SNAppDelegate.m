@@ -16,6 +16,15 @@
 
 @synthesize window = _window;
 
++(void)writeFollowers:(NSString *)followers {
+	[[NSUserDefaults standardUserDefaults] setObject:followers forKey:@"followers"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++(NSString *)subscribedFollowers {
+	return ([[NSUserDefaults standardUserDefaults] objectForKey:@"followers"]);
+}
+
 
 +(UIFont *)snHelveticaFontRegular {
 	return ([UIFont fontWithName:@"Helvetica" size:14.0]);
@@ -97,6 +106,10 @@
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	
 	[[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"airplay_enabled"];
+	
+	//if (![SNAppDelegate subscribedFollowers])
+		[SNAppDelegate writeFollowers:@""];
+	
 	self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
 	
 	UINavigationController *rootNavigationController;

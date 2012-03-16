@@ -11,25 +11,27 @@
 #import "SNArticleVO.h"
 #import "EGOImageView.h"
 
-@interface SNArticleCardView_iPhone : UIView <UIScrollViewDelegate, EGOImageViewDelegate> {
+@interface SNArticleCardView_iPhone : UIView <UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate, EGOImageViewDelegate> {
 	SNArticleVO *_vo;
 	
-	UIView *_contentBGView;
 	EGOImageView *_avatarImgView;
 	EGOImageView *_bgImageView;
 	
 	UILabel *_twitterName;
 	UILabel *_tweetLabel;
 	UILabel *_dateLabel;
+	UILabel *_contentLabel;
 	UIImageView *_twitterImgView;
 	UIButton *_shareButton;
 	
-	UIScrollView *_scrollView;
+	UITableView *_tableView;
 	
 	UIView *_holderView;
 	UIImageView *_scaledImgView;
 	
 	UIButton *_playButton;
+	CGSize _tweetSize;
+	CGSize _contentSize;
 }
 
 @property (nonatomic, retain) UIView *holderView;

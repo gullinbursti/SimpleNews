@@ -19,5 +19,6 @@
 @property (nonatomic, retain) NSString *handle;
 @property (nonatomic, retain) NSString *follower_name;
 @property (nonatomic, retain) NSString *avatar_url;
+@property (nonatomic, retain) NSString *blurb;
 
 @end

@@ -25,5 +25,9 @@
 }
 
 -(id)initAsMostRecent;
+-(id)initWithFollower:(int)follower_id;
+-(id)initWithFollowers;
+-(id)initWithTag:(int)tag_id;
+-(id)initWithTags:(NSString *)tags;
 
 @end

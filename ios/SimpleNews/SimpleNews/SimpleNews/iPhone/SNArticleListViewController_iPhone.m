@@ -25,15 +25,20 @@
 -(id)init {
 	if ((self = [super init])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startVideo:) name:@"START_VIDEO" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_tagSearch:) name:@"TAG_SEARCH" object:nil];
 		
 		_articles = [NSMutableArray new];
 		_cardViews = [NSMutableArray new];
 		
 		_isSwiping = NO;
-		
+	}
+	return (self);
+}
+
+-(id)initAsMostRecent {
+	if ((self = [self init])) {
 		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"followerID"];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
 		[_articlesRequest setTimeOutSeconds:30];
 		[_articlesRequest setDelegate:self];
 		[_articlesRequest startAsynchronous];
@@ -42,17 +47,53 @@
 	return (self);
 }
 
--(id)initAsMostRecent {
-	if ((self = [super init])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startVideo:) name:@"START_VIDEO" object:nil];
-		
-		_articles = [NSMutableArray new];
-		_cardViews = [NSMutableArray new];
-		
-		_isSwiping = NO;
-		
+-(id)initWithFollower:(int)follower_id {
+	if ((self = [self init])) {
 		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", follower_id] forKey:@"followerID"];
+		[_articlesRequest setTimeOutSeconds:30];
+		[_articlesRequest setDelegate:self];
+		[_articlesRequest startAsynchronous];
+	}
+	
+	return (self);
+}
+
+
+-(id)initWithFollowers {
+	if ((self = [self init])) {
+		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+		[_articlesRequest setPostValue:[SNAppDelegate subscribedFollowers] forKey:@"followers"];
+		[_articlesRequest setTimeOutSeconds:30];
+		[_articlesRequest setDelegate:self];
+		[_articlesRequest startAsynchronous];
+	}
+	
+	return (self);
+}
+
+
+-(id)initWithTag:(int)tag_id {
+	if ((self = [self init])) {
+		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", tag_id] forKey:@"tagID"];
+		[_articlesRequest setTimeOutSeconds:30];
+		[_articlesRequest setDelegate:self];
+		[_articlesRequest startAsynchronous];
+	}
+	
+	return (self);
+}
+
+
+-(id)initWithTags:(NSString *)tags {
+	if ((self = [self init])) {
+		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 5] forKey:@"action"];
+		[_articlesRequest setPostValue:tags forKey:@"tags"];
 		[_articlesRequest setTimeOutSeconds:30];
 		[_articlesRequest setDelegate:self];
 		[_articlesRequest startAsynchronous];
@@ -66,6 +107,9 @@
 }
 
 -(void)dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"START_VIDEO" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"TAG_SEARCH" object:nil];
+	
 	//[_articles release];
 	[_overlayView release];
 	[_gridButton release];
@@ -204,6 +248,10 @@
 	
 	[navigationController setNavigationBarHidden:YES];
 	[self.navigationController presentModalViewController:navigationController animated:YES];
+}
+
+-(void)_tagSearch:(NSNotification *)notification {
+	[self _goBack];
 }
 
 

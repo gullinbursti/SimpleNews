@@ -48,6 +48,7 @@ $result = mysql_query($query);
 						echo ("<tr><td colspan=\"2\"><img src=\"". $row['avatar_url'] ."\" /></td></tr>");
 						echo ("<tr><td>Name:</td><td>". $row['name'] ."</td></tr>");
 						echo ("<tr><td>Handle:</td><td><a href=\"https://twitter.com/#!/". $row['handle'] ."\" target=\"_blank\">@". $row['handle'] ."</a></td></tr>");
+						echo ("<tr><td>Info:</td><td>". $row['description'] ."</td></tr>");
 						echo ("<tr><td><br /></td></tr>");
 						echo ("<tr><td colspan=\"2\"><input type=\"button\" value=\"Delete\" onclick=\"remove('". $row['id'] ."');\" /><input type=\"button\" value=\"Edit\" onclick=\"edit('". $row['id'] ."');\" /><input type=\"button\" value=\"Tweets\" onclick=\"window.location='./tweets.php?id=". $row['id'] ."&handle=". $row['handle'] ."'\" /></td></tr>");
 						echo ("<tr><td colspan=\"2\"><hr /></td></tr>");

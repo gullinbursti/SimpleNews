@@ -25,20 +25,20 @@
 	NSMutableArray *_itemViews;
 	NSMutableArray *_followers;
 	
+	NSMutableArray *_tags;
+	
 	SNFollowerGridHeaderView_iPhone *_headerView;
 	SNOptionsListView_iPhone *_optionsListView;
 	
 	EGORefreshTableHeaderView *_refreshHeaderView;
 	ASIFormDataRequest *_followersRequest;
+	ASIFormDataRequest *_tagsRequest;
 	
 	BOOL _isDetails;
 	BOOL _isOptions;
 	BOOL _isArticles;
 	BOOL _isSearching;
-	
-	int _totSelected;
-	NSString *_selectedFollowers;
-	NSMutableArray *_selectedVOs;
+	BOOL _isFirst;
 }
 
 

@@ -25,6 +25,9 @@
 
 #define kServerPath @"http://dev.gullinbursti.cc/projs/simplenews/services"
 
++(void)writeFollowers:(NSString *)followers;
++(NSString *)subscribedFollowers;
+
 
 +(UIFont *)snHelveticaNeueFontRegular;
 +(UIFont *)snHelveticaNeueFontBold;

@@ -93,7 +93,7 @@
 			$tot = 0;
 			while ($follower_row = mysql_fetch_array($follower_result, MYSQL_BOTH)) {
 				$query = 'SELECT `id` FROM `tblArticles` WHERE `follower_id` = "'. $follower_row['id'] .'"';
-				$article_arr = mysql_fetch_array(mysql_query($query));
+				$article_arr = mysql_query($query);
 				
 				
 				array_push($follower_arr, array(
@@ -101,7 +101,8 @@
 					"handle" => $follower_row['handle'],
 					"name" => $follower_row['name'], 
 					"avatar_url" => $follower_row['avatar_url'], 
-					"article_total" => count($article_arr) - 1
+					"blurb" => $follower_row['description'], 
+					"article_total" => mysql_num_rows($article_arr)
 				));
 				
 				$tot++;
