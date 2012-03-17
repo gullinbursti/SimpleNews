@@ -20,6 +20,8 @@
 	
 	UIButton *_queueButton;
 	UIButton *_watchButton;
+	
+	UIImageView *_bgImgView;
 }
 
 -(id)initWithFrame:(CGRect)frame followerVO:(SNFollowerVO *)vo;

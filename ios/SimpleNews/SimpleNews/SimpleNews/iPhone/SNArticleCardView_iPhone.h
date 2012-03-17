@@ -11,7 +11,9 @@
 #import "SNArticleVO.h"
 #import "EGOImageView.h"
 
-@interface SNArticleCardView_iPhone : UIView <UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate, EGOImageViewDelegate> {
+#import "SNBaseArticleCardView_iPhone.h"
+
+@interface SNArticleCardView_iPhone : SNBaseArticleCardView_iPhone <UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate, EGOImageViewDelegate> {
 	SNArticleVO *_vo;
 	
 	EGOImageView *_avatarImgView;
@@ -26,16 +28,11 @@
 	
 	UITableView *_tableView;
 	
-	UIView *_holderView;
-	UIImageView *_scaledImgView;
-	
 	UIButton *_playButton;
 	CGSize _tweetSize;
 	CGSize _contentSize;
 }
 
-@property (nonatomic, retain) UIView *holderView;
-@property (nonatomic, retain) UIImageView *scaledImgView;
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;
 

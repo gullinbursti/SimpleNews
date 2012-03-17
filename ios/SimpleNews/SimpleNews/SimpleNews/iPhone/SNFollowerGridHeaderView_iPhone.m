@@ -10,7 +10,7 @@
 #import "SNAppDelegate.h"
 
 @interface SNFollowerGridHeaderView_iPhone()
--(void)_goNowPlaying;
+-(void)_goArticles;
 -(void)_clearText;
 @end
 
@@ -19,7 +19,7 @@
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
 		
-		_cursorImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 3.0, 8.0, 44.0)] autorelease];
+		_cursorImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 3.0, 6.0, 34.0)] autorelease];
 		_cursorImgView.image = [UIImage imageNamed:@"blinkingCursor.png"];
 		[self addSubview:_cursorImgView];
 		
@@ -41,21 +41,21 @@
 		_txtLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
 		_txtLabel.textColor = [UIColor whiteColor];
 		_txtLabel.backgroundColor = [UIColor clearColor];
-		_txtLabel.text = @"Search news video";
+		_txtLabel.text = @"Search news";
 		[self addSubview:_txtLabel];
 		
-		_nowPlayingButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_nowPlayingButton.frame = CGRectMake(215.0, 4.0, 100.0, 44.0);
-		[_nowPlayingButton setBackgroundImage:[[UIImage imageNamed:@"genericButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:22.0] forState:UIControlStateNormal];
-		[_nowPlayingButton setBackgroundImage:[[UIImage imageNamed:@"genericButton_active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:22.0] forState:UIControlStateHighlighted];
-		_nowPlayingButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-		_nowPlayingButton.titleLabel.textAlignment = UITextAlignmentCenter;
-		[_nowPlayingButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-		_nowPlayingButton.titleLabel.shadowColor = [UIColor blackColor];
-		_nowPlayingButton.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-		[_nowPlayingButton setTitle:@"now playing" forState:UIControlStateNormal];
-		[_nowPlayingButton addTarget:self action:@selector(_goNowPlaying) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:_nowPlayingButton];
+		_backButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		_backButton.frame = CGRectMake(245.0, 4.0, 64.0, 34.0);
+		[_backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+		[_backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+		_backButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		_backButton.titleLabel.textAlignment = UITextAlignmentCenter;
+		[_backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		_backButton.titleLabel.shadowColor = [UIColor blackColor];
+		_backButton.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
+		[_backButton setTitle:@"Back" forState:UIControlStateNormal];
+		[_backButton addTarget:self action:@selector(_goArticles) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:_backButton];
 	}
 	
 	return (self);
@@ -76,7 +76,7 @@
 
 
 #pragma mark - Navigation
--(void)_goNowPlaying {
+-(void)_goArticles {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_NOW_PLAYING" object:nil];
 }
 

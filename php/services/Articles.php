@@ -180,6 +180,7 @@
 						"article_id" => $article_row['id'], 
 						"type_id" => $article_row['type_id'], 
 						"title" => $article_row['title'], 
+						"tweet_id" => $article_row['tweet_id'], 
 						"tweet_msg" => $article_row['tweet_msg'], 
 						"twitter_name" => $follower_arr[1], 
 						"bg_url" => $article_row['image_url'], 
@@ -204,7 +205,7 @@
 		function getMostRecentArticles() {
 			$article_arr = array();
 			
-			$start_date = mktime(date('H'), date('i'), date('s'), date('m'), date('d') - 2, date('Y'));
+			$start_date = mktime(date('H'), date('i'), date('s'), date('m'), date('d') - 3, date('Y'));
 			
 			$query = 'SELECT * FROM `tblArticles` WHERE `added` >= "'. date('Y-m-d H:i:s', $start_date) .'";';
 			$article_result = mysql_query($query); 
@@ -229,6 +230,7 @@
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
 					"title" => $article_row['title'], 
+					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
 					"twitter_name" => $follower_arr[1], 
 					"bg_url" => $article_row['image_url'], 
@@ -274,6 +276,7 @@
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
 					"title" => $article_row['title'], 
+					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
 					"twitter_name" => $follower_arr[1], 
 					"bg_url" => $article_row['image_url'], 
@@ -334,6 +337,7 @@
 							"article_id" => $article_row['id'], 
 							"type_id" => $article_row['type_id'], 
 							"title" => $article_row['title'], 
+							"tweet_id" => $article_row['tweet_id'], 
 							"tweet_msg" => $article_row['tweet_msg'], 
 							"twitter_name" => $follower_arr[1], 
 							"bg_url" => $article_row['image_url'], 

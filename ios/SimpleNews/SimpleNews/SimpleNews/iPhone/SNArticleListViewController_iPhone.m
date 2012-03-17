@@ -6,11 +6,16 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import <Twitter/Twitter.h>
+
 #import "SNArticleListViewController_iPhone.h"
 #import "SNArticleCardView_iPhone.h"
 
 #import "SNAppDelegate.h"
 #import "SNArticleVideoPlayerViewController_iPhone.h"
+
+#import "SNFacebookCardView_iPhone.h"
+#import "SNTwitterCardView_iPhone.h"
 
 @interface SNArticleListViewController_iPhone()
 -(void)_goBack;
@@ -26,11 +31,22 @@
 	if ((self = [super init])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startVideo:) name:@"START_VIDEO" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_tagSearch:) name:@"TAG_SEARCH" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_leaveArticles:) name:@"LEAVE_ARTICLES" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_shareSheet:) name:@"SHARE_SHEET" object:nil];
+		
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_facebookShare:) name:@"FACEBOOK_SHARE" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterShare:) name:@"TWITTER_SHARE" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_emailShare:) name:@"EMAIL_SHARE" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cancelShare:) name:@"CANCEL_SHARE" object:nil];
 		
 		_articles = [NSMutableArray new];
 		_cardViews = [NSMutableArray new];
 		
 		_isSwiping = NO;
+		
+		_shareSheetView = [[SNShareSheetView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
+		[self.view addSubview:_shareSheetView];
 	}
 	return (self);
 }
@@ -109,10 +125,15 @@
 -(void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"START_VIDEO" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"TAG_SEARCH" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LEAVE_ARTICLES" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHARE_SHEET" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FACEBOOK_SHARE" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"TWITTER_SHARE" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"EMAIL_SHARE" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"CANCEL_SHARE" object:nil];
 	
 	//[_articles release];
 	[_overlayView release];
-	[_gridButton release];
 	[_cardHolderView release];
 	
 	[super dealloc];
@@ -129,13 +150,6 @@
 	
 	//_overlayView = [[UIView alloc] initWithFrame:self.view.frame];
 	//[self.view addSubview:_overlayView];
-	
-	_gridButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_gridButton.frame = CGRectMake(4.0, 4.0, 34.0, 34.0);
-	[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridButton_nonActive.png"] forState:UIControlStateNormal];
-	[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridButton_Active.png"] forState:UIControlStateHighlighted];
-	[_gridButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:_gridButton];
 	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
@@ -163,7 +177,6 @@
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
-
 #pragma mark - Interaction handlers
 -(void)_goSwipe:(id)sender {
 	CGPoint translatedPoint = [(UIPanGestureRecognizer *)sender translationInView:self.view];
@@ -182,8 +195,8 @@
 	NSLog(@"PREV CARD");
 	
 	if (_cardIndex < [_cardViews count] - 1) {
-		SNArticleCardView_iPhone *cardView = (SNArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex + 1];
-		SNArticleCardView_iPhone *currentCardView = (SNArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
+		SNBaseArticleCardView_iPhone *cardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex + 1];
+		SNBaseArticleCardView_iPhone *currentCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
 		
 		cardView.holderView.hidden = YES;
 		cardView.scaledImgView.hidden = NO;
@@ -214,8 +227,8 @@
 	NSLog(@"NEXT CARD");
 	
 	if (_cardIndex > 1) {
-		SNArticleCardView_iPhone *cardView = (SNArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
-		SNArticleCardView_iPhone *nextCardView = (SNArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex - 1];
+		SNBaseArticleCardView_iPhone *cardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
+		SNBaseArticleCardView_iPhone *nextCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex - 1];
 		
 		nextCardView.holderView.hidden = YES;
 		nextCardView.scaledImgView.hidden = NO;
@@ -254,9 +267,112 @@
 	[self _goBack];
 }
 
+-(void)_leaveArticles:(NSNotification *)notification {
+	[self _goBack];
+}
+
+-(void)_shareSheet:(NSNotification *)notification {
+	SNArticleVO *vo = (SNArticleVO *)[notification object];
+	[_shareSheetView setVo:vo];
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_shareSheetView.frame = CGRectMake(0.0, self.view.frame.size.height - _shareSheetView.frame.size.height, _shareSheetView.frame.size.width, _shareSheetView.frame.size.height);
+	}];
+}
+
+
+-(void)_facebookShare:(NSNotification *)notification {
+	
+}
+-(void)_twitterShare:(NSNotification *)notification {
+	SNArticleVO *vo = (SNArticleVO *)[notification object];
+	
+	TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
+	
+	//[twitter addImage:[UIImage imageNamed:@"iOSDevTips.png"]];
+	[twitter addURL:[NSURL URLWithString:[NSString stringWithString:[NSString stringWithFormat:@"http://assemb.ly/tweets?id=%@", vo.tweet_id]]]];
+	[twitter setInitialText:[NSString stringWithFormat:@"via Assembly - %@", vo.title]];
+	
+	[self presentModalViewController:twitter animated:YES];
+	
+	twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+		NSString *msg; 
+		
+		if (result == TWTweetComposeViewControllerResultDone)
+			msg = @"Tweet compostion completed.";
+		
+		else if (result == TWTweetComposeViewControllerResultCancelled)
+			msg = @"Tweet composition canceled.";
+		
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Tweet Status" message:msg delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+		[alertView show];
+		
+		[self dismissModalViewControllerAnimated:YES];
+	};	
+}
+-(void)_emailShare:(NSNotification *)notification {
+	SNArticleVO *vo = (SNArticleVO *)[notification object];
+	
+	if ([MFMailComposeViewController canSendMail]) {
+		MFMailComposeViewController *mfViewController = [[MFMailComposeViewController alloc] init];
+		mfViewController.mailComposeDelegate = self;
+		[mfViewController setSubject:[NSString stringWithFormat:@"Assembly - %@", vo.title]];
+		[mfViewController setMessageBody:vo.content isHTML:NO];
+		
+		[self presentViewController:mfViewController animated:YES completion:nil];
+		[mfViewController release];
+		
+	} else {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"Your phone is not currently configured to send mail." delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+		
+		[alert show];
+		[alert release];
+	}
+}
+-(void)_cancelShare:(NSNotification *)notification {
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_shareSheetView.frame = CGRectMake(0.0, self.view.frame.size.height, _shareSheetView.frame.size.width, _shareSheetView.frame.size.height);
+	}];
+}
 
 //CGAffineTransform transform = scaleCardView.transform;
 //scaleCardView.transform = CGAffineTransformScale(transform, 1.18f, 1.18f);
+
+
+#pragma mark MailComposeViewController Delegates
+-(void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"" delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+	
+	switch (result) {
+		case MFMailComposeResultCancelled:
+			alert.message = @"Message Canceled";
+			break;
+			
+		case MFMailComposeResultSaved:
+			alert.message = @"Message Saved";
+			[alert show];
+			break;
+			
+		case MFMailComposeResultSent:
+			alert.message = @"Message Sent";
+			break;
+			
+		case MFMailComposeResultFailed:
+			alert.message = @"Message Failed";
+			[alert show];
+			break;
+			
+		default:
+			alert.message = @"Message Not Sent";
+			[alert show];
+			break;
+	}
+	
+	[self dismissViewControllerAnimated:YES completion:nil];
+	
+	
+	[alert release];
+}
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
@@ -286,7 +402,7 @@
 				
 				
 				SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:_cardHolderView.frame articleVO:vo] autorelease];
-				[_cardViews addObject:articleCardView];
+				[_cardViews addObject:(SNBaseArticleCardView_iPhone *)articleCardView];
 				
 				/*
 				 UIImageView *scaledImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(((articleCardView.frame.size.width - (articleCardView.frame.size.width * kImageScale)) * 0.5), ((articleCardView.frame.size.height - (articleCardView.frame.size.height * kImageScale)) * 0.5), articleCardView.frame.size.width * kImageScale, articleCardView.frame.size.height * kImageScale)] autorelease];
@@ -304,7 +420,11 @@
 				[_cardHolderView addSubview:cardView];
 			}
 			
-			SNArticleCardView_iPhone *articleCardView = (SNArticleCardView_iPhone *)[_cardViews objectAtIndex:[_cardViews count] - 1];
+			//SNArticleCardView_iPhone *articleCardView = (SNArticleCardView_iPhone *)[_cardViews objectAtIndex:[_cardViews count] - 1];
+			//articleCardView.scaledImgView.hidden = YES;
+			//articleCardView.holderView.hidden = YES;
+			
+			/*
 			[UIView animateWithDuration:0.15 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
 				articleCardView.scaledImgView.frame = CGRectMake(0.0, 0.0, articleCardView.frame.size.width, articleCardView.frame.size.height);
 				
@@ -313,11 +433,33 @@
 				articleCardView.scaledImgView.frame = CGRectMake(((articleCardView.frame.size.width - (articleCardView.frame.size.width * kImageScale)) * 0.5), ((articleCardView.frame.size.height - (articleCardView.frame.size.height * kImageScale)) * 0.5), articleCardView.frame.size.width * kImageScale, articleCardView.frame.size.height * kImageScale);
 				articleCardView.holderView.hidden = NO;
 			}];
-			 
+			*/
+			
+			SNTwitterCardView_iPhone *twitterCardView = [[[SNTwitterCardView_iPhone alloc] initWithFrame:self.view.frame] autorelease];
+			[_cardViews addObject:(SNBaseArticleCardView_iPhone *)twitterCardView];
+			[_cardHolderView addSubview:twitterCardView];
+			
 			_cardIndex = [_cardViews count] - 1;
+			
+			[self performSelector:@selector(_introFirstCard) withObject:nil afterDelay:0.125];
 		}
 	}
 }
+
+
+-(void)_introFirstCard {
+	SNArticleCardView_iPhone *articleCardView = (SNArticleCardView_iPhone *)[_cardViews lastObject];
+	
+	[UIView animateWithDuration:0.15 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
+		articleCardView.scaledImgView.frame = CGRectMake(0.0, 0.0, articleCardView.frame.size.width, articleCardView.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+		articleCardView.scaledImgView.hidden = YES;
+		articleCardView.scaledImgView.frame = CGRectMake(((articleCardView.frame.size.width - (articleCardView.frame.size.width * kImageScale)) * 0.5), ((articleCardView.frame.size.height - (articleCardView.frame.size.height * kImageScale)) * 0.5), articleCardView.frame.size.width * kImageScale, articleCardView.frame.size.height * kImageScale);
+		articleCardView.holderView.hidden = NO;
+	}];
+}
+
 
 
 -(void)requestFailed:(ASIHTTPRequest *)request {

@@ -12,7 +12,7 @@
 @implementation SNArticleVO
 
 @synthesize dictionary;
-@synthesize article_id, type_id, title, twitterName, tweetMessage, content, bgImage_url, video_url, avatarImage_url, isDark, added, tags;
+@synthesize article_id, type_id, title, twitterName, tweet_id, tweetMessage, content, bgImage_url, video_url, avatarImage_url, isDark, added, tags;
 
 +(SNArticleVO *)articleWithDictionary:(NSDictionary *)dictionary {
 	
@@ -22,6 +22,7 @@
 	vo.article_id = [[dictionary objectForKey:@"article_id"] intValue];
 	vo.type_id = [[dictionary objectForKey:@"type_id"] intValue];
 	vo.title = [dictionary objectForKey:@"title"];
+	vo.tweet_id = [dictionary objectForKey:@"tweet_id"];
 	vo.twitterName = [dictionary objectForKey:@"twitter_name"];
 	vo.tweetMessage = [dictionary objectForKey:@"tweet_msg"]; 
 	vo.content = [dictionary objectForKey:@"content"];
@@ -46,6 +47,7 @@
 -(void)dealloc {
 	dictionary = nil;
 	title = nil;
+	tweet_id = nil;
 	twitterName = nil;
 	tweetMessage = nil;
 	content = nil;

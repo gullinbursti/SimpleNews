@@ -17,8 +17,6 @@
 
 #define kImageScale 0.9
 #define kBaseHeaderHeight 90.0
-@synthesize scaledImgView = _scaledImgView;
-@synthesize holderView = _holderView;
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo {
 	if ((self = [super initWithFrame:frame])) {
@@ -29,28 +27,37 @@
 		_tweetSize = [_vo.tweetMessage sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(300.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		_contentSize = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(312.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		
-		_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height + _contentSize.height)];
-		[self addSubview:_holderView];
-		
 		_bgImageView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
 		_bgImageView.delegate = self;
 		_bgImageView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 		[_holderView addSubview:_bgImageView];
 		
+		_gridButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		_gridButton.frame = CGRectMake(12.0, 2.0, 24.0, 24.0);
+		
 		_shareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_shareButton.frame = CGRectMake(272.0, 2.0, 44.0, 44.0);
+		_shareButton.frame = CGRectMake(272.0, 2.0, 34.0, 34.0);
 		
 		if (_vo.isDark) {
-			[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_nonActive.png"] forState:UIControlStateNormal];
-			[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_active.png"] forState:UIControlStateHighlighted];
+			[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridIconGray_nonActive.png"] forState:UIControlStateNormal];
+			[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridIconGray_Active.png"] forState:UIControlStateHighlighted];
+			
+			[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareIconGrey_nonActive.png"] forState:UIControlStateNormal];
+			[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareIconGrey_Active.png"] forState:UIControlStateHighlighted];
 		
 		} else {
-			[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_nonActiveWhite.png"] forState:UIControlStateNormal];
-			[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_activeWhite.png"] forState:UIControlStateHighlighted];
+			[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridIcon_nonActive.png"] forState:UIControlStateNormal];
+			[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridIcon_Active.png"] forState:UIControlStateHighlighted];
+			
+			[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareIcon_nonActive.png"] forState:UIControlStateNormal];
+			[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareIcon_Active.png"] forState:UIControlStateHighlighted];
 		}
 		
+		[_gridButton addTarget:self action:@selector(_goGrid) forControlEvents:UIControlEventTouchUpInside];
 		[_shareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-		[_holderView addSubview:_shareButton];
+		
+		[self addSubview:_gridButton];
+		[self addSubview:_shareButton];
 		
 		NSLog(@"CONTENT HEIGHT:[%f]", _contentSize.height);
 		
@@ -70,9 +77,8 @@
 		[_holderView addSubview:_tableView];
 		
 		if (_vo.type_id > 4) {
-			
 			_playButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-			_playButton.frame = CGRectMake(128.0, 128.0, 64.0, 64.0);
+			_playButton.frame = CGRectMake(118.0, 128.0, 84.0, 84.0);
 			[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 			[_playButton setBackgroundImage:[[UIImage imageNamed:@"tagBG_active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 			[_playButton addTarget:self action:@selector(_goPlayVideo) forControlEvents:UIControlEventTouchUpInside];
@@ -99,8 +105,12 @@
 }
 
 #pragma mark - Navigation
+-(void)_goGrid {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"LEAVE_ARTICLES" object:nil];
+}
+
 -(void)_goShare {
-	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHARE_SHEET" object:_vo];
 }
 
 -(void)_goTag:(UIButton *)button {
@@ -283,7 +293,7 @@
 }
 
 
--(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {	
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 
@@ -336,17 +346,25 @@
 
 -(void)imageViewLoadedImage:(EGOImageView *)imageView {
 	NSLog(@"IMAGE LOADED:[%@]", imageView.imageURL);
-	
-	_scaledImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)] autorelease];
-	_scaledImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:_bgImageView] CGImage] scale:1.0 orientation:UIImageOrientationUp];
-	[self addSubview:_scaledImgView];
-	
-	_holderView.hidden = YES;
+	[self performSelector:@selector(_drawTable) withObject:nil afterDelay:0.125];
 }
 
 -(void)imageViewFailedToLoadImage:(EGOImageView *)imageView error:(NSError *)error {
 	NSLog(@"IMAGE LOAD FAIL");
 }
 
+
+
+-(void)_drawTable {
+	_scaledImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)] autorelease];
+	_scaledImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:_holderView] CGImage] scale:1.0 orientation:UIImageOrientationUp];
+	[self addSubview:_scaledImgView];
+	
+	_holderView.hidden = YES;
+	
+	//UIImageView *holderImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)] autorelease];
+	//holderImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:_holderView] CGImage] scale:1.0 orientation:UIImageOrientationUp];
+	//[_scaledImgView addSubview:holderImgView];
+}
 
 @end

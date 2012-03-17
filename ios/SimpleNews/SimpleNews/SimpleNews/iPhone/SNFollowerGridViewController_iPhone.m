@@ -13,6 +13,7 @@
 #import "SNFollowerVO.h"
 #import "SNFollowerGridItemView_iPhone.h"
 #import "SNArticleListViewController_iPhone.h"
+#import "SNOptionsViewController_iPhone.h"
 
 #import "SNFollowerInfoView.h"
 
@@ -73,7 +74,6 @@
 	[_itemViews release];
 	[_followers release];
 	[_headerView release];
-	[_optionsListView release];
 	[_refreshHeaderView release];
 	[_followersRequest release];
 	
@@ -121,7 +121,7 @@
 	[super loadView];
 	
 	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
-	bgImgView.image = [UIImage imageNamed:@"gridBackground.jpg"];
+	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[self.view addSubview:bgImgView];
 	
 	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)];
@@ -148,6 +148,15 @@
 	_headerView = [[SNFollowerGridHeaderView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 50.0)];
 	[_scrollView addSubview:_headerView];
 	
+	
+	_optionsButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_optionsButton.frame = CGRectMake(290.0, 446.0, 24.0, 24.0);
+	[_optionsButton setBackgroundColor:[UIColor greenColor]];
+	[_optionsButton setBackgroundImage:[[UIImage imageNamed:@"tagBG_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+	[_optionsButton setBackgroundImage:[[UIImage imageNamed:@"tagBG_active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+	[_optionsButton addTarget:self action:@selector(_goOptions) forControlEvents:UIControlEventTouchUpInside];
+	[_holderView addSubview:_optionsButton];
+	
 	UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)];
 	[panRecognizer setMinimumNumberOfTouches:1];
 	[panRecognizer setMaximumNumberOfTouches:1];
@@ -159,10 +168,6 @@
 	[longPressRecognizer setMinimumPressDuration:0.5];
 	[longPressRecognizer setDelegate:self];
 	[_holderView addGestureRecognizer:longPressRecognizer];
-	
-	_optionsListView = [[SNOptionsListView_iPhone alloc] initWithFrame:CGRectMake(-self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
-	_optionsListView.hidden = YES;
-	[self.view addSubview:_optionsListView];
 	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
@@ -197,12 +202,23 @@
 #pragma mark - Navigation
 -(void)_goOptions {
 	_isOptions = YES;
+	
+	
+	
+	SNOptionsViewController_iPhone *optionsViewController = [[[SNOptionsViewController_iPhone alloc] init] autorelease];
+	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:optionsViewController] autorelease];
+	
+	[navigationController setNavigationBarHidden:YES];
+	[self.navigationController presentModalViewController:navigationController animated:YES];
+	
+	/*
 	_optionsListView.hidden = NO;
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		//_scrollView.frame = CGRectMake(self.view.bounds.size.width, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
 		_optionsListView.frame = CGRectMake(0.0, _optionsListView.frame.origin.y, self.view.bounds.size.width, _optionsListView.frame.size.height);
 	}];
+	 */
 }
 
 -(void)_goArticles {
@@ -245,9 +261,9 @@
 	NSLog(@"SWIPE @:(%f)", translatedPoint.x);
 	
 	if (!_isDetails && !_isOptions) {	
-		//		if (translatedPoint.x > 20.0 && abs(translatedPoint.y) < 20) {
-		//			[self _goOptions];
-		//		}
+		//if (translatedPoint.x > 20.0 && abs(translatedPoint.y) < 20) {
+		//		[self _goOptions];
+		//	}
 		
 		if (!_isArticles && (translatedPoint.x < -20.0 && abs(translatedPoint.y) < 20)) {
 			[self _goArticles];
@@ -319,11 +335,13 @@
 -(void)_optionsReturn:(NSNotification *)notification {
 	_isOptions = NO;
 	
+	/*
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_optionsListView.frame = CGRectMake(-self.view.bounds.size.width, _optionsListView.frame.origin.y, _optionsListView.frame.size.width, _optionsListView.frame.size.height);
 	} completion:^(BOOL finished) {
 		_optionsListView.hidden = YES;
 	}];
+	 */
 }
 
 -(void)_articlesReturn:(NSNotification *)notification {
@@ -339,7 +357,7 @@
 	NSLog(@"FOLLOWER TAPPED");
 	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
 	
-	SNFollowerInfoView *followerInfoView = [[[SNFollowerInfoView alloc] initWithFrame:CGRectMake(80.0, 150.0, 170.0, 180.0) followerVO:vo] autorelease];
+	SNFollowerInfoView *followerInfoView = [[[SNFollowerInfoView alloc] initWithFrame:CGRectMake(80.0, 150.0, 194.0, 194.0) followerVO:vo] autorelease];
 	[self.view addSubview:followerInfoView];
 }
 

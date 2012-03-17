@@ -8,14 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-#import "SNSplashHighlightView.h"
-
 @interface SNSplashViewController_iPhone : UIViewController {
 	UIImageView *_bgImgView;
-	SNSplashHighlightView *_highlightView;
-	
-	NSTimer *_timer;
-	int _cnt;
+	UIImageView *_stripsImgView;
+	UIImageView *_highlightImgView;
 }
 
 @end

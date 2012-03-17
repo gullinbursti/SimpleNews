@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-#import "SNOptionsListView_iPhone.h"
 #import "SNFollowerGridHeaderView_iPhone.h"
 
 #import "EGORefreshTableHeaderView.h"
@@ -27,8 +26,9 @@
 	
 	NSMutableArray *_tags;
 	
+	UIButton *_optionsButton;
+	
 	SNFollowerGridHeaderView_iPhone *_headerView;
-	SNOptionsListView_iPhone *_optionsListView;
 	
 	EGORefreshTableHeaderView *_refreshHeaderView;
 	ASIFormDataRequest *_followersRequest;

@@ -15,7 +15,7 @@
 	UITextField *_txtField;
 	UILabel *_txtLabel;
 	
-	UIButton *_nowPlayingButton;
+	UIButton *_backButton;
 }
 
 @end

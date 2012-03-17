@@ -10,7 +10,6 @@
 #import "SNFollowerGridViewController_iPhone.h"
 
 @interface SNSplashViewController_iPhone()
--(void)_goNextCell;
 -(void)_goGrid;
 @end
 
@@ -18,7 +17,6 @@
 
 -(id)init {
 	if ((self = [super init])) {
-		_cnt = 0;	
 	}
 	
 	return (self);
@@ -45,8 +43,13 @@
 	_bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[self.view addSubview:_bgImgView];
 	
-	_highlightView = [[SNSplashHighlightView alloc] init];
-	[self.view addSubview:_highlightView];
+	_stripsImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, -self.view.frame.size.height + 20.0, self.view.frame.size.width, self.view.frame.size.height)];
+	_stripsImgView.image = [UIImage imageNamed:@"loaderBG.jpg"];
+	[self.view addSubview:_stripsImgView];
+	
+	_highlightImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 12.0, 74.0, 9.0)];
+	_highlightImgView.image = [UIImage imageNamed:@"loaderHighlight.png"];
+	[self.view addSubview:_highlightImgView];
 	
 	UIImageView *logoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(53.0, 228.0, 214.0, 24.0)] autorelease];
 	logoImgView.image = [UIImage imageNamed:@"logo.png"];
@@ -56,8 +59,27 @@
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
 	
-	_timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(_goNextCell) userInfo:nil repeats:YES];
-	[[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
+	
+	[UIView animateWithDuration:1.5 delay:0.0 options:UIViewAnimationCurveLinear animations:^(void) {
+		_highlightImgView.frame = CGRectMake(self.view.frame.size.width, _highlightImgView.frame.origin.y, _highlightImgView.frame.size.width, _highlightImgView.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+		_highlightImgView.frame = CGRectMake(0.0, _highlightImgView.frame.origin.y, _highlightImgView.frame.size.width, _highlightImgView.frame.size.height);
+		
+		[UIView animateWithDuration:1.5 delay:0.0 options:UIViewAnimationCurveLinear animations:^(void) {
+			_highlightImgView.frame = CGRectMake(self.view.frame.size.width, _highlightImgView.frame.origin.y, _highlightImgView.frame.size.width, _highlightImgView.frame.size.height);
+			
+		} completion:^(BOOL finished) {
+			_highlightImgView.frame = CGRectMake(0.0, _highlightImgView.frame.origin.y, _highlightImgView.frame.size.width, _highlightImgView.frame.size.height);
+			
+			[UIView animateWithDuration:0.67 delay:0.0 options:UIViewAnimationCurveLinear animations:^(void) {
+				_stripsImgView.frame = CGRectMake(0.0, 0.0, _stripsImgView.frame.size.width, _stripsImgView.frame.size.height);
+				
+			} completion:^(BOOL finished) {
+				[self _goGrid];
+			}];
+		}];
+	}];
 }
 
 -(void)viewDidLoad {
@@ -66,27 +88,6 @@
 
 -(void)viewDidUnload {
 	[super viewDidUnload];
-}
-
--(void)_goNextCell {
-	_cnt++;
-	
-	if (_cnt == 4) {
-		[_timer invalidate];
-		_timer = nil;
-		
-		[self _goGrid];
-	}
-	
-	int rndCell = arc4random() % 24;
-	int row = rndCell / 6;
-	int col = rndCell % 4;
-	
-	NSLog(@"NEXT CELL(%d, %d)", col, row);
-	
-	[UIView animateWithDuration:0.25 animations:^(void) {
-		_highlightView.frame = CGRectMake(col * 80.0, row * 80.0, 80.0, 80.0);
-	}];
 }
 
 
