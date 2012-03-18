@@ -150,10 +150,9 @@
 	
 	
 	_optionsButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_optionsButton.frame = CGRectMake(290.0, 446.0, 24.0, 24.0);
-	[_optionsButton setBackgroundColor:[UIColor greenColor]];
-	[_optionsButton setBackgroundImage:[[UIImage imageNamed:@"tagBG_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-	[_optionsButton setBackgroundImage:[[UIImage imageNamed:@"tagBG_active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+	_optionsButton.frame = CGRectMake(276.0, 436.0, 34.0, 34.0);
+	[_optionsButton setBackgroundImage:[[UIImage imageNamed:@"gearButton_nonAcvtive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+	[_optionsButton setBackgroundImage:[[UIImage imageNamed:@"gearButton_Acvtive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 	[_optionsButton addTarget:self action:@selector(_goOptions) forControlEvents:UIControlEventTouchUpInside];
 	[_holderView addSubview:_optionsButton];
 	
@@ -357,7 +356,7 @@
 	NSLog(@"FOLLOWER TAPPED");
 	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
 	
-	SNFollowerInfoView *followerInfoView = [[[SNFollowerInfoView alloc] initWithFrame:CGRectMake(80.0, 150.0, 194.0, 194.0) followerVO:vo] autorelease];
+	SNFollowerInfoView *followerInfoView = [[[SNFollowerInfoView alloc] initWithFrame:CGRectMake(67.0, 166.0, 194.0, 194.0) followerVO:vo] autorelease];
 	[self.view addSubview:followerInfoView];
 }
 

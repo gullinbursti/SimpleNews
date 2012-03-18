@@ -22,14 +22,15 @@
 	UILabel *_twitterName;
 	UILabel *_tweetLabel;
 	UILabel *_dateLabel;
+	UILabel *_titleLabel;
 	UILabel *_contentLabel;
 	UIImageView *_twitterImgView;
-	UIButton *_shareButton;
 	
 	UITableView *_tableView;
 	
 	UIButton *_playButton;
 	CGSize _tweetSize;
+	CGSize _titleSize;
 	CGSize _contentSize;
 }
 

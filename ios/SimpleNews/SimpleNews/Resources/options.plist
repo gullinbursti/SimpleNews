@@ -6,17 +6,23 @@
 		<key>option_id</key>
 		<integer>1</integer>
 		<key>title</key>
-		<string>Push Notifications</string>
+		<string>Facebook</string>
 	</dict>
 	<dict>
 		<key>option_id</key>
 		<integer>2</integer>
 		<key>title</key>
-		<string>About Assemb.ly</string>
+		<string>Push Notifications</string>
 	</dict>
 	<dict>
 		<key>option_id</key>
 		<integer>3</integer>
+		<key>title</key>
+		<string>About Assembly</string>
+	</dict>
+	<dict>
+		<key>option_id</key>
+		<integer>4</integer>
 		<key>title</key>
 		<string>Privacy Policy</string>
 	</dict>

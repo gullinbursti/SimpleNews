@@ -46,6 +46,7 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>simplenews</string>
+				<string>fb316539575066102</string>
 			</array>
 		</dict>
 	</array>
@@ -55,6 +56,10 @@
 	<true/>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Aller_Rg.ttf</string>
+		<string>Aller_Bd.ttf</string>
+		<string>Aller_It.ttf</string>
+		<string>Aller_BdIt.ttf</string>
 		<string>HelveticaNeueLTStd-Roman.otf</string>
 		<string>HelveticaNeueLTStd-Md.otf</string>
 		<string>HelveticaNeueLTStd-Bd.otf</string>

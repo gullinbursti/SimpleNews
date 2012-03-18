@@ -11,8 +11,6 @@
 @interface SNBaseArticleCardView_iPhone : UIView {
 	UIView *_holderView;
 	UIImageView *_scaledImgView;
-	
-	UIButton *_gridButton;
 }
 
 @property (nonatomic, retain) UIView *holderView;

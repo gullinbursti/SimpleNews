@@ -16,7 +16,7 @@
 @implementation SNArticleCardView_iPhone
 
 #define kImageScale 0.9
-#define kBaseHeaderHeight 90.0
+#define kBaseHeaderHeight 115.0
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo {
 	if ((self = [super initWithFrame:frame])) {
@@ -24,40 +24,16 @@
 		
 		[self setBackgroundColor:[UIColor clearColor]];
 		
-		_tweetSize = [_vo.tweetMessage sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(300.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-		_contentSize = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(312.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		_tweetSize = [_vo.tweetMessage sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		_titleSize = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:22] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		_contentSize = [_vo.content sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		
+		_holderView.frame = CGRectMake(_holderView.frame.origin.x, _holderView.frame.origin.y, self.frame.size.width, self.frame.size.height + _contentSize.height + _titleSize.height);
 		
 		_bgImageView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
 		_bgImageView.delegate = self;
 		_bgImageView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 		[_holderView addSubview:_bgImageView];
-		
-		_gridButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_gridButton.frame = CGRectMake(12.0, 2.0, 24.0, 24.0);
-		
-		_shareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_shareButton.frame = CGRectMake(272.0, 2.0, 34.0, 34.0);
-		
-		if (_vo.isDark) {
-			[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridIconGray_nonActive.png"] forState:UIControlStateNormal];
-			[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridIconGray_Active.png"] forState:UIControlStateHighlighted];
-			
-			[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareIconGrey_nonActive.png"] forState:UIControlStateNormal];
-			[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareIconGrey_Active.png"] forState:UIControlStateHighlighted];
-		
-		} else {
-			[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridIcon_nonActive.png"] forState:UIControlStateNormal];
-			[_gridButton setBackgroundImage:[UIImage imageNamed:@"gridIcon_Active.png"] forState:UIControlStateHighlighted];
-			
-			[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareIcon_nonActive.png"] forState:UIControlStateNormal];
-			[_shareButton setBackgroundImage:[UIImage imageNamed:@"shareIcon_Active.png"] forState:UIControlStateHighlighted];
-		}
-		
-		[_gridButton addTarget:self action:@selector(_goGrid) forControlEvents:UIControlEventTouchUpInside];
-		[_shareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-		
-		[self addSubview:_gridButton];
-		[self addSubview:_shareButton];
 		
 		NSLog(@"CONTENT HEIGHT:[%f]", _contentSize.height);
 		
@@ -78,7 +54,7 @@
 		
 		if (_vo.type_id > 4) {
 			_playButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-			_playButton.frame = CGRectMake(118.0, 128.0, 84.0, 84.0);
+			_playButton.frame = CGRectMake(121.0, 128.0, 84.0, 84.0);
 			[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 			[_playButton setBackgroundImage:[[UIImage imageNamed:@"tagBG_active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 			[_playButton addTarget:self action:@selector(_goPlayVideo) forControlEvents:UIControlEventTouchUpInside];
@@ -105,14 +81,6 @@
 }
 
 #pragma mark - Navigation
--(void)_goGrid {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"LEAVE_ARTICLES" object:nil];
-}
-
--(void)_goShare {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHARE_SHEET" object:_vo];
-}
-
 -(void)_goTag:(UIButton *)button {
 	NSLog(@"GO TAG %d", [button tag]);
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TAG_SEARCH" object:[NSNumber numberWithInt:[button tag]]];
@@ -145,11 +113,12 @@
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 			[cell setUserInteractionEnabled:NO];
 			
-			UIView *cellView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, _contentSize.height)] autorelease];
-			[cellView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
+			UIView *cellView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, _contentSize.height + _titleSize.height + 52.0)] autorelease];
+			[cellView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.85]];
 			[cell addSubview:cellView];
 			
 			
+			/*
 			float width = 0;
 			for (SNTagVO *tagVO in _vo.tags) {
 				CGSize tagSize = [[NSString stringWithFormat:@"   #%@   ", tagVO.title] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(160.0, 24.0) lineBreakMode:UILineBreakModeClip]; 
@@ -170,9 +139,18 @@
 				
 				width += (tagSize.width + 8.0);
 			}
+			*/
 			
-			_contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(4.0, 40.0, 312.0, _contentSize.height)];
-			_contentLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
+			_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 25.0, 296.0, _titleSize.height)];
+			_titleLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:22];
+			_titleLabel.textColor = [UIColor whiteColor];
+			_titleLabel.backgroundColor = [UIColor clearColor];
+			_titleLabel.text = _vo.title;
+			_titleLabel.numberOfLines = 0;
+			[cell addSubview:_titleLabel];
+			
+			_contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 50.0 + _titleSize.height, 296.0, _contentSize.height)];
+			_contentLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
 			_contentLabel.textColor = [UIColor whiteColor];
 			_contentLabel.backgroundColor = [UIColor clearColor];
 			_contentLabel.text = _vo.content;
@@ -200,7 +178,7 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	if (indexPath.section == 1)
-		return (_contentSize.height + 50.0);
+		return (_contentSize.height + 80.0);
 	
 	else
 		return (self.frame.size.height - (_tweetSize.height + kBaseHeaderHeight));
@@ -219,14 +197,14 @@
 	
 	if (section == 1) {
 		UIView *headerView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, _tweetSize.height + kBaseHeaderHeight)] autorelease];
-		[headerView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.85]];
+		[headerView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
 		
-		_avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(4.0, 4.0, 72.0, 72.0)];
+		_avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 40.0, 40.0)];
 		_avatarImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
 		[headerView addSubview:_avatarImgView];
 		
-		_twitterName = [[UILabel alloc] initWithFrame:CGRectMake(80.0, 32.0, 256.0, 20.0)];
-		_twitterName.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
+		_twitterName = [[UILabel alloc] initWithFrame:CGRectMake(62.0, 20.0, 256.0, 20.0)];
+		_twitterName.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
 		_twitterName.textColor = [UIColor whiteColor];
 		_twitterName.backgroundColor = [UIColor clearColor];
 		_twitterName.text = _vo.twitterName;
@@ -238,29 +216,17 @@
 		int days = [SNAppDelegate daysAfterDate:_vo.added];
 		
 		if (days > 0) {
-			if (days == 1)
-				timeSince = @"1 day ago";
-			
-			else if (days > 1)
-				timeSince = [NSString stringWithFormat:@"%d days ago", days];
+			timeSince = [NSString stringWithFormat:@"%dd", days];
 			
 		} else {
-			if (hours == 1)
-				timeSince = @"1 hour ago";
+			if (hours > 0)
+				timeSince = [NSString stringWithFormat:@"%dh", hours];
 			
-			else if (hours > 1)
-				timeSince = [NSString stringWithFormat:@"%d hours ago", hours];
-			
-			else {
-				if (mins == 1)
-					timeSince = @"1 minute ago";
-				
-				else if (mins > 1)
-					timeSince = [NSString stringWithFormat:@"%d minutes ago", mins];
-			}
+			else
+				timeSince = [NSString stringWithFormat:@"%dm", mins];
 		}
 		
-		_dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(220.0, 32.0, 100.0, 26.0)];
+		_dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(269.0, 20.0, 41.0, 26.0)];
 		_dateLabel.textAlignment = UITextAlignmentRight;
 		_dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 		_dateLabel.textColor = [UIColor lightGrayColor];
@@ -269,13 +235,24 @@
 		_dateLabel.numberOfLines = 0;
 		[headerView addSubview:_dateLabel];
 		
-		_tweetLabel = [[UILabel alloc] initWithFrame:CGRectMake(4.0, 85.0, 300.0, _tweetSize.height)];
-		_tweetLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
+		_tweetLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 60.0, 296.0, _tweetSize.height)];
+		_tweetLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
 		_tweetLabel.textColor = [UIColor whiteColor];
 		_tweetLabel.backgroundColor = [UIColor clearColor];
 		_tweetLabel.text = _vo.tweetMessage;
 		_tweetLabel.numberOfLines = 0;
 		[headerView addSubview:_tweetLabel];
+		
+		UIImageView *twitterIcoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 77.0 + _tweetSize.height, 14.0, 14.0)] autorelease];
+		twitterIcoImgView.image = [UIImage imageNamed:@"twitterIcon.png"];
+		[headerView addSubview:twitterIcoImgView];
+		
+		UILabel *twitterSiteLabel = [[[UILabel alloc] initWithFrame:CGRectMake(30.0, 77.0 + _tweetSize.height, 150.0, 16.0)] autorelease];
+		twitterSiteLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
+		twitterSiteLabel.textColor = [UIColor whiteColor];
+		twitterSiteLabel.backgroundColor = [UIColor clearColor];
+		twitterSiteLabel.text = @"Twitter.com";
+		[headerView addSubview:twitterSiteLabel];
 		
 		return (headerView);
 	}
@@ -357,10 +334,11 @@
 
 -(void)_drawTable {
 	_scaledImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)] autorelease];
-	_scaledImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:_holderView] CGImage] scale:1.0 orientation:UIImageOrientationUp];
+	_scaledImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:self] CGImage] scale:1.0 orientation:UIImageOrientationUp];
 	[self addSubview:_scaledImgView];
 	
 	_holderView.hidden = YES;
+	//[self hideButtons];
 	
 	//UIImageView *holderImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)] autorelease];
 	//holderImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:_holderView] CGImage] scale:1.0 orientation:UIImageOrientationUp];

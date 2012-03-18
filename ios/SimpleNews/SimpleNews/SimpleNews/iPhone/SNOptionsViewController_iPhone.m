@@ -42,7 +42,7 @@
 	_optionViews = [[NSMutableArray alloc] init];
 	_optionVOs = [[NSMutableArray alloc] init];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 56.0, self.view.frame.size.width, self.view.frame.size.height)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	_scrollView.opaque = NO;
 	_scrollView.scrollsToTop = YES;
@@ -74,7 +74,7 @@
 	
 	
 	UIButton *backButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	backButton.frame = CGRectMake(245.0, 4.0, 64.0, 34.0);
+	backButton.frame = CGRectMake(254.0, 4.0, 64.0, 34.0);
 	[backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 	[backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 	backButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];

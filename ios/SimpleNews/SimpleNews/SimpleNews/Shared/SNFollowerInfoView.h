@@ -13,6 +13,7 @@
 
 @interface SNFollowerInfoView : UIView {
 	UILabel *_nameLabel;
+	UILabel *_totalLabel;
 	UILabel *_infoLabel;
 	
 	EGOImageView *_avatarImgView;

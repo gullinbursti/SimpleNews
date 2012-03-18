@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "SNBaseArticleCardView_iPhone.h"
 
-@interface SNFacebookCardView_iPhone : SNBaseArticleCardView_iPhone
+@interface SNFacebookCardView_iPhone : SNBaseArticleCardView_iPhone {
+	UIButton *_noThanksButton;
+	UIButton *_connectButton;
+}
 
 @end

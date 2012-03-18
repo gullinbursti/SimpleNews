@@ -17,7 +17,7 @@
 		_isSelected = NO;
 		
 		
-		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(17.5, 0, self.frame.size.width, 64)];
+		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 0, self.frame.size.width, 64)];
 		_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16.0];
 		_titleLabel.backgroundColor = [UIColor clearColor];
 		_titleLabel.textColor = [UIColor whiteColor];
@@ -25,7 +25,7 @@
 		_titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 		[self addSubview:_titleLabel];
 		
-		_checkImageView = [[[UIImageView alloc] initWithFrame:CGRectMake(290, 20, 24, 24)] autorelease];
+		_checkImageView = [[[UIImageView alloc] initWithFrame:CGRectMake(284, 20, 24, 24)] autorelease];
 		_checkImageView.image = [UIImage imageNamed:@"checkMark.png"];
 		[self addSubview:_checkImageView];
 		

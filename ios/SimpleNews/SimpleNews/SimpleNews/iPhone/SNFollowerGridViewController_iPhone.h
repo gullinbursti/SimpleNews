@@ -14,6 +14,8 @@
 #import "EGORefreshTableHeaderView.h"
 #import "ASIFormDataRequest.h"
 
+#import "FBConnect.h"
+
 @interface SNFollowerGridViewController_iPhone : UIViewController <ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate> {
 	
 	UIView *_holderView;

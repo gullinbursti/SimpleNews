@@ -12,7 +12,9 @@
 #import "ASIFormDataRequest.h"
 #import "SNShareSheetView.h"
 
-@interface SNArticleListViewController_iPhone : UIViewController <UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate, ASIHTTPRequestDelegate> {
+#import "Facebook.h"
+
+@interface SNArticleListViewController_iPhone : UIViewController <UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate, ASIHTTPRequestDelegate, FBRequestDelegate> {
 	NSMutableArray *_articles;
 	ASIFormDataRequest *_articlesRequest;
 	
@@ -26,6 +28,11 @@
 	BOOL _isSwiping;
 	
 	SNShareSheetView *_shareSheetView;
+	
+	UIButton *_greyGridButton;
+	UIButton *_whiteGridButton;
+	UIButton *_greyShareButton;
+	UIButton *_whiteShareButton;
 }
 
 -(id)initAsMostRecent;
