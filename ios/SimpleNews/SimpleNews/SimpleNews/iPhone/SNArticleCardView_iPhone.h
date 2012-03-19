@@ -19,12 +19,15 @@
 	EGOImageView *_avatarImgView;
 	EGOImageView *_bgImageView;
 	
+	UIView *_headerView;
+	
 	UILabel *_twitterName;
 	UILabel *_tweetLabel;
 	UILabel *_dateLabel;
 	UILabel *_titleLabel;
 	UILabel *_contentLabel;
 	UIImageView *_twitterImgView;
+	UIImageView *_playImgView;
 	
 	UITableView *_tableView;
 	
@@ -32,6 +35,8 @@
 	CGSize _tweetSize;
 	CGSize _titleSize;
 	CGSize _contentSize;
+	
+	BOOL _isAtTop;
 }
 
 

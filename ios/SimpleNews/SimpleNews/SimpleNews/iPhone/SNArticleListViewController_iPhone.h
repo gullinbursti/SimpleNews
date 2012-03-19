@@ -33,6 +33,8 @@
 	UIButton *_whiteGridButton;
 	UIButton *_greyShareButton;
 	UIButton *_whiteShareButton;
+	
+	UIView *_blackMatteView;
 }
 
 -(id)initAsMostRecent;

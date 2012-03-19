@@ -76,6 +76,7 @@
 				_stripsImgView.frame = CGRectMake(0.0, 0.0, _stripsImgView.frame.size.width, _stripsImgView.frame.size.height);
 				
 			} completion:^(BOOL finished) {
+				[_highlightImgView removeFromSuperview];
 				[self _goGrid];
 			}];
 		}];

@@ -29,23 +29,25 @@
 -(id)init {
 	if ((self = [super init])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startVideo:) name:@"START_VIDEO" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
+		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_tagSearch:) name:@"TAG_SEARCH" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_leaveArticles:) name:@"LEAVE_ARTICLES" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_shareSheet:) name:@"SHARE_SHEET" object:nil];
-		
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_facebookShare:) name:@"FACEBOOK_SHARE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterShare:) name:@"TWITTER_SHARE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_emailShare:) name:@"EMAIL_SHARE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cancelShare:) name:@"CANCEL_SHARE" object:nil];
 		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showButtons:) name:@"SHOW_BUTTONS" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideButtons:) name:@"HIDE_BUTTONS" object:nil];
+		
+		
 		_articles = [NSMutableArray new];
 		_cardViews = [NSMutableArray new];
 		
 		_isSwiping = NO;
-		
-		_shareSheetView = [[SNShareSheetView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
-		[self.view addSubview:_shareSheetView];
 	}
 	return (self);
 }
@@ -123,6 +125,7 @@
 
 -(void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"START_VIDEO" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"VIDEO_ENDED" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"TAG_SEARCH" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LEAVE_ARTICLES" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHARE_SHEET" object:nil];
@@ -130,6 +133,8 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"TWITTER_SHARE" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"EMAIL_SHARE" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"CANCEL_SHARE" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_BUTTONS" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"HIDE_BUTTONS" object:nil];
 	
 	//[_articles release];
 	[_overlayView release];
@@ -165,19 +170,26 @@
 	[self.view addSubview:_whiteGridButton];
 	
 	_greyShareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_greyShareButton.frame = CGRectMake(280.0, 12.0, 34.0, 34.0);
+	_greyShareButton.frame = CGRectMake(275.0, 6.0, 34.0, 34.0);
 	[_greyShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconGrey_nonActive.png"] forState:UIControlStateNormal];
 	[_greyShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconGrey_Active.png"] forState:UIControlStateHighlighted];
 	[_greyShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_greyShareButton];
 	
 	_whiteShareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_whiteShareButton.frame = CGRectMake(280.0, 12.0, 34.0, 34.0);
+	_whiteShareButton.frame = CGRectMake(275.0, 6.0, 34.0, 34.0);
 	[_whiteShareButton setBackgroundImage:[UIImage imageNamed:@"shareIcon_nonActive.png"] forState:UIControlStateNormal];
 	[_whiteShareButton setBackgroundImage:[UIImage imageNamed:@"shareIcon_Active.png"] forState:UIControlStateHighlighted];
 	[_whiteShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_whiteShareButton];
 	
+	_blackMatteView = [[[UIView alloc] initWithFrame:self.view.frame] autorelease];
+	[_blackMatteView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.67]];
+	_blackMatteView.alpha = 0.0;
+	[self.view addSubview:_blackMatteView];
+	
+	_shareSheetView = [[SNShareSheetView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
+	[self.view addSubview:_shareSheetView];
 	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
@@ -235,15 +247,22 @@
 		
 		_isSwiping = YES;
 		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_CARDS" object:nil];
 		[UIView animateWithDuration:0.33 animations:^(void) {
 			cardView.frame = CGRectMake(0.0, 0.0, cardView.frame.size.width, cardView.frame.size.height);
 			currentCardView.frame = CGRectMake(self.view.frame.size.width, 0.0, currentCardView.frame.size.width, currentCardView.frame.size.height);
 			
-			_greyGridButton.frame = CGRectMake(-_greyGridButton.frame.size.width, -_greyGridButton.frame.size.height, 24.0, 24.0);
-			_whiteGridButton.frame = CGRectMake(-_whiteGridButton.frame.size.width, -_whiteGridButton.frame.size.height, 24.0, 24.0);
+//			_greyGridButton.alpha = 0.0;
+//			_greyShareButton.alpha = 0.0;
+//			
+//			_whiteGridButton.alpha = 0.0;
+//			_whiteShareButton.alpha = 0.0;
 			
-			_greyShareButton.frame = CGRectMake(self.view.frame.size.width, -_greyShareButton.frame.size.height, 34.0, 34.0);
-			_whiteShareButton.frame = CGRectMake(self.view.frame.size.width, -_whiteShareButton.frame.size.height, 34.0, 34.0);
+//			_greyGridButton.frame = CGRectMake(-_greyGridButton.frame.size.width, -_greyGridButton.frame.size.height, 24.0, 24.0);
+//			_whiteGridButton.frame = CGRectMake(-_whiteGridButton.frame.size.width, -_whiteGridButton.frame.size.height, 24.0, 24.0);
+			
+//			_greyShareButton.frame = CGRectMake(self.view.frame.size.width, -_greyShareButton.frame.size.height, 34.0, 34.0);
+//			_whiteShareButton.frame = CGRectMake(self.view.frame.size.width, -_whiteShareButton.frame.size.height, 34.0, 34.0);
 			
 		} completion:^(BOOL finished) {
 			_isSwiping = NO;
@@ -254,12 +273,24 @@
 				SNArticleVO *vo = (SNArticleVO *)[_articles objectAtIndex:_cardIndex - 1];
 				
 				if (vo.isDark) {
-					_greyGridButton.frame = CGRectMake(12.0, 12.0, 24.0, 24.0);
-					_greyShareButton.frame = CGRectMake(280.0, 12.0, 34.0, 34.0);
+					_greyGridButton.alpha = 1.0;
+					_greyShareButton.alpha = 1.0;
+					
+					_whiteGridButton.alpha = 0.0;
+					_whiteShareButton.alpha = 0.0;
+					
+					//_greyGridButton.frame = CGRectMake(12.0, 12.0, 24.0, 24.0);
+					//_greyShareButton.frame = CGRectMake(280.0, 12.0, 34.0, 34.0);
 					
 				} else {
-					_whiteGridButton.frame = CGRectMake(12.0, 12.0, 24.0, 24.0);
-					_whiteShareButton.frame = CGRectMake(280.0, 12.0, 34.0, 34.0);
+					_whiteGridButton.alpha = 1.0;
+					_whiteShareButton.alpha = 1.0;
+					
+					_greyGridButton.alpha = 0.0;
+					_greyShareButton.alpha = 0.0;
+					
+					//_whiteGridButton.frame = CGRectMake(12.0, 12.0, 24.0, 24.0);
+					//_whiteShareButton.frame = CGRectMake(280.0, 12.0, 34.0, 34.0);
 				}
 			} completion:nil];
 		}];
@@ -287,14 +318,22 @@
 		nextCardView.frame = CGRectMake(0.0, 0.0, nextCardView.frame.size.width, nextCardView.frame.size.height);
 		
 		_isSwiping = YES;
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_CARDS" object:nil];
 		[UIView animateWithDuration:0.33 animations:^(void) {
 			cardView.frame = CGRectMake(-self.view.frame.size.width, 0.0, cardView.frame.size.width, cardView.frame.size.height);
 			
-			_greyGridButton.frame = CGRectMake(-_greyGridButton.frame.size.width, -_greyGridButton.frame.size.height, 24.0, 24.0);
-			_whiteGridButton.frame = CGRectMake(-_whiteGridButton.frame.size.width, -_whiteGridButton.frame.size.height, 24.0, 24.0);
+//			_greyGridButton.alpha = 0.0;
+//			_greyShareButton.alpha = 0.0;
+//			
+//			_whiteGridButton.alpha = 0.0;
+//			_whiteShareButton.alpha = 0.0;
 			
-			_greyShareButton.frame = CGRectMake(self.view.frame.size.width, -_greyShareButton.frame.size.height, 34.0, 34.0);
-			_whiteShareButton.frame = CGRectMake(self.view.frame.size.width, -_whiteShareButton.frame.size.height, 34.0, 34.0);
+//			_greyGridButton.frame = CGRectMake(-_greyGridButton.frame.size.width, -_greyGridButton.frame.size.height, 24.0, 24.0);
+//			_whiteGridButton.frame = CGRectMake(-_whiteGridButton.frame.size.width, -_whiteGridButton.frame.size.height, 24.0, 24.0);
+//			
+//			_greyShareButton.frame = CGRectMake(self.view.frame.size.width, -_greyShareButton.frame.size.height, 34.0, 34.0);
+//			_whiteShareButton.frame = CGRectMake(self.view.frame.size.width, -_whiteShareButton.frame.size.height, 34.0, 34.0);
 			
 		} completion:^(BOOL finished) {
 			[UIView animateWithDuration:0.25 animations:^(void) {
@@ -302,12 +341,24 @@
 				SNArticleVO *vo = (SNArticleVO *)[_articles objectAtIndex:_cardIndex - 1];
 				
 				if (vo.isDark) {
-					_greyGridButton.frame = CGRectMake(12.0, 12.0, 24.0, 24.0);
-					_greyShareButton.frame = CGRectMake(280.0, 12.0, 34.0, 34.0);
+					_greyGridButton.alpha = 1.0;
+					_greyShareButton.alpha = 1.0;
+					
+					_whiteGridButton.alpha = 0.0;
+					_whiteShareButton.alpha = 0.0;
+					
+//					_greyGridButton.frame = CGRectMake(12.0, 12.0, 24.0, 24.0);
+//					_greyShareButton.frame = CGRectMake(280.0, 12.0, 34.0, 34.0);
 					
 				} else {
-					_whiteGridButton.frame = CGRectMake(12.0, 12.0, 24.0, 24.0);
-					_whiteShareButton.frame = CGRectMake(280.0, 12.0, 34.0, 34.0);
+					_whiteGridButton.alpha = 1.0;
+					_whiteShareButton.alpha = 1.0;
+					
+					_greyGridButton.alpha = 0.0;
+					_greyShareButton.alpha = 0.0;
+					
+//					_whiteGridButton.frame = CGRectMake(12.0, 12.0, 24.0, 24.0);
+//					_whiteShareButton.frame = CGRectMake(280.0, 12.0, 34.0, 34.0);
 				}
 			}];
 			
@@ -350,7 +401,7 @@
 	blackMatteView.alpha = 0.0;
 	[self.view addSubview:blackMatteView];
 	
-	[UIView animateWithDuration:1.0 animations:^(void) {
+	[UIView animateWithDuration:0.5 animations:^(void) {
 		blackMatteView.alpha = 1.0;
 		
 	} completion:^(BOOL finished) {
@@ -371,6 +422,20 @@
 //	[self.navigationController presentModalViewController:navigationController animated:YES];
 }
 
+-(void)_videoEnded:(NSNotification *)notification {
+	UIView *blackMatteView = [[[UIView alloc] initWithFrame:self.view.frame] autorelease];
+	[blackMatteView setBackgroundColor:[UIColor blackColor]];
+	blackMatteView.alpha = 1.0;
+	[self.view addSubview:blackMatteView];
+	
+	[UIView animateWithDuration:0.5 animations:^(void) {
+		blackMatteView.alpha = 0.0;
+	
+	} completion:^(BOOL finished) {
+		[blackMatteView removeFromSuperview];
+	}];
+}
+
 -(void)_tagSearch:(NSNotification *)notification {
 	[self _goBack];
 }
@@ -383,8 +448,12 @@
 	SNArticleVO *vo = (SNArticleVO *)[notification object];
 	[_shareSheetView setVo:vo];
 	
+	_blackMatteView.hidden = NO;
 	[UIView animateWithDuration:0.33 animations:^(void) {
+		_blackMatteView.alpha = 1.0;
 		_shareSheetView.frame = CGRectMake(0.0, self.view.frame.size.height - _shareSheetView.frame.size.height, _shareSheetView.frame.size.width, _shareSheetView.frame.size.height);
+	
+	} completion:^(BOOL finished) {
 	}];
 }
 
@@ -421,7 +490,7 @@
 			msg = @"Tweet composition canceled.";
 		
 		
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Tweet Status" message:msg delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+		//UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Tweet Status" message:msg delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
 		//[alertView show];
 		
 		[self dismissModalViewControllerAnimated:YES];
@@ -448,8 +517,28 @@
 }
 -(void)_cancelShare:(NSNotification *)notification {
 	[UIView animateWithDuration:0.33 animations:^(void) {
+		_blackMatteView.alpha = 0.0;
 		_shareSheetView.frame = CGRectMake(0.0, self.view.frame.size.height, _shareSheetView.frame.size.width, _shareSheetView.frame.size.height);
+	
+	} completion:^(BOOL finished) {
+		_blackMatteView.hidden = YES;
 	}];
+}
+
+-(void)_showButtons:(NSNotification *)notification {
+	_greyGridButton.alpha = 1.0;
+	_greyShareButton.alpha = 1.0;
+	
+	_whiteGridButton.alpha = 1.0;
+	_whiteShareButton.alpha = 1.0;
+}
+
+-(void)_hideButtons:(NSNotification *)notification {
+	_greyGridButton.alpha = 0.0;
+	_greyShareButton.alpha = 0.0;
+	
+	_whiteGridButton.alpha = 0.0;
+	_whiteShareButton.alpha = 0.0;
 }
 
 //CGAffineTransform transform = scaleCardView.transform;
@@ -608,11 +697,11 @@
 			for (SNArticleCardView_iPhone *cardView in _cardViews) {
 				[_cardHolderView addSubview:cardView];
 			}
-						
-//			SNFacebookCardView_iPhone *facebookCardView = [[[SNFacebookCardView_iPhone alloc] initWithFrame:self.view.frame] autorelease];
-//			[_cardViews insertObject:(SNBaseArticleCardView_iPhone *)facebookCardView atIndex:[_cardViews count] - 3];
-//			[_cardHolderView addSubview:facebookCardView];
-//			
+			
+			//SNFacebookCardView_iPhone *facebookCardView = [[[SNFacebookCardView_iPhone alloc] initWithFrame:self.view.frame] autorelease];
+			//[_cardViews insertObject:(SNBaseArticleCardView_iPhone *)facebookCardView atIndex:[_cardViews count] - 3];
+			//[_cardHolderView addSubview:facebookCardView];
+			
 			_cardIndex = [_cardViews count] - 1;
 			[self performSelector:@selector(_introFirstCard) withObject:nil afterDelay:0.125];
 		}

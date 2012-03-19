@@ -46,7 +46,7 @@ if (isset($_POST['txtHandle'])) {
 	header('Location: followers.php');
 }
 
-$query = 'SELECT * FROM `tblCategories`;';
+$query = 'SELECT * FROM `tblChannels`;';
 $result = mysql_query($query);
 
 $cat_tot = 0;
@@ -96,7 +96,7 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 				<td><form id="frmAdd" name="frmAdd" method="post" action="./add_follower.php"><table cellspacing="0" cellpadding="0" border="0">
 					<tr><td>Handle:</td><td>@<input type="text" id="txtHandle" name="txtHandle" /></td></tr>
 					<tr><td>Categories:</td><td><?php
-					 	$query = 'SELECT * FROM `tblCategories`;';
+					 	$query = 'SELECT * FROM `tblChannels`;';
 						$result = mysql_query($query); 
 
 						$cnt = 0;

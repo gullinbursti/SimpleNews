@@ -28,6 +28,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_splashDismissed:) name:@"SPLASH_DISMISSED" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_followerTapped:) name:@"FOLLOWER_TAPPED" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_followerClosed:) name:@"FOLLOWER_CLOSED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_queueFollower:) name:@"QUEUE_FOLLOWER" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_followerArticles:) name:@"FOLLOWER_ARTICLES" object:nil];
 		
@@ -283,7 +284,6 @@
 
 
 
-
 #pragma mark - Notification handlers
 -(void)_showNowPlaying:(NSNotification *)notification {
 	[self _goArticles];
@@ -356,8 +356,12 @@
 	NSLog(@"FOLLOWER TAPPED");
 	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
 	
-	SNFollowerInfoView *followerInfoView = [[[SNFollowerInfoView alloc] initWithFrame:CGRectMake(67.0, 166.0, 194.0, 194.0) followerVO:vo] autorelease];
+	SNFollowerInfoView *followerInfoView = [[[SNFollowerInfoView alloc] initWithFrame:self.view.frame followerVO:vo] autorelease];
 	[self.view addSubview:followerInfoView];
+}
+
+-(void)_followerClosed:(NSNotification *)notification {
+	
 }
 
 -(void)_queueFollower:(NSNotification *)notification {

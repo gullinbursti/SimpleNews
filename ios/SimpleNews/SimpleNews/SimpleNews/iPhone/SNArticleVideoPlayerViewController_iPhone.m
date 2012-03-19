@@ -43,7 +43,7 @@
 	
 	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"youtube_player" ofType:@"html"]]];
 	
-	_webView = [[UIWebView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
+	_webView = [[UIWebView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 240.0)];
 	[_webView setBackgroundColor:[UIColor blackColor]];
 	_webView.delegate = self;
 	_webView.allowsInlineMediaPlayback = YES;
@@ -54,6 +54,11 @@
 	_overlayView = [[[UIView alloc] initWithFrame:self.view.frame] autorelease];
 	[_overlayView setBackgroundColor:[UIColor blackColor]];
 	[self.view addSubview:_overlayView];
+	
+	UIView *progressView = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
+	progressView.frame = CGRectMake(144.0, 224.0, 32.0, 32.0);
+	[(UIActivityIndicatorView *)progressView startAnimating];
+	[self.view addSubview:progressView];
 }
 
 -(void)viewDidLoad {
@@ -98,8 +103,16 @@
 	NSLog(@"_leftFullscreen");
 	_isFullscreen = NO;
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
-	[self.navigationController dismissModalViewControllerAnimated:YES];
+	//[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
+	//[self.navigationController dismissModalViewControllerAnimated:NO];
+	
+	[UIView animateWithDuration:0.5 animations:^(void) {
+		_overlayView.alpha = 1.0;
+		
+	} completion:^(BOOL finished) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
+		[self.navigationController dismissModalViewControllerAnimated:NO];
+	}];
 }
 
 
@@ -125,7 +138,15 @@
 				//if (!_isFullscreen)
 				//	[_webView stringByEvaluatingJavaScriptFromString:@"playVideo();"];
 			} else if ([value isEqualToString:@"PLAYING"]) {
-				[_overlayView removeFromSuperview];
+				//_overlayView.alpha = 0.0;
+				//[_overlayView removeFromSuperview];
+				
+				if (!_isFullscreen) {
+					//[_webView stringByEvaluatingJavaScriptFromString:@"stopVideo();"];
+					//[_webView stringByEvaluatingJavaScriptFromString:@"playVideo();"];
+					
+					[_webView stringByEvaluatingJavaScriptFromString:@"loadVideo('hrkltBedC0E');"];
+				}
 			}
 		}		
 		

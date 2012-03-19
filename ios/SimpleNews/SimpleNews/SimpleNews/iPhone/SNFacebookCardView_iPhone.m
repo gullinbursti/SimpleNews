@@ -25,10 +25,10 @@
 		_noThanksButton.frame = CGRectMake(230.0, 8.0, 82.0, 34.0);
 		[_noThanksButton setBackgroundImage:[[UIImage imageNamed:@"fbNoThanksButton.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_noThanksButton setBackgroundImage:[[UIImage imageNamed:@"fbNoThanksButton.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-		_noThanksButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14.0];
+		_noThanksButton.titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14.0];
 		_noThanksButton.titleLabel.textAlignment = UITextAlignmentCenter;
 		[_noThanksButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-		_noThanksButton.titleLabel.shadowColor = [UIColor blackColor];
+		_noThanksButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
 		_noThanksButton.titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 		[_noThanksButton setTitle:@"No Thanks" forState:UIControlStateNormal];
 		[_noThanksButton addTarget:self action:@selector(_goCancel) forControlEvents:UIControlEventTouchUpInside];
@@ -38,10 +38,10 @@
 		_connectButton.frame = CGRectMake(38.0, 400.0, 244.0, 64.0);
 		[_connectButton setBackgroundImage:[[UIImage imageNamed:@"facebookButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_connectButton setBackgroundImage:[[UIImage imageNamed:@"facebookButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-		_connectButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14.0];
+		_connectButton.titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14.0];
 		_connectButton.titleLabel.textAlignment = UITextAlignmentCenter;
 		[_connectButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-		_connectButton.titleLabel.shadowColor = [UIColor blackColor];
+		_connectButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
 		_connectButton.titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 		[_connectButton setTitle:@"Connect to Facebook" forState:UIControlStateNormal];
 		[_connectButton addTarget:self action:@selector(_goConnect) forControlEvents:UIControlEventTouchUpInside];

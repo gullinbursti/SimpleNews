@@ -77,11 +77,11 @@
 	backButton.frame = CGRectMake(254.0, 4.0, 64.0, 34.0);
 	[backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 	[backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-	backButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+	backButton.titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12.0];
 	backButton.titleLabel.textAlignment = UITextAlignmentCenter;
 	[backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-	backButton.titleLabel.shadowColor = [UIColor blackColor];
-	backButton.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
+	backButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+	backButton.titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 	[backButton setTitle:@"Done" forState:UIControlStateNormal];
 	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:backButton];

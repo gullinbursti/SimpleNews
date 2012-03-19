@@ -3,6 +3,7 @@
 		<meta name="viewport" content="initial-scale = 1.0, user-scalable = no, width = 320"/>
 	</head>
 	<body style="background-color:black; color:white; margin:0; padding:0;">
+		<!-- <iframe id="player" type="text/html" width="320" height="180" src="http://www.youtube.com/embed/tAxQCweDucI?modestbranding=1" frameborder="0"> -->
 		<div id="player"></div>
 		<script>
 			var tag = document.createElement('script');
@@ -18,7 +19,7 @@
 				player = new YT.Player('player', {
 					width: '320',
 					height: '480',
-					videoId: 'tAxQCweDucI', 
+					videoId: 'hrkltBedC0E', 
 											  
 					playerVars: {
 						'enablejsapi': 1, 
@@ -27,7 +28,9 @@
 						'showsearch': 0, 
 						'showinfo': 0, 
 						'autoplay': 1, 
-						'controls': 0 
+						'controls': 0, 
+						'suggestedQuality': "large", 
+						'modestbranding': 1
 					
 					}, events: {
 						'onReady': onPlayerReady,
@@ -40,6 +43,7 @@
 			
 			function onPlayerReady(event) {
 				sendValue('state', "READY");
+				event.target.setPlaybackQuality('large');
 				event.target.playVideo();
 			}
 			
@@ -110,12 +114,17 @@
 				}
 			}
 			
+			function loadVideo(id) {
+				player.loadVideoByUrl("http://www.youtube.com/v/" + id + "?version=3", 0, 'high');
+			}
+			
 			function playVideo() {
 				player.playVideo();
 			}
 			
 			function stopVideo() {
 				player.stopVideo();
+				player.clearVideo();
 			}
 			
 			function sendValue(key, val) {

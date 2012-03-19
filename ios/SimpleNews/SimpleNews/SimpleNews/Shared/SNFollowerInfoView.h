@@ -23,6 +23,7 @@
 	UIButton *_watchButton;
 	
 	UIImageView *_bgImgView;
+	UIView *_bgView;
 }
 
 -(id)initWithFrame:(CGRect)frame followerVO:(SNFollowerVO *)vo;

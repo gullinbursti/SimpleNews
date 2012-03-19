@@ -23,24 +23,26 @@
 		_cursorImgView.image = [UIImage imageNamed:@"blinkingCursor.png"];
 		[self addSubview:_cursorImgView];
 		
-		_txtField = [[[UITextField alloc] initWithFrame:CGRectMake(32, 15, 256, 20)] autorelease];
+		_txtField = [[[UITextField alloc] initWithFrame:CGRectMake(32.0, 11.0, 256.0, 20.0)] autorelease];
 		[_txtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 		[_txtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 		[_txtField setAutocorrectionType:UITextAutocorrectionTypeNo];
 		[_txtField setBackgroundColor:[UIColor clearColor]];
 		[_txtField setReturnKeyType:UIReturnKeyDone];
 		[_txtField addTarget:self action:@selector(onTxtDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
-		_txtField.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
+		_txtField.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
 		_txtField.textColor = [UIColor whiteColor];
 		_txtField.keyboardType = UIKeyboardTypeDefault;
 		_txtField.delegate = self;
 		_txtField.text = @"";
 		[self addSubview:_txtField];
 		
-		_txtLabel = [[UILabel alloc] initWithFrame:CGRectMake(32, 15, 256, 20)];
-		_txtLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
+		_txtLabel = [[UILabel alloc] initWithFrame:CGRectMake(32.0, 11.0, 256.0, 20.0)];
+		_txtLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
 		_txtLabel.textColor = [UIColor whiteColor];
 		_txtLabel.backgroundColor = [UIColor clearColor];
+		_txtLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+		_txtLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 		_txtLabel.text = @"Search news";
 		[self addSubview:_txtLabel];
 		
@@ -48,11 +50,11 @@
 		_backButton.frame = CGRectMake(245.0, 4.0, 64.0, 34.0);
 		[_backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-		_backButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		_backButton.titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12.0];
 		_backButton.titleLabel.textAlignment = UITextAlignmentCenter;
 		[_backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-		_backButton.titleLabel.shadowColor = [UIColor blackColor];
-		_backButton.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
+		_backButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+		_backButton.titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 		[_backButton setTitle:@"Back" forState:UIControlStateNormal];
 		[_backButton addTarget:self action:@selector(_goArticles) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_backButton];
@@ -82,6 +84,8 @@
 
 #pragma mark - Handlers
 -(void)onTxtDoneEditing:(id)sender {
+	[sender resignFirstResponder];
+	
 	if ([_txtField.text length] == 0)
 		_txtLabel.hidden = NO;
 	
@@ -90,7 +94,6 @@
 		[self performSelector:@selector(_clearText) withObject:nil afterDelay:3.5];
 	}
 	
-	[sender resignFirstResponder];
 }
 
 

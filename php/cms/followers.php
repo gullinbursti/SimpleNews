@@ -10,7 +10,7 @@ if (!isset($_SESSION['login']))
 require './_db_open.php';
 
 	
-$query = 'SELECT * FROM `tblTwitterFollowers`;';
+$query = 'SELECT * FROM `tblTwitterFollowers` ORDER BY `added` DESC;';
 $result = mysql_query($query);
 	
 ?>
@@ -40,6 +40,9 @@ $result = mysql_query($query);
 			<tr>
 				<td width="320" valign="top"><?php include './nav.php'; ?></td>
 				<td><table cellspacing="0" cellpadding="0" border="0">
+					<tr><td><input type="button" id="btnAdd" name="btnAdd" value="Add Follower" onclick="location.href='./add_follower.php'"></td></tr>
+					<tr><td colspan="2"><hr /></td></tr>
+					
 					<?php while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 						$pre_html = "<tr><td><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\">";
 						$post_html = "</table></td></tr>";
@@ -53,9 +56,7 @@ $result = mysql_query($query);
 						echo ("<tr><td colspan=\"2\"><input type=\"button\" value=\"Delete\" onclick=\"remove('". $row['id'] ."');\" /><input type=\"button\" value=\"Edit\" onclick=\"edit('". $row['id'] ."');\" /><input type=\"button\" value=\"Tweets\" onclick=\"window.location='./tweets.php?id=". $row['id'] ."&handle=". $row['handle'] ."'\" /></td></tr>");
 						echo ("<tr><td colspan=\"2\"><hr /></td></tr>");
 						echo ($post_html);
-						
 					} ?>
-					<tr><td><input type="button" id="btnAdd" name="btnAdd" value="Add Follower" onclick="location.href='./add_follower.php'"></td></tr>
 				</table></td>
 			</tr>
 		</table>
