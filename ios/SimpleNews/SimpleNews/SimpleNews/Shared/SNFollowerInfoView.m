@@ -20,10 +20,10 @@
 		[_bgView setBackgroundColor:[UIColor clearColor]];
 		[self addSubview:_bgView];
 		
-		UIView *holderView = [[[UIView alloc] initWithFrame:CGRectMake(67.0, 166.0, 194.0, 194.0)] autorelease];
+		UIView *holderView = [[[UIView alloc] initWithFrame:CGRectMake(40.0, 166.0, 244.0, 214.0)] autorelease];
 		[self addSubview:holderView];
 		
-		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 194.0, 194.0)];
+		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 244.0, 214.0)];
 		bgImgView.image = [UIImage imageNamed:@"infoOverlay.png"];
 		[holderView addSubview:bgImgView];
 		
@@ -69,7 +69,7 @@
 		[holderView addSubview:_infoLabel];
 		
 		_queueButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_queueButton.frame = CGRectMake(10.0, 150.0, 84.0, 34.0);
+		_queueButton.frame = CGRectMake(10.0, 150.0, 96.0, 34.0);
 		[_queueButton setBackgroundImage:[[UIImage imageNamed:@"followerInfoButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_queueButton setBackgroundImage:[[UIImage imageNamed:@"followerInfoButton_active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		_queueButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];
@@ -82,7 +82,7 @@
 		[holderView addSubview:_queueButton];
 		
 		_watchButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_watchButton.frame = CGRectMake(100.0, 150.0, 84.0, 34.0);
+		_watchButton.frame = CGRectMake(100.0, 150.0, 96.0, 34.0);
 		[_watchButton setBackgroundImage:[[UIImage imageNamed:@"followerInfoButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_watchButton setBackgroundImage:[[UIImage imageNamed:@"followerInfoButton_active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		_watchButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];

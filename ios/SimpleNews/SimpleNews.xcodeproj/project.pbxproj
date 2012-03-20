@@ -18,6 +18,7 @@
 		4C3904D615172BCD00278B95 /* pagination_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3904D215172BCD00278B95 /* pagination_on@2x.png */; };
 		4C3904D9151821E000278B95 /* SNShareSheetView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C3904D8151821E000278B95 /* SNShareSheetView_iPhone.m */; };
 		4C3904DC1518227A00278B95 /* SNPaginationView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C3904DB1518227A00278B95 /* SNPaginationView_iPhone.m */; };
+		4C3904DF1519132900278B95 /* SNLoaderView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C3904DE1519132800278B95 /* SNLoaderView_iPhone.m */; };
 		4C45B7A6150BD8520039F45B /* SNSplashViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C45B7A5150BD8520039F45B /* SNSplashViewController_iPhone.m */; };
 		4C45B7AD150C1F360039F45B /* SNSplashHighlightView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C45B7AC150C1F360039F45B /* SNSplashHighlightView.m */; };
 		4C48968D14FB76DC00C55125 /* SNBaseListItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C48968C14FB76DA00C55125 /* SNBaseListItemView_iPhone.m */; };
@@ -214,6 +215,8 @@
 		4C3904D8151821E000278B95 /* SNShareSheetView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNShareSheetView_iPhone.m; sourceTree = "<group>"; };
 		4C3904DA1518227A00278B95 /* SNPaginationView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPaginationView_iPhone.h; sourceTree = "<group>"; };
 		4C3904DB1518227A00278B95 /* SNPaginationView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPaginationView_iPhone.m; sourceTree = "<group>"; };
+		4C3904DD1519132700278B95 /* SNLoaderView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNLoaderView_iPhone.h; sourceTree = "<group>"; };
+		4C3904DE1519132800278B95 /* SNLoaderView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNLoaderView_iPhone.m; sourceTree = "<group>"; };
 		4C45B7A4150BD8520039F45B /* SNSplashViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSplashViewController_iPhone.h; sourceTree = "<group>"; };
 		4C45B7A5150BD8520039F45B /* SNSplashViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSplashViewController_iPhone.m; sourceTree = "<group>"; };
 		4C45B7AB150C1F360039F45B /* SNSplashHighlightView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSplashHighlightView.h; sourceTree = "<group>"; };
@@ -531,6 +534,8 @@
 				4C6B21DF1511A5500027AEE4 /* SNVideoPlayerView_iPhone.m */,
 				4C3904DA1518227A00278B95 /* SNPaginationView_iPhone.h */,
 				4C3904DB1518227A00278B95 /* SNPaginationView_iPhone.m */,
+				4C3904DD1519132700278B95 /* SNLoaderView_iPhone.h */,
+				4C3904DE1519132800278B95 /* SNLoaderView_iPhone.m */,
 			);
 			name = Articles;
 			sourceTree = "<group>";
@@ -1299,6 +1304,7 @@
 				4CD01BCC151550E6005B490C /* SBJsonWriter.m in Sources */,
 				4C3904D9151821E000278B95 /* SNShareSheetView_iPhone.m in Sources */,
 				4C3904DC1518227A00278B95 /* SNPaginationView_iPhone.m in Sources */,
+				4C3904DF1519132900278B95 /* SNLoaderView_iPhone.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

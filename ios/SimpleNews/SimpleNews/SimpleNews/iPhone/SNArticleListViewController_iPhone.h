@@ -13,6 +13,7 @@
 #import "ASIFormDataRequest.h"
 #import "SNShareSheetView_iPhone.h"
 #import "SNPaginationView_iPhone.h"
+#import "SNLoaderView_iPhone.h"
 
 #import "Facebook.h"
 
@@ -41,6 +42,7 @@
 	SNVideoPlayerView_iPhone *_videoPlayerView;
 	
 	SNPaginationView_iPhone	*_paginationView;
+	SNLoaderView_iPhone *_loaderView;
 }
 
 -(id)initAsMostRecent;

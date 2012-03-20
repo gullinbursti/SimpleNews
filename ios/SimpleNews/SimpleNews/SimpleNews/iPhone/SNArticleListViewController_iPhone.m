@@ -205,6 +205,9 @@
 	_shareSheetView = [[SNShareSheetView_iPhone alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
 	[self.view addSubview:_shareSheetView];
 	
+	_loaderView = [[SNLoaderView_iPhone alloc] initWithFrame:self.view.frame];
+	[self.view addSubview:_loaderView];
+	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
@@ -322,6 +325,10 @@
 			cardView.scaledImgView.frame = CGRectMake(((cardView.frame.size.width - (cardView.frame.size.width * kImageScale)) * 0.5), ((cardView.frame.size.height - (cardView.frame.size.height * kImageScale)) * 0.5), cardView.frame.size.width * kImageScale, cardView.frame.size.height * kImageScale);
 			cardView.holderView.hidden = NO;
 		}];
+	
+	} else {
+		[_loaderView introMe];
+		[self performSelector:@selector(_doneLoading) withObject:nil afterDelay:3.0];
 	}
 }
 
@@ -398,6 +405,10 @@
 			nextCardView.scaledImgView.frame = CGRectMake(((nextCardView.frame.size.width - (nextCardView.frame.size.width * kImageScale)) * 0.5), ((nextCardView.frame.size.height - (nextCardView.frame.size.height * kImageScale)) * 0.5), nextCardView.frame.size.width * kImageScale, nextCardView.frame.size.height * kImageScale);
 			nextCardView.holderView.hidden = NO;
 		}];
+	
+	} else {
+		[_loaderView introMe];
+		[self performSelector:@selector(_doneLoading) withObject:nil afterDelay:3.0];
 	}
 }
 
@@ -416,6 +427,10 @@
 	}];
 }
 
+-(void)_doneLoading {
+	[_loaderView outroMe];
+	
+}
 
 
 #pragma mark - Notification handlers

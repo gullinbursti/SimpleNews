@@ -13,7 +13,6 @@
 @interface SNVideoPlayerView_iPhone : UIView <UIWebViewDelegate> {
 	UIWebView *_webView;
 	
-	NSTimer *_timer;
 	BOOL _isFinished;
 	BOOL _isPaused;
 	float _duration;
