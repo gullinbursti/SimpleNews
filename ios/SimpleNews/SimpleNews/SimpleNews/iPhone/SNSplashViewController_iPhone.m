@@ -70,13 +70,12 @@
 			_highlightImgView.frame = CGRectMake(self.view.frame.size.width, _highlightImgView.frame.origin.y, _highlightImgView.frame.size.width, _highlightImgView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
-			_highlightImgView.frame = CGRectMake(0.0, _highlightImgView.frame.origin.y, _highlightImgView.frame.size.width, _highlightImgView.frame.size.height);
+			[_highlightImgView removeFromSuperview];
 			
-			[UIView animateWithDuration:0.67 delay:0.0 options:UIViewAnimationCurveLinear animations:^(void) {
+			[UIView animateWithDuration:0.67 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^(void) {
 				_stripsImgView.frame = CGRectMake(0.0, 0.0, _stripsImgView.frame.size.width, _stripsImgView.frame.size.height);
 				
 			} completion:^(BOOL finished) {
-				[_highlightImgView removeFromSuperview];
 				[self _goGrid];
 			}];
 		}];

@@ -475,14 +475,14 @@
 					if (vo != nil)
 						[followerList addObject:vo];
 					
-					SNFollowerGridItemView_iPhone *channelItemView = [[[SNFollowerGridItemView_iPhone alloc] initWithFrame:CGRectMake(80.0 * (tot % 4), 50.0 + (80.0 * (int)(tot / 4)), 80.0, 80.0) followerVO:vo] autorelease];
+					SNFollowerGridItemView_iPhone *channelItemView = [[[SNFollowerGridItemView_iPhone alloc] initWithFrame:CGRectMake(80.0 * (tot % 4), 55.0 + (80.0 * (int)(tot / 4)), 80.0, 80.0) followerVO:vo] autorelease];
 					[_itemViews addObject:channelItemView];
 					tot++;
 				}
 				
 				_followers = [followerList retain];
 				[followerList release];
-				_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 50.0 + ((ceil(tot / 4) + 1) * 80.0));
+				_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 55.0 + (ceil(tot / 4) * 80.0));
 				
 				for (SNFollowerGridItemView_iPhone *followerItemView in _itemViews)
 					[_scrollView addSubview:followerItemView];

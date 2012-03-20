@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
 
+#import "SNVideoPlayerView_iPhone.h"
 #import "ASIFormDataRequest.h"
-#import "SNShareSheetView.h"
+#import "SNShareSheetView_iPhone.h"
+#import "SNPaginationView_iPhone.h"
 
 #import "Facebook.h"
 
@@ -27,7 +29,7 @@
 	int _cardIndex;
 	BOOL _isSwiping;
 	
-	SNShareSheetView *_shareSheetView;
+	SNShareSheetView_iPhone *_shareSheetView;
 	
 	UIButton *_greyGridButton;
 	UIButton *_whiteGridButton;
@@ -35,6 +37,10 @@
 	UIButton *_whiteShareButton;
 	
 	UIView *_blackMatteView;
+	UIView *_videoDimmerView;
+	SNVideoPlayerView_iPhone *_videoPlayerView;
+	
+	SNPaginationView_iPhone	*_paginationView;
 }
 
 -(id)initAsMostRecent;

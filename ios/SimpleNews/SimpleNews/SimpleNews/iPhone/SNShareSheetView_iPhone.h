@@ -1,5 +1,5 @@
 //
-//  SNShareSheetView.h
+//  SNShareSheetView_iPhone.h
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.16.12.
@@ -10,7 +10,7 @@
 
 #import "SNArticleVO.h"
 
-@interface SNShareSheetView : UIView {
+@interface SNShareSheetView_iPhone : UIView {
 	SNArticleVO *_vo;
 }
 

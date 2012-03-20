@@ -358,6 +358,97 @@
 			return (true);	
 		}
 		
+		function getArticlesBeforeDate($date) {
+			$article_arr = array();
+			
+			$query = 'SELECT * FROM `tblArticles` WHERE `added` < "'. $date .'";';
+			$article_result = mysql_query($query); 
+			
+			$tot = 0;
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
+				$query = 'SELECT `avatar_url`, `name` FROM `tblTwitterFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
+				$follower_arr = mysql_fetch_row(mysql_query($query));
+				
+				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
+				$tag_result = mysql_query($query);
+				
+				$tag_arr = array();
+				while ($tag_row = mysql_fetch_array($tag_result, MYSQL_BOTH)) { 
+					array_push($tag_arr, array(
+						"tag_id" => $tag_row['id'], 
+						"title" => $tag_row['title']
+					));
+				}
+				
+				array_push($article_arr, array(
+					"article_id" => $article_row['id'], 
+					"type_id" => $article_row['type_id'], 
+					"title" => $article_row['title'], 
+					"tweet_id" => $article_row['tweet_id'], 
+					"tweet_msg" => $article_row['tweet_msg'], 
+					"twitter_name" => $follower_arr[1], 
+					"bg_url" => $article_row['image_url'], 
+					"content" => $article_row['content'], 
+					"avatar_url" => $follower_arr[0], 
+					"video_url" => $article_row['video_url'], 
+					"is_dark" => $article_row['isDark'], 
+					"added" => $article_row['added'], 
+					"tags" => $tag_arr
+				));
+				
+				$tot++;
+	    	}
+			
+			 
+			$this->sendResponse(200, json_encode($article_arr));
+			return (true);   
+		}
+		
+		function getArticlesAfterDate($date) {
+			$article_arr = array();
+			
+			$query = 'SELECT * FROM `tblArticles` WHERE `added` > "'. $date .'";';
+			$article_result = mysql_query($query); 
+			
+			$tot = 0;
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
+				$query = 'SELECT `avatar_url`, `name` FROM `tblTwitterFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
+				$follower_arr = mysql_fetch_row(mysql_query($query));
+				
+				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
+				$tag_result = mysql_query($query);
+				
+				$tag_arr = array();
+				while ($tag_row = mysql_fetch_array($tag_result, MYSQL_BOTH)) { 
+					array_push($tag_arr, array(
+						"tag_id" => $tag_row['id'], 
+						"title" => $tag_row['title']
+					));
+				}
+				
+				array_push($article_arr, array(
+					"article_id" => $article_row['id'], 
+					"type_id" => $article_row['type_id'], 
+					"title" => $article_row['title'], 
+					"tweet_id" => $article_row['tweet_id'], 
+					"tweet_msg" => $article_row['tweet_msg'], 
+					"twitter_name" => $follower_arr[1], 
+					"bg_url" => $article_row['image_url'], 
+					"content" => $article_row['content'], 
+					"avatar_url" => $follower_arr[0], 
+					"video_url" => $article_row['video_url'], 
+					"is_dark" => $article_row['isDark'], 
+					"added" => $article_row['added'], 
+					"tags" => $tag_arr
+				));
+				
+				$tot++;
+	    	}  
+	
+			$this->sendResponse(200, json_encode($article_arr));
+			return (true);
+		}
+		
 		
 		function test() {
 			$this->sendResponse(200, json_encode(array(
@@ -401,7 +492,17 @@
 			case "5":
 				if (isset($_POST['tags']))
 					$articles->getArticlesByTags($_POST['tags']);
+				break; 
+				
+			case "6":
+				if (isset($_POST['date']))
+					$articles->getArticlesBeforeDate($_POST['date']);
 				break;
+				
+			case "7":
+				if (isset($_POST['date']))
+					$articles->getArticlesAfterDate($_POST['date']);
+				break; 
     	}
 	}
 ?>

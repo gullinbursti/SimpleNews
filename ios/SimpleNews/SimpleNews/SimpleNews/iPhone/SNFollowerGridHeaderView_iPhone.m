@@ -47,10 +47,10 @@
 		[self addSubview:_txtLabel];
 		
 		_backButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_backButton.frame = CGRectMake(245.0, 4.0, 64.0, 34.0);
+		_backButton.frame = CGRectMake(250.0, 12.0, 64.0, 34.0);
 		[_backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-		_backButton.titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12.0];
+		_backButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
 		_backButton.titleLabel.textAlignment = UITextAlignmentCenter;
 		[_backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 		_backButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];

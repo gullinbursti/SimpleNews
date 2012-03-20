@@ -36,6 +36,8 @@
 	CGSize _titleSize;
 	CGSize _contentSize;
 	
+	UIView *_indicatorView;
+	
 	BOOL _isAtTop;
 }
 

@@ -12,7 +12,6 @@
 #import "SNArticleCardView_iPhone.h"
 
 #import "SNAppDelegate.h"
-#import "SNArticleVideoPlayerViewController_iPhone.h"
 
 #import "SNFacebookCardView_iPhone.h"
 
@@ -29,6 +28,7 @@
 -(id)init {
 	if ((self = [super init])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startVideo:) name:@"START_VIDEO" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoStarted:) name:@"VIDEO_STARTED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_tagSearch:) name:@"TAG_SEARCH" object:nil];
@@ -147,7 +147,9 @@
 -(void)loadView {
 	[super loadView];
 	
-	[self.view setBackgroundColor:[UIColor blackColor]];
+//	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+//	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+//	[self.view addSubview:bgImgView];
 	
 	_cardHolderView = [[UIView alloc] initWithFrame:self.view.frame];
 	[self.view addSubview:_cardHolderView];
@@ -183,12 +185,24 @@
 	[_whiteShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_whiteShareButton];
 	
+	_paginationView = [[SNPaginationView_iPhone alloc] initWithFrame:CGRectMake(262.0, 470.0, 48.0, 9.0)];
+	[self.view addSubview:_paginationView];
+	
+	_videoPlayerView = [[SNVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)];
+	_videoPlayerView.hidden = YES;
+	[self.view addSubview:_videoPlayerView];
+	
 	_blackMatteView = [[[UIView alloc] initWithFrame:self.view.frame] autorelease];
 	[_blackMatteView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.67]];
 	_blackMatteView.alpha = 0.0;
 	[self.view addSubview:_blackMatteView];
 	
-	_shareSheetView = [[SNShareSheetView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
+	_videoDimmerView = [[[UIView alloc] initWithFrame:self.view.frame] autorelease];
+	[_videoDimmerView setBackgroundColor:[UIColor blackColor]];
+	_videoDimmerView.alpha = 0.0;
+	[self.view addSubview:_videoDimmerView];
+	
+	_shareSheetView = [[SNShareSheetView_iPhone alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
 	[self.view addSubview:_shareSheetView];
 	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
@@ -244,6 +258,7 @@
 		
 		cardView.holderView.hidden = YES;
 		cardView.scaledImgView.hidden = NO;
+		//cardView.alpha = 0.0;
 		
 		_isSwiping = YES;
 		
@@ -265,8 +280,9 @@
 //			_whiteShareButton.frame = CGRectMake(self.view.frame.size.width, -_whiteShareButton.frame.size.height, 34.0, 34.0);
 			
 		} completion:^(BOOL finished) {
-			_isSwiping = NO;
 			_cardIndex++;
+			
+			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
 			
 			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void) {
 				NSLog(@"Article [%d/%d]", _cardIndex, [_articles count]);
@@ -297,8 +313,11 @@
 		
 		[UIView animateWithDuration:0.15 delay:0.25 options:UIViewAnimationCurveEaseInOut animations:^(void) {
 			cardView.scaledImgView.frame = CGRectMake(0.0, 0.0, cardView.frame.size.width, cardView.frame.size.height);
+			//cardView.alpha = 1.0;
 			
 		} completion:^(BOOL finished) {
+			_isSwiping = NO;
+			
 			cardView.scaledImgView.hidden = YES;
 			cardView.scaledImgView.frame = CGRectMake(((cardView.frame.size.width - (cardView.frame.size.width * kImageScale)) * 0.5), ((cardView.frame.size.height - (cardView.frame.size.height * kImageScale)) * 0.5), cardView.frame.size.width * kImageScale, cardView.frame.size.height * kImageScale);
 			cardView.holderView.hidden = NO;
@@ -315,6 +334,7 @@
 		
 		nextCardView.holderView.hidden = YES;
 		nextCardView.scaledImgView.hidden = NO;
+		//nextCardView.alpha = 0.0;
 		nextCardView.frame = CGRectMake(0.0, 0.0, nextCardView.frame.size.width, nextCardView.frame.size.height);
 		
 		_isSwiping = YES;
@@ -362,15 +382,18 @@
 				}
 			}];
 			
-			_isSwiping = NO;
 			_cardIndex--;
+			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
 		}];
 		
 		
 		[UIView animateWithDuration:0.15 delay:0.25 options:UIViewAnimationCurveEaseInOut animations:^(void) {
 			nextCardView.scaledImgView.frame = CGRectMake(0.0, 0.0, cardView.frame.size.width, cardView.frame.size.height);
+			//nextCardView.alpha = 1.0;
 			
 		} completion:^(BOOL finished) {
+			_isSwiping = NO;
+			
 			nextCardView.scaledImgView.hidden = YES;
 			nextCardView.scaledImgView.frame = CGRectMake(((nextCardView.frame.size.width - (nextCardView.frame.size.width * kImageScale)) * 0.5), ((nextCardView.frame.size.height - (nextCardView.frame.size.height * kImageScale)) * 0.5), nextCardView.frame.size.width * kImageScale, nextCardView.frame.size.height * kImageScale);
 			nextCardView.holderView.hidden = NO;
@@ -384,6 +407,7 @@
 	
 	[UIView animateWithDuration:0.15 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
 		articleCardView.scaledImgView.frame = CGRectMake(0.0, 0.0, articleCardView.frame.size.width, articleCardView.frame.size.height);
+		//articleCardView.alpha = 1.0;
 		
 	} completion:^(BOOL finished) {
 		articleCardView.scaledImgView.hidden = YES;
@@ -396,44 +420,20 @@
 
 #pragma mark - Notification handlers
 -(void)_startVideo:(NSNotification *)notification {
-	UIView *blackMatteView = [[[UIView alloc] initWithFrame:self.view.frame] autorelease];
-	[blackMatteView setBackgroundColor:[UIColor blackColor]];
-	blackMatteView.alpha = 0.0;
-	[self.view addSubview:blackMatteView];
-	
-	[UIView animateWithDuration:0.5 animations:^(void) {
-		blackMatteView.alpha = 1.0;
-		
-	} completion:^(BOOL finished) {
-		[blackMatteView removeFromSuperview];
-		
-		SNArticleVideoPlayerViewController_iPhone *articleListViewController = [[[SNArticleVideoPlayerViewController_iPhone alloc] init] autorelease];
-		UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:articleListViewController] autorelease];
-		
-		[navigationController setNavigationBarHidden:YES];
-		[self.navigationController presentModalViewController:navigationController animated:NO];
-	}];
-	
-	
-//	SNArticleVideoPlayerViewController_iPhone *articleListViewController = [[[SNArticleVideoPlayerViewController_iPhone alloc] init] autorelease];
-//	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:articleListViewController] autorelease];
-//	
-//	[navigationController setNavigationBarHidden:YES];
-//	[self.navigationController presentModalViewController:navigationController animated:YES];
+	SNArticleVO *vo = (SNArticleVO *)[notification object];
+	[_videoPlayerView changeArticleVO:vo];
+}
+
+-(void)_videoStarted:(NSNotification *)notification {
+	[UIView animateWithDuration:0.25 delay:0.25 options:UIViewAnimationCurveLinear animations:^(void) {
+		_videoDimmerView.alpha = 1.0;
+	} completion:nil];
 }
 
 -(void)_videoEnded:(NSNotification *)notification {
-	UIView *blackMatteView = [[[UIView alloc] initWithFrame:self.view.frame] autorelease];
-	[blackMatteView setBackgroundColor:[UIColor blackColor]];
-	blackMatteView.alpha = 1.0;
-	[self.view addSubview:blackMatteView];
-	
 	[UIView animateWithDuration:0.5 animations:^(void) {
-		blackMatteView.alpha = 0.0;
-	
-	} completion:^(BOOL finished) {
-		[blackMatteView removeFromSuperview];
-	}];
+		_videoDimmerView.alpha = 0.0;
+	} completion:nil];
 }
 
 -(void)_tagSearch:(NSNotification *)notification {

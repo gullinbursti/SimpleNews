@@ -1,16 +1,16 @@
 //
-//  SNShareSheetView.m
+//  SNShareSheetView_iPhone.m
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.16.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import "SNShareSheetView.h"
+#import "SNShareSheetView_iPhone.h"
 
 #import "SNAppDelegate.h"
 
-@implementation SNShareSheetView
+@implementation SNShareSheetView_iPhone
 
 @synthesize vo = _vo;
 

@@ -16,7 +16,7 @@
 @implementation SNArticleCardView_iPhone
 
 #define kImageScale 0.9
-#define kBaseHeaderHeight 115.0
+#define kBaseHeaderHeight 65.0
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo {
 	if ((self = [super initWithFrame:frame])) {
@@ -28,7 +28,7 @@
 		
 		[self setBackgroundColor:[UIColor clearColor]];
 		
-		_tweetSize = [_vo.tweetMessage sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		_tweetSize = [_vo.tweetMessage sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		_titleSize = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:22] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		_contentSize = [_vo.content sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		
@@ -61,12 +61,17 @@
 			_playImgView.image = [UIImage imageNamed:@"playIcon.png"];
 			
 			_playButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-			_playButton.frame = CGRectMake(121.0, 128.0, 84.0, 84.0);
+			_playButton.frame = CGRectMake(121.0, 165.0, 84.0, 84.0);
 			[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 			[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 			[_playButton addTarget:self action:@selector(_goPlayVideo) forControlEvents:UIControlEventTouchUpInside];
 			[_playButton addSubview:_playImgView];
 			[_holderView addSubview:_playButton];
+			
+			_indicatorView = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
+			_indicatorView.frame = CGRectMake(147.0, 191.0, 32.0, 32.0);
+			_indicatorView.hidden = YES;
+			[_holderView addSubview:_indicatorView];
 		}
 	}
 	
@@ -98,18 +103,35 @@
 
 -(void)_goPlayVideo {
 	_playImgView.hidden = YES;
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"START_VIDEO" object:_vo.video_url];
+	
+	[(UIActivityIndicatorView *)_indicatorView startAnimating];
+	_indicatorView.hidden = NO;
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"START_VIDEO" object:_vo];
 }
 
 
 #pragma mark - Notifications
 -(void)_changeCards:(NSNotification *)notification {
-	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-	[_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+	[self performSelector:@selector(_resetMe) withObject:nil afterDelay:0.33];
 }
 
 -(void)_videoEnded:(NSNotification *)notification {
 	_playImgView.hidden = NO;
+	
+	[(UIActivityIndicatorView *)_indicatorView stopAnimating];
+	_indicatorView.hidden = YES;
+}
+
+
+#pragma mark - Interaction handlers
+-(void)_resetMe {
+	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+	[_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
+	
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		_tableView.contentOffset = CGPointMake(0.0, 45.0 + _tweetSize.height);
+	}];
 }
 
 
@@ -139,6 +161,29 @@
 			[cellView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.85]];
 			[cell addSubview:cellView];
 			
+			_tweetLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 0.0, 296.0, _tweetSize.height)];
+			_tweetLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
+			_tweetLabel.textColor = [UIColor whiteColor];
+			_tweetLabel.backgroundColor = [UIColor clearColor];
+			_tweetLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+			_tweetLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+			_tweetLabel.text = _vo.tweetMessage;
+			_tweetLabel.numberOfLines = 0;
+			[cell addSubview:_tweetLabel];
+			
+			UIImageView *twitterIcoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 20.0 + _tweetSize.height, 14.0, 14.0)] autorelease];
+			twitterIcoImgView.image = [UIImage imageNamed:@"twitterIcon.png"];
+			[cell addSubview:twitterIcoImgView];
+			
+			UILabel *twitterSiteLabel = [[[UILabel alloc] initWithFrame:CGRectMake(30.0, 20.0 + _tweetSize.height, 150.0, 16.0)] autorelease];
+			twitterSiteLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
+			twitterSiteLabel.textColor = [UIColor whiteColor];
+			twitterSiteLabel.backgroundColor = [UIColor clearColor];
+			twitterSiteLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+			twitterSiteLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+			twitterSiteLabel.text = @"Twitter.com";
+			[cell addSubview:twitterSiteLabel];
+			
 			
 			/*
 			float width = 0;
@@ -163,7 +208,7 @@
 			}
 			*/
 			
-			_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 25.0, 296.0, _titleSize.height)];
+			_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 50.0 + _tweetSize.height, 296.0, _titleSize.height)];
 			_titleLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:22];
 			_titleLabel.textColor = [UIColor whiteColor];
 			_titleLabel.backgroundColor = [UIColor clearColor];
@@ -173,7 +218,7 @@
 			_titleLabel.numberOfLines = 0;
 			[cell addSubview:_titleLabel];
 			
-			_contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 50.0 + _titleSize.height, 296.0, _contentSize.height)];
+			_contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 75.0 + _titleSize.height + _tweetSize.height, 296.0, _contentSize.height)];
 			_contentLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
 			_contentLabel.textColor = [UIColor whiteColor];
 			_contentLabel.backgroundColor = [UIColor clearColor];
@@ -204,10 +249,10 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	if (indexPath.section == 1)
-		return (_contentSize.height + 80.0);
+		return (_contentSize.height + 160.0);
 	
 	else
-		return (self.frame.size.height - (_tweetSize.height + kBaseHeaderHeight));
+		return (self.frame.size.height - kBaseHeaderHeight);
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -216,13 +261,13 @@
 		return (0);
 	
 	else
-		return (_tweetSize.height + kBaseHeaderHeight);
+		return (kBaseHeaderHeight);
 }
 			  
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
 	
 	if (section == 1) {
-		_headerView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, _tweetSize.height + kBaseHeaderHeight)] autorelease];
+		_headerView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, kBaseHeaderHeight)] autorelease];
 		[_headerView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
 		
 		_avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 40.0, 40.0)];
@@ -265,29 +310,6 @@
 		_dateLabel.numberOfLines = 0;
 		[_headerView addSubview:_dateLabel];
 		
-		_tweetLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 60.0, 296.0, _tweetSize.height)];
-		_tweetLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
-		_tweetLabel.textColor = [UIColor whiteColor];
-		_tweetLabel.backgroundColor = [UIColor clearColor];
-		_tweetLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-		_tweetLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-		_tweetLabel.text = _vo.tweetMessage;
-		_tweetLabel.numberOfLines = 0;
-		[_headerView addSubview:_tweetLabel];
-		
-		UIImageView *twitterIcoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 77.0 + _tweetSize.height, 14.0, 14.0)] autorelease];
-		twitterIcoImgView.image = [UIImage imageNamed:@"twitterIcon.png"];
-		[_headerView addSubview:twitterIcoImgView];
-		
-		UILabel *twitterSiteLabel = [[[UILabel alloc] initWithFrame:CGRectMake(30.0, 77.0 + _tweetSize.height, 150.0, 16.0)] autorelease];
-		twitterSiteLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
-		twitterSiteLabel.textColor = [UIColor whiteColor];
-		twitterSiteLabel.backgroundColor = [UIColor clearColor];
-		twitterSiteLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-		twitterSiteLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-		twitterSiteLabel.text = @"Twitter.com";
-		[_headerView addSubview:twitterSiteLabel];
-		
 		return (_headerView);
 	}
 	
@@ -317,14 +339,18 @@
 	NSLog(@"OFFSET:[%f]", scrollView.contentOffset.y);
 	
 	if (_playButton != nil) {
-		if (scrollView.contentOffset.y > 20.0)
-			_playButton.hidden = YES;
+		if (scrollView.contentOffset.y > 160.0)
+			[UIView animateWithDuration:0.25 animations:^(void) {
+				_playButton.alpha = 0.0;
+			}];
 	
 		else
-			_playButton.hidden = NO;
+			[UIView animateWithDuration:0.25 animations:^(void) {
+				_playButton.alpha = 1.0;
+			}];
 	}
 	
-	if (_isAtTop && (scrollView.contentOffset.y < self.frame.size.height - (_tweetSize.height + kBaseHeaderHeight))) {
+	if (_isAtTop && (scrollView.contentOffset.y < self.frame.size.height - kBaseHeaderHeight)) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_BUTTONS" object:nil];
 		_isAtTop = NO;
 		
@@ -335,7 +361,7 @@
 		[_headerView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
 	} 
 	
-	if (scrollView.contentOffset.y >= self.frame.size.height - (_tweetSize.height + kBaseHeaderHeight)) {
+	if (scrollView.contentOffset.y >= self.frame.size.height - kBaseHeaderHeight) {
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"HIDE_BUTTONS" object:nil];
 		_isAtTop = YES;
 		
@@ -373,7 +399,7 @@
 }
 
 
-#pragma mark ImageLoader
+#pragma mark - ImageLoader
 
 -(void)imageViewLoadedImage:(EGOImageView *)imageView {
 	NSLog(@"IMAGE LOADED:[%@]", imageView.imageURL);
@@ -397,6 +423,10 @@
 	//UIImageView *holderImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)] autorelease];
 	//holderImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:_holderView] CGImage] scale:1.0 orientation:UIImageOrientationUp];
 	//[_scaledImgView addSubview:holderImgView];
+	
+	//self.alpha = 0.0;
+	
+	[self _resetMe];
 }
 
 @end

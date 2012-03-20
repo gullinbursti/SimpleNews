@@ -72,7 +72,7 @@
 		_queueButton.frame = CGRectMake(10.0, 150.0, 84.0, 34.0);
 		[_queueButton setBackgroundImage:[[UIImage imageNamed:@"followerInfoButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_queueButton setBackgroundImage:[[UIImage imageNamed:@"followerInfoButton_active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-		_queueButton.titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:13.0];
+		_queueButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];
 		_queueButton.titleLabel.textAlignment = UITextAlignmentCenter;
 		[_queueButton setTitleColor:[UIColor colorWithWhite:0.773 alpha:1.0] forState:UIControlStateNormal];
 		_queueButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
@@ -85,7 +85,7 @@
 		_watchButton.frame = CGRectMake(100.0, 150.0, 84.0, 34.0);
 		[_watchButton setBackgroundImage:[[UIImage imageNamed:@"followerInfoButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_watchButton setBackgroundImage:[[UIImage imageNamed:@"followerInfoButton_active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-		_watchButton.titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:13.0];
+		_watchButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];
 		_watchButton.titleLabel.textAlignment = UITextAlignmentCenter;
 		[_watchButton setTitleColor:[UIColor colorWithWhite:0.773 alpha:1.0] forState:UIControlStateNormal];
 		_watchButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];

@@ -17,18 +17,6 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_enteredFullscreen:) name:@"UIMoviePlayerControllerDidEnterFullscreenNotification" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_leftFullscreen:) name:@"UIMoviePlayerControllerDidExitFullscreenNotification" object:nil];
-		
-		[self setBackgroundColor:[UIColor blackColor]];
-		
-		NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"youtube_player" ofType:@"html"]]];
-		
-		_webView = [[UIWebView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
-		[_webView setBackgroundColor:[UIColor blackColor]];
-		_webView.delegate = self;
-		_webView.allowsInlineMediaPlayback = YES;
-		_webView.mediaPlaybackRequiresUserAction = NO;
-		[_webView loadRequest:request];
-		[self addSubview:_webView];
 	}
 	
 	return (self);
@@ -38,6 +26,39 @@
 	[_webView release];
 	
 	[super dealloc];
+}
+
+-(void)changeArticleVO:(SNArticleVO *)vo {
+	_vo = vo;
+	
+	_isFullscreen = NO;
+	_isFirstPlay = YES;
+	
+	NSLog(@"TITLE:[%@]", _vo.title);
+	
+	[self setBackgroundColor:[UIColor blackColor]];
+	
+	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"youtube_player" ofType:@"html"]]];
+	
+	_webView = [[UIWebView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 240.0)];
+	[_webView setBackgroundColor:[UIColor blackColor]];
+	_webView.hidden = YES;
+	_webView.delegate = self;
+	_webView.allowsInlineMediaPlayback = YES;
+	_webView.mediaPlaybackRequiresUserAction = NO;
+	[_webView loadRequest:request];
+	[self addSubview:_webView];
+	
+	//[self performSelector:@selector(delay) withObject:nil afterDelay:1.33];
+	
+	_overlayView = [[[UIView alloc] initWithFrame:self.frame] autorelease];
+	[_overlayView setBackgroundColor:[UIColor blackColor]];
+	[self addSubview:_overlayView];
+	
+	UIView *progressView = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
+	progressView.frame = CGRectMake(144.0, 224.0, 32.0, 32.0);
+	[(UIActivityIndicatorView *)progressView startAnimating];
+	[self addSubview:progressView];
 }
 
 
@@ -62,13 +83,23 @@
 
 -(void)_enteredFullscreen:(NSNotification *)notification {
 	NSLog(@"_enteredFullscreen");
+	_isFullscreen = YES;
 }
 
 -(void)_leftFullscreen:(NSNotification *)notification {
 	NSLog(@"_leftFullscreen");
+	_isFullscreen = NO;
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
-	//[self.na
+	//[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
+	//[self.navigationController dismissModalViewControllerAnimated:NO];
+	
+	[UIView animateWithDuration:0.5 animations:^(void) {
+		_overlayView.alpha = 1.0;
+		
+	} completion:^(BOOL finished) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
+		//[self removeFromSuperview];
+	}];
 }
 
 
@@ -89,7 +120,36 @@
 				
 				_isFinished = YES;
 				[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
-				//	[self.navigationController popViewControllerAnimated:YES];
+				//[self removeFromSuperview];
+				
+				//if (!_isFullscreen)
+				//	[_webView stringByEvaluatingJavaScriptFromString:@"playVideo();"];
+			} else if ([value isEqualToString:@"PLAYING"]) {
+				//_overlayView.alpha = 0.0;
+				//[_overlayView removeFromSuperview];
+				
+				if (_isFirstPlay) {
+					_isFirstPlay = NO;
+					[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_STARTED" object:nil];	
+					//[_webView stringByEvaluatingJavaScriptFromString:@"pauseVideo();"];
+					//_webView.hidden = NO;
+				}
+				
+				if (!_isFullscreen) {
+					//[_webView stringByEvaluatingJavaScriptFromString:@"stopVideo();"];
+					//[_webView stringByEvaluatingJavaScriptFromString:@"playVideo();"];
+					//[_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"loadVideo(\"%@\");", _vo.video_url]];
+					
+					[_webView reload];
+				}
+				
+			} else if ([value isEqualToString:@"BUFFERING"]) {
+				if (_isFirstPlay) {
+					_isFirstPlay = NO;
+					[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_STARTED" object:nil];	
+					//[_webView stringByEvaluatingJavaScriptFromString:@"pauseVideo();"];
+					//_webView.hidden = NO;
+				}
 			}
 		}		
 		
@@ -104,9 +164,10 @@
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
+	[_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"loadVideo(\"%@\");", _vo.video_url]];
 }
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {	
-} 
+}
 
 @end

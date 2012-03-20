@@ -18,7 +18,7 @@
 		
 		
 		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 0, self.frame.size.width, 64)];
-		_titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16.0];
+		_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16.0];
 		_titleLabel.backgroundColor = [UIColor clearColor];
 		_titleLabel.textColor = [UIColor whiteColor];
 		_titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];

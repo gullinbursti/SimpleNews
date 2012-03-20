@@ -8,13 +8,23 @@
 
 #import <UIKit/UIKit.h>
 
+#import "SNArticleVO.h"
+
 @interface SNVideoPlayerView_iPhone : UIView <UIWebViewDelegate> {
 	UIWebView *_webView;
 	
 	NSTimer *_timer;
 	BOOL _isFinished;
 	BOOL _isPaused;
-	float _duration; 
+	float _duration;
+	
+	BOOL _isFirstPlay;
+	BOOL _isFullscreen;
+	
+	UIView *_overlayView;
+	SNArticleVO *_vo;
 }
+
+-(void)changeArticleVO:(SNArticleVO *)vo;
 
 @end

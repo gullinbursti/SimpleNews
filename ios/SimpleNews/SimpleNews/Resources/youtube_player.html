@@ -2,32 +2,27 @@
 	<head>
 		<meta name="viewport" content="initial-scale = 1.0, user-scalable = no, width = 320"/>
 	</head>
-	<body style="background-color:black; color:white; margin:0; padding:0;">
+	<body style="background-color:#000000; margin:0; padding:0;">
 		<!-- <iframe id="player" type="text/html" width="320" height="180" src="http://www.youtube.com/embed/tAxQCweDucI?modestbranding=1" frameborder="0"> -->
 		<div id="player"></div>
 		<script>
-			var tag = document.createElement('script');
-				tag.src = "http://www.youtube.com/player_api";
-			
-			var firstScriptTag = document.getElementsByTagName('script')[0];
-				firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-			
 			var player;
 			var isPaused = false;
+			var videoID;
 			
 			function onYouTubePlayerAPIReady() {
 				player = new YT.Player('player', {
 					width: '320',
 					height: '480',
-					videoId: 'hrkltBedC0E', 
-											  
+					videoId: videoID, 
+					
 					playerVars: {
 						'enablejsapi': 1, 
 						'fs': 0, 
 						'rel': 0, 
 						'showsearch': 0, 
 						'showinfo': 0, 
-						'autoplay': 1, 
+						'autoplay': 0, 
 						'controls': 0, 
 						'suggestedQuality': "large", 
 						'modestbranding': 1
@@ -108,18 +103,25 @@
 					case YT.PlayerState.BUFFERING:
 						sendValue('state', "CUED");
 						break;
-					
-						
-					
 				}
 			}
 			
 			function loadVideo(id) {
-				player.loadVideoByUrl("http://www.youtube.com/v/" + id + "?version=3", 0, 'high');
+				videoID = id;
+				
+				var tag = document.createElement('script');
+					tag.src = "http://www.youtube.com/player_api";
+				
+				var firstScriptTag = document.getElementsByTagName('script')[0];
+					firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 			}
 			
 			function playVideo() {
 				player.playVideo();
+			}
+			
+			function pauseVideo() {
+				player.pauseVideo();
 			}
 			
 			function stopVideo() {
@@ -130,7 +132,6 @@
 			function sendValue(key, val) {
 				location.href = 'result://keyval/' + key + '/' + val;
 			}
-			
 		</script>
 	</body>
 </html>

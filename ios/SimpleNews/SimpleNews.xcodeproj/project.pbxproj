@@ -16,6 +16,8 @@
 		4C3904D415172BCD00278B95 /* pagination_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3904D015172BCD00278B95 /* pagination_off@2x.png */; };
 		4C3904D515172BCD00278B95 /* pagination_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3904D115172BCD00278B95 /* pagination_on.png */; };
 		4C3904D615172BCD00278B95 /* pagination_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3904D215172BCD00278B95 /* pagination_on@2x.png */; };
+		4C3904D9151821E000278B95 /* SNShareSheetView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C3904D8151821E000278B95 /* SNShareSheetView_iPhone.m */; };
+		4C3904DC1518227A00278B95 /* SNPaginationView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C3904DB1518227A00278B95 /* SNPaginationView_iPhone.m */; };
 		4C45B7A6150BD8520039F45B /* SNSplashViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C45B7A5150BD8520039F45B /* SNSplashViewController_iPhone.m */; };
 		4C45B7AD150C1F360039F45B /* SNSplashHighlightView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C45B7AC150C1F360039F45B /* SNSplashHighlightView.m */; };
 		4C48968D14FB76DC00C55125 /* SNBaseListItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C48968C14FB76DA00C55125 /* SNBaseListItemView_iPhone.m */; };
@@ -44,7 +46,6 @@
 		4C6B21C91510775B0027AEE4 /* twitterIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C6B21C71510775B0027AEE4 /* twitterIcon@2x.png */; };
 		4C6B21CC15112B550027AEE4 /* SNTagVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B21CB15112B550027AEE4 /* SNTagVO.m */; };
 		4C6B21CF15112C9B0027AEE4 /* SNTagButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B21CE15112C9B0027AEE4 /* SNTagButton.m */; };
-		4C6B21DD151184240027AEE4 /* SNArticleVideoPlayerViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B21DC151184230027AEE4 /* SNArticleVideoPlayerViewController_iPhone.m */; };
 		4C6B21E01511A5500027AEE4 /* SNVideoPlayerView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B21DF1511A5500027AEE4 /* SNVideoPlayerView_iPhone.m */; };
 		4C6B21E715127DB10027AEE4 /* SNFollowerInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B21E615127DB00027AEE4 /* SNFollowerInfoView.m */; };
 		4C7D600E14FF02B600156054 /* fpo_startVideo.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4C7D600D14FF02B600156054 /* fpo_startVideo.mp3 */; };
@@ -118,7 +119,6 @@
 		4CD01B7815140840005B490C /* facebookButton_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01B7015140840005B490C /* facebookButton_nonActive@2x.png */; };
 		4CD01B7915140840005B490C /* facebookIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01B7115140840005B490C /* facebookIcon.png */; };
 		4CD01B7A15140840005B490C /* facebookIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01B7215140840005B490C /* facebookIcon@2x.png */; };
-		4CD01B7D151408B1005B490C /* SNShareSheetView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD01B7C151408B1005B490C /* SNShareSheetView.m */; };
 		4CD01B80151412F1005B490C /* fbNoThanksButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01B7E151412F1005B490C /* fbNoThanksButton.png */; };
 		4CD01B81151412F1005B490C /* fbNoThanksButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01B7F151412F1005B490C /* fbNoThanksButton@2x.png */; };
 		4CD01B84151416E9005B490C /* SNFacebookCardView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD01B83151416E9005B490C /* SNFacebookCardView_iPhone.m */; };
@@ -210,6 +210,10 @@
 		4C3904D015172BCD00278B95 /* pagination_off@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pagination_off@2x.png"; sourceTree = "<group>"; };
 		4C3904D115172BCD00278B95 /* pagination_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pagination_on.png; sourceTree = "<group>"; };
 		4C3904D215172BCD00278B95 /* pagination_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pagination_on@2x.png"; sourceTree = "<group>"; };
+		4C3904D7151821E000278B95 /* SNShareSheetView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNShareSheetView_iPhone.h; sourceTree = "<group>"; };
+		4C3904D8151821E000278B95 /* SNShareSheetView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNShareSheetView_iPhone.m; sourceTree = "<group>"; };
+		4C3904DA1518227A00278B95 /* SNPaginationView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPaginationView_iPhone.h; sourceTree = "<group>"; };
+		4C3904DB1518227A00278B95 /* SNPaginationView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPaginationView_iPhone.m; sourceTree = "<group>"; };
 		4C45B7A4150BD8520039F45B /* SNSplashViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSplashViewController_iPhone.h; sourceTree = "<group>"; };
 		4C45B7A5150BD8520039F45B /* SNSplashViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSplashViewController_iPhone.m; sourceTree = "<group>"; };
 		4C45B7AB150C1F360039F45B /* SNSplashHighlightView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSplashHighlightView.h; sourceTree = "<group>"; };
@@ -250,8 +254,6 @@
 		4C6B21CB15112B550027AEE4 /* SNTagVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNTagVO.m; sourceTree = "<group>"; };
 		4C6B21CD15112C9A0027AEE4 /* SNTagButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNTagButton.h; sourceTree = "<group>"; };
 		4C6B21CE15112C9B0027AEE4 /* SNTagButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNTagButton.m; sourceTree = "<group>"; };
-		4C6B21DB151184230027AEE4 /* SNArticleVideoPlayerViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNArticleVideoPlayerViewController_iPhone.h; sourceTree = "<group>"; };
-		4C6B21DC151184230027AEE4 /* SNArticleVideoPlayerViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNArticleVideoPlayerViewController_iPhone.m; sourceTree = "<group>"; };
 		4C6B21DE1511A54E0027AEE4 /* SNVideoPlayerView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoPlayerView_iPhone.h; sourceTree = "<group>"; };
 		4C6B21DF1511A5500027AEE4 /* SNVideoPlayerView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNVideoPlayerView_iPhone.m; sourceTree = "<group>"; };
 		4C6B21E515127DAF0027AEE4 /* SNFollowerInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNFollowerInfoView.h; sourceTree = "<group>"; };
@@ -335,8 +337,6 @@
 		4CD01B7015140840005B490C /* facebookButton_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebookButton_nonActive@2x.png"; sourceTree = "<group>"; };
 		4CD01B7115140840005B490C /* facebookIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = facebookIcon.png; sourceTree = "<group>"; };
 		4CD01B7215140840005B490C /* facebookIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "facebookIcon@2x.png"; sourceTree = "<group>"; };
-		4CD01B7B151408B1005B490C /* SNShareSheetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNShareSheetView.h; sourceTree = "<group>"; };
-		4CD01B7C151408B1005B490C /* SNShareSheetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNShareSheetView.m; sourceTree = "<group>"; };
 		4CD01B7E151412F1005B490C /* fbNoThanksButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fbNoThanksButton.png; sourceTree = "<group>"; };
 		4CD01B7F151412F1005B490C /* fbNoThanksButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "fbNoThanksButton@2x.png"; sourceTree = "<group>"; };
 		4CD01B82151416E9005B490C /* SNFacebookCardView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNFacebookCardView_iPhone.h; sourceTree = "<group>"; };
@@ -523,14 +523,14 @@
 				4CD01B83151416E9005B490C /* SNFacebookCardView_iPhone.m */,
 				4C6B217C151063E00027AEE4 /* SNArticleCardView_iPhone.h */,
 				4C6B217D151063E00027AEE4 /* SNArticleCardView_iPhone.m */,
+				4C3904D7151821E000278B95 /* SNShareSheetView_iPhone.h */,
+				4C3904D8151821E000278B95 /* SNShareSheetView_iPhone.m */,
 				4C6B2176151063470027AEE4 /* SNArticleListViewController_iPhone.h */,
 				4C6B2177151063470027AEE4 /* SNArticleListViewController_iPhone.m */,
-				4C6B21DB151184230027AEE4 /* SNArticleVideoPlayerViewController_iPhone.h */,
-				4C6B21DC151184230027AEE4 /* SNArticleVideoPlayerViewController_iPhone.m */,
 				4C6B21DE1511A54E0027AEE4 /* SNVideoPlayerView_iPhone.h */,
 				4C6B21DF1511A5500027AEE4 /* SNVideoPlayerView_iPhone.m */,
-				4CD01B7B151408B1005B490C /* SNShareSheetView.h */,
-				4CD01B7C151408B1005B490C /* SNShareSheetView.m */,
+				4C3904DA1518227A00278B95 /* SNPaginationView_iPhone.h */,
+				4C3904DB1518227A00278B95 /* SNPaginationView_iPhone.m */,
 			);
 			name = Articles;
 			sourceTree = "<group>";
@@ -1281,10 +1281,8 @@
 				4C6B218D15106ECB0027AEE4 /* SNArticleVO.m in Sources */,
 				4C6B21CC15112B550027AEE4 /* SNTagVO.m in Sources */,
 				4C6B21CF15112C9B0027AEE4 /* SNTagButton.m in Sources */,
-				4C6B21DD151184240027AEE4 /* SNArticleVideoPlayerViewController_iPhone.m in Sources */,
 				4C6B21E01511A5500027AEE4 /* SNVideoPlayerView_iPhone.m in Sources */,
 				4C6B21E715127DB10027AEE4 /* SNFollowerInfoView.m in Sources */,
-				4CD01B7D151408B1005B490C /* SNShareSheetView.m in Sources */,
 				4CD01B84151416E9005B490C /* SNFacebookCardView_iPhone.m in Sources */,
 				4CD01B8715142F7B005B490C /* SNOptionsViewController_iPhone.m in Sources */,
 				4CD01BA515149100005B490C /* SNBaseArticleCardView_iPhone.m in Sources */,
@@ -1299,6 +1297,8 @@
 				4CD01BCA151550E6005B490C /* SBJsonBase.m in Sources */,
 				4CD01BCB151550E6005B490C /* SBJsonParser.m in Sources */,
 				4CD01BCC151550E6005B490C /* SBJsonWriter.m in Sources */,
+				4C3904D9151821E000278B95 /* SNShareSheetView_iPhone.m in Sources */,
+				4C3904DC1518227A00278B95 /* SNPaginationView_iPhone.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

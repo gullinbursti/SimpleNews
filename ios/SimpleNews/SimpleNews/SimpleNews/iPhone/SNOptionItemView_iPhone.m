@@ -18,10 +18,10 @@
 		_vo = vo;
 		
 		if (_vo.option_id % 2 == 0)
-			[self setBackgroundColor:[UIColor blackColor]];
+			[self setBackgroundColor:[UIColor colorWithWhite:0.145 alpha:1.0]];
 		
 		else
-			[self setBackgroundColor:[UIColor colorWithWhite:0.1 alpha:1.0]];
+			[self setBackgroundColor:[UIColor colorWithWhite:0.133 alpha:1.0]];
 		
 		UIButton *toggleButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 		toggleButton.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
