@@ -10,6 +10,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 
 #import "SNFollowerGridHeaderView_iPhone.h"
+#import "SNRecentFollowersView_iPhone.h"
 
 #import "EGORefreshTableHeaderView.h"
 #import "ASIFormDataRequest.h"
@@ -31,10 +32,12 @@
 	UIButton *_optionsButton;
 	
 	SNFollowerGridHeaderView_iPhone *_headerView;
+	SNRecentFollowersView_iPhone *_recentFollowersView;
 	
 	EGORefreshTableHeaderView *_refreshHeaderView;
 	ASIFormDataRequest *_followersRequest;
 	ASIFormDataRequest *_tagsRequest;
+	ASIFormDataRequest *_recentRequest;
 	
 	BOOL _isDetails;
 	BOOL _isOptions;

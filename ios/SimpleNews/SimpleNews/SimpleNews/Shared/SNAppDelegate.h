@@ -12,11 +12,12 @@
 #import "SNVideoGridViewController_iPad.h"
 
 #import "Facebook.h"
+#import "UAPushNotificationHandler.h"
 
 
 @class SNViewController;
 
-@interface SNAppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate> {
+@interface SNAppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate, UAPushNotificationDelegate> {
 	SNSplashViewController_iPhone *_splashViewController_iPhone;
 	
 	SNVideoGridViewController_iPad *_gridViewController_iPad;
@@ -57,6 +58,9 @@
 
 +(BOOL)hasWiFi;
 +(BOOL)hasAirplay;
+
++(void)notificationsToggle:(BOOL)isOn;
++(BOOL)notificationsEnabled;
 
 +(UIImage *)imageWithView:(UIView *)view;
 

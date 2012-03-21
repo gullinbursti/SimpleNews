@@ -87,7 +87,7 @@
 		function getActiveFollowers() {
             $follower_arr = array();
 
-			$query = 'SELECT * FROM `tblTwitterFollowers` WHERE `active` = "Y";';
+			$query = 'SELECT * FROM `tblFollowers` WHERE `active` = "Y";';
 			$follower_result = mysql_query($query); 
             
 			$tot = 0;
@@ -112,29 +112,35 @@
 			return (true);
 		}
 		
-		function getFollowersByChannel($chan_id) {
+		function getMostRecentFollowers() {
 			$follower_arr = array();
+			$avatar_arr = array();
 			
-			$query = 'SELECT * FROM `tblTwitterFollowers` INNER JOIN `tblFollowersChannels` ON `tblTwitterFollowers`.`id` = `tblFollowersChannels`.`follower_id` WHERE `tblFollowersChannels`.`channel_id` = "'. $chan_id .'";';
+			$query = 'SELECT `tblFollowers`.`id`, `tblFollowers`.`avatar_url` FROM `tblFollowers` INNER JOIN `tblArticles` ON `tblFollowers`.`id` = `tblArticles`.`follower_id` ORDER BY `tblArticles`.`added` DESC;';
 			$follower_result = mysql_query($query);
 		    
 			$tot = 0;
 			while ($follower_row = mysql_fetch_array($follower_result, MYSQL_BOTH)) {
-				$query = 'SELECT `id` FROM `tblArticles` WHERE `follower_id` = "'. $follower_row['id'] .'"';
-				$article_arr = mysql_fetch_array(mysql_query($query));
 				
-				array_push($follower_arr, array(
-					"follower_id" => $follower_row['id'], 
-					"handle" => $follower_row['handle'],
-					"name" => $follower_row['name'], 
-					"avatar_url" => $follower_row['avatar_url'], 
-					"article_total" => count($article_arr) - 1
-				));
+				$isFound = false;
+				foreach ($avatar_arr as $url) {
+					if ($url == $follower_row['avatar_url']) {
+						$isFound = true;
+					}
+				}
 				
-				$tot++;
+				if (!$isFound && $tot < 4) {
+					array_push($avatar_arr, $follower_row['avatar_url']);
+					array_push($follower_arr, array(
+						"follower_id" => $follower_row['id'], 
+						"avatar_url" => $follower_row['avatar_url']
+					));
+					
+					$tot++;
+				}
 	    	}
 
-			$this->sendResponse(200, json_encode($channel_arr));
+			$this->sendResponse(200, json_encode($follower_arr));
 			return (true);
 		}
 		
@@ -159,9 +165,10 @@
 				break;
 				
 			case "1":
-				if (isset($_POST['channelID']))
-					$followers->getFollowersByChannel($_POST['channelID']);
+				$followers->getMostRecentFollowers();
 				break;
+				
+			
 			
     	}
 	}

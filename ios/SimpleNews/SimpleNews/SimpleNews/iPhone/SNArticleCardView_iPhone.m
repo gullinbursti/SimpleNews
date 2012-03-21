@@ -39,7 +39,7 @@
 		_bgImageView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 		[_holderView addSubview:_bgImageView];
 		
-		NSLog(@"CONTENT HEIGHT:[%f]", _contentSize.height);
+		//NSLog(@"CONTENT HEIGHT:[%f]", _contentSize.height);
 		
 		_tableView = [[UITableView alloc] initWithFrame:self.frame style:UITableViewStylePlain];
 		[_tableView setBackgroundColor:[UIColor clearColor]];
@@ -336,7 +336,7 @@
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	
 	//int offset = (self.frame.size.height - (kBaseHeaderHeight + _tweetSize.height)) + scrollView.contentOffset.y;
-	NSLog(@"OFFSET:[%f]", scrollView.contentOffset.y);
+	//NSLog(@"OFFSET:[%f]", scrollView.contentOffset.y);
 	
 	if (_playButton != nil) {
 		if (scrollView.contentOffset.y > 160.0)
@@ -399,7 +399,7 @@
 }
 
 
-#pragma mark - ImageLoader
+#pragma mark - ImageLoader Delegates
 
 -(void)imageViewLoadedImage:(EGOImageView *)imageView {
 	NSLog(@"IMAGE LOADED:[%@]", imageView.imageURL);
@@ -415,10 +415,10 @@
 -(void)_drawTable {
 	_scaledImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)] autorelease];
 	_scaledImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:self] CGImage] scale:1.0 orientation:UIImageOrientationUp];
+	//_scaledImgView.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
 	[self addSubview:_scaledImgView];
 	
 	_holderView.hidden = YES;
-	//[self hideButtons];
 	
 	//UIImageView *holderImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)] autorelease];
 	//holderImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:_holderView] CGImage] scale:1.0 orientation:UIImageOrientationUp];

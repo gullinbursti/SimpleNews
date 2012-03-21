@@ -118,6 +118,22 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 	return (img);
 }
 
++(void)notificationsToggle:(BOOL)isOn {
+	NSString *bool_str;
+	if (isOn)
+		bool_str = [NSString stringWithString:@"YES"];
+	
+	else
+		bool_str = [NSString stringWithString:@"NO"];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:bool_str forKey:@"notifications"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++(BOOL)notificationsEnabled {
+	return ([[[NSUserDefaults standardUserDefaults] objectForKey:@"notifications"] isEqualToString:@"YES"]);
+}
+
 
 +(NSDictionary *)profileForUser {
 	return [[NSUserDefaults standardUserDefaults] objectForKey:kOJProfileInfoKey];
@@ -149,11 +165,38 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 	
 	[[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"airplay_enabled"];
 	
+		
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[defaults removeObjectForKey:@"FBAccessTokenKey"];
 	[defaults removeObjectForKey:@"FBExpirationDateKey"];
 	[defaults synchronize];
 	
+	if (![defaults objectForKey:@"boot_total"]) {
+		[defaults setObject:[NSNumber numberWithInt:0] forKey:@"boot_total"];
+		[defaults synchronize];
+	
+	} else {
+		int boot_total = [[defaults objectForKey:@"boot_total"] intValue];
+		boot_total++;
+		
+		[defaults setObject:[NSNumber numberWithInt:boot_total] forKey:@"boot_total"];
+		[defaults synchronize];
+		
+		if ([[defaults objectForKey:@"boot_total"] intValue] > 2) {
+			if (![[NSUserDefaults standardUserDefaults] objectForKey:@"notifications"] || [SNAppDelegate notificationsEnabled]) {
+				[SNAppDelegate notificationsToggle:YES];
+				
+				// init Airship launch options
+				NSMutableDictionary *takeOffOptions = [[[NSMutableDictionary alloc] init] autorelease];
+				[takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
+				
+				// create Airship singleton that's used to talk to Urban Airhship servers, populate AirshipConfig.plist with your info from http://go.urbanairship.com
+				[UAirship takeOff:takeOffOptions];
+				[[UAPush shared] resetBadge];//zero badge on startup
+				[[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+			}	
+		}
+	}
 	
 	//if (![SNAppDelegate subscribedFollowers])
 		[SNAppDelegate writeFollowers:@""];
@@ -384,6 +427,148 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 	[alertView release];
 	[self fbDidLogout];
 }
+
+
+#pragma mark - PushNotification Delegates
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+	UALOG(@"APN device token: %@", deviceToken);
+	// Updates the device token and registers the token with UA
+	[[UAPush shared] registerDeviceToken:deviceToken];
+	
+	NSString *deviceID = [[deviceToken description] substringFromIndex:1];
+	deviceID = [deviceID substringToIndex:[deviceID length] - 1];
+	deviceID = [deviceID stringByReplacingOccurrencesOfString:@" " withString:@""];
+	//[DIAppDelegate setDeviceToken:deviceID];
+	
+	/*
+	 * Some example cases where user notifcation may be warranted
+	 *
+	 * This code will alert users who try to enable notifications
+	 * from the settings screen, but cannot do so because
+	 * notications are disabled in some capacity through the settings
+	 * app.
+	 * 
+	 */
+	
+	/*
+    
+    //Do something when notifications are disabled altogther
+    if ([application enabledRemoteNotificationTypes] == UIRemoteNotificationTypeNone) {
+	 UALOG(@"iOS Registered a device token, but nothing is enabled!");
+	 
+	 //only alert if this is the first registration, or if push has just been
+	 //re-enabled
+	 if ([UAirship shared].deviceToken != nil) { //already been set this session
+	 NSString* okStr = @"OK";
+	 NSString* errorMessage =
+	 @"Unable to turn on notifications. Use the \"Settings\" app to enable notifications.";
+	 NSString *errorTitle = @"Error";
+	 UIAlertView *someError = [[UIAlertView alloc] initWithTitle:errorTitle
+	 message:errorMessage
+	 delegate:nil
+	 cancelButtonTitle:okStr
+	 otherButtonTitles:nil];
+	 
+	 [someError show];
+	 [someError release];
+	 }
+	 
+    //Do something when some notification types are disabled
+    } else if ([application enabledRemoteNotificationTypes] != [UAPush shared].notificationTypes) {
+	 
+	 UALOG(@"Failed to register a device token with the requested services. Your notifications may be turned off.");
+	 
+	 //only alert if this is the first registration, or if push has just been
+	 //re-enabled
+	 if ([UAirship shared].deviceToken != nil) { //already been set this session
+	 
+	 UIRemoteNotificationType disabledTypes = [application enabledRemoteNotificationTypes] ^ [UAPush shared].notificationTypes;
+	 
+	 
+	 
+	 NSString* okStr = @"OK";
+	 NSString* errorMessage = [NSString stringWithFormat:@"Unable to turn on %@. Use the \"Settings\" app to enable these notifications.", [UAPush pushTypeString:disabledTypes]];
+	 NSString *errorTitle = @"Error";
+	 UIAlertView *someError = [[UIAlertView alloc] initWithTitle:errorTitle
+	 message:errorMessage
+	 delegate:nil
+	 cancelButtonTitle:okStr
+	 otherButtonTitles:nil];
+	 
+	 [someError show];
+	 [someError release];
+	 }
+    }
+	 
+	 */
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *) error {
+	UALOG(@"Failed To Register For Remote Notifications With Error: %@", error);
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+	UALOG(@"Received remote notification: %@", userInfo);
+	
+	// Get application state for iOS4.x+ devices, otherwise assume active
+	UIApplicationState appState = UIApplicationStateActive;
+	if ([application respondsToSelector:@selector(applicationState)]) {
+		appState = application.applicationState;
+	}
+	
+	[[UAPush shared] handleNotification:userInfo applicationState:appState];
+	[[UAPush shared] resetBadge]; // zero badge after push received
+	
+	//[UAPush shared].delegate = self;
+	
+	/*
+	int type_id = [[userInfo objectForKey:@"type"] intValue];
+	NSLog(@"TYPE: [%d]", type_id);
+	
+	switch (type_id) {
+		case 1:
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_REWARDS_LIST" object:nil];
+			break;
+			
+		case 2:
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_REWARDS_LIST" object:nil];
+			break;
+			
+		case 3:
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_DEVICES_LIST" object:nil];
+			break;
+			
+		case 4:
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"THANK_YOU_RECIEVED" object:nil];
+			break;
+			
+	}
+
+	 if (type_id == 2) {
+	 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Leaving diddit" message:@"Your iTunes gift card number has been copied" delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:@"Visit iTunes", nil];
+	 [alert show];
+	 [alert release];
+	 
+	 NSString *redeemCode = [[DIAppDelegate md5:[NSString stringWithFormat:@"%d", arc4random()]] uppercaseString];
+	 redeemCode = [redeemCode substringToIndex:[redeemCode length] - 12];
+	 
+	 UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+	 [pasteboard setValue:redeemCode forPasteboardType:@"public.utf8-plain-text"];
+	 }
+	 
+	 UILocalNotification *localNotification = [[[UILocalNotification alloc] init] autorelease];
+	 localNotification.fireDate = [[NSDate alloc] initWithTimeIntervalSinceNow:5];
+	 localNotification.alertBody = [NSString stringWithFormat:@"%d", [[userInfo objectForKey:@"type"] intValue]];;
+	 localNotification.soundName = UILocalNotificationDefaultSoundName;
+	 localNotification.applicationIconBadgeNumber = 3;
+	 
+	 NSDictionary *infoDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Object 1", @"Key 1", @"Object 2", @"Key 2", nil];
+	 localNotification.userInfo = infoDict;
+	 
+	 [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+	 */
+}
+
 
 
 @end

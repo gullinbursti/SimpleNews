@@ -68,7 +68,7 @@ $row = mysql_fetch_row(mysql_query($query));
 						echo ("<tr><td>Active:</td><td><input type=\"checkbox\" id=\"chkActive\" name=\"chkActive\" value=\"N\" /></td></tr>");
 					?>
 					<tr><td colspan="2"><hr /></td></tr>
-					<tr><td colspan="2"><input type="button" id="btnAdd" name="btnAdd" value="Edit Tag" onclick="edit();" /></td></tr>
+					<tr><td><input type="button" id="btnCancel" name="btnCancel" value="Cancel" onclick="history.back();" /></td><td><input type="button" id="btnAdd" name="btnAdd" value="Edit Tag" onclick="edit();" /></td></tr>
 				</form></table></td>
 			</tr>
 		</table>

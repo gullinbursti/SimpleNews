@@ -28,6 +28,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_splashDismissed:) name:@"SPLASH_DISMISSED" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_followerTapped:) name:@"FOLLOWER_TAPPED" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_recentTapped:) name:@"RECENT_TAPPED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_followerClosed:) name:@"FOLLOWER_CLOSED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_queueFollower:) name:@"QUEUE_FOLLOWER" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_followerArticles:) name:@"FOLLOWER_ARTICLES" object:nil];
@@ -50,6 +51,12 @@
 		_isArticles = NO;
 		_isFirst = YES;
 		
+		_recentRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Followers.php"]]] retain];
+		[_recentRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[_recentRequest setTimeOutSeconds:30];
+		[_recentRequest setDelegate:self];
+		[_recentRequest startAsynchronous];
+		
 		_tagsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Tags.php"]]] retain];
 		[_tagsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
 		[_tagsRequest setTimeOutSeconds:30];
@@ -60,7 +67,6 @@
 		[_followersRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
 		[_followersRequest setTimeOutSeconds:30];
 		[_followersRequest setDelegate:self];
-		[_followersRequest startAsynchronous];
 		
 		
 		//NSLog(@"USER INTERFACE:[%d]", _userInterfaceIdiom); 0 == iPhone // 1 == iPad
@@ -361,23 +367,50 @@
 }
 
 -(void)_followerClosed:(NSNotification *)notification {
+	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
 	
+	for (SNBaseFollowerGridItemView_iPhone *view in _itemViews) {
+		if ([vo isEqual:view.vo])
+			[view toggleSelected:NO];
+	}
+}
+
+-(void)_recentTapped:(NSNotification *)notification {
+	for (SNBaseFollowerGridItemView_iPhone *view in _itemViews)
+		[view toggleSelected:NO];
+	
+	SNBaseFollowerGridItemView_iPhone *view = (SNBaseFollowerGridItemView_iPhone *)[_itemViews objectAtIndex:0];
+	[view toggleSelected:YES];
+	
+	[SNAppDelegate writeFollowers:@""];
 }
 
 -(void)_queueFollower:(NSNotification *)notification {
 	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
 	
-	[SNAppDelegate writeFollowers:[[SNAppDelegate subscribedFollowers] stringByAppendingFormat:@"|%d", vo.follower_id]];
+	SNBaseFollowerGridItemView_iPhone *view = (SNBaseFollowerGridItemView_iPhone *)[_itemViews objectAtIndex:0];
+	[view toggleSelected:NO];
+	
+	if ([[SNAppDelegate subscribedFollowers] length] == 0)
+		[SNAppDelegate writeFollowers:[NSString stringWithFormat:@"%d", vo.follower_id]];
+	
+	else
+		[SNAppDelegate writeFollowers:[[SNAppDelegate subscribedFollowers] stringByAppendingFormat:@"|%d", vo.follower_id]];
 }
 
 -(void)_followerArticles:(NSNotification *)notification {
 	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
 	
-	SNArticleListViewController_iPhone *articleListViewController = [[[SNArticleListViewController_iPhone alloc] initWithFollower:vo.follower_id] autorelease];
-	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:articleListViewController] autorelease];
+	SNBaseFollowerGridItemView_iPhone *view = (SNBaseFollowerGridItemView_iPhone *)[_itemViews objectAtIndex:0];
+	[view toggleSelected:NO];
 	
-	[navigationController setNavigationBarHidden:YES];
-	[self.navigationController pushViewController:articleListViewController animated:YES];	
+	if ([[SNAppDelegate subscribedFollowers] length] == 0)
+		[SNAppDelegate writeFollowers:[NSString stringWithFormat:@"%d", vo.follower_id]];
+	
+	else
+		[SNAppDelegate writeFollowers:[[SNAppDelegate subscribedFollowers] stringByAppendingFormat:@"|%d", vo.follower_id]];
+	
+	[self _goArticles];
 }
 
 
@@ -448,7 +481,7 @@
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
-	NSLog(@"SNFollowerGridViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	//NSLog(@"SNFollowerGridViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
 	
 	if ([request isEqual:_followersRequest]) {
@@ -461,16 +494,15 @@
 			
 			else {
 				NSMutableArray *followerList = [NSMutableArray array];
-				_itemViews = [NSMutableArray new];
 				
-				SNFollowerGridItemView_iPhone *followerItemView = [[[SNFollowerGridItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 50.0, 80.0, 80.0) followerVO:nil] autorelease];
-				[_itemViews addObject:followerItemView];
+				//SNFollowerGridItemView_iPhone *followerItemView = [[[SNFollowerGridItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 50.0, 80.0, 80.0) followerVO:nil] autorelease];
+				//[_itemViews addObject:followerItemView];
 				
 				int tot = 1;
 				for (NSDictionary *serverFollower in parsedFollowers) {
 					SNFollowerVO *vo = [SNFollowerVO followerWithDictionary:serverFollower];
 					
-					NSLog(@"FOLLOWER \"@%@\" %d", vo.handle, vo.totalArticles);
+					//NSLog(@"FOLLOWER \"@%@\" %d", vo.handle, vo.totalArticles);
 					
 					if (vo != nil)
 						[followerList addObject:vo];
@@ -505,8 +537,6 @@
 				for (NSDictionary *serverTag in parsedTags) {
 					SNTagVO *vo = [SNTagVO tagWithDictionary:serverTag];
 					
-					NSLog(@"TAG \"@%@\" %d", vo.title, vo.articleTotal);
-					
 					if (vo != nil)
 						[tagList addObject:vo];
 					
@@ -516,6 +546,32 @@
 				_tags = [tagList retain];
 			}
 		}
+	
+	} else if ([request isEqual:_recentRequest]) {
+		@autoreleasepool {
+			NSError *error = nil;
+			NSArray *parsedRecents = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+			
+			else {
+				NSMutableArray *recentList = [NSMutableArray array];
+				_itemViews = [NSMutableArray new];
+				
+				for (NSDictionary *serverRecent in parsedRecents) {
+					[recentList addObject:[serverRecent objectForKey:@"avatar_url"]];
+				}
+				
+				_recentFollowersView = [[SNRecentFollowersView_iPhone alloc] initWithFrame:CGRectMake(0.0, 50.0, 80.0, 80.0) avatarURLs:[NSArray arrayWithObjects:[recentList objectAtIndex:0], [recentList objectAtIndex:1], [recentList objectAtIndex:2], [recentList objectAtIndex:3], nil]];
+				
+				[_itemViews addObject:_recentFollowersView];
+				[_scrollView addSubview:_recentFollowersView];
+				
+				//_tags = [recentList retain];
+			}
+		}
+		
+		[_followersRequest startAsynchronous];
 	}
 }
 

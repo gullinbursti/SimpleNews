@@ -22,36 +22,17 @@ if (isset($_POST['txtHandle'])) {
 	
 	foreach($tweet_obj as $key => $val)
 		$twitter_name = $tweet_obj[$key]->name;
-		$twitter_avatar = $tweet_obj[$key]->profile_image_url;
+		$twitter_avatar = str_replace("_normal.", "_reasonably_small.", $tweet_obj[$key]->profile_image_url);
 		$twitter_descript = $tweet_obj[$key]->description;
-	
-	$query = 'INSERT INTO `tblTwitterFollowers` (';
+		
+	$query = 'INSERT INTO `tblFollowers` (';
 	$query .= '`id`, `handle`, `name`, `avatar_url`, `description`, `active`, `added`, `modified`) ';
 	$query .= 'VALUES (NULL, "'. $twitter_handle .'", "'. $twitter_name .'", "'. $twitter_avatar .'", "'. $twitter_descript .'", "'. $twitter_active .'", NOW(), CURRENT_TIMESTAMP);';
 	
 	$result = mysql_query($query);
 	$twitter_id = mysql_insert_id();
 	
-	$catID_arr = explode("|", $_POST['hidIDs']);
-
-	for ($i=0; $i<count($catID_arr); $i++) {
-		$cat_id = $catID_arr[$i];
-		
-		$query = 'INSERT INTO `tblFollowersCategories` (';
-		$query .= '`follower_id`, `category_id`) ';
-		$query .= 'VALUES ("'. $twitter_id .'", "'. $cat_id .'");';
-		$result = mysql_query($query);
-	}
-	
 	header('Location: followers.php');
-}
-
-$query = 'SELECT * FROM `tblChannels`;';
-$result = mysql_query($query);
-
-$cat_tot = 0;
-while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
-	$cat_tot++;
 }
 
 ?>
@@ -65,25 +46,13 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 		
 		<script type="text/javascript">
 			function addFollower () {
-				var tot = <?php echo ($cat_tot); ?>;
-				var catIDs = "";
-				var cnt = 0;    
+				var chkbox = document.getElementById('chkActive');				
+				if (chkbox.checked)
+					chkbox.value = "Y";
 				
-				for (var i=0; i<tot; i++) {
-					var chkbox = document.getElementById('chkCat_'+i);
+				else
+					chkbox.value = "N";
 					
-					if (chkbox.checked) {
-						var cat_id = chkbox.name.substring(7);
-						
-						if (cnt > 0)
-							catIDs += "|";
-						
-						catIDs += cat_id;
-						cnt++;
-					}
-				}
-				
-				document.frmAdd.hidIDs.value = catIDs;
 				document.frmAdd.submit();
 			}
 		</script>
@@ -95,16 +64,6 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 				<td width="320" valign="top"><?php include './nav.php'; ?></td>
 				<td><form id="frmAdd" name="frmAdd" method="post" action="./add_follower.php"><table cellspacing="0" cellpadding="0" border="0">
 					<tr><td>Handle:</td><td>@<input type="text" id="txtHandle" name="txtHandle" /></td></tr>
-					<tr><td>Categories:</td><td><?php
-					 	$query = 'SELECT * FROM `tblChannels`;';
-						$result = mysql_query($query); 
-
-						$cnt = 0;
-						while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
-							echo ("<input type=\"checkbox\" id=\"chkCat_". $cnt ."\" name=\"chkCat_". $row['id'] ."\" />". $row['title'] ."<br />");
-							$cnt++;
-						}
-					?><input type="hidden" id="hidIDs" name="hidIDs" value="" /></td></tr>
 					<tr><td>Active:</td><td><input type="checkbox" id="chkActive" name="chkActive" value="Y" checked /></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<tr><td colspan="2"><input type="button" id="btnAdd" name="btnAdd" value="Add Follower" onclick="addFollower();" /></td></tr>

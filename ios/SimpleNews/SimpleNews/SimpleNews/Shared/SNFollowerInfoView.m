@@ -117,7 +117,7 @@
 	
 	if ([touch view] == _bgView) {
 		NSLog(@"CLOSE");		
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"CLOSE_FOLLOWER" object:nil];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"FOLLOWER_CLOSED" object:_vo];
 		[self removeFromSuperview];
 		
 		return;

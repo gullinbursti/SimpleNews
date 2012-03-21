@@ -82,35 +82,13 @@
 			header("Content-type: ". $content_type);
 			echo $body;
 		}
-	
-		
-		function articlesByChannel($chan_id) {
-			$article_arr = array();
-			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblFollowersChannels` ON `tblArticles`.`follower_id` = `tblFollowersChannels`.`follower_id` WHERE `tblFollowersChannels`.`channel_id` = "'. $chan_id .'"';
-			$article_result = mysql_query($query);
-			
-			$tot = 0;
-			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
-				array_push($article_arr, array(
-					"article_id" => $article_row['id'], 
-					"handle" => $article_row['handle'],
-					"name" => $article_row['name'], 
-					"avatar_url" => $article_row['avatar_url']
-				));
-				
-				$tot++;
-	    	}
-			
-			$this->sendResponse(200, json_encode($article_arr));
-			return (true);	
-		}
-		
+	    
 		function articlesByFollower($follower_id) {
 			$article_arr = array();
 			$query = 'SELECT * FROM `tblArticles` WHERE `follower_id` = "'. $follower_id .'";';
 			$article_result = mysql_query($query);
 			
-			$query = 'SELECT `avatar_url`, `name` FROM `tblTwitterFollowers` WHERE `id` = "'. $follower_id .'";';
+			$query = 'SELECT `avatar_url`, `name` FROM `tblFollowers` WHERE `id` = "'. $follower_id .'";';
 			$follower_arr = mysql_fetch_row(mysql_query($query));
 			
 				
@@ -159,7 +137,7 @@
 				$query = 'SELECT * FROM `tblArticles` WHERE `follower_id` = "'. $follower_id .'";';
 				$article_result = mysql_query($query);
 			
-				$query = 'SELECT `avatar_url`, `name` FROM `tblTwitterFollowers` WHERE `id` = "'. $follower_id .'";';
+				$query = 'SELECT `avatar_url`, `name` FROM `tblFollowers` WHERE `id` = "'. $follower_id .'";';
 				$follower_arr = mysql_fetch_row(mysql_query($query));
 			
 				
@@ -207,12 +185,12 @@
 			
 			$start_date = mktime(date('H'), date('i'), date('s'), date('m'), date('d') - 10, date('Y'));
 			
-			$query = 'SELECT * FROM `tblArticles` WHERE `added` >= "'. date('Y-m-d H:i:s', $start_date) .'";';
+			$query = 'SELECT * FROM `tblArticles` WHERE `added` >= "'. date('Y-m-d H:i:s', $start_date) .'" ORDER BY `added` ASC;';
 			$article_result = mysql_query($query); 
 			
 			$tot = 0;
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
-				$query = 'SELECT `avatar_url`, `name` FROM `tblTwitterFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
+				$query = 'SELECT `avatar_url`, `name` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
 				$follower_arr = mysql_fetch_row(mysql_query($query));
 				
 				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
@@ -258,7 +236,7 @@
 			
 			$tot = 0;
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
-				$query = 'SELECT `avatar_url`, `name` FROM `tblTwitterFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
+				$query = 'SELECT `avatar_url`, `name` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
 				$follower_arr = mysql_fetch_row(mysql_query($query));
 				
 				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
@@ -319,7 +297,7 @@
 					if (!$isAdded) {
 						array_push($added_arr, $article_row['id']);
 					 
-						$query = 'SELECT `avatar_url`, `name` FROM `tblTwitterFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
+						$query = 'SELECT `avatar_url`, `name` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
 						$follower_arr = mysql_fetch_row(mysql_query($query));
 				
 						$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
@@ -358,15 +336,28 @@
 			return (true);	
 		}
 		
-		function getArticlesBeforeDate($date) {
+		function getArticlesBeforeDate($date, $followers) {
 			$article_arr = array();
 			
-			$query = 'SELECT * FROM `tblArticles` WHERE `added` < "'. $date .'";';
+			$followers_sql = '';
+			if ($followers) {
+				$followers_sql = ' AND (';
+				$follower_arr = explode('|', $followers);
+				
+				foreach ($follower_arr as $follower_id)
+					$followers_sql .= '`follower_id` = "'. $follower_id .'" OR ';
+				
+				$followers_sql = substr($followers_sql, 0, -4);
+				$followers_sql .= ')';
+				
+			}
+			
+			$query = 'SELECT * FROM `tblArticles` WHERE `added` < "'. $date .'"'. $followers_sql .' ORDER BY `added` DESC;';
 			$article_result = mysql_query($query); 
 			
 			$tot = 0;
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
-				$query = 'SELECT `avatar_url`, `name` FROM `tblTwitterFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
+				$query = 'SELECT `avatar_url`, `name` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
 				$follower_arr = mysql_fetch_row(mysql_query($query));
 				
 				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
@@ -404,15 +395,28 @@
 			return (true);   
 		}
 		
-		function getArticlesAfterDate($date) {
+		function getArticlesAfterDate($date, $followers) {
 			$article_arr = array();
 			
-			$query = 'SELECT * FROM `tblArticles` WHERE `added` > "'. $date .'";';
+		   $followers_sql = '';
+			if ($followers) {
+				$followers_sql = ' AND (';
+				$follower_arr = explode('|', $followers);
+				
+				foreach ($follower_arr as $follower_id)
+					$followers_sql .= '`follower_id` = "'. $follower_id .'" OR ';
+				
+				$followers_sql = substr($followers_sql, 0, -4);
+				$followers_sql .= ')';
+				
+			}
+			
+			$query = 'SELECT * FROM `tblArticles` WHERE `added` > "'. $date .'"'. $followers_sql .';';
 			$article_result = mysql_query($query); 
 			
 			$tot = 0;
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
-				$query = 'SELECT `avatar_url`, `name` FROM `tblTwitterFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
+				$query = 'SELECT `avatar_url`, `name` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
 				$follower_arr = mysql_fetch_row(mysql_query($query));
 				
 				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
@@ -459,15 +463,13 @@
 	}
 	
 	$articles = new Articles;
-	////$channels->test();
+	////$articles->test();
 	
 	
 	if (isset($_POST['action'])) {
 		switch ($_POST['action']) {
 			
 			case "0":
-				if (isset($_POST['channelID']))
-					$articles->articlesByChannel($_POST['channelID']);
 				break;
 				
 			case "1":
@@ -496,12 +498,12 @@
 				
 			case "6":
 				if (isset($_POST['date']))
-					$articles->getArticlesBeforeDate($_POST['date']);
+					$articles->getArticlesBeforeDate($_POST['date'], $_POST['followers']);
 				break;
 				
 			case "7":
 				if (isset($_POST['date']))
-					$articles->getArticlesAfterDate($_POST['date']);
+					$articles->getArticlesAfterDate($_POST['date'], $_POST['followers']);
 				break; 
     	}
 	}

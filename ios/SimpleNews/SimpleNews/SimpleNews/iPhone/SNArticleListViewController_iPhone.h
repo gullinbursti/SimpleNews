@@ -20,6 +20,8 @@
 @interface SNArticleListViewController_iPhone : UIViewController <UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate, ASIHTTPRequestDelegate, FBRequestDelegate> {
 	NSMutableArray *_articles;
 	ASIFormDataRequest *_articlesRequest;
+	ASIFormDataRequest *_latestArticlesRequest;
+	ASIFormDataRequest *_olderArticlesRequest;
 	
 	UIView *_overlayView;
 	UIView *_cardHolderView;
@@ -46,7 +48,6 @@
 }
 
 -(id)initAsMostRecent;
--(id)initWithFollower:(int)follower_id;
 -(id)initWithFollowers;
 -(id)initWithTag:(int)tag_id;
 -(id)initWithTags:(NSString *)tags;

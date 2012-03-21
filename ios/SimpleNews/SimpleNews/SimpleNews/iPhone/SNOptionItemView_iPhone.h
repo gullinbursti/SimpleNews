@@ -7,16 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-
-#import "SNBaseListItemView_iPhone.h"
-
 #import "SNOptionVO.h"
 
-@interface SNOptionItemView_iPhone : SNBaseListItemView_iPhone {
+@interface SNOptionItemView_iPhone : UIView {
+	UILabel *_titleLabel;
+	UIImageView *_checkImageView;
+	
+	BOOL _isSelected;
 	SNOptionVO *_vo;
 }
 
 -(id)initWithFrame:(CGRect)frame withVO:(SNOptionVO *)vo;
 -(void)toggleSelected:(BOOL)isSelected;
+-(void)deselect;
 
 @end

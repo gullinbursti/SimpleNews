@@ -17,7 +17,8 @@
 
 -(id)init {
 	if ((self = [super init])) {
-		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_optionSelected:) name:@"OPTION_SELECTED" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_optionDeselected:) name:@"OPTION_DESELECTED" object:nil];
 	}
 	
 	return (self);
@@ -28,6 +29,9 @@
 }
 
 -(void)dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"OPTION_SELECTED" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"OPTION_DESELECTED" object:nil];
+	
 	[super dealloc];
 }
 
@@ -63,6 +67,9 @@
 	for (NSDictionary *testOption in plist) {
 		SNOptionVO *vo = [SNOptionVO optionWithDictionary:testOption];
 		SNOptionItemView_iPhone *itemView = [[[SNOptionItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, cnt * 64, self.view.frame.size.width, 64) withVO:vo] autorelease];
+		
+		if (vo.option_id == 2 && [SNAppDelegate notificationsEnabled])
+			[itemView toggleSelected:YES];
 		
 		[_optionViews addObject:itemView];
 		[_optionVOs addObject:vo];
@@ -122,19 +129,21 @@
 
 
 #pragma mark - Notification handlers
-/*
- -(void)_deviceSelected:(NSNotification *)notification {
- SNDeviceVO *vo = (SNDeviceVO *)[notification object];
+
+-(void)_optionSelected:(NSNotification *)notification {
+	SNOptionVO *vo = (SNOptionVO *)[notification object];
  
- if (vo.type_id != 4) {
- for (SNDeviceItemView_iPhone *deviceItemView in _deviceViews) {
- if (deviceItemView.vo != vo)
- [deviceItemView deselect];
- }
- }
- 
- [self performSelector:@selector(_goBack) withObject:nil afterDelay:0.25];
- }
- */
+	if (vo.option_id == 2) {
+		[SNAppDelegate notificationsToggle:YES];
+ 	}
+}
+
+-(void)_optionDeselected:(NSNotification *)notification {
+	SNOptionVO *vo = (SNOptionVO *)[notification object];
+	
+	if (vo.option_id == 2) {
+		[SNAppDelegate notificationsToggle:NO];
+ 	}
+}
 
 @end

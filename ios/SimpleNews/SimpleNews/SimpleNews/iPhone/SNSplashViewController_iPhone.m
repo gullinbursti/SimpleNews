@@ -43,13 +43,9 @@
 	_bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[self.view addSubview:_bgImgView];
 	
-	_stripsImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, -self.view.frame.size.height + 20.0, self.view.frame.size.width, self.view.frame.size.height)];
+	_stripsImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
 	_stripsImgView.image = [UIImage imageNamed:@"loaderBG.jpg"];
 	[self.view addSubview:_stripsImgView];
-	
-	_highlightImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 12.0, 74.0, 9.0)];
-	_highlightImgView.image = [UIImage imageNamed:@"loaderHighlight.png"];
-	[self.view addSubview:_highlightImgView];
 	
 	UIImageView *logoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(53.0, 228.0, 214.0, 24.0)] autorelease];
 	logoImgView.image = [UIImage imageNamed:@"logo.png"];
@@ -59,24 +55,32 @@
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
 	
-	
-	[UIView animateWithDuration:1.5 delay:0.0 options:UIViewAnimationCurveLinear animations:^(void) {
-		_highlightImgView.frame = CGRectMake(self.view.frame.size.width, _highlightImgView.frame.origin.y, _highlightImgView.frame.size.width, _highlightImgView.frame.size.height);
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_stripsImgView.frame = CGRectMake(0.0, -self.view.frame.size.height + 20, self.view.frame.size.width, self.view.frame.size.height);	
 		
 	} completion:^(BOOL finished) {
-		_highlightImgView.frame = CGRectMake(0.0, _highlightImgView.frame.origin.y, _highlightImgView.frame.size.width, _highlightImgView.frame.size.height);
+		_highlightImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-74.0, 12.0, 74.0, 9.0)];
+		_highlightImgView.image = [UIImage imageNamed:@"loaderHighlight.png"];
+		[self.view addSubview:_highlightImgView];
 		
-		[UIView animateWithDuration:1.5 delay:0.0 options:UIViewAnimationCurveLinear animations:^(void) {
+		[UIView animateWithDuration:1.5 delay:0.33 options:UIViewAnimationCurveLinear animations:^(void) {
 			_highlightImgView.frame = CGRectMake(self.view.frame.size.width, _highlightImgView.frame.origin.y, _highlightImgView.frame.size.width, _highlightImgView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
-			[_highlightImgView removeFromSuperview];
+			_highlightImgView.frame = CGRectMake(-_highlightImgView.frame.size.width, _highlightImgView.frame.origin.y, _highlightImgView.frame.size.width, _highlightImgView.frame.size.height);
 			
-			[UIView animateWithDuration:0.67 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^(void) {
-				_stripsImgView.frame = CGRectMake(0.0, 0.0, _stripsImgView.frame.size.width, _stripsImgView.frame.size.height);
+			[UIView animateWithDuration:1.5 delay:0.0 options:UIViewAnimationCurveLinear animations:^(void) {
+				_highlightImgView.frame = CGRectMake(self.view.frame.size.width, _highlightImgView.frame.origin.y, _highlightImgView.frame.size.width, _highlightImgView.frame.size.height);
 				
 			} completion:^(BOOL finished) {
-				[self _goGrid];
+				[_highlightImgView removeFromSuperview];
+				
+				[UIView animateWithDuration:0.67 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^(void) {
+					_stripsImgView.frame = CGRectMake(0.0, 0.0, _stripsImgView.frame.size.width, _stripsImgView.frame.size.height);
+					
+				} completion:^(BOOL finished) {
+					[self _goGrid];
+				}];
 			}];
 		}];
 	}];

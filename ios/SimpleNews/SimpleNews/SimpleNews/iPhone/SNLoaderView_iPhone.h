@@ -16,6 +16,8 @@
 	NSTimer *_timer;
 }
 
+@property (nonatomic) BOOL isLoading;
+
 -(void)introMe;
 -(void)outroMe;
 

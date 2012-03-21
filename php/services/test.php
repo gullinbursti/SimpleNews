@@ -1,8 +1,8 @@
 <?php
 
-$subscriptions_xml = new SimpleXMLElement('http://gdata.youtube.com/feeds/api/users/getassemblytv/subscriptions', NULL, true);
+//$subscriptions_xml = new SimpleXMLElement('http://gdata.youtube.com/feeds/api/users/getassemblytv/subscriptions', NULL, true);
 
-echo ("SUBSCRIPTION_ID:". $subscriptions_xml->id ."<br /><hr />");
+//echo ("SUBSCRIPTION_ID:". $subscriptions_xml->id ."<br /><hr />");
 
 /*
 $subscribers_arr = array();
@@ -35,10 +35,11 @@ foreach ($subscriptions_xml -> entry as $subscription_entry) {
 }
 */
 
-$channel_name = "CNN";
-$videos_xml = new SimpleXMLElement('http://gdata.youtube.com/feeds/api/users/'. strtolower($channel_name) .'/uploads', NULL, true);
+//$channel_name = "CNN";
+//$videos_xml = new SimpleXMLElement('http://gdata.youtube.com/feeds/api/users/'. strtolower($channel_name) .'/uploads', NULL, true);
 
-$tot = 0;
+//$tot = 0;
+/*
 foreach ($videos_xml -> entry as $video_entry) {
 	$id_arr = explode('/', $video_entry->id);
 	
@@ -51,5 +52,25 @@ foreach ($videos_xml -> entry as $video_entry) {
 	echo ("TITLE:[". $title ."]<br />");
 	echo ("INFO:[". $info ."]<br />");
 	echo ("ADDED:[". $added ."]<br />");
-} 
+}*/
+
+$followers = "1|3|4|5";
+
+
+$followers_sql = '';
+if ($followers) {
+	$followers_sql = ' AND (';
+	$follower_arr = explode('|', $followers);
+	
+	foreach ($follower_arr as $follower_id)
+		$followers_sql .= '`follower_id` = "'. $follower_id .'" OR ';
+	
+	$followers_sql = substr($followers_sql, 0, -4);
+	$followers_sql .= ')';
+	
+}
+
+$query = 'SELECT * FROM `tblArticles` WHERE `added` < "'. $date .'"'. $followers_sql .';';
+
+echo ($query);
 ?>

@@ -64,20 +64,6 @@
 	return (self);
 }
 
--(id)initWithFollower:(int)follower_id {
-	if ((self = [self init])) {
-		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", follower_id] forKey:@"followerID"];
-		[_articlesRequest setTimeOutSeconds:30];
-		[_articlesRequest setDelegate:self];
-		[_articlesRequest startAsynchronous];
-	}
-	
-	return (self);
-}
-
-
 -(id)initWithFollowers {
 	if ((self = [self init])) {
 		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
@@ -91,7 +77,6 @@
 	return (self);
 }
 
-
 -(id)initWithTag:(int)tag_id {
 	if ((self = [self init])) {
 		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
@@ -104,7 +89,6 @@
 	
 	return (self);
 }
-
 
 -(id)initWithTags:(NSString *)tags {
 	if ((self = [self init])) {
@@ -241,7 +225,7 @@
 #pragma mark - Interaction handlers
 -(void)_goSwipe:(id)sender {
 	CGPoint translatedPoint = [(UIPanGestureRecognizer *)sender translationInView:self.view];
-	NSLog(@"SWIPE @:(%f)", translatedPoint.x);
+	//NSLog(@"SWIPE @:(%f)", translatedPoint.x);
 	
 	if (!_isSwiping && (translatedPoint.x > 20.0 && abs(translatedPoint.y) < 20)) {
 		[self _prevCard];
@@ -288,7 +272,7 @@
 			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
 			
 			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void) {
-				NSLog(@"Article [%d/%d]", _cardIndex, [_articles count]);
+				//NSLog(@"Article [%d/%d]", _cardIndex, [_articles count]);
 				SNArticleVO *vo = (SNArticleVO *)[_articles objectAtIndex:_cardIndex - 1];
 				
 				if (vo.isDark) {
@@ -327,8 +311,23 @@
 		}];
 	
 	} else {
-		[_loaderView introMe];
-		[self performSelector:@selector(_doneLoading) withObject:nil afterDelay:3.0];
+		if (![_loaderView isLoading]) {
+			[_loaderView introMe];
+			[self performSelector:@selector(_doneLoading) withObject:nil afterDelay:3.0];
+			
+			NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+			[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+			
+			_latestArticlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+			[_latestArticlesRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
+			[_latestArticlesRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles lastObject]).added] forKey:@"date"];
+			[_latestArticlesRequest setPostValue:[SNAppDelegate subscribedFollowers] forKey:@"followers"];
+			[_latestArticlesRequest setTimeOutSeconds:30];
+			[_latestArticlesRequest setDelegate:self];
+			[_latestArticlesRequest startAsynchronous];
+			
+			[dateFormat release];
+		}
 	}
 }
 
@@ -364,7 +363,7 @@
 			
 		} completion:^(BOOL finished) {
 			[UIView animateWithDuration:0.25 animations:^(void) {
-				NSLog(@"Article [%d/%d]", _cardIndex, [_articles count]);
+				//NSLog(@"Article [%d/%d]", _cardIndex, [_articles count]);
 				SNArticleVO *vo = (SNArticleVO *)[_articles objectAtIndex:_cardIndex - 1];
 				
 				if (vo.isDark) {
@@ -407,8 +406,23 @@
 		}];
 	
 	} else {
-		[_loaderView introMe];
-		[self performSelector:@selector(_doneLoading) withObject:nil afterDelay:3.0];
+		if (![_loaderView isLoading]) {
+			[_loaderView introMe];
+			[self performSelector:@selector(_doneLoading) withObject:nil afterDelay:3.0];
+			
+			NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+			[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+			
+			_olderArticlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+			[_olderArticlesRequest setPostValue:[NSString stringWithFormat:@"%d", 6] forKey:@"action"];
+			[_olderArticlesRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles objectAtIndex:0]).added] forKey:@"date"];
+			[_latestArticlesRequest setPostValue:[SNAppDelegate subscribedFollowers] forKey:@"followers"];
+			[_olderArticlesRequest setTimeOutSeconds:30];
+			[_olderArticlesRequest setDelegate:self];
+			[_olderArticlesRequest startAsynchronous];
+			
+			[dateFormat release];
+		}
 	}
 }
 
@@ -677,48 +691,120 @@
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
-	NSLog(@"SNArticleListViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	//NSLog(@"SNArticleListViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
-	@autoreleasepool {
-		NSError *error = nil;
-		NSArray *parsedArticles = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-		if (error != nil)
-			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+	if ([request isEqual:_articlesRequest]) {
+	
+		@autoreleasepool {
+			NSError *error = nil;
+			NSArray *parsedArticles = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+			
+			else {
+				NSMutableArray *articleList = [NSMutableArray array];
+				_cardViews = [NSMutableArray new];
+				
+				for (NSDictionary *serverArticle in parsedArticles) {
+					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
+					
+					//NSLog(@"ARTICLE \"%@\"", vo.title);
+					
+					if (vo != nil)
+						[articleList addObject:vo];
+					
+					
+					SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:_cardHolderView.frame articleVO:vo] autorelease];
+					[_cardViews addObject:(SNBaseArticleCardView_iPhone *)articleCardView];
+				}
+				
+				_articles = [articleList retain];
+				
+				for (SNArticleCardView_iPhone *cardView in _cardViews) {
+					[_cardHolderView addSubview:cardView];
+				}
+				
+				//SNFacebookCardView_iPhone *facebookCardView = [[[SNFacebookCardView_iPhone alloc] initWithFrame:self.view.frame] autorelease];
+				//[_cardViews insertObject:(SNBaseArticleCardView_iPhone *)facebookCardView atIndex:[_cardViews count] - 3];
+				//[_cardHolderView addSubview:facebookCardView];
+				
+				_cardIndex = [_cardViews count] - 1;
+				[self performSelector:@selector(_introFirstCard) withObject:nil afterDelay:0.125];
+			}
+		}
+	
+	} else if ([request isEqual:_latestArticlesRequest]) {
+		@autoreleasepool {
+			NSError *error = nil;
+			NSArray *parsedArticles = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+			
+			else {				
+				int cnt = 0;
+				int tot = [_cardViews count];
+				
+				for (NSDictionary *serverArticle in parsedArticles) {
+					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
+					
+					//NSLog(@"ARTICLE \"%@\"", vo.title);
+					
+					if (vo != nil)
+						[_articles addObject:vo];
+					
+					
+					SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:CGRectMake(-self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) articleVO:vo] autorelease];
+					[_cardViews addObject:(SNBaseArticleCardView_iPhone *)articleCardView];
+					
+					cnt++;
+				}
+				
+				if (cnt > 0) {
+					cnt = 0;
+					
+					for (SNArticleCardView_iPhone *cardView in _cardViews) {
+						if (cnt >= tot)
+							[_cardHolderView addSubview:cardView];
+						cnt++;
+					}
+				}
+			}
+		}
 		
-		else {
-			NSMutableArray *articleList = [NSMutableArray array];
-			_cardViews = [NSMutableArray new];
+	} else if ([request isEqual:_olderArticlesRequest]) {
+		@autoreleasepool {
+			NSError *error = nil;
+			NSArray *parsedArticles = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
 			
-			SNArticleCardView_iPhone *followerItemView = [[[SNArticleCardView_iPhone alloc] initWithFrame:CGRectMake(0.0, 50.0, 80.0, 80.0) articleVO:nil] autorelease];
-			[_cardViews addObject:followerItemView];
-			
-			int tot = 0;
-			for (NSDictionary *serverArticle in parsedArticles) {
-				SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
+			else {
 				
-				NSLog(@"ARTICLE \"%@\"", vo.title);
+				int cnt = 0;
+				for (NSDictionary *serverArticle in parsedArticles) {
+					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
+					
+					//NSLog(@"ARTICLE \"%@\"", vo.title);
+					
+					if (vo != nil)
+						[_articles insertObject:vo atIndex:0];
+					
+					
+					SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:_cardHolderView.frame articleVO:vo] autorelease];
+					articleCardView.holderView.hidden = YES;
+					[_cardViews insertObject:(SNBaseArticleCardView_iPhone *)articleCardView atIndex:0];
+					
+					cnt++;
+				}
 				
-				if (vo != nil)
-					[articleList addObject:vo];
-				
-				
-				SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:_cardHolderView.frame articleVO:vo] autorelease];
-				[_cardViews addObject:(SNBaseArticleCardView_iPhone *)articleCardView];
-				tot++;
+				if (cnt > 0) {
+					for (SNArticleCardView_iPhone *cardView in _cardViews) {
+						[_cardHolderView insertSubview:cardView atIndex:0];
+					}
+					
+					_cardIndex = cnt;
+				}
 			}
-			
-			_articles = [articleList retain];
-			
-			for (SNArticleCardView_iPhone *cardView in _cardViews) {
-				[_cardHolderView addSubview:cardView];
-			}
-			
-			//SNFacebookCardView_iPhone *facebookCardView = [[[SNFacebookCardView_iPhone alloc] initWithFrame:self.view.frame] autorelease];
-			//[_cardViews insertObject:(SNBaseArticleCardView_iPhone *)facebookCardView atIndex:[_cardViews count] - 3];
-			//[_cardHolderView addSubview:facebookCardView];
-			
-			_cardIndex = [_cardViews count] - 1;
-			[self performSelector:@selector(_introFirstCard) withObject:nil afterDelay:0.125];
 		}
 	}
 }

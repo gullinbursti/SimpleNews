@@ -10,7 +10,7 @@ if (!isset($_SESSION['login']))
 require './_db_open.php';
 
 	
-$query = 'SELECT * FROM `tblTwitterFollowers` ORDER BY `added` DESC;';
+$query = 'SELECT * FROM `tblFollowers` ORDER BY `added` DESC;';
 $result = mysql_query($query);
 	
 ?>

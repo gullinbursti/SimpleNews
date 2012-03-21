@@ -7,21 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "SNBaseFollowerGridItemView_iPhone.h"
 #import "SNFollowerVO.h"
 #import "EGOImageView.h"
 
-@interface SNFollowerGridItemView_iPhone : UIView {
+@interface SNFollowerGridItemView_iPhone : SNBaseFollowerGridItemView_iPhone {
 	EGOImageView *_imageView;
-	SNFollowerVO *_vo;
-	
-	BOOL _isSelected;
 }
 
 -(id)initWithFrame:(CGRect)frame followerVO:(SNFollowerVO *)vo;
--(void)toggleSelected:(BOOL)isSelected;
--(void)fadeTo:(float)opac;
-
-@property (nonatomic, retain) SNFollowerVO *vo;
 
 @end
