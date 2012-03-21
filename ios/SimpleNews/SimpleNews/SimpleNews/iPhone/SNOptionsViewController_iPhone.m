@@ -80,7 +80,7 @@
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, cnt * 64);
 	
 	
-	UIButton *backButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	UIButton *backButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 	backButton.frame = CGRectMake(250.0, 12.0, 64.0, 34.0);
 	[backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 	[backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];

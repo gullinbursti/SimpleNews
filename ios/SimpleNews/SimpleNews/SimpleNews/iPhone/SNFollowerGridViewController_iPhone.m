@@ -300,7 +300,7 @@
 	
 	[self _resetToTop];
 	
-	NSMutableArray *searchTags = [NSMutableArray new];
+	NSMutableArray *searchTags = [[NSMutableArray new] autorelease];
 	
 	NSArray *enteredTags = [((NSString *)[notification object]) componentsSeparatedByString:@" "];
 	

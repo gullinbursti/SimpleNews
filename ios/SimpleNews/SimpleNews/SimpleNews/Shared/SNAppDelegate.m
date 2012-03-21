@@ -79,14 +79,14 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 +(void)playMP3:(NSString *)filename {
 	NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@.mp3", [[NSBundle mainBundle] resourcePath], filename]];
 	
-	AVAudioPlayer *audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
+	AVAudioPlayer *audioPlayer = [[[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil] autorelease];
 	audioPlayer.numberOfLoops = 0;
 	[audioPlayer play];
 }
 
 
 +(BOOL)hasWiFi {
-	Reachability *wifiReachability = [[Reachability reachabilityForLocalWiFi] retain];
+	Reachability *wifiReachability = [[[Reachability reachabilityForLocalWiFi] retain] autorelease];
 	[wifiReachability startNotifier];
 	
 	return ([wifiReachability currentReachabilityStatus] == kReachableViaWiFi);
@@ -301,8 +301,8 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 		//[rootNavigationController pushViewController:splashViewController animated:NO];
 	
 	} else {
-		_gridViewController_iPad = [[SNVideoGridViewController_iPad alloc] init];
-		rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_gridViewController_iPad] autorelease];
+		//_gridViewController_iPad = [[SNVideoGridViewController_iPad alloc] init];
+		//rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_gridViewController_iPad] autorelease];
 	}
 	
 	
@@ -435,9 +435,9 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 	// Updates the device token and registers the token with UA
 	[[UAPush shared] registerDeviceToken:deviceToken];
 	
-	NSString *deviceID = [[deviceToken description] substringFromIndex:1];
-	deviceID = [deviceID substringToIndex:[deviceID length] - 1];
-	deviceID = [deviceID stringByReplacingOccurrencesOfString:@" " withString:@""];
+	//NSString *deviceID = [[deviceToken description] substringFromIndex:1];
+	//deviceID = [deviceID substringToIndex:[deviceID length] - 1];
+	//deviceID = [deviceID stringByReplacingOccurrencesOfString:@" " withString:@""];
 	//[DIAppDelegate setDeviceToken:deviceID];
 	
 	/*

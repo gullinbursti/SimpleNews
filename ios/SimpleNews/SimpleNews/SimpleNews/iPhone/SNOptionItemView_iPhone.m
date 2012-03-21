@@ -41,7 +41,7 @@
 		else
 			[self setBackgroundColor:[UIColor colorWithWhite:0.133 alpha:1.0]];
 		
-		UIButton *toggleButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		UIButton *toggleButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 		toggleButton.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
 		[toggleButton addTarget:self action:@selector(_goToggle) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:toggleButton];

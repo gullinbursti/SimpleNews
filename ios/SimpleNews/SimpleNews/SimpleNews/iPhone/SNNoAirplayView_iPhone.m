@@ -35,7 +35,7 @@
 		[_skipButton addTarget:self action:@selector(_goSkip) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_skipButton];
 		
-		MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(140.0, 300.0, 40.0, 20.0)];
+		MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:CGRectMake(140.0, 300.0, 40.0, 20.0)] autorelease];
 		[volumeView setShowsVolumeSlider:NO];
 		[volumeView sizeToFit];
 		[self addSubview:volumeView];

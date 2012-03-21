@@ -23,7 +23,7 @@
 		UIView *holderView = [[[UIView alloc] initWithFrame:CGRectMake(40.0, 166.0, 244.0, 214.0)] autorelease];
 		[self addSubview:holderView];
 		
-		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 244.0, 214.0)];
+		UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 244.0, 214.0)] autorelease];
 		bgImgView.image = [UIImage imageNamed:@"infoOverlay.png"];
 		[holderView addSubview:bgImgView];
 		

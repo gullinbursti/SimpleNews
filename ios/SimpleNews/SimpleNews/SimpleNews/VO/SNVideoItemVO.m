@@ -15,7 +15,7 @@
 
 +(SNVideoItemVO *)videoItemWithDictionary:(NSDictionary *)dictionary {
 	
-	SNVideoItemVO *vo = [[SNVideoItemVO alloc] init];
+	SNVideoItemVO *vo = [[[SNVideoItemVO alloc] init] autorelease];
 	vo.dictionary = dictionary;
 	
 	vo.video_id = [[dictionary objectForKey:@"video_id"] intValue];

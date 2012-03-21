@@ -123,28 +123,25 @@
 	//[_articles release];
 	//[_cardViews release];
 	
-	[_overlayView release];
-	[_cardHolderView release];
-	 
-	[_articlesRequest release];;
 	//[_latestArticlesRequest release];
 	//[_olderArticlesRequest release];
+	[_articlesRequest release];;
 	
+	[_overlayView release];
+	[_cardHolderView release];
 	[_shareSheetView release];
+	[_blackMatteView release];
+	[_videoDimmerView release];
+	[_loaderView release];
 	
 	[_greyGridButton release];
 	[_whiteGridButton release];
 	[_greyShareButton release];
 	[_whiteShareButton release];
 	
-	[_blackMatteView release];
-	/*
-	[_videoDimmerView release];
-	 */
 	
 	[_paginationView release];
 	
-	//[_loaderView release];
 	//[_videoPlayerView release];
 	
 	[super dealloc];
@@ -199,12 +196,12 @@
 	_videoPlayerView.hidden = YES;
 	[self.view addSubview:_videoPlayerView];
 	
-	_blackMatteView = [[[UIView alloc] initWithFrame:self.view.frame] autorelease];
+	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_blackMatteView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.67]];
 	_blackMatteView.alpha = 0.0;
 	[self.view addSubview:_blackMatteView];
 	
-	_videoDimmerView = [[[UIView alloc] initWithFrame:self.view.frame] autorelease];
+	_videoDimmerView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_videoDimmerView setBackgroundColor:[UIColor blackColor]];
 	_videoDimmerView.alpha = 0.0;
 	[self.view addSubview:_videoDimmerView];

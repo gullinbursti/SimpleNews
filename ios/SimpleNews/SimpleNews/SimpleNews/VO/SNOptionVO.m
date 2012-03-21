@@ -14,7 +14,7 @@
 @synthesize option_id, option_title;
 
 +(SNOptionVO *)optionWithDictionary:(NSDictionary *)dictionary {
-	SNOptionVO *vo = [[SNOptionVO alloc] init];
+	SNOptionVO *vo = [[[SNOptionVO alloc] init] autorelease];
 	vo.dictionary = dictionary;
 	
 	vo.option_id = [[dictionary objectForKey:@"option_id"] intValue];
