@@ -27,7 +27,6 @@
 	UIView *_cardHolderView;
 	
 	NSMutableArray *_cardViews;
-	NSMutableArray *_scaledImages;
 	
 	int _cardIndex;
 	BOOL _isSwiping;

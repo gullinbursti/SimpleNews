@@ -19,11 +19,11 @@
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
 		
-		_cursorImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 3.0, 6.0, 34.0)] autorelease];
+		_cursorImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 10.0, 6.0, 34.0)] autorelease];
 		_cursorImgView.image = [UIImage imageNamed:@"blinkingCursor.png"];
 		[self addSubview:_cursorImgView];
 		
-		_txtField = [[[UITextField alloc] initWithFrame:CGRectMake(32.0, 11.0, 256.0, 20.0)] autorelease];
+		_txtField = [[[UITextField alloc] initWithFrame:CGRectMake(20.0, 18.0, 256.0, 20.0)] autorelease];
 		[_txtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 		[_txtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 		[_txtField setAutocorrectionType:UITextAutocorrectionTypeNo];
@@ -36,8 +36,8 @@
 		_txtField.delegate = self;
 		_txtField.text = @"";
 		[self addSubview:_txtField];
-		
-		_txtLabel = [[UILabel alloc] initWithFrame:CGRectMake(32.0, 11.0, 256.0, 20.0)];
+
+		_txtLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 18.0, 256.0, 20.0)];
 		_txtLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
 		_txtLabel.textColor = [UIColor whiteColor];
 		_txtLabel.backgroundColor = [UIColor clearColor];

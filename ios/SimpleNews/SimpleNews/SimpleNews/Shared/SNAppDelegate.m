@@ -98,15 +98,15 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 
 
 +(int)minutesAfterDate:(NSDate *)date {
-	return ([[NSDate new] timeIntervalSinceDate:date] / 60);
+	return ([[[NSDate new] autorelease] timeIntervalSinceDate:date] / 60);
 }
 
-+(int)hoursAfterDate:(NSDate *)date {
-	return ([[NSDate new] timeIntervalSinceDate:date] / 3600);
++(int)hoursAfterDate:(NSDate *)date {;
+	return ([[[NSDate new] autorelease] timeIntervalSinceDate:date] / 3600);
 }
 
 +(int)daysAfterDate:(NSDate *)date {
-	return ([[NSDate new] timeIntervalSinceDate:date] / 86400);
+	return ([[[NSDate new] autorelease] timeIntervalSinceDate:date] / 86400);
 }
 
 +(UIImage *)imageWithView:(UIView *)view {

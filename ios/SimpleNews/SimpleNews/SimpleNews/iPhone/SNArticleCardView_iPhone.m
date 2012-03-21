@@ -15,16 +15,19 @@
 
 @implementation SNArticleCardView_iPhone
 
+@synthesize totalCards = _totCards;
+
 #define kImageScale 0.9
 #define kBaseHeaderHeight 65.0
 
--(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo {
+-(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo index:(int)idx {
 	if ((self = [super initWithFrame:frame])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_changeCards:) name:@"CHANGE_CARDS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
 		
 		_vo = vo;
 		_isAtTop = NO;
+		_ind = idx;
 		
 		[self setBackgroundColor:[UIColor clearColor]];
 		
@@ -32,13 +35,14 @@
 		_titleSize = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:22] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		_contentSize = [_vo.content sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		
+		_scaledImgView = [[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)];
 		_holderView.frame = CGRectMake(_holderView.frame.origin.x, _holderView.frame.origin.y, self.frame.size.width, self.frame.size.height + _contentSize.height + _titleSize.height);
 		
 		_bgImageView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
 		_bgImageView.delegate = self;
 		_bgImageView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 		[_holderView addSubview:_bgImageView];
-		
+				
 		//NSLog(@"CONTENT HEIGHT:[%f]", _contentSize.height);
 		
 		_tableView = [[UITableView alloc] initWithFrame:self.frame style:UITableViewStylePlain];
@@ -87,7 +91,28 @@
 	[_twitterName release];
 	[_playButton release];
 	
+	[_bgImageView release];
+	[_headerView release];
+	
+	[_twitterName release];
+	[_tweetLabel release];
+	[_dateLabel release];
+	[_titleLabel release];
+	[_contentLabel release];
+	[_twitterImgView release];
+	[_playImgView release];
+	
+	[_indicatorView release];
+	
+	
 	[super dealloc];
+}
+
+-(void)setTotalCards:(int)totalCards {
+	_totCards = totalCards;
+	
+	if (_ind == _totCards - 1)
+		_scaledImgView.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
 }
 
 -(void)setScaledImgView:(UIImageView *)scaledImgView {
@@ -413,9 +438,7 @@
 
 
 -(void)_drawTable {
-	_scaledImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)] autorelease];
 	_scaledImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:self] CGImage] scale:1.0 orientation:UIImageOrientationUp];
-	//_scaledImgView.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
 	[self addSubview:_scaledImgView];
 	
 	_holderView.hidden = YES;

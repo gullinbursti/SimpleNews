@@ -17,7 +17,7 @@
 		_vo = vo;
 		
 		_bgView = [[[UIView alloc] initWithFrame:frame] autorelease];
-		[_bgView setBackgroundColor:[UIColor clearColor]];
+		[_bgView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.85]];
 		[self addSubview:_bgView];
 		
 		UIView *holderView = [[[UIView alloc] initWithFrame:CGRectMake(40.0, 166.0, 244.0, 214.0)] autorelease];
@@ -27,13 +27,13 @@
 		bgImgView.image = [UIImage imageNamed:@"infoOverlay.png"];
 		[holderView addSubview:bgImgView];
 		
-		_avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 37.0, 37.0)];
+		_avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(15.0, 15.0, 38.0, 38.0)];
 		_avatarImgView.imageURL = [NSURL URLWithString:_vo.avatar_url];
 		_avatarImgView.alpha = 1.0;
 		[holderView addSubview:_avatarImgView];
 		
-		_nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(70.0, 22.0, 150.0, 26.0)];
-		_nameLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
+		_nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(70.0, 20.0, 214.0, 26.0)];
+		_nameLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14];
 		_nameLabel.textColor = [UIColor whiteColor];
 		_nameLabel.backgroundColor = [UIColor clearColor];
 		_nameLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
@@ -49,7 +49,7 @@
 		else
 			total = @"%d stories assembled";
 		
-		_totalLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 55.0, 150.0, 26.0)];
+		_totalLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 68.0, 214.0, 26.0)];
 		_totalLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
 		_totalLabel.textColor = [UIColor whiteColor];
 		_totalLabel.backgroundColor = [UIColor clearColor];
@@ -58,7 +58,9 @@
 		_totalLabel.text = [NSString stringWithFormat:total, _vo.totalArticles];
 		[holderView addSubview:_totalLabel];
 		
-		_infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 80.0, 150.0, 50.0)];
+		CGSize infoSize = [_vo.blurb sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(214.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		
+		_infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 100.0, 214.0, MIN(infoSize.height, 50.0))];
 		_infoLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:12];
 		_infoLabel.textColor = [UIColor colorWithWhite:0.816 alpha:1.0];
 		_infoLabel.backgroundColor = [UIColor clearColor];
@@ -69,7 +71,7 @@
 		[holderView addSubview:_infoLabel];
 		
 		_queueButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_queueButton.frame = CGRectMake(10.0, 150.0, 96.0, 34.0);
+		_queueButton.frame = CGRectMake(15.0, 165.0, 96.0, 34.0);
 		[_queueButton setBackgroundImage:[[UIImage imageNamed:@"followerInfoButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_queueButton setBackgroundImage:[[UIImage imageNamed:@"followerInfoButton_active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		_queueButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];
@@ -82,7 +84,7 @@
 		[holderView addSubview:_queueButton];
 		
 		_watchButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_watchButton.frame = CGRectMake(100.0, 150.0, 96.0, 34.0);
+		_watchButton.frame = CGRectMake(130.0, 165.0, 96.0, 34.0);
 		[_watchButton setBackgroundImage:[[UIImage imageNamed:@"followerInfoButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_watchButton setBackgroundImage:[[UIImage imageNamed:@"followerInfoButton_active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		_watchButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];

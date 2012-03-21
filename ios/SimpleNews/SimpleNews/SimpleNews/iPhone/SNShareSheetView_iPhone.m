@@ -20,7 +20,7 @@
 		bgImgView.image = [UIImage imageNamed:@"shareBG.png"];
 		[self addSubview:bgImgView];
 		
-		UIButton *facebookButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		UIButton *facebookButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 		facebookButton.frame = CGRectMake(38.0, 38.0, 244.0, 64.0);
 		[facebookButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[facebookButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
@@ -33,7 +33,7 @@
 		[facebookButton addTarget:self action:@selector(_goFacebook) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:facebookButton];
 		
-		UIButton *twitterButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		UIButton *twitterButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 		twitterButton.frame = CGRectMake(38.0, 112.0, 244.0, 64.0);
 		[twitterButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[twitterButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
@@ -46,7 +46,7 @@
 		[twitterButton addTarget:self action:@selector(_goTwitter) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:twitterButton];
 		
-		UIButton *emailButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		UIButton *emailButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 		emailButton.frame = CGRectMake(38.0, 186.0, 244.0, 64.0);
 		[emailButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[emailButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
@@ -59,7 +59,7 @@
 		[emailButton addTarget:self action:@selector(_goEmail) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:emailButton];
 		
-		UIButton *cancelButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		UIButton *cancelButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 		cancelButton.frame = CGRectMake(38.0, 260.0, 244.0, 64.0);
 		[cancelButton setBackgroundImage:[[UIImage imageNamed:@"shareCancelButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[cancelButton setBackgroundImage:[[UIImage imageNamed:@"shareCancelButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];

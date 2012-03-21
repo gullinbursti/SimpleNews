@@ -121,8 +121,31 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"HIDE_BUTTONS" object:nil];
 	
 	//[_articles release];
+	//[_cardViews release];
+	
 	[_overlayView release];
 	[_cardHolderView release];
+	 
+	[_articlesRequest release];;
+	//[_latestArticlesRequest release];
+	//[_olderArticlesRequest release];
+	
+	[_shareSheetView release];
+	
+	[_greyGridButton release];
+	[_whiteGridButton release];
+	[_greyShareButton release];
+	[_whiteShareButton release];
+	
+	[_blackMatteView release];
+	/*
+	[_videoDimmerView release];
+	 */
+	
+	[_paginationView release];
+	
+	//[_loaderView release];
+	//[_videoPlayerView release];
 	
 	[super dealloc];
 }
@@ -196,7 +219,7 @@
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
 	
-	UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)];
+	UIPanGestureRecognizer *panRecognizer = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)] autorelease];
 	[panRecognizer setMinimumNumberOfTouches:1];
 	[panRecognizer setMaximumNumberOfTouches:1];
 	[panRecognizer setDelegate:self];
@@ -248,7 +271,6 @@
 		//cardView.alpha = 0.0;
 		
 		_isSwiping = YES;
-		
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_CARDS" object:nil];
 		[UIView animateWithDuration:0.33 animations:^(void) {
 			cardView.frame = CGRectMake(0.0, 0.0, cardView.frame.size.width, cardView.frame.size.height);
@@ -324,7 +346,7 @@
 			[_latestArticlesRequest setPostValue:[SNAppDelegate subscribedFollowers] forKey:@"followers"];
 			[_latestArticlesRequest setTimeOutSeconds:30];
 			[_latestArticlesRequest setDelegate:self];
-			[_latestArticlesRequest startAsynchronous];
+			//[_latestArticlesRequest startAsynchronous];
 			
 			[dateFormat release];
 		}
@@ -419,7 +441,7 @@
 			[_latestArticlesRequest setPostValue:[SNAppDelegate subscribedFollowers] forKey:@"followers"];
 			[_olderArticlesRequest setTimeOutSeconds:30];
 			[_olderArticlesRequest setDelegate:self];
-			[_olderArticlesRequest startAsynchronous];
+			//[_olderArticlesRequest startAsynchronous];
 			
 			[dateFormat release];
 		}
@@ -501,7 +523,7 @@
 -(void)_twitterShare:(NSNotification *)notification {
 	SNArticleVO *vo = (SNArticleVO *)[notification object];
 	
-	TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
+	TWTweetComposeViewController *twitter = [[[TWTweetComposeViewController alloc] init] autorelease];
 	
 	//[twitter addImage:[UIImage imageNamed:@"iOSDevTips.png"]];
 	[twitter addURL:[NSURL URLWithString:[NSString stringWithString:[NSString stringWithFormat:@"http://assemb.ly/tweets?id=%@", vo.tweet_id]]]];
@@ -510,13 +532,13 @@
 	[self presentModalViewController:twitter animated:YES];
 	
 	twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
-		NSString *msg; 
+		//NSString *msg; 
 		
-		if (result == TWTweetComposeViewControllerResultDone)
-			msg = @"Tweet compostion completed.";
+		//if (result == TWTweetComposeViewControllerResultDone)
+		//	msg = @"Tweet compostion completed.";
 		
-		else if (result == TWTweetComposeViewControllerResultCancelled)
-			msg = @"Tweet composition canceled.";
+		//else if (result == TWTweetComposeViewControllerResultCancelled)
+		//	msg = @"Tweet composition canceled.";
 		
 		
 		//UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Tweet Status" message:msg delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
@@ -705,6 +727,7 @@
 				NSMutableArray *articleList = [NSMutableArray array];
 				_cardViews = [NSMutableArray new];
 				
+				int tot = 0;
 				for (NSDictionary *serverArticle in parsedArticles) {
 					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
 					
@@ -714,22 +737,30 @@
 						[articleList addObject:vo];
 					
 					
-					SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:_cardHolderView.frame articleVO:vo] autorelease];
+					SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:_cardHolderView.frame articleVO:vo index:tot] autorelease];
 					[_cardViews addObject:(SNBaseArticleCardView_iPhone *)articleCardView];
+					
+					tot++;
 				}
 				
 				_articles = [articleList retain];
 				
 				for (SNArticleCardView_iPhone *cardView in _cardViews) {
+					//[cardView setTotalCards:tot];
 					[_cardHolderView addSubview:cardView];
+					
+					//if (tot == 0) {
+					//	[self performSelector:@selector(_introFirstCard) withObject:nil afterDelay:0.125];
+					//}
 				}
+				
+				[self performSelector:@selector(_introFirstCard) withObject:nil afterDelay:0.125];
 				
 				//SNFacebookCardView_iPhone *facebookCardView = [[[SNFacebookCardView_iPhone alloc] initWithFrame:self.view.frame] autorelease];
 				//[_cardViews insertObject:(SNBaseArticleCardView_iPhone *)facebookCardView atIndex:[_cardViews count] - 3];
 				//[_cardHolderView addSubview:facebookCardView];
 				
 				_cardIndex = [_cardViews count] - 1;
-				[self performSelector:@selector(_introFirstCard) withObject:nil afterDelay:0.125];
 			}
 		}
 	
@@ -767,6 +798,18 @@
 							[_cardHolderView addSubview:cardView];
 						cnt++;
 					}
+					
+					SNArticleCardView_iPhone *articleCardView = (SNArticleCardView_iPhone *)[_cardViews objectAtIndex:0];
+					
+					[UIView animateWithDuration:0.15 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
+						articleCardView.scaledImgView.frame = CGRectMake(0.0, 0.0, articleCardView.frame.size.width, articleCardView.frame.size.height);
+						//articleCardView.alpha = 1.0;
+						
+					} completion:^(BOOL finished) {
+						articleCardView.scaledImgView.hidden = YES;
+						articleCardView.scaledImgView.frame = CGRectMake(((articleCardView.frame.size.width - (articleCardView.frame.size.width * kImageScale)) * 0.5), ((articleCardView.frame.size.height - (articleCardView.frame.size.height * kImageScale)) * 0.5), articleCardView.frame.size.width * kImageScale, articleCardView.frame.size.height * kImageScale);
+						articleCardView.holderView.hidden = NO;
+					}];
 				}
 			}
 		}

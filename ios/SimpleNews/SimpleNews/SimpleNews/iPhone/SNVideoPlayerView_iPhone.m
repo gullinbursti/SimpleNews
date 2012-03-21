@@ -34,7 +34,7 @@
 	_isFullscreen = NO;
 	_isFirstPlay = YES;
 	
-	NSLog(@"TITLE:[%@]", _vo.title);
+	NSLog(@"TITLE:[%@]", _vo.video_url);
 	
 	[self setBackgroundColor:[UIColor blackColor]];
 	

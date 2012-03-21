@@ -15,7 +15,7 @@
 
 +(SNTagVO *)tagWithDictionary:(NSDictionary *)dictionary {
 	
-	SNTagVO *vo = [[SNTagVO alloc] init];
+	SNTagVO *vo = [[[SNTagVO alloc] init] autorelease];
 	vo.dictionary = dictionary;
 	
 	vo.tag_id = [[dictionary objectForKey:@"tag_id"] intValue];

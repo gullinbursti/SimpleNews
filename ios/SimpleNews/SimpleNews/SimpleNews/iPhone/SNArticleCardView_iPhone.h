@@ -39,9 +39,13 @@
 	UIView *_indicatorView;
 	
 	BOOL _isAtTop;
+	int _ind;
+	int _totCards;
 }
 
+@property (nonatomic) int totalCards;
 
--(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;
+
+-(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo index:(int)idx;
 
 @end

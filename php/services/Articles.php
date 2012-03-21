@@ -185,7 +185,7 @@
 			
 			$start_date = mktime(date('H'), date('i'), date('s'), date('m'), date('d') - 10, date('Y'));
 			
-			$query = 'SELECT * FROM `tblArticles` WHERE `added` >= "'. date('Y-m-d H:i:s', $start_date) .'" ORDER BY `added` ASC;';
+			$query = 'SELECT * FROM `tblArticles` WHERE (`added` >= "'. date('Y-m-d H:i:s', $start_date) .'" AND `active` = "Y") ORDER BY `added` ASC;';
 			$article_result = mysql_query($query); 
 			
 			$tot = 0;
