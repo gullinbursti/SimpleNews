@@ -38,10 +38,10 @@
 		_scaledImgView = [[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)];
 		_holderView.frame = CGRectMake(_holderView.frame.origin.x, _holderView.frame.origin.y, self.frame.size.width, self.frame.size.height + _contentSize.height + _titleSize.height);
 		
-		_bgImageView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
-		_bgImageView.delegate = self;
-		_bgImageView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
-		[_holderView addSubview:_bgImageView];
+		EGOImageView *bgImageView = [[[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)] autorelease];
+		bgImageView.delegate = self;
+		bgImageView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
+		[_holderView addSubview:bgImageView];
 				
 		//NSLog(@"CONTENT HEIGHT:[%f]", _contentSize.height);
 		
@@ -64,7 +64,7 @@
 			_playImgView = [[UIImageView alloc] initWithFrame:CGRectMake(25.0, 25.0, 34.0, 34.0)];
 			_playImgView.image = [UIImage imageNamed:@"playIcon.png"];
 			
-			_playButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			_playButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 			_playButton.frame = CGRectMake(121.0, 165.0, 84.0, 84.0);
 			[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 			[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
@@ -72,7 +72,7 @@
 			[_playButton addSubview:_playImgView];
 			[_holderView addSubview:_playButton];
 			
-			_indicatorView = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
+			_indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
 			_indicatorView.frame = CGRectMake(147.0, 191.0, 32.0, 32.0);
 			_indicatorView.hidden = YES;
 			[_holderView addSubview:_indicatorView];
@@ -86,24 +86,12 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"CHANGE_CARDS" object:nil];
 	
 	[_tableView release];
-	[_avatarImgView release];
-	[_tweetLabel release];
-	[_twitterName release];
-	[_playButton release];
-	
-	[_bgImageView release];
 	[_headerView release];
 	
-	[_twitterName release];
-	[_tweetLabel release];
-	[_dateLabel release];
-	[_titleLabel release];
-	[_contentLabel release];
-	[_twitterImgView release];
-	[_playImgView release];
-	
-	[_indicatorView release];
-	
+	if (_vo.type_id > 4) {
+		[_playImgView release];
+		[_indicatorView release];
+	}
 	
 	[super dealloc];
 }
@@ -133,6 +121,10 @@
 	_indicatorView.hidden = NO;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"START_VIDEO" object:_vo];
+}
+
+-(void)_goReadMore {
+	
 }
 
 
@@ -182,19 +174,19 @@
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 			[cell setUserInteractionEnabled:NO];
 			
-			UIView *cellView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, _contentSize.height + _titleSize.height + 52.0)] autorelease];
+			UIView *cellView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, _tweetSize.height + _contentSize.height + _titleSize.height + 250.0)] autorelease];
 			[cellView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.85]];
 			[cell addSubview:cellView];
 			
-			_tweetLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 0.0, 296.0, _tweetSize.height)];
-			_tweetLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
-			_tweetLabel.textColor = [UIColor whiteColor];
-			_tweetLabel.backgroundColor = [UIColor clearColor];
-			_tweetLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-			_tweetLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-			_tweetLabel.text = _vo.tweetMessage;
-			_tweetLabel.numberOfLines = 0;
-			[cell addSubview:_tweetLabel];
+			UILabel *tweetLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 0.0, 296.0, _tweetSize.height)] autorelease];
+			tweetLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
+			tweetLabel.textColor = [UIColor whiteColor];
+			tweetLabel.backgroundColor = [UIColor clearColor];
+			tweetLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+			tweetLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+			tweetLabel.text = _vo.tweetMessage;
+			tweetLabel.numberOfLines = 0;
+			[cell addSubview:tweetLabel];
 			
 			UIImageView *twitterIcoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 20.0 + _tweetSize.height, 14.0, 14.0)] autorelease];
 			twitterIcoImgView.image = [UIImage imageNamed:@"twitterIcon.png"];
@@ -233,26 +225,43 @@
 			}
 			*/
 			
-			_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 50.0 + _tweetSize.height, 296.0, _titleSize.height)];
-			_titleLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:22];
-			_titleLabel.textColor = [UIColor whiteColor];
-			_titleLabel.backgroundColor = [UIColor clearColor];
-			_titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-			_titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-			_titleLabel.text = _vo.title;
-			_titleLabel.numberOfLines = 0;
-			[cell addSubview:_titleLabel];
+			UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 50.0 + _tweetSize.height, 296.0, _titleSize.height)] autorelease];
+			titleLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:22];
+			titleLabel.textColor = [UIColor whiteColor];
+			titleLabel.backgroundColor = [UIColor clearColor];
+			titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+			titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+			titleLabel.text = _vo.title;
+			titleLabel.numberOfLines = 0;
+			[cell addSubview:titleLabel];
 			
-			_contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 75.0 + _titleSize.height + _tweetSize.height, 296.0, _contentSize.height)];
-			_contentLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
-			_contentLabel.textColor = [UIColor whiteColor];
-			_contentLabel.backgroundColor = [UIColor clearColor];
-			_contentLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-			_contentLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-			_contentLabel.text = _vo.content;
-			_contentLabel.numberOfLines = 0;
-			[cell addSubview:_contentLabel];
+			UILabel *contentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 75.0 + _titleSize.height + _tweetSize.height, 296.0, _contentSize.height)] autorelease];
+			contentLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
+			contentLabel.textColor = [UIColor whiteColor];
+			contentLabel.backgroundColor = [UIColor clearColor];
+			contentLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+			contentLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+			contentLabel.text = _vo.content;
+			contentLabel.numberOfLines = 0;
+			[cell addSubview:contentLabel];
+			
+			UIButton *_readMoreBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			_readMoreBtn.frame = CGRectMake(118.0, 95.0 + _titleSize.height + _tweetSize.height + _contentSize.height, 84.0, 34.0);
+			[_readMoreBtn setBackgroundImage:[UIImage imageNamed:@"readMoreButton_nonActive.png"] forState:UIControlStateNormal];
+			[_readMoreBtn setBackgroundImage:[UIImage imageNamed:@"readMoreButton_Active.png"] forState:UIControlStateHighlighted];
+			_readMoreBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];
+			_readMoreBtn.titleLabel.textAlignment = UITextAlignmentCenter;
+			[_readMoreBtn setTitleColor:[UIColor colorWithWhite:0.773 alpha:1.0] forState:UIControlStateNormal];
+			_readMoreBtn.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+			_readMoreBtn.titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+			[_readMoreBtn setTitle:@"Read More" forState:UIControlStateNormal];
+
+			[_readMoreBtn addTarget:self action:@selector(_goReadMore) forControlEvents:UIControlEventTouchUpInside];
+			[cell addSubview:_readMoreBtn];
+				
+			
 		}
+		
 		return (cell);
 	
 	} else {
@@ -274,7 +283,7 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	if (indexPath.section == 1)
-		return (_contentSize.height + 160.0);
+		return (_titleSize.height + _contentSize.height + _tweetSize.height + 150.0);
 	
 	else
 		return (self.frame.size.height - kBaseHeaderHeight);
@@ -295,18 +304,18 @@
 		_headerView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, kBaseHeaderHeight)] autorelease];
 		[_headerView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
 		
-		_avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 40.0, 40.0)];
-		_avatarImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
-		[_headerView addSubview:_avatarImgView];
+		EGOImageView *avatarImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 40.0, 40.0)] autorelease];
+		avatarImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
+		[_headerView addSubview:avatarImgView];
 		
-		_twitterName = [[UILabel alloc] initWithFrame:CGRectMake(62.0, 20.0, 256.0, 20.0)];
-		_twitterName.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
-		_twitterName.textColor = [UIColor whiteColor];
-		_twitterName.backgroundColor = [UIColor clearColor];
-		_twitterName.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-		_twitterName.shadowOffset = CGSizeMake(1.0, 1.0);
-		_twitterName.text = _vo.twitterName;
-		[_headerView addSubview:_twitterName];
+		UILabel *twitterName = [[[UILabel alloc] initWithFrame:CGRectMake(62.0, 20.0, 256.0, 20.0)] autorelease];
+		twitterName.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
+		twitterName.textColor = [UIColor whiteColor];
+		twitterName.backgroundColor = [UIColor clearColor];
+		twitterName.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+		twitterName.shadowOffset = CGSizeMake(1.0, 1.0);
+		twitterName.text = _vo.twitterName;
+		[_headerView addSubview:twitterName];
 		
 		NSString *timeSince = @"";
 		int mins = [SNAppDelegate minutesAfterDate:_vo.added];
@@ -324,16 +333,16 @@
 				timeSince = [NSString stringWithFormat:@"%dm", mins];
 		}
 		
-		_dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(269.0, 20.0, 41.0, 26.0)];
-		_dateLabel.textAlignment = UITextAlignmentRight;
-		_dateLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
-		_dateLabel.textColor = [UIColor lightGrayColor];
-		_dateLabel.backgroundColor = [UIColor clearColor];
-		_dateLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-		_dateLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-		_dateLabel.text = timeSince;
-		_dateLabel.numberOfLines = 0;
-		[_headerView addSubview:_dateLabel];
+		UILabel *dateLabel = [[[UILabel alloc] initWithFrame:CGRectMake(269.0, 20.0, 41.0, 26.0)] autorelease];
+		dateLabel.textAlignment = UITextAlignmentRight;
+		dateLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
+		dateLabel.textColor = [UIColor lightGrayColor];
+		dateLabel.backgroundColor = [UIColor clearColor];
+		dateLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+		dateLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+		dateLabel.text = timeSince;
+		dateLabel.numberOfLines = 0;
+		[_headerView addSubview:dateLabel];
 		
 		return (_headerView);
 	}

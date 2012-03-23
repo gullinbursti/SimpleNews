@@ -131,7 +131,6 @@
 	[_cardHolderView release];
 	[_shareSheetView release];
 	[_blackMatteView release];
-	[_videoDimmerView release];
 	[_loaderView release];
 	
 	[_greyGridButton release];
@@ -192,19 +191,14 @@
 	_paginationView = [[SNPaginationView_iPhone alloc] initWithFrame:CGRectMake(262.0, 470.0, 48.0, 9.0)];
 	[self.view addSubview:_paginationView];
 	
-	_videoPlayerView = [[SNVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, 0.0, 0.0)];
-	_videoPlayerView.hidden = YES;
-	[self.view addSubview:_videoPlayerView];
-	
 	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
-	[_blackMatteView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.67]];
+	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
 	_blackMatteView.alpha = 0.0;
 	[self.view addSubview:_blackMatteView];
 	
-	_videoDimmerView = [[UIView alloc] initWithFrame:self.view.frame];
-	[_videoDimmerView setBackgroundColor:[UIColor blackColor]];
-	_videoDimmerView.alpha = 0.0;
-	[self.view addSubview:_videoDimmerView];
+	_videoPlayerView = [[SNVideoPlayerView_iPhone alloc] initWithFrame:self.view.frame];
+	_videoPlayerView.hidden = YES;
+	[self.view addSubview:_videoPlayerView];
 	
 	_shareSheetView = [[SNShareSheetView_iPhone alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
 	[self.view addSubview:_shareSheetView];
@@ -263,6 +257,7 @@
 		SNBaseArticleCardView_iPhone *cardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex + 1];
 		SNBaseArticleCardView_iPhone *currentCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
 		
+		cardView.hidden = NO;
 		cardView.holderView.hidden = YES;
 		cardView.scaledImgView.hidden = NO;
 		//cardView.alpha = 0.0;
@@ -323,6 +318,7 @@
 			
 		} completion:^(BOOL finished) {
 			_isSwiping = NO;
+			currentCardView.hidden = YES;
 			
 			cardView.scaledImgView.hidden = YES;
 			cardView.scaledImgView.frame = CGRectMake(((cardView.frame.size.width - (cardView.frame.size.width * kImageScale)) * 0.5), ((cardView.frame.size.height - (cardView.frame.size.height * kImageScale)) * 0.5), cardView.frame.size.width * kImageScale, cardView.frame.size.height * kImageScale);
@@ -357,6 +353,7 @@
 		SNBaseArticleCardView_iPhone *cardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
 		SNBaseArticleCardView_iPhone *nextCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex - 1];
 		
+		nextCardView.hidden = NO;
 		nextCardView.holderView.hidden = YES;
 		nextCardView.scaledImgView.hidden = NO;
 		//nextCardView.alpha = 0.0;
@@ -418,6 +415,7 @@
 			
 		} completion:^(BOOL finished) {
 			_isSwiping = NO;
+			cardView.hidden = YES;
 			
 			nextCardView.scaledImgView.hidden = YES;
 			nextCardView.scaledImgView.frame = CGRectMake(((nextCardView.frame.size.width - (nextCardView.frame.size.width * kImageScale)) * 0.5), ((nextCardView.frame.size.height - (nextCardView.frame.size.height * kImageScale)) * 0.5), nextCardView.frame.size.width * kImageScale, nextCardView.frame.size.height * kImageScale);
@@ -448,6 +446,7 @@
 
 -(void)_introFirstCard {
 	SNArticleCardView_iPhone *articleCardView = (SNArticleCardView_iPhone *)[_cardViews lastObject];
+	articleCardView.hidden = NO;
 	
 	[UIView animateWithDuration:0.15 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
 		articleCardView.scaledImgView.frame = CGRectMake(0.0, 0.0, articleCardView.frame.size.width, articleCardView.frame.size.height);
@@ -470,17 +469,20 @@
 -(void)_startVideo:(NSNotification *)notification {
 	SNArticleVO *vo = (SNArticleVO *)[notification object];
 	[_videoPlayerView changeArticleVO:vo];
+	_videoPlayerView.hidden = NO;
 }
 
 -(void)_videoStarted:(NSNotification *)notification {
 	[UIView animateWithDuration:0.25 delay:0.25 options:UIViewAnimationCurveLinear animations:^(void) {
-		_videoDimmerView.alpha = 1.0;
+		_blackMatteView.alpha = 1.0;
 	} completion:nil];
 }
 
 -(void)_videoEnded:(NSNotification *)notification {
+	_videoPlayerView.hidden = YES;
+	
 	[UIView animateWithDuration:0.5 animations:^(void) {
-		_videoDimmerView.alpha = 0.0;
+		_blackMatteView.alpha = 0.0;
 	} completion:nil];
 }
 
@@ -498,7 +500,7 @@
 	
 	_blackMatteView.hidden = NO;
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_blackMatteView.alpha = 1.0;
+		_blackMatteView.alpha = 0.67;
 		_shareSheetView.frame = CGRectMake(0.0, self.view.frame.size.height - _shareSheetView.frame.size.height, _shareSheetView.frame.size.width, _shareSheetView.frame.size.height);
 	
 	} completion:^(BOOL finished) {
@@ -735,6 +737,7 @@
 					
 					
 					SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:_cardHolderView.frame articleVO:vo index:tot] autorelease];
+					articleCardView.hidden = YES;
 					[_cardViews addObject:(SNBaseArticleCardView_iPhone *)articleCardView];
 					
 					tot++;

@@ -23,6 +23,11 @@
 		4C45B7AD150C1F360039F45B /* SNSplashHighlightView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C45B7AC150C1F360039F45B /* SNSplashHighlightView.m */; };
 		4C4F951815197D530069D921 /* SNRecentFollowersView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4F951715197D520069D921 /* SNRecentFollowersView_iPhone.m */; };
 		4C4F951B1519A17D0069D921 /* SNBaseFollowerGridItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4F951A1519A17D0069D921 /* SNBaseFollowerGridItemView_iPhone.m */; };
+		4C4F9520151AD0910069D921 /* readMoreButton_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4F951C151AD0910069D921 /* readMoreButton_Active.png */; };
+		4C4F9521151AD0910069D921 /* readMoreButton_Active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4F951D151AD0910069D921 /* readMoreButton_Active@2x.png */; };
+		4C4F9522151AD0910069D921 /* readMoreButton_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4F951E151AD0910069D921 /* readMoreButton_nonActive.png */; };
+		4C4F9523151AD0910069D921 /* readMoreButton_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4F951F151AD0910069D921 /* readMoreButton_nonActive@2x.png */; };
+		4C4F9525151BD43F0069D921 /* shelby_player.html in Resources */ = {isa = PBXBuildFile; fileRef = 4C4F9524151BD43F0069D921 /* shelby_player.html */; };
 		4C6B215F15101F610027AEE4 /* SNFollowerVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B215E15101F610027AEE4 /* SNFollowerVO.m */; };
 		4C6B21661510241B0027AEE4 /* SNFollowerGridViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B21651510241B0027AEE4 /* SNFollowerGridViewController_iPhone.m */; };
 		4C6B2169151024D90027AEE4 /* SNFollowerGridItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B2168151024D90027AEE4 /* SNFollowerGridItemView_iPhone.m */; };
@@ -327,6 +332,11 @@
 		4C4F951715197D520069D921 /* SNRecentFollowersView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNRecentFollowersView_iPhone.m; sourceTree = "<group>"; };
 		4C4F95191519A17C0069D921 /* SNBaseFollowerGridItemView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNBaseFollowerGridItemView_iPhone.h; sourceTree = "<group>"; };
 		4C4F951A1519A17D0069D921 /* SNBaseFollowerGridItemView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNBaseFollowerGridItemView_iPhone.m; sourceTree = "<group>"; };
+		4C4F951C151AD0910069D921 /* readMoreButton_Active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = readMoreButton_Active.png; sourceTree = "<group>"; };
+		4C4F951D151AD0910069D921 /* readMoreButton_Active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "readMoreButton_Active@2x.png"; sourceTree = "<group>"; };
+		4C4F951E151AD0910069D921 /* readMoreButton_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = readMoreButton_nonActive.png; sourceTree = "<group>"; };
+		4C4F951F151AD0910069D921 /* readMoreButton_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "readMoreButton_nonActive@2x.png"; sourceTree = "<group>"; };
+		4C4F9524151BD43F0069D921 /* shelby_player.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = shelby_player.html; sourceTree = "<group>"; };
 		4C6B215D15101F610027AEE4 /* SNFollowerVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNFollowerVO.h; sourceTree = "<group>"; };
 		4C6B215E15101F610027AEE4 /* SNFollowerVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNFollowerVO.m; sourceTree = "<group>"; };
 		4C6B21641510241B0027AEE4 /* SNFollowerGridViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNFollowerGridViewController_iPhone.h; sourceTree = "<group>"; };
@@ -875,6 +885,7 @@
 		4C91181214FE1CDE001F8FD0 /* HTML */ = {
 			isa = PBXGroup;
 			children = (
+				4C4F9524151BD43F0069D921 /* shelby_player.html */,
 				4C9F9B9B150D56CB00E842FA /* youtube_player.html */,
 				4C0C331914FF790400A3EB60 /* video_player.html */,
 			);
@@ -1496,6 +1507,10 @@
 		4CD01B5515140452005B490C /* Articles */ = {
 			isa = PBXGroup;
 			children = (
+				4C4F951C151AD0910069D921 /* readMoreButton_Active.png */,
+				4C4F951D151AD0910069D921 /* readMoreButton_Active@2x.png */,
+				4C4F951E151AD0910069D921 /* readMoreButton_nonActive.png */,
+				4C4F951F151AD0910069D921 /* readMoreButton_nonActive@2x.png */,
 				4C3904CA15172B2E00278B95 /* playIcon.png */,
 				4C3904CB15172B2E00278B95 /* playIcon@2x.png */,
 				4CD01B191513EF5E005B490C /* gridIcon_Active.png */,
@@ -2132,6 +2147,11 @@
 				4C9E011C15194B9B00AEB803 /* UASubscriptionRootViewController.xib in Resources */,
 				4C9E011D15194B9B00AEB803 /* UASubscriptionSettingsViewController.xib in Resources */,
 				4C9E011E15194B9B00AEB803 /* UASubscriptionUserProductsViewController.xib in Resources */,
+				4C4F9520151AD0910069D921 /* readMoreButton_Active.png in Resources */,
+				4C4F9521151AD0910069D921 /* readMoreButton_Active@2x.png in Resources */,
+				4C4F9522151AD0910069D921 /* readMoreButton_nonActive.png in Resources */,
+				4C4F9523151AD0910069D921 /* readMoreButton_nonActive@2x.png in Resources */,
+				4C4F9525151BD43F0069D921 /* shelby_player.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2333,7 +2353,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/SimpleNews/Airship\"",
+					"\"$(SRCROOT)/SimpleNews/cURL\"",
+					"\"$(SRCROOT)/SimpleNews/curl\"",
+					"\"$(SRCROOT)/SimpleNews/openssl\"",
 				);
+				OTHER_LDFLAGS = "-lz";
+				"OTHER_LDFLAGS[arch=*]" = "-lz";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2348,7 +2373,12 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/SimpleNews/Airship\"",
+					"\"$(SRCROOT)/SimpleNews/cURL\"",
+					"\"$(SRCROOT)/SimpleNews/curl\"",
+					"\"$(SRCROOT)/SimpleNews/openssl\"",
 				);
+				OTHER_LDFLAGS = "-lz";
+				"OTHER_LDFLAGS[arch=*]" = "-lz";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

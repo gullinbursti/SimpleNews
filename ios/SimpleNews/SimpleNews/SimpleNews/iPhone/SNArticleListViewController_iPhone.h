@@ -39,7 +39,6 @@
 	UIButton *_whiteShareButton;
 	
 	UIView *_blackMatteView;
-	UIView *_videoDimmerView;
 	SNVideoPlayerView_iPhone *_videoPlayerView;
 	
 	SNPaginationView_iPhone	*_paginationView;

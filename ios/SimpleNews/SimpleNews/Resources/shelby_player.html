@@ -1,0 +1,104 @@
+<!-- Include jQuery -->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script type="text/javascript"
+	var ShelbyPlayer = function(options, onStateChange){
+	var self = this;
+	this.options = options;
+	this.validOptions = ['container', 'sidebar', 'shade'];
+	this.rootUri = 'http://alpha.shelby.tv/';
+	this.iframe = $('<iframe id="'+options.container+'-iframe" style="width:100%;height:100%"></iframe>')[0];
+	jQuery('#'+options.container).append(this.iframe);
+	// this.iframe message handler
+	window.addEventListener("message", function(event){
+									data = JSON.parse(event.data);
+									if (data.id === options.container){
+									if(data.playerLoaded){
+									this.playerLoaded = data.msg.playerLoaded;
+									}
+									onStateChange(data, self);
+									}
+									}, false);
+	};
+	
+	/*
+	 * ShelbyPlayer.playBroadcast : start playing a broadcast
+	 * @param channelId : string : the channel id of the broadcast to play
+	 * @param broadcastId : string : the broadcast id of the broadcast to play
+	 * returns : string : the new url of the iframes src
+	 */
+	
+	ShelbyPlayer.prototype.playBroadcast = function(channelId, broadcastId){
+		var self = this;
+		var newSrc = this.rootUri+'#!/channels/'+channelId+'/broadcasts/'+broadcastId+'/iframe/';
+		if (this.options){
+			Object.keys(this.options).forEach(function(k){
+														 if (self.validOptions.indexOf(k)===-1){
+														 delete this.options[k];
+														 }
+														 });
+			newSrc+=escape(JSON.stringify(this.options));
+		}
+		return this.iframe.src = newSrc;
+	};
+	
+	/*
+	 * ShelbyPlayer.isPlayerLoaded : determine if (a) player is currently loaded
+	 * returns : boolean 
+	 */
+	
+	ShelbyPlayer.prototype.isPlayerLoaded = function(){
+		return this.playerLoaded;
+	};
+	
+	/*
+	 * ShelbyPlayer.togglePlay : if playing, pause, if paused, play
+	 */
+	
+	ShelbyPlayer.prototype.togglePlay = function(){
+		this._postMessage('iframe:toggleplay'); 
+	};
+	
+	/*
+	 * ShelbyPlayer.toggleMute : if unmuted, mute, if muted, unmute 
+	 */
+	
+	ShelbyPlayer.prototype.toggleMute = function(){
+		this._postMessage('iframe:togglemute'); 
+	};
+	
+	/*
+	 * ShelbyPlayer._postMessage : post a message to this.iframe
+	 * @param message : string : the message to post this.iframe
+	 */
+	
+	ShelbyPlayer.prototype._postMessage = function(message){
+		return this.iframe.contentWindow.postMessage(message, this.rootUri);
+	};
+</script>
+
+<div id="player-div" style="position:relavitve;float:left;width:320px;height:180px"></div>
+
+<script type='text/javascript'>
+  jQuery(document).ready(function(){
+
+    // Instantiate a ShelbyPlayer and pass in the selector string of the containing div element
+    // and the root uri of the shelby app you want to iFrame (this will default to alpha.shelby.tv)
+
+    var options = {
+      container:'player-div',
+      sidebar:false
+    };
+
+    var myStateChangeFunc = function(data, player){
+      Object.keys(data.state).forEach(function(k){
+        console.log(k, data.state[k]);
+      });
+      if (data.state.playerLoaded){
+        
+      }
+    };
+
+    var player = new ShelbyPlayer(options, myStateChangeFunc);
+    player.playBroadcast('4f6bae5f8848207fc5000074', '4f6baf30bb2dac12da0011be');
+  });
+</script>

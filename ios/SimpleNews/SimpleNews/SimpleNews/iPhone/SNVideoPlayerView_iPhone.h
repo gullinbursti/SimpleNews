@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MediaPlayer/MediaPlayer.h>
 
 #import "SNArticleVO.h"
+#import "ASIHTTPRequest.h"
 
-@interface SNVideoPlayerView_iPhone : UIView <UIWebViewDelegate> {
+@interface SNVideoPlayerView_iPhone : UIView <UIWebViewDelegate, ASIHTTPRequestDelegate> {
 	UIWebView *_webView;
 	
 	BOOL _isFinished;
@@ -22,7 +24,17 @@
 	
 	UIView *_overlayView;
 	SNArticleVO *_vo;
+	
+	ASIHTTPRequest *_videoInfoRequest;
+	UIView *_videoHolderView;
+	
+	
+	NSTimer *_timer;
+	BOOL _isFirst;
+	BOOL _isStalled;
 }
+
+@property (nonatomic, retain) MPMoviePlayerController *mpc;
 
 -(void)changeArticleVO:(SNArticleVO *)vo;
 

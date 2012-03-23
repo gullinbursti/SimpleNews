@@ -39,6 +39,8 @@
 }
 
 -(void)dealloc {
+	[_onImgView release];
+	
 	[super dealloc];	
 }
 

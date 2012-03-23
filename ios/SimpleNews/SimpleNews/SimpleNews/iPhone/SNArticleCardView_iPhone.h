@@ -16,16 +16,8 @@
 @interface SNArticleCardView_iPhone : SNBaseArticleCardView_iPhone <UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate, EGOImageViewDelegate> {
 	SNArticleVO *_vo;
 	
-	EGOImageView *_avatarImgView;
-	EGOImageView *_bgImageView;
-	
 	UIView *_headerView;
 	
-	UILabel *_twitterName;
-	UILabel *_tweetLabel;
-	UILabel *_dateLabel;
-	UILabel *_titleLabel;
-	UILabel *_contentLabel;
 	UIImageView *_twitterImgView;
 	UIImageView *_playImgView;
 	
