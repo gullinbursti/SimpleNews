@@ -253,6 +253,7 @@
 		4CD01BEE1515BCA9005B490C /* gearButton_Acvtive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01BEA1515BCA9005B490C /* gearButton_Acvtive@2x.png */; };
 		4CD01BEF1515BCA9005B490C /* gearButton_nonAcvtive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01BEB1515BCA9005B490C /* gearButton_nonAcvtive.png */; };
 		4CD01BF01515BCA9005B490C /* gearButton_nonAcvtive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01BEC1515BCA9005B490C /* gearButton_nonAcvtive@2x.png */; };
+		4CD91984151D6C60004081B7 /* SNArticleFollowerInfoView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD91983151D6C5F004081B7 /* SNArticleFollowerInfoView_iPhone.m */; };
 		4CDC8BF214F2CDEB00D42EA5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CDC8BF114F2CDEB00D42EA5 /* UIKit.framework */; };
 		4CDC8BF414F2CDEB00D42EA5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CDC8BF314F2CDEB00D42EA5 /* Foundation.framework */; };
 		4CDC8BF614F2CDEB00D42EA5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CDC8BF514F2CDEB00D42EA5 /* CoreGraphics.framework */; };
@@ -704,6 +705,8 @@
 		4CD01BEA1515BCA9005B490C /* gearButton_Acvtive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gearButton_Acvtive@2x.png"; sourceTree = "<group>"; };
 		4CD01BEB1515BCA9005B490C /* gearButton_nonAcvtive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gearButton_nonAcvtive.png; sourceTree = "<group>"; };
 		4CD01BEC1515BCA9005B490C /* gearButton_nonAcvtive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gearButton_nonAcvtive@2x.png"; sourceTree = "<group>"; };
+		4CD91982151D6C5F004081B7 /* SNArticleFollowerInfoView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNArticleFollowerInfoView_iPhone.h; sourceTree = "<group>"; };
+		4CD91983151D6C5F004081B7 /* SNArticleFollowerInfoView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNArticleFollowerInfoView_iPhone.m; sourceTree = "<group>"; };
 		4CDC8BED14F2CDEB00D42EA5 /* SimpleNews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleNews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CDC8BF114F2CDEB00D42EA5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4CDC8BF314F2CDEB00D42EA5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -859,6 +862,8 @@
 				4C3904DB1518227A00278B95 /* SNPaginationView_iPhone.m */,
 				4C3904DD1519132700278B95 /* SNLoaderView_iPhone.h */,
 				4C3904DE1519132800278B95 /* SNLoaderView_iPhone.m */,
+				4CD91982151D6C5F004081B7 /* SNArticleFollowerInfoView_iPhone.h */,
+				4CD91983151D6C5F004081B7 /* SNArticleFollowerInfoView_iPhone.m */,
 			);
 			name = Articles;
 			sourceTree = "<group>";
@@ -2262,6 +2267,7 @@
 				4C9E010E15194B9B00AEB803 /* UASubscriptionUIUtil.m in Sources */,
 				4C4F951815197D530069D921 /* SNRecentFollowersView_iPhone.m in Sources */,
 				4C4F951B1519A17D0069D921 /* SNBaseFollowerGridItemView_iPhone.m in Sources */,
+				4CD91984151D6C60004081B7 /* SNArticleFollowerInfoView_iPhone.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2357,8 +2363,8 @@
 					"\"$(SRCROOT)/SimpleNews/curl\"",
 					"\"$(SRCROOT)/SimpleNews/openssl\"",
 				);
-				OTHER_LDFLAGS = "-lz";
-				"OTHER_LDFLAGS[arch=*]" = "-lz";
+				OTHER_LDFLAGS = "";
+				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2377,8 +2383,8 @@
 					"\"$(SRCROOT)/SimpleNews/curl\"",
 					"\"$(SRCROOT)/SimpleNews/openssl\"",
 				);
-				OTHER_LDFLAGS = "-lz";
-				"OTHER_LDFLAGS[arch=*]" = "-lz";
+				OTHER_LDFLAGS = "";
+				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

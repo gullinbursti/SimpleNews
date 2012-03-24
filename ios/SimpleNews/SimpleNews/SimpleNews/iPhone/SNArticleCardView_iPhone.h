@@ -17,6 +17,7 @@
 	SNArticleVO *_vo;
 	
 	UIView *_headerView;
+	UIView *_headerBgView;
 	
 	UIImageView *_twitterImgView;
 	UIImageView *_playImgView;
@@ -32,11 +33,7 @@
 	
 	BOOL _isAtTop;
 	int _ind;
-	int _totCards;
 }
-
-@property (nonatomic) int totalCards;
-
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo index:(int)idx;
 

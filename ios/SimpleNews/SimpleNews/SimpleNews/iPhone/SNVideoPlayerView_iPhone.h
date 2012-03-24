@@ -10,28 +10,29 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 #import "SNArticleVO.h"
+#import "SNArticleFollowerInfoView_iPhone.h"
 #import "ASIHTTPRequest.h"
 
-@interface SNVideoPlayerView_iPhone : UIView <UIWebViewDelegate, ASIHTTPRequestDelegate> {
-	UIWebView *_webView;
+@interface SNVideoPlayerView_iPhone : UIView <ASIHTTPRequestDelegate> {
 	
-	BOOL _isFinished;
-	BOOL _isPaused;
-	float _duration;
-	
-	BOOL _isFirstPlay;
 	BOOL _isFullscreen;
-	
-	UIView *_overlayView;
-	SNArticleVO *_vo;
+	BOOL _isStalled;
+	BOOL _isPaused;
+	BOOL _isFinished;
 	
 	ASIHTTPRequest *_videoInfoRequest;
-	UIView *_videoHolderView;
-	
-	
 	NSTimer *_timer;
-	BOOL _isFirst;
-	BOOL _isStalled;
+	
+	SNArticleVO *_vo;
+	SNArticleFollowerInfoView_iPhone *_articleFollowerView;
+	
+	UIImageView *_bgImgView;
+	UIView *_videoHolderView;
+	UIView *_progressView;
+	UILabel *_timeLabel;
+	CGSize _timeSize;
+	
+	UIButton *_playButton;
 }
 
 @property (nonatomic, retain) MPMoviePlayerController *mpc;

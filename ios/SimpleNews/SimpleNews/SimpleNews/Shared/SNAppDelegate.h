@@ -17,7 +17,7 @@
 
 @class SNViewController;
 
-@interface SNAppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate, UAPushNotificationDelegate> {
+@interface SNAppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate, FBRequestDelegate, UAPushNotificationDelegate> {
 	SNSplashViewController_iPhone *_splashViewController_iPhone;
 	
 	SNVideoGridViewController_iPad *_gridViewController_iPad;

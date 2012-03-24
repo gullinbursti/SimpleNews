@@ -12,10 +12,13 @@
 #import "SNTagVO.h"
 
 #import "EGOImageLoader.h"
+#import "SNArticleFollowerInfoView_iPhone.h"
+
+
+@interface SNArticleCardView_iPhone()
+@end
 
 @implementation SNArticleCardView_iPhone
-
-@synthesize totalCards = _totCards;
 
 #define kImageScale 0.9
 #define kBaseHeaderHeight 65.0
@@ -29,24 +32,26 @@
 		_isAtTop = NO;
 		_ind = idx;
 		
+		self.userInteractionEnabled = NO;
 		[self setBackgroundColor:[UIColor clearColor]];
 		
 		_tweetSize = [_vo.tweetMessage sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		_titleSize = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:22] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		_contentSize = [_vo.content sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		
-		_scaledImgView = [[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)];
 		_holderView.frame = CGRectMake(_holderView.frame.origin.x, _holderView.frame.origin.y, self.frame.size.width, self.frame.size.height + _contentSize.height + _titleSize.height);
+		//_scaledImgView = [[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)];
+		//[_scaledImgView setBackgroundColor:[UIColor redColor]];
 		
 		EGOImageView *bgImageView = [[[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)] autorelease];
 		bgImageView.delegate = self;
 		bgImageView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
-		[_holderView addSubview:bgImageView];
-				
+		[_bgView addSubview:bgImageView];
+						
 		//NSLog(@"CONTENT HEIGHT:[%f]", _contentSize.height);
-		
 		_tableView = [[UITableView alloc] initWithFrame:self.frame style:UITableViewStylePlain];
 		[_tableView setBackgroundColor:[UIColor clearColor]];
+		_tableView.alpha = 0.0;
 		_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 		_tableView.rowHeight = _contentSize.height;
 		_tableView.delegate = self;
@@ -55,13 +60,14 @@
 		_tableView.pagingEnabled = NO;
 		_tableView.opaque = NO;
 		_tableView.scrollsToTop = YES;
+		_tableView.contentOffset = CGPointMake(0.0, _tweetSize.height);
 		_tableView.showsHorizontalScrollIndicator = NO;
 		_tableView.showsVerticalScrollIndicator = NO;
 		_tableView.alwaysBounceVertical = NO;
 		[_holderView addSubview:_tableView];
 		
 		if (_vo.type_id > 4) {
-			_playImgView = [[UIImageView alloc] initWithFrame:CGRectMake(25.0, 25.0, 34.0, 34.0)];
+			_playImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 84.0, 84.0)];
 			_playImgView.image = [UIImage imageNamed:@"playIcon.png"];
 			
 			_playButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
@@ -86,6 +92,7 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"CHANGE_CARDS" object:nil];
 	
 	[_tableView release];
+	[_headerBgView release];
 	[_headerView release];
 	
 	if (_vo.type_id > 4) {
@@ -96,17 +103,35 @@
 	[super dealloc];
 }
 
--(void)setTotalCards:(int)totalCards {
-	_totCards = totalCards;
+
+#pragma mark - Interaction handlers
+-(void)resetContent {
+	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+	[_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
+	self.userInteractionEnabled = NO;
 	
-	if (_ind == _totCards - 1)
-		_scaledImgView.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		_tableView.contentOffset = CGPointMake(0.0, _tweetSize.height);
+	
+	} completion:^(BOOL finished){
+		_tableView.alpha = 0.0;
+	}];
+	
+	[super resetContent];
 }
 
--(void)setScaledImgView:(UIImageView *)scaledImgView {
-	_scaledImgView = scaledImgView;
-	[self addSubview:_scaledImgView];
+-(void)introContent {
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		_tableView.contentOffset = CGPointMake(0.0, 45.0 + _tweetSize.height);
+		_tableView.alpha = 1.0;
+	
+	} completion:^(BOOL finished) {
+		self.userInteractionEnabled = YES;
+	}];
+	
+	[super introContent];
 }
+
 
 #pragma mark - Navigation
 -(void)_goTag:(UIButton *)button {
@@ -129,26 +154,11 @@
 
 
 #pragma mark - Notifications
--(void)_changeCards:(NSNotification *)notification {
-	[self performSelector:@selector(_resetMe) withObject:nil afterDelay:0.33];
-}
-
 -(void)_videoEnded:(NSNotification *)notification {
 	_playImgView.hidden = NO;
 	
 	[(UIActivityIndicatorView *)_indicatorView stopAnimating];
 	_indicatorView.hidden = YES;
-}
-
-
-#pragma mark - Interaction handlers
--(void)_resetMe {
-	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-	[_tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
-	
-	[UIView animateWithDuration:0.25 animations:^(void) {
-		_tableView.contentOffset = CGPointMake(0.0, 45.0 + _tweetSize.height);
-	}];
 }
 
 
@@ -165,20 +175,22 @@
 	UITableViewCell *cell = nil;
 	
 	if (indexPath.section == 1) {
-	
 		cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+		
 		if (cell == nil) {
 			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"] autorelease];
-			
-			//cell. = NO;
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 			[cell setUserInteractionEnabled:NO];
 			
 			UIView *cellView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, _tweetSize.height + _contentSize.height + _titleSize.height + 250.0)] autorelease];
-			[cellView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.85]];
+			[cellView setBackgroundColor:[UIColor colorWithWhite:0.137 alpha:1.0]];
 			[cell addSubview:cellView];
 			
-			UILabel *tweetLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 0.0, 296.0, _tweetSize.height)] autorelease];
+			UIView *tweetBgView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, _tableView.frame.size.width, _tweetSize.height+ 45.0)] autorelease];
+			[tweetBgView setBackgroundColor:[UIColor colorWithWhite:0.184 alpha:1.0]];
+			[cell addSubview:tweetBgView];
+			
+			UILabel *tweetLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 12.0, 296.0, _tweetSize.height)] autorelease];
 			tweetLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
 			tweetLabel.textColor = [UIColor whiteColor];
 			tweetLabel.backgroundColor = [UIColor clearColor];
@@ -188,11 +200,11 @@
 			tweetLabel.numberOfLines = 0;
 			[cell addSubview:tweetLabel];
 			
-			UIImageView *twitterIcoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 20.0 + _tweetSize.height, 14.0, 14.0)] autorelease];
+			UIImageView *twitterIcoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 17.0 + _tweetSize.height, 14.0, 14.0)] autorelease];
 			twitterIcoImgView.image = [UIImage imageNamed:@"twitterIcon.png"];
 			[cell addSubview:twitterIcoImgView];
 			
-			UILabel *twitterSiteLabel = [[[UILabel alloc] initWithFrame:CGRectMake(30.0, 20.0 + _tweetSize.height, 150.0, 16.0)] autorelease];
+			UILabel *twitterSiteLabel = [[[UILabel alloc] initWithFrame:CGRectMake(30.0, 17.0 + _tweetSize.height, 150.0, 16.0)] autorelease];
 			twitterSiteLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
 			twitterSiteLabel.textColor = [UIColor whiteColor];
 			twitterSiteLabel.backgroundColor = [UIColor clearColor];
@@ -258,8 +270,6 @@
 
 			[_readMoreBtn addTarget:self action:@selector(_goReadMore) forControlEvents:UIControlEventTouchUpInside];
 			[cell addSubview:_readMoreBtn];
-				
-			
 		}
 		
 		return (cell);
@@ -302,47 +312,14 @@
 	
 	if (section == 1) {
 		_headerView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, kBaseHeaderHeight)] autorelease];
-		[_headerView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
 		
-		EGOImageView *avatarImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 40.0, 40.0)] autorelease];
-		avatarImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
-		[_headerView addSubview:avatarImgView];
+		_headerBgView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, kBaseHeaderHeight)] autorelease];
+		[_headerBgView setBackgroundColor:[UIColor colorWithWhite:0.094 alpha:1.0]];
+		_headerBgView.alpha = 0.85;
+		[_headerView addSubview:_headerBgView];
 		
-		UILabel *twitterName = [[[UILabel alloc] initWithFrame:CGRectMake(62.0, 20.0, 256.0, 20.0)] autorelease];
-		twitterName.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
-		twitterName.textColor = [UIColor whiteColor];
-		twitterName.backgroundColor = [UIColor clearColor];
-		twitterName.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-		twitterName.shadowOffset = CGSizeMake(1.0, 1.0);
-		twitterName.text = _vo.twitterName;
-		[_headerView addSubview:twitterName];
-		
-		NSString *timeSince = @"";
-		int mins = [SNAppDelegate minutesAfterDate:_vo.added];
-		int hours = [SNAppDelegate hoursAfterDate:_vo.added];
-		int days = [SNAppDelegate daysAfterDate:_vo.added];
-		
-		if (days > 0) {
-			timeSince = [NSString stringWithFormat:@"%dd", days];
-			
-		} else {
-			if (hours > 0)
-				timeSince = [NSString stringWithFormat:@"%dh", hours];
-			
-			else
-				timeSince = [NSString stringWithFormat:@"%dm", mins];
-		}
-		
-		UILabel *dateLabel = [[[UILabel alloc] initWithFrame:CGRectMake(269.0, 20.0, 41.0, 26.0)] autorelease];
-		dateLabel.textAlignment = UITextAlignmentRight;
-		dateLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
-		dateLabel.textColor = [UIColor lightGrayColor];
-		dateLabel.backgroundColor = [UIColor clearColor];
-		dateLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-		dateLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-		dateLabel.text = timeSince;
-		dateLabel.numberOfLines = 0;
-		[_headerView addSubview:dateLabel];
+		SNArticleFollowerInfoView_iPhone *articleFollowerView = [[[SNArticleFollowerInfoView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, kBaseHeaderHeight) articleVO:_vo] autorelease];
+		[_headerView addSubview:articleFollowerView];
 		
 		return (_headerView);
 	}
@@ -358,11 +335,6 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
 }
-
-
--(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-}
-
 
 
 #pragma mark - ScrollView Delegates
@@ -388,11 +360,9 @@
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_BUTTONS" object:nil];
 		_isAtTop = NO;
 		
-//		[UIView animateWithDuration:0.25 animations:^(void) {
-//			[_headerView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
-//		}];
-		
-		[_headerView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
+		[UIView animateWithDuration:0.25 animations:^(void) {
+			_headerBgView.alpha = 0.85;
+		}];
 	} 
 	
 	if (scrollView.contentOffset.y >= self.frame.size.height - kBaseHeaderHeight) {
@@ -400,7 +370,7 @@
 		_isAtTop = YES;
 		
 		[UIView animateWithDuration:0.25 animations:^(void) {
-			[_headerView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:1.0]];
+			_headerBgView.alpha = 1.0;
 		}];
 	}
 }
@@ -434,31 +404,13 @@
 
 
 #pragma mark - ImageLoader Delegates
-
 -(void)imageViewLoadedImage:(EGOImageView *)imageView {
 	NSLog(@"IMAGE LOADED:[%@]", imageView.imageURL);
-	[self performSelector:@selector(_drawTable) withObject:nil afterDelay:0.125];
 }
 
 -(void)imageViewFailedToLoadImage:(EGOImageView *)imageView error:(NSError *)error {
 	NSLog(@"IMAGE LOAD FAIL");
 }
 
-
-
--(void)_drawTable {
-	_scaledImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:self] CGImage] scale:1.0 orientation:UIImageOrientationUp];
-	[self addSubview:_scaledImgView];
-	
-	_holderView.hidden = YES;
-	
-	//UIImageView *holderImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)] autorelease];
-	//holderImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:_holderView] CGImage] scale:1.0 orientation:UIImageOrientationUp];
-	//[_scaledImgView addSubview:holderImgView];
-	
-	//self.alpha = 0.0;
-	
-	[self _resetMe];
-}
 
 @end

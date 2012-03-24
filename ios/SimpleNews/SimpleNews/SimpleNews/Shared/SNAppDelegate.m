@@ -376,7 +376,9 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 	[defaults setObject:[_facebook expirationDate] forKey:@"FBExpirationDateKey"];
 	[defaults synchronize];
 	
-	
+	//[_facebook requestWithGraphPath:@"me/home" andParams:[NSMutableDictionary dictionaryWithObject:@"2011-01-27 04:48:50" forKey:@"since"] andDelegate:self];
+	//[_facebook requestWithGraphPath:@"me/feed" andDelegate:self];
+	[_facebook requestWithGraphPath:[NSString stringWithFormat:@"me/feed"] andParams:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"TEST TITLE", @"feed", nil] andHttpMethod:@"POST" andDelegate:self];
 	//[pendingApiCallsController userDidGrantPermission];
 }
 
@@ -427,6 +429,50 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 	[alertView release];
 	[self fbDidLogout];
 }
+
+
+#pragma mark - FBRequestDelegate Methods
+- (void)requestLoading:(FBRequest *)request {
+	
+}
+
+- (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response {
+	NSLog(@"received response [%@]", [request responseText]);
+}
+
+- (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
+	NSLog(@"Err message: %@", [[error userInfo] objectForKey:@"error_msg"]);
+	NSLog(@"Err code: %d", [error code]);
+	NSLog(@"Err desc: %@", [error description]);
+	NSLog(@"Err: %@", error);
+	
+	if ([error code] == 190)
+		[_facebook logout:self];
+	
+	else
+		NSLog(@"There was an error making your request.");
+	
+}
+
+- (void)request:(FBRequest *)request didLoad:(id)result {
+	NSLog(@"Result: %@", result);
+	
+	
+	NSMutableArray *places = [[NSMutableArray alloc] initWithCapacity:1];
+	NSArray *resultData = [result objectForKey:@"data"];
+	
+	for (NSUInteger i=0; i<[resultData count] && i<5; i++)
+		[places addObject:[resultData objectAtIndex:i]];
+	
+	[places release];
+	
+}
+
+- (void)request:(FBRequest *)request didLoadRawResponse:(NSData *)data {
+	
+}
+
+
 
 
 #pragma mark - PushNotification Delegates

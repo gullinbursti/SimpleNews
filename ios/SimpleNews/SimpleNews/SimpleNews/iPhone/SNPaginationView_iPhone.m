@@ -10,7 +10,7 @@
 
 @implementation SNPaginationView_iPhone
 
-#define kOffset 14.0
+#define kOffset 10.0
 
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
