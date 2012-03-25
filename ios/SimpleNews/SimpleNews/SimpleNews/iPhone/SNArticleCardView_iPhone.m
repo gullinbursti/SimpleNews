@@ -132,6 +132,10 @@
 	[super introContent];
 }
 
+-(void)setTweets:(NSMutableArray *)tweets {
+	_tweets = tweets;
+}
+
 
 #pragma mark - Navigation
 -(void)_goTag:(UIButton *)button {
@@ -212,31 +216,7 @@
 			twitterSiteLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 			twitterSiteLabel.text = @"Twitter.com";
 			[cell addSubview:twitterSiteLabel];
-			
-			
-			/*
-			float width = 0;
-			for (SNTagVO *tagVO in _vo.tags) {
-				CGSize tagSize = [[NSString stringWithFormat:@"   #%@   ", tagVO.title] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(160.0, 24.0) lineBreakMode:UILineBreakModeClip]; 
-				
-				UIButton *tagButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-				tagButton.frame = CGRectMake(width, 0.0, tagSize.width, 24.0);
-				[tagButton setBackgroundImage:[[UIImage imageNamed:@"tagBG_nonActive.png"] stretchableImageWithLeftCapWidth:12.0 topCapHeight:12.0] forState:UIControlStateNormal];
-				[tagButton setBackgroundImage:[[UIImage imageNamed:@"tagBG_active.png"] stretchableImageWithLeftCapWidth:12.0 topCapHeight:12.0] forState:UIControlStateHighlighted];
-				tagButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0];
-				tagButton.titleLabel.textAlignment = UITextAlignmentCenter;
-				[tagButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-				tagButton.titleLabel.shadowColor = [UIColor blackColor];
-				tagButton.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-				[tagButton setTitle:[NSString stringWithFormat:@"#%@", tagVO.title] forState:UIControlStateNormal];
-				[tagButton addTarget:self action:@selector(_goTag:) forControlEvents:UIControlEventTouchUpInside];
-				[tagButton setTag:tagVO.tag_id];
-				[cell addSubview:tagButton];
-				
-				width += (tagSize.width + 8.0);
-			}
-			*/
-			
+						
 			UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 50.0 + _tweetSize.height, 296.0, _titleSize.height)] autorelease];
 			titleLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:22];
 			titleLabel.textColor = [UIColor whiteColor];
@@ -257,19 +237,18 @@
 			contentLabel.numberOfLines = 0;
 			[cell addSubview:contentLabel];
 			
-			UIButton *_readMoreBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-			_readMoreBtn.frame = CGRectMake(118.0, 95.0 + _titleSize.height + _tweetSize.height + _contentSize.height, 84.0, 34.0);
-			[_readMoreBtn setBackgroundImage:[UIImage imageNamed:@"readMoreButton_nonActive.png"] forState:UIControlStateNormal];
-			[_readMoreBtn setBackgroundImage:[UIImage imageNamed:@"readMoreButton_Active.png"] forState:UIControlStateHighlighted];
-			_readMoreBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];
-			_readMoreBtn.titleLabel.textAlignment = UITextAlignmentCenter;
-			[_readMoreBtn setTitleColor:[UIColor colorWithWhite:0.773 alpha:1.0] forState:UIControlStateNormal];
-			_readMoreBtn.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-			_readMoreBtn.titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-			[_readMoreBtn setTitle:@"Read More" forState:UIControlStateNormal];
-
-			[_readMoreBtn addTarget:self action:@selector(_goReadMore) forControlEvents:UIControlEventTouchUpInside];
-			[cell addSubview:_readMoreBtn];
+			UIButton *readMoreBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			readMoreBtn.frame = CGRectMake(118.0, 95.0 + _titleSize.height + _tweetSize.height + _contentSize.height, 84.0, 34.0);
+			[readMoreBtn setBackgroundImage:[UIImage imageNamed:@"readMoreButton_nonActive.png"] forState:UIControlStateNormal];
+			[readMoreBtn setBackgroundImage:[UIImage imageNamed:@"readMoreButton_Active.png"] forState:UIControlStateHighlighted];
+			readMoreBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];
+			readMoreBtn.titleLabel.textAlignment = UITextAlignmentCenter;
+			[readMoreBtn setTitleColor:[UIColor colorWithWhite:0.773 alpha:1.0] forState:UIControlStateNormal];
+			readMoreBtn.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+			readMoreBtn.titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+			[readMoreBtn setTitle:@"Read More" forState:UIControlStateNormal];
+			[readMoreBtn addTarget:self action:@selector(_goReadMore) forControlEvents:UIControlEventTouchUpInside];
+			[cell addSubview:readMoreBtn];
 		}
 		
 		return (cell);

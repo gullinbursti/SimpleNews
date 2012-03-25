@@ -11,7 +11,7 @@
 @implementation SNOptionVO
 
 @synthesize dictionary;
-@synthesize option_id, option_title;
+@synthesize option_id, option_title, option_url, option_info;
 
 +(SNOptionVO *)optionWithDictionary:(NSDictionary *)dictionary {
 	SNOptionVO *vo = [[[SNOptionVO alloc] init] autorelease];
@@ -19,6 +19,8 @@
 	
 	vo.option_id = [[dictionary objectForKey:@"option_id"] intValue];
 	vo.option_title = [dictionary objectForKey:@"title"];
+	vo.option_url = [dictionary objectForKey:@"url"];
+	vo.option_info = [dictionary objectForKey:@"info"]; 
 	
 	return (vo);
 }
@@ -27,6 +29,8 @@
 -(void)dealloc {
 	self.dictionary = nil;
 	self.option_title = nil;
+	self.option_url = nil;
+	self.option_info = nil;
 	
 	[super dealloc];
 }

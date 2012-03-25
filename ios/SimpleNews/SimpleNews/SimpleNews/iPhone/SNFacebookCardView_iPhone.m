@@ -48,7 +48,7 @@
 		[self addSubview:_connectButton];
 		
 		_scaledImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(((self.frame.size.width - (self.frame.size.width * kImageScale)) * 0.5), ((self.frame.size.height - (self.frame.size.height * kImageScale)) * 0.5), self.frame.size.width * kImageScale, self.frame.size.height * kImageScale)] autorelease];
-		_scaledImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:self] CGImage] scale:1.0 orientation:UIImageOrientationUp];
+		//_scaledImgView.image = [UIImage imageWithCGImage:[[SNAppDelegate imageWithView:self] CGImage] scale:1.0 orientation:UIImageOrientationUp];
 		[self addSubview:_scaledImgView];
 		
 		_holderView.hidden = YES;

@@ -23,21 +23,16 @@
 	SNVideoGridViewController_iPad *_gridViewController_iPad;
 	SNFollowerGridViewController_iPhone *_gridViewController_iPhone;
 	
-	Facebook *_facebook;
-	NSArray *_facebookPermissions;
-	void (^_facebookAuthorizationHandler)(BOOL didLogIn);
+	Facebook *facebook;
+	NSArray *userPermissions;
 }
-
-@property (strong, nonatomic) UIWindow *window;
-@property (nonatomic, retain) Facebook *facebook;
 
 #define kServerPath @"http://dev.gullinbursti.cc/projs/simplenews/services"
 
-//-(void)authorizeFacebookWithHandler:(void (^)(BOOL didLogIn))handler;
--(void)confirmSignUpWithProfile:(NSDictionary *)profile;
-+(BOOL)isProfileInfoAvailable;
-+(NSDictionary *)profileForUser;
-+(void)setUserProfile:(NSDictionary *)profile;
++(SNAppDelegate *)sharedInstance;
+
++(void)twitterToggle:(BOOL)isSignedIn;
++(BOOL)twitterEnabled;
 
 
 +(void)writeFollowers:(NSString *)followers;
@@ -62,10 +57,12 @@
 +(void)notificationsToggle:(BOOL)isOn;
 +(BOOL)notificationsEnabled;
 
-+(UIImage *)imageWithView:(UIView *)view;
-
 +(int)minutesAfterDate:(NSDate *)date;
 +(int)hoursAfterDate:(NSDate *)date;
 +(int)daysAfterDate:(NSDate *)date;
+
+@property (strong, nonatomic) UIWindow *window;
+@property (nonatomic, retain) Facebook *facebook;
+@property (nonatomic, retain) NSArray *userPermissions;
 
 @end

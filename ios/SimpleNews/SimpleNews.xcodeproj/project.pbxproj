@@ -53,7 +53,6 @@
 		4C6B21C91510775B0027AEE4 /* twitterIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C6B21C71510775B0027AEE4 /* twitterIcon@2x.png */; };
 		4C6B21CC15112B550027AEE4 /* SNTagVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B21CB15112B550027AEE4 /* SNTagVO.m */; };
 		4C6B21CF15112C9B0027AEE4 /* SNTagButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B21CE15112C9B0027AEE4 /* SNTagButton.m */; };
-		4C6B21E01511A5500027AEE4 /* SNVideoPlayerView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B21DF1511A5500027AEE4 /* SNVideoPlayerView_iPhone.m */; };
 		4C6B21E715127DB10027AEE4 /* SNFollowerInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B21E615127DB00027AEE4 /* SNFollowerInfoView.m */; };
 		4C7D600E14FF02B600156054 /* fpo_startVideo.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4C7D600D14FF02B600156054 /* fpo_startVideo.mp3 */; };
 		4C7D601214FF0E5C00156054 /* SNNoAirplayView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7D601114FF0E5C00156054 /* SNNoAirplayView_iPhone.m */; };
@@ -254,6 +253,12 @@
 		4CD01BEF1515BCA9005B490C /* gearButton_nonAcvtive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01BEB1515BCA9005B490C /* gearButton_nonAcvtive.png */; };
 		4CD01BF01515BCA9005B490C /* gearButton_nonAcvtive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01BEC1515BCA9005B490C /* gearButton_nonAcvtive@2x.png */; };
 		4CD91984151D6C60004081B7 /* SNArticleFollowerInfoView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD91983151D6C5F004081B7 /* SNArticleFollowerInfoView_iPhone.m */; };
+		4CD9199A151E4CE0004081B7 /* SNOptionsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD91999151E4CE0004081B7 /* SNOptionsPageViewController.m */; };
+		4CD919A1151E6BEB004081B7 /* SNVideoPlayerViewControlller_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD919A0151E6BEA004081B7 /* SNVideoPlayerViewControlller_iPhone.m */; };
+		4CD919AC151E7E4A004081B7 /* SNGraphCaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD919AB151E7E4A004081B7 /* SNGraphCaller.m */; };
+		4CD919B4151E9D8A004081B7 /* SNTwitterCaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD919B3151E9D89004081B7 /* SNTwitterCaller.m */; };
+		4CD919B7151E9F6B004081B7 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD919B5151E9F5B004081B7 /* Accounts.framework */; };
+		4CD919BA151ECCFA004081B7 /* SNTweetVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD919B9151ECCFA004081B7 /* SNTweetVO.m */; };
 		4CDC8BF214F2CDEB00D42EA5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CDC8BF114F2CDEB00D42EA5 /* UIKit.framework */; };
 		4CDC8BF414F2CDEB00D42EA5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CDC8BF314F2CDEB00D42EA5 /* Foundation.framework */; };
 		4CDC8BF614F2CDEB00D42EA5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CDC8BF514F2CDEB00D42EA5 /* CoreGraphics.framework */; };
@@ -372,8 +377,6 @@
 		4C6B21CB15112B550027AEE4 /* SNTagVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNTagVO.m; sourceTree = "<group>"; };
 		4C6B21CD15112C9A0027AEE4 /* SNTagButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNTagButton.h; sourceTree = "<group>"; };
 		4C6B21CE15112C9B0027AEE4 /* SNTagButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNTagButton.m; sourceTree = "<group>"; };
-		4C6B21DE1511A54E0027AEE4 /* SNVideoPlayerView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoPlayerView_iPhone.h; sourceTree = "<group>"; };
-		4C6B21DF1511A5500027AEE4 /* SNVideoPlayerView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNVideoPlayerView_iPhone.m; sourceTree = "<group>"; };
 		4C6B21E515127DAF0027AEE4 /* SNFollowerInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNFollowerInfoView.h; sourceTree = "<group>"; };
 		4C6B21E615127DB00027AEE4 /* SNFollowerInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNFollowerInfoView.m; sourceTree = "<group>"; };
 		4C7D600D14FF02B600156054 /* fpo_startVideo.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fpo_startVideo.mp3; sourceTree = "<group>"; };
@@ -707,6 +710,17 @@
 		4CD01BEC1515BCA9005B490C /* gearButton_nonAcvtive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "gearButton_nonAcvtive@2x.png"; sourceTree = "<group>"; };
 		4CD91982151D6C5F004081B7 /* SNArticleFollowerInfoView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNArticleFollowerInfoView_iPhone.h; sourceTree = "<group>"; };
 		4CD91983151D6C5F004081B7 /* SNArticleFollowerInfoView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNArticleFollowerInfoView_iPhone.m; sourceTree = "<group>"; };
+		4CD91998151E4CE0004081B7 /* SNOptionsPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNOptionsPageViewController.h; sourceTree = "<group>"; };
+		4CD91999151E4CE0004081B7 /* SNOptionsPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNOptionsPageViewController.m; sourceTree = "<group>"; };
+		4CD9199F151E6BE8004081B7 /* SNVideoPlayerViewControlller_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNVideoPlayerViewControlller_iPhone.h; sourceTree = "<group>"; };
+		4CD919A0151E6BEA004081B7 /* SNVideoPlayerViewControlller_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNVideoPlayerViewControlller_iPhone.m; sourceTree = "<group>"; };
+		4CD919AA151E7E4A004081B7 /* SNGraphCaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNGraphCaller.h; sourceTree = "<group>"; };
+		4CD919AB151E7E4A004081B7 /* SNGraphCaller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNGraphCaller.m; sourceTree = "<group>"; };
+		4CD919B2151E9D88004081B7 /* SNTwitterCaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNTwitterCaller.h; sourceTree = "<group>"; };
+		4CD919B3151E9D89004081B7 /* SNTwitterCaller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNTwitterCaller.m; sourceTree = "<group>"; };
+		4CD919B5151E9F5B004081B7 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		4CD919B8151ECCFA004081B7 /* SNTweetVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNTweetVO.h; sourceTree = "<group>"; };
+		4CD919B9151ECCFA004081B7 /* SNTweetVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNTweetVO.m; sourceTree = "<group>"; };
 		4CDC8BED14F2CDEB00D42EA5 /* SimpleNews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleNews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CDC8BF114F2CDEB00D42EA5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4CDC8BF314F2CDEB00D42EA5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -809,6 +823,7 @@
 				4CDC8BF414F2CDEB00D42EA5 /* Foundation.framework in Frameworks */,
 				4CDC8BF614F2CDEB00D42EA5 /* CoreGraphics.framework in Frameworks */,
 				4C8B444A14FEA89600F89F7C /* AVFoundation.framework in Frameworks */,
+				4CD919B7151E9F6B004081B7 /* Accounts.framework in Frameworks */,
 				4C9E00BC15194B9B00AEB803 /* libUAirship-1.1.1.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -852,18 +867,18 @@
 				4CD01B83151416E9005B490C /* SNFacebookCardView_iPhone.m */,
 				4C6B217C151063E00027AEE4 /* SNArticleCardView_iPhone.h */,
 				4C6B217D151063E00027AEE4 /* SNArticleCardView_iPhone.m */,
-				4C3904D7151821E000278B95 /* SNShareSheetView_iPhone.h */,
-				4C3904D8151821E000278B95 /* SNShareSheetView_iPhone.m */,
 				4C6B2176151063470027AEE4 /* SNArticleListViewController_iPhone.h */,
 				4C6B2177151063470027AEE4 /* SNArticleListViewController_iPhone.m */,
-				4C6B21DE1511A54E0027AEE4 /* SNVideoPlayerView_iPhone.h */,
-				4C6B21DF1511A5500027AEE4 /* SNVideoPlayerView_iPhone.m */,
+				4CD9199F151E6BE8004081B7 /* SNVideoPlayerViewControlller_iPhone.h */,
+				4CD919A0151E6BEA004081B7 /* SNVideoPlayerViewControlller_iPhone.m */,
+				4CD91982151D6C5F004081B7 /* SNArticleFollowerInfoView_iPhone.h */,
+				4CD91983151D6C5F004081B7 /* SNArticleFollowerInfoView_iPhone.m */,
+				4C3904D7151821E000278B95 /* SNShareSheetView_iPhone.h */,
+				4C3904D8151821E000278B95 /* SNShareSheetView_iPhone.m */,
 				4C3904DA1518227A00278B95 /* SNPaginationView_iPhone.h */,
 				4C3904DB1518227A00278B95 /* SNPaginationView_iPhone.m */,
 				4C3904DD1519132700278B95 /* SNLoaderView_iPhone.h */,
 				4C3904DE1519132800278B95 /* SNLoaderView_iPhone.m */,
-				4CD91982151D6C5F004081B7 /* SNArticleFollowerInfoView_iPhone.h */,
-				4CD91983151D6C5F004081B7 /* SNArticleFollowerInfoView_iPhone.m */,
 			);
 			name = Articles;
 			sourceTree = "<group>";
@@ -1441,6 +1456,8 @@
 				4CAF9D481506D1CA00AB3735 /* SNOptionItemView_iPhone.m */,
 				4CD01B8515142F7B005B490C /* SNOptionsViewController_iPhone.h */,
 				4CD01B8615142F7B005B490C /* SNOptionsViewController_iPhone.m */,
+				4CD91998151E4CE0004081B7 /* SNOptionsPageViewController.h */,
+				4CD91999151E4CE0004081B7 /* SNOptionsPageViewController.m */,
 			);
 			name = Options;
 			sourceTree = "<group>";
@@ -1707,6 +1724,7 @@
 		4CDC8BF014F2CDEB00D42EA5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4CD919B5151E9F5B004081B7 /* Accounts.framework */,
 				4CD01B88151440E7005B490C /* Twitter.framework */,
 				4C8B444814FEA88700F89F7C /* AVFoundation.framework */,
 				4CB2293514F70A2D00F5618D /* QuartzCore.framework */,
@@ -1782,6 +1800,10 @@
 				4C6B21CE15112C9B0027AEE4 /* SNTagButton.m */,
 				4C6B21E515127DAF0027AEE4 /* SNFollowerInfoView.h */,
 				4C6B21E615127DB00027AEE4 /* SNFollowerInfoView.m */,
+				4CD919AA151E7E4A004081B7 /* SNGraphCaller.h */,
+				4CD919AB151E7E4A004081B7 /* SNGraphCaller.m */,
+				4CD919B2151E9D88004081B7 /* SNTwitterCaller.h */,
+				4CD919B3151E9D89004081B7 /* SNTwitterCaller.m */,
 			);
 			name = Shared;
 			path = SimpleNews/Shared;
@@ -1923,6 +1945,8 @@
 				4C6B215E15101F610027AEE4 /* SNFollowerVO.m */,
 				4C6B21CA15112B540027AEE4 /* SNTagVO.h */,
 				4C6B21CB15112B550027AEE4 /* SNTagVO.m */,
+				4CD919B8151ECCFA004081B7 /* SNTweetVO.h */,
+				4CD919B9151ECCFA004081B7 /* SNTweetVO.m */,
 			);
 			name = VO;
 			path = SimpleNews/VO;
@@ -2208,7 +2232,6 @@
 				4C6B218D15106ECB0027AEE4 /* SNArticleVO.m in Sources */,
 				4C6B21CC15112B550027AEE4 /* SNTagVO.m in Sources */,
 				4C6B21CF15112C9B0027AEE4 /* SNTagButton.m in Sources */,
-				4C6B21E01511A5500027AEE4 /* SNVideoPlayerView_iPhone.m in Sources */,
 				4C6B21E715127DB10027AEE4 /* SNFollowerInfoView.m in Sources */,
 				4CD01B84151416E9005B490C /* SNFacebookCardView_iPhone.m in Sources */,
 				4CD01B8715142F7B005B490C /* SNOptionsViewController_iPhone.m in Sources */,
@@ -2268,6 +2291,11 @@
 				4C4F951815197D530069D921 /* SNRecentFollowersView_iPhone.m in Sources */,
 				4C4F951B1519A17D0069D921 /* SNBaseFollowerGridItemView_iPhone.m in Sources */,
 				4CD91984151D6C60004081B7 /* SNArticleFollowerInfoView_iPhone.m in Sources */,
+				4CD9199A151E4CE0004081B7 /* SNOptionsPageViewController.m in Sources */,
+				4CD919A1151E6BEB004081B7 /* SNVideoPlayerViewControlller_iPhone.m in Sources */,
+				4CD919AC151E7E4A004081B7 /* SNGraphCaller.m in Sources */,
+				4CD919B4151E9D8A004081B7 /* SNTwitterCaller.m in Sources */,
+				4CD919BA151ECCFA004081B7 /* SNTweetVO.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

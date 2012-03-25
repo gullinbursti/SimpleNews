@@ -30,11 +30,13 @@
 	CGSize _contentSize;
 	
 	UIView *_indicatorView;
+	NSMutableArray *_tweets;
 	
 	BOOL _isAtTop;
 	int _ind;
 }
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo index:(int)idx;
+-(void)setTweets:(NSMutableArray *)tweets;
 
 @end

@@ -109,6 +109,8 @@
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
 					"title" => $article_row['title'], 
+					"article_url" => $article_row['article_url'], 
+					"short_url" => $article_row['short_url'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
 					"twitter_name" => $follower_arr[1], 
 					"bg_url" => $article_row['image_url'], 
@@ -158,6 +160,8 @@
 						"article_id" => $article_row['id'], 
 						"type_id" => $article_row['type_id'], 
 						"title" => $article_row['title'], 
+						"article_url" => $article_row['article_url'], 
+						"short_url" => $article_row['short_url'], 
 						"tweet_id" => $article_row['tweet_id'], 
 						"tweet_msg" => $article_row['tweet_msg'], 
 						"twitter_name" => $follower_arr[1], 
@@ -183,7 +187,7 @@
 		function getMostRecentArticles() {
 			$article_arr = array();
 			
-			$start_date = mktime(date('H'), date('i'), date('s'), date('m'), date('d') - 10, date('Y'));
+			$start_date = mktime(date('H'), date('i'), date('s'), date('m'), date('d') - 12, date('Y'));
 			
 			$query = 'SELECT * FROM `tblArticles` WHERE (`added` >= "'. date('Y-m-d H:i:s', $start_date) .'" AND `active` = "Y") ORDER BY `added` ASC;';
 			$article_result = mysql_query($query); 
@@ -208,6 +212,8 @@
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
 					"title" => $article_row['title'], 
+					"article_url" => $article_row['article_url'], 
+					"short_url" => $article_row['short_url'], 
 					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
 					"twitter_name" => $follower_arr[1], 
@@ -254,6 +260,8 @@
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
 					"title" => $article_row['title'], 
+					"article_url" => $article_row['article_url'], 
+					"short_url" => $article_row['short_url'], 
 					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
 					"twitter_name" => $follower_arr[1], 
@@ -315,6 +323,8 @@
 							"article_id" => $article_row['id'], 
 							"type_id" => $article_row['type_id'], 
 							"title" => $article_row['title'], 
+							"article_url" => $article_row['article_url'], 
+							"short_url" => $article_row['short_url'], 
 							"tweet_id" => $article_row['tweet_id'], 
 							"tweet_msg" => $article_row['tweet_msg'], 
 							"twitter_name" => $follower_arr[1], 
@@ -375,6 +385,8 @@
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
 					"title" => $article_row['title'], 
+					"article_url" => $article_row['article_url'], 
+					"short_url" => $article_row['short_url'], 
 					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
 					"twitter_name" => $follower_arr[1], 
@@ -434,6 +446,8 @@
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
 					"title" => $article_row['title'], 
+					"article_url" => $article_row['article_url'], 
+					"short_url" => $article_row['short_url'], 
 					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
 					"twitter_name" => $follower_arr[1], 

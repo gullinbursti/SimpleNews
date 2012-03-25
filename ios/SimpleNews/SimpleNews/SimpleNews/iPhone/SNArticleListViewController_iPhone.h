@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
 
-#import "SNVideoPlayerView_iPhone.h"
 #import "ASIFormDataRequest.h"
 #import "SNShareSheetView_iPhone.h"
 #import "SNPaginationView_iPhone.h"
@@ -27,6 +26,7 @@
 	UIView *_cardHolderView;
 	
 	NSMutableArray *_cardViews;
+	NSMutableArray *_timelineTweets;
 	
 	int _cardIndex;
 	BOOL _isSwiping;
@@ -39,7 +39,6 @@
 	UIButton *_whiteShareButton;
 	
 	UIView *_blackMatteView;
-	SNVideoPlayerView_iPhone *_videoPlayerView;
 	
 	SNPaginationView_iPhone	*_paginationView;
 	SNLoaderView_iPhone *_loaderView;

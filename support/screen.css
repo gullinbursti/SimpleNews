@@ -1,0 +1,16 @@
+body {
+	margin:12px; 
+	font-family:Tahoma, Arial, sans-serif; 
+	font-size:14px; 
+	color:#999999; 
+	background-color:#212121;
+}
+
+h3 {
+	color:#A0A0A0;
+	border-bottom:1px solid #808080;
+}
+
+p {
+	text-align:justify;
+}

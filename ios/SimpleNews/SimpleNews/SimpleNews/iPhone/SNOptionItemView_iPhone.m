@@ -73,12 +73,15 @@
 
 #pragma mark - Button handlers
 -(void)_goToggle {
-	_isSelected = !_isSelected;
-	_checkImageView.hidden = !_isSelected;
 	
+	if (_vo.option_id < 4)
+		_checkImageView.hidden = !_isSelected;
+	
+	_isSelected = !_isSelected;
+		
 	if (_isSelected)
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"OPTION_SELECTED" object:_vo];
-	
+		
 	else
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"OPTION_DESELECTED" object:_vo];
 }

@@ -7,13 +7,17 @@
 //
 
 #import <Twitter/Twitter.h>
+#import "SNGraphCaller.h"
+#import "SNTwitterCaller.h"
 
 #import "SNArticleListViewController_iPhone.h"
 #import "SNArticleCardView_iPhone.h"
 
 #import "SNAppDelegate.h"
+#import "SNTweetVO.h"
 
 #import "SNFacebookCardView_iPhone.h"
+#import "SNVideoPlayerViewControlller_iPhone.h"
 
 @interface SNArticleListViewController_iPhone()
 -(void)_goBack;
@@ -46,10 +50,16 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideButtons:) name:@"HIDE_BUTTONS" object:nil];
 		
 		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterTimeline:) name:@"TWITTER_TIMELINE" object:nil];
+		
+		
 		_articles = [NSMutableArray new];
 		_cardViews = [NSMutableArray new];
+		_timelineTweets = [NSMutableArray new];
 		
 		_isSwiping = NO;
+		
+		[[SNTwitterCaller sharedInstance] userTimeline];
 	}
 	return (self);
 }
@@ -188,9 +198,9 @@
 	_blackMatteView.alpha = 0.0;
 	[self.view addSubview:_blackMatteView];
 	
-	_videoPlayerView = [[SNVideoPlayerView_iPhone alloc] initWithFrame:self.view.frame];
-	_videoPlayerView.hidden = YES;
-	[self.view addSubview:_videoPlayerView];
+	//_videoPlayerView = [[SNVideoPlayerView_iPhone alloc] initWithFrame:self.view.frame];
+	//_videoPlayerView.hidden = YES;
+	//[self.view addSubview:_videoPlayerView];
 	
 	_paginationView = [[SNPaginationView_iPhone alloc] initWithFrame:CGRectMake(278.0, 460.0, 48.0, 9.0)];
 	[self.view addSubview:_paginationView];
@@ -268,17 +278,15 @@
 	
 	[articleCardView introContent];
 	
-	/*
-	[UIView animateWithDuration:0.15 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
-		//articleCardView.scaledImgView.frame = CGRectMake(0.0, 0.0, articleCardView.frame.size.width, articleCardView.frame.size.height);
-		articleCardView.bgView.frame = CGRectMake(0.0, 0.0, articleCardView.frame.size.width, articleCardView.frame.size.height);
-		
-	} completion:^(BOOL finished) {
-		//articleCardView.scaledImgView.hidden = YES;
-		//articleCardView.scaledImgView.frame = CGRectMake(((articleCardView.frame.size.width - (articleCardView.frame.size.width * kImageScale)) * 0.5), ((articleCardView.frame.size.height - (articleCardView.frame.size.height * kImageScale)) * 0.5), articleCardView.frame.size.width * kImageScale, articleCardView.frame.size.height * kImageScale);
-		//articleCardView.holderView.hidden = NO;
-	}];
-	 */
+	NSMutableArray *tweets = [NSMutableArray new];
+	SNArticleVO *articleVO = (SNArticleVO *)[_articles objectAtIndex:_cardIndex];
+	for (SNTweetVO *tweetVO in _timelineTweets) {
+		if ([tweetVO.content rangeOfString:articleVO.article_url].location > 0 || [tweetVO.content rangeOfString:articleVO.short_url].location > 0) {
+			[tweets addObject:tweetVO];
+		}
+	}
+	
+	[articleCardView setTweets:tweets];
 }
 
 -(void)_prevCard {
@@ -287,39 +295,23 @@
 	if (_cardIndex < [_cardViews count] - 1) {
 		SNBaseArticleCardView_iPhone *previousCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex + 1];
 		SNBaseArticleCardView_iPhone *currentCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
-		
-		//.previousCardView.holderView.hidden = NO;
-		//previousCardView.scaledImgView.hidden = NO;
 
 		[UIView animateWithDuration:0.25 animations:^(void) {
 			previousCardView.frame = CGRectMake(0.0, 0.0, previousCardView.frame.size.width, previousCardView.frame.size.height);
 			currentCardView.frame = CGRectMake(self.view.frame.size.width, 0.0, currentCardView.frame.size.width, currentCardView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
-			[self _transitionBtns];
 			
 			[previousCardView introContent];
 			[currentCardView resetContent];
 			
 			_isSwiping = NO;
 			_cardIndex++;
-			//_cardIndex = MIN(_cardIndex, [_cardViews count] - 1);
+			
+			[self _transitionBtns];
 			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
 		}];
-		
-		/*
-		[UIView animateWithDuration:0.15 delay:0.25 options:UIViewAnimationCurveEaseInOut animations:^(void) {
-			previousCardView.scaledImgView.frame = CGRectMake(0.0, 0.0, previousCardView.frame.size.width, previousCardView.frame.size.height);
 			
-		} completion:^(BOOL finished) {
-			_isSwiping = NO;
-			
-			previousCardView.scaledImgView.hidden = YES;
-			previousCardView.scaledImgView.frame = CGRectMake(((previousCardView.frame.size.width - (previousCardView.frame.size.width * kImageScale)) * 0.5), ((previousCardView.frame.size.height - (previousCardView.frame.size.height * kImageScale)) * 0.5), previousCardView.frame.size.width * kImageScale, previousCardView.frame.size.height * kImageScale);
-			previousCardView.holderView.hidden = NO;
-		}];
-		*/
-	
 	} else {
 		if (![_loaderView isLoading]) {
 			[_loaderView introMe];
@@ -348,8 +340,6 @@
 		SNBaseArticleCardView_iPhone *currentCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
 		SNBaseArticleCardView_iPhone *nextCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex - 1];
 		
-		//.nextCardView.holderView.hidden = YES;
-		//.nextCardView.scaledImgView.hidden = NO;
 		nextCardView.frame = CGRectMake(0.0, 0.0, nextCardView.frame.size.width, nextCardView.frame.size.height);
 		
 		CABasicAnimation *zoomAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
@@ -365,30 +355,17 @@
 			currentCardView.frame = CGRectMake(-self.view.frame.size.width, 0.0, currentCardView.frame.size.width, currentCardView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
-			[self _transitionBtns];
 			
 			[currentCardView resetContent];
 			[nextCardView introContent];
 			
 			_isSwiping = NO;
 			_cardIndex--;
-			//_cardIndex = MAX(_cardIndex, 1);
+			
+			[self _transitionBtns];
 			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
 		}];
-		
-		/*
-		[UIView animateWithDuration:0.15 delay:0.25 options:UIViewAnimationCurveEaseInOut animations:^(void) {
-			nextCardView.scaledImgView.frame = CGRectMake(0.0, 0.0, currentCardView.frame.size.width, currentCardView.frame.size.height);
-
-		} completion:^(BOOL finished) {
-			_isSwiping = NO;
-			
-			nextCardView.scaledImgView.hidden = YES;
-			nextCardView.scaledImgView.frame = CGRectMake((nextCardView.frame.size.width - (nextCardView.frame.size.width * kImageScale)) * 0.5, (nextCardView.frame.size.height - (nextCardView.frame.size.height * kImageScale)) * 0.5, nextCardView.frame.size.width * kImageScale, nextCardView.frame.size.height * kImageScale);
-			nextCardView.holderView.hidden = NO;
-		}];
-		*/
-		
+				
 	} else {
 		if (![_loaderView isLoading]) {
 			[_loaderView introMe];
@@ -412,7 +389,7 @@
 
 
 -(void)_transitionBtns {
-	SNArticleVO *vo = (SNArticleVO *)[_articles objectAtIndex:_cardIndex - 1];
+	SNArticleVO *vo = (SNArticleVO *)[_articles objectAtIndex:_cardIndex];
 	//NSLog(@"Article [%d/%d]", _cardIndex, [_articles count]);
 	
 	[UIView animateWithDuration:0.25 animations:^(void) {
@@ -442,8 +419,13 @@
 #pragma mark - Notification handlers
 -(void)_startVideo:(NSNotification *)notification {
 	SNArticleVO *vo = (SNArticleVO *)[notification object];
-	[_videoPlayerView changeArticleVO:vo];
-	_videoPlayerView.hidden = NO;
+	
+	SNVideoPlayerViewControlller_iPhone *videoPlayerViewController = [[[SNVideoPlayerViewControlller_iPhone alloc] init] autorelease];
+	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:videoPlayerViewController] autorelease];
+	[navigationController setNavigationBarHidden:YES animated:NO];
+	[self.navigationController presentModalViewController:navigationController animated:NO];
+	
+	[videoPlayerViewController changeArticleVO:vo];
 }
 
 -(void)_videoStarted:(NSNotification *)notification {
@@ -453,7 +435,6 @@
 }
 
 -(void)_videoEnded:(NSNotification *)notification {
-	_videoPlayerView.hidden = YES;
 	
 	[UIView animateWithDuration:0.5 animations:^(void) {
 		_blackMatteView.alpha = 0.0;
@@ -483,22 +464,20 @@
 
 
 -(void)_facebookShare:(NSNotification *)notification {
-	SNArticleVO *vo = (SNArticleVO *)[notification object];
+	//SNArticleVO *vo = (SNArticleVO *)[notification object];
+
+	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+											 @"SELECT uid, name, pic FROM user WHERE uid=me()", @"query",
+											 nil];
+	SNAppDelegate *delegate = (SNAppDelegate *)[[UIApplication sharedApplication] delegate];
+	[[delegate facebook] requestWithMethodName:@"fql.query"
+												andParams:params
+										  andHttpMethod:@"POST"
+											 andDelegate:self];
 	
-	if (![[(SNAppDelegate *)[UIApplication sharedApplication].delegate facebook] isSessionValid]) {
-		[[(SNAppDelegate *)[UIApplication sharedApplication].delegate facebook] authorize:[[NSArray arrayWithObjects:
-																														@"read_stream", @"publish_stream", @"offline_access", 
-																														@"user_relationships", 
-																														@"user_birthday", 
-																														@"user_work_history", 
-																														@"user_education_history",
-																														@"user_location",
-																														nil] retain]];
 	
-	} else {
-	}
-	
-	//[[(SNAppDelegate *)[UIApplication sharedApplication].delegate facebook] requestWithGraphPath:[NSString stringWithFormat:@"me/feed"] andParams:[NSMutableDictionary dictionaryWithObjectsAndKeys:vo.title, @"feed", nil] andHttpMethod:@"POST" andDelegate:self];
+	//[[SNGraphCaller sharedInstance] postFeed:@"DERP"];
+	[[delegate facebook] requestWithGraphPath:[NSString stringWithFormat:@"me/feed"] andParams:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"DERP", @"feed", nil] andHttpMethod:@"POST" andDelegate:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CANCEL_SHARE" object:nil];	
 }
 -(void)_twitterShare:(NSNotification *)notification {
@@ -513,6 +492,8 @@
 	[self presentModalViewController:twitter animated:YES];
 	
 	twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+		
+		
 		//NSString *msg; 
 		
 		//if (result == TWTweetComposeViewControllerResultDone)
@@ -526,8 +507,9 @@
 		//[alertView show];
 		
 		[self dismissModalViewControllerAnimated:YES];
-	};	
+	};
 }
+
 -(void)_emailShare:(NSNotification *)notification {
 	SNArticleVO *vo = (SNArticleVO *)[notification object];
 	
@@ -573,8 +555,9 @@
 	_whiteShareButton.alpha = 0.0;
 }
 
-//CGAffineTransform transform = scaleCardView.transform;
-//scaleCardView.transform = CGAffineTransformScale(transform, 1.18f, 1.18f);
+-(void)_twitterTimeline:(NSNotification *)notification {
+	_timelineTweets = (NSMutableArray *)[notification object];
+}
 
 
 #pragma mark - MailComposeViewController Delegates
@@ -637,47 +620,8 @@
 	if ([result isKindOfClass:[NSArray class]]) {
 		result = [result objectAtIndex:0];
 	}
-	// This callback can be a result of getting the user's basic
-	// information or getting the user's permissions.
-	if ([result objectForKey:@"name"]) {
-		// If basic information callback, set the UI objects to
-		// display this.
-		//		nameLabel.text = [result objectForKey:@"name"];
-		// Get the profile image
-		UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[result objectForKey:@"pic"]]]];
-		
-		// Resize, crop the image to make sure it is square and renders
-		// well on Retina display
-		float ratio;
-		float delta;
-		float px = 100; // Double the pixels of the UIImageView (to render on Retina)
-		CGPoint offset;
-		CGSize size = image.size;
-		if (size.width > size.height) {
-			ratio = px / size.width;
-			delta = (ratio*size.width - ratio*size.height);
-			offset = CGPointMake(delta/2, 0);
-		} else {
-			ratio = px / size.height;
-			delta = (ratio*size.height - ratio*size.width);
-			offset = CGPointMake(0, delta/2);
-		}
-		CGRect clipRect = CGRectMake(-offset.x, -offset.y,
-											  (ratio * size.width) + delta,
-											  (ratio * size.height) + delta);
-		UIGraphicsBeginImageContext(CGSizeMake(px, px));
-		UIRectClip(clipRect);
-		[image drawInRect:clipRect];
-		UIImage *imgThumb =   UIGraphicsGetImageFromCurrentImageContext();
-		[imgThumb retain];
-		
-		//		[profilePhotoImageView setImage:imgThumb];
-		//		[self apiGraphUserPermissions];
-	} else {
-		// Processing permissions information
-		//		HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
-		//		[delegate setUserPermissions:[[result objectForKey:@"data"] objectAtIndex:0]];
-	}
+
+	NSLog(@"%@", result);
 }
 
 /**
@@ -685,6 +629,7 @@
  * successfully.
  */
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
+	NSLog(@"Err: %@", error);
 	NSLog(@"Err message: %@", [[error userInfo] objectForKey:@"error_msg"]);
 	NSLog(@"Err code: %d", [error code]);
 }
@@ -738,94 +683,8 @@
 				
 				_cardIndex = [_cardViews count] - 1;
 			}
-		}
-	
-	} /*else if ([request isEqual:_latestArticlesRequest]) {
-		@autoreleasepool {
-			NSError *error = nil;
-			NSArray *parsedArticles = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-			if (error != nil)
-				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
-			
-			else {				
-				int cnt = 0;
-				int tot = [_cardViews count];
-				
-				for (NSDictionary *serverArticle in parsedArticles) {
-					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
-					
-					//NSLog(@"ARTICLE \"%@\"", vo.title);
-					
-					if (vo != nil)
-						[_articles addObject:vo];
-					
-					
-					SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:CGRectMake(-self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) articleVO:vo] autorelease];
-					[_cardViews addObject:(SNBaseArticleCardView_iPhone *)articleCardView];
-					
-					cnt++;
-				}
-				
-				if (cnt > 0) {
-					cnt = 0;
-					
-					for (SNArticleCardView_iPhone *cardView in _cardViews) {
-						if (cnt >= tot)
-							[_cardHolderView addSubview:cardView];
-						cnt++;
-					}
-					
-					SNArticleCardView_iPhone *articleCardView = (SNArticleCardView_iPhone *)[_cardViews objectAtIndex:0];
-					
-					[UIView animateWithDuration:0.15 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
-						articleCardView.scaledImgView.frame = CGRectMake(0.0, 0.0, articleCardView.frame.size.width, articleCardView.frame.size.height);
-						//articleCardView.alpha = 1.0;
-						
-					} completion:^(BOOL finished) {
-						articleCardView.scaledImgView.hidden = YES;
-						articleCardView.scaledImgView.frame = CGRectMake(((articleCardView.frame.size.width - (articleCardView.frame.size.width * kImageScale)) * 0.5), ((articleCardView.frame.size.height - (articleCardView.frame.size.height * kImageScale)) * 0.5), articleCardView.frame.size.width * kImageScale, articleCardView.frame.size.height * kImageScale);
-						articleCardView.holderView.hidden = NO;
-					}];
-				}
-			}
-		}
-		
-	} else if ([request isEqual:_olderArticlesRequest]) {
-		@autoreleasepool {
-			NSError *error = nil;
-			NSArray *parsedArticles = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-			if (error != nil)
-				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
-			
-			else {
-				
-				int cnt = 0;
-				for (NSDictionary *serverArticle in parsedArticles) {
-					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
-					
-					//NSLog(@"ARTICLE \"%@\"", vo.title);
-					
-					if (vo != nil)
-						[_articles insertObject:vo atIndex:0];
-					
-					
-					SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:_cardHolderView.frame articleVO:vo] autorelease];
-					articleCardView.holderView.hidden = YES;
-					[_cardViews insertObject:(SNBaseArticleCardView_iPhone *)articleCardView atIndex:0];
-					
-					cnt++;
-				}
-				
-				if (cnt > 0) {
-					for (SNArticleCardView_iPhone *cardView in _cardViews) {
-						[_cardHolderView insertSubview:cardView atIndex:0];
-					}
-					
-					_cardIndex = cnt;
-				}
-			}
-		}
-	}*/
+		}	
+	}
 }
 
 
@@ -845,5 +704,10 @@
  return (interfaceOrientation == UIInterfaceOrientationPortrait);
  }
  */
+
+
+
+
+
 
 @end

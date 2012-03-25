@@ -1,8 +1,8 @@
 //
-//  SNVideoPlayerView_iPhone.h
+//  SNVideoPlayerViewControlller_iPhone.h
 //  SimpleNews
 //
-//  Created by Matthew Holcombe on 03.14.12.
+//  Created by Matthew Holcombe on 03.24.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
@@ -13,12 +13,13 @@
 #import "SNArticleFollowerInfoView_iPhone.h"
 #import "ASIHTTPRequest.h"
 
-@interface SNVideoPlayerView_iPhone : UIView <ASIHTTPRequestDelegate> {
+@interface SNVideoPlayerViewControlller_iPhone : UIViewController <ASIHTTPRequestDelegate> {
 	
 	BOOL _isFullscreen;
 	BOOL _isStalled;
 	BOOL _isPaused;
 	BOOL _isFinished;
+	BOOL _isFlipped;
 	
 	ASIHTTPRequest *_videoInfoRequest;
 	NSTimer *_timer;
@@ -30,6 +31,7 @@
 	UIView *_videoHolderView;
 	UIView *_progressView;
 	UILabel *_timeLabel;
+	UIButton *_backButton;
 	CGSize _timeSize;
 	
 	UIButton *_playButton;

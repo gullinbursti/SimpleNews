@@ -12,13 +12,23 @@
 #import "SNAppDelegate.h"
 #import "SNSplashViewController_iPhone.h"
 
-static NSString * kFacebookAppId = @"316539575066102";
-NSString * const kOJProfileInfoKey = @"ProfileInfo";
+static NSString *kFacebookAppId = @"316539575066102";
+NSString *const kSNProfileInfoKey = @"ProfileInfo";
 
 @implementation SNAppDelegate
 
 @synthesize window = _window;
-@synthesize facebook = _facebook;
+@synthesize facebook;
+@synthesize userPermissions;
+
++(SNAppDelegate *)sharedInstance {
+	return (SNAppDelegate *)[UIApplication sharedApplication].delegate;
+}
+
++(Facebook *)facebook {
+	return [[SNAppDelegate sharedInstance] facebook];
+}
+
 
 +(void)writeFollowers:(NSString *)followers {
 	[[NSUserDefaults standardUserDefaults] setObject:followers forKey:@"followers"];
@@ -109,14 +119,6 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 	return ([[[NSDate new] autorelease] timeIntervalSinceDate:date] / 86400);
 }
 
-+(UIImage *)imageWithView:(UIView *)view {
-	UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.opaque, [[UIScreen mainScreen] scale]);
-	[view.layer renderInContext:UIGraphicsGetCurrentContext()];
-	UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-	UIGraphicsEndImageContext();
-	
-	return (img);
-}
 
 +(void)notificationsToggle:(BOOL)isOn {
 	NSString *bool_str;
@@ -135,8 +137,26 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 }
 
 
++(void)twitterToggle:(BOOL)isSignedIn {
+	NSString *bool_str;
+	if (isSignedIn)
+		bool_str = [NSString stringWithString:@"YES"];
+	
+	else
+		bool_str = [NSString stringWithString:@"NO"];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:bool_str forKey:@"twitter"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++(BOOL)twitterEnabled {
+	return ([[[NSUserDefaults standardUserDefaults] objectForKey:@"twitter"] isEqualToString:@"YES"]);
+}
+
+
+
 +(NSDictionary *)profileForUser {
-	return [[NSUserDefaults standardUserDefaults] objectForKey:kOJProfileInfoKey];
+	return [[NSUserDefaults standardUserDefaults] objectForKey:kSNProfileInfoKey];
 }
 
 +(BOOL)isProfileInfoAvailable {
@@ -145,14 +165,13 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 
 +(void)setUserProfile:(NSDictionary *)profile {
 	if (profile != nil)
-		[[NSUserDefaults standardUserDefaults] setObject:profile forKey:kOJProfileInfoKey];
+		[[NSUserDefaults standardUserDefaults] setObject:profile forKey:kSNProfileInfoKey];
 	
 	else
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:kOJProfileInfoKey];
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:kSNProfileInfoKey];
 	
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
-
 
 
 -(void)dealloc {
@@ -163,12 +182,8 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	
-	[[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"airplay_enabled"];
-	
-		
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults removeObjectForKey:@"FBAccessTokenKey"];
-	[defaults removeObjectForKey:@"FBExpirationDateKey"];
+	[defaults setObject:@"NO" forKey:@"airplay_enabled"];
 	[defaults synchronize];
 	
 	if (![defaults objectForKey:@"boot_total"]) {
@@ -202,17 +217,6 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 		[SNAppDelegate writeFollowers:@""];
 	
 	self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
-	
-	
-	_facebookPermissions = [[NSArray arrayWithObjects:
-									 @"read_stream", @"publish_stream", @"offline_access", 
-									 @"user_relationships", 
-									 @"user_birthday", 
-									 @"user_work_history", 
-									 @"user_education_history",
-									 @"user_location",
-									 nil] retain];
-	
 	UINavigationController *rootNavigationController;
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
@@ -224,69 +228,28 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 		
 		
 		// Initialize Facebook
-		_facebook = [[Facebook alloc] initWithAppId:kFacebookAppId andDelegate:self];
+		facebook = [[Facebook alloc] initWithAppId:kFacebookAppId andDelegate:self];
+		userPermissions = [[NSArray arrayWithObjects:@"read_stream", @"publish_stream", @"offline_access", @"user_location", nil] retain];
 		
 		// Check and retrieve authorization information
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		if ([defaults objectForKey:@"FBAccessTokenKey"] && [defaults objectForKey:@"FBExpirationDateKey"]) {
-			_facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
-			_facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
+			facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
+			facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
 		}
 		
 		[rootNavigationController setNavigationBarHidden:YES];
 		[self.window setRootViewController:rootNavigationController];
 		[self.window makeKeyAndVisible];
 		
-		
-		// Check App ID:
-		// This is really a warning for the developer, this should not
-		// happen in a completed app
-		if (!kFacebookAppId) {
-			UIAlertView *alertView = [[UIAlertView alloc]
-											  initWithTitle:@"Setup Error"
-											  message:@"Missing app ID. You cannot run the app until you provide this in the code."
-											  delegate:self
-											  cancelButtonTitle:@"OK"
-											  otherButtonTitles:nil,
-											  nil];
-			[alertView show];
-			[alertView release];
+		/*
+		if (![facebook isSessionValid]) {
+			[facebook authorize:userPermissions];
+			
 		} else {
-			// Now check that the URL scheme fb[app_id]://authorize is in the .plist and can
-			// be opened, doing a simple check without local app id factored in here
-			NSString *url = [NSString stringWithFormat:@"fb%@://authorize",kFacebookAppId];
-			BOOL bSchemeInPlist = NO; // find out if the sceme is in the plist file.
-			NSArray* aBundleURLTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
-			if ([aBundleURLTypes isKindOfClass:[NSArray class]] &&
-				 ([aBundleURLTypes count] > 0)) {
-            NSDictionary* aBundleURLTypes0 = [aBundleURLTypes objectAtIndex:0];
-            if ([aBundleURLTypes0 isKindOfClass:[NSDictionary class]]) {
-					NSArray* aBundleURLSchemes = [aBundleURLTypes0 objectForKey:@"CFBundleURLSchemes"];
-					if ([aBundleURLSchemes isKindOfClass:[NSArray class]] &&
-						 ([aBundleURLSchemes count] > 0)) {
-						NSString *scheme = [aBundleURLSchemes objectAtIndex:0];
-						if ([scheme isKindOfClass:[NSString class]] &&
-							 [url hasPrefix:scheme]) {
-							bSchemeInPlist = YES;
-						}
-					}
-            }
-			}
-			// Check if the authorization callback will work
-			BOOL bCanOpenUrl = [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString: url]];
-			if (!bSchemeInPlist || !bCanOpenUrl) {
-            UIAlertView *alertView = [[UIAlertView alloc]
-                                      initWithTitle:@"Setup Error"
-                                      message:@"Invalid or missing URL scheme. You cannot run the app until you set up a valid URL scheme in your .plist."
-                                      delegate:self
-                                      cancelButtonTitle:@"OK"
-                                      otherButtonTitles:nil,
-                                      nil];
-            //[alertView show];
-            [alertView release];
-			}
+			NSLog(@"ALREADY LOGGED IN");
 		}
-		
+		*/
 		
 		SNSplashViewController_iPhone *splashViewController = [[[SNSplashViewController_iPhone alloc] init] autorelease];
 		UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:splashViewController] autorelease];
@@ -333,7 +296,7 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
  Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
  **/
 -(void)applicationDidBecomeActive:(UIApplication *)application {
-	[_facebook extendAccessTokenIfNeeded];
+	[facebook extendAccessTokenIfNeeded];
 }
 
 /**
@@ -343,24 +306,23 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 }
 
 -(BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-	return [_facebook handleOpenURL:url]; 
+	return [facebook handleOpenURL:url]; 
 }
 
 // For iOS 4.2+ support
 -(BOOL)application:(UIApplication *)application openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-	return [_facebook handleOpenURL:url]; 
+	return [facebook handleOpenURL:url]; 
 }
 
 
-- (void)confirmSignUpWithProfile:(NSDictionary *)profile {
-	[SNAppDelegate setUserProfile:profile];
-	//[[OJGraphCaller sharedInstance] postActivity:@"install" withObject:@"odd_job"];
-}
 
-- (void)signOut {
+-(void)storeAuthData:(NSString *)accessToken expiresAt:(NSDate *)expiresAt {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	[defaults setObject:accessToken forKey:@"FBAccessTokenKey"];
+	[defaults setObject:expiresAt forKey:@"FBExpirationDateKey"];
+	[defaults synchronize];
 }
-
 
 
 #pragma mark - FBSessionDelegate Methods
@@ -368,41 +330,29 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
  * Called when the user has logged in successfully.
  */
 - (void)fbDidLogin {
-	NSLog(@"LOGGED IN");
+	SNAppDelegate *delegate = (SNAppDelegate *)[[UIApplication sharedApplication] delegate];
+	[self storeAuthData:[[delegate facebook] accessToken] expiresAt:[[delegate facebook] expirationDate]];
 	
-	//SNAppDelegate *delegate = (SNAppDelegate *)[[UIApplication sharedApplication] delegate];
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setObject:[_facebook accessToken] forKey:@"FBAccessTokenKey"];
-	[defaults setObject:[_facebook expirationDate] forKey:@"FBExpirationDateKey"];
-	[defaults synchronize];
+	NSLog(@"FB LOGGED IN");
 	
-	//[_facebook requestWithGraphPath:@"me/home" andParams:[NSMutableDictionary dictionaryWithObject:@"2011-01-27 04:48:50" forKey:@"since"] andDelegate:self];
-	//[_facebook requestWithGraphPath:@"me/feed" andDelegate:self];
-	[_facebook requestWithGraphPath:[NSString stringWithFormat:@"me/feed"] andParams:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"TEST TITLE", @"feed", nil] andHttpMethod:@"POST" andDelegate:self];
-	//[pendingApiCallsController userDidGrantPermission];
+	
 }
 
 -(void)fbDidExtendToken:(NSString *)accessToken expiresAt:(NSDate *)expiresAt {
 	NSLog(@"token extended");
-	
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setObject:accessToken forKey:@"FBAccessTokenKey"];
-	[defaults setObject:expiresAt forKey:@"FBExpirationDateKey"];
-	[defaults synchronize];
+	[self storeAuthData:accessToken expiresAt:expiresAt];
 }
 
 /**
  * Called when the user canceled the authorization dialog.
  */
 -(void)fbDidNotLogin:(BOOL)cancelled {
-	//[pendingApiCallsController userDidNotGrantPermission];
 }
 
 /**
  * Called when the request logout has succeeded.
  */
 - (void)fbDidLogout {
-	//pendingApiCallsController = nil;
 	
 	// Remove saved authorization information if it exists and it is
 	// ok to clear it (logout, session invalid, app unauthorized)
@@ -410,66 +360,64 @@ NSString * const kOJProfileInfoKey = @"ProfileInfo";
 	[defaults removeObjectForKey:@"FBAccessTokenKey"];
 	[defaults removeObjectForKey:@"FBExpirationDateKey"];
 	[defaults synchronize];
-	
-	//	[self showLoggedOut];
 }
 
 /**
  * Called when the session has expired.
  */
 - (void)fbSessionInvalidated {
-	UIAlertView *alertView = [[UIAlertView alloc]
-									  initWithTitle:@"Auth Exception"
-									  message:@"Your session has expired."
-									  delegate:nil
-									  cancelButtonTitle:@"OK"
-									  otherButtonTitles:nil,
-									  nil];
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Auth Exception" message:@"Your session has expired." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
 	[alertView show];
 	[alertView release];
 	[self fbDidLogout];
 }
 
 
+
 #pragma mark - FBRequestDelegate Methods
-- (void)requestLoading:(FBRequest *)request {
-	
-}
-
+/**
+ * Called when the Facebook API request has returned a response. This callback
+ * gives you access to the raw response. It's called before
+ * (void)request:(FBRequest *)request didLoad:(id)result,
+ * which is passed the parsed response object.
+ */
 - (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response {
-	NSLog(@"received response [%@]", [request responseText]);
+	//NSLog(@"received response");
 }
 
+/**
+ * Called when a request returns and its response has been parsed into
+ * an object. The resulting object may be a dictionary, an array, a string,
+ * or a number, depending on the format of the API response. If you need access
+ * to the raw response, use:
+ *
+ * (void)request:(FBRequest *)request
+ *      didReceiveResponse:(NSURLResponse *)response
+ */
+- (void)request:(FBRequest *)request didLoad:(id)result {
+	if ([result isKindOfClass:[NSArray class]]) {
+		result = [result objectAtIndex:0];
+	}
+	// This callback can be a result of getting the user's basic
+	// information or getting the user's permissions.
+	if ([result objectForKey:@"name"]) {
+		NSLog(@"%@", [result objectForKey:@"name"]);
+		UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[result objectForKey:@"pic"]]]];
+		
+	} else {
+		// Processing permissions information
+		SNAppDelegate *delegate = (SNAppDelegate *)[[UIApplication sharedApplication] delegate];
+		[delegate setUserPermissions:[[result objectForKey:@"data"] objectAtIndex:0]];
+	}
+}
+
+/**
+ * Called when an error prevents the Facebook API request from completing
+ * successfully.
+ */
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
 	NSLog(@"Err message: %@", [[error userInfo] objectForKey:@"error_msg"]);
 	NSLog(@"Err code: %d", [error code]);
-	NSLog(@"Err desc: %@", [error description]);
-	NSLog(@"Err: %@", error);
-	
-	if ([error code] == 190)
-		[_facebook logout:self];
-	
-	else
-		NSLog(@"There was an error making your request.");
-	
-}
-
-- (void)request:(FBRequest *)request didLoad:(id)result {
-	NSLog(@"Result: %@", result);
-	
-	
-	NSMutableArray *places = [[NSMutableArray alloc] initWithCapacity:1];
-	NSArray *resultData = [result objectForKey:@"data"];
-	
-	for (NSUInteger i=0; i<[resultData count] && i<5; i++)
-		[places addObject:[resultData objectAtIndex:i]];
-	
-	[places release];
-	
-}
-
-- (void)request:(FBRequest *)request didLoadRawResponse:(NSData *)data {
-	
 }
 
 

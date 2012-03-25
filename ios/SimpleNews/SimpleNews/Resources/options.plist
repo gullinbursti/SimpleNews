@@ -6,25 +6,51 @@
 		<key>option_id</key>
 		<integer>1</integer>
 		<key>title</key>
-		<string>Facebook</string>
+		<string>Twitter</string>
+		<key>url</key>
+		<string>http://getassembly.com</string>
+		<key>info</key>
+		<string>Tweeted from assembly</string>
 	</dict>
 	<dict>
 		<key>option_id</key>
 		<integer>2</integer>
 		<key>title</key>
-		<string>Push Notifications</string>
+		<string>Facebook</string>
+		<key>url</key>
+		<string></string>
+		<key>info</key>
+		<string></string>
 	</dict>
 	<dict>
 		<key>option_id</key>
 		<integer>3</integer>
 		<key>title</key>
-		<string>About Assembly</string>
+		<string>Push Notifications</string>
+		<key>url</key>
+		<string></string>
+		<key>info</key>
+		<string></string>
 	</dict>
 	<dict>
 		<key>option_id</key>
 		<integer>4</integer>
 		<key>title</key>
+		<string>About Assembly</string>
+		<key>url</key>
+		<string>http://dev.gullinbursti.cc/projs/simplenews/support/about.htm</string>
+		<key>info</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>option_id</key>
+		<integer>5</integer>
+		<key>title</key>
 		<string>Privacy Policy</string>
+		<key>url</key>
+		<string>http://dev.gullinbursti.cc/projs/simplenews/support/privacy.htm</string>
+		<key>info</key>
+		<string></string>
 	</dict>
 </array>
 </plist>

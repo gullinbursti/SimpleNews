@@ -16,6 +16,8 @@
 
 @property (nonatomic) int option_id;
 @property (nonatomic, retain) NSString *option_title;
+@property (nonatomic, retain) NSString *option_url;
+@property (nonatomic, retain) NSString *option_info;
 
 
 

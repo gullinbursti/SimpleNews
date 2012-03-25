@@ -6,12 +6,16 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import <Twitter/Twitter.h>
+
 #import "SNOptionsViewController_iPhone.h"
 
 #import "SNOptionItemView_iPhone.h"
 #import "SNOptionVO.h"
 
 #import "SNAppDelegate.h"
+
+#import "SNOptionsPageViewController.h"
 
 @implementation SNOptionsViewController_iPhone
 
@@ -68,7 +72,7 @@
 		SNOptionVO *vo = [SNOptionVO optionWithDictionary:testOption];
 		SNOptionItemView_iPhone *itemView = [[[SNOptionItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, cnt * 64, self.view.frame.size.width, 64) withVO:vo] autorelease];
 		
-		if (vo.option_id == 2 && [SNAppDelegate notificationsEnabled])
+		if (vo.option_id == 3 && [SNAppDelegate notificationsEnabled])
 			[itemView toggleSelected:YES];
 		
 		[_optionViews addObject:itemView];
@@ -92,12 +96,6 @@
 	[backButton setTitle:@"Done" forState:UIControlStateNormal];
 	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:backButton];
-	
-	UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)];
-	[panRecognizer setMinimumNumberOfTouches:1];
-	[panRecognizer setMaximumNumberOfTouches:1];
-	[panRecognizer setDelegate:self];
-	//[self.view addGestureRecognizer:panRecognizer];
 }
 
 -(void)viewDidLoad {
@@ -117,24 +115,47 @@
 }
 
 
--(void)_goSwipe:(id)sender {
-	CGPoint translatedPoint = [(UIPanGestureRecognizer*)sender translationInView:self.view];
-	NSLog(@"SWIPE @:(%f, %d)", translatedPoint.x, abs(translatedPoint.y));
-	
-	
-	//if (translatedPoint.x < -20 && abs(translatedPoint.y) < 30) {
-	//	[self _goBack];
-	//}
-}
-
-
 #pragma mark - Notification handlers
-
 -(void)_optionSelected:(NSNotification *)notification {
 	SNOptionVO *vo = (SNOptionVO *)[notification object];
- 
-	if (vo.option_id == 2) {
-		[SNAppDelegate notificationsToggle:YES];
+ 	
+	SNOptionsPageViewController *optionsPageViewController;
+	TWTweetComposeViewController *twitter;
+	
+	switch (vo.option_id) {
+		case 1:
+			twitter = [[[TWTweetComposeViewController alloc] init] autorelease];
+			[twitter addURL:[NSURL URLWithString:[NSString stringWithString:vo.option_url]]];
+			[twitter setInitialText:vo.option_info];
+			[self presentModalViewController:twitter animated:YES];
+			
+			twitter.completionHandler = ^(TWTweetComposeViewControllerResult result) {
+				
+				if (result == TWTweetComposeViewControllerResultDone)
+					[SNAppDelegate twitterToggle:YES];
+				
+				else if (result == TWTweetComposeViewControllerResultCancelled)
+					[SNAppDelegate twitterToggle:NO];
+				
+				[self dismissModalViewControllerAnimated:YES];
+			};	
+			break;
+			
+		case 3:
+			[SNAppDelegate notificationsToggle:YES];
+			break;
+			
+		case 4:
+			optionsPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:vo.option_url]] autorelease];
+			[self.navigationController setNavigationBarHidden:YES];
+			[self.navigationController pushViewController:optionsPageViewController animated:YES];
+			break;
+			
+		case 5:
+			optionsPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:vo.option_url]] autorelease];
+			[self.navigationController setNavigationBarHidden:YES];
+			[self.navigationController pushViewController:optionsPageViewController animated:YES];
+			break;
  	}
 }
 
