@@ -12,7 +12,7 @@
 @implementation SNArticleVO
 
 @synthesize dictionary;
-@synthesize article_id, type_id, title, article_url, short_url, twitterName, tweet_id, tweetMessage, content, bgImage_url, video_url, avatarImage_url, isDark, added, tags;
+@synthesize article_id, type_id, title, article_url, short_url, twitterName, tweet_id, tweetMessage, content, bgImage_url, thumb_url, video_url, avatarImage_url, isDark, added, tags;
 
 +(SNArticleVO *)articleWithDictionary:(NSDictionary *)dictionary {
 	
@@ -29,6 +29,7 @@
 	vo.tweetMessage = [dictionary objectForKey:@"tweet_msg"]; 
 	vo.content = [dictionary objectForKey:@"content"];
 	vo.bgImage_url = [dictionary objectForKey:@"bg_url"];
+	vo.thumb_url = [dictionary objectForKey:@"thumb_url"];
 	vo.video_url = [dictionary objectForKey:@"video_url"];
 	vo.avatarImage_url = [dictionary objectForKey:@"avatar_url"];
 	vo.isDark = (BOOL)([[dictionary objectForKey:@"is_dark"] isEqualToString:@"Y"]);
@@ -47,17 +48,18 @@
 }
 
 -(void)dealloc {
-	dictionary = nil;
-	title = nil;
-	tweet_id = nil;
-	twitterName = nil;
-	tweetMessage = nil;
-	content = nil;
-	bgImage_url = nil;
-	avatarImage_url = nil;
-	video_url = nil;
-	added = nil;
-	tags = nil;
+	self.dictionary = nil;
+	self.title = nil;
+	self.tweet_id = nil;
+	self.twitterName = nil;
+	self.tweetMessage = nil;
+	self.content = nil;
+	self.bgImage_url = nil;
+	self.thumb_url = nil;
+	self.avatarImage_url = nil;
+	self.video_url = nil;
+	self.added = nil;
+	self.tags = nil;
 	
 	[super dealloc];
 }

@@ -20,6 +20,7 @@
 	BOOL _isPaused;
 	BOOL _isFinished;
 	BOOL _isFlipped;
+	BOOL _isControls;
 	
 	ASIHTTPRequest *_videoInfoRequest;
 	NSTimer *_timer;
@@ -29,9 +30,10 @@
 	
 	UIImageView *_bgImgView;
 	UIView *_videoHolderView;
-	UIView *_progressView;
+	UIImageView *_progressBgImgView;
+	UIImageView *_progressImgView;
 	UILabel *_timeLabel;
-	UIButton *_backButton;
+	UIButton *_closeButton;
 	CGSize _timeSize;
 	
 	UIButton *_playButton;

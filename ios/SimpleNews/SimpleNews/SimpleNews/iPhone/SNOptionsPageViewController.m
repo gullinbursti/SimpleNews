@@ -31,9 +31,14 @@
 -(void)loadView {
 	[super loadView];
 	
+	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	[self.view addSubview:bgImgView];
+	
 	_webView = [[UIWebView alloc] initWithFrame:self.view.frame];
-	[_webView setBackgroundColor:[UIColor colorWithWhite:0.128 alpha:1.0]];
-	//_webView.delegate = self;
+	[_webView setBackgroundColor:[UIColor clearColor]];
+	_webView.hidden = YES;
+	_webView.delegate = self;
 	[_webView loadRequest:[NSURLRequest requestWithURL:_url]];	
 	[self.view addSubview:_webView];
 	
@@ -65,5 +70,10 @@
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
+
+#pragma mark - WebView Delegates
+-(void)webViewDidFinishLoad:(UIWebView *)webView {
+	_webView.hidden = NO;
+}
 
 @end

@@ -45,10 +45,17 @@
 -(void)loadView {
 	[super loadView];
 	
-	[self.view setBackgroundColor:[UIColor colorWithWhite:0.145 alpha:1.0]];
-	
 	_optionViews = [[NSMutableArray alloc] init];
 	_optionVOs = [[NSMutableArray alloc] init];
+	
+	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	bgImgView.image = [UIImage imageNamed:@"background.jpg"];
+	[self.view addSubview:bgImgView];
+	
+	UIImageView *titleImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(100.0, 21.0, 114.0, 14.0)] autorelease];
+	titleImgView.image = [UIImage imageNamed:@"titleOptions.png"];
+	[self.view addSubview:titleImgView];
+	
 	
 	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 56.0, self.view.frame.size.width, self.view.frame.size.height)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -85,15 +92,16 @@
 	
 	
 	UIButton *backButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
-	backButton.frame = CGRectMake(250.0, 12.0, 64.0, 34.0);
+	backButton.frame = CGRectMake(12.0, 12.0, 64.0, 34.0);
 	[backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 	[backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 	backButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
 	backButton.titleLabel.textAlignment = UITextAlignmentCenter;
 	[backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+	backButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 4.0, 0.0, -4.0);
 	backButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
 	backButton.titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-	[backButton setTitle:@"Done" forState:UIControlStateNormal];
+	[backButton setTitle:@"Back" forState:UIControlStateNormal];
 	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:backButton];
 }
@@ -111,7 +119,7 @@
 #pragma mark - Navigation
 -(void)_goBack {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"OPTIONS_RETURN" object:nil];
-	[self dismissModalViewControllerAnimated:YES];
+	[self.navigationController popViewControllerAnimated:YES];
 }
 
 
@@ -124,6 +132,9 @@
 	
 	switch (vo.option_id) {
 		case 1:
+			break;
+			
+		case 2:
 			twitter = [[[TWTweetComposeViewController alloc] init] autorelease];
 			[twitter addURL:[NSURL URLWithString:[NSString stringWithString:vo.option_url]]];
 			[twitter setInitialText:vo.option_info];

@@ -48,16 +48,16 @@
 }
 
 -(void)dealloc {
-	dictionary = nil;
-	youtube_id = nil;
-	video_title = nil;
-	video_info = nil;
-	video_url = nil;
-	image_url = nil;
-	thumb_url = nil;
-	channelImg_url = nil;
-	postedDate = nil;
-	posted = nil;
+	self.dictionary = nil;
+	self.youtube_id = nil;
+	self.video_title = nil;
+	self.video_info = nil;
+	self.video_url = nil;
+	self.image_url = nil;
+	self.thumb_url = nil;
+	self.channelImg_url = nil;
+	self.postedDate = nil;
+	self.posted = nil;
 	
 	[super dealloc];
 }

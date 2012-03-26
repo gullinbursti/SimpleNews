@@ -8,13 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SNFollowerGridHeaderView_iPhone : UIView <UITextFieldDelegate> {
-	
-	UIImageView *_cursorImgView;
-	
-	UITextField *_txtField;
-	UILabel *_txtLabel;
-	
+@interface SNFollowerGridHeaderView_iPhone : UIView <UITextFieldDelegate> {	
+	UIButton *_optionsButton;
 	UIButton *_backButton;
 }
 

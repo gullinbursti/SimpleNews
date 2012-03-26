@@ -11,17 +11,15 @@
 
 #import "SNFollowerGridHeaderView_iPhone.h"
 #import "SNRecentFollowersView_iPhone.h"
-
-#import "EGORefreshTableHeaderView.h"
 #import "ASIFormDataRequest.h"
 
 #import "FBConnect.h"
 
-@interface SNFollowerGridViewController_iPhone : UIViewController <ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate> {
+@interface SNFollowerGridViewController_iPhone : UIViewController <ASIHTTPRequestDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate, UITableViewDataSource, UITableViewDelegate> {
 	
 	UIView *_holderView;
 	
-	BOOL _isReloading;
+	UITableView *_tableView;
 	UIScrollView *_scrollView;
 	
 	NSMutableArray *_itemViews;
@@ -29,12 +27,9 @@
 	
 	NSMutableArray *_tags;
 	
-	UIButton *_optionsButton;
-	
 	SNFollowerGridHeaderView_iPhone *_headerView;
 	SNRecentFollowersView_iPhone *_recentFollowersView;
 	
-	EGORefreshTableHeaderView *_refreshHeaderView;
 	ASIFormDataRequest *_followersRequest;
 	ASIFormDataRequest *_tagsRequest;
 	ASIFormDataRequest *_recentRequest;

@@ -27,9 +27,9 @@
 }
 
 -(void)dealloc {
-	dictionary = nil;
-	title = nil;
-	blurb = nil;
+	self.dictionary = nil;
+	self.title = nil;
+	self.blurb = nil;
 	
 	[super dealloc];
 }

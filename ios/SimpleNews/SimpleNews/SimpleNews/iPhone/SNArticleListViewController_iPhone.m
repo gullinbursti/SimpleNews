@@ -173,21 +173,21 @@
 	//[self.view addSubview:_overlayView];
 	
 	_greyGridButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_greyGridButton.frame = CGRectMake(12.0, 12.0, 24.0, 24.0);
+	_greyGridButton.frame = CGRectMake(4.0, 0.0, 44.0, 44.0);
 	[_greyGridButton setBackgroundImage:[UIImage imageNamed:@"gridIconGray_nonActive.png"] forState:UIControlStateNormal];
 	[_greyGridButton setBackgroundImage:[UIImage imageNamed:@"gridIconGray_Active.png"] forState:UIControlStateHighlighted];
 	[_greyGridButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_greyGridButton];
 	
 	_whiteGridButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_whiteGridButton.frame = CGRectMake(12.0, 12.0, 24.0, 24.0);
+	_whiteGridButton.frame = CGRectMake(4.0, 0.0, 44.0, 44.0);
 	[_whiteGridButton setBackgroundImage:[UIImage imageNamed:@"gridIcon_nonActive.png"] forState:UIControlStateNormal];
 	[_whiteGridButton setBackgroundImage:[UIImage imageNamed:@"gridIcon_Active.png"] forState:UIControlStateHighlighted];
 	[_whiteGridButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_whiteGridButton];
 	
 	_whiteShareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_whiteShareButton.frame = CGRectMake(275.0, 6.0, 34.0, 34.0);
+	_whiteShareButton.frame = CGRectMake(272.0, 0.0, 44.0, 44.0);
 	[_whiteShareButton setBackgroundImage:[UIImage imageNamed:@"shareIcon_nonActive.png"] forState:UIControlStateNormal];
 	[_whiteShareButton setBackgroundImage:[UIImage imageNamed:@"shareIcon_Active.png"] forState:UIControlStateHighlighted];
 	[_whiteShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
@@ -206,7 +206,7 @@
 	[self.view addSubview:_paginationView];
 	
 	_greyShareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_greyShareButton.frame = CGRectMake(275.0, 6.0, 34.0, 34.0);
+	_greyShareButton.frame = CGRectMake(272.0, 0.0, 44.0, 44.0);
 	[_greyShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconGrey_nonActive.png"] forState:UIControlStateNormal];
 	[_greyShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconGrey_Active.png"] forState:UIControlStateHighlighted];
 	[_greyShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
@@ -241,7 +241,7 @@
 #pragma mark - Navigation
 -(void)_goBack {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ARTICLES_RETURN" object:nil];	
-	[self.navigationController popViewControllerAnimated:YES];
+	[self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 -(void)_goShare {
@@ -336,7 +336,7 @@
 -(void)_nextCard {
 	NSLog(@"NEXT CARD");
 	
-	if (_cardIndex > 1) {
+	if (_cardIndex > 0) {
 		SNBaseArticleCardView_iPhone *currentCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
 		SNBaseArticleCardView_iPhone *nextCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex - 1];
 		
@@ -466,18 +466,12 @@
 -(void)_facebookShare:(NSNotification *)notification {
 	//SNArticleVO *vo = (SNArticleVO *)[notification object];
 
-	NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-											 @"SELECT uid, name, pic FROM user WHERE uid=me()", @"query",
-											 nil];
-	SNAppDelegate *delegate = (SNAppDelegate *)[[UIApplication sharedApplication] delegate];
-	[[delegate facebook] requestWithMethodName:@"fql.query"
-												andParams:params
-										  andHttpMethod:@"POST"
-											 andDelegate:self];
+	//NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys: @"SELECT uid, name, pic FROM user WHERE uid=me()", @"query", nil];
 	
-	
+	//[[[SNAppDelegate sharedInstance] facebook] requestWithMethodName:@"fql.query" andParams:params andHttpMethod:@"POST" andDelegate:self];
 	//[[SNGraphCaller sharedInstance] postFeed:@"DERP"];
-	[[delegate facebook] requestWithGraphPath:[NSString stringWithFormat:@"me/feed"] andParams:[NSMutableDictionary dictionaryWithObjectsAndKeys:@"DERP", @"feed", nil] andHttpMethod:@"POST" andDelegate:self];
+	//[[[SNAppDelegate sharedInstance] facebook] requestWithGraphPath:@"me/feed" andDelegate:self];
+	[[[SNAppDelegate sharedInstance] facebook] requestWithGraphPath:@"me/feed" andParams:[NSDictionary dictionaryWithObjectsAndKeys:@"DERP", @"feed", nil] andHttpMethod:@"POST" andDelegate:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CANCEL_SHARE" object:nil];	
 }
 -(void)_twitterShare:(NSNotification *)notification {

@@ -29,7 +29,7 @@
 		[self addSubview:_titleLabel];
 		
 		_checkImageView = [[[UIImageView alloc] initWithFrame:CGRectMake(284, 20, 24, 24)] autorelease];
-		_checkImageView.image = [UIImage imageNamed:@"checkMark.png"];
+		_checkImageView.image = [UIImage imageNamed:@"optionsCheckMark.png"];
 		[self addSubview:_checkImageView];
 		
 		UIView *lineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 63.0, self.frame.size.width, 1.0)] autorelease];

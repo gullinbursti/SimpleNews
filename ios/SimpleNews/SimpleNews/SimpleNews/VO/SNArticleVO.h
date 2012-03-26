@@ -24,6 +24,7 @@
 @property (nonatomic, retain) NSString *short_url;
 @property (nonatomic, retain) NSString *content;
 @property (nonatomic, retain) NSString *bgImage_url;
+@property (nonatomic, retain) NSString *thumb_url;
 @property (nonatomic, retain) NSString *video_url;
 @property (nonatomic, retain) NSString *avatarImage_url;
 @property (nonatomic, retain) NSDate *added;

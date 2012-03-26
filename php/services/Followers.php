@@ -85,16 +85,26 @@
 	
 		
 		function getActiveFollowers() {
+			$category_arr = array();
             $follower_arr = array();
-
-			$query = 'SELECT * FROM `tblFollowers` WHERE `active` = "Y";';
-			$follower_result = mysql_query($query); 
             
-			$tot = 0;
+			$query = 'SELECT `id` FROM `tblCategories`;';
+			$category_result = mysql_query($query);
+			
+            while ($category_row = mysql_fetch_array($category_result, MYSQL_BOTH)) {
+				$follower_arr = array();
+				
+				$query = 'SELECT * FROM `tblFollowers` INNER JOIN `tblFollowersCategories` ON `tblFollowers`.`id` = `tblFollowersCategories`.`follower_id` WHERE `tblFollowersCategories`.`category_id` = "'. $category_row[`id`] .'" AND `tblFollowers`.`active` = "Y";';
+				$follower_result = mysql_query($query);
+				
+				
+				
+				
+			}
+            
 			while ($follower_row = mysql_fetch_array($follower_result, MYSQL_BOTH)) {
 				$query = 'SELECT `id` FROM `tblArticles` WHERE `follower_id` = "'. $follower_row['id'] .'"';
 				$article_arr = mysql_query($query);
-				
 				
 				array_push($follower_arr, array(
 					"follower_id" => $follower_row['id'], 
@@ -104,8 +114,6 @@
 					"blurb" => $follower_row['description'], 
 					"article_total" => mysql_num_rows($article_arr)
 				));
-				
-				$tot++;
 	    	}
 			
 			$this->sendResponse(200, json_encode($follower_arr));

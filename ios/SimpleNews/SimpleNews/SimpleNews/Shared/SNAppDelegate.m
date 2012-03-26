@@ -395,20 +395,20 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
  *      didReceiveResponse:(NSURLResponse *)response
  */
 - (void)request:(FBRequest *)request didLoad:(id)result {
-	if ([result isKindOfClass:[NSArray class]]) {
-		result = [result objectAtIndex:0];
-	}
-	// This callback can be a result of getting the user's basic
-	// information or getting the user's permissions.
-	if ([result objectForKey:@"name"]) {
-		NSLog(@"%@", [result objectForKey:@"name"]);
-		UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[result objectForKey:@"pic"]]]];
-		
-	} else {
-		// Processing permissions information
-		SNAppDelegate *delegate = (SNAppDelegate *)[[UIApplication sharedApplication] delegate];
-		[delegate setUserPermissions:[[result objectForKey:@"data"] objectAtIndex:0]];
-	}
+//	if ([result isKindOfClass:[NSArray class]]) {
+//		result = [result objectAtIndex:0];
+//	}
+//	// This callback can be a result of getting the user's basic
+//	// information or getting the user's permissions.
+//	if ([result objectForKey:@"name"]) {
+//		NSLog(@"%@", [result objectForKey:@"name"]);
+//		UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[result objectForKey:@"pic"]]]];
+//		
+//	} else {
+//		// Processing permissions information
+//		SNAppDelegate *delegate = (SNAppDelegate *)[[UIApplication sharedApplication] delegate];
+//		[delegate setUserPermissions:[[result objectForKey:@"data"] objectAtIndex:0]];
+//	}
 }
 
 /**

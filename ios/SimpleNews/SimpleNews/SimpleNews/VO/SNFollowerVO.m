@@ -29,11 +29,11 @@
 }
 
 -(void)dealloc {
-	dictionary = nil;
-	handle = nil;
-	follower_name = nil;
-	avatar_url = nil;
-	blurb = nil;
+	self.dictionary = nil;
+	self.handle = nil;
+	self.follower_name = nil;
+	self.avatar_url = nil;
+	self.blurb = nil;
 	
 	[super dealloc];
 }

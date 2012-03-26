@@ -23,8 +23,8 @@
 		
 		_noThanksButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 		_noThanksButton.frame = CGRectMake(230.0, 8.0, 82.0, 34.0);
-		[_noThanksButton setBackgroundImage:[[UIImage imageNamed:@"fbNoThanksButton.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-		[_noThanksButton setBackgroundImage:[[UIImage imageNamed:@"fbNoThanksButton.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+		[_noThanksButton setBackgroundImage:[[UIImage imageNamed:@"noThanksButton.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+		[_noThanksButton setBackgroundImage:[[UIImage imageNamed:@"noThanksButton.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		_noThanksButton.titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14.0];
 		_noThanksButton.titleLabel.textAlignment = UITextAlignmentCenter;
 		[_noThanksButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

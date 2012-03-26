@@ -14,6 +14,7 @@
 #import "SNFollowerGridItemView_iPhone.h"
 #import "SNArticleListViewController_iPhone.h"
 #import "SNOptionsViewController_iPhone.h"
+#import "SNFollowerProfileViewController_iPhone.h"
 
 #import "SNFollowerInfoView.h"
 
@@ -42,6 +43,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_tagSearch:) name:@"TAG_SEARCH" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showNowPlaying:) name:@"SHOW_NOW_PLAYING" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showOptions:) name:@"SHOW_OPTIONS" object:nil];
 		
 		_followers = [NSMutableArray new];
 		_itemViews = [NSMutableArray new];
@@ -81,7 +83,6 @@
 	[_itemViews release];
 	[_followers release];
 	[_headerView release];
-	[_refreshHeaderView release];
 	[_followersRequest release];
 	
 	[super dealloc];
@@ -146,22 +147,9 @@
 	_scrollView.contentSize = self.view.frame.size;
 	_scrollView.contentInset = UIEdgeInsetsMake(0.0, 0.0f, 0.0f, 0.0f);
 	[_holderView addSubview:_scrollView];
-	
-	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -_scrollView.bounds.size.height, self.view.frame.size.width, _scrollView.bounds.size.height)];
-	_refreshHeaderView.delegate = self;
-	[_scrollView addSubview:_refreshHeaderView];
-	[_refreshHeaderView refreshLastUpdatedDate];
-	
-	_headerView = [[SNFollowerGridHeaderView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 50.0)];
+		
+	_headerView = [[SNFollowerGridHeaderView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 56.0)];
 	[_scrollView addSubview:_headerView];
-	
-	
-	_optionsButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_optionsButton.frame = CGRectMake(276.0, 436.0, 34.0, 34.0);
-	[_optionsButton setBackgroundImage:[[UIImage imageNamed:@"gearButton_nonAcvtive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-	[_optionsButton setBackgroundImage:[[UIImage imageNamed:@"gearButton_Acvtive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-	[_optionsButton addTarget:self action:@selector(_goOptions) forControlEvents:UIControlEventTouchUpInside];
-	[_holderView addSubview:_optionsButton];
 	
 	UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)];
 	[panRecognizer setMinimumNumberOfTouches:1];
@@ -206,27 +194,6 @@
 
 
 #pragma mark - Navigation
--(void)_goOptions {
-	_isOptions = YES;
-	
-	
-	
-	SNOptionsViewController_iPhone *optionsViewController = [[[SNOptionsViewController_iPhone alloc] init] autorelease];
-	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:optionsViewController] autorelease];
-	
-	[navigationController setNavigationBarHidden:YES];
-	[self.navigationController presentModalViewController:navigationController animated:YES];
-	
-	/*
-	_optionsListView.hidden = NO;
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		//_scrollView.frame = CGRectMake(self.view.bounds.size.width, _scrollView.frame.origin.y, _scrollView.frame.size.width, _scrollView.frame.size.height);
-		_optionsListView.frame = CGRectMake(0.0, _optionsListView.frame.origin.y, self.view.bounds.size.width, _optionsListView.frame.size.height);
-	}];
-	 */
-}
-
 -(void)_goArticles {
 	[SNAppDelegate playMP3:@"fpo_tapVideo"];
 	
@@ -295,6 +262,19 @@
 	[self _goArticles];
 }
 
+-(void)_showOptions:(NSNotification *)notification {
+	_isOptions = YES;
+	
+//	SNOptionsViewController_iPhone *optionsViewController = [[[SNOptionsViewController_iPhone alloc] init] autorelease];
+//	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:optionsViewController] autorelease];
+//	
+//	[navigationController setNavigationBarHidden:YES];
+//	[self.navigationController presentModalViewController:navigationController animated:YES];
+	
+	[self.navigationController pushViewController:[[[SNOptionsViewController_iPhone alloc] init] autorelease] animated:YES];
+}
+
+
 -(void)_searchEntered:(NSNotification *)notification {
 	NSLog(@"SEARCH ENTERED");
 	
@@ -362,8 +342,13 @@
 	NSLog(@"FOLLOWER TAPPED");
 	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
 	
-	SNFollowerInfoView *followerInfoView = [[[SNFollowerInfoView alloc] initWithFrame:self.view.frame followerVO:vo] autorelease];
-	[self.view addSubview:followerInfoView];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"FOLLOWER_ARTICLES" object:vo];
+	
+	SNFollowerProfileViewController_iPhone *followerProfileViewController = [[[SNFollowerProfileViewController_iPhone alloc] initWithFollowerVO:vo] autorelease];
+	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:followerProfileViewController] autorelease];
+	
+	[navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:followerProfileViewController animated:YES];
 }
 
 -(void)_followerClosed:(NSNotification *)notification {
@@ -404,29 +389,71 @@
 	SNBaseFollowerGridItemView_iPhone *view = (SNBaseFollowerGridItemView_iPhone *)[_itemViews objectAtIndex:0];
 	[view toggleSelected:NO];
 	
-	if ([[SNAppDelegate subscribedFollowers] length] == 0)
-		[SNAppDelegate writeFollowers:[NSString stringWithFormat:@"%d", vo.follower_id]];
-	
-	else
-		[SNAppDelegate writeFollowers:[[SNAppDelegate subscribedFollowers] stringByAppendingFormat:@"|%d", vo.follower_id]];
-	
-	[self _goArticles];
+	[SNAppDelegate writeFollowers:[NSString stringWithFormat:@"%d", vo.follower_id]];
 }
 
 
+#pragma mark - TableView DataSource Delegates
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	return (1);
+}
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return (2);
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	UITableViewCell *cell = nil;
+	
+	cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+	
+	if (cell == nil) {
+		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"] autorelease];
+		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		[cell setUserInteractionEnabled:NO];
+		
+		UIScrollView *scrollView = [[[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 165.0)] autorelease];
+		[scrollView setBackgroundColor:[UIColor colorWithWhite:0.133 alpha:1.0]];
+		[cell addSubview:scrollView];
+	}
+	
+	return (cell);
+}
+
+#pragma mark - TableView Delegates
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return (170.0);
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+	return (31.0);
+}
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+	UIView *headerView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, _tableView.frame.size.width, 31.0)] autorelease];
+	[headerView setBackgroundColor:[UIColor colorWithWhite:0.094 alpha:1.0]];
+		
+	return (_headerView);
+}
+
+
+-(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {	
+	return (nil);
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
+}
 
 
 #pragma mark - ScrollView Delegates
 // any offset changes
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
 }
-
 
 // called on start of dragging (may require some time and or distance to move)
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
 }
-
 
 // called on finger up if the user dragged. velocity is in points/second. targetContentOffset may be changed to adjust where the scroll view comes to rest. not called when pagingEnabled is YES
 -(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
@@ -434,9 +461,7 @@
 
 // called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
-	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:_scrollView];
 }
-
 
 // called on finger up as we are moving
 -(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
@@ -451,41 +476,12 @@
 }
 
 
-
--(void)_reloadData {
-	_isReloading = YES;	
-}
-
--(void)_doneLoadingData {
-	_isReloading = NO;
-	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_scrollView];
-}
-
-
-
-#pragma mark EGORefreshTableHeaderDelegate Methods
--(void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
-	
-	//[self reloadData];
-	[self performSelector:@selector(_doneLoadingData) withObject:nil afterDelay:1.33];
-}
-
--(BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView *)view {
-	return (_isReloading); // should return if data source model is reloading
-}
-
--(NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView *)view {
-	return [NSDate date]; // should return date data source was last changed
-}
-
-
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
 	//NSLog(@"SNFollowerGridViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
 	
 	if ([request isEqual:_followersRequest]) {
-	
 		@autoreleasepool {
 			NSError *error = nil;
 			NSArray *parsedFollowers = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];

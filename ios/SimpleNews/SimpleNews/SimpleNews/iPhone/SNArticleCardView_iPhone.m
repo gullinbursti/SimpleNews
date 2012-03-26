@@ -166,7 +166,7 @@
 }
 
 
-#pragma mark - TableView Data Source Delegates
+#pragma mark - TableView DataSource Delegates
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	return (1);
 }

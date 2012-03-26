@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SNOptionsPageViewController : UIViewController {
+@interface SNOptionsPageViewController : UIViewController <UIWebViewDelegate> {
 	NSURL *_url;
 	UIWebView *_webView;
 }
