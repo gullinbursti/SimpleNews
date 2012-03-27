@@ -13,16 +13,15 @@
 
 #import "SNBaseArticleCardView_iPhone.h"
 
-@interface SNArticleCardView_iPhone : SNBaseArticleCardView_iPhone <UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate, EGOImageViewDelegate> {
+@interface SNArticleCardView_iPhone : SNBaseArticleCardView_iPhone <UIScrollViewDelegate, EGOImageViewDelegate> {
 	SNArticleVO *_vo;
 	
 	UIView *_headerView;
 	UIView *_headerBgView;
+	UIScrollView *_scrollView;
 	
 	UIImageView *_twitterImgView;
 	UIImageView *_playImgView;
-	
-	UITableView *_tableView;
 	
 	UIButton *_playButton;
 	CGSize _tweetSize;
@@ -32,8 +31,11 @@
 	UIView *_indicatorView;
 	NSMutableArray *_tweets;
 	
+	BOOL _isExpanded;
 	BOOL _isAtTop;
 	int _ind;
+	
+	UIButton *_expandCollapseButton;
 }
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo index:(int)idx;

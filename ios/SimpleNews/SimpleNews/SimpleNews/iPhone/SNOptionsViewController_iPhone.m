@@ -52,6 +52,12 @@
 	bgImgView.image = [UIImage imageNamed:@"background.jpg"];
 	[self.view addSubview:bgImgView];
 	
+	
+	UIImageView *headerImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 56.0)] autorelease];
+	headerImgView.image = [UIImage imageNamed:@"subheaderBG.png"];
+	[self.view addSubview:headerImgView];
+	
+	
 	UIImageView *titleImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(100.0, 21.0, 114.0, 14.0)] autorelease];
 	titleImgView.image = [UIImage imageNamed:@"titleOptions.png"];
 	[self.view addSubview:titleImgView];
@@ -89,7 +95,6 @@
 	}
 	
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, cnt * 64);
-	
 	
 	UIButton *backButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 	backButton.frame = CGRectMake(12.0, 12.0, 64.0, 34.0);

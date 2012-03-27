@@ -23,7 +23,8 @@
 	BOOL _isControls;
 	
 	ASIHTTPRequest *_videoInfoRequest;
-	NSTimer *_timer;
+	NSTimer *_progressTimer;
+	NSTimer *_hudTimer;
 	
 	SNArticleVO *_vo;
 	SNArticleFollowerInfoView_iPhone *_articleFollowerView;

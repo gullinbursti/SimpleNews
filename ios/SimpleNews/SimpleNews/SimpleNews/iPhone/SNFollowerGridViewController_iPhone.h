@@ -23,6 +23,8 @@
 	UIScrollView *_scrollView;
 	
 	NSMutableArray *_itemViews;
+	NSMutableArray *_categories;
+	NSMutableArray *_categorizedFollowers;
 	NSMutableArray *_followers;
 	
 	NSMutableArray *_tags;

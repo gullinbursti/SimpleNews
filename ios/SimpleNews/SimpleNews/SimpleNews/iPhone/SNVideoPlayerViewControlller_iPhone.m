@@ -214,8 +214,8 @@
 	[self _goStopVideo];
 	_isFinished = YES;
 	
-	[_timer invalidate];
-	_timer = nil;
+	[_progressTimer invalidate];
+	_progressTimer = nil;
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_playButton.alpha = 0.0;
@@ -284,6 +284,11 @@
 //		return;
 //	}
 	
+	[_hudTimer invalidate];
+	_hudTimer = nil;
+	_hudTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(_fadeOutControls) userInfo:nil repeats:NO];
+	
+	
 	[self _fadeInControls];
 	[self performSelector:@selector(_fadeOutControls) withObject:nil afterDelay:2.0];
 }
@@ -326,8 +331,8 @@
 	_isPaused = NO;
 	_isStalled = NO;
 	
-	[_timer invalidate];
-	_timer = nil;
+	[_progressTimer invalidate];
+	_progressTimer = nil;
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_videoHolderView.alpha = 1.0;
@@ -335,7 +340,7 @@
 	}];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_STARTED" object:nil];
-	_timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(_timerTick) userInfo:nil repeats:YES];
+	_progressTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(_timerTick) userInfo:nil repeats:YES];
 }
 
 -(void)_finishedCallback:(NSNotification *)notification {
@@ -344,8 +349,8 @@
 	
 	_isFinished = YES;
 	
-	[_timer invalidate];
-	_timer = nil;
+	[_progressTimer invalidate];
+	_progressTimer = nil;
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_playButton.alpha = 0.0;

@@ -35,6 +35,7 @@
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
 	UITouch *touch = [touches anyObject];
+	NSLog(@"TOUCHED:%@", [touch view]);
 	
 	if ([touch view] == _holderView) {
 		[self toggleSelected:YES];

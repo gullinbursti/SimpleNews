@@ -11,12 +11,10 @@
 #import "SNAppDelegate.h"
 #import "SNTagVO.h"
 #import "SNFollowerVO.h"
-#import "SNFollowerGridItemView_iPhone.h"
+#import "SNCategoryViewCell_iPhone.h"
 #import "SNArticleListViewController_iPhone.h"
 #import "SNOptionsViewController_iPhone.h"
 #import "SNFollowerProfileViewController_iPhone.h"
-
-#import "SNFollowerInfoView.h"
 
 @interface SNFollowerGridViewController_iPhone()
 -(void)_resetToTop;
@@ -48,6 +46,8 @@
 		_followers = [NSMutableArray new];
 		_itemViews = [NSMutableArray new];
 		_tags = [NSMutableArray new];
+		_categories = [NSMutableArray new];
+		_categorizedFollowers = [NSMutableArray new];
 		_isDetails = NO;
 		_isOptions = NO;
 		_isArticles = NO;
@@ -129,39 +129,42 @@
 	[super loadView];
 	
 	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
-	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	bgImgView.image = [UIImage imageNamed:@"background.jpg"];
 	[self.view addSubview:bgImgView];
 	
-	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height)];
+	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 56.0, self.view.bounds.size.width, self.view.bounds.size.height - 56.0)];
 	[self.view addSubview:_holderView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.bounds.size.width, self.view.bounds.size.height - _holderView.frame.origin.y)];
-	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	_scrollView.opaque = YES;
-	_scrollView.scrollsToTop = NO;
-	_scrollView.pagingEnabled = NO;
-	_scrollView.delegate = self;
-	_scrollView.showsHorizontalScrollIndicator = NO;
-	_scrollView.showsVerticalScrollIndicator = NO;
-	_scrollView.alwaysBounceVertical = NO;
-	_scrollView.contentSize = self.view.frame.size;
-	_scrollView.contentInset = UIEdgeInsetsMake(0.0, 0.0f, 0.0f, 0.0f);
-	[_holderView addSubview:_scrollView];
-		
 	_headerView = [[SNFollowerGridHeaderView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 56.0)];
-	[_scrollView addSubview:_headerView];
+	[self.view addSubview:_headerView];
+	
+	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height - 56.0) style:UITableViewStylePlain];
+	[_tableView setBackgroundColor:[UIColor clearColor]];
+	_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+	_tableView.rowHeight = 170.0;
+	_tableView.delegate = self;
+	_tableView.dataSource = self;
+	_tableView.allowsSelection = NO;
+	_tableView.pagingEnabled = NO;
+	_tableView.opaque = NO;
+	_tableView.scrollsToTop = NO;
+	_tableView.showsHorizontalScrollIndicator = NO;
+	_tableView.showsVerticalScrollIndicator = NO;
+	_tableView.alwaysBounceVertical = NO;
+	[_holderView addSubview:_tableView];
+		
 	
 	UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)];
 	[panRecognizer setMinimumNumberOfTouches:1];
 	[panRecognizer setMaximumNumberOfTouches:1];
 	[panRecognizer setDelegate:self];
-	[_holderView addGestureRecognizer:panRecognizer];
+	//[_holderView addGestureRecognizer:panRecognizer];
 	
 	UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_goLongPress:)];
 	[longPressRecognizer setNumberOfTouchesRequired:1];
 	[longPressRecognizer setMinimumPressDuration:0.5];
 	[longPressRecognizer setDelegate:self];
-	[_holderView addGestureRecognizer:longPressRecognizer];
+	//[_holderView addGestureRecognizer:longPressRecognizer];
 	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
@@ -399,25 +402,25 @@
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return (2);
+	NSLog(@"numberOfSectionsInTableView:[%d]", [_categorizedFollowers count]);
+	return ([_categorizedFollowers count]);
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	UITableViewCell *cell = nil;
 	
-	cell = [tableView dequeueReusableCellWithIdentifier:@"Cell"];
+	SNCategoryViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNCategoryViewCell_iPhone cellReuseIdentifier]];
 	
-	if (cell == nil) {
-		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"] autorelease];
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		[cell setUserInteractionEnabled:NO];
-		
-		UIScrollView *scrollView = [[[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 165.0)] autorelease];
-		[scrollView setBackgroundColor:[UIColor colorWithWhite:0.133 alpha:1.0]];
-		[cell addSubview:scrollView];
-	}
+	if (cell == nil)
+		cell = [[[SNCategoryViewCell_iPhone alloc] init] autorelease];
+	
+	cell.followers = [_categorizedFollowers objectAtIndex:indexPath.section];
+	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
 	
 	return (cell);
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	return ([_categories objectAtIndex:section]);
 }
 
 #pragma mark - TableView Delegates
@@ -430,10 +433,24 @@
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-	UIView *headerView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, _tableView.frame.size.width, 31.0)] autorelease];
-	[headerView setBackgroundColor:[UIColor colorWithWhite:0.094 alpha:1.0]];
-		
-	return (_headerView);
+	//NSLog(@"viewForHeaderInSection:[%@]", [_categories objectAtIndex:section]);
+	
+	UIView *sectionHeaderView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, _tableView.frame.size.width, 31.0)] autorelease];
+	
+	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 29.0)] autorelease];
+	bgImgView.image = [UIImage imageNamed:@"peopleTableHeader.png"];
+	[sectionHeaderView addSubview:bgImgView];
+	
+	UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 0.0, 296.0, 31.0)] autorelease];
+	titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:11];
+	titleLabel.textColor = [UIColor blackColor];
+	titleLabel.backgroundColor = [UIColor clearColor];
+	titleLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.05];
+	titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+	titleLabel.text = [_categories objectAtIndex:section];
+	[sectionHeaderView addSubview:titleLabel];
+	
+	return (sectionHeaderView);
 }
 
 
@@ -489,31 +506,48 @@
 				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
 			
 			else {
-				NSMutableArray *followerList = [NSMutableArray array];
+				NSMutableArray *list = [NSMutableArray array];
 				
-				//SNFollowerGridItemView_iPhone *followerItemView = [[[SNFollowerGridItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 50.0, 80.0, 80.0) followerVO:nil] autorelease];
-				//[_itemViews addObject:followerItemView];
-				
-				int tot = 1;
-				for (NSDictionary *serverFollower in parsedFollowers) {
-					SNFollowerVO *vo = [SNFollowerVO followerWithDictionary:serverFollower];
+				for (NSDictionary *serverCategory in parsedFollowers) {
+					//NSLog(@"\n\n\nCATEGORY \"%@\"", [serverCategory objectForKey:@"title"]);
+					NSMutableArray *followerList = [NSMutableArray array];
+					[_categories addObject:[serverCategory objectForKey:@"title"]];
 					
-					//NSLog(@"FOLLOWER \"@%@\" %d", vo.handle, vo.totalArticles);
+					for (NSDictionary *serverFollower in [serverCategory objectForKey:@"followers"]) {
+						SNFollowerVO *vo = [SNFollowerVO followerWithDictionary:serverFollower];
+						//NSLog(@"FOLLOWER \"@%@\" %d", vo.handle, vo.totalArticles);
+						
+						if (vo != nil)
+							[followerList addObject:vo];
+					}
 					
-					if (vo != nil)
-						[followerList addObject:vo];
-					
-					SNFollowerGridItemView_iPhone *channelItemView = [[[SNFollowerGridItemView_iPhone alloc] initWithFrame:CGRectMake(80.0 * (tot % 4), 55.0 + (80.0 * (int)(tot / 4)), 80.0, 80.0) followerVO:vo] autorelease];
-					[_itemViews addObject:channelItemView];
-					tot++;
+					[list addObject:followerList];
 				}
 				
-				_followers = [followerList retain];
-				[followerList release];
-				_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 55.0 + (ceil(tot / 4) * 80.0));
+				_categorizedFollowers = [list retain];
+				[_tableView reloadData];
 				
-				for (SNFollowerGridItemView_iPhone *followerItemView in _itemViews)
-					[_scrollView addSubview:followerItemView];
+				
+				
+//				for (NSDictionary *serverFollower in parsedFollowers) {
+//					SNFollowerVO *vo = [SNFollowerVO followerWithDictionary:serverFollower];
+//					
+//					//NSLog(@"FOLLOWER \"@%@\" %d", vo.handle, vo.totalArticles);
+//					
+//					if (vo != nil)
+//						[followerList addObject:vo];
+//					
+//					SNFollowerGridItemView_iPhone *channelItemView = [[[SNFollowerGridItemView_iPhone alloc] initWithFrame:CGRectMake(80.0 * (tot % 4), 55.0 + (80.0 * (int)(tot / 4)), 80.0, 80.0) followerVO:vo] autorelease];
+//					[_itemViews addObject:channelItemView];
+//					tot++;
+//				}
+//				
+//				_followers = [followerList retain];
+//				[followerList release];
+//				_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 55.0 + (ceil(tot / 4) * 80.0));
+//				
+//				for (SNFollowerGridItemView_iPhone *followerItemView in _itemViews)
+//					[_scrollView addSubview:followerItemView];
 			}			
 			
 			//[self _goArticles];

@@ -34,11 +34,13 @@
 -(void)toggleSelected:(BOOL)isSelected {
 	_isSelected = isSelected;
 	
+	/*
 	if (_isSelected)
 		[self fadeTo:1.0];
 	
 	else
 		[self fadeTo:0.33];
+	*/
 }
 
 -(void)fadeTo:(float)opac {

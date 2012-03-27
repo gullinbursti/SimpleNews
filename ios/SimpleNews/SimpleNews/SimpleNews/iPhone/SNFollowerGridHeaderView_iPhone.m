@@ -19,6 +19,10 @@
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
 		
+		UIImageView *headerImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 56.0)] autorelease];
+		headerImgView.image = [UIImage imageNamed:@"subheaderBG.png"];
+		[self addSubview:headerImgView];
+		
 		UIImageView *titleImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(110.0, 21.0, 94.0, 14.0)] autorelease];
 		titleImgView.image = [UIImage imageNamed:@"titlePeople.png"];
 		[self addSubview:titleImgView];

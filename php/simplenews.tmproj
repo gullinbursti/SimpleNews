@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>services/Articles.php</string>
+	<string>services/Followers.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -39,49 +39,77 @@
 	<integer>189</integer>
 	<key>metaData</key>
 	<dict>
-		<key>services/Articles.php</key>
+		<key>cms/add_article.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>1</integer>
+				<integer>35</integer>
 				<key>line</key>
-				<integer>481</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>477</integer>
-		</dict>
-		<key>services/Followers.php</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>14</integer>
-				<key>line</key>
-				<integer>135</integer>
+				<integer>28</integer>
 			</dict>
 			<key>columnSelection</key>
 			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>110</integer>
+			<integer>5</integer>
 			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>7</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>135</integer>
+				<integer>28</integer>
 			</dict>
 			<key>selectTo</key>
 			<dict>
 				<key>column</key>
-				<integer>17</integer>
+				<integer>35</integer>
 				<key>line</key>
-				<integer>135</integer>
+				<integer>28</integer>
 			</dict>
+		</dict>
+		<key>services/Articles.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>10</integer>
+				<key>line</key>
+				<integer>498</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>390</integer>
+		</dict>
+		<key>services/Categories.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>7</integer>
+				<key>line</key>
+				<integer>100</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>34</integer>
+		</dict>
+		<key>services/Followers.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>212</integer>
+				<key>line</key>
+				<integer>95</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>82</integer>
 		</dict>
 		<key>services/test.php</key>
 		<dict>
@@ -101,6 +129,8 @@
 	<key>openDocuments</key>
 	<array>
 		<string>services/Followers.php</string>
+		<string>services/Categories.php</string>
+		<string>cms/add_article.php</string>
 		<string>services/test.php</string>
 		<string>services/Articles.php</string>
 	</array>
