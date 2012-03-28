@@ -42,6 +42,8 @@
 	
 	SNPaginationView_iPhone	*_paginationView;
 	SNLoaderView_iPhone *_loaderView;
+	
+	NSTimer *_timer;
 }
 
 -(id)initAsMostRecent;

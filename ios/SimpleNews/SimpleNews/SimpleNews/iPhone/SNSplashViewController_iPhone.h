@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface SNSplashViewController_iPhone : UIViewController {
-	UIImageView *_bgImgView;
 	UIImageView *_stripsImgView;
 	UIImageView *_highlightImgView;
 }

@@ -26,13 +26,17 @@ $tweet_html = eregi_replace('@([_\.0-9a-z-]+)', '<a href="https://twitter.com/#!
 
 $query = 'SELECT * FROM `tblTags`;';
 $tag_result = mysql_query($query);
-$tot = mysql_num_rows($tag_result); 
+$tot = mysql_num_rows($tag_result);
+
+$query = 'SELECT * FROM `tblSourceTypes`;';
+$src_result = mysql_query($query); 
 
 
 
 if (isset($_POST['txtArticleSource'])) {
 	$type_id = 7;
 	$source_url = $_POST['txtArticleSource'];
+	$network_id = $_POST['selNetworks'];
 	$title = $_POST['txtArticleTitle'];
 	$content = $_POST['txtArticleText'];
 	$image_url = $_POST['txtImageURL_1'];
@@ -50,10 +54,12 @@ if (isset($_POST['txtArticleSource'])) {
 		
 	if (strlen($image_url) == 0)
 		$type_id -= 2;
+	
+	
 		
 	$query = 'INSERT INTO `tblArticles` (';
-	$query .= '`id`, `follower_id`, `tweet_id`, `tweet_msg`, `type_id`, `article_url`, `title`, `content`, `image_url`, `video_url`, `isDark`, `added`) ';
-	$query .= 'VALUES (NULL, "'. $follower_id .'", "'. $tweet_id .'", "'. $tweet_msg .'", "'. $type_id .'", "'. $source_url .'", "'. $title .'", "'. $content .'",  "'. $image_url .'", "'. $video_url .'", "'. $isDark .'", NOW());';
+	$query .= '`id`, `follower_id`, `tweet_id`, `tweet_msg`, `source_id`, `type_id`, `article_url`, `title`, `content`, `image_url`, `video_url`, `isDark`, `added`) ';
+	$query .= 'VALUES (NULL, "'. $follower_id .'", "'. $tweet_id .'", "'. $tweet_msg .'", "'. $network_id .'", "'. $type_id .'", "'. $source_url .'", "'. $title .'", "'. $content .'",  "'. $image_url .'", "'. $video_url .'", "'. $isDark .'", NOW());';
 	$result = mysql_query($query);
 	$article_id = mysql_insert_id();
 	
@@ -121,6 +127,9 @@ if (isset($_POST['txtArticleSource'])) {
 					?></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
 					<tr><td>Article Source:</td><td><input type="text" id="txtArticleSource" name="txtArticleSource" size="80" /></td></tr>
+					<tr><td>Social Network:</td><td><select id="selNetworks" name="selNetworks"><?php while ($row = mysql_fetch_array($src_result, MYSQL_BOTH)) {
+						echo ("<option id=\"". $row['id'] ."\">". $row['title'] ."</option>");
+					} ?><select></td></tr>
 					<tr><td>Article Title:</td><td><input type="text" id="txtArticleTitle" name="txtArticleTitle" size="80" /></td></tr>
 					<tr><td>Article Text:</td><td><textarea id="txtArticleText" name="txtArticleText" rows="18" cols="80"></textarea></td></tr>
 					<tr><td>Image URL:</td><td><input type="text" id="txtImageURL_1" name="txtImageURL_1" size="80" /></td></tr>

@@ -37,9 +37,19 @@
 	_followers = followers;
 	
 	int tot = 0;
+	int row = 0;
+	int col = -1;
 	for (SNFollowerVO *vo in _followers) {
-		int row = tot / (int)([_followers count] * 0.5);
-		int col = tot % (int)([_followers count] * 0.5);
+		//row = tot / (int)([_followers count] * 0.5);
+		//col = tot % (int)([_followers count] * 0.5);
+		
+		row = tot % 2;
+		if (tot % 2 == 0) {
+			col++;
+		}
+		
+		
+		NSLog(@"Follower \"@%@\" (%d, %d) -- [%d]", vo.handle, row, col, tot);
 		
 		SNFollowerGridItemView_iPhone *followerItemView = [[[SNFollowerGridItemView_iPhone alloc] initWithFrame:CGRectMake(col * 80.0, row * 80.0, 80.0, 80.0) followerVO:vo] autorelease];
 		[_scrollView addSubview:followerItemView];

@@ -14,15 +14,15 @@
 
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
-		_messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(82.0, 206.0, 155.0, 24)];
-		_messageLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16.0];
-		_messageLabel.backgroundColor = [UIColor clearColor];
-		_messageLabel.textColor = [UIColor whiteColor];
-		_messageLabel.textAlignment = UITextAlignmentCenter;
-		_messageLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-		_messageLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-		_messageLabel.text = @"No Wi-Fi connection!";
-		[self addSubview:_messageLabel];		
+		UILabel *messageLabel = [[[UILabel alloc] initWithFrame:CGRectMake(82.0, 206.0, 155.0, 24)] autorelease];
+		messageLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16.0];
+		messageLabel.backgroundColor = [UIColor clearColor];
+		messageLabel.textColor = [UIColor whiteColor];
+		messageLabel.textAlignment = UITextAlignmentCenter;
+		messageLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+		messageLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+		messageLabel.text = @"No Wi-Fi connection!";
+		[self addSubview:messageLabel];		
 	}
 	
 	return (self);

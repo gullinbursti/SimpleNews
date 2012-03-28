@@ -9,8 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface SNNoAirplayView_iPhone : UIView {
-	UILabel *_messageLabel;
-	UIButton *_skipButton;
 }
 
 -(id)init;

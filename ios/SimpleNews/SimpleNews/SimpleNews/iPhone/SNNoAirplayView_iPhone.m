@@ -16,24 +16,24 @@
 
 -(id)init {
 	if ((self = [super initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)])) {
-		_messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(82.0, 206.0, 155.0, 24)];
-		_messageLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16.0];
-		_messageLabel.backgroundColor = [UIColor clearColor];
-		_messageLabel.textColor = [UIColor whiteColor];
-		_messageLabel.textAlignment = UITextAlignmentCenter;
-		_messageLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-		_messageLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-		_messageLabel.text = @"connect to AirPlay™";
-		[self addSubview:_messageLabel];
+		UILabel *messageLabel = [[[UILabel alloc] initWithFrame:CGRectMake(82.0, 206.0, 155.0, 24)] autorelease];
+		messageLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16.0];
+		messageLabel.backgroundColor = [UIColor clearColor];
+		messageLabel.textColor = [UIColor whiteColor];
+		messageLabel.textAlignment = UITextAlignmentCenter;
+		messageLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+		messageLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+		messageLabel.text = @"connect to AirPlay™";
+		[self addSubview:messageLabel];
 		
-		_skipButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_skipButton.frame = CGRectMake(128.0, 400.0, 64.0, 32.0);
-		[_skipButton setBackgroundColor:[UIColor purpleColor]];
-		_skipButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-		[_skipButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-		[_skipButton setTitle:@"NEXT" forState:UIControlStateNormal];
-		[_skipButton addTarget:self action:@selector(_goSkip) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:_skipButton];
+		UIButton *skipButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		skipButton.frame = CGRectMake(128.0, 400.0, 64.0, 32.0);
+		[skipButton setBackgroundColor:[UIColor purpleColor]];
+		skipButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		[skipButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		[skipButton setTitle:@"NEXT" forState:UIControlStateNormal];
+		[skipButton addTarget:self action:@selector(_goSkip) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:skipButton];
 		
 		MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:CGRectMake(140.0, 300.0, 40.0, 20.0)] autorelease];
 		[volumeView setShowsVolumeSlider:NO];

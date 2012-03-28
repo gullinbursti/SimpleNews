@@ -20,13 +20,13 @@
 		_isSelected = NO;
 		
 		
-		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 0, self.frame.size.width, 64)];
-		_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16.0];
-		_titleLabel.backgroundColor = [UIColor clearColor];
-		_titleLabel.textColor = [UIColor whiteColor];
-		_titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-		_titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-		[self addSubview:_titleLabel];
+		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 0, self.frame.size.width, 64)] autorelease];
+		titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16.0];
+		titleLabel.backgroundColor = [UIColor clearColor];
+		titleLabel.textColor = [UIColor whiteColor];
+		titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+		titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+		[self addSubview:titleLabel];
 		
 		_checkImageView = [[[UIImageView alloc] initWithFrame:CGRectMake(284, 20, 24, 24)] autorelease];
 		_checkImageView.image = [UIImage imageNamed:@"optionsCheckMark.png"];
@@ -46,7 +46,7 @@
 		[toggleButton addTarget:self action:@selector(_goToggle) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:toggleButton];
 		
-		_titleLabel.text = _vo.option_title;
+		titleLabel.text = _vo.option_title;
 		_checkImageView.hidden = YES;
 	}
 	
@@ -54,7 +54,6 @@
 }
 
 -(void)dealloc {
-	[_titleLabel release];
 	[_checkImageView release];
 	
 	[super dealloc];

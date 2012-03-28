@@ -15,6 +15,9 @@
 #import "SNArticleFollowerInfoView_iPhone.h"
 
 @interface SNArticleCardView_iPhone()
+-(void)_goExpandCollapse;
+-(void)_goPlayVideo;
+-(void)_goReadMore;
 @end
 
 @implementation SNArticleCardView_iPhone
@@ -28,7 +31,6 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
 		
 		_vo = vo;
-		_isAtTop = NO;
 		_ind = idx;
 		_isExpanded = NO;
 		
@@ -44,7 +46,7 @@
 		bgImageView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 		[_bgView addSubview:bgImageView];
 		
-		_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - kBaseHeaderHeight, _holderView.frame.size.width, _tweetSize.height + _titleSize.height + _contentSize.height + 150.0);
+		_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - kBaseHeaderHeight, _holderView.frame.size.width, _tweetSize.height + _titleSize.height + _contentSize.height + 223.0);
 		_holderView.alpha = 0.0;
 		
 		_headerView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, kBaseHeaderHeight)] autorelease];
@@ -56,9 +58,9 @@
 		[_holderView addSubview:_headerView];
 		
 		_expandCollapseButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_expandCollapseButton.frame = CGRectMake(240.0, 5.0, 84.0, 34.0);
-		[_expandCollapseButton setBackgroundImage:[UIImage imageNamed:@"readMoreButton_nonActive.png"] forState:UIControlStateNormal];
-		[_expandCollapseButton setBackgroundImage:[UIImage imageNamed:@"readMoreButton_Active.png"] forState:UIControlStateHighlighted];
+		_expandCollapseButton.frame = CGRectMake(284.0, 12.0, 24.0, 24.0);
+		[_expandCollapseButton setBackgroundImage:[UIImage imageNamed:@"upDownArrow_nonActive.png"] forState:UIControlStateNormal];
+		[_expandCollapseButton setBackgroundImage:[UIImage imageNamed:@"upDownArrow_Active.png"] forState:UIControlStateHighlighted];
 		[_expandCollapseButton addTarget:self action:@selector(_goExpandCollapse) forControlEvents:UIControlEventTouchUpInside];
 		[_holderView addSubview:_expandCollapseButton];
 		
@@ -78,25 +80,17 @@
 		[_holderView addSubview:_scrollView];
 		
 		if (_vo.type_id > 4) {
-			_playImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 84.0, 84.0)];
-			_playImgView.image = [UIImage imageNamed:@"playIcon.png"];
-			
 			_playButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 			_playButton.frame = CGRectMake(121.0, 165.0, 84.0, 84.0);
+			_playButton.alpha = 0.0;
 			[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 			[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 			[_playButton addTarget:self action:@selector(_goPlayVideo) forControlEvents:UIControlEventTouchUpInside];
-			[_playButton addSubview:_playImgView];
 			[self addSubview:_playButton];
-			
-			_indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-			_indicatorView.frame = CGRectMake(147.0, 191.0, 32.0, 32.0);
-			_indicatorView.hidden = YES;
-			[_holderView addSubview:_indicatorView];
 		}
 		
 				
-		UIView *tweetBgView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, _tweetSize.height+ 45.0)] autorelease];
+		UIView *tweetBgView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, _tweetSize.height + 45.0)] autorelease];
 		[tweetBgView setBackgroundColor:[UIColor colorWithWhite:0.184 alpha:1.0]];
 		[_scrollView addSubview:tweetBgView];
 		
@@ -123,7 +117,36 @@
 		twitterSiteLabel.text = @"Twitter.com";
 		[_scrollView addSubview:twitterSiteLabel];
 		
-		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 50.0 + _tweetSize.height, 296.0, _titleSize.height)] autorelease];
+		UIView *iconsView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 45.0 + _tweetSize.height, self.frame.size.width, 53.0)] autorelease];
+		[iconsView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.85]];
+		[_scrollView addSubview:iconsView];
+		
+		UIButton *favoriteButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		favoriteButton.frame = CGRectMake(90.0, 12.0, 34.0, 34.0);
+		[favoriteButton setBackgroundImage:[UIImage imageNamed:@"star_nonActive.png"] forState:UIControlStateNormal];
+		[favoriteButton setBackgroundImage:[UIImage imageNamed:@"star_Active.png"] forState:UIControlStateHighlighted];
+		[favoriteButton addTarget:self action:@selector(_goFavorite) forControlEvents:UIControlEventTouchUpInside];
+		[iconsView addSubview:favoriteButton];
+		
+		UIButton *shareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		shareButton.frame = CGRectMake(143.0, 12.0, 34.0, 34.0);
+		[shareButton setBackgroundImage:[UIImage imageNamed:@"shareIconB_nonActive.png"] forState:UIControlStateNormal];
+		[shareButton setBackgroundImage:[UIImage imageNamed:@"shareIconB_Active.png"] forState:UIControlStateHighlighted];
+		[shareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+		[iconsView addSubview:shareButton];
+		
+		UIButton *personButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		personButton.frame = CGRectMake(205.0, 12.0, 34.0, 34.0);
+		[personButton setBackgroundImage:[UIImage imageNamed:@"viewPerson_nonActive.png"] forState:UIControlStateNormal];
+		[personButton setBackgroundImage:[UIImage imageNamed:@"viewPerson_Active.png"] forState:UIControlStateHighlighted];
+		[personButton addTarget:self action:@selector(_goPerson) forControlEvents:UIControlEventTouchUpInside];
+		[iconsView addSubview:personButton];
+		
+		_iconsCoverImgView = [[UIImageView alloc] initWithFrame:CGRectMake(12.0, 45.0 + _tweetSize.height, self.frame.size.width, 53.0)];
+		_iconsCoverImgView.image = [UIImage imageNamed:@"storyShelfCover.png"];
+		[_scrollView addSubview:_iconsCoverImgView];
+		
+		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 123.0 + _tweetSize.height, 296.0, _titleSize.height)] autorelease];
 		titleLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:22];
 		titleLabel.textColor = [UIColor whiteColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
@@ -133,7 +156,7 @@
 		titleLabel.numberOfLines = 0;
 		[_scrollView addSubview:titleLabel];
 		
-		UILabel *contentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 75.0 + _titleSize.height + _tweetSize.height, 296.0, _contentSize.height)] autorelease];
+		UILabel *contentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 148.0 + _titleSize.height + _tweetSize.height, 296.0, _contentSize.height)] autorelease];
 		contentLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
 		contentLabel.textColor = [UIColor whiteColor];
 		contentLabel.backgroundColor = [UIColor clearColor];
@@ -144,7 +167,7 @@
 		[_scrollView addSubview:contentLabel];
 		
 		UIButton *readMoreBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		readMoreBtn.frame = CGRectMake(118.0, 95.0 + _titleSize.height + _tweetSize.height + _contentSize.height, 84.0, 34.0);
+		readMoreBtn.frame = CGRectMake(118.0, 168.0 + _titleSize.height + _tweetSize.height + _contentSize.height, 84.0, 34.0);
 		[readMoreBtn setBackgroundImage:[UIImage imageNamed:@"readMoreButton_nonActive.png"] forState:UIControlStateNormal];
 		[readMoreBtn setBackgroundImage:[UIImage imageNamed:@"readMoreButton_Active.png"] forState:UIControlStateHighlighted];
 		readMoreBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];
@@ -165,21 +188,16 @@
 	
 	[_headerBgView release];
 	[_headerView release];
-	
-	if (_vo.type_id > 4) {
-		[_playImgView release];
-		[_indicatorView release];
-	}
-	
+	[_iconsCoverImgView release];
+		
 	[super dealloc];
 }
 
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
 	UITouch *touch = [touches anyObject];
-	NSLog(@"TOUCHED:%@", [touch view]);
 	
-	if ([touch view] == _bgView) {
+	if ([touch view] == _bgView || [touch view] == _holderView) {
 		[self _goExpandCollapse];
 		return;
 	}
@@ -187,9 +205,20 @@
 
 #pragma mark - Interaction handlers
 -(void)resetContent {
+	_isExpanded = NO;
 	_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - kBaseHeaderHeight, _holderView.frame.size.width, _holderView.frame.size.height);
 	_holderView.alpha = 0.0;
-	_isExpanded = NO;
+	_playButton.alpha = 0.0;
+	_iconsCoverImgView.frame = CGRectMake(0.0, _iconsCoverImgView.frame.origin.y, _iconsCoverImgView.frame.size.width, _iconsCoverImgView.frame.size.height);
+	
+	CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+	rotationAnimation.beginTime = CACurrentMediaTime();
+	rotationAnimation.toValue = [NSNumber numberWithDouble:0.0];
+	rotationAnimation.duration = 0.15;
+	rotationAnimation.fillMode = kCAFillModeForwards;
+	rotationAnimation.removedOnCompletion = NO;
+	rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+	[[_expandCollapseButton layer] addAnimation:rotationAnimation forKey:@"rotationAnimation"];
 	
 	[super resetContent];
 }
@@ -198,8 +227,11 @@
 	[UIView animateWithDuration:0.25 animations:^(void) {
 		_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - (kBaseHeaderHeight + _tweetSize.height + 45.0), _holderView.frame.size.width, _holderView.frame.size.height);
 		_holderView.alpha = 1.0;
+		
+		if (_vo.type_id > 4)
+			_playButton.alpha = 1,0;
 	
-	}completion:^(BOOL finished) {
+	} completion:^(BOOL finished) {
 		self.userInteractionEnabled = YES;
 	}];
 	
@@ -212,17 +244,7 @@
 
 
 #pragma mark - Navigation
--(void)_goTag:(UIButton *)button {
-	NSLog(@"GO TAG %d", [button tag]);
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"TAG_SEARCH" object:[NSNumber numberWithInt:[button tag]]];
-}
-
--(void)_goPlayVideo {
-	_playImgView.hidden = YES;
-	
-	[(UIActivityIndicatorView *)_indicatorView startAnimating];
-	_indicatorView.hidden = NO;
-	
+-(void)_goPlayVideo {	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"START_VIDEO" object:_vo];
 }
 
@@ -230,13 +252,21 @@
 	NSLog(@"_goExpandCollapse");
 	
 	_isExpanded = !_isExpanded;
+	int ang;
 	
 	if (_isExpanded) {
+		ang = 180;
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"HIDE_BUTTONS" object:nil];
+		
 		[UIView animateWithDuration:0.5 animations:^(void) {
 			_holderView.frame = CGRectMake(_holderView.frame.origin.x, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		
 		} completion:^(BOOL finished) {
 			_scrollView.userInteractionEnabled = YES;
+			
+			[UIView animateWithDuration:0.33 animations:^(void) {
+				_iconsCoverImgView.frame = CGRectMake(_iconsCoverImgView.frame.size.width, _iconsCoverImgView.frame.origin.y, _iconsCoverImgView.frame.size.width, _iconsCoverImgView.frame.size.height);
+			}];
 		}];
 		
 		[UIView animateWithDuration:0.25 animations:^(void) {
@@ -244,6 +274,13 @@
 		}];
 	
 	} else {
+		ang = 0;
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_BUTTONS" object:nil];
+		
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_iconsCoverImgView.frame = CGRectMake(0.0, _iconsCoverImgView.frame.origin.y, _iconsCoverImgView.frame.size.width, _iconsCoverImgView.frame.size.height);
+		}];
+		
 		[UIView animateWithDuration:0.5 animations:^(void) {
 			_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - (kBaseHeaderHeight + _tweetSize.height + 45.0), _holderView.frame.size.width, _holderView.frame.size.height);
 		
@@ -255,57 +292,46 @@
 			}];
 		}];
 	}
+	
+	CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+	rotationAnimation.beginTime = CACurrentMediaTime();
+	rotationAnimation.toValue = [NSNumber numberWithDouble:(M_PI / 180) * ang];
+	rotationAnimation.duration = 0.33;
+	rotationAnimation.fillMode = kCAFillModeForwards;
+	rotationAnimation.removedOnCompletion = NO;
+	rotationAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
+	[[_expandCollapseButton layer] addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+	
+//	CGAffineTransform transform = _expandCollapseButton.transform;
+//	_expandCollapseButton.center = CGPointMake(_expandCollapseButton.frame.size.width * 0.5, _expandCollapseButton.frame.size.height * 0.5);
+//	transform = CGAffineTransformRotate(transform, M_PI);
+//	_expandCollapseButton.transform = transform;
 }
 
 -(void)_goReadMore {
 	
 }
 
+-(void)_goFavorite {
+	
+}
+
+-(void)_goShare {
+	
+}
+
+-(void)_goPerson {
+	
+}
+
 
 #pragma mark - Notifications
 -(void)_videoEnded:(NSNotification *)notification {
-	_playImgView.hidden = NO;
-	
-	[(UIActivityIndicatorView *)_indicatorView stopAnimating];
-	_indicatorView.hidden = YES;
 }
 
 #pragma mark - ScrollView Delegates
 // any offset changes
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	
-	//int offset = (self.frame.size.height - (kBaseHeaderHeight + _tweetSize.height)) + scrollView.contentOffset.y;
-	//NSLog(@"OFFSET:[%f]", scrollView.contentOffset.y);
-	
-//	if (_playButton != nil) {
-//		if (scrollView.contentOffset.y > 160.0)
-//			[UIView animateWithDuration:0.25 animations:^(void) {
-//				_playButton.alpha = 0.0;
-//			}];
-//	
-//		else
-//			[UIView animateWithDuration:0.25 animations:^(void) {
-//				_playButton.alpha = 1.0;
-//			}];
-//	}
-//	
-//	if (_isAtTop && (scrollView.contentOffset.y < self.frame.size.height - kBaseHeaderHeight)) {
-//		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_BUTTONS" object:nil];
-//		_isAtTop = NO;
-//		
-//		[UIView animateWithDuration:0.25 animations:^(void) {
-//			_headerBgView.alpha = 0.85;
-//		}];
-//	} 
-//	
-//	if (scrollView.contentOffset.y >= self.frame.size.height - kBaseHeaderHeight) {
-//		[[NSNotificationCenter defaultCenter] postNotificationName:@"HIDE_BUTTONS" object:nil];
-//		_isAtTop = YES;
-//		
-//		[UIView animateWithDuration:0.25 animations:^(void) {
-//			_headerBgView.alpha = 1.0;
-//		}];
-//	}
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {	
 }
 
 

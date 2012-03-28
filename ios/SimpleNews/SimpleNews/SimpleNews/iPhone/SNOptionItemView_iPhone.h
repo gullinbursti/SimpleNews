@@ -10,7 +10,6 @@
 #import "SNOptionVO.h"
 
 @interface SNOptionItemView_iPhone : UIView {
-	UILabel *_titleLabel;
 	UIImageView *_checkImageView;
 	
 	BOOL _isSelected;

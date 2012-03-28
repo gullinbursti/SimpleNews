@@ -10,24 +10,24 @@ require './_db_open.php';
 
 if (isset($_POST['txtName'])) {
 	
-	$tag_name = $_POST['txtName'];
-	$tag_info = $_POST['txtInfo'];
-	$tag_active = "N";
+	$cat_name = $_POST['txtName'];
+	$cat_info = $_POST['txtInfo'];
+	$cat_active = "N";
 	
 	if ($_POST['chkActive'] == "Y")
-		$tag_active = "Y"; 
+		$cat_active = "Y"; 
 	
-	$query = 'UPDATE `tblTags` SET ';
-	$query .= '`title` = "'. $tag_name .'", ';
-	$query .= '`info` = "'. $tag_info .'", ';
-	$query .= '`active` = "'. $tag_active .'" ';
+	$query = 'UPDATE `tblCategories` SET ';
+	$query .= '`title` = "'. $cat_name .'", ';
+	$query .= '`info` = "'. $cat_info .'", ';
+	$query .= '`active` = "'. $cat_active .'" ';
 	$query .= 'WHERE `id` = "'. $_GET['id'] .'";';
 	$result = mysql_query($query);
 	
 	header('Location: tags.php');
 }
 
-$query = 'SELECT * FROM `tblTags` WHERE `id` = "'. $_GET['id'] .'"';
+$query = 'SELECT * FROM `tblCategories` WHERE `id` = "'. $_GET['id'] .'"';
 $result = mysql_query($query);
 $row = mysql_fetch_row(mysql_query($query));
 	
@@ -68,7 +68,7 @@ $row = mysql_fetch_row(mysql_query($query));
 						echo ("<tr><td>Active:</td><td><input type=\"checkbox\" id=\"chkActive\" name=\"chkActive\" value=\"N\" /></td></tr>");
 					?>
 					<tr><td colspan="2"><hr /></td></tr>
-					<tr><td><input type="button" id="btnCancel" name="btnCancel" value="Cancel" onclick="history.back();" /></td><td><input type="button" id="btnAdd" name="btnAdd" value="Edit Tag" onclick="edit();" /></td></tr>
+					<tr><td><input type="button" id="btnCancel" name="btnCancel" value="Cancel" onclick="history.back();" /></td><td><input type="button" id="btnAdd" name="btnAdd" value="Edit Category" onclick="edit();" /></td></tr>
 				</form></table></td>
 			</tr>
 		</table>

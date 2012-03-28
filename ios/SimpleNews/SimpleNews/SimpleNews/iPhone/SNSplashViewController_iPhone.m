@@ -27,6 +27,9 @@
 }
 		  
 -(void)dealloc {
+	[_stripsImgView release];
+	[_highlightImgView release];
+	
 	[super dealloc];
 }
 
@@ -39,9 +42,9 @@
 -(void)loadView {
 	[super loadView];
 	
-	_bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
-	_bgImgView.image = [UIImage imageNamed:@"background_root.png"];
-	[self.view addSubview:_bgImgView];
+	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	[self.view addSubview:bgImgView];
 	
 	_stripsImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
 	_stripsImgView.image = [UIImage imageNamed:@"loaderBG.jpg"];

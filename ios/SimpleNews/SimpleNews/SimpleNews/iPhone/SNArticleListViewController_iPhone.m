@@ -22,8 +22,8 @@
 @interface SNArticleListViewController_iPhone()
 -(void)_goBack;
 -(void)_introFirstCard;
--(void)_prevCard;
--(void)_nextCard;
+-(void)_prevCard:(id)sender;
+-(void)_nextCard:(id)sender;
 -(void)_transitionBtns;
 @end
 
@@ -48,7 +48,6 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showButtons:) name:@"SHOW_BUTTONS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideButtons:) name:@"HIDE_BUTTONS" object:nil];
-		
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterTimeline:) name:@"TWITTER_TIMELINE" object:nil];
 		
@@ -186,6 +185,13 @@
 	[_whiteGridButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_whiteGridButton];
 	
+	_greyShareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_greyShareButton.frame = CGRectMake(272.0, 0.0, 44.0, 44.0);
+	[_greyShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconGrey_nonActive.png"] forState:UIControlStateNormal];
+	[_greyShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconGrey_Active.png"] forState:UIControlStateHighlighted];
+	[_greyShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:_greyShareButton];
+	
 	_whiteShareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 	_whiteShareButton.frame = CGRectMake(272.0, 0.0, 44.0, 44.0);
 	[_whiteShareButton setBackgroundImage:[UIImage imageNamed:@"shareIcon_nonActive.png"] forState:UIControlStateNormal];
@@ -205,13 +211,6 @@
 	_paginationView = [[SNPaginationView_iPhone alloc] initWithFrame:CGRectMake(278.0, 460.0, 48.0, 9.0)];
 	[self.view addSubview:_paginationView];
 	
-	_greyShareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_greyShareButton.frame = CGRectMake(272.0, 0.0, 44.0, 44.0);
-	[_greyShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconGrey_nonActive.png"] forState:UIControlStateNormal];
-	[_greyShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconGrey_Active.png"] forState:UIControlStateHighlighted];
-	[_greyShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:_greyShareButton];
-	
 	_shareSheetView = [[SNShareSheetView_iPhone alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
 	[self.view addSubview:_shareSheetView];
 	
@@ -222,11 +221,15 @@
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
 	
-	UIPanGestureRecognizer *panRecognizer = [[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)] autorelease];
-	[panRecognizer setMinimumNumberOfTouches:1];
-	[panRecognizer setMaximumNumberOfTouches:1];
-	[panRecognizer setDelegate:self];
-	[_cardHolderView addGestureRecognizer:panRecognizer];
+	UISwipeGestureRecognizer *swipeRtRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_prevCard:)];
+	swipeRtRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+	[_cardHolderView addGestureRecognizer:swipeRtRecognizer];
+	[swipeRtRecognizer release];
+	
+	UISwipeGestureRecognizer *swipeLtRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_nextCard:)];
+	swipeLtRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+	[_cardHolderView addGestureRecognizer:swipeLtRecognizer];
+	[swipeLtRecognizer release];
 }
 
 -(void)viewDidLoad {
@@ -242,30 +245,23 @@
 -(void)_goBack {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ARTICLES_RETURN" object:nil];	
 	[self.navigationController popToRootViewControllerAnimated:YES];
+	
+	[_timer invalidate];
+	_timer = nil;
 }
 
 -(void)_goShare {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHARE_SHEET" object:(SNArticleVO *)[_articles objectAtIndex:_cardIndex - 1]];
+	
+	[_timer invalidate];
+	_timer = nil;
 }
 
 #pragma mark - Interaction handlers
--(void)_goSwipe:(id)sender {
-	CGPoint translatedPoint = [(UIPanGestureRecognizer *)sender translationInView:self.view];
-	//NSLog(@"SWIPE @:(%f)", translatedPoint.x);
-	
-	if (!_isSwiping && (translatedPoint.x > 20.0 && abs(translatedPoint.y) < 20)) {
-		_isSwiping = YES;
-		[self _prevCard];
-	}
-		
-	if (!_isSwiping && (translatedPoint.x < -20.0 && abs(translatedPoint.y) < 20)) {
-		_isSwiping = YES;
-		[self _nextCard];
-	}
-}
-
 -(void)_introFirstCard {
 	SNArticleCardView_iPhone *articleCardView = (SNArticleCardView_iPhone *)[_cardViews lastObject];
+	
+	[self _transitionBtns];
 	
 	CABasicAnimation *zoomAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
 	zoomAnimation.beginTime = CACurrentMediaTime();
@@ -286,17 +282,24 @@
 		}
 	}
 	
+	_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
 	[articleCardView setTweets:tweets];
 }
 
--(void)_prevCard {
+-(void)_prevCard:(id)sender {
 	NSLog(@"PREV CARD");
 	
 	if (_cardIndex < [_cardViews count] - 1) {
+		
+		[_timer invalidate];
+		_timer = nil;
+		
+		_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
+		
 		SNBaseArticleCardView_iPhone *previousCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex + 1];
 		SNBaseArticleCardView_iPhone *currentCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
 
-		[UIView animateWithDuration:0.25 animations:^(void) {
+		[UIView animateWithDuration:0.33 animations:^(void) {
 			previousCardView.frame = CGRectMake(0.0, 0.0, previousCardView.frame.size.width, previousCardView.frame.size.height);
 			currentCardView.frame = CGRectMake(self.view.frame.size.width, 0.0, currentCardView.frame.size.width, currentCardView.frame.size.height);
 			
@@ -333,10 +336,15 @@
 	}
 }
 
--(void)_nextCard {
+-(void)_nextCard:(id)sender {
 	NSLog(@"NEXT CARD");
 	
 	if (_cardIndex > 0) {
+		[_timer invalidate];
+		_timer = nil;
+		
+		_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
+		
 		SNBaseArticleCardView_iPhone *currentCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
 		SNBaseArticleCardView_iPhone *nextCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex - 1];
 		
@@ -351,7 +359,7 @@
 		zoomAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
 		[nextCardView.bgView.layer addAnimation:zoomAnimation forKey:@"zoomAnimation"];
 		
-		[UIView animateWithDuration:0.25 animations:^(void) {
+		[UIView animateWithDuration:0.33 animations:^(void) {
 			currentCardView.frame = CGRectMake(-self.view.frame.size.width, 0.0, currentCardView.frame.size.width, currentCardView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
@@ -426,6 +434,9 @@
 	[self.navigationController presentModalViewController:navigationController animated:NO];
 	
 	[videoPlayerViewController changeArticleVO:vo];
+	
+	[_timer invalidate];
+	_timer = nil;
 }
 
 -(void)_videoStarted:(NSNotification *)notification {
@@ -439,6 +450,8 @@
 	[UIView animateWithDuration:0.5 animations:^(void) {
 		_blackMatteView.alpha = 0.0;
 	} completion:nil];
+	
+	_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
 }
 
 -(void)_tagSearch:(NSNotification *)notification {
@@ -531,22 +544,39 @@
 	} completion:^(BOOL finished) {
 		_blackMatteView.hidden = YES;
 	}];
+	
+	_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
 }
 
 -(void)_showButtons:(NSNotification *)notification {
-	_greyGridButton.alpha = 1.0;
-	_greyShareButton.alpha = 1.0;
+	SNArticleVO *vo = (SNArticleVO *)[_articles objectAtIndex:_cardIndex];
 	
-	_whiteGridButton.alpha = 1.0;
-	_whiteShareButton.alpha = 1.0;
+	if (vo.isDark) {
+		_greyGridButton.alpha = 1.0;
+		_greyShareButton.alpha = 1.0;
+		
+	} else {
+		_whiteGridButton.alpha = 1.0;
+		_whiteShareButton.alpha = 1.0;
+	}
+	
+	_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
 }
 
 -(void)_hideButtons:(NSNotification *)notification {
-	_greyGridButton.alpha = 0.0;
-	_greyShareButton.alpha = 0.0;
+	SNArticleVO *vo = (SNArticleVO *)[_articles objectAtIndex:_cardIndex];
 	
-	_whiteGridButton.alpha = 0.0;
-	_whiteShareButton.alpha = 0.0;
+	if (vo.isDark) {
+		_greyGridButton.alpha = 0.0;
+		_greyShareButton.alpha = 0.0;
+		
+	} else {
+		_whiteGridButton.alpha = 0.0;
+		_whiteShareButton.alpha = 0.0;
+	}
+	
+	[_timer invalidate];
+	_timer = nil;
 }
 
 -(void)_twitterTimeline:(NSNotification *)notification {

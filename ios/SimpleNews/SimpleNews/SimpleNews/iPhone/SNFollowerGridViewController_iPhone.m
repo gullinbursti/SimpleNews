@@ -32,7 +32,6 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_queueFollower:) name:@"QUEUE_FOLLOWER" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_followerArticles:) name:@"FOLLOWER_ARTICLES" object:nil];
 		
-		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_optionsReturn:) name:@"OPTIONS_RETURN" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_articlesReturn:) name:@"ARTICLES_RETURN" object:nil];
 				
@@ -93,37 +92,6 @@
 }
 
 
-/*
- -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
- NSLog(@"ORIENTATION:[%d]", interfaceOrientation);
- 
- 
- if (interfaceOrientation == UIInterfaceOrientationPortrait) {
- [[NSNotificationCenter defaultCenter] postNotificationName:@"ORIENTED_PORTRAIT" object:nil];
- 
- [UIView animateWithDuration:0.33 animations:^(void) {
- _tableView.frame = CGRectMake(-self.view.bounds.size.width, _tableView.frame.origin.y, _tableView.frame.size.width, _tableView.frame.size.height);
- _playingListViewController.view.frame = CGRectMake(0.0, _playingListViewController.view.frame.origin.y, _playingListViewController.view.bounds.size.width, _playingListViewController.view.frame.size.height);
- _isDetails = YES;
- 
- } completion:nil];
- 
- } else if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
- [[NSNotificationCenter defaultCenter] postNotificationName:@"ORIENTED_LANDSCAPE" object:nil];
- 
- [UIView animateWithDuration:0.33 animations:^(void) {
- _tableView.frame = CGRectMake(-self.view.bounds.size.width, _tableView.frame.origin.y, _tableView.frame.size.width, _tableView.frame.size.height);
- _playingListViewController.view.frame = CGRectMake(0.0, _playingListViewController.view.frame.origin.y, _playingListViewController.view.bounds.size.width, _playingListViewController.view.frame.size.height);
- _isDetails = YES;
- 
- } completion:nil];
- }
- 
- 
- return ((interfaceOrientation == UIInterfaceOrientationPortrait) || (interfaceOrientation == UIInterfaceOrientationLandscapeLeft));
- }
- */
-
 #pragma mark - View lifecycle
 -(void)loadView {
 	[super loadView];
@@ -153,13 +121,6 @@
 	_tableView.alwaysBounceVertical = NO;
 	[_holderView addSubview:_tableView];
 		
-	
-	UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(_goSwipe:)];
-	[panRecognizer setMinimumNumberOfTouches:1];
-	[panRecognizer setMaximumNumberOfTouches:1];
-	[panRecognizer setDelegate:self];
-	//[_holderView addGestureRecognizer:panRecognizer];
-	
 	UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_goLongPress:)];
 	[longPressRecognizer setNumberOfTouchesRequired:1];
 	[longPressRecognizer setMinimumPressDuration:0.5];
@@ -216,9 +177,6 @@
 	
 	[navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:articleListViewController animated:YES];	
-	
-	
-	//[self.navigationController pushViewController:[[[SNChannelListViewController_iPhone alloc] init] autorelease] animated:YES];
 }
 
 -(void)_goArticlesWithTag:(id)tag_id {
@@ -237,13 +195,8 @@
 	NSLog(@"SWIPE @:(%f)", translatedPoint.x);
 	
 	if (!_isDetails && !_isOptions) {	
-		//if (translatedPoint.x > 20.0 && abs(translatedPoint.y) < 20) {
-		//		[self _goOptions];
-		//	}
-		
-		if (!_isArticles && (translatedPoint.x < -20.0 && abs(translatedPoint.y) < 20)) {
+		if (!_isArticles && (translatedPoint.x < -20.0 && abs(translatedPoint.y) < 20))
 			[self _goArticles];
-		}
 	}
 }
 
@@ -268,12 +221,6 @@
 -(void)_showOptions:(NSNotification *)notification {
 	_isOptions = YES;
 	
-//	SNOptionsViewController_iPhone *optionsViewController = [[[SNOptionsViewController_iPhone alloc] init] autorelease];
-//	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:optionsViewController] autorelease];
-//	
-//	[navigationController setNavigationBarHidden:YES];
-//	[self.navigationController presentModalViewController:navigationController animated:YES];
-	
 	[self.navigationController pushViewController:[[[SNOptionsViewController_iPhone alloc] init] autorelease] animated:YES];
 }
 
@@ -282,24 +229,20 @@
 	NSLog(@"SEARCH ENTERED");
 	
 	[self _resetToTop];
-	
 	NSMutableArray *searchTags = [[NSMutableArray new] autorelease];
-	
 	NSArray *enteredTags = [((NSString *)[notification object]) componentsSeparatedByString:@" "];
 	
 	for (NSString *enteredTag in enteredTags) {
 		for (SNTagVO *vo in _tags) {
-			if ([[vo.title lowercaseString] isEqualToString:[enteredTag lowercaseString]]) {
+			if ([[vo.title lowercaseString] isEqualToString:[enteredTag lowercaseString]])
 				[searchTags addObject:[NSNumber numberWithInt:vo.tag_id]];
-			}
 		}
 	}
 	
 	NSString *tagIDs = @"";
 	
-	for (NSNumber *tagID in searchTags) {
+	for (NSNumber *tagID in searchTags)
 		tagIDs = [tagIDs stringByAppendingFormat:@"|%d", [tagID intValue]];
-	}
 	
 	tagIDs = [tagIDs substringFromIndex:1];
 	
@@ -322,14 +265,6 @@
 
 -(void)_optionsReturn:(NSNotification *)notification {
 	_isOptions = NO;
-	
-	/*
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_optionsListView.frame = CGRectMake(-self.view.bounds.size.width, _optionsListView.frame.origin.y, _optionsListView.frame.size.width, _optionsListView.frame.size.height);
-	} completion:^(BOOL finished) {
-		_optionsListView.hidden = YES;
-	}];
-	 */
 }
 
 -(void)_articlesReturn:(NSNotification *)notification {
@@ -419,9 +354,6 @@
 	return (cell);
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-	return ([_categories objectAtIndex:section]);
-}
 
 #pragma mark - TableView Delegates
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -526,31 +458,7 @@
 				
 				_categorizedFollowers = [list retain];
 				[_tableView reloadData];
-				
-				
-				
-//				for (NSDictionary *serverFollower in parsedFollowers) {
-//					SNFollowerVO *vo = [SNFollowerVO followerWithDictionary:serverFollower];
-//					
-//					//NSLog(@"FOLLOWER \"@%@\" %d", vo.handle, vo.totalArticles);
-//					
-//					if (vo != nil)
-//						[followerList addObject:vo];
-//					
-//					SNFollowerGridItemView_iPhone *channelItemView = [[[SNFollowerGridItemView_iPhone alloc] initWithFrame:CGRectMake(80.0 * (tot % 4), 55.0 + (80.0 * (int)(tot / 4)), 80.0, 80.0) followerVO:vo] autorelease];
-//					[_itemViews addObject:channelItemView];
-//					tot++;
-//				}
-//				
-//				_followers = [followerList retain];
-//				[followerList release];
-//				_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, 55.0 + (ceil(tot / 4) * 80.0));
-//				
-//				for (SNFollowerGridItemView_iPhone *followerItemView in _itemViews)
-//					[_scrollView addSubview:followerItemView];
-			}			
-			
-			//[self _goArticles];
+			}
 		}
 	
 	} else if ([request isEqual:_tagsRequest]) {
@@ -588,16 +496,13 @@
 				NSMutableArray *recentList = [NSMutableArray array];
 				_itemViews = [NSMutableArray new];
 				
-				for (NSDictionary *serverRecent in parsedRecents) {
+				for (NSDictionary *serverRecent in parsedRecents)
 					[recentList addObject:[serverRecent objectForKey:@"avatar_url"]];
-				}
 				
 				_recentFollowersView = [[SNRecentFollowersView_iPhone alloc] initWithFrame:CGRectMake(0.0, 50.0, 80.0, 80.0) avatarURLs:[NSArray arrayWithObjects:[recentList objectAtIndex:0], [recentList objectAtIndex:1], [recentList objectAtIndex:2], [recentList objectAtIndex:3], nil]];
 				
 				[_itemViews addObject:_recentFollowersView];
 				[_scrollView addSubview:_recentFollowersView];
-				
-				//_tags = [recentList retain];
 			}
 		}
 		

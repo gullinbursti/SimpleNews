@@ -38,6 +38,7 @@
 	CGSize _timeSize;
 	
 	UIButton *_playButton;
+	UIButton *_pauseButton;
 }
 
 @property (nonatomic, retain) MPMoviePlayerController *mpc;

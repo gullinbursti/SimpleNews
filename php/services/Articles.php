@@ -108,6 +108,7 @@
 				array_push($article_arr, array(
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
+					"source_id" => $article_row['source_id'], 
 					"title" => $article_row['title'], 
 					"article_url" => $article_row['article_url'], 
 					"short_url" => $article_row['short_url'], 
@@ -160,6 +161,7 @@
 					array_push($article_arr, array(
 						"article_id" => $article_row['id'], 
 						"type_id" => $article_row['type_id'], 
+						"source_id" => $article_row['source_id'], 
 						"title" => $article_row['title'], 
 						"article_url" => $article_row['article_url'], 
 						"short_url" => $article_row['short_url'], 
@@ -213,6 +215,7 @@
 				array_push($article_arr, array(
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
+					"source_id" => $article_row['source_id'], 
 					"title" => $article_row['title'], 
 					"article_url" => $article_row['article_url'], 
 					"short_url" => $article_row['short_url'], 
@@ -262,6 +265,7 @@
 				array_push($article_arr, array(
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
+					"source_id" => $article_row['source_id'], 
 					"title" => $article_row['title'], 
 					"article_url" => $article_row['article_url'], 
 					"short_url" => $article_row['short_url'], 
@@ -326,6 +330,7 @@
 						array_push($article_arr, array(
 							"article_id" => $article_row['id'], 
 							"type_id" => $article_row['type_id'], 
+							"source_id" => $article_row['source_id'], 
 							"title" => $article_row['title'], 
 							"article_url" => $article_row['article_url'], 
 							"short_url" => $article_row['short_url'], 
@@ -389,6 +394,7 @@
 				array_push($article_arr, array(
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
+					"source_id" => $article_row['source_id'], 
 					"title" => $article_row['title'], 
 					"article_url" => $article_row['article_url'], 
 					"short_url" => $article_row['short_url'], 
@@ -451,6 +457,7 @@
 				array_push($article_arr, array(
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
+					"source_id" => $article_row['source_id'], 
 					"title" => $article_row['title'], 
 					"article_url" => $article_row['article_url'], 
 					"short_url" => $article_row['short_url'], 

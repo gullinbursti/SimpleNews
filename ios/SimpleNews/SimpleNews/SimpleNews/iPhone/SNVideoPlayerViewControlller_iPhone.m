@@ -117,17 +117,21 @@
 	_timeLabel.text = @"0:00";
 	[self.view addSubview:_timeLabel];
 	
-	UIImageView *playImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 84.0, 84.0)];
-	playImgView.image = [UIImage imageNamed:@"playIcon.png"];
-	
 	_playButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 	_playButton.frame = CGRectMake(121.0, 198.0, 84.0, 84.0);
 	_playButton.alpha = 0.0;
 	[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 	[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 	[_playButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
-	[_playButton addSubview:playImgView];
 	[self.view addSubview:_playButton];
+	
+	_pauseButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+	_pauseButton.frame = CGRectMake(121.0, 198.0, 84.0, 84.0);
+	_pauseButton.alpha = 1.0;
+	[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"pauseButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+	[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"pauseButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+	[_pauseButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:_pauseButton];
 	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
@@ -158,9 +162,10 @@
 		_videoHolderView.frame = CGRectMake(0.0, 150.0, 320.0, 180.0);
 		self.mpc.view.frame = CGRectMake(0.0, 0.0, 320.0, 180.0);
 		_playButton.frame = CGRectMake(121.0, 198.0, 84.0, 84.0);
+		_pauseButton.frame = CGRectMake(121.0, 198.0, 84.0, 84.0);
 		_progressBgImgView.frame = CGRectMake(0.0, 435.0, 320.0, 45.0);
 			
-	} else if (self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft) {
+	} else if (self.interfaceOrientation == UIInterfaceOrientationLandscapeLeft || self.interfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 		_isFlipped = YES;
 		
 //		_bgImgView.transform = CGAffineTransformIdentity;
@@ -172,12 +177,13 @@
 		_videoHolderView.frame = CGRectMake(0.0, 0.0, 480.0, 270.0);
 		self.mpc.view.frame = _videoHolderView.frame;
 		_playButton.frame = CGRectMake(198.0, 121.0, 84.0, 84.0);
+		_pauseButton.frame = CGRectMake(198.0, 121.0, 84.0, 84.0);
 		_progressBgImgView.frame = CGRectMake(0.0, 275.0, 480.0, 45.0);
 		
 		//480x270
 	}
 	
-	return (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
+	return (interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationLandscapeLeft || interfaceOrientation == UIInterfaceOrientationLandscapeRight);
 }
 
 
@@ -214,6 +220,9 @@
 	[self _goStopVideo];
 	_isFinished = YES;
 	
+	[_hudTimer invalidate];
+	_hudTimer = nil;
+	
 	[_progressTimer invalidate];
 	_progressTimer = nil;
 	
@@ -233,10 +242,13 @@
 -(void)_goPlayPause {
 	if (self.mpc.playbackState == MPMoviePlaybackStatePlaying) {
 		[self.mpc pause];
+		_playButton.alpha = 1.0;
+		_pauseButton.alpha = 0.0;
 		
 	} else if (self.mpc.playbackState == MPMoviePlaybackStatePaused) {
 		[self.mpc play];
-		[self _fadeOutControls];
+		_playButton.alpha = 0.0;
+		_pauseButton.alpha = 1.0;
 	}
 	
 	_isPaused = (self.mpc.playbackState == MPMoviePlaybackStatePaused);
@@ -284,13 +296,17 @@
 //		return;
 //	}
 	
-	[_hudTimer invalidate];
-	_hudTimer = nil;
-	_hudTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(_fadeOutControls) userInfo:nil repeats:NO];
 	
-	
-	[self _fadeInControls];
-	[self performSelector:@selector(_fadeOutControls) withObject:nil afterDelay:2.0];
+	if (_isControls) {
+		[_hudTimer invalidate];
+		_hudTimer = nil;
+		
+		[self _fadeOutControls];
+		
+	} else {
+		[self _fadeInControls];
+		_hudTimer = [NSTimer scheduledTimerWithTimeInterval:2.33 target:self selector:@selector(_fadeOutControls) userInfo:nil repeats:NO];
+	}
 }
 
 
@@ -298,15 +314,35 @@
 	_isControls = YES;
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_playButton.alpha = 1.0;
-	}];
+		
+		if (self.mpc.playbackState == MPMoviePlaybackStatePlaying)
+			_pauseButton.alpha = 1.0;
+		
+		else if (self.mpc.playbackState == MPMoviePlaybackStatePaused)
+			_playButton.alpha = 1.0;
+	
+		_articleFollowerView.alpha = 1.0;
+		_progressBgImgView.alpha = 1.0;
+		_progressImgView.alpha = 1.0;
+		_timeLabel.alpha = 1.0;
+		_closeButton.alpha = 1.0;
+	}];	
 }
 
 -(void)_fadeOutControls {
 	_isControls = NO;
 	
+	[_hudTimer invalidate];
+	_hudTimer = nil;
+	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_playButton.alpha = 0.0;
+		_pauseButton.alpha = 0.0;
+		_articleFollowerView.alpha = 0.0;
+		_progressBgImgView.alpha = 0.0;
+		_progressImgView.alpha = 0.0;
+		_timeLabel.alpha = 0.0;
+		_closeButton.alpha = 0.0;
 	}];
 }
 
@@ -336,8 +372,9 @@
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_videoHolderView.alpha = 1.0;
-		_playButton.alpha = 0.0;
 	}];
+	
+	[self _fadeOutControls];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_STARTED" object:nil];
 	_progressTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(_timerTick) userInfo:nil repeats:YES];
@@ -351,6 +388,9 @@
 	
 	[_progressTimer invalidate];
 	_progressTimer = nil;
+	
+	[_hudTimer invalidate];
+	_hudTimer = nil;
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_playButton.alpha = 0.0;
