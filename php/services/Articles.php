@@ -88,7 +88,7 @@
 			$query = 'SELECT * FROM `tblArticles` WHERE `follower_id` = "'. $follower_id .'";';
 			$article_result = mysql_query($query);
 			
-			$query = 'SELECT `avatar_url`, `name` FROM `tblFollowers` WHERE `id` = "'. $follower_id .'";';
+			$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $follower_id .'";';
 			$follower_arr = mysql_fetch_row(mysql_query($query));
 			
 				
@@ -105,6 +105,32 @@
 					));
 				}
 				
+				$lorem_arr = array(
+					"consequat vel illum dolore eu feugiat nulla facilisis", 
+					"commodo consequat duis autem vel eum iriure dolor in hendrerit in vulputate velit esse", 
+					"euismod tincidunt ut laoreet dolore magna aliquam erat volutpat ut wisi enim ad minim veniam quis"
+				);
+				
+				
+				$reaction_id = 1;
+				$reaction_arr = array();
+				for ($i=0; $i<rand(0, 5); $i++) {
+					$line = "";
+					for ($j=0; $j<rand(1, 3); $j++)
+						$line .= ucfirst($lorem_arr[$j]) . ".";
+					
+					array_push($reaction_arr, array(
+						"reaction_id" => $reaction_id, 
+						"thumb_url" => "https://si0.twimg.com/profile_images/180710325/andvari.jpg", 
+						"user_url" => "https://twitter.com/#!/andvari", 
+						"reaction_url" => "http://shelby.tv", 
+						"content" => $line
+					));
+					
+					$reaction_id++;
+				}
+	
+				
 				array_push($article_arr, array(
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
@@ -114,6 +140,7 @@
 					"short_url" => $article_row['short_url'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
 					"twitter_name" => $follower_arr[1], 
+					"twitter_handle" => $follower_arr[2], 
 					"bg_url" => $article_row['image_url'], 
 					"thumb_url" => $article_row['thumb_url'], 
 					"content" => $article_row['content'], 
@@ -121,7 +148,8 @@
 					"video_url" => $article_row['video_url'], 
 					"is_dark" => $article_row['isDark'], 
 					"added" => $article_row['added'], 
-					"tags" => $tag_arr
+					"tags" => $tag_arr, 
+					"reactions" => $reaction_arr
 				));
 				
 				$tot++;
@@ -141,7 +169,7 @@
 				$query = 'SELECT * FROM `tblArticles` WHERE `follower_id` = "'. $follower_id .'";';
 				$article_result = mysql_query($query);
 			
-				$query = 'SELECT `avatar_url`, `name` FROM `tblFollowers` WHERE `id` = "'. $follower_id .'";';
+				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $follower_id .'";';
 				$follower_arr = mysql_fetch_row(mysql_query($query));
 			
 				
@@ -157,6 +185,31 @@
 							"title" => $tag_row['title']
 						));
 					}
+				    
+				    $lorem_arr = array(
+						"consequat vel illum dolore eu feugiat nulla facilisis", 
+						"commodo consequat duis autem vel eum iriure dolor in hendrerit in vulputate velit esse", 
+						"euismod tincidunt ut laoreet dolore magna aliquam erat volutpat ut wisi enim ad minim veniam quis"
+					);  
+					
+					$reaction_id = 1;
+					$reaction_arr = array();
+					for ($i=0; $i<rand(0, 5); $i++) {
+						$line = "";
+						for ($j=0; $j<rand(1, 3); $j++)
+							$line .= ucfirst($lorem_arr[$j]) . ".";
+						
+						array_push($reaction_arr, array(
+							"reaction_id" => $reaction_id, 
+							"thumb_url" => "https://si0.twimg.com/profile_images/180710325/andvari.jpg", 
+							"user_url" => "https://twitter.com/#!/andvari", 
+							"reaction_url" => "http://shelby.tv", 
+							"content" => $line
+						));
+					
+						$reaction_id++;
+					}
+				
 				
 					array_push($article_arr, array(
 						"article_id" => $article_row['id'], 
@@ -168,6 +221,7 @@
 						"tweet_id" => $article_row['tweet_id'], 
 						"tweet_msg" => $article_row['tweet_msg'], 
 						"twitter_name" => $follower_arr[1], 
+						"twitter_handle" => $follower_arr[2], 
 						"bg_url" => $article_row['image_url'], 
 						"thumb_url" => $article_row['thumb_url'], 
 						"content" => $article_row['content'], 
@@ -175,7 +229,8 @@
 						"video_url" => $article_row['video_url'], 
 						"is_dark" => $article_row['isDark'], 
 						"added" => $article_row['added'], 
-						"tags" => $tag_arr
+						"tags" => $tag_arr,
+						"reactions" => $reaction_arr
 					));
 				
 					$tot++;
@@ -198,7 +253,7 @@
 			
 			$tot = 0;
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
-				$query = 'SELECT `avatar_url`, `name` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
+				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
 				$follower_arr = mysql_fetch_row(mysql_query($query));
 				
 				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
@@ -212,6 +267,30 @@
 					));
 				}
 				
+				$lorem_arr = array(
+					"consequat vel illum dolore eu feugiat nulla facilisis", 
+					"commodo consequat duis autem vel eum iriure dolor in hendrerit in vulputate velit esse", 
+					"euismod tincidunt ut laoreet dolore magna aliquam erat volutpat ut wisi enim ad minim veniam quis"
+				);
+				
+				$reaction_id = 1;
+				$reaction_arr = array();
+				for ($i=0; $i<rand(0, 5); $i++) {				
+					$line = "";
+					for ($j=0; $j<rand(1, 3); $j++)
+						$line .= ucfirst($lorem_arr[$j]) . ".";
+						
+					array_push($reaction_arr, array(
+						"reaction_id" => $reaction_id, 
+						"thumb_url" => "https://si0.twimg.com/profile_images/180710325/andvari.jpg", 
+						"user_url" => "https://twitter.com/#!/andvari", 
+						"reaction_url" => "http://shelby.tv", 
+						"content" => $line
+					));
+					
+					$reaction_id++;
+				}
+				
 				array_push($article_arr, array(
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
@@ -222,6 +301,7 @@
 					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
 					"twitter_name" => $follower_arr[1], 
+					"twitter_handle" => $follower_arr[2], 
 					"bg_url" => $article_row['image_url'], 
 					"thumb_url" => $article_row['thumb_url'], 
 					"content" => $article_row['content'], 
@@ -229,7 +309,8 @@
 					"video_url" => $article_row['video_url'], 
 					"is_dark" => $article_row['isDark'], 
 					"added" => $article_row['added'], 
-					"tags" => $tag_arr
+					"tags" => $tag_arr,
+					"reactions" => $reaction_arr
 				));
 				
 				$tot++;
@@ -248,7 +329,7 @@
 			
 			$tot = 0;
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
-				$query = 'SELECT `avatar_url`, `name` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
+				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
 				$follower_arr = mysql_fetch_row(mysql_query($query));
 				
 				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
@@ -262,6 +343,30 @@
 					));
 				}
 				
+				$lorem_arr = array(
+					"consequat vel illum dolore eu feugiat nulla facilisis", 
+					"commodo consequat duis autem vel eum iriure dolor in hendrerit in vulputate velit esse", 
+					"euismod tincidunt ut laoreet dolore magna aliquam erat volutpat ut wisi enim ad minim veniam quis"
+				);
+				
+				$reaction_id = 1;
+				$reaction_arr = array();
+				for ($i=0; $i<rand(0, 5); $i++) {  
+					$line = "";
+					for ($j=0; $j<rand(1, 3); $j++)
+						$line .= ucfirst($lorem_arr[$j]) . ".";
+						
+					array_push($reaction_arr, array(
+						"reaction_id" => $reaction_id, 
+						"thumb_url" => "https://si0.twimg.com/profile_images/180710325/andvari.jpg", 
+						"user_url" => "https://twitter.com/#!/andvari", 
+						"reaction_url" => "http://shelby.tv", 
+						"content" => $line
+					));
+					
+					$reaction_id++;
+				}
+				
 				array_push($article_arr, array(
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
@@ -272,6 +377,7 @@
 					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
 					"twitter_name" => $follower_arr[1], 
+					"twitter_handle" => $follower_arr[2], 
 					"bg_url" => $article_row['image_url'], 
 					"thumb_url" => $article_row['thumb_url'], 
 					"content" => $article_row['content'], 
@@ -279,7 +385,8 @@
 					"video_url" => $article_row['video_url'], 
 					"is_dark" => $article_row['isDark'], 
 					"added" => $article_row['added'], 
-					"tags" => $tag_arr
+					"tags" => $tag_arr, 
+					"reactions" => $reaction_arr
 				));
 				
 				$tot++;
@@ -313,7 +420,7 @@
 					if (!$isAdded) {
 						array_push($added_arr, $article_row['id']);
 					 
-						$query = 'SELECT `avatar_url`, `name` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
+						$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
 						$follower_arr = mysql_fetch_row(mysql_query($query));
 				
 						$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
@@ -326,6 +433,30 @@
 								"title" => $tag_row['title']
 							));
 						}
+						
+						$lorem_arr = array(
+							"consequat vel illum dolore eu feugiat nulla facilisis", 
+							"commodo consequat duis autem vel eum iriure dolor in hendrerit in vulputate velit esse", 
+							"euismod tincidunt ut laoreet dolore magna aliquam erat volutpat ut wisi enim ad minim veniam quis"
+						);
+					
+						$reaction_id = 1;
+						$reaction_arr = array();
+						for ($i=0; $i<rand(0, 5); $i++) {
+							$line = "";
+							for ($j=0; $j<rand(1, 3); $j++)
+								$line .= ucfirst($lorem_arr[$j]) . ".";
+						
+							array_push($reaction_arr, array(
+								"reaction_id" => $reaction_id, 
+								"thumb_url" => "https://si0.twimg.com/profile_images/180710325/andvari.jpg", 
+								"user_url" => "https://twitter.com/#!/andvari", 
+								"reaction_url" => "http://shelby.tv", 
+								"content" => $line
+							));
+					
+							$reaction_id++;
+						}
 				
 						array_push($article_arr, array(
 							"article_id" => $article_row['id'], 
@@ -337,6 +468,7 @@
 							"tweet_id" => $article_row['tweet_id'], 
 							"tweet_msg" => $article_row['tweet_msg'], 
 							"twitter_name" => $follower_arr[1], 
+							"twitter_handle" => $follower_arr[2], 
 							"bg_url" => $article_row['image_url'], 
 							"thumb_url" => $article_row['thumb_url'], 
 							"content" => $article_row['content'], 
@@ -344,7 +476,8 @@
 							"video_url" => $article_row['video_url'], 
 							"is_dark" => $article_row['isDark'], 
 							"added" => $article_row['added'], 
-							"tags" => $tag_arr
+							"tags" => $tag_arr, 
+							"reactions" => $reaction_arr
 						));
 				
 						$tot++;
@@ -377,7 +510,7 @@
 			
 			$tot = 0;
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
-				$query = 'SELECT `avatar_url`, `name` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
+				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
 				$follower_arr = mysql_fetch_row(mysql_query($query));
 				
 				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
@@ -391,6 +524,30 @@
 					));
 				}
 				
+				$lorem_arr = array(
+					"consequat vel illum dolore eu feugiat nulla facilisis", 
+					"commodo consequat duis autem vel eum iriure dolor in hendrerit in vulputate velit esse", 
+					"euismod tincidunt ut laoreet dolore magna aliquam erat volutpat ut wisi enim ad minim veniam quis"
+				);
+				
+				$reaction_id = 1;
+				$reaction_arr = array();
+				for ($i=0; $i<rand(0, 5); $i++) {
+					$line = "";
+					for ($j=0; $j<rand(1, 3); $j++)
+						$line .= ucfirst($lorem_arr[$j]) . ".";
+						
+					array_push($reaction_arr, array(
+						"reaction_id" => $reaction_id, 
+						"thumb_url" => "https://si0.twimg.com/profile_images/180710325/andvari.jpg", 
+						"user_url" => "https://twitter.com/#!/andvari", 
+						"reaction_url" => "http://shelby.tv", 
+						"content" => $line
+					));
+					
+					$reaction_id++;
+				}
+				
 				array_push($article_arr, array(
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
@@ -401,6 +558,7 @@
 					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
 					"twitter_name" => $follower_arr[1], 
+					"twitter_handle" => $follower_arr[2], 
 					"bg_url" => $article_row['image_url'], 
 					"thumb_url" => $article_row['thumb_url'], 
 					"content" => $article_row['content'], 
@@ -408,7 +566,8 @@
 					"video_url" => $article_row['video_url'], 
 					"is_dark" => $article_row['isDark'], 
 					"added" => $article_row['added'], 
-					"tags" => $tag_arr
+					"tags" => $tag_arr, 
+					"reactions" => $reaction_arr
 				));
 				
 				$tot++;
@@ -440,7 +599,7 @@
 			
 			$tot = 0;
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
-				$query = 'SELECT `avatar_url`, `name` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
+				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
 				$follower_arr = mysql_fetch_row(mysql_query($query));
 				
 				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
@@ -454,6 +613,30 @@
 					));
 				}
 				
+				$lorem_arr = array(
+					"consequat vel illum dolore eu feugiat nulla facilisis", 
+					"commodo consequat duis autem vel eum iriure dolor in hendrerit in vulputate velit esse", 
+					"euismod tincidunt ut laoreet dolore magna aliquam erat volutpat ut wisi enim ad minim veniam quis"
+				);
+				
+				$reaction_id = 1;
+				$reaction_arr = array();
+				for ($i=0; $i<rand(0, 5); $i++) { 
+					$line = "";
+					for ($j=0; $j<rand(1, 3); $j++)
+						$line .= ucfirst($lorem_arr[$j]) . ".";
+						
+					array_push($reaction_arr, array(
+						"reaction_id" => $reaction_id, 
+						"thumb_url" => "https://si0.twimg.com/profile_images/180710325/andvari.jpg", 
+						"user_url" => "https://twitter.com/#!/andvari", 
+						"reaction_url" => "http://shelby.tv", 
+						"content" => $line
+					));
+					
+					$reaction_id++;
+				}
+				
 				array_push($article_arr, array(
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
@@ -464,6 +647,7 @@
 					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
 					"twitter_name" => $follower_arr[1], 
+					"twitter_handle" => $follower_arr[2], 
 					"bg_url" => $article_row['image_url'], 
 					"thumb_url" => $article_row['thumb_url'], 
 					"content" => $article_row['content'], 
@@ -471,7 +655,8 @@
 					"video_url" => $article_row['video_url'], 
 					"is_dark" => $article_row['isDark'], 
 					"added" => $article_row['added'], 
-					"tags" => $tag_arr
+					"tags" => $tag_arr, 
+					"reactions" => $reaction_arr
 				));
 				
 				$tot++;

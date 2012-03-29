@@ -35,8 +35,6 @@
 	
 	UIButton *_greyGridButton;
 	UIButton *_whiteGridButton;
-	UIButton *_greyShareButton;
-	UIButton *_whiteShareButton;
 	
 	UIView *_blackMatteView;
 	

@@ -11,6 +11,8 @@
 #import "SNArticleVO.h"
 #import "SNProfileArticleView_iPhone.h"
 
+#import "SNOptionsPageViewController.h"
+
 #import "EGOImageView.h"
 
 @implementation SNFollowerProfileViewController_iPhone
@@ -110,6 +112,32 @@
 	nameLabel.text = _vo.follower_name;
 	[_scrollView addSubview:nameLabel];
 	
+	int offset = 0;
+	for (NSNumber *srcType in _vo.sources) {
+		UIImageView *iconImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(100.0 + offset, 55.0, 14.0, 14.0)] autorelease];
+		
+		switch ([srcType intValue]) {
+			case 1:
+				iconImgView.image = [UIImage imageNamed:@"twitterIcon.png"];
+				break;
+				
+			case 2:
+				iconImgView.image = [UIImage imageNamed:@"facebookIcon.png"];
+				break;
+				
+			case 3:
+				iconImgView.image = [UIImage imageNamed:@"wordPressIcon.png"];
+				break;
+				
+			case 4:
+				iconImgView.image = [UIImage imageNamed:@"tumblerIcon.png"];
+				break;
+		}
+		
+		[_scrollView addSubview:iconImgView];
+		offset += 18;
+	}
+	
 	UILabel *infoLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 107.0, 296.0, _infoSize.height)] autorelease];
 	infoLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:12];
 	infoLabel.textColor = [UIColor colorWithWhite:0.816 alpha:1.0];
@@ -126,6 +154,12 @@
 	
 	else
 		total = @"%d news stories";
+	
+	UIButton *profileButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+	profileButton.frame = CGRectMake(0.0, 0.0, _scrollView.frame.size.width, 100.0 + _infoSize.height);
+	[profileButton addTarget:self action:@selector(_goProfilePage) forControlEvents:UIControlEventTouchUpInside];
+	[_scrollView addSubview:profileButton];
+	
 	
 	UILabel *totalLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 135.0 + _infoSize.height, 214.0, 26.0)];
 	totalLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
@@ -156,6 +190,12 @@
 
 -(void)_goArticles {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_NOW_PLAYING" object:nil];
+}
+
+-(void)_goProfilePage {
+	SNOptionsPageViewController *tweetPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/", _vo.handle]]] autorelease];
+	[self.navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:tweetPageViewController animated:YES];
 }
 
 #pragma mark - ScrollView Delegates

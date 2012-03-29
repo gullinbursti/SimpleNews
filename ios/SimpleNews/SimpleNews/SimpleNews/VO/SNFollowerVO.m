@@ -11,7 +11,7 @@
 @implementation SNFollowerVO
 
 @synthesize dictionary;
-@synthesize follower_id, totalArticles, handle, follower_name, avatar_url, blurb;
+@synthesize follower_id, totalArticles, handle, follower_name, avatar_url, blurb, sources;
 
 +(SNFollowerVO *)followerWithDictionary:(NSDictionary *)dictionary {
 	
@@ -24,6 +24,7 @@
 	vo.avatar_url = [dictionary objectForKey:@"avatar_url"];
 	vo.blurb = [dictionary objectForKey:@"blurb"];
 	vo.totalArticles = [[dictionary objectForKey:@"article_total"] intValue];
+	vo.sources = [dictionary objectForKey:@"source_types"];
 	
 	return (vo);
 }
@@ -34,6 +35,7 @@
 	self.follower_name = nil;
 	self.avatar_url = nil;
 	self.blurb = nil;
+	self.sources = nil;
 	
 	[super dealloc];
 }

@@ -14,8 +14,11 @@
 #import "EGOImageLoader.h"
 #import "SNArticleFollowerInfoView_iPhone.h"
 
+#import "SNReactionVO.h"
+#import "SNArticleReactionItemView.h"
+
 @interface SNArticleCardView_iPhone()
--(void)_goExpandCollapse;
+-(void)_goExpandCollapse:(id)sender;
 -(void)_goPlayVideo;
 -(void)_goReadMore;
 @end
@@ -37,16 +40,22 @@
 		self.userInteractionEnabled = NO;
 		[self setBackgroundColor:[UIColor clearColor]];
 		
+		_reactionViews = [NSMutableArray new];
+		
 		_tweetSize = [_vo.tweetMessage sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		_titleSize = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:22] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		_contentSize = [_vo.content sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		
+		int reactionsHeight = 50;
+		for (SNReactionVO *vo in _vo.reactions)
+			reactionsHeight += (30.0 + [vo.content sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(230.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip].height);
 		
 		EGOImageView *bgImageView = [[[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)] autorelease];
 		bgImageView.delegate = self;
 		bgImageView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 		[_bgView addSubview:bgImageView];
 		
-		_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - kBaseHeaderHeight, _holderView.frame.size.width, _tweetSize.height + _titleSize.height + _contentSize.height + 223.0);
+		_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - kBaseHeaderHeight, _holderView.frame.size.width, _tweetSize.height + _titleSize.height + _contentSize.height + reactionsHeight + 250.0);
 		_holderView.alpha = 0.0;
 		
 		_headerView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, kBaseHeaderHeight)] autorelease];
@@ -61,7 +70,7 @@
 		_expandCollapseButton.frame = CGRectMake(284.0, 12.0, 24.0, 24.0);
 		[_expandCollapseButton setBackgroundImage:[UIImage imageNamed:@"upDownArrow_nonActive.png"] forState:UIControlStateNormal];
 		[_expandCollapseButton setBackgroundImage:[UIImage imageNamed:@"upDownArrow_Active.png"] forState:UIControlStateHighlighted];
-		[_expandCollapseButton addTarget:self action:@selector(_goExpandCollapse) forControlEvents:UIControlEventTouchUpInside];
+		[_expandCollapseButton addTarget:self action:@selector(_goExpandCollapse:) forControlEvents:UIControlEventTouchUpInside];
 		[_holderView addSubview:_expandCollapseButton];
 		
 		
@@ -103,6 +112,12 @@
 		tweetLabel.text = _vo.tweetMessage;
 		tweetLabel.numberOfLines = 0;
 		[_scrollView addSubview:tweetLabel];
+		
+		
+		UIButton *tweetButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		tweetButton.frame = tweetLabel.frame;
+		[tweetButton addTarget:self action:@selector(_goTweetPage) forControlEvents:UIControlEventTouchUpInside];
+		[_scrollView addSubview:tweetButton];
 		
 		UIImageView *twitterIcoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 17.0 + _tweetSize.height, 14.0, 14.0)] autorelease];
 		twitterIcoImgView.image = [UIImage imageNamed:@"twitterIcon.png"];
@@ -156,6 +171,11 @@
 		titleLabel.numberOfLines = 0;
 		[_scrollView addSubview:titleLabel];
 		
+		UIButton *titleButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		titleButton.frame = titleLabel.frame;
+		[titleButton addTarget:self action:@selector(_goSourcePage) forControlEvents:UIControlEventTouchUpInside];
+		[_scrollView addSubview:titleButton];
+		
 		UILabel *contentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 148.0 + _titleSize.height + _tweetSize.height, 296.0, _contentSize.height)] autorelease];
 		contentLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
 		contentLabel.textColor = [UIColor whiteColor];
@@ -178,6 +198,42 @@
 		[readMoreBtn setTitle:@"Read More" forState:UIControlStateNormal];
 		[readMoreBtn addTarget:self action:@selector(_goReadMore) forControlEvents:UIControlEventTouchUpInside];
 		[_scrollView addSubview:readMoreBtn];
+		
+		UIView *reactionsView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 217.0 + _titleSize.height + _tweetSize.height + _contentSize.height, self.frame.size.width, 50.0 + reactionsHeight)] autorelease];
+		[reactionsView setBackgroundColor:[UIColor colorWithWhite:0.176 alpha:1.0]];
+		[_scrollView addSubview:reactionsView];
+		
+		UILabel *reactionsLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 20.0, 250.0, 14.0)] autorelease];
+		reactionsLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
+		reactionsLabel.textColor = [UIColor colorWithWhite:0.294 alpha:1.0];
+		reactionsLabel.backgroundColor = [UIColor clearColor];
+		reactionsLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+		reactionsLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+		reactionsLabel.text = @"REACTIONS";
+		[reactionsView addSubview:reactionsLabel];
+		
+		int offset = 50;
+		for (SNReactionVO *vo in _vo.reactions) {
+			NSLog(@"OFFSET:%d", offset);
+			
+			CGSize txtSize = [vo.content sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(230.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+			
+			SNArticleReactionItemView *reactionView = [[[SNArticleReactionItemView alloc] initWithFrame:CGRectMake(0.0, offset, _scrollView.frame.size.width, 30.0 + txtSize.height) reactionVO:vo] autorelease];
+			[_reactionViews addObject:reactionView];
+			[reactionsView addSubview:reactionView];
+			
+			offset += (30.0 + txtSize.height);
+		}
+		
+		UISwipeGestureRecognizer *swipeUpRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_goExpandCollapse:)];
+		swipeUpRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
+		[self addGestureRecognizer:swipeUpRecognizer];
+		[swipeUpRecognizer release];
+		
+		UISwipeGestureRecognizer *swipeDnRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_goExpandCollapse:)];
+		swipeDnRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+		[self addGestureRecognizer:swipeDnRecognizer];
+		[swipeDnRecognizer release];
 	}
 	
 	return (self);
@@ -194,14 +250,14 @@
 }
 
 
--(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-	UITouch *touch = [touches anyObject];
-	
-	if ([touch view] == _bgView || [touch view] == _holderView) {
-		[self _goExpandCollapse];
-		return;
-	}
-}
+//-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+//	UITouch *touch = [touches anyObject];
+//	
+//	if ([touch view] == _bgView || [touch view] == _holderView) {
+//		[self _goExpandCollapse:nil];
+//		return;
+//	}
+//}
 
 #pragma mark - Interaction handlers
 -(void)resetContent {
@@ -248,7 +304,7 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"START_VIDEO" object:_vo];
 }
 
--(void)_goExpandCollapse {
+-(void)_goExpandCollapse:(id)sender {
 	NSLog(@"_goExpandCollapse");
 	
 	_isExpanded = !_isExpanded;
@@ -258,7 +314,7 @@
 		ang = 180;
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"HIDE_BUTTONS" object:nil];
 		
-		[UIView animateWithDuration:0.5 animations:^(void) {
+		[UIView animateWithDuration:0.33 animations:^(void) {
 			_holderView.frame = CGRectMake(_holderView.frame.origin.x, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		
 		} completion:^(BOOL finished) {
@@ -281,7 +337,7 @@
 			_iconsCoverImgView.frame = CGRectMake(0.0, _iconsCoverImgView.frame.origin.y, _iconsCoverImgView.frame.size.width, _iconsCoverImgView.frame.size.height);
 		}];
 		
-		[UIView animateWithDuration:0.5 animations:^(void) {
+		[UIView animateWithDuration:0.33 animations:^(void) {
 			_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - (kBaseHeaderHeight + _tweetSize.height + 45.0), _holderView.frame.size.width, _holderView.frame.size.height);
 		
 		} completion:^(BOOL finished) {
@@ -309,7 +365,7 @@
 }
 
 -(void)_goReadMore {
-	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SOURCE_PAGE" object:_vo.article_url];
 }
 
 -(void)_goFavorite {
@@ -317,11 +373,21 @@
 }
 
 -(void)_goShare {
-	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHARE_SHEET" object:_vo];
 }
 
 -(void)_goPerson {
 	
+}
+
+-(void)_goTweetPage {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TWEET_PAGE" object:[NSString stringWithFormat:@"https://twitter.com/#!/%@/status/%@/", _vo.twitterHandle, _vo.tweet_id]];
+	//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/status/%@/", _vo.twitterHandle, _vo.tweet_id]]];
+}
+
+-(void)_goSourcePage {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SOURCE_PAGE" object:_vo.article_url];
+	//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:_vo.article_url]];
 }
 
 
@@ -364,7 +430,7 @@
 
 #pragma mark - ImageLoader Delegates
 -(void)imageViewLoadedImage:(EGOImageView *)imageView {
-	NSLog(@"IMAGE LOADED:[%@]", imageView.imageURL);
+	//NSLog(@"IMAGE LOADED:[%@]", imageView.imageURL);
 }
 
 -(void)imageViewFailedToLoadImage:(EGOImageView *)imageView error:(NSError *)error {

@@ -15,6 +15,7 @@
 
 @interface SNArticleCardView_iPhone : SNBaseArticleCardView_iPhone <UIScrollViewDelegate, EGOImageViewDelegate> {
 	NSMutableArray *_tweets;
+	NSMutableArray *_reactionViews;
 	SNArticleVO *_vo;
 	
 	CGSize _tweetSize;

@@ -97,16 +97,30 @@
 				$follower_result = mysql_query($query);
 				
 				while ($follower_row = mysql_fetch_array($follower_result, MYSQL_BOTH)) {
-			   		$query = 'SELECT `id` FROM `tblArticles` WHERE `follower_id` = "'. $follower_row['id'] .'"';
-					$article_arr = mysql_query($query);
-				
+			   		$query = 'SELECT `id`, `source_id` FROM `tblArticles` WHERE `follower_id` = "'. $follower_row['id'] .'"';
+					$article_result = mysql_query($query);
+					$article_row = mysql_fetch_row(mysql_query($query));
+					
+					$isFound = false;
+					$src_arr = array();
+					while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
+						foreach ($src_arr as $key) {
+							if ($key == $article_row['source_id'])
+								$isFound = true;
+						}
+						
+						if (!$isFound)
+							array_push($src_arr, $article_row['source_id']);
+					}
+					
 					array_push($follower_arr, array(
 						"follower_id" => $follower_row['id'], 
 						"handle" => $follower_row['handle'],
 						"name" => $follower_row['name'], 
 						"avatar_url" => $follower_row['avatar_url'], 
 						"blurb" => $follower_row['description'], 
-						"article_total" => mysql_num_rows($article_arr)
+						"article_total" => mysql_num_rows($article_result), 
+						"source_types" => $src_arr
 					));
 		    	}
 				

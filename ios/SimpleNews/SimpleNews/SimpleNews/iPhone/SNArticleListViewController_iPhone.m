@@ -18,6 +18,7 @@
 
 #import "SNFacebookCardView_iPhone.h"
 #import "SNVideoPlayerViewControlller_iPhone.h"
+#import "SNOptionsPageViewController.h"
 
 @interface SNArticleListViewController_iPhone()
 -(void)_goBack;
@@ -48,6 +49,13 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showButtons:) name:@"SHOW_BUTTONS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideButtons:) name:@"HIDE_BUTTONS" object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTweetPage:) name:@"SHOW_TWEET_PAGE" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSourcePage:) name:@"SHOW_SOURCE_PAGE" object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showReactionProfile:) name:@"SHOW_REACTION_PROFILE" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showReactionPage:) name:@"SHOW_REACTION_PAGE" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterTimeline:) name:@"TWITTER_TIMELINE" object:nil];
 		
@@ -130,6 +138,11 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"CANCEL_SHARE" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_BUTTONS" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"HIDE_BUTTONS" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_TWITTER_PROFILE" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_TWEET_PAGE" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_SOURCE_PAGE" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_REACTION_PROFILE" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_REACTION_PAGE" object:nil];
 	
 	//[_articles release];
 	//[_cardViews release];
@@ -145,10 +158,7 @@
 	[_loaderView release];
 	
 	[_greyGridButton release];
-	[_whiteGridButton release];
-	[_greyShareButton release];
-	[_whiteShareButton release];
-	
+	[_whiteGridButton release];	
 	
 	[_paginationView release];
 	
@@ -184,21 +194,7 @@
 	[_whiteGridButton setBackgroundImage:[UIImage imageNamed:@"gridIcon_Active.png"] forState:UIControlStateHighlighted];
 	[_whiteGridButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_whiteGridButton];
-	
-	_greyShareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_greyShareButton.frame = CGRectMake(272.0, 0.0, 44.0, 44.0);
-	[_greyShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconGrey_nonActive.png"] forState:UIControlStateNormal];
-	[_greyShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconGrey_Active.png"] forState:UIControlStateHighlighted];
-	[_greyShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:_greyShareButton];
-	
-	_whiteShareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_whiteShareButton.frame = CGRectMake(272.0, 0.0, 44.0, 44.0);
-	[_whiteShareButton setBackgroundImage:[UIImage imageNamed:@"shareIcon_nonActive.png"] forState:UIControlStateNormal];
-	[_whiteShareButton setBackgroundImage:[UIImage imageNamed:@"shareIcon_Active.png"] forState:UIControlStateHighlighted];
-	[_whiteShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:_whiteShareButton];
-	
+		
 	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
 	_blackMatteView.alpha = 0.0;
@@ -250,12 +246,6 @@
 	_timer = nil;
 }
 
--(void)_goShare {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHARE_SHEET" object:(SNArticleVO *)[_articles objectAtIndex:_cardIndex - 1]];
-	
-	[_timer invalidate];
-	_timer = nil;
-}
 
 #pragma mark - Interaction handlers
 -(void)_introFirstCard {
@@ -403,17 +393,11 @@
 	[UIView animateWithDuration:0.25 animations:^(void) {
 		if (vo.isDark) {
 			_greyGridButton.alpha = 1.0;
-			_greyShareButton.alpha = 1.0;
-			
 			_whiteGridButton.alpha = 0.0;
-			_whiteShareButton.alpha = 0.0;
 			
 		} else {
 			_whiteGridButton.alpha = 1.0;
-			_whiteShareButton.alpha = 1.0;
-			
 			_greyGridButton.alpha = 0.0;
-			_greyShareButton.alpha = 0.0;
 		}
 	}];
 }
@@ -553,11 +537,9 @@
 	
 	if (vo.isDark) {
 		_greyGridButton.alpha = 1.0;
-		_greyShareButton.alpha = 1.0;
 		
 	} else {
 		_whiteGridButton.alpha = 1.0;
-		_whiteShareButton.alpha = 1.0;
 	}
 	
 	_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
@@ -568,11 +550,9 @@
 	
 	if (vo.isDark) {
 		_greyGridButton.alpha = 0.0;
-		_greyShareButton.alpha = 0.0;
 		
 	} else {
 		_whiteGridButton.alpha = 0.0;
-		_whiteShareButton.alpha = 0.0;
 	}
 	
 	[_timer invalidate];
@@ -581,6 +561,36 @@
 
 -(void)_twitterTimeline:(NSNotification *)notification {
 	_timelineTweets = (NSMutableArray *)[notification object];
+}
+
+-(void)_showTwitterProfile:(NSNotification *)notification {
+	SNOptionsPageViewController *tweetPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]]] autorelease];
+	[self.navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:tweetPageViewController animated:YES];
+}
+
+-(void)_showTweetPage:(NSNotification *)notification {
+	SNOptionsPageViewController *tweetPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]]] autorelease];
+	[self.navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:tweetPageViewController animated:YES];
+}
+
+-(void)_showSourcePage:(NSNotification *)notification {
+	SNOptionsPageViewController *tweetPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]]] autorelease];
+	[self.navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:tweetPageViewController animated:YES];
+}
+
+-(void)_showReactionPage:(NSNotification *)notification {
+	SNOptionsPageViewController *tweetPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]]] autorelease];
+	[self.navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:tweetPageViewController animated:YES];
+}
+
+-(void)_showReactionProfile:(NSNotification *)notification {
+	SNOptionsPageViewController *tweetPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]]] autorelease];
+	[self.navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:tweetPageViewController animated:YES];
 }
 
 
@@ -663,7 +673,7 @@
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
-	//NSLog(@"SNArticleListViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	NSLog(@"SNArticleListViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
 	if ([request isEqual:_articlesRequest]) {
 	

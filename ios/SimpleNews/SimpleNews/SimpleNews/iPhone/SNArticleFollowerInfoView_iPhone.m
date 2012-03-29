@@ -55,6 +55,11 @@
 		dateLabel.text = timeSince;
 		dateLabel.numberOfLines = 0;
 		[self addSubview:dateLabel];
+		
+		UIButton *twitterButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		twitterButton.frame = self.frame;
+		[twitterButton addTarget:self action:@selector(_goTwitterPage) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:twitterButton];
 	}
 	
 	return (self);
@@ -63,4 +68,11 @@
 -(void)dealloc {
 	[super dealloc];
 }
+
+
+#pragma mark - Navigation
+-(void)_goTwitterPage {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TWITTER_PROFILE" object:[NSString stringWithFormat:@"https://twitter.com/#!/%@/", _vo.twitterHandle]];
+}
+
 @end

@@ -19,6 +19,7 @@
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) NSString *tweet_id;
 @property (nonatomic, retain) NSString *twitterName;
+@property (nonatomic, retain) NSString *twitterHandle;
 @property (nonatomic, retain) NSString *tweetMessage;
 @property (nonatomic, retain) NSString *article_url;
 @property (nonatomic, retain) NSString *short_url;
@@ -29,6 +30,7 @@
 @property (nonatomic, retain) NSString *avatarImage_url;
 @property (nonatomic, retain) NSDate *added;
 @property (nonatomic, retain) NSMutableArray *tags;
+@property (nonatomic, retain) NSMutableArray *reactions;
 @property (nonatomic) BOOL isDark;
 
 @end
