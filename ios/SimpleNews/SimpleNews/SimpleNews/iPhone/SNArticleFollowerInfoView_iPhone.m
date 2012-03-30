@@ -57,7 +57,7 @@
 		[self addSubview:dateLabel];
 		
 		UIButton *twitterButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
-		twitterButton.frame = self.frame;
+		twitterButton.frame = CGRectMake(0.0, 0.0, 280.0, self.frame.size.height);
 		[twitterButton addTarget:self action:@selector(_goTwitterPage) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:twitterButton];
 	}

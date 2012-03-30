@@ -59,12 +59,11 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterTimeline:) name:@"TWITTER_TIMELINE" object:nil];
 		
+		_isLastCard = NO;
 		
 		_articles = [NSMutableArray new];
 		_cardViews = [NSMutableArray new];
 		_timelineTweets = [NSMutableArray new];
-		
-		_isSwiping = NO;
 		
 		[[SNTwitterCaller sharedInstance] userTimeline];
 	}
@@ -281,8 +280,11 @@
 	
 	if (_cardIndex < [_cardViews count] - 1) {
 		
-		[_timer invalidate];
-		_timer = nil;
+		if (!_isLastCard) {
+			[_timer invalidate];
+			_timer = nil;
+		}
+		
 		
 		_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
 		
@@ -298,14 +300,16 @@
 			[previousCardView introContent];
 			[currentCardView resetContent];
 			
-			_isSwiping = NO;
 			_cardIndex++;
+			_isLastCard = NO;
 			
 			[self _transitionBtns];
 			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
 		}];
 			
 	} else {
+		_isLastCard = YES;
+		
 		if (![_loaderView isLoading]) {
 			[_loaderView introMe];
 			[self performSelector:@selector(_doneLoading) withObject:nil afterDelay:3.0];
@@ -330,8 +334,11 @@
 	NSLog(@"NEXT CARD");
 	
 	if (_cardIndex > 0) {
-		[_timer invalidate];
-		_timer = nil;
+		
+		if (!_isLastCard) {
+			[_timer invalidate];
+			_timer = nil;
+		}
 		
 		_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
 		
@@ -356,15 +363,16 @@
 			
 			[currentCardView resetContent];
 			[nextCardView introContent];
-			
-			_isSwiping = NO;
 			_cardIndex--;
+			_isLastCard = NO;
 			
 			[self _transitionBtns];
 			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
 		}];
 				
 	} else {
+		_isLastCard = YES;
+		
 		if (![_loaderView isLoading]) {
 			[_loaderView introMe];
 			[self performSelector:@selector(_doneLoading) withObject:nil afterDelay:3.0];
@@ -403,7 +411,6 @@
 }
 
 -(void)_doneLoading {
-	_isSwiping = NO;
 	[_loaderView outroMe];	
 }
 

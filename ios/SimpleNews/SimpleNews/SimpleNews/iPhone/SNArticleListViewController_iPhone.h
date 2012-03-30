@@ -29,7 +29,7 @@
 	NSMutableArray *_timelineTweets;
 	
 	int _cardIndex;
-	BOOL _isSwiping;
+	BOOL _isLastCard;
 	
 	SNShareSheetView_iPhone *_shareSheetView;
 	
