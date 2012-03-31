@@ -119,6 +119,9 @@
 		[tweetButton addTarget:self action:@selector(_goTweetPage) forControlEvents:UIControlEventTouchUpInside];
 		[_scrollView addSubview:tweetButton];
 		
+		UIImageView *socialIconImgView;
+		UILabel *socialLabel;
+		
 		UIImageView *twitterIcoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 17.0 + _tweetSize.height, 14.0, 14.0)] autorelease];
 		twitterIcoImgView.image = [UIImage imageNamed:@"twitterIcon.png"];
 		[_scrollView addSubview:twitterIcoImgView];

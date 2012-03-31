@@ -333,9 +333,7 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 	SNAppDelegate *delegate = (SNAppDelegate *)[[UIApplication sharedApplication] delegate];
 	[self storeAuthData:[[delegate facebook] accessToken] expiresAt:[[delegate facebook] expirationDate]];
 	
-	NSLog(@"FB LOGGED IN");
-	
-	
+	NSLog(@"FB LOGGED IN");	
 }
 
 -(void)fbDidExtendToken:(NSString *)accessToken expiresAt:(NSDate *)expiresAt {
