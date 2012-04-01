@@ -10,7 +10,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 #import "SNArticleVO.h"
-#import "SNArticleFollowerInfoView_iPhone.h"
+#import "SNArticleInfluencerInfoView_iPhone.h"
 #import "ASIHTTPRequest.h"
 
 @interface SNVideoPlayerViewControlller_iPhone : UIViewController <ASIHTTPRequestDelegate> {
@@ -27,7 +27,7 @@
 	NSTimer *_hudTimer;
 	
 	SNArticleVO *_vo;
-	SNArticleFollowerInfoView_iPhone *_articleFollowerView;
+	SNArticleInfluencerInfoView_iPhone *_articleInfluencerView;
 	
 	UIImageView *_bgImgView;
 	UIView *_videoHolderView;

@@ -1,12 +1,12 @@
 //
-//  SNFollowerProfileViewController_iPhone.m
+//  SNInfluencerProfileViewController_iPhone.m
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.25.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import "SNFollowerProfileViewController_iPhone.h"
+#import "SNInfluencerProfileViewController_iPhone.h"
 #import "SNAppDelegate.h"
 #import "SNArticleVO.h"
 #import "SNProfileArticleView_iPhone.h"
@@ -15,15 +15,15 @@
 
 #import "EGOImageView.h"
 
-@implementation SNFollowerProfileViewController_iPhone
+@implementation SNInfluencerProfileViewController_iPhone
 
--(id)initWithFollowerVO:(SNFollowerVO *)vo {
+-(id)initWithInfluencerVO:(SNInfluencerVO *)vo {
 	if ((self = [super init])) {
 		_vo = vo;
 		
 		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-		[_articlesRequest setPostValue:[SNAppDelegate subscribedFollowers] forKey:@"followers"];
+		[_articlesRequest setPostValue:[SNAppDelegate subscribedInfluencers] forKey:@"influencers"];
 		[_articlesRequest setTimeOutSeconds:30];
 		[_articlesRequest setDelegate:self];
 		[_articlesRequest startAsynchronous];
@@ -109,7 +109,7 @@
 	nameLabel.backgroundColor = [UIColor clearColor];
 	nameLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
 	nameLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-	nameLabel.text = _vo.follower_name;
+	nameLabel.text = _vo.influencer_name;
 	[_scrollView addSubview:nameLabel];
 	
 	int offset = 0;

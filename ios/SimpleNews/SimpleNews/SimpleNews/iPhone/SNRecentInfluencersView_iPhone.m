@@ -1,17 +1,17 @@
 //
-//  SNRecentFollowersView_iPhone.m
+//  SNRecentInfluencersView_iPhone.m
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.20.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import "SNRecentFollowersView_iPhone.h"
+#import "SNRecentInfluencersView_iPhone.h"
 
-@interface SNRecentFollowersView_iPhone()
+@interface SNRecentInfluencersView_iPhone()
 @end
 
-@implementation SNRecentFollowersView_iPhone
+@implementation SNRecentInfluencersView_iPhone
 #define kThumbSize 36.0
 
 -(id)initWithFrame:(CGRect)frame avatarURLs:(NSArray *)urls {

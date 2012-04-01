@@ -12,7 +12,7 @@
 #import "SNTagVO.h"
 
 #import "EGOImageLoader.h"
-#import "SNArticleFollowerInfoView_iPhone.h"
+#import "SNArticleInfluencerInfoView_iPhone.h"
 
 #import "SNReactionVO.h"
 #import "SNArticleReactionItemView.h"
@@ -62,8 +62,8 @@
 		[_headerView setBackgroundColor:[UIColor colorWithWhite:0.094 alpha:1.0]];
 		_headerView.alpha = 0.85;
 		
-		SNArticleFollowerInfoView_iPhone *articleFollowerView = [[[SNArticleFollowerInfoView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, kBaseHeaderHeight) articleVO:_vo] autorelease];
-		[_headerView addSubview:articleFollowerView];
+		SNArticleInfluencerInfoView_iPhone *_articleInfluencerView = [[[SNArticleInfluencerInfoView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, kBaseHeaderHeight) articleVO:_vo] autorelease];
+		[_headerView addSubview:_articleInfluencerView];
 		[_holderView addSubview:_headerView];
 		
 		_expandCollapseButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
@@ -119,8 +119,8 @@
 		[tweetButton addTarget:self action:@selector(_goTweetPage) forControlEvents:UIControlEventTouchUpInside];
 		[_scrollView addSubview:tweetButton];
 		
-		UIImageView *socialIconImgView;
-		UILabel *socialLabel;
+		//UIImageView *socialIconImgView;
+		//UILabel *socialLabel;
 		
 		UIImageView *twitterIcoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 17.0 + _tweetSize.height, 14.0, 14.0)] autorelease];
 		twitterIcoImgView.image = [UIImage imageNamed:@"twitterIcon.png"];

@@ -1,5 +1,5 @@
 //
-//  SNRecentFollowersView_iPhone.h
+//  SNRecentInfluencersView_iPhone.h
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.20.12.
@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "EGOImageView.h"
-#import "SNBaseFollowerGridItemView_iPhone.h"
+#import "SNBaseInfluencerGridItemView_iPhone.h"
 
-@interface SNRecentFollowersView_iPhone : SNBaseFollowerGridItemView_iPhone {
+@interface SNRecentInfluencersView_iPhone : SNBaseInfluencerGridItemView_iPhone {
 	NSArray *_urls;
 	int _cnt;
 	

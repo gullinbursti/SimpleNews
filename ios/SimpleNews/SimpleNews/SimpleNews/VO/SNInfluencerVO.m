@@ -1,26 +1,26 @@
 //
-//  SNFollowerVO.m
+//  SNInfluencerVO.m
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.13.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import "SNFollowerVO.h"
+#import "SNInfluencerVO.h"
 
-@implementation SNFollowerVO
+@implementation SNInfluencerVO
 
 @synthesize dictionary;
-@synthesize follower_id, totalArticles, handle, follower_name, avatar_url, blurb, sources;
+@synthesize influencer_id, totalArticles, handle, influencer_name, avatar_url, blurb, sources;
 
-+(SNFollowerVO *)followerWithDictionary:(NSDictionary *)dictionary {
++(SNInfluencerVO *)influencerWithDictionary:(NSDictionary *)dictionary {
 	
-	SNFollowerVO *vo = [[SNFollowerVO alloc] init];
+	SNInfluencerVO *vo = [[SNInfluencerVO alloc] init];
 	vo.dictionary = dictionary;
 	
-	vo.follower_id = [[dictionary objectForKey:@"follower_id"] intValue];
+	vo.influencer_id = [[dictionary objectForKey:@"influencer_id"] intValue];
 	vo.handle = [dictionary objectForKey:@"handle"];
-	vo.follower_name = [dictionary objectForKey:@"name"];
+	vo.influencer_name = [dictionary objectForKey:@"name"];
 	vo.avatar_url = [dictionary objectForKey:@"avatar_url"];
 	vo.blurb = [dictionary objectForKey:@"blurb"];
 	vo.totalArticles = [[dictionary objectForKey:@"article_total"] intValue];
@@ -32,7 +32,7 @@
 -(void)dealloc {
 	self.dictionary = nil;
 	self.handle = nil;
-	self.follower_name = nil;
+	self.influencer_name = nil;
 	self.avatar_url = nil;
 	self.blurb = nil;
 	self.sources = nil;

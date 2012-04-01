@@ -1,5 +1,5 @@
 //
-//  SNBaseFollowerGridItemView_iPhone.h
+//  SNBaseInfluencerGridItemView_iPhone.h
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.20.12.
@@ -8,16 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-#import "SNFollowerVO.h"
+#import "SNInfluencerVO.h"
 
-@interface SNBaseFollowerGridItemView_iPhone : UIView {
+@interface SNBaseInfluencerGridItemView_iPhone : UIView {
 	UIView *_holderView;
 	BOOL _isSelected;
 	
-	SNFollowerVO *_vo;
+	SNInfluencerVO *_vo;
 }
 
-@property (nonatomic, retain) SNFollowerVO *vo;
+@property (nonatomic, retain) SNInfluencerVO *vo;
 
 -(void)toggleSelected:(BOOL)isSelected;
 -(void)fadeTo:(float)opac;

@@ -1,14 +1,14 @@
 //
-//  SNBaseFollowerGridItemView_iPhone.m
+//  SNBaseInfluencerGridItemView_iPhone.m
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.20.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import "SNBaseFollowerGridItemView_iPhone.h"
+#import "SNBaseInfluencerGridItemView_iPhone.h"
 
-@implementation SNBaseFollowerGridItemView_iPhone
+@implementation SNBaseInfluencerGridItemView_iPhone
 
 @synthesize vo = _vo;
 

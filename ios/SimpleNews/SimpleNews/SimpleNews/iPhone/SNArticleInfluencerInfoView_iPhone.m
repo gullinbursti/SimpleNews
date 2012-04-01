@@ -1,17 +1,17 @@
 //
-//  SNArticleFollowerInfoView_iPhone.m
+//  SNArticleInfluencerInfoView_iPhone.m
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.23.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import "SNArticleFollowerInfoView_iPhone.h"
+#import "SNArticleInfluencerInfoView_iPhone.h"
 
 #import "SNAppDelegate.h"
 #import "EGOImageView.h"
 
-@implementation SNArticleFollowerInfoView_iPhone
+@implementation SNArticleInfluencerInfoView_iPhone
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo {
 	if ((self = [super initWithFrame:frame])) {

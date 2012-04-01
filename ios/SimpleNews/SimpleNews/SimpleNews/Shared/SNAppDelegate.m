@@ -30,13 +30,13 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 }
 
 
-+(void)writeFollowers:(NSString *)followers {
-	[[NSUserDefaults standardUserDefaults] setObject:followers forKey:@"followers"];
++(void)writeInfluencers:(NSString *)influencers {
+	[[NSUserDefaults standardUserDefaults] setObject:influencers forKey:@"influencers"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-+(NSString *)subscribedFollowers {
-	return ([[NSUserDefaults standardUserDefaults] objectForKey:@"followers"]);
++(NSString *)subscribedInfluencers {
+	return ([[NSUserDefaults standardUserDefaults] objectForKey:@"influencers"]);
 }
 
 
@@ -213,8 +213,8 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 		}
 	}
 	
-	//if (![SNAppDelegate subscribedFollowers])
-		[SNAppDelegate writeFollowers:@""];
+	//if (![SNAppDelegate subscribedInfluencers])
+		[SNAppDelegate writeInfluencers:@""];
 	
 	self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
 	UINavigationController *rootNavigationController;
@@ -223,7 +223,7 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 		//_splashViewController_iPhone = [[SNSplashViewController_iPhone alloc] init];
 		//rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_splashViewController_iPhone] autorelease];
 		
-		_gridViewController_iPhone = [[SNFollowerGridViewController_iPhone alloc] init];
+		_gridViewController_iPhone = [[SNInfluencerGridViewController_iPhone alloc] init];
 		rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_gridViewController_iPhone] autorelease];
 		
 		

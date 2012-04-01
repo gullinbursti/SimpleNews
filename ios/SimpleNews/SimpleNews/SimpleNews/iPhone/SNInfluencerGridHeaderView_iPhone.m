@@ -1,20 +1,20 @@
 //
-//  SNFollowerGridHeaderView_iPhone.m
+//  SNInfluencerGridHeaderView_iPhone.m
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.13.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import "SNFollowerGridHeaderView_iPhone.h"
+#import "SNInfluencerGridHeaderView_iPhone.h"
 #import "SNAppDelegate.h"
 
-@interface SNFollowerGridHeaderView_iPhone()
+@interface SNInfluencerGridHeaderView_iPhone()
 -(void)_goArticles;
 -(void)_goOptions;
 @end
 
-@implementation SNFollowerGridHeaderView_iPhone
+@implementation SNInfluencerGridHeaderView_iPhone
 
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {

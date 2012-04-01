@@ -1,5 +1,5 @@
 //
-//  SNFollowerGridViewController_iPhone.h
+//  SNInfluencerGridViewController_iPhone.h
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.13.12.
@@ -9,13 +9,13 @@
 #import <UIKit/UIKit.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
-#import "SNFollowerGridHeaderView_iPhone.h"
-#import "SNRecentFollowersView_iPhone.h"
+#import "SNInfluencerGridHeaderView_iPhone.h"
+#import "SNRecentInfluencersView_iPhone.h"
 #import "ASIFormDataRequest.h"
 
 #import "FBConnect.h"
 
-@interface SNFollowerGridViewController_iPhone : UIViewController <ASIHTTPRequestDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate, UITableViewDataSource, UITableViewDelegate> {
+@interface SNInfluencerGridViewController_iPhone : UIViewController <ASIHTTPRequestDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate, UITableViewDataSource, UITableViewDelegate> {
 	
 	UIView *_holderView;
 	
@@ -24,15 +24,15 @@
 	
 	NSMutableArray *_itemViews;
 	NSMutableArray *_categories;
-	NSMutableArray *_categorizedFollowers;
-	NSMutableArray *_followers;
+	NSMutableArray *_categorizedInfluencers;
+	NSMutableArray *_influencers;
 	
 	NSMutableArray *_tags;
 	
-	SNFollowerGridHeaderView_iPhone *_headerView;
-	SNRecentFollowersView_iPhone *_recentFollowersView;
+	SNInfluencerGridHeaderView_iPhone *_headerView;
+	SNRecentInfluencersView_iPhone *_recentInfluencersView;
 	
-	ASIFormDataRequest *_followersRequest;
+	ASIFormDataRequest *_influencersRequest;
 	ASIFormDataRequest *_tagsRequest;
 	ASIFormDataRequest *_recentRequest;
 	

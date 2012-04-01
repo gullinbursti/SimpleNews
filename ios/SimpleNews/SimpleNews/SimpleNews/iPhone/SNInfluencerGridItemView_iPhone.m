@@ -1,17 +1,17 @@
 //
-//  SNFollowerGridItemView_iPhone.m
+//  SNInfluencerGridItemView_iPhone.m
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.06.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import "SNFollowerGridItemView_iPhone.h"
+#import "SNInfluencerGridItemView_iPhone.h"
 #import "SNAppDelegate.h"
 
-@implementation SNFollowerGridItemView_iPhone
+@implementation SNInfluencerGridItemView_iPhone
 
--(id)initWithFrame:(CGRect)frame followerVO:(SNFollowerVO *)vo {
+-(id)initWithFrame:(CGRect)frame influencerVO:(SNInfluencerVO *)vo {
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
 		
@@ -39,7 +39,7 @@
 	
 	if ([touch view] == _holderView) {
 		[self toggleSelected:YES];
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"FOLLOWER_TAPPED" object:_vo];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"INFLUENCER_TAPPED" object:_vo];
 		
 		return;
 	}

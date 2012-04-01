@@ -1,36 +1,36 @@
 //
-//  SNFollowerGridViewController_iPhone.m
+//  SNInfluencerGridViewController_iPhone.m
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.13.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import "SNFollowerGridViewController_iPhone.h"
+#import "SNInfluencerGridViewController_iPhone.h"
 
 #import "SNAppDelegate.h"
 #import "SNTagVO.h"
-#import "SNFollowerVO.h"
+#import "SNInfluencerVO.h"
 #import "SNCategoryViewCell_iPhone.h"
 #import "SNArticleListViewController_iPhone.h"
 #import "SNOptionsViewController_iPhone.h"
-#import "SNFollowerProfileViewController_iPhone.h"
+#import "SNInfluencerProfileViewController_iPhone.h"
 
-@interface SNFollowerGridViewController_iPhone()
+@interface SNInfluencerGridViewController_iPhone()
 -(void)_resetToTop;
 @end
 
-@implementation SNFollowerGridViewController_iPhone
+@implementation SNInfluencerGridViewController_iPhone
 
 -(id)init {
 	if ((self = [super init])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_splashDismissed:) name:@"SPLASH_DISMISSED" object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_followerTapped:) name:@"FOLLOWER_TAPPED" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_influencerTapped:) name:@"INFLUENCER_TAPPED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_recentTapped:) name:@"RECENT_TAPPED" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_followerClosed:) name:@"FOLLOWER_CLOSED" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_queueFollower:) name:@"QUEUE_FOLLOWER" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_followerArticles:) name:@"FOLLOWER_ARTICLES" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_influencerClosed:) name:@"INFLUENCER_CLOSED" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_queueInfluencer:) name:@"QUEUE_INFLUENCER" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_influencerArticles:) name:@"INFLUENCER_ARTICLES" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_optionsReturn:) name:@"OPTIONS_RETURN" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_articlesReturn:) name:@"ARTICLES_RETURN" object:nil];
@@ -42,17 +42,17 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showNowPlaying:) name:@"SHOW_NOW_PLAYING" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showOptions:) name:@"SHOW_OPTIONS" object:nil];
 		
-		_followers = [NSMutableArray new];
+		_influencers = [NSMutableArray new];
 		_itemViews = [NSMutableArray new];
 		_tags = [NSMutableArray new];
 		_categories = [NSMutableArray new];
-		_categorizedFollowers = [NSMutableArray new];
+		_categorizedInfluencers = [NSMutableArray new];
 		_isDetails = NO;
 		_isOptions = NO;
 		_isArticles = NO;
 		_isFirst = YES;
 		
-		_recentRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Followers.php"]]] retain];
+		_recentRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Influencers.php"]]] retain];
 		[_recentRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		[_recentRequest setTimeOutSeconds:30];
 		[_recentRequest setDelegate:self];
@@ -64,10 +64,10 @@
 		[_tagsRequest setDelegate:self];
 		[_tagsRequest startAsynchronous];
 		
-		_followersRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Followers.php"]]] retain];
-		[_followersRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
-		[_followersRequest setTimeOutSeconds:30];
-		[_followersRequest setDelegate:self];
+		_influencersRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Influencers.php"]]] retain];
+		[_influencersRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
+		[_influencersRequest setTimeOutSeconds:30];
+		[_influencersRequest setDelegate:self];
 		
 		
 		//NSLog(@"USER INTERFACE:[%d]", _userInterfaceIdiom); 0 == iPhone // 1 == iPad
@@ -80,9 +80,9 @@
 	[_scrollView release];
 	[_holderView release];
 	[_itemViews release];
-	[_followers release];
+	[_influencers release];
 	[_headerView release];
-	[_followersRequest release];
+	[_influencersRequest release];
 	
 	[super dealloc];
 }
@@ -103,7 +103,7 @@
 	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 56.0, self.view.bounds.size.width, self.view.bounds.size.height - 56.0)];
 	[self.view addSubview:_holderView];
 	
-	_headerView = [[SNFollowerGridHeaderView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 56.0)];
+	_headerView = [[SNInfluencerGridHeaderView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 56.0)];
 	[self.view addSubview:_headerView];
 	
 	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height - 56.0) style:UITableViewStylePlain];
@@ -165,12 +165,12 @@
 	
 	SNArticleListViewController_iPhone *articleListViewController;
 	
-	if (_isFirst || [[SNAppDelegate subscribedFollowers] isEqualToString:@""]) {
+	if (_isFirst || [[SNAppDelegate subscribedInfluencers] isEqualToString:@""]) {
 		_isFirst = NO;
 		articleListViewController = [[[SNArticleListViewController_iPhone alloc] initAsMostRecent] autorelease];
 	
 	} else
-		articleListViewController = [[[SNArticleListViewController_iPhone alloc] initWithFollowers] autorelease];
+		articleListViewController = [[[SNArticleListViewController_iPhone alloc] initWithInfluencers] autorelease];
 	
 	
 	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:articleListViewController] autorelease];
@@ -276,58 +276,58 @@
 	[self _goArticles];
 }
 
--(void)_followerTapped:(NSNotification *)notification {
-	NSLog(@"FOLLOWER TAPPED");
-	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
+-(void)_influencerTapped:(NSNotification *)notification {
+	NSLog(@"INFLUENCER TAPPED");
+	SNInfluencerVO *vo = (SNInfluencerVO *)[notification object];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"FOLLOWER_ARTICLES" object:vo];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"INFLUENCER_ARTICLES" object:vo];
 	
-	SNFollowerProfileViewController_iPhone *followerProfileViewController = [[[SNFollowerProfileViewController_iPhone alloc] initWithFollowerVO:vo] autorelease];
-	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:followerProfileViewController] autorelease];
+	SNInfluencerProfileViewController_iPhone *influencerProfileViewController = [[[SNInfluencerProfileViewController_iPhone alloc] initWithInfluencerVO:vo] autorelease];
+	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:influencerProfileViewController] autorelease];
 	
 	[navigationController setNavigationBarHidden:YES];
-	[self.navigationController pushViewController:followerProfileViewController animated:YES];
+	[self.navigationController pushViewController:influencerProfileViewController animated:YES];
 }
 
--(void)_followerClosed:(NSNotification *)notification {
-	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
+-(void)_influencerClosed:(NSNotification *)notification {
+	SNInfluencerVO *vo = (SNInfluencerVO *)[notification object];
 	
-	for (SNBaseFollowerGridItemView_iPhone *view in _itemViews) {
+	for (SNBaseInfluencerGridItemView_iPhone *view in _itemViews) {
 		if ([vo isEqual:view.vo])
 			[view toggleSelected:NO];
 	}
 }
 
 -(void)_recentTapped:(NSNotification *)notification {
-	for (SNBaseFollowerGridItemView_iPhone *view in _itemViews)
+	for (SNBaseInfluencerGridItemView_iPhone *view in _itemViews)
 		[view toggleSelected:NO];
 	
-	SNBaseFollowerGridItemView_iPhone *view = (SNBaseFollowerGridItemView_iPhone *)[_itemViews objectAtIndex:0];
+	SNBaseInfluencerGridItemView_iPhone *view = (SNBaseInfluencerGridItemView_iPhone *)[_itemViews objectAtIndex:0];
 	[view toggleSelected:YES];
 	
-	[SNAppDelegate writeFollowers:@""];
+	[SNAppDelegate writeInfluencers:@""];
 }
 
--(void)_queueFollower:(NSNotification *)notification {
-	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
+-(void)_queueInfluencer:(NSNotification *)notification {
+	SNInfluencerVO *vo = (SNInfluencerVO *)[notification object];
 	
-	SNBaseFollowerGridItemView_iPhone *view = (SNBaseFollowerGridItemView_iPhone *)[_itemViews objectAtIndex:0];
+	SNBaseInfluencerGridItemView_iPhone *view = (SNBaseInfluencerGridItemView_iPhone *)[_itemViews objectAtIndex:0];
 	[view toggleSelected:NO];
 	
-	if ([[SNAppDelegate subscribedFollowers] length] == 0)
-		[SNAppDelegate writeFollowers:[NSString stringWithFormat:@"%d", vo.follower_id]];
+	if ([[SNAppDelegate subscribedInfluencers] length] == 0)
+		[SNAppDelegate writeInfluencers:[NSString stringWithFormat:@"%d", vo.influencer_id]];
 	
 	else
-		[SNAppDelegate writeFollowers:[[SNAppDelegate subscribedFollowers] stringByAppendingFormat:@"|%d", vo.follower_id]];
+		[SNAppDelegate writeInfluencers:[[SNAppDelegate subscribedInfluencers] stringByAppendingFormat:@"|%d", vo.influencer_id]];
 }
 
--(void)_followerArticles:(NSNotification *)notification {
-	SNFollowerVO *vo = (SNFollowerVO *)[notification object];
+-(void)_influencerArticles:(NSNotification *)notification {
+	SNInfluencerVO *vo = (SNInfluencerVO *)[notification object];
 	
-	SNBaseFollowerGridItemView_iPhone *view = (SNBaseFollowerGridItemView_iPhone *)[_itemViews objectAtIndex:0];
+	SNBaseInfluencerGridItemView_iPhone *view = (SNBaseInfluencerGridItemView_iPhone *)[_itemViews objectAtIndex:0];
 	[view toggleSelected:NO];
 	
-	[SNAppDelegate writeFollowers:[NSString stringWithFormat:@"%d", vo.follower_id]];
+	[SNAppDelegate writeInfluencers:[NSString stringWithFormat:@"%d", vo.influencer_id]];
 }
 
 
@@ -337,8 +337,8 @@
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	NSLog(@"numberOfSectionsInTableView:[%d]", [_categorizedFollowers count]);
-	return ([_categorizedFollowers count]);
+	NSLog(@"numberOfSectionsInTableView:[%d]", [_categorizedInfluencers count]);
+	return ([_categorizedInfluencers count]);
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -348,7 +348,7 @@
 	if (cell == nil)
 		cell = [[[SNCategoryViewCell_iPhone alloc] init] autorelease];
 	
-	cell.followers = [_categorizedFollowers objectAtIndex:indexPath.section];
+	cell.influencers = [_categorizedInfluencers objectAtIndex:indexPath.section];
 	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
 	
 	return (cell);
@@ -427,36 +427,36 @@
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
-	//NSLog(@"SNFollowerGridViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	NSLog(@"SNInfluencerGridViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
 	
-	if ([request isEqual:_followersRequest]) {
+	if ([request isEqual:_influencersRequest]) {
 		@autoreleasepool {
 			NSError *error = nil;
-			NSArray *parsedFollowers = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			NSArray *parsedInfluencers = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
 			if (error != nil)
 				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
 			
 			else {
 				NSMutableArray *list = [NSMutableArray array];
 				
-				for (NSDictionary *serverCategory in parsedFollowers) {
+				for (NSDictionary *serverCategory in parsedInfluencers) {
 					//NSLog(@"\n\n\nCATEGORY \"%@\"", [serverCategory objectForKey:@"title"]);
-					NSMutableArray *followerList = [NSMutableArray array];
+					NSMutableArray *influencerList = [NSMutableArray array];
 					[_categories addObject:[serverCategory objectForKey:@"title"]];
 					
-					for (NSDictionary *serverFollower in [serverCategory objectForKey:@"followers"]) {
-						SNFollowerVO *vo = [SNFollowerVO followerWithDictionary:serverFollower];
-						//NSLog(@"FOLLOWER \"@%@\" %d", vo.handle, vo.totalArticles);
+					for (NSDictionary *serverInfluencer in [serverCategory objectForKey:@"influencers"]) {
+						SNInfluencerVO *vo = [SNInfluencerVO influencerWithDictionary:serverInfluencer];
+						//NSLog(@"INFLUENCER \"@%@\" %d", vo.handle, vo.totalArticles);
 						
 						if (vo != nil)
-							[followerList addObject:vo];
+							[influencerList addObject:vo];
 					}
 					
-					[list addObject:followerList];
+					[list addObject:influencerList];
 				}
 				
-				_categorizedFollowers = [list retain];
+				_categorizedInfluencers = [list retain];
 				[_tableView reloadData];
 			}
 		}
@@ -499,21 +499,21 @@
 				for (NSDictionary *serverRecent in parsedRecents)
 					[recentList addObject:[serverRecent objectForKey:@"avatar_url"]];
 				
-				_recentFollowersView = [[SNRecentFollowersView_iPhone alloc] initWithFrame:CGRectMake(0.0, 50.0, 80.0, 80.0) avatarURLs:[NSArray arrayWithObjects:[recentList objectAtIndex:0], [recentList objectAtIndex:1], [recentList objectAtIndex:2], [recentList objectAtIndex:3], nil]];
+				_recentInfluencersView = [[SNRecentInfluencersView_iPhone alloc] initWithFrame:CGRectMake(0.0, 50.0, 80.0, 80.0) avatarURLs:[NSArray arrayWithObjects:[recentList objectAtIndex:0], [recentList objectAtIndex:1], [recentList objectAtIndex:2], [recentList objectAtIndex:3], nil]];
 				
-				[_itemViews addObject:_recentFollowersView];
-				[_scrollView addSubview:_recentFollowersView];
+				[_itemViews addObject:_recentInfluencersView];
+				[_scrollView addSubview:_recentInfluencersView];
 			}
 		}
 		
-		[_followersRequest startAsynchronous];
+		[_influencersRequest startAsynchronous];
 	}
 }
 
 
 -(void)requestFailed:(ASIHTTPRequest *)request {
 	
-	if (request == _followersRequest) {
+	if (request == _influencersRequest) {
 		//[_delegates perform:@selector(jobList:didFailLoadWithError:) withObject:self withObject:request.error];
 		//MBL_RELEASE_SAFELY(_jobListRequest);
 	}

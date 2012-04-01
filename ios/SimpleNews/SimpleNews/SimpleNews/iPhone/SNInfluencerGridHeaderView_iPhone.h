@@ -1,5 +1,5 @@
 //
-//  SNFollowerGridHeaderView_iPhone.h
+//  SNInfluencerGridHeaderView_iPhone.h
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.13.12.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SNFollowerGridHeaderView_iPhone : UIView <UITextFieldDelegate> {	
+@interface SNInfluencerGridHeaderView_iPhone : UIView <UITextFieldDelegate> {	
 	UIButton *_optionsButton;
 	UIButton *_backButton;
 }

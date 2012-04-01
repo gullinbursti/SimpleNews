@@ -7,10 +7,10 @@
 //
 
 #import "SNCategoryViewCell_iPhone.h"
-#import "SNFollowerGridItemView_iPhone.h"
+#import "SNInfluencerGridItemView_iPhone.h"
 @implementation SNCategoryViewCell_iPhone
 
-@synthesize followers = _followers;
+@synthesize influencers = _influencers;
 
 
 +(NSString *)cellReuseIdentifier {
@@ -33,15 +33,15 @@
 }
 
 
--(void)setFollowers:(NSMutableArray *)followers {
-	_followers = followers;
+-(void)setInfluencers:(NSMutableArray *)influencers {
+	_influencers = influencers;
 	
 	int tot = 0;
 	int row = 0;
 	int col = -1;
-	for (SNFollowerVO *vo in _followers) {
-		//row = tot / (int)([_followers count] * 0.5);
-		//col = tot % (int)([_followers count] * 0.5);
+	for (SNInfluencerVO *vo in _influencers) {
+		//row = tot / (int)([_influencers count] * 0.5);
+		//col = tot % (int)([_influencers count] * 0.5);
 		
 		row = tot % 2;
 		if (tot % 2 == 0) {
@@ -49,14 +49,14 @@
 		}
 		
 		
-		NSLog(@"Follower \"@%@\" (%d, %d) -- [%d]", vo.handle, row, col, tot);
+		NSLog(@"Influencers \"@%@\" (%d, %d) -- [%d]", vo.handle, row, col, tot);
 		
-		SNFollowerGridItemView_iPhone *followerItemView = [[[SNFollowerGridItemView_iPhone alloc] initWithFrame:CGRectMake(col * 80.0, row * 80.0, 80.0, 80.0) followerVO:vo] autorelease];
-		[_scrollView addSubview:followerItemView];
+		SNInfluencerGridItemView_iPhone *influencerItemView = [[[SNInfluencerGridItemView_iPhone alloc] initWithFrame:CGRectMake(col * 80.0, row * 80.0, 80.0, 80.0) influencerVO:vo] autorelease];
+		[_scrollView addSubview:influencerItemView];
 		tot++;
 	}
 	
-	int pages = round([_followers count] * 0.125);
+	int pages = round([_influencers count] * 0.125);
 	_scrollView.contentSize = CGSizeMake(320.0 * pages, 92);
 }
 

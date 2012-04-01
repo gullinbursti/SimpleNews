@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SNSplashViewController_iPhone.h"
-#import "SNFollowerGridViewController_iPhone.h"
+#import "SNInfluencerGridViewController_iPhone.h"
 #import "SNVideoGridViewController_iPad.h"
 
 #import "Facebook.h"
@@ -21,7 +21,7 @@
 	SNSplashViewController_iPhone *_splashViewController_iPhone;
 	
 	SNVideoGridViewController_iPad *_gridViewController_iPad;
-	SNFollowerGridViewController_iPhone *_gridViewController_iPhone;
+	SNInfluencerGridViewController_iPhone *_gridViewController_iPhone;
 	
 	Facebook *facebook;
 	NSArray *userPermissions;
@@ -35,8 +35,8 @@
 +(BOOL)twitterEnabled;
 
 
-+(void)writeFollowers:(NSString *)followers;
-+(NSString *)subscribedFollowers;
++(void)writeInfluencers:(NSString *)influencers;
++(NSString *)subscribedInfluencers;
 
 
 +(UIFont *)snHelveticaNeueFontRegular;

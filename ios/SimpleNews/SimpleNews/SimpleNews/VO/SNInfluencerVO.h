@@ -1,5 +1,5 @@
 //
-//  SNFollowerVO.h
+//  SNInfluencerVO.h
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.13.12.
@@ -8,16 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-@interface SNFollowerVO : NSObject
+@interface SNInfluencerVO : NSObject
 
-+(SNFollowerVO *)followerWithDictionary:(NSDictionary *)dictionary;
++(SNInfluencerVO *)influencerWithDictionary:(NSDictionary *)dictionary;
 
 @property (nonatomic, retain) NSDictionary *dictionary;
 
-@property (nonatomic) int follower_id;
+@property (nonatomic) int influencer_id;
 @property (nonatomic) int totalArticles;
 @property (nonatomic, retain) NSString *handle;
-@property (nonatomic, retain) NSString *follower_name;
+@property (nonatomic, retain) NSString *influencer_name;
 @property (nonatomic, retain) NSString *avatar_url;
 @property (nonatomic, retain) NSString *blurb;
 @property (nonatomic, retain) NSArray *sources;

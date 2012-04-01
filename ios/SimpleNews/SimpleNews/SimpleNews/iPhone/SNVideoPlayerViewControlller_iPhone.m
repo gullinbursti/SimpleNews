@@ -8,7 +8,7 @@
 
 #import "SNVideoPlayerViewControlller_iPhone.h"
 #import "SNAppDelegate.h"
-#import "SNArticleFollowerInfoView_iPhone.h"
+#import "SNArticleInfluencerInfoView_iPhone.h"
 
 #define degreesToRadian(x) (M_PI * (x) / 180.0)
 
@@ -199,13 +199,13 @@
 	UIView *headerView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 50.0)] autorelease];
 	[self.view addSubview:headerView];
 	
-	_articleFollowerView = [[[SNArticleFollowerInfoView_iPhone alloc] initWithFrame:CGRectMake(0.0, -90.0, 250.0, 90.0) articleVO:_vo] autorelease];
+	_articleInfluencerView = [[[SNArticleInfluencerInfoView_iPhone alloc] initWithFrame:CGRectMake(0.0, -90.0, 250.0, 90.0) articleVO:_vo] autorelease];
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_articleFollowerView.frame = CGRectMake(0.0, 0.0, 250.0, 90.0);
+		_articleInfluencerView.frame = CGRectMake(0.0, 0.0, 250.0, 90.0);
 	}];
 	
-	[headerView addSubview:_articleFollowerView];
+	[headerView addSubview:_articleInfluencerView];
 	
 	_videoInfoRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.youtube.com/get_video_info?html5=1&video_id=%@&eurl=http%3A%2F%2Fshelby.tv%2F&ps=native&el=embedded&hl=en_US", _vo.video_url]]];
 	_videoInfoRequest.delegate = self;
@@ -231,7 +231,7 @@
 		_videoHolderView.alpha = 0.0;
 		
 	} completion:^(BOOL finished) {
-		[_articleFollowerView removeFromSuperview];
+		[_articleInfluencerView removeFromSuperview];
 		[self.mpc.view removeFromSuperview];
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
@@ -321,7 +321,7 @@
 		else if (self.mpc.playbackState == MPMoviePlaybackStatePaused)
 			_playButton.alpha = 1.0;
 	
-		_articleFollowerView.alpha = 1.0;
+		_articleInfluencerView.alpha = 1.0;
 		_progressBgImgView.alpha = 1.0;
 		_progressImgView.alpha = 1.0;
 		_timeLabel.alpha = 1.0;
@@ -338,7 +338,7 @@
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_playButton.alpha = 0.0;
 		_pauseButton.alpha = 0.0;
-		_articleFollowerView.alpha = 0.0;
+		_articleInfluencerView.alpha = 0.0;
 		_progressBgImgView.alpha = 0.0;
 		_progressImgView.alpha = 0.0;
 		_timeLabel.alpha = 0.0;
@@ -397,7 +397,7 @@
 		_videoHolderView.alpha = 0.0;
 		
 	} completion:^(BOOL finished) {
-		[_articleFollowerView removeFromSuperview];
+		[_articleInfluencerView removeFromSuperview];
 		[self.mpc.view removeFromSuperview];
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];

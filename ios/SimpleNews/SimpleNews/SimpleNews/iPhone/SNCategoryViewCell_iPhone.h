@@ -10,10 +10,10 @@
 
 @interface SNCategoryViewCell_iPhone : UITableViewCell {
 	UIScrollView *_scrollView;
-	NSMutableArray *_followers;
+	NSMutableArray *_influencers;
 }
 
 +(NSString *)cellReuseIdentifier;
-@property(nonatomic, retain) NSMutableArray *followers;
+@property(nonatomic, retain) NSMutableArray *influencers;
 
 @end

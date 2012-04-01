@@ -1,5 +1,5 @@
 //
-//  SNArticleFollowerInfoView_iPhone.h
+//  SNArticleInfluencerInfoView_iPhone.h
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.23.12.
@@ -10,7 +10,7 @@
 
 #import "SNArticleVO.h"
 
-@interface SNArticleFollowerInfoView_iPhone : UIView {
+@interface SNArticleInfluencerInfoView_iPhone : UIView {
 	SNArticleVO *_vo;
 }
 

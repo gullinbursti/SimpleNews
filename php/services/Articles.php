@@ -83,13 +83,13 @@
 			echo $body;
 		}
 	    
-		function articlesByFollower($follower_id) {
+		function articlesByInfluencer($influencer_id) {
 			$article_arr = array();
-			$query = 'SELECT * FROM `tblArticles` WHERE `follower_id` = "'. $follower_id .'";';
+			$query = 'SELECT * FROM `tblArticles` WHERE `influencer_id` = "'. $influencer_id .'";';
 			$article_result = mysql_query($query);
 			
-			$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $follower_id .'";';
-			$follower_arr = mysql_fetch_row(mysql_query($query));
+			$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblInfluencers` WHERE `id` = "'. $influencer_id .'";';
+			$influencer_arr = mysql_fetch_row(mysql_query($query));
 			
 				
 			$tot = 0;
@@ -139,12 +139,12 @@
 					"article_url" => $article_row['article_url'], 
 					"short_url" => $article_row['short_url'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
-					"twitter_name" => $follower_arr[1], 
-					"twitter_handle" => $follower_arr[2], 
+					"twitter_name" => $influencer_arr[1], 
+					"twitter_handle" => $influencer_arr[2], 
 					"bg_url" => $article_row['image_url'], 
 					"thumb_url" => $article_row['thumb_url'], 
 					"content" => $article_row['content'], 
-					"avatar_url" => $follower_arr[0], 
+					"avatar_url" => $influencer_arr[0], 
 					"video_url" => $article_row['video_url'], 
 					"is_dark" => $article_row['isDark'], 
 					"added" => $article_row['added'], 
@@ -160,17 +160,17 @@
 		}
 		
 		
-		function articlesByFollowers($follower_list) {
+		function articlesByInfluencers($influencer_list) {
 			
 			$article_arr = array();
-			$follower_arr = explode('|', $follower_list);
+			$influencer_arr = explode('|', $influencer_list);
 			
-			foreach ($follower_arr as $follower_id) {	
-				$query = 'SELECT * FROM `tblArticles` WHERE `follower_id` = "'. $follower_id .'";';
+			foreach ($influencer_arr as $influencer_id) {	
+				$query = 'SELECT * FROM `tblArticles` WHERE `influencer_id` = "'. $influencer_id .'";';
 				$article_result = mysql_query($query);
 			
-				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $follower_id .'";';
-				$follower_arr = mysql_fetch_row(mysql_query($query));
+				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblInfluencers` WHERE `id` = "'. $influencer_id .'";';
+				$influencer_arr = mysql_fetch_row(mysql_query($query));
 			
 				
 				$tot = 0;
@@ -220,12 +220,12 @@
 						"short_url" => $article_row['short_url'], 
 						"tweet_id" => $article_row['tweet_id'], 
 						"tweet_msg" => $article_row['tweet_msg'], 
-						"twitter_name" => $follower_arr[1], 
-						"twitter_handle" => $follower_arr[2], 
+						"twitter_name" => $influencer_arr[1], 
+						"twitter_handle" => $influencer_arr[2], 
 						"bg_url" => $article_row['image_url'], 
 						"thumb_url" => $article_row['thumb_url'], 
 						"content" => $article_row['content'], 
-						"avatar_url" => $follower_arr[0], 
+						"avatar_url" => $influencer_arr[0], 
 						"video_url" => $article_row['video_url'], 
 						"is_dark" => $article_row['isDark'], 
 						"added" => $article_row['added'], 
@@ -253,8 +253,8 @@
 			
 			$tot = 0;
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
-				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
-				$follower_arr = mysql_fetch_row(mysql_query($query));
+				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblInfluencers` WHERE `id` = "'. $article_row['influencer_id'] .'";';
+				$influencer_arr = mysql_fetch_row(mysql_query($query));
 				
 				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
 				$tag_result = mysql_query($query);
@@ -300,12 +300,12 @@
 					"short_url" => $article_row['short_url'], 
 					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
-					"twitter_name" => $follower_arr[1], 
-					"twitter_handle" => $follower_arr[2], 
+					"twitter_name" => $influencer_arr[1], 
+					"twitter_handle" => $influencer_arr[2], 
 					"bg_url" => $article_row['image_url'], 
 					"thumb_url" => $article_row['thumb_url'], 
 					"content" => $article_row['content'], 
-					"avatar_url" => $follower_arr[0], 
+					"avatar_url" => $influencer_arr[0], 
 					"video_url" => $article_row['video_url'], 
 					"is_dark" => $article_row['isDark'], 
 					"added" => $article_row['added'], 
@@ -329,8 +329,8 @@
 			
 			$tot = 0;
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
-				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
-				$follower_arr = mysql_fetch_row(mysql_query($query));
+				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $article_row['influencerr_id'] .'";';
+				$influencer_arr = mysql_fetch_row(mysql_query($query));
 				
 				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
 				$tag_result = mysql_query($query);
@@ -376,12 +376,12 @@
 					"short_url" => $article_row['short_url'], 
 					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
-					"twitter_name" => $follower_arr[1], 
-					"twitter_handle" => $follower_arr[2], 
+					"twitter_name" => $influencer_arr[1], 
+					"twitter_handle" => $influencer_arr[2], 
 					"bg_url" => $article_row['image_url'], 
 					"thumb_url" => $article_row['thumb_url'], 
 					"content" => $article_row['content'], 
-					"avatar_url" => $follower_arr[0], 
+					"avatar_url" => $influencer_arr[0], 
 					"video_url" => $article_row['video_url'], 
 					"is_dark" => $article_row['isDark'], 
 					"added" => $article_row['added'], 
@@ -420,8 +420,8 @@
 					if (!$isAdded) {
 						array_push($added_arr, $article_row['id']);
 					 
-						$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
-						$follower_arr = mysql_fetch_row(mysql_query($query));
+						$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblInfluencers` WHERE `id` = "'. $article_row['influencer_id'] .'";';
+						$influencer_arr = mysql_fetch_row(mysql_query($query));
 				
 						$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
 						$tag_result = mysql_query($query);
@@ -467,12 +467,12 @@
 							"short_url" => $article_row['short_url'], 
 							"tweet_id" => $article_row['tweet_id'], 
 							"tweet_msg" => $article_row['tweet_msg'], 
-							"twitter_name" => $follower_arr[1], 
-							"twitter_handle" => $follower_arr[2], 
+							"twitter_name" => $influencer_arr[1], 
+							"twitter_handle" => $influencer_arr[2], 
 							"bg_url" => $article_row['image_url'], 
 							"thumb_url" => $article_row['thumb_url'], 
 							"content" => $article_row['content'], 
-							"avatar_url" => $follower_arr[0], 
+							"avatar_url" => $influencer_arr[0], 
 							"video_url" => $article_row['video_url'], 
 							"is_dark" => $article_row['isDark'], 
 							"added" => $article_row['added'], 
@@ -489,29 +489,29 @@
 			return (true);	
 		}
 		
-		function getArticlesBeforeDate($date, $followers) {
+		function getArticlesBeforeDate($date, $influencers) {
 			$article_arr = array();
 			
-			$followers_sql = '';
-			if ($followers) {
-				$followers_sql = ' AND (';
-				$follower_arr = explode('|', $followers);
+			$influencers_sql = '';
+			if ($influencers) {
+				$influencers_sql = ' AND (';
+				$influencer_arr = explode('|', $influencers);
 				
-				foreach ($follower_arr as $follower_id)
-					$followers_sql .= '`follower_id` = "'. $follower_id .'" OR ';
+				foreach ($influencer_arr as $influencer_id)
+					$influencers_sql .= '`influencer_id` = "'. $influencer_id .'" OR ';
 				
-				$followers_sql = substr($followers_sql, 0, -4);
-				$followers_sql .= ')';
+				$influencers_sql = substr($influencers_sql, 0, -4);
+				$influencers_sql .= ')';
 				
 			}
 			
-			$query = 'SELECT * FROM `tblArticles` WHERE `added` < "'. $date .'"'. $followers_sql .' ORDER BY `added` DESC;';
+			$query = 'SELECT * FROM `tblArticles` WHERE `added` < "'. $date .'"'. $influencers_sql .' ORDER BY `added` DESC;';
 			$article_result = mysql_query($query); 
 			
 			$tot = 0;
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
-				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
-				$follower_arr = mysql_fetch_row(mysql_query($query));
+				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblInfluencers` WHERE `id` = "'. $article_row['influencer_id'] .'";';
+				$influencer_arr = mysql_fetch_row(mysql_query($query));
 				
 				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
 				$tag_result = mysql_query($query);
@@ -557,12 +557,12 @@
 					"short_url" => $article_row['short_url'], 
 					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
-					"twitter_name" => $follower_arr[1], 
-					"twitter_handle" => $follower_arr[2], 
+					"twitter_name" => $influencer_arr[1], 
+					"twitter_handle" => $influencer_arr[2], 
 					"bg_url" => $article_row['image_url'], 
 					"thumb_url" => $article_row['thumb_url'], 
 					"content" => $article_row['content'], 
-					"avatar_url" => $follower_arr[0], 
+					"avatar_url" => $influencer_arr[0], 
 					"video_url" => $article_row['video_url'], 
 					"is_dark" => $article_row['isDark'], 
 					"added" => $article_row['added'], 
@@ -578,29 +578,29 @@
 			return (true);   
 		}
 		
-		function getArticlesAfterDate($date, $followers) {
+		function getArticlesAfterDate($date, $influencers) {
 			$article_arr = array();
 			
-		   $followers_sql = '';
-			if ($followers) {
-				$followers_sql = ' AND (';
-				$follower_arr = explode('|', $followers);
+		   $influencers_sql = '';
+			if ($influencers) {
+				$influencers_sql = ' AND (';
+				$influencer_arr = explode('|', $influencers);
 				
-				foreach ($follower_arr as $follower_id)
-					$followers_sql .= '`follower_id` = "'. $follower_id .'" OR ';
+				foreach ($influencer_arr as $influencer_id)
+					$influencers_sql .= '`influencer_id` = "'. $influencer_id .'" OR ';
 				
-				$followers_sql = substr($followers_sql, 0, -4);
-				$followers_sql .= ')';
+				$influencers_sql = substr($influencers_sql, 0, -4);
+				$influencers_sql .= ')';
 				
 			}
 			
-			$query = 'SELECT * FROM `tblArticles` WHERE `added` > "'. $date .'"'. $followers_sql .';';
+			$query = 'SELECT * FROM `tblArticles` WHERE `added` > "'. $date .'"'. $influencers_sql .';';
 			$article_result = mysql_query($query); 
 			
 			$tot = 0;
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 
-				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $article_row['follower_id'] .'";';
-				$follower_arr = mysql_fetch_row(mysql_query($query));
+				$query = 'SELECT `avatar_url`, `name`, `handle` FROM `tblFollowers` WHERE `id` = "'. $article_row['influencer_id'] .'";';
+				$influencer_arr = mysql_fetch_row(mysql_query($query));
 				
 				$query = 'SELECT * FROM `tblTags` INNER JOIN `tblArticlesTags` ON `tblTags`.`id` = `tblArticlesTags`.`tag_id` WHERE `tblArticlesTags`.`article_id` = "'. $article_row['id'] .'";';
 				$tag_result = mysql_query($query);
@@ -646,12 +646,12 @@
 					"short_url" => $article_row['short_url'], 
 					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
-					"twitter_name" => $follower_arr[1], 
-					"twitter_handle" => $follower_arr[2], 
+					"twitter_name" => $influencer_arr[1], 
+					"twitter_handle" => $influencer_arr[2], 
 					"bg_url" => $article_row['image_url'], 
 					"thumb_url" => $article_row['thumb_url'], 
 					"content" => $article_row['content'], 
-					"avatar_url" => $follower_arr[0], 
+					"avatar_url" => $influencer_arr[0], 
 					"video_url" => $article_row['video_url'], 
 					"is_dark" => $article_row['isDark'], 
 					"added" => $article_row['added'], 
@@ -686,8 +686,8 @@
 				break;
 				
 			case "1":
-				if (isset($_POST['followerID']))
-					$articles->articlesByFollower($_POST['followerID']);
+				if (isset($_POST['influencerID']))
+					$articles->articlesByInfluencer($_POST['influencerID']);
 				break;
 				
 			case "2":
@@ -695,8 +695,8 @@
 				break;
 				
 			case "3":
-				if (isset($_POST['followers']))
-					$articles->articlesByFollowers($_POST['followers']);
+				if (isset($_POST['influencers']))
+					$articles->articlesByInfluencers($_POST['influencers']);
 				break;
 				
 			case "4":
@@ -711,12 +711,12 @@
 				
 			case "6":
 				if (isset($_POST['date']))
-					$articles->getArticlesBeforeDate($_POST['date'], $_POST['followers']);
+					$articles->getArticlesBeforeDate($_POST['date'], $_POST['influencers']);
 				break;
 				
 			case "7":
 				if (isset($_POST['date']))
-					$articles->getArticlesAfterDate($_POST['date'], $_POST['followers']);
+					$articles->getArticlesAfterDate($_POST['date'], $_POST['influencers']);
 				break; 
     	}
 	}

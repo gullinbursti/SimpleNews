@@ -82,11 +82,11 @@
 	return (self);
 }
 
--(id)initWithFollowers {
+-(id)initWithInfluencers {
 	if ((self = [self init])) {
 		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-		[_articlesRequest setPostValue:[SNAppDelegate subscribedFollowers] forKey:@"followers"];
+		[_articlesRequest setPostValue:[SNAppDelegate subscribedInfluencers] forKey:@"influencers"];
 		[_articlesRequest setTimeOutSeconds:30];
 		[_articlesRequest setDelegate:self];
 		[_articlesRequest startAsynchronous];
@@ -320,7 +320,7 @@
 			_latestArticlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
 			[_latestArticlesRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
 			[_latestArticlesRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles lastObject]).added] forKey:@"date"];
-			[_latestArticlesRequest setPostValue:[SNAppDelegate subscribedFollowers] forKey:@"followers"];
+			[_latestArticlesRequest setPostValue:[SNAppDelegate subscribedInfluencers] forKey:@"influencers"];
 			[_latestArticlesRequest setTimeOutSeconds:30];
 			[_latestArticlesRequest setDelegate:self];
 			//[_latestArticlesRequest startAsynchronous];
@@ -383,7 +383,7 @@
 			_olderArticlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
 			[_olderArticlesRequest setPostValue:[NSString stringWithFormat:@"%d", 6] forKey:@"action"];
 			[_olderArticlesRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles objectAtIndex:0]).added] forKey:@"date"];
-			[_latestArticlesRequest setPostValue:[SNAppDelegate subscribedFollowers] forKey:@"followers"];
+			[_latestArticlesRequest setPostValue:[SNAppDelegate subscribedInfluencers] forKey:@"influencers"];
 			[_olderArticlesRequest setTimeOutSeconds:30];
 			[_olderArticlesRequest setDelegate:self];
 			//[_olderArticlesRequest startAsynchronous];

@@ -1,5 +1,5 @@
 //
-//  SNFollowerProfileViewController_iPhone.h
+//  SNInfluencerProfileViewController_iPhone.h
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.25.12.
@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SNFollowerVO.h"
+#import "SNInfluencerVO.h"
 #import "ASIFormDataRequest.h"
 
-@interface SNFollowerProfileViewController_iPhone : UIViewController <ASIHTTPRequestDelegate, UIScrollViewDelegate> {
-	SNFollowerVO *_vo;
+@interface SNInfluencerProfileViewController_iPhone : UIViewController <ASIHTTPRequestDelegate, UIScrollViewDelegate> {
+	SNInfluencerVO *_vo;
 	ASIFormDataRequest *_articlesRequest;
 	
 	NSMutableArray *_articles;
@@ -21,5 +21,5 @@
 	CGSize _infoSize;
 }
 
--(id)initWithFollowerVO:(SNFollowerVO *)vo;
+-(id)initWithInfluencerVO:(SNInfluencerVO *)vo;
 @end
