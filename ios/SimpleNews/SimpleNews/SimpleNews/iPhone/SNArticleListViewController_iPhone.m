@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import <Twitter/Twitter.h>
 #import "SNGraphCaller.h"
 #import "SNTwitterCaller.h"
@@ -239,7 +241,8 @@
 #pragma mark - Navigation
 -(void)_goBack {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ARTICLES_RETURN" object:nil];	
-	[self.navigationController popToRootViewControllerAnimated:YES];
+	//[self.navigationController popToRootViewControllerAnimated:NO];
+	[self.navigationController popViewControllerAnimated:NO];
 	
 	[_timer invalidate];
 	_timer = nil;

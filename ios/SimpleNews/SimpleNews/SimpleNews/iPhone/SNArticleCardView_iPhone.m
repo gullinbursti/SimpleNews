@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "SNArticleCardView_iPhone.h"
 
 #import "SNAppDelegate.h"
@@ -217,7 +219,7 @@
 		
 		int offset = 50;
 		for (SNReactionVO *vo in _vo.reactions) {
-			NSLog(@"OFFSET:%d", offset);
+			//NSLog(@"OFFSET:%d", offset);
 			
 			CGSize txtSize = [vo.content sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(230.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 			

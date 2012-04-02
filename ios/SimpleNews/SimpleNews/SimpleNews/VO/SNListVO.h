@@ -10,4 +10,13 @@
 
 @interface SNListVO : NSObject
 
++(SNListVO *)listWithDictionary:(NSDictionary *)dictionary;
+
+@property (nonatomic, retain) NSDictionary *dictionary;
+
+@property (nonatomic) int list_id;
+@property (nonatomic) int totalInfluencers;
+@property (nonatomic, retain) NSString *list_name;
+@property (nonatomic, retain) NSString *list_info;
+
 @end

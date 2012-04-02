@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "SNSplashViewController_iPhone.h"
-#import "SNInfluencerGridViewController_iPhone.h"
-#import "SNVideoGridViewController_iPad.h"
+
+#import "SNRootViewController_iPhone.h"
 
 #import "Facebook.h"
 #import "UAPushNotificationHandler.h"
@@ -20,8 +20,7 @@
 @interface SNAppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate, FBRequestDelegate, UAPushNotificationDelegate> {
 	SNSplashViewController_iPhone *_splashViewController_iPhone;
 	
-	SNVideoGridViewController_iPad *_gridViewController_iPad;
-	SNInfluencerGridViewController_iPhone *_gridViewController_iPhone;
+	SNRootViewController_iPhone *_rootViewController_iPhone;
 	
 	Facebook *facebook;
 	NSArray *userPermissions;
@@ -30,6 +29,10 @@
 #define kServerPath @"http://dev.gullinbursti.cc/projs/simplenews/services"
 
 +(SNAppDelegate *)sharedInstance;
+
++(void)writeFBProfile:(NSDictionary *)profile;
++(NSDictionary *)fbProfile;
+
 
 +(void)twitterToggle:(BOOL)isSignedIn;
 +(BOOL)twitterEnabled;

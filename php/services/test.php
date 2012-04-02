@@ -54,6 +54,7 @@ foreach ($videos_xml -> entry as $video_entry) {
 	echo ("ADDED:[". $added ."]<br />");
 }*/
 
+/*
 $followers = "1|3|4|5";
 
 
@@ -73,4 +74,42 @@ if ($followers) {
 $query = 'SELECT * FROM `tblArticles` WHERE `added` < "'. $date .'"'. $followers_sql .';';
 
 echo ($query);
+*/
+
+// make the connection
+$db_conn = mysql_connect('internal-db.s41232.gridserver.com', 'db41232_sn_usr', 'dope911t') or die("Could not connect to database.");
+
+// select the proper db
+mysql_select_db('db41232_simplenews') or die("Could not select database.");
+
+// get the current date / time from mysql
+$ts_result = mysql_query("SELECT NOW();") or die("Couldn't get the date from MySQL");
+$row = mysql_fetch_row($ts_result);
+$sql_time = $row[0];
+
+
+//$query = 'SELECT * FROM `tblLists` INNER JOIN `tblUsersLists` ON `tblLists`.`id` = `tblUsersLists`.`list_id` WHERE `tblUsersLists`.`user_id` =1;';
+$query = 'SELECT * FROM `tblInfluencers` INNER JOIN `tblListsInfluencers` ON `tblInfluencers`.`id` = `tblListsInfluencers`.`influencer_id` INNER JOIN `tblUsersLists` ON `tblListsInfluencers`.`list_id` = `tblUsersLists`.`list_id` WHERE `tblUsersLists`.`user_id` =1;';
+$list_result = mysql_query($query);
+
+while ($list_row = mysql_fetch_array($list_result, MYSQL_BOTH)) {
+	echo ("[". $list_row['id'] ."]\t". $list_row['handle'] ."\t". $list_row['list_id'] ."<br />");
+	
+	$query = 'SELECT * FROM `tblArticles` WHERE `influencer_id` = "'. $list_row['id'] .'";';
+	$article_result = mysql_query($query);
+	
+	while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
+		echo ("[". $article_row['id'] ."]\t". $article_row['title'] ."<br />");
+		
+		$query = 'INSERT INTO `tblArticlesLists` (';
+		$query .= '`article_id`, `list_id`) ';
+		$query .= 'VALUES ("'. $article_row['id'] .'", "'. $list_row['id'] .'");';
+		$result = mysql_query($query);
+	}
+	
+	echo ("<br /><br />");
+}
+
+
+
 ?>

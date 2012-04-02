@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SNListItemView_iPhone : UIView
+#import "SNListVO.h"
+
+@interface SNListItemView_iPhone : UIView {
+	SNListVO *_vo;
+}
+
+-(id)initWithFrame:(CGRect)frame listVO:(SNListVO *)vo;
 
 @end

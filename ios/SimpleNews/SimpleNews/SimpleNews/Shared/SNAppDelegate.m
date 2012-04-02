@@ -155,15 +155,16 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 
 
 
-+(NSDictionary *)profileForUser {
++(NSDictionary *)fbProfile {
 	return [[NSUserDefaults standardUserDefaults] objectForKey:kSNProfileInfoKey];
 }
 
 +(BOOL)isProfileInfoAvailable {
-	return ([self profileForUser] != nil);
+	return ([self fbProfile] != nil);
 }
 
-+(void)setUserProfile:(NSDictionary *)profile {
++(void)writeFBProfile:(NSDictionary *)profile {
+	
 	if (profile != nil)
 		[[NSUserDefaults standardUserDefaults] setObject:profile forKey:kSNProfileInfoKey];
 	
@@ -223,8 +224,8 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 		//_splashViewController_iPhone = [[SNSplashViewController_iPhone alloc] init];
 		//rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_splashViewController_iPhone] autorelease];
 		
-		_gridViewController_iPhone = [[SNInfluencerGridViewController_iPhone alloc] init];
-		rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_gridViewController_iPhone] autorelease];
+		_rootViewController_iPhone = [[SNRootViewController_iPhone alloc] init];
+		rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_rootViewController_iPhone] autorelease];
 		
 		
 		// Initialize Facebook
@@ -333,12 +334,15 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 	SNAppDelegate *delegate = (SNAppDelegate *)[[UIApplication sharedApplication] delegate];
 	[self storeAuthData:[[delegate facebook] accessToken] expiresAt:[[delegate facebook] expirationDate]];
 	
-	NSLog(@"FB LOGGED IN");	
+	NSLog(@"FB LOGGED IN");
+	[facebook requestWithGraphPath:@"me" andDelegate:self];
 }
 
 -(void)fbDidExtendToken:(NSString *)accessToken expiresAt:(NSDate *)expiresAt {
 	NSLog(@"token extended");
+	
 	[self storeAuthData:accessToken expiresAt:expiresAt];
+	[facebook requestWithGraphPath:@"me" andDelegate:self];
 }
 
 /**
@@ -407,6 +411,33 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 //		SNAppDelegate *delegate = (SNAppDelegate *)[[UIApplication sharedApplication] delegate];
 //		[delegate setUserPermissions:[[result objectForKey:@"data"] objectAtIndex:0]];
 //	}
+	
+	NSMutableDictionary *profile = [NSMutableDictionary new];
+	
+	if ([result isKindOfClass:[NSDictionary class]]) {
+		NSString *strBirthDay = [[NSString alloc] initWithFormat:@"%@", [result objectForKey:@"birthday"]];
+		NSString *strBirthYear = [[NSString alloc] initWithFormat:@"%@", [(NSArray *)[strBirthDay componentsSeparatedByString:@"/"] lastObject]];
+		
+		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+		[formatter setDateFormat:@"YYYY"];	  
+		NSString *strCurrentYear = [formatter stringFromDate:[NSDate date]];
+		
+		[profile setObject:[result objectForKey:@"id"] forKey:@"id"];
+		[profile setObject:[result objectForKey:@"username"] forKey:@"handle"];
+		[profile setObject:[[NSString alloc] initWithFormat:@"%@ %@", [result objectForKey:@"first_name"], [result objectForKey:@"last_name"]] forKey:@"name"];
+		[profile setObject:[result objectForKey:@"first_name"] forKey:@"fName"];
+		[profile setObject:[result objectForKey:@"last_name"] forKey:@"lName"];
+		[profile setObject:[result objectForKey:@"gender"] forKey:@"sex"];
+		[profile setObject:[NSNumber numberWithInteger:[strCurrentYear intValue] - [strBirthYear intValue]] forKey:@"age"];
+		[profile setObject:[(NSDictionary *)[result objectForKey:@"location"] objectForKey:@"name"] forKey:@"location"];
+		[profile setObject:[(NSDictionary *)[result objectForKey:@"hometown"] objectForKey:@"name"] forKey:@"hometown"];
+		[profile setObject:[(NSDictionary *)[(NSDictionary *)[(NSArray *)[result objectForKey:@"work"] objectAtIndex:0] objectForKey:@"employer"] objectForKey:@"name"] forKey:@"work"];
+		[profile setObject:[(NSDictionary *)[(NSArray *)[result objectForKey:@"education"] lastObject] objectForKey:@"type"] forKey:@"education"];
+		[profile setObject:@"" forKey:@"profession"];
+		[profile setObject:@"0" forKey:@"friends"];
+	}
+	
+	[SNAppDelegate writeFBProfile:profile];
 }
 
 /**

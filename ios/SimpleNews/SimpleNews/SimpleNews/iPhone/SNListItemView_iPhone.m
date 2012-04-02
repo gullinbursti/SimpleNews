@@ -8,24 +8,29 @@
 
 #import "SNListItemView_iPhone.h"
 
+#import "SNAppDelegate.h"
+
 @implementation SNListItemView_iPhone
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
+-(id)initWithFrame:(CGRect)frame listVO:(SNListVO *)vo {
+	if ((self = [super initWithFrame:frame])) {
+		_vo = vo;
+		
+		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, frame.size.width, 20.0)] autorelease];
+		titleLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
+		titleLabel.textColor = [UIColor whiteColor];
+		titleLabel.backgroundColor = [UIColor clearColor];
+		titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+		titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+		titleLabel.text = _vo.list_name;
+		[self addSubview:titleLabel];
+	}
+	
+	return (self);
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
+-(void)dealloc {
+	[super dealloc];	
 }
-*/
 
 @end

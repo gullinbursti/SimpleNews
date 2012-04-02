@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SNSubscribedListsViewController_iPhone : UIViewController
+#import "ASIFormDataRequest.h"
+
+@interface SNSubscribedListsViewController_iPhone : UIViewController <ASIHTTPRequestDelegate> {
+	NSMutableArray *_subscribedLists;
+	ASIFormDataRequest *_listsRequest;
+	
+	UIView *_holderView;
+	UIScrollView *_scrollView;
+}
 
 @end

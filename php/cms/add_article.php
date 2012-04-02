@@ -8,7 +8,7 @@ if (!isset($_SESSION['login']))
 	
 require './_db_open.php';
 
-$follower_id = $_GET['fID'];
+$influencer_id = $_GET['fID'];
 $handle = $_GET['handle'];
 $tweet_id = $_GET['tID'];
 
@@ -58,8 +58,8 @@ if (isset($_POST['txtArticleSource'])) {
 	
 		
 	$query = 'INSERT INTO `tblArticles` (';
-	$query .= '`id`, `follower_id`, `tweet_id`, `tweet_msg`, `source_id`, `type_id`, `article_url`, `title`, `content`, `image_url`, `video_url`, `isDark`, `added`) ';
-	$query .= 'VALUES (NULL, "'. $follower_id .'", "'. $tweet_id .'", "'. $tweet_msg .'", "'. $network_id .'", "'. $type_id .'", "'. $source_url .'", "'. $title .'", "'. $content .'",  "'. $image_url .'", "'. $video_url .'", "'. $isDark .'", NOW());';
+	$query .= '`id`, `influencer_id`, `tweet_id`, `tweet_msg`, `source_id`, `type_id`, `article_url`, `title`, `content`, `image_url`, `video_url`, `isDark`, `added`) ';
+	$query .= 'VALUES (NULL, "'. $influencer_id .'", "'. $tweet_id .'", "'. $tweet_msg .'", "'. $network_id .'", "'. $type_id .'", "'. $source_url .'", "'. $title .'", "'. $content .'",  "'. $image_url .'", "'. $video_url .'", "'. $isDark .'", NOW());';
 	$result = mysql_query($query);
 	$article_id = mysql_insert_id();
 	

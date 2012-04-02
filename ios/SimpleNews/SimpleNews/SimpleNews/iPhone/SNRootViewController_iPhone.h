@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ASIFormDataRequest.h"
 
-@interface SNRootViewController_iPhone : UIViewController
+@interface SNRootViewController_iPhone : UIViewController <ASIHTTPRequestDelegate> {
+	ASIFormDataRequest *_listsRequest;
+	NSMutableArray *_lists;
+	
+	UIScrollView *_scrollView;
+}
 
 @end

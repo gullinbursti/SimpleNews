@@ -159,7 +159,7 @@
 
 #pragma mark - Navigation
 -(void)_goArticles {
-	[SNAppDelegate playMP3:@"fpo_tapVideo"];
+	//[SNAppDelegate playMP3:@"fpo_tapVideo"];
 	
 	_isArticles = YES;
 	
