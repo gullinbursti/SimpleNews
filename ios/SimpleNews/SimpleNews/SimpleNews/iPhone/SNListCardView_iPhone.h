@@ -1,14 +1,13 @@
 //
-//  SNNoWifiView_iPhone.h
+//  SNListCardView_iPhone.h
 //  SimpleNews
 //
-//  Created by Matthew Holcombe on 03.05.12.
+//  Created by Matthew Holcombe on 04.01.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface SNNoWifiView_iPhone : UIView {
-}
+@interface SNListCardView_iPhone : UIView
 
 @end
