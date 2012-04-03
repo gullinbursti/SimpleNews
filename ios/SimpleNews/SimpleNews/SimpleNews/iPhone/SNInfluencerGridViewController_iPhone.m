@@ -97,7 +97,7 @@
 	[super loadView];
 	
 	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
-	bgImgView.image = [UIImage imageNamed:@"background.jpg"];
+	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[self.view addSubview:bgImgView];
 	
 	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 56.0, self.view.bounds.size.width, self.view.bounds.size.height - 56.0)];

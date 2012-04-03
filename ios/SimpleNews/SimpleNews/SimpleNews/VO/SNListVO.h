@@ -16,7 +16,11 @@
 
 @property (nonatomic) int list_id;
 @property (nonatomic) int totalInfluencers;
+@property (nonatomic) int totalSubscribers;
 @property (nonatomic, retain) NSString *list_name;
+@property (nonatomic, retain) NSString *curator;
 @property (nonatomic, retain) NSString *list_info;
+
+-(NSString *)subscribersFormatted;
 
 @end

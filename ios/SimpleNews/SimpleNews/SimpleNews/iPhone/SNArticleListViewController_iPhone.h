@@ -33,8 +33,7 @@
 	
 	SNShareSheetView_iPhone *_shareSheetView;
 	
-	UIButton *_greyGridButton;
-	UIButton *_whiteGridButton;
+	UIButton *_rootListButton;
 	
 	UIView *_blackMatteView;
 	

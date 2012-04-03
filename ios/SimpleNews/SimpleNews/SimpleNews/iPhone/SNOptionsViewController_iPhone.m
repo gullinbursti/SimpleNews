@@ -49,7 +49,7 @@
 	_optionVOs = [[NSMutableArray alloc] init];
 	
 	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
-	bgImgView.image = [UIImage imageNamed:@"background.jpg"];
+	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[self.view addSubview:bgImgView];
 	
 	

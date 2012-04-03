@@ -109,18 +109,23 @@
 		function getSubscribedLists($user_id) {
 			$list_arr = array();
             
-			$query = 'SELECT * FROM `tblLists` INNER JOIN `tblUsersLists` ON `tblLists`.`id` = `tblUsersLists`.`list_id` WHERE `tblUsersLists`.`user_id` = "'. $user_id .'" AND `tblLists`.`active` = "Y";';
+			$query = 'SELECT `tblLists`.`id`, `tblLists`.`title`, `tblLists`.`info`, `tblCurators`.`name` FROM `tblLists` INNER JOIN `tblCurators` ON `tblLists`.`curator_id` = `tblCurators`.`id` INNER JOIN `tblUsersLists` ON `tblLists`.`id` = `tblUsersLists`.`list_id` WHERE `tblUsersLists`.`user_id` = "'. $user_id .'" AND `tblLists`.`active` = "Y";';
 			$list_result = mysql_query($query);
 			
             while ($list_row = mysql_fetch_array($list_result, MYSQL_BOTH)) {
 				$query = 'SELECT * FROM `tblListsInfluencers` WHERE `list_id` = "'. $list_row['id'] .'";';
 				$influencer_result = mysql_query($query);
 				
+				$query = 'SELECT * FROM `tblUsersLists` WHERE `list_id` = "'. $list_row['id'] .'";';
+				$user_result = mysql_query($query);
+				
 				array_push($list_arr, array(
 					"list_id" => $list_row['id'], 
 					"name" => $list_row['title'],
 					"info" => $list_row['info'], 
-					"total" => mysql_num_rows($influencer_result), 
+					"curator" => $list_row['name'], 
+					"influencers" => mysql_num_rows($influencer_result),
+					"subscribers" => mysql_num_rows($user_result)
 				));				
 			}
             

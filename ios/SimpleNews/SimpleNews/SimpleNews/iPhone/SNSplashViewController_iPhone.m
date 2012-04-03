@@ -50,7 +50,7 @@
 	_stripsImgView.image = [UIImage imageNamed:@"loaderBG.jpg"];
 	[self.view addSubview:_stripsImgView];
 	
-	UIImageView *logoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(53.0, 228.0, 214.0, 24.0)] autorelease];
+	UIImageView *logoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(42.0, 221.0, 234.0, 34.0)] autorelease];
 	logoImgView.image = [UIImage imageNamed:@"logo.png"];
 	[self.view addSubview:logoImgView];
 	

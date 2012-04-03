@@ -24,11 +24,10 @@
 	
 	UIButton *_playButton;
 	UIScrollView *_scrollView;
-	UIImageView *_iconsCoverImgView;
+	UIView *_iconsCoverView;
 	
-	UIView *_headerView;
 	UIView *_headerBgView;
-	UIButton *_expandCollapseButton;
+	UIButton *_collapseButton;
 	
 	BOOL _isExpanded;
 	int _ind;

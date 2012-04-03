@@ -51,6 +51,10 @@
 -(void)loadView {
 	[super loadView];
 	
+	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height)] autorelease];
+	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	[self.view addSubview:bgImgView];
+	
 	_holderView = [[UIView alloc] initWithFrame:self.view.frame];
 	[self.view addSubview:_holderView];
 
@@ -66,12 +70,16 @@
 	[self.view addSubview:_scrollView];
 	
 	
-	UIButton *greyGridButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	greyGridButton.frame = CGRectMake(4.0, 0.0, 44.0, 44.0);
-	[greyGridButton setBackgroundImage:[UIImage imageNamed:@"gridIconGray_nonActive.png"] forState:UIControlStateNormal];
-	[greyGridButton setBackgroundImage:[UIImage imageNamed:@"gridIconGray_Active.png"] forState:UIControlStateHighlighted];
-	[greyGridButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:greyGridButton];
+	UIButton *rootListButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
+	[rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_nonActive.png"] forState:UIControlStateNormal];
+	[rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_Active.png"] forState:UIControlStateHighlighted];
+	[rootListButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:rootListButton];
+	
+	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
+	[self.view addSubview:overlayImgView];
 		
 	[_listsRequest startAsynchronous];
 }

@@ -27,7 +27,6 @@
 -(void)_introFirstCard;
 -(void)_prevCard:(id)sender;
 -(void)_nextCard:(id)sender;
--(void)_transitionBtns;
 @end
 
 @implementation SNArticleListViewController_iPhone
@@ -49,8 +48,8 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_emailShare:) name:@"EMAIL_SHARE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cancelShare:) name:@"CANCEL_SHARE" object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showButtons:) name:@"SHOW_BUTTONS" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideButtons:) name:@"HIDE_BUTTONS" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startTimer:) name:@"START_TIMER" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_stopTimer:) name:@"STOP_TIMER" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTweetPage:) name:@"SHOW_TWEET_PAGE" object:nil];
@@ -137,8 +136,8 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"TWITTER_SHARE" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"EMAIL_SHARE" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"CANCEL_SHARE" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_BUTTONS" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"HIDE_BUTTONS" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"START_TIMER" object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"STOP_TIMER" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_TWITTER_PROFILE" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_TWEET_PAGE" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_SOURCE_PAGE" object:nil];
@@ -158,9 +157,7 @@
 	[_blackMatteView release];
 	[_loaderView release];
 	
-	[_greyGridButton release];
-	[_whiteGridButton release];	
-	
+	[_rootListButton release];
 	[_paginationView release];
 	
 	//[_videoPlayerView release];
@@ -182,20 +179,13 @@
 	//_overlayView = [[UIView alloc] initWithFrame:self.view.frame];
 	//[self.view addSubview:_overlayView];
 	
-	_greyGridButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_greyGridButton.frame = CGRectMake(4.0, 0.0, 44.0, 44.0);
-	[_greyGridButton setBackgroundImage:[UIImage imageNamed:@"gridIconGray_nonActive.png"] forState:UIControlStateNormal];
-	[_greyGridButton setBackgroundImage:[UIImage imageNamed:@"gridIconGray_Active.png"] forState:UIControlStateHighlighted];
-	[_greyGridButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:_greyGridButton];
+	_rootListButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
+	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeftArrow_nonActive.png"] forState:UIControlStateNormal];
+	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeftArrow_Active.png"] forState:UIControlStateHighlighted];
+	[_rootListButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:_rootListButton];
 	
-	_whiteGridButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_whiteGridButton.frame = CGRectMake(4.0, 0.0, 44.0, 44.0);
-	[_whiteGridButton setBackgroundImage:[UIImage imageNamed:@"gridIcon_nonActive.png"] forState:UIControlStateNormal];
-	[_whiteGridButton setBackgroundImage:[UIImage imageNamed:@"gridIcon_Active.png"] forState:UIControlStateHighlighted];
-	[_whiteGridButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:_whiteGridButton];
-		
 	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
 	_blackMatteView.alpha = 0.0;
@@ -253,8 +243,6 @@
 -(void)_introFirstCard {
 	SNArticleCardView_iPhone *articleCardView = (SNArticleCardView_iPhone *)[_cardViews lastObject];
 	
-	[self _transitionBtns];
-	
 	CABasicAnimation *zoomAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
 	zoomAnimation.beginTime = CACurrentMediaTime();
 	zoomAnimation.toValue = [NSNumber numberWithDouble:1.0];
@@ -306,7 +294,6 @@
 			_cardIndex++;
 			_isLastCard = NO;
 			
-			[self _transitionBtns];
 			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
 		}];
 			
@@ -369,7 +356,6 @@
 			_cardIndex--;
 			_isLastCard = NO;
 			
-			[self _transitionBtns];
 			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
 		}];
 				
@@ -396,22 +382,6 @@
 	}
 }
 
-
--(void)_transitionBtns {
-	SNArticleVO *vo = (SNArticleVO *)[_articles objectAtIndex:_cardIndex];
-	//NSLog(@"Article [%d/%d]", _cardIndex, [_articles count]);
-	
-	[UIView animateWithDuration:0.25 animations:^(void) {
-		if (vo.isDark) {
-			_greyGridButton.alpha = 1.0;
-			_whiteGridButton.alpha = 0.0;
-			
-		} else {
-			_whiteGridButton.alpha = 1.0;
-			_greyGridButton.alpha = 0.0;
-		}
-	}];
-}
 
 -(void)_doneLoading {
 	[_loaderView outroMe];	
@@ -542,28 +512,14 @@
 	_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
 }
 
--(void)_showButtons:(NSNotification *)notification {
-	SNArticleVO *vo = (SNArticleVO *)[_articles objectAtIndex:_cardIndex];
-	
-	if (vo.isDark) {
-		_greyGridButton.alpha = 1.0;
-		
-	} else {
-		_whiteGridButton.alpha = 1.0;
-	}
+-(void)_startTimer:(NSNotification *)notification {
+	_rootListButton.hidden = NO;
 	
 	_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
 }
 
--(void)_hideButtons:(NSNotification *)notification {
-	SNArticleVO *vo = (SNArticleVO *)[_articles objectAtIndex:_cardIndex];
-	
-	if (vo.isDark) {
-		_greyGridButton.alpha = 0.0;
-		
-	} else {
-		_whiteGridButton.alpha = 0.0;
-	}
+-(void)_stopTimer:(NSNotification *)notification {
+	_rootListButton.hidden = YES;
 	
 	[_timer invalidate];
 	_timer = nil;

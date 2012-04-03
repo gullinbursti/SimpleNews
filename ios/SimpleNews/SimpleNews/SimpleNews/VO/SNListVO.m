@@ -11,24 +11,36 @@
 @implementation SNListVO
 
 @synthesize dictionary;
-@synthesize list_id, totalInfluencers, list_name, list_info;
+@synthesize list_id, totalInfluencers, totalSubscribers, list_name, list_info, curator;
 
 +(SNListVO *)listWithDictionary:(NSDictionary *)dictionary {
 	SNListVO *vo = [[SNListVO alloc] init];
 	
 	vo.dictionary = dictionary;
 	vo.list_id = [[dictionary objectForKey:@"list_id"] intValue];
-	vo.totalInfluencers = [[dictionary objectForKey:@"total"] intValue];
+	vo.totalInfluencers = [[dictionary objectForKey:@"influencers"] intValue];
+	vo.totalSubscribers = [[dictionary objectForKey:@"subscribers"] intValue];
 	vo.list_name = [dictionary objectForKey:@"name"];
+	vo.curator = [dictionary objectForKey:@"curator"];
 	vo.list_info = [dictionary objectForKey:@"info"];
 	
 	return (vo);
+}
+
+-(NSString *)subscribersFormatted {
+	NSNumber *subscribers = [NSNumber numberWithInt:self.totalSubscribers];
+	NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+	[formatter setNumberStyle:kCFNumberFormatterDecimalStyle];
+	[formatter setGroupingSeparator:@","];
+	
+	return ([formatter stringForObjectValue:subscribers]);
 }
 
 -(void)dealloc {
 	self.dictionary = nil;
 	self.list_name = nil;
 	self.list_info = nil;
+	self.curator = nil;
 	
 	[super dealloc];
 }

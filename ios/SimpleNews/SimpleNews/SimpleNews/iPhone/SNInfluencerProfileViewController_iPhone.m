@@ -96,7 +96,7 @@
 	_infoSize = [_vo.blurb sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 	
 	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, -350.0 + _infoSize.height, self.view.frame.size.width, self.view.frame.size.height)] autorelease];
-	bgImgView.image = [UIImage imageNamed:@"background.jpg"];
+	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[_scrollView addSubview:bgImgView];
 	
 	EGOImageView *avatarImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 75.0, 75.0)] autorelease];
