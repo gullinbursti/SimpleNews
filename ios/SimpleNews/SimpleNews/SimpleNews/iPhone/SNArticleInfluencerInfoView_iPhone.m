@@ -25,7 +25,7 @@
 		bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 		[self addSubview:bgImgView];
 		
-		EGOImageView *avatarImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 40.0, 40.0)] autorelease];
+		EGOImageView *avatarImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 6.0, 50.0, 50.0)] autorelease];
 		avatarImgView.layer.cornerRadius = 8.0;
 		avatarImgView.clipsToBounds = YES;
 		avatarImgView.layer.borderColor = [[UIColor colorWithWhite:0.671 alpha:1.0] CGColor];
@@ -33,40 +33,24 @@
 		avatarImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
 		[self addSubview:avatarImgView];
 		
-		UILabel *twitterName = [[[UILabel alloc] initWithFrame:CGRectMake(62.0, 13.0, 256.0, 20.0)] autorelease];
-		twitterName.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
+		UILabel *twitterName = [[[UILabel alloc] initWithFrame:CGRectMake(72.0, 8.0, 256.0, 20.0)] autorelease];
+		twitterName.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 		twitterName.textColor = [UIColor colorWithWhite:0.325 alpha:1.0];
 		twitterName.backgroundColor = [UIColor clearColor];
 		twitterName.text = _vo.twitterName;
 		[self addSubview:twitterName];
 		
-		NSString *timeSince = @"";
-		int mins = [SNAppDelegate minutesAfterDate:_vo.added];
-		int hours = [SNAppDelegate hoursAfterDate:_vo.added];
-		int days = [SNAppDelegate daysAfterDate:_vo.added];
-		
-		if (days > 0) {
-			timeSince = [NSString stringWithFormat:@"%dd ago", days];
-			
-		} else {
-			if (hours > 0)
-				timeSince = [NSString stringWithFormat:@"%dh ago", hours];
-			
-			else
-				timeSince = [NSString stringWithFormat:@"%dm ago", mins];
-		}
-		
-		UILabel *dateLabel = [[[UILabel alloc] initWithFrame:CGRectMake(62.0, 32.0, 41.0, 16.0)] autorelease];
-		dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
-		dateLabel.textColor = [UIColor colorWithWhite:0.329 alpha:1.0];
-		dateLabel.backgroundColor = [UIColor clearColor];
-		dateLabel.text = timeSince;
-		dateLabel.numberOfLines = 0;
-		[self addSubview:dateLabel];
+		UILabel *infoLabel = [[[UILabel alloc] initWithFrame:CGRectMake(72.0, 27.0, 210.0, 30.0)] autorelease];
+		infoLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
+		infoLabel.textColor = [UIColor blackColor];
+		infoLabel.backgroundColor = [UIColor clearColor];
+		infoLabel.text = _vo.twitterInfo;
+		infoLabel.numberOfLines = 2;
+		[self addSubview:infoLabel];
 		
 		UIButton *twitterButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 		twitterButton.frame = CGRectMake(0.0, 0.0, 280.0, self.frame.size.height);
-		[twitterButton addTarget:self action:@selector(_goTwitterPage) forControlEvents:UIControlEventTouchUpInside];
+		//[twitterButton addTarget:self action:@selector(_goTwitterPage) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:twitterButton];
 	}
 	

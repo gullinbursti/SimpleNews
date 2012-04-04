@@ -12,6 +12,10 @@
 
 @interface SNListCardView_iPhone : UIView {
 	SNListVO *_vo;
+	UIImageView *_testImgView;
+	
+	UIView *_influencersView;
+	BOOL _isExpanded;
 }
 
 -(id)initWithFrame:(CGRect)frame listVO:(SNListVO *)vo;

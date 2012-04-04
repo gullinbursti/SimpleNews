@@ -19,6 +19,7 @@
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) NSString *tweet_id;
 @property (nonatomic, retain) NSString *twitterName;
+@property (nonatomic, retain) NSString *twitterInfo;
 @property (nonatomic, retain) NSString *twitterHandle;
 @property (nonatomic, retain) NSString *tweetMessage;
 @property (nonatomic, retain) NSString *article_url;

@@ -667,6 +667,45 @@
 		}
 		
 		
+		function getArticlesForList($list_id) {
+			$article_arr = array();
+			
+			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblArticlesLists` ON `tblArticles`.`id` = `tblArticlesLists`.`article_id` WHERE `tblArticlesLists`.`list_id` = "'. $list_id .'";';
+			$article_result = mysql_query($query);
+			
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
+				$query = 'SELECT `avatar_url`, `name`, `handle`, `description` FROM `tblInfluencers` WHERE `id` = "'. $article_row['influencer_id'] .'";';
+				$influencer_arr = mysql_fetch_row(mysql_query($query));
+				
+				array_push($article_arr, array(
+					"article_id" => $article_row['id'], 
+					"type_id" => $article_row['type_id'], 
+					"source_id" => $article_row['source_id'], 
+					"title" => $article_row['title'], 
+					"article_url" => $article_row['article_url'], 
+					"short_url" => $article_row['short_url'], 
+					"tweet_id" => $article_row['tweet_id'], 
+					"tweet_msg" => $article_row['tweet_msg'], 
+					"twitter_name" => $influencer_arr[1], 
+					"twitter_handle" => $influencer_arr[2],
+					"twitter_info" => $influencer_arr[3], 
+					"bg_url" => $article_row['image_url'], 
+					"thumb_url" => $article_row['thumb_url'], 
+					"content" => $article_row['content'], 
+					"avatar_url" => $influencer_arr[0], 
+					"video_url" => $article_row['video_url'], 
+					"is_dark" => $article_row['isDark'], 
+					"added" => $article_row['added'], 
+					"tags" => array(), 
+					"reactions" => array()
+				));
+			}
+			
+			$this->sendResponse(200, json_encode($article_arr));
+			return (true);
+		}
+		
+		
 		function test() {
 			$this->sendResponse(200, json_encode(array(
 				"result" => true
@@ -717,7 +756,12 @@
 			case "7":
 				if (isset($_POST['date']))
 					$articles->getArticlesAfterDate($_POST['date'], $_POST['influencers']);
-				break; 
+				break;
+				
+			case "8":
+			 	if (isset($_POST['listID']))
+					$articles->getArticlesForList($_POST['listID']);
+				break;
     	}
 	}
 ?>

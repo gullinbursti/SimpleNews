@@ -44,6 +44,8 @@
 -(void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LIST_ARTICLES" object:nil];
 	
+	[_paginationView release];
+	
 	[super dealloc];
 }
 
@@ -64,6 +66,7 @@
 	_scrollView.opaque = YES;
 	_scrollView.scrollsToTop = NO;
 	_scrollView.pagingEnabled = YES;
+	_scrollView.delegate = self;
 	_scrollView.showsHorizontalScrollIndicator = NO;
 	_scrollView.showsVerticalScrollIndicator = NO;
 	_scrollView.alwaysBounceVertical = NO;
@@ -76,6 +79,9 @@
 	[rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_Active.png"] forState:UIControlStateHighlighted];
 	[rootListButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:rootListButton];
+	
+	_paginationView = [[SNPaginationView_iPhone alloc] initWithFrame:CGRectMake(136.0, 460.0, 48.0, 9.0)];
+	[self.view addSubview:_paginationView];
 	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
@@ -105,7 +111,43 @@
 
 #pragma mark - Notification handlers
 -(void)_listArticles:(NSNotification *)notification {
-	[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initAsMostRecent] autorelease] animated:NO];
+	SNListVO *vo = (SNListVO *)[notification object];
+	
+	[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initWithList:vo.list_id] autorelease] animated:NO];
+}
+
+
+#pragma mark - ScrollView Delegates
+// any offset changes
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {	
+}
+
+
+// called on start of dragging (may require some time and or distance to move)
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+}
+
+
+// called on finger up if the user dragged. velocity is in points/second. targetContentOffset may be changed to adjust where the scroll view comes to rest. not called when pagingEnabled is YES
+-(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+}
+
+// called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
+}
+
+
+// called on finger up as we are moving
+-(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+}
+
+// called when setContentOffset/scrollRectVisible:animated: finishes. not called if not animating
+-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+}
+
+// called when scroll view grinds to a halt
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+	[_paginationView changePage:round((([_subscribedLists count] - 1) - (scrollView.contentOffset.x / 320.0)) / 3)];
 }
 
 

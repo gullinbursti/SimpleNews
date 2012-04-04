@@ -13,7 +13,7 @@
 
 #import "SNBaseArticleCardView_iPhone.h"
 
-@interface SNArticleCardView_iPhone : SNBaseArticleCardView_iPhone <UIScrollViewDelegate, EGOImageViewDelegate> {
+@interface SNArticleCardView_iPhone : SNBaseArticleCardView_iPhone <UIScrollViewDelegate, EGOImageViewDelegate, UITextFieldDelegate> {
 	NSMutableArray *_tweets;
 	NSMutableArray *_reactionViews;
 	SNArticleVO *_vo;

@@ -13,6 +13,7 @@
 #import "SNShareSheetView_iPhone.h"
 #import "SNPaginationView_iPhone.h"
 #import "SNLoaderView_iPhone.h"
+#import "SNArticleVideoPlayerView_iPhone.h"
 
 #import "Facebook.h"
 
@@ -36,15 +37,15 @@
 	UIButton *_rootListButton;
 	
 	UIView *_blackMatteView;
-	
-	SNPaginationView_iPhone	*_paginationView;
 	SNLoaderView_iPhone *_loaderView;
+	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
 	
 	NSTimer *_timer;
 }
 
 -(id)initAsMostRecent;
 -(id)initWithInfluencers;
+-(id)initWithList:(int)list_id;
 -(id)initWithTag:(int)tag_id;
 -(id)initWithTags:(NSString *)tags;
 

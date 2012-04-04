@@ -9,13 +9,16 @@
 #import <UIKit/UIKit.h>
 
 #import "ASIFormDataRequest.h"
+#import "SNPaginationView_iPhone.h"
 
-@interface SNSubscribedListsViewController_iPhone : UIViewController <ASIHTTPRequestDelegate> {
+@interface SNSubscribedListsViewController_iPhone : UIViewController <ASIHTTPRequestDelegate, UIScrollViewDelegate> {
 	NSMutableArray *_subscribedLists;
 	ASIFormDataRequest *_listsRequest;
 	
 	UIView *_holderView;
 	UIScrollView *_scrollView;
+	
+	SNPaginationView_iPhone	*_paginationView;
 }
 
 @end

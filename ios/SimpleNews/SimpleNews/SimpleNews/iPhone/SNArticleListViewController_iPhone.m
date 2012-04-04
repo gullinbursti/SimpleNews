@@ -19,7 +19,6 @@
 #import "SNTweetVO.h"
 
 #import "SNFacebookCardView_iPhone.h"
-#import "SNVideoPlayerViewControlller_iPhone.h"
 #import "SNOptionsPageViewController.h"
 
 @interface SNArticleListViewController_iPhone()
@@ -122,6 +121,19 @@
 	return (self);
 }
 
+-(id)initWithList:(int)list_id {
+	if ((self = [self init])) {
+		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 8] forKey:@"action"];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", list_id] forKey:@"listID"];
+		[_articlesRequest setTimeOutSeconds:30];
+		[_articlesRequest setDelegate:self];
+		[_articlesRequest startAsynchronous];
+	}
+	
+	return (self);
+}
+
 -(void)didReceiveMemoryWarning {
 	
 }
@@ -158,7 +170,6 @@
 	[_loaderView release];
 	
 	[_rootListButton release];
-	[_paginationView release];
 	
 	//[_videoPlayerView release];
 	
@@ -179,25 +190,22 @@
 	//_overlayView = [[UIView alloc] initWithFrame:self.view.frame];
 	//[self.view addSubview:_overlayView];
 	
+	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
+	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
+	_blackMatteView.alpha = 0.0;
+	[self.view addSubview:_blackMatteView];
+	
+	_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:self.view.frame];
+	_videoPlayerView.hidden = YES;
+	[self.view addSubview:_videoPlayerView];
+	
 	_rootListButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 	_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
 	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeftArrow_nonActive.png"] forState:UIControlStateNormal];
 	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeftArrow_Active.png"] forState:UIControlStateHighlighted];
 	[_rootListButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_rootListButton];
-	
-	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
-	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
-	_blackMatteView.alpha = 0.0;
-	[self.view addSubview:_blackMatteView];
-	
-	//_videoPlayerView = [[SNVideoPlayerView_iPhone alloc] initWithFrame:self.view.frame];
-	//_videoPlayerView.hidden = YES;
-	//[self.view addSubview:_videoPlayerView];
-	
-	_paginationView = [[SNPaginationView_iPhone alloc] initWithFrame:CGRectMake(278.0, 460.0, 48.0, 9.0)];
-	[self.view addSubview:_paginationView];
-	
+
 	_shareSheetView = [[SNShareSheetView_iPhone alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
 	[self.view addSubview:_shareSheetView];
 	
@@ -294,7 +302,6 @@
 			_cardIndex++;
 			_isLastCard = NO;
 			
-			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
 		}];
 			
 	} else {
@@ -355,8 +362,6 @@
 			[nextCardView introContent];
 			_cardIndex--;
 			_isLastCard = NO;
-			
-			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
 		}];
 				
 	} else {
@@ -392,12 +397,8 @@
 -(void)_startVideo:(NSNotification *)notification {
 	SNArticleVO *vo = (SNArticleVO *)[notification object];
 	
-	SNVideoPlayerViewControlller_iPhone *videoPlayerViewController = [[[SNVideoPlayerViewControlller_iPhone alloc] init] autorelease];
-	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:videoPlayerViewController] autorelease];
-	[navigationController setNavigationBarHidden:YES animated:NO];
-	[self.navigationController presentModalViewController:navigationController animated:NO];
-	
-	[videoPlayerViewController changeArticleVO:vo];
+	_videoPlayerView.hidden = NO;
+	[_videoPlayerView changeArticleVO:vo];
 	
 	[_timer invalidate];
 	_timer = nil;
@@ -410,6 +411,8 @@
 }
 
 -(void)_videoEnded:(NSNotification *)notification {
+	
+	_videoPlayerView.hidden = YES;
 	
 	[UIView animateWithDuration:0.5 animations:^(void) {
 		_blackMatteView.alpha = 0.0;

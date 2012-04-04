@@ -57,6 +57,10 @@
 		bgImageView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 		[_bgView addSubview:bgImageView];
 		
+		UIImageView *testImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)] autorelease];
+		testImgView.image = [UIImage imageNamed:@"storyImageTest.jpg"];
+		[_bgView addSubview:testImgView];
+		
 		_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - kBaseHeaderHeight, _holderView.frame.size.width, _tweetSize.height + _titleSize.height + _contentSize.height + reactionsHeight + 250.0);
 		_holderView.alpha = 0.0;
 		
@@ -76,6 +80,31 @@
 		_scrollView.alwaysBounceVertical = NO;
 		_scrollView.contentSize = CGSizeMake(self.frame.size.width, _holderView.frame.size.height);
 		[_holderView addSubview:_scrollView];
+		
+		UIImageView *inputBgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, self.frame.size.height - 50.0, self.frame.size.width, 50.0)] autorelease];
+		inputBgImgView.image = [UIImage imageNamed:@"inputFieldBG.png"];
+		inputBgImgView.userInteractionEnabled = YES;
+		[_holderView addSubview:inputBgImgView];
+		
+		UITextField *commentTxtField = [[[UITextField alloc] initWithFrame:CGRectMake(23.0, 17.0, 270.0, 16.0)] autorelease];
+		[commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+		[commentTxtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
+		[commentTxtField setAutocorrectionType:UITextAutocorrectionTypeNo];
+		[commentTxtField setBackgroundColor:[UIColor clearColor]];
+		[commentTxtField setReturnKeyType:UIReturnKeyDone];
+		[commentTxtField addTarget:self action:@selector(_onTxtDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
+		commentTxtField.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
+		commentTxtField.keyboardType = UIKeyboardTypeDefault;
+		commentTxtField.text = @"";
+		commentTxtField.placeholder = @"add comments";
+		[inputBgImgView addSubview:commentTxtField];
+		
+		UIButton *emoticonButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		emoticonButton.frame = CGRectMake(280.0, 13.0, 24.0, 24.0);
+		[emoticonButton setBackgroundImage:[UIImage imageNamed:@"emoticon_nonActive.png"] forState:UIControlStateNormal];
+		[emoticonButton setBackgroundImage:[UIImage imageNamed:@"emoticon_Active.png"] forState:UIControlStateHighlighted];
+		[emoticonButton addTarget:self action:@selector(_goEmoticon) forControlEvents:UIControlEventTouchUpInside];
+		[inputBgImgView addSubview:emoticonButton];
 		
 		_collapseButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 		_collapseButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
@@ -111,7 +140,7 @@
 		
 		UIButton *tweetButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 		tweetButton.frame = tweetLabel.frame;
-		[tweetButton addTarget:self action:@selector(_goTweetPage) forControlEvents:UIControlEventTouchUpInside];
+		//[tweetButton addTarget:self action:@selector(_goTweetPage) forControlEvents:UIControlEventTouchUpInside];
 		[_scrollView addSubview:tweetButton];
 		
 		//UIImageView *socialIconImgView;
@@ -167,37 +196,22 @@
 		
 		UIButton *titleButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 		titleButton.frame = titleLabel.frame;
-		[titleButton addTarget:self action:@selector(_goSourcePage) forControlEvents:UIControlEventTouchUpInside];
+		//[titleButton addTarget:self action:@selector(_goSourcePage) forControlEvents:UIControlEventTouchUpInside];
 		[_scrollView addSubview:titleButton];
 		
 		UILabel *contentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 148.0 + _titleSize.height + _tweetSize.height, 296.0, _contentSize.height)] autorelease];
-		contentLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
+		contentLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:16];
 		contentLabel.textColor = [UIColor colorWithWhite:0.431 alpha:1.0];
 		contentLabel.backgroundColor = [UIColor clearColor];
 		contentLabel.text = _vo.content;
 		contentLabel.numberOfLines = 0;
 		[_scrollView addSubview:contentLabel];
 		
-		UIButton *readMoreBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		readMoreBtn.frame = CGRectMake(118.0, 168.0 + _titleSize.height + _tweetSize.height + _contentSize.height, 83.0, 35.0);
-		[readMoreBtn setBackgroundImage:[UIImage imageNamed:@"readMoreButton_nonActive.png"] forState:UIControlStateNormal];
-		[readMoreBtn setBackgroundImage:[UIImage imageNamed:@"readMoreButton_Active.png"] forState:UIControlStateHighlighted];
-		readMoreBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];
-		readMoreBtn.titleLabel.textAlignment = UITextAlignmentCenter;
-		[readMoreBtn setTitleColor:[UIColor colorWithWhite:0.235 alpha:1.0] forState:UIControlStateNormal];
-		[readMoreBtn setTitle:@"Read More" forState:UIControlStateNormal];
-		[readMoreBtn addTarget:self action:@selector(_goReadMore) forControlEvents:UIControlEventTouchUpInside];
-		[_scrollView addSubview:readMoreBtn];
-		
-		UIView *reactionsView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 217.0 + _titleSize.height + _tweetSize.height + _contentSize.height, self.frame.size.width, 50.0 + reactionsHeight)] autorelease];
+		UIView *reactionsView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 150.0 + _titleSize.height + _tweetSize.height + _contentSize.height, self.frame.size.width, 150.0 + reactionsHeight)] autorelease];
+		[reactionsView setBackgroundColor:[UIColor colorWithWhite:0.886 alpha:1.0]];
 		[_scrollView addSubview:reactionsView];
 		
-		UILabel *reactionsLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 20.0, 250.0, 14.0)] autorelease];
-		reactionsLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
-		reactionsLabel.textColor = [UIColor colorWithWhite:0.294 alpha:1.0];
-		reactionsLabel.backgroundColor = [UIColor clearColor];
-		reactionsLabel.text = @"REACTIONS";
-		[reactionsView addSubview:reactionsLabel];
+		
 		
 		int offset = 50;
 		for (SNReactionVO *vo in _vo.reactions) {
@@ -258,7 +272,7 @@
 
 -(void)introContent {
 	[UIView animateWithDuration:0.25 animations:^(void) {
-		_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - (kBaseHeaderHeight + _tweetSize.height + 45.0), _holderView.frame.size.width, _holderView.frame.size.height);
+		_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - (kBaseHeaderHeight + 5.0), _holderView.frame.size.width, _holderView.frame.size.height);
 		_holderView.alpha = 1.0;
 		
 		if (_vo.type_id > 4)
@@ -273,6 +287,17 @@
 
 -(void)setTweets:(NSMutableArray *)tweets {
 	_tweets = tweets;
+}
+
+
+-(void)_onTxtDoneEditing:(id)sender {
+	[sender resignFirstResponder];
+	
+	//_titleLabel.text = _titleInputTxtField.text;
+	//_commentLabel.text = _commentInputTxtView.text;
+	
+	//_holderView.hidden = NO;
+	//_txtInputView.hidden = YES;
 }
 
 
@@ -318,7 +343,7 @@
 		}];
 		
 		[UIView animateWithDuration:0.33 animations:^(void) {
-			_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - (kBaseHeaderHeight + _tweetSize.height + 45.0), _holderView.frame.size.width, _holderView.frame.size.height);
+			_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - (kBaseHeaderHeight), _holderView.frame.size.width, _holderView.frame.size.height);
 		
 		} completion:^(BOOL finished) {
 			_scrollView.userInteractionEnabled = NO;
@@ -361,9 +386,24 @@
 	//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:_vo.article_url]];
 }
 
+-(void)_goEmoticon {
+	
+}
+
 
 #pragma mark - Notifications
 -(void)_videoEnded:(NSNotification *)notification {
+}
+
+
+#pragma mark - TextField Delegates
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+	[textField resignFirstResponder];
+	return YES;
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField {
+	[textField resignFirstResponder];
 }
 
 #pragma mark - ScrollView Delegates
