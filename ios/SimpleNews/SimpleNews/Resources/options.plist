@@ -4,16 +4,6 @@
 <array>
 	<dict>
 		<key>option_id</key>
-		<integer>1</integer>
-		<key>title</key>
-		<string>Facebook</string>
-		<key>url</key>
-		<string></string>
-		<key>info</key>
-		<string></string>
-	</dict>
-	<dict>
-		<key>option_id</key>
 		<integer>2</integer>
 		<key>title</key>
 		<string>Twitter</string>

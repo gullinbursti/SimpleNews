@@ -13,7 +13,7 @@ if (isset($_GET['id'])) {
 	$query = 'DELETE FROM `tblArticles` WHERE `follower_id` = "'. $_GET['id'] .'";';
 	$result = mysql_query($query);
 	
-	$query = 'DELETE FROM `tblFollowers` WHERE `id` = "'. $_GET['id'] .'";';
+	$query = 'DELETE FROM `tblInfluencers` WHERE `id` = "'. $_GET['id'] .'";';
 	$result = mysql_query($query);
 	
 	header('Location: followers.php');

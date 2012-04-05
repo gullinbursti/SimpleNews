@@ -54,7 +54,7 @@
 	[super loadView];
 	
 	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height)] autorelease];
-	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	bgImgView.image = [UIImage imageNamed:@"background_stripes.png"];
 	[self.view addSubview:bgImgView];
 	
 	_holderView = [[UIView alloc] initWithFrame:self.view.frame];
@@ -73,14 +73,14 @@
 	[self.view addSubview:_scrollView];
 	
 	
-	UIButton *rootListButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
-	[rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_nonActive.png"] forState:UIControlStateNormal];
-	[rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_Active.png"] forState:UIControlStateHighlighted];
-	[rootListButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:rootListButton];
+	_rootListButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
+	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_nonActive.png"] forState:UIControlStateNormal];
+	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_Active.png"] forState:UIControlStateHighlighted];
+	[_rootListButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:_rootListButton];
 	
-	_paginationView = [[SNPaginationView_iPhone alloc] initWithFrame:CGRectMake(136.0, 460.0, 48.0, 9.0)];
+	_paginationView = [[SNPaginationView_iPhone alloc] initWithFrame:CGRectMake(136.0, 467.0, 48.0, 9.0)];
 	[self.view addSubview:_paginationView];
 	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
@@ -98,6 +98,14 @@
 	[super viewDidUnload];
 }
 
+-(void)viewDidAppear:(BOOL)animated {
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
+	} completion:nil];
+	
+	[super viewDidAppear:animated];
+}
+
 
 #pragma mark - Navigation
 -(void)_goBack {
@@ -113,7 +121,13 @@
 -(void)_listArticles:(NSNotification *)notification {
 	SNListVO *vo = (SNListVO *)[notification object];
 	
-	[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initWithList:vo.list_id] autorelease] animated:NO];
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
+	
+	} completion:^(BOOL finished) {
+		[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initWithList:vo.list_id] autorelease] animated:YES];
+	}];
+	
 }
 
 

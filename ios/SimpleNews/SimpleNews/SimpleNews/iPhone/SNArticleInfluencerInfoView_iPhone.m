@@ -21,8 +21,8 @@
 		
 		self.clipsToBounds = YES;
 		
-		UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, -32.0, 320.0, 480.0)] autorelease];
-		bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+		UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)] autorelease];
+		bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 		[self addSubview:bgImgView];
 		
 		EGOImageView *avatarImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 6.0, 50.0, 50.0)] autorelease];
@@ -33,7 +33,11 @@
 		avatarImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
 		[self addSubview:avatarImgView];
 		
-		UILabel *twitterName = [[[UILabel alloc] initWithFrame:CGRectMake(72.0, 8.0, 256.0, 20.0)] autorelease];
+		UIImageView *twitterIcoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(72.0, 9.0, 14.0, 14.0)] autorelease];
+		twitterIcoImgView.image = [UIImage imageNamed:@"twitterIconGray.png"];
+		[self addSubview:twitterIcoImgView];
+		
+		UILabel *twitterName = [[[UILabel alloc] initWithFrame:CGRectMake(90.0, 8.0, 256.0, 20.0)] autorelease];
 		twitterName.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 		twitterName.textColor = [UIColor colorWithWhite:0.325 alpha:1.0];
 		twitterName.backgroundColor = [UIColor clearColor];
@@ -44,7 +48,7 @@
 		infoLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
 		infoLabel.textColor = [UIColor blackColor];
 		infoLabel.backgroundColor = [UIColor clearColor];
-		infoLabel.text = _vo.twitterInfo;
+		infoLabel.text = _vo.tweetMessage;
 		infoLabel.numberOfLines = 2;
 		[self addSubview:infoLabel];
 		

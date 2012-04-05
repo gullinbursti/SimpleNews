@@ -109,7 +109,7 @@
 		function getSubscribedLists($user_id) {
 			$list_arr = array();
             
-			$query = 'SELECT `tblLists`.`id`, `tblLists`.`title`, `tblLists`.`info`, `tblCurators`.`name` FROM `tblLists` INNER JOIN `tblCurators` ON `tblLists`.`curator_id` = `tblCurators`.`id` INNER JOIN `tblUsersLists` ON `tblLists`.`id` = `tblUsersLists`.`list_id` WHERE `tblUsersLists`.`user_id` = "'. $user_id .'" AND `tblLists`.`active` = "Y";';
+			$query = 'SELECT `tblLists`.`id`, `tblLists`.`title`, `tblLists`.`info`, `tblCurators`.`name`, `tblLists`.`image_url`, `tblLists`.`thumb_url` FROM `tblLists` INNER JOIN `tblCurators` ON `tblLists`.`curator_id` = `tblCurators`.`id` INNER JOIN `tblUsersLists` ON `tblLists`.`id` = `tblUsersLists`.`list_id` WHERE `tblUsersLists`.`user_id` = "'. $user_id .'" AND `tblLists`.`active` = "Y";';
 			$list_result = mysql_query($query);
 			
             while ($list_row = mysql_fetch_array($list_result, MYSQL_BOTH)) {
@@ -124,12 +124,36 @@
 					"name" => $list_row['title'],
 					"info" => $list_row['info'], 
 					"curator" => $list_row['name'], 
+					"image_url" => $list_row['image_url'], 
+					"thumb_url" => $list_row['thumb_url'], 
 					"influencers" => mysql_num_rows($influencer_result),
 					"subscribers" => mysql_num_rows($user_result)
 				));				
 			}
             
 			$this->sendResponse(200, json_encode($list_arr));
+			return (true);
+		}
+		
+		function getInfluencersInfoByList($list_id) {
+			$influencers_arr = array();
+            
+			$query = 'SELECT * FROM `tblInfluencers` INNER JOIN `tblListsInfluencers` ON `tblInfluencers`.`id` = `tblListsInfluencers`.`influencer_id` WHERE `tblListsInfluencers`.`list_id` = "'. $list_id .'";';
+			$influencer_result = mysql_query($query);
+			
+			while ($influencer_row = mysql_fetch_array($influencer_result, MYSQL_BOTH)) {
+				array_push($influencers_arr, array(
+					"influencer_id" => $influencer_row['id'], 
+					"handle" => $influencer_row['handle'],
+					"name" => $influencer_row['name'], 
+					"avatar_url" => $influencer_row['avatar_url'], 
+					"blurb" => $influencer_row['description'], 
+					"article_total" => 0, 
+					"source_types" => array()
+				));
+			}
+			
+			$this->sendResponse(200, json_encode($influencers_arr));
 			return (true);
 		}
 		
@@ -158,6 +182,11 @@
 			case "1":
 				if ($_POST['userID'])
 					$lists->getSubscribedLists($_POST['userID']);
+				break;
+				
+			case "2":
+				if ($_POST['listID'])
+					$lists->getInfluencersInfoByList($_POST['listID']);
 				break;
     	}
 	}

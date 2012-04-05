@@ -19,6 +19,8 @@
 @property (nonatomic) int totalSubscribers;
 @property (nonatomic, retain) NSString *list_name;
 @property (nonatomic, retain) NSString *curator;
+@property (nonatomic, retain) NSString *imageURL;
+@property (nonatomic, retain) NSString *thumbURL;
 @property (nonatomic, retain) NSString *list_info;
 
 -(NSString *)subscribersFormatted;

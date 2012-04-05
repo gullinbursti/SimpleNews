@@ -18,7 +18,7 @@
 	NSMutableArray *_reactionViews;
 	SNArticleVO *_vo;
 	
-	CGSize _tweetSize;
+	//CGSize _tweetSize;
 	CGSize _titleSize;
 	CGSize _contentSize;
 	

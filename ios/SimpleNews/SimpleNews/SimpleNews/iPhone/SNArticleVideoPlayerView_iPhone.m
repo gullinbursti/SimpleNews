@@ -81,7 +81,7 @@
 		[self addSubview:_timeLabel];
 		
 		_playButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
-		_playButton.frame = CGRectMake(121.0, 198.0, 84.0, 84.0);
+		_playButton.frame = CGRectMake(116.0, 193.0, 94.0, 94.0);
 		_playButton.alpha = 0.0;
 		[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
@@ -89,7 +89,7 @@
 		[self addSubview:_playButton];
 		
 		_pauseButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
-		_pauseButton.frame = CGRectMake(121.0, 198.0, 84.0, 84.0);
+		_pauseButton.frame = CGRectMake(116.0, 193.0, 94.0, 94.0);
 		_pauseButton.alpha = 1.0;
 		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"pauseButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"pauseButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];

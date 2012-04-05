@@ -9,12 +9,17 @@
 #import <UIKit/UIKit.h>
 
 #import "SNListVO.h"
+#import "SNInfluencersListView.h"
+#import "EGOImageView.h"
+#import "SNListInfoView_iPhone.h"
 
 @interface SNListCardView_iPhone : UIView {
 	SNListVO *_vo;
 	UIImageView *_testImgView;
+	EGOImageView *_coverImgView;
 	
-	UIView *_influencersView;
+	SNInfluencersListView *_influencersListView;
+	SNListInfoView_iPhone *_listInfoView;
 	BOOL _isExpanded;
 }
 

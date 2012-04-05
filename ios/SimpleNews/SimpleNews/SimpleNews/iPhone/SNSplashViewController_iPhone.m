@@ -46,11 +46,11 @@
 	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[self.view addSubview:bgImgView];
 	
-	_stripsImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+	_stripsImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, -self.view.frame.size.height + 21.0, self.view.frame.size.width, self.view.frame.size.height)];
 	_stripsImgView.image = [UIImage imageNamed:@"loaderBG.jpg"];
 	[self.view addSubview:_stripsImgView];
 	
-	UIImageView *logoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(42.0, 221.0, 234.0, 34.0)] autorelease];
+	UIImageView *logoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(43.0, 221.0, 234.0, 34.0)] autorelease];
 	logoImgView.image = [UIImage imageNamed:@"logo.png"];
 	[self.view addSubview:logoImgView];
 	
@@ -59,7 +59,7 @@
 	[self.view addSubview:overlayImgView];
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_stripsImgView.frame = CGRectMake(0.0, -self.view.frame.size.height + 20, self.view.frame.size.width, self.view.frame.size.height);	
+		_stripsImgView.frame = CGRectMake(0.0, -self.view.frame.size.height + 21.0, self.view.frame.size.width, self.view.frame.size.height);	
 		
 	} completion:^(BOOL finished) {
 		_highlightImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-74.0, 12.0, 74.0, 9.0)];

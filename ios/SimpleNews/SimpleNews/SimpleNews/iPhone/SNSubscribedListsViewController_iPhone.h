@@ -18,6 +18,8 @@
 	UIView *_holderView;
 	UIScrollView *_scrollView;
 	
+	UIButton *_rootListButton;
+	
 	SNPaginationView_iPhone	*_paginationView;
 }
 

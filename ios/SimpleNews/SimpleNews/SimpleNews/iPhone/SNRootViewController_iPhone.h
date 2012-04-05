@@ -14,6 +14,7 @@
 	NSMutableArray *_lists;
 	
 	UIScrollView *_scrollView;
+	UIButton *_articlesButton;
 }
 
 @end

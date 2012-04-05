@@ -200,7 +200,7 @@
 	[self.view addSubview:_videoPlayerView];
 	
 	_rootListButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
+	_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
 	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeftArrow_nonActive.png"] forState:UIControlStateNormal];
 	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeftArrow_Active.png"] forState:UIControlStateHighlighted];
 	[_rootListButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
@@ -235,12 +235,20 @@
 	[super viewDidUnload];
 }
 
+-(void)viewDidAppear:(BOOL)animated {
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
+	} completion:nil];
+	
+	[super viewDidAppear:animated];
+}
+
 
 #pragma mark - Navigation
 -(void)_goBack {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ARTICLES_RETURN" object:nil];	
 	//[self.navigationController popToRootViewControllerAnimated:NO];
-	[self.navigationController popViewControllerAnimated:NO];
+	[self.navigationController popViewControllerAnimated:YES];
 	
 	[_timer invalidate];
 	_timer = nil;
@@ -307,23 +315,23 @@
 	} else {
 		_isLastCard = YES;
 		
-		if (![_loaderView isLoading]) {
-			[_loaderView introMe];
-			[self performSelector:@selector(_doneLoading) withObject:nil afterDelay:3.0];
-			
-			NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-			[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-			
-			_latestArticlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
-			[_latestArticlesRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
-			[_latestArticlesRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles lastObject]).added] forKey:@"date"];
-			[_latestArticlesRequest setPostValue:[SNAppDelegate subscribedInfluencers] forKey:@"influencers"];
-			[_latestArticlesRequest setTimeOutSeconds:30];
-			[_latestArticlesRequest setDelegate:self];
-			//[_latestArticlesRequest startAsynchronous];
-			
-			[dateFormat release];
-		}
+//		if (![_loaderView isLoading]) {
+//			[_loaderView introMe];
+//			[self performSelector:@selector(_doneLoading) withObject:nil afterDelay:3.0];
+//			
+//			NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+//			[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+//			
+//			_latestArticlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+//			[_latestArticlesRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
+//			[_latestArticlesRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles lastObject]).added] forKey:@"date"];
+//			[_latestArticlesRequest setPostValue:[SNAppDelegate subscribedInfluencers] forKey:@"influencers"];
+//			[_latestArticlesRequest setTimeOutSeconds:30];
+//			[_latestArticlesRequest setDelegate:self];
+//			//[_latestArticlesRequest startAsynchronous];
+//			
+//			[dateFormat release];
+//		}
 	}
 }
 
@@ -367,23 +375,23 @@
 	} else {
 		_isLastCard = YES;
 		
-		if (![_loaderView isLoading]) {
-			[_loaderView introMe];
-			[self performSelector:@selector(_doneLoading) withObject:nil afterDelay:3.0];
-			
-			NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-			[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-			
-			_olderArticlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
-			[_olderArticlesRequest setPostValue:[NSString stringWithFormat:@"%d", 6] forKey:@"action"];
-			[_olderArticlesRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles objectAtIndex:0]).added] forKey:@"date"];
-			[_latestArticlesRequest setPostValue:[SNAppDelegate subscribedInfluencers] forKey:@"influencers"];
-			[_olderArticlesRequest setTimeOutSeconds:30];
-			[_olderArticlesRequest setDelegate:self];
-			//[_olderArticlesRequest startAsynchronous];
-			
-			[dateFormat release];
-		}
+//		if (![_loaderView isLoading]) {
+//			[_loaderView introMe];
+//			[self performSelector:@selector(_doneLoading) withObject:nil afterDelay:3.0];
+//			
+//			NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+//			[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+//			
+//			_olderArticlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+//			[_olderArticlesRequest setPostValue:[NSString stringWithFormat:@"%d", 6] forKey:@"action"];
+//			[_olderArticlesRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles objectAtIndex:0]).added] forKey:@"date"];
+//			[_latestArticlesRequest setPostValue:[SNAppDelegate subscribedInfluencers] forKey:@"influencers"];
+//			[_olderArticlesRequest setTimeOutSeconds:30];
+//			[_olderArticlesRequest setDelegate:self];
+//			//[_olderArticlesRequest startAsynchronous];
+//			
+//			[dateFormat release];
+//		}
 	}
 }
 
@@ -516,13 +524,21 @@
 }
 
 -(void)_startTimer:(NSNotification *)notification {
-	_rootListButton.hidden = NO;
+	//_rootListButton.hidden = NO;
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
+	} completion:nil];
 	
 	_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
 }
 
 -(void)_stopTimer:(NSNotification *)notification {
-	_rootListButton.hidden = YES;
+	//_rootListButton.hidden = YES;
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
+	} completion:nil];
 	
 	[_timer invalidate];
 	_timer = nil;

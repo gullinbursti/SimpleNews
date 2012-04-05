@@ -6,12 +6,16 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "SNRootViewController_iPhone.h"
 #import "SNListItemView_iPhone.h"
 #import "SNListVO.h"
+#import "SNOptionVO.h"
 
 #import "SNSubscribedListsViewController_iPhone.h"
 #import "SNArticleListViewController_iPhone.h"
+#import "SNOptionItemView_iPhone.h"
 #import "SNAppDelegate.h"
 
 @interface SNRootViewController_iPhone()
@@ -25,7 +29,8 @@
 		_lists = [NSMutableArray new];
 		
 		_listsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
-		[_listsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
+		[_listsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[_listsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"userID"];
 		[_listsRequest setTimeOutSeconds:30];
 		[_listsRequest setDelegate:self];
 	}
@@ -41,11 +46,16 @@
 -(void)loadView {
 	[super loadView];
 	
-	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height)] autorelease];
-	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	bgImgView.image = [UIImage imageNamed:@"background_stripes.png"];
 	[self.view addSubview:bgImgView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(12.0, 7.0, self.view.frame.size.width - 24.0, self.view.frame.size.height - 29.0)];
+	[_scrollView setBackgroundColor:[UIColor whiteColor]];
+	_scrollView.layer.cornerRadius = 8.0;
+	_scrollView.clipsToBounds = YES;
+	_scrollView.layer.borderColor = [[UIColor colorWithWhite:0.671 alpha:1.0] CGColor];
+	_scrollView.layer.borderWidth = 1.0;
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	_scrollView.opaque = YES;
 	_scrollView.scrollsToTop = NO;
@@ -53,21 +63,15 @@
 	_scrollView.showsHorizontalScrollIndicator = NO;
 	_scrollView.showsVerticalScrollIndicator = NO;
 	_scrollView.alwaysBounceVertical = NO;
-	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
+	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width - 24.0, self.view.frame.size.height);
 	[self.view addSubview:_scrollView];
 	
-	UIButton *articlesButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	articlesButton.frame = CGRectMake(250.0, 12.0, 64.0, 34.0);
-	[articlesButton setBackgroundImage:[[UIImage imageNamed:@"doneButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-	[articlesButton setBackgroundImage:[[UIImage imageNamed:@"doneButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-	articlesButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-	articlesButton.titleLabel.textAlignment = UITextAlignmentCenter;
-	[articlesButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-	articlesButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-	articlesButton.titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-	[articlesButton setTitle:@"Lists" forState:UIControlStateNormal];
-	[articlesButton addTarget:self action:@selector(_goLists) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:articlesButton];
+	_articlesButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_articlesButton.frame = CGRectMake(320.0, -64.0, 64.0, 64.0);
+	[_articlesButton setBackgroundImage:[[UIImage imageNamed:@"topRight_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+	[_articlesButton setBackgroundImage:[[UIImage imageNamed:@"topRight_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+	[_articlesButton addTarget:self action:@selector(_goLists) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:_articlesButton];
 	
 	[_listsRequest startAsynchronous];
 }
@@ -81,10 +85,23 @@
 	[super viewDidUnload];
 }
 
+-(void)viewDidAppear:(BOOL)animated {
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_articlesButton.frame = CGRectMake(256.0, 0.0, 64.0, 64.0);
+	} completion:nil];
+	
+	[super viewDidAppear:animated];
+}
+
 
 #pragma mark - Navigation
 -(void)_goLists {
-	[self.navigationController pushViewController:[[[SNSubscribedListsViewController_iPhone alloc] init] autorelease] animated:YES];
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_articlesButton.frame = CGRectMake(320.0, -64.0, 64.0, 64.0);
+	} completion:^(BOOL finished) {
+		[self.navigationController pushViewController:[[[SNSubscribedListsViewController_iPhone alloc] init] autorelease] animated:YES];
+	}];
+	
 }
 
 
@@ -112,13 +129,30 @@
 			
 			int cnt = 0;
 			for (SNListVO *vo in _lists) {
-				SNListItemView_iPhone *listItemView = [[[SNListItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, cnt * 20.0, self.view.frame.size.width, 20.0) listVO:vo] autorelease];
+				SNListItemView_iPhone *listItemView = [[[SNListItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, cnt * 70.0, self.view.frame.size.width, 70.0) listVO:vo] autorelease];
 				[_scrollView addSubview:listItemView];
 				
 				cnt++;
 			}
 			
-			_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, cnt * 20.0);
+			NSString *testOptionsPath = [[NSBundle mainBundle] pathForResource:@"options" ofType:@"plist"];
+			NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:testOptionsPath] options:NSPropertyListImmutable format:nil error:nil];
+			
+			for (NSDictionary *testOption in plist) {
+				SNOptionVO *vo = [SNOptionVO optionWithDictionary:testOption];
+				SNOptionItemView_iPhone *itemView = [[[SNOptionItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, cnt * 70, self.view.frame.size.width, 64) withVO:vo] autorelease];
+				
+				//if (vo.option_id == 3 && [SNAppDelegate notificationsEnabled])
+				//	[itemView toggleSelected:YES];
+				
+				//[_optionViews addObject:itemView];
+				//[_optionVOs addObject:vo];
+				[_scrollView addSubview:itemView];
+				cnt++;
+			}
+			
+			
+			_scrollView.contentSize = CGSizeMake(self.view.frame.size.width - 24.0, cnt * 70.0);
 		}
 	}
 }

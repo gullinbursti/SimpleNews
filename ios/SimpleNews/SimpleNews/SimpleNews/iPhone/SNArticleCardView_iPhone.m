@@ -44,7 +44,7 @@
 		
 		_reactionViews = [NSMutableArray new];
 		
-		_tweetSize = [_vo.tweetMessage sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		//_tweetSize = [_vo.tweetMessage sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		_titleSize = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:22] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		_contentSize = [_vo.content sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(296.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		
@@ -57,11 +57,11 @@
 		bgImageView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 		[_bgView addSubview:bgImageView];
 		
-		UIImageView *testImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)] autorelease];
-		testImgView.image = [UIImage imageNamed:@"storyImageTest.jpg"];
-		[_bgView addSubview:testImgView];
+		//UIImageView *testImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)] autorelease];
+		//testImgView.image = [UIImage imageNamed:@"storyImageTest.jpg"];
+		//[_bgView addSubview:testImgView];
 		
-		_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - kBaseHeaderHeight, _holderView.frame.size.width, _tweetSize.height + _titleSize.height + _contentSize.height + reactionsHeight + 250.0);
+		_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - kBaseHeaderHeight, _holderView.frame.size.width, _titleSize.height + _contentSize.height + reactionsHeight + 150.0);
 		_holderView.alpha = 0.0;
 		
 		SNArticleInfluencerInfoView_iPhone *_articleInfluencerView = [[[SNArticleInfluencerInfoView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, kBaseHeaderHeight) articleVO:_vo] autorelease];
@@ -81,12 +81,12 @@
 		_scrollView.contentSize = CGSizeMake(self.frame.size.width, _holderView.frame.size.height);
 		[_holderView addSubview:_scrollView];
 		
-		UIImageView *inputBgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, self.frame.size.height - 50.0, self.frame.size.width, 50.0)] autorelease];
+		UIImageView *inputBgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, self.frame.size.height - 54.0, self.frame.size.width, 54.0)] autorelease];
 		inputBgImgView.image = [UIImage imageNamed:@"inputFieldBG.png"];
 		inputBgImgView.userInteractionEnabled = YES;
 		[_holderView addSubview:inputBgImgView];
 		
-		UITextField *commentTxtField = [[[UITextField alloc] initWithFrame:CGRectMake(23.0, 17.0, 270.0, 16.0)] autorelease];
+		UITextField *commentTxtField = [[[UITextField alloc] initWithFrame:CGRectMake(23.0, 21.0, 270.0, 16.0)] autorelease];
 		[commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 		[commentTxtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 		[commentTxtField setAutocorrectionType:UITextAutocorrectionTypeNo];
@@ -96,19 +96,38 @@
 		commentTxtField.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
 		commentTxtField.keyboardType = UIKeyboardTypeDefault;
 		commentTxtField.text = @"";
-		commentTxtField.placeholder = @"add comments";
+		commentTxtField.placeholder = @"Comment";
 		[inputBgImgView addSubview:commentTxtField];
 		
-		UIButton *emoticonButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		emoticonButton.frame = CGRectMake(280.0, 13.0, 24.0, 24.0);
-		[emoticonButton setBackgroundImage:[UIImage imageNamed:@"emoticon_nonActive.png"] forState:UIControlStateNormal];
-		[emoticonButton setBackgroundImage:[UIImage imageNamed:@"emoticon_Active.png"] forState:UIControlStateHighlighted];
-		[emoticonButton addTarget:self action:@selector(_goEmoticon) forControlEvents:UIControlEventTouchUpInside];
-		[inputBgImgView addSubview:emoticonButton];
+//		UIButton *emoticonButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+//		emoticonButton.frame = CGRectMake(280.0, 13.0, 24.0, 24.0);
+//		[emoticonButton setBackgroundImage:[UIImage imageNamed:@"emoticon_nonActive.png"] forState:UIControlStateNormal];
+//		[emoticonButton setBackgroundImage:[UIImage imageNamed:@"emoticon_Active.png"] forState:UIControlStateHighlighted];
+//		[emoticonButton addTarget:self action:@selector(_goEmoticon) forControlEvents:UIControlEventTouchUpInside];
+//		[inputBgImgView addSubview:emoticonButton];
+		
+		
+		UIImageView *scoreBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(261.0, 35.0, 64.0, 94.0)];
+		scoreBgImgView.image = [UIImage imageNamed:@"scoreMeterBG.png"];
+		scoreBgImgView.userInteractionEnabled = YES;
+		[self addSubview:scoreBgImgView];
+		
+		UIButton *scoreFavoriteButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		scoreFavoriteButton.frame = CGRectMake(22.0, 18.0, 24.0, 24.0);
+		[scoreFavoriteButton setBackgroundImage:[UIImage imageNamed:@"likeIcon_nonActive.png"] forState:UIControlStateNormal];
+		[scoreFavoriteButton setBackgroundImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
+		[scoreFavoriteButton addTarget:self action:@selector(_goFavorite) forControlEvents:UIControlEventTouchUpInside];
+		[scoreBgImgView addSubview:scoreFavoriteButton];
+		
+		UIButton *scoreShareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		scoreShareButton.frame = CGRectMake(22.0, 58.0, 24.0, 24.0);
+		[scoreShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconB_nonActive.png"] forState:UIControlStateNormal];
+		[scoreShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconB_Active.png"] forState:UIControlStateHighlighted];
+		[scoreShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+		[scoreBgImgView addSubview:scoreShareButton];
 		
 		_collapseButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_collapseButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
-		_collapseButton.hidden = YES;
+		_collapseButton.frame = CGRectMake(320.0, -64.0, 64.0, 64.0);
 		[_collapseButton setBackgroundImage:[UIImage imageNamed:@"topLeftClose_nonActive.png"] forState:UIControlStateNormal];
 		[_collapseButton setBackgroundImage:[UIImage imageNamed:@"topLeftClose_Active.png"] forState:UIControlStateHighlighted];
 		[_collapseButton addTarget:self action:@selector(_goExpandCollapse:) forControlEvents:UIControlEventTouchUpInside];
@@ -124,7 +143,7 @@
 			[self addSubview:_playButton];
 		}
 		
-				
+		/*		
 		UIView *tweetBgView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, _tweetSize.height + 45.0)] autorelease];
 		[tweetBgView setBackgroundColor:[UIColor whiteColor]];
 		[_scrollView addSubview:tweetBgView];
@@ -137,56 +156,46 @@
 		tweetLabel.numberOfLines = 0;
 		[_scrollView addSubview:tweetLabel];
 		
-		
 		UIButton *tweetButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 		tweetButton.frame = tweetLabel.frame;
-		//[tweetButton addTarget:self action:@selector(_goTweetPage) forControlEvents:UIControlEventTouchUpInside];
+		[tweetButton addTarget:self action:@selector(_goTweetPage) forControlEvents:UIControlEventTouchUpInside];
 		[_scrollView addSubview:tweetButton];
+		*/
 		
 		//UIImageView *socialIconImgView;
 		//UILabel *socialLabel;
 		
-		UIImageView *twitterIcoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 17.0 + _tweetSize.height, 14.0, 14.0)] autorelease];
-		twitterIcoImgView.image = [UIImage imageNamed:@"twitterIconGray.png"];
-		[_scrollView addSubview:twitterIcoImgView];
-		
-		UILabel *twitterSiteLabel = [[[UILabel alloc] initWithFrame:CGRectMake(30.0, 17.0 + _tweetSize.height, 150.0, 16.0)] autorelease];
-		twitterSiteLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
-		twitterSiteLabel.textColor = [UIColor colorWithWhite:0.259 alpha:1.0];
-		twitterSiteLabel.backgroundColor = [UIColor clearColor];
-		twitterSiteLabel.text = @"Twitter.com";
-		[_scrollView addSubview:twitterSiteLabel];
-		
-		UIImageView *iconsBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 45.0 + _tweetSize.height, self.frame.size.width, 54.0)];
+		UIImageView *iconsBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 54.0)];
 		iconsBgImgView.image = [UIImage imageNamed:@"shareBackground.png"];
+		iconsBgImgView.userInteractionEnabled = YES;
 		[_scrollView addSubview:iconsBgImgView];
 		
 		UIButton *favoriteButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		favoriteButton.frame = CGRectMake(90.0, 12.0, 34.0, 34.0);
-		[favoriteButton setBackgroundImage:[UIImage imageNamed:@"star_nonActive.png"] forState:UIControlStateNormal];
-		[favoriteButton setBackgroundImage:[UIImage imageNamed:@"star_Active.png"] forState:UIControlStateHighlighted];
+		favoriteButton.frame = CGRectMake(90.0, 12.0, 24.0, 24.0);
+		[favoriteButton setBackgroundImage:[UIImage imageNamed:@"likeIcon_nonActive.png"] forState:UIControlStateNormal];
+		[favoriteButton setBackgroundImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
 		[favoriteButton addTarget:self action:@selector(_goFavorite) forControlEvents:UIControlEventTouchUpInside];
 		[iconsBgImgView addSubview:favoriteButton];
 		
 		UIButton *shareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		shareButton.frame = CGRectMake(143.0, 12.0, 34.0, 34.0);
+		shareButton.frame = CGRectMake(143.0, 12.0, 24.0, 24.0);
 		[shareButton setBackgroundImage:[UIImage imageNamed:@"shareIconB_nonActive.png"] forState:UIControlStateNormal];
 		[shareButton setBackgroundImage:[UIImage imageNamed:@"shareIconB_Active.png"] forState:UIControlStateHighlighted];
 		[shareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 		[iconsBgImgView addSubview:shareButton];
 		
 		UIButton *personButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		personButton.frame = CGRectMake(205.0, 12.0, 34.0, 34.0);
+		personButton.frame = CGRectMake(205.0, 12.0, 24.0, 24.0);
 		[personButton setBackgroundImage:[UIImage imageNamed:@"viewPerson_nonActive.png"] forState:UIControlStateNormal];
 		[personButton setBackgroundImage:[UIImage imageNamed:@"viewPerson_Active.png"] forState:UIControlStateHighlighted];
 		[personButton addTarget:self action:@selector(_goPerson) forControlEvents:UIControlEventTouchUpInside];
 		[iconsBgImgView addSubview:personButton];
 		
-		_iconsCoverView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 45.0 + _tweetSize.height, self.frame.size.width, 54.0)];
+		_iconsCoverView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 54.0)];
 		[_iconsCoverView setBackgroundColor:[UIColor whiteColor]];
 		[_scrollView addSubview:_iconsCoverView];
 		
-		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 123.0 + _tweetSize.height, 296.0, _titleSize.height)] autorelease];
+		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 73.0, 296.0, _titleSize.height)] autorelease];
 		titleLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:22];
 		titleLabel.textColor = [UIColor blackColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
@@ -199,7 +208,7 @@
 		//[titleButton addTarget:self action:@selector(_goSourcePage) forControlEvents:UIControlEventTouchUpInside];
 		[_scrollView addSubview:titleButton];
 		
-		UILabel *contentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 148.0 + _titleSize.height + _tweetSize.height, 296.0, _contentSize.height)] autorelease];
+		UILabel *contentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 103.0 + _titleSize.height, 296.0, _contentSize.height)] autorelease];
 		contentLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:16];
 		contentLabel.textColor = [UIColor colorWithWhite:0.431 alpha:1.0];
 		contentLabel.backgroundColor = [UIColor clearColor];
@@ -207,10 +216,20 @@
 		contentLabel.numberOfLines = 0;
 		[_scrollView addSubview:contentLabel];
 		
-		UIView *reactionsView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 150.0 + _titleSize.height + _tweetSize.height + _contentSize.height, self.frame.size.width, 150.0 + reactionsHeight)] autorelease];
-		[reactionsView setBackgroundColor:[UIColor colorWithWhite:0.886 alpha:1.0]];
-		[_scrollView addSubview:reactionsView];
+		UIButton *readMoreBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		readMoreBtn.frame = CGRectMake(118.0, 110.0 + _titleSize.height + _contentSize.height, 84.0, 34.0);
+		[readMoreBtn setBackgroundImage:[UIImage imageNamed:@"readMoreButton_nonActive.png"] forState:UIControlStateNormal];
+		[readMoreBtn setBackgroundImage:[UIImage imageNamed:@"readMoreButton_Active.png"] forState:UIControlStateHighlighted];
+		readMoreBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];
+		readMoreBtn.titleLabel.textAlignment = UITextAlignmentCenter;
+		[readMoreBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		[readMoreBtn setTitle:@"Read More" forState:UIControlStateNormal];
+		[readMoreBtn addTarget:self action:@selector(_goReadMore) forControlEvents:UIControlEventTouchUpInside];
+		[_scrollView addSubview:readMoreBtn];
 		
+		UIImageView *commentsBGImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 150.0 + _titleSize.height + _contentSize.height, self.frame.size.width, 480.0)] autorelease];
+		commentsBGImgView.image = [UIImage imageNamed:@"background_plain.png"];
+		[_scrollView addSubview:commentsBGImgView];
 		
 		
 		int offset = 50;
@@ -221,7 +240,7 @@
 			
 			SNArticleReactionItemView *reactionView = [[[SNArticleReactionItemView alloc] initWithFrame:CGRectMake(0.0, offset, _scrollView.frame.size.width, 30.0 + txtSize.height) reactionVO:vo] autorelease];
 			[_reactionViews addObject:reactionView];
-			[reactionsView addSubview:reactionView];
+			[commentsBGImgView addSubview:reactionView];
 			
 			offset += (30.0 + txtSize.height);
 		}
@@ -322,7 +341,9 @@
 			_scrollView.userInteractionEnabled = YES;
 			
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"STOP_TIMER" object:nil];
-			_collapseButton.hidden = NO;
+			[UIView animateWithDuration:0.33 animations:^(void) {
+				_collapseButton.frame = CGRectMake(256.0, 0.0, 64.0, 64.0);
+			} completion:nil];
 			
 			[UIView animateWithDuration:0.33 animations:^(void) {
 				_iconsCoverView.frame = CGRectMake(_iconsCoverView.frame.size.width, _iconsCoverView.frame.origin.y, _iconsCoverView.frame.size.width, _iconsCoverView.frame.size.height);
@@ -336,7 +357,9 @@
 	} else {
 		ang = 0;
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"START_TIMER" object:nil];
-		_collapseButton.hidden = YES;
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_collapseButton.frame = CGRectMake(320.0, -64.0, 64.0, 64.0);
+		} completion:nil];
 		
 		[UIView animateWithDuration:0.33 animations:^(void) {
 			_iconsCoverView.frame = CGRectMake(0.0, _iconsCoverView.frame.origin.y, _iconsCoverView.frame.size.width, _iconsCoverView.frame.size.height);

@@ -10,6 +10,7 @@
 
 #import "SNListCardView_iPhone.h"
 #import "SNAppDelegate.h"
+#import "SNListInfoView_iPhone.h"
 
 @implementation SNListCardView_iPhone
 
@@ -18,14 +19,17 @@
 		_vo = vo;
 		_isExpanded = NO;
 		
-		_testImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, -6.0, self.frame.size.width, self.frame.size.height)] autorelease];
+		_testImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)] autorelease];
 		_testImgView.image = [UIImage imageNamed:@"storyImageTest.jpg"];
 		_testImgView.layer.cornerRadius = 8.0;
 		_testImgView.clipsToBounds = YES;
 		_testImgView.layer.borderColor = [[UIColor colorWithWhite:0.671 alpha:1.0] CGColor];
 		_testImgView.layer.borderWidth = 1.0;
-		[self addSubview:_testImgView];
+		//[self addSubview:_testImgView];
 		
+		_coverImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)] autorelease];
+		_coverImgView.imageURL = [NSURL URLWithString:_vo.imageURL];
+		[self addSubview:_coverImgView];
 		
 		CABasicAnimation *initAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
 		initAnimation.beginTime = CACurrentMediaTime();
@@ -33,38 +37,15 @@
 		initAnimation.duration = 0.1;
 		initAnimation.fillMode = kCAFillModeForwards;
 		initAnimation.removedOnCompletion = NO;
-		[_testImgView.layer addAnimation:initAnimation forKey:@"initAnimation"];
+		//[_coverImgView.layer addAnimation:initAnimation forKey:@"initAnimation"];
 		
-		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(82.0, 410.0, 200.0, 20.0)] autorelease];
-		titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
-		titleLabel.textColor = [UIColor blackColor];
-		titleLabel.backgroundColor = [UIColor clearColor];
-		titleLabel.text = _vo.list_name;
-		[self addSubview:titleLabel];
+		_listInfoView = [[SNListInfoView_iPhone alloc] initWithFrame:CGRectMake(10.0, 400.0, self.frame.size.width - 30.0, 80.0) listVO:_vo];
+		[self addSubview:_listInfoView];
 		
-		UILabel *curatorLabel = [[[UILabel alloc] initWithFrame:CGRectMake(82.0, 430.0, 200.0, 20.0)] autorelease];
-		curatorLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14];
-		curatorLabel.textColor = [UIColor colorWithWhite:0.325 alpha:1.0];
-		curatorLabel.backgroundColor = [UIColor clearColor];
-		
-		if (_vo.totalSubscribers == 1)
-			curatorLabel.text = [NSString stringWithFormat:@"By %@ • %@ subscriber", _vo.curator, _vo.subscribersFormatted];
-		
-		else
-			curatorLabel.text = [NSString stringWithFormat:@"By %@ • %@ subscribers", _vo.curator, _vo.subscribersFormatted];
-		
-		[self addSubview:curatorLabel];
-		
-		_influencersView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 360.0, self.frame.size.width, 320.0)];
-		[_influencersView setBackgroundColor:[UIColor whiteColor]];
-		_influencersView.hidden = YES;
-		[self addSubview:_influencersView];
-		
-		
-		UIImageView *gripImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(128.0, 350.0, 64.0, 64.0)] autorelease];
-		gripImgView.image = [UIImage imageNamed:@"grip.png"];
-		[self addSubview:gripImgView];
-		
+		_influencersListView = [[SNInfluencersListView alloc] initWithFrame:CGRectMake(12.0, 360.0, 297.0, 450.0) listVO:_vo];
+		[_influencersListView setBackgroundColor:[UIColor whiteColor]];
+		_influencersListView.hidden = YES;
+		[self addSubview:_influencersListView];
 		
 		UIButton *articlesButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 		articlesButton.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
@@ -72,12 +53,12 @@
 		[self addSubview:articlesButton];
 		
 		UIButton *subscribeBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		subscribeBtn.frame = CGRectMake(214.0, 23, 83.0, 35.0);
-		[subscribeBtn setBackgroundImage:[UIImage imageNamed:@"readMoreButton_nonActive.png"] forState:UIControlStateNormal];
-		[subscribeBtn setBackgroundImage:[UIImage imageNamed:@"readMoreButton_Active.png"] forState:UIControlStateHighlighted];
+		subscribeBtn.frame = CGRectMake(214.0, 23, 84.0, 44.0);
+		[subscribeBtn setBackgroundImage:[UIImage imageNamed:@"subscribeButton_nonActive.png"] forState:UIControlStateNormal];
+		[subscribeBtn setBackgroundImage:[UIImage imageNamed:@"subscribeButton_Active.png"] forState:UIControlStateHighlighted];
 		subscribeBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];
 		subscribeBtn.titleLabel.textAlignment = UITextAlignmentCenter;
-		[subscribeBtn setTitleColor:[UIColor colorWithWhite:0.235 alpha:1.0] forState:UIControlStateNormal];
+		[subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 		[subscribeBtn setTitle:@"Subscribe" forState:UIControlStateNormal];
 		[subscribeBtn addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:subscribeBtn];
@@ -104,20 +85,20 @@
 	
 	
 	if (_isExpanded) {
-		_influencersView.hidden = NO;
+		_influencersListView.hidden = NO;
 		
-		[UIView animateWithDuration:0.33 animations:^(void){
-			_influencersView.frame = CGRectMake(_influencersView.frame.origin.x, 12.0, _influencersView.frame.size.width, _influencersView.frame.size.height);
-		} completion:^(BOOL finished){
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_influencersListView.frame = CGRectMake(_influencersListView.frame.origin.x, 12.0, _influencersListView.frame.size.width, _influencersListView.frame.size.height);
+		} completion:^(BOOL finished) {
 			
 		}];
 	
 	} else {
-		[UIView animateWithDuration:0.33 animations:^(void){
-			_influencersView.frame = CGRectMake(_influencersView.frame.origin.x, 360.0, _influencersView.frame.size.width, _influencersView.frame.size.height);
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_influencersListView.frame = CGRectMake(_influencersListView.frame.origin.x, 360.0, _influencersListView.frame.size.width, _influencersListView.frame.size.height);
 			
-		} completion:^(BOOL finished){
-			_influencersView.hidden = YES;
+		} completion:^(BOOL finished) {
+			_influencersListView.hidden = YES;
 		}];
 	}
 }
@@ -127,27 +108,17 @@
 -(void)_goArticles {
 	CABasicAnimation *zoomAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
 	zoomAnimation.beginTime = CACurrentMediaTime();
-	zoomAnimation.toValue = [NSNumber numberWithDouble:1.0];
+	zoomAnimation.toValue = [NSNumber numberWithDouble:1.07];
 	zoomAnimation.duration = 0.15;
 	zoomAnimation.fillMode = kCAFillModeForwards;
 	zoomAnimation.removedOnCompletion = NO;
-	[_testImgView.layer addAnimation:zoomAnimation forKey:@"zoomAnimation"];
+	[_coverImgView.layer addAnimation:zoomAnimation forKey:@"zoomAnimation"];
 	
-	[UIView animateWithDuration:0.15 animations:^(void) {
-		_testImgView.frame = CGRectMake(_testImgView.frame.origin.x, _testImgView.frame.origin.y + 6, _testImgView.frame.size.width, _testImgView.frame.size.height);
-	
-	} completion:^(BOOL finished){
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"LIST_ARTICLES" object:_vo];
-		_testImgView.frame = CGRectMake(_testImgView.frame.origin.x, _testImgView.frame.origin.y - 6, _testImgView.frame.size.width, _testImgView.frame.size.height);
-		
-		CABasicAnimation *initAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-		initAnimation.beginTime = CACurrentMediaTime();
-		initAnimation.toValue = [NSNumber numberWithDouble:0.93];
-		initAnimation.duration = 0.1;
-		initAnimation.fillMode = kCAFillModeForwards;
-		initAnimation.removedOnCompletion = NO;
-		[_testImgView.layer addAnimation:initAnimation forKey:@"initAnimation"];
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		_listInfoView.alpha = 0.0;
 	}];
+	
+	[self performSelector:@selector(_outroMe) withObject:nil afterDelay:0.2];
 	
 //	CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
 //	animationGroup.animations = [NSArray arrayWithObjects:zoomAnimation, scaleAnim, opacityAnim, nil];
@@ -160,6 +131,25 @@
 
 -(void)_goSubscribe {
 	
+}
+
+
+-(void)_outroMe {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"LIST_ARTICLES" object:_vo];
+	[self performSelector:@selector(_resetMe) withObject:nil afterDelay:0.33];
+}
+
+-(void)_resetMe {
+	CABasicAnimation *resetAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+	resetAnimation.beginTime = CACurrentMediaTime();
+	resetAnimation.toValue = [NSNumber numberWithDouble:1.0];
+	//resetAnimation.beginTime = CACurrentMediaTime() + 0.33;
+	resetAnimation.duration = 0.1;
+	resetAnimation.fillMode = kCAFillModeForwards;
+	resetAnimation.removedOnCompletion = NO;
+	[_coverImgView.layer addAnimation:resetAnimation forKey:@"resetAnimation"];
+
+	_listInfoView.alpha = 1.0;
 }
 
 @end

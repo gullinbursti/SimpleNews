@@ -494,11 +494,11 @@
 }
 
 -(void)requestFinished:(ASIHTTPRequest *)request {
-	//NSLog(@"requestFinished:\n%@", [[NSString alloc] initWithData:[request responseData] encoding:NSUTF8StringEncoding]);
+	NSLog(@"requestFinished:\n%@", [[NSString alloc] initWithData:[request responseData] encoding:NSUTF8StringEncoding]);
 	//NSString *videoStreamMap = @"url_encoded_fmt_stream_map= ... &tmi=1";
 	
 	NSString *videoInfo = [[[NSString alloc] initWithData:[request responseData] encoding:NSUTF8StringEncoding] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-	//NSLog(@"%@", videoInfo);
+	NSLog(@"%@", videoInfo);
 	
 	NSRange prefixRange = [videoInfo rangeOfString:@"url_encoded_fmt_stream_map=url="];
 	NSRange suffixRange = [videoInfo rangeOfString:@"&tmi=1"];
