@@ -32,17 +32,15 @@
 		
 		UIButton *contentButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 		contentButton.frame = CGRectMake(45.0, 0.0, 255.0, 20.0 + txtSize.height);
-		[contentButton setBackgroundImage:[[UIImage imageNamed:@"readMoreButton_nonActive.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:5.0] forState:UIControlStateNormal];
-		[contentButton setBackgroundImage:[[UIImage imageNamed:@"readMoreButton_Active.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:5.0] forState:UIControlStateHighlighted];
+		[contentButton setBackgroundImage:[[UIImage imageNamed:@"commentsBG.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:5.0] forState:UIControlStateNormal];
+		[contentButton setBackgroundImage:[[UIImage imageNamed:@"commentsBG.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:5.0] forState:UIControlStateHighlighted];
 		[contentButton addTarget:self action:@selector(_goReactionPage) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:contentButton];
 		
 		UILabel *contentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(60.0, 8.0, 230.0, txtSize.height)] autorelease];
 		contentLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
-		contentLabel.textColor = [UIColor whiteColor];
+		contentLabel.textColor = [UIColor colorWithWhite:0.376 alpha:1.0];
 		contentLabel.backgroundColor = [UIColor clearColor];
-		contentLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-		contentLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 		contentLabel.text = _vo.content;
 		contentLabel.numberOfLines = 0;
 		[self addSubview:contentLabel];

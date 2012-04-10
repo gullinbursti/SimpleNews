@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C06B0E31532A09700BEBA04 /* commentsArrowBG.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C06B0DF1532A09700BEBA04 /* commentsArrowBG.png */; };
+		4C06B0E41532A09700BEBA04 /* commentsArrowBG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C06B0E01532A09700BEBA04 /* commentsArrowBG@2x.png */; };
+		4C06B0E51532A09700BEBA04 /* commentsBG.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C06B0E11532A09700BEBA04 /* commentsBG.png */; };
+		4C06B0E61532A09700BEBA04 /* commentsBG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C06B0E21532A09700BEBA04 /* commentsBG@2x.png */; };
 		4C0C331A14FF790400A3EB60 /* video_player.html in Resources */ = {isa = PBXBuildFile; fileRef = 4C0C331914FF790400A3EB60 /* video_player.html */; };
 		4C23BF451523E32E002D028B /* UABeveledLoadingIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C23BEAC1523E32E002D028B /* UABeveledLoadingIndicator.m */; };
 		4C23BF461523E32E002D028B /* UAInboxAlertHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C23BEAE1523E32E002D028B /* UAInboxAlertHandler.m */; };
@@ -366,6 +370,7 @@
 		4CF39882152D970000460BD2 /* scoreMeterBG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CF39880152D970000460BD2 /* scoreMeterBG@2x.png */; };
 		4CF39885152D971B00460BD2 /* topOfStoryBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CF39883152D971B00460BD2 /* topOfStoryBackground.png */; };
 		4CF39886152D971B00460BD2 /* topOfStoryBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CF39884152D971B00460BD2 /* topOfStoryBackground@2x.png */; };
+		4CF3988C152E16DE00460BD2 /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CF3988B152E16DD00460BD2 /* Entitlements.plist */; };
 		4CF63C2E150B205F00055EFD /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CF63C2C150B205F00055EFD /* logo.png */; };
 		4CF63C2F150B205F00055EFD /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CF63C2D150B205F00055EFD /* logo@2x.png */; };
 		4CF63C32150B207B00055EFD /* overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CF63C30150B207B00055EFD /* overlay.png */; };
@@ -373,6 +378,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4C06B0DF1532A09700BEBA04 /* commentsArrowBG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = commentsArrowBG.png; sourceTree = "<group>"; };
+		4C06B0E01532A09700BEBA04 /* commentsArrowBG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "commentsArrowBG@2x.png"; sourceTree = "<group>"; };
+		4C06B0E11532A09700BEBA04 /* commentsBG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = commentsBG.png; sourceTree = "<group>"; };
+		4C06B0E21532A09700BEBA04 /* commentsBG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "commentsBG@2x.png"; sourceTree = "<group>"; };
 		4C0C331914FF790400A3EB60 /* video_player.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = video_player.html; sourceTree = "<group>"; };
 		4C23BEAB1523E32E002D028B /* UABeveledLoadingIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UABeveledLoadingIndicator.h; sourceTree = "<group>"; };
 		4C23BEAC1523E32E002D028B /* UABeveledLoadingIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UABeveledLoadingIndicator.m; sourceTree = "<group>"; };
@@ -926,6 +935,7 @@
 		4CF39880152D970000460BD2 /* scoreMeterBG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "scoreMeterBG@2x.png"; sourceTree = "<group>"; };
 		4CF39883152D971B00460BD2 /* topOfStoryBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topOfStoryBackground.png; sourceTree = "<group>"; };
 		4CF39884152D971B00460BD2 /* topOfStoryBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "topOfStoryBackground@2x.png"; sourceTree = "<group>"; };
+		4CF3988B152E16DD00460BD2 /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Entitlements.plist; path = "../../../../../sThompkins/GUTZ/02_DEV/iPhone App/Entitlements.plist"; sourceTree = "<group>"; };
 		4CF63C2C150B205F00055EFD /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		4CF63C2D150B205F00055EFD /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@2x.png"; sourceTree = "<group>"; };
 		4CF63C30150B207B00055EFD /* overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = overlay.png; sourceTree = "<group>"; };
@@ -1706,6 +1716,10 @@
 		4CD01B571514049B005B490C /* Articles */ = {
 			isa = PBXGroup;
 			children = (
+				4C06B0DF1532A09700BEBA04 /* commentsArrowBG.png */,
+				4C06B0E01532A09700BEBA04 /* commentsArrowBG@2x.png */,
+				4C06B0E11532A09700BEBA04 /* commentsBG.png */,
+				4C06B0E21532A09700BEBA04 /* commentsBG@2x.png */,
 				4CF39883152D971B00460BD2 /* topOfStoryBackground.png */,
 				4CF39884152D971B00460BD2 /* topOfStoryBackground@2x.png */,
 				4CF3987F152D970000460BD2 /* scoreMeterBG.png */,
@@ -1843,6 +1857,7 @@
 		4CDC8BE214F2CDEB00D42EA5 = {
 			isa = PBXGroup;
 			children = (
+				4CF3988B152E16DD00460BD2 /* Entitlements.plist */,
 				4C6B218E1510739A0027AEE4 /* Default.png */,
 				4C6B218F1510739A0027AEE4 /* Default@2x.png */,
 				4CE53DE91509EA55004C6810 /* icon_114x114.png */,
@@ -2385,6 +2400,11 @@
 				4CF39882152D970000460BD2 /* scoreMeterBG@2x.png in Resources */,
 				4CF39885152D971B00460BD2 /* topOfStoryBackground.png in Resources */,
 				4CF39886152D971B00460BD2 /* topOfStoryBackground@2x.png in Resources */,
+				4CF3988C152E16DE00460BD2 /* Entitlements.plist in Resources */,
+				4C06B0E31532A09700BEBA04 /* commentsArrowBG.png in Resources */,
+				4C06B0E41532A09700BEBA04 /* commentsArrowBG@2x.png in Resources */,
+				4C06B0E51532A09700BEBA04 /* commentsBG.png in Resources */,
+				4C06B0E61532A09700BEBA04 /* commentsBG@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2634,6 +2654,50 @@
 			};
 			name = Release;
 		};
+		4CF3988D152E172000460BD2 /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Matthew Holcombe";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8B9F7F52-BF7D-467D-A90E-B03C414C485A";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Ad Hoc";
+		};
+		4CF3988E152E172000460BD2 /* Ad Hoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_ENTITLEMENTS[sdk=*]" = Entitlements.plist;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SimpleNews/SimpleNews-Prefix.pch";
+				INFOPLIST_FILE = "SimpleNews/SimpleNews-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/SimpleNews/Airship\"",
+					"\"$(SRCROOT)/SimpleNews/cURL\"",
+					"\"$(SRCROOT)/SimpleNews/curl\"",
+					"\"$(SRCROOT)/SimpleNews/openssl\"",
+				);
+				OTHER_LDFLAGS = "";
+				"OTHER_LDFLAGS[arch=*]" = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Ad Hoc";
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2642,6 +2706,7 @@
 			buildConfigurations = (
 				4CDC8C0C14F2CDEB00D42EA5 /* Debug */,
 				4CDC8C0D14F2CDEB00D42EA5 /* Release */,
+				4CF3988D152E172000460BD2 /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -2651,6 +2716,7 @@
 			buildConfigurations = (
 				4CDC8C0F14F2CDEB00D42EA5 /* Debug */,
 				4CDC8C1014F2CDEB00D42EA5 /* Release */,
+				4CF3988E152E172000460BD2 /* Ad Hoc */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -148,9 +148,8 @@
 
 #pragma mark - Control handlers
 -(void)_goClose {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
 	
-	[self _goStopVideo];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
 	_isFinished = YES;
 	
 	[_hudTimer invalidate];
@@ -164,6 +163,7 @@
 		_videoHolderView.alpha = 0.0;
 		
 	} completion:^(BOOL finished) {
+		[self.mpc stop];
 		[_articleInfluencerView removeFromSuperview];
 		[self.mpc.view removeFromSuperview];
 		
@@ -315,7 +315,6 @@
 -(void)_finishedCallback:(NSNotification *)notification {
 	NSLog(@"----[FINISHED PLAYBACK](%f, %f)----", self.mpc.currentPlaybackTime, self.mpc.duration);
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
-	
 	_isFinished = YES;
 	
 	[_progressTimer invalidate];

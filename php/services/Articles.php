@@ -677,6 +677,20 @@
 				$query = 'SELECT `avatar_url`, `name`, `handle`, `description` FROM `tblInfluencers` WHERE `id` = "'. $article_row['influencer_id'] .'";';
 				$influencer_arr = mysql_fetch_row(mysql_query($query));
 				
+				$query = 'SELECT * FROM `tblComments` WHERE `article_id` = "'. $article_row['id'] .'" AND `list_id` = "'. $list_id .'";';
+				$comments_result = mysql_query($query);
+				
+				$reaction_arr = array();
+				while ($comment_row = mysql_fetch_array($comments_result, MYSQL_BOTH)) {
+					array_push($reaction_arr, array(
+						"reaction_id" => $comment_row['id'], 
+						"thumb_url" => "https://si0.twimg.com/profile_images/180710325/andvari.jpg", 
+						"user_url" => "https://twitter.com/#!/andvari", 
+						"reaction_url" => "http://shelby.tv", 
+						"content" => $comment_row['content']
+					 ));
+				}
+				
 				array_push($article_arr, array(
 					"article_id" => $article_row['id'], 
 					"type_id" => $article_row['type_id'], 
@@ -697,11 +711,24 @@
 					"is_dark" => $article_row['isDark'], 
 					"added" => $article_row['added'], 
 					"tags" => array(), 
-					"reactions" => array()
+					"reactions" => $reaction_arr
 				));
 			}
 			
 			$this->sendResponse(200, json_encode($article_arr));
+			return (true);
+		}
+		
+		function submitComment($user_id, $list_id, $article_id, $content) {
+			$query = 'INSERT INTO `tblComments` (';
+			$query .= '`id`, `article_id`, `list_id`, `user_id`, `content`, `added`) ';
+			$query .= 'VALUES (NULL, "'. $article_id .'", "'. $list_id .'", "'. $user_id .'", "'. $content .'", NOW());';
+			$result = mysql_query($query);
+			$comment_id = mysql_insert_id();
+			
+			$this->sendResponse(200, json_encode(array(
+				"comment_id" => $comment_id
+			)));
 			return (true);
 		}
 		
@@ -761,6 +788,11 @@
 			case "8":
 			 	if (isset($_POST['listID']))
 					$articles->getArticlesForList($_POST['listID']);
+				break;
+				
+			case "9":
+				if (isset($_POST['userID']) && isset($_POST['listID']) && isset($_POST['articleID']) && isset($_POST['content']))
+					$articles->submitComment($_POST['userID'], $_POST['listID'], $_POST['articleID'], $_POST['content']);
 				break;
     	}
 	}

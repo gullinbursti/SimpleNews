@@ -52,16 +52,16 @@
 		[articlesButton addTarget:self action:@selector(_goArticles) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:articlesButton];
 		
-		UIButton *subscribeBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		subscribeBtn.frame = CGRectMake(214.0, 23, 84.0, 44.0);
-		[subscribeBtn setBackgroundImage:[UIImage imageNamed:@"subscribeButton_nonActive.png"] forState:UIControlStateNormal];
-		[subscribeBtn setBackgroundImage:[UIImage imageNamed:@"subscribeButton_Active.png"] forState:UIControlStateHighlighted];
-		subscribeBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];
-		subscribeBtn.titleLabel.textAlignment = UITextAlignmentCenter;
-		[subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-		[subscribeBtn setTitle:@"Subscribe" forState:UIControlStateNormal];
-		[subscribeBtn addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:subscribeBtn];
+		_subscribeBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		_subscribeBtn.frame = CGRectMake(214.0, 23, 84.0, 44.0);
+		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"subscribeButton_nonActive.png"] forState:UIControlStateNormal];
+		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"subscribeButton_Active.png"] forState:UIControlStateHighlighted];
+		_subscribeBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13.0];
+		_subscribeBtn.titleLabel.textAlignment = UITextAlignmentCenter;
+		[_subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		[_subscribeBtn setTitle:@"Subscribe" forState:UIControlStateNormal];
+		[_subscribeBtn addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:_subscribeBtn];
 		
 		UISwipeGestureRecognizer *swipeUpRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_goExpandCollapse:)];
 		swipeUpRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
@@ -87,15 +87,33 @@
 	if (_isExpanded) {
 		_influencersListView.hidden = NO;
 		
+		CABasicAnimation *flipAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.y"];
+		flipAnimation.fromValue = [NSNumber numberWithFloat:0.0];
+		flipAnimation.toValue = [NSNumber numberWithFloat:M_PI];
+		flipAnimation.duration = 0.33;
+		flipAnimation.fillMode = kCAFillModeForwards;
+		flipAnimation.removedOnCompletion = NO;
+		[_coverImgView.layer addAnimation:flipAnimation forKey:@"flipAnimation"];
+		
 		[UIView animateWithDuration:0.33 animations:^(void) {
-			_influencersListView.frame = CGRectMake(_influencersListView.frame.origin.x, 12.0, _influencersListView.frame.size.width, _influencersListView.frame.size.height);
+			_subscribeBtn.alpha = 0.0;
+			//_influencersListView.frame = CGRectMake(_influencersListView.frame.origin.x, 12.0, _influencersListView.frame.size.width, _influencersListView.frame.size.height);
 		} completion:^(BOOL finished) {
 			
 		}];
 	
 	} else {
+		CABasicAnimation *flipAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.y"];
+		flipAnimation.fromValue = [NSNumber numberWithFloat:M_PI];
+		flipAnimation.toValue = [NSNumber numberWithFloat:0.0];
+		flipAnimation.duration = 0.33;
+		flipAnimation.fillMode = kCAFillModeForwards;
+		flipAnimation.removedOnCompletion = NO;
+		[_coverImgView.layer addAnimation:flipAnimation forKey:@"flipAnimation"];
+		
 		[UIView animateWithDuration:0.33 animations:^(void) {
-			_influencersListView.frame = CGRectMake(_influencersListView.frame.origin.x, 360.0, _influencersListView.frame.size.width, _influencersListView.frame.size.height);
+			_subscribeBtn.alpha = 1.0;
+			//_influencersListView.frame = CGRectMake(_influencersListView.frame.origin.x, 360.0, _influencersListView.frame.size.width, _influencersListView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
 			_influencersListView.hidden = YES;

@@ -123,6 +123,7 @@
 
 -(id)initWithList:(int)list_id {
 	if ((self = [self init])) {
+		_list_id = list_id;
 		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 8] forKey:@"action"];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", list_id] forKey:@"listID"];
@@ -410,6 +411,10 @@
 	
 	[_timer invalidate];
 	_timer = nil;
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
+	} completion:nil];
 }
 
 -(void)_videoStarted:(NSNotification *)notification {
@@ -421,6 +426,10 @@
 -(void)_videoEnded:(NSNotification *)notification {
 	
 	_videoPlayerView.hidden = YES;
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
+	} completion:nil];
 	
 	[UIView animateWithDuration:0.5 animations:^(void) {
 		_blackMatteView.alpha = 0.0;
@@ -682,7 +691,7 @@
 						[articleList addObject:vo];
 					
 					
-					SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:_cardHolderView.frame articleVO:vo index:tot] autorelease];
+					SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:_cardHolderView.frame articleVO:vo listID:_list_id] autorelease];
 					[_cardViews addObject:(SNBaseArticleCardView_iPhone *)articleCardView];
 					
 					tot++;

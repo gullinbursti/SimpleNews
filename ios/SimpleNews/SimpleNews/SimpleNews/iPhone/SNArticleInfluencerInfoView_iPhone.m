@@ -19,10 +19,8 @@
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
 		
-		self.clipsToBounds = YES;
-		
-		UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)] autorelease];
-		bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
+		UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, -20.0, 320.0, 101.0)] autorelease];
+		bgImgView.image = [UIImage imageNamed:@"topOfStoryBackground.png"];
 		[self addSubview:bgImgView];
 		
 		EGOImageView *avatarImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 6.0, 50.0, 50.0)] autorelease];

@@ -30,14 +30,15 @@
 #define kImageScale 0.9
 #define kBaseHeaderHeight 65.0
 
--(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo index:(int)idx {
+-(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo listID:(int)list_id {
 	if ((self = [super initWithFrame:frame])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_changeCards:) name:@"CHANGE_CARDS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
 		
 		_vo = vo;
-		_ind = idx;
+		_list_id = list_id;
 		_isExpanded = NO;
+		_commentsOffset = 12;
 		
 		self.userInteractionEnabled = NO;
 		[self setBackgroundColor:[UIColor clearColor]];
@@ -97,6 +98,7 @@
 		commentTxtField.keyboardType = UIKeyboardTypeDefault;
 		commentTxtField.text = @"";
 		commentTxtField.placeholder = @"Comment";
+		commentTxtField.delegate = self;
 		[inputBgImgView addSubview:commentTxtField];
 		
 //		UIButton *emoticonButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
@@ -135,7 +137,7 @@
 		
 		if (_vo.type_id > 4) {
 			_playButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
-			_playButton.frame = CGRectMake(121.0, 165.0, 84.0, 84.0);
+			_playButton.frame = CGRectMake(116.0, 193.0, 94.0, 94.0);
 			_playButton.alpha = 0.0;
 			[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 			[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
@@ -227,22 +229,21 @@
 		[readMoreBtn addTarget:self action:@selector(_goReadMore) forControlEvents:UIControlEventTouchUpInside];
 		[_scrollView addSubview:readMoreBtn];
 		
-		UIImageView *commentsBGImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 150.0 + _titleSize.height + _contentSize.height, self.frame.size.width, 480.0)] autorelease];
-		commentsBGImgView.image = [UIImage imageNamed:@"background_plain.png"];
-		[_scrollView addSubview:commentsBGImgView];
+		_commentsBGImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 150.0 + _titleSize.height + _contentSize.height, self.frame.size.width, 480.0)] autorelease];
+		_commentsBGImgView.image = [UIImage imageNamed:@"background_plain.png"];
+		[_scrollView addSubview:_commentsBGImgView];
 		
 		
-		int offset = 50;
 		for (SNReactionVO *vo in _vo.reactions) {
 			//NSLog(@"OFFSET:%d", offset);
 			
 			CGSize txtSize = [vo.content sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(230.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 			
-			SNArticleReactionItemView *reactionView = [[[SNArticleReactionItemView alloc] initWithFrame:CGRectMake(0.0, offset, _scrollView.frame.size.width, 30.0 + txtSize.height) reactionVO:vo] autorelease];
+			SNArticleReactionItemView *reactionView = [[[SNArticleReactionItemView alloc] initWithFrame:CGRectMake(0.0, _commentsOffset, _scrollView.frame.size.width, 30.0 + txtSize.height) reactionVO:vo] autorelease];
 			[_reactionViews addObject:reactionView];
-			[commentsBGImgView addSubview:reactionView];
+			[_commentsBGImgView addSubview:reactionView];
 			
-			offset += (30.0 + txtSize.height);
+			_commentsOffset += (30.0 + txtSize.height);
 		}
 		
 		UISwipeGestureRecognizer *swipeUpRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_goExpandCollapse:)];
@@ -420,6 +421,12 @@
 
 
 #pragma mark - TextField Delegates
+-(void)textFieldDidBeginEditing:(UITextField *)textField {
+	[UIView animateWithDuration:0.33 animations:^(void){
+		_scrollView.contentOffset = CGPointMake(0.0, _scrollView.contentSize.height - 250.0);
+	}];
+}
+
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
 	[textField resignFirstResponder];
 	return YES;
@@ -427,6 +434,41 @@
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
 	[textField resignFirstResponder];
+	
+	_commentSubmitRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+	[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", 9] forKey:@"action"];
+	[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"userID"];
+	[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+	[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", _list_id] forKey:@"listID"];
+	[_commentSubmitRequest setPostValue:textField.text forKey:@"content"];
+	
+	[_commentSubmitRequest setTimeOutSeconds:30];
+	[_commentSubmitRequest setDelegate:self];
+	[_commentSubmitRequest startAsynchronous];
+	
+	NSLog(@"USER:%d, ARTICLE:%d, LIST:%d, CONTENT:%@", 1, _vo.article_id, _list_id, textField.text);
+	
+	
+	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+								 @"0", @"reaction_id",
+								 @"https://si0.twimg.com/profile_images/180710325/andvari.jpg", @"thumb_url", 
+								 @"https://twitter.com/#!/andvari", @"user_url", 
+								 @"http://shelby.tv", @"reaction_url", 
+								 textField.text, @"content", 
+								 nil];
+	SNReactionVO *vo = [SNReactionVO reactionWithDictionary:dict];
+	CGSize commentSize = [textField.text sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:24] constrainedToSize:CGSizeMake(230.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+	
+	SNArticleReactionItemView *reactionView = [[[SNArticleReactionItemView alloc] initWithFrame:CGRectMake(0.0, _commentsOffset, _scrollView.frame.size.width, 30.0 + commentSize.height) reactionVO:vo] autorelease];
+	[_reactionViews addObject:reactionView];
+	[_commentsBGImgView addSubview:reactionView];
+	
+	_commentsOffset += (30.0 + commentSize.height);
+	
+	textField.text = @"";
+	
+	//_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - kBaseHeaderHeight, _holderView.frame.size.width, _titleSize.height + _contentSize.height + _commentsOffset + 150.0);
+	//_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, _holderView.frame.size.height);
 }
 
 #pragma mark - ScrollView Delegates
@@ -469,6 +511,31 @@
 
 -(void)imageViewFailedToLoadImage:(EGOImageView *)imageView error:(NSError *)error {
 	NSLog(@"IMAGE LOAD FAIL");
+}
+
+
+
+#pragma mark - ASI Delegates
+-(void)requestFinished:(ASIHTTPRequest *)request { 
+	NSLog(@"SNArticleCardView_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	
+	@autoreleasepool {
+		NSError *error = nil;
+		//NSArray *parsedArticles = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+		if (error != nil)
+			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+		
+		else {
+		}
+	}	
+}
+
+
+-(void)requestFailed:(ASIHTTPRequest *)request {
+	//[_delegates perform:@selector(jobList:didFailLoadWithError:) withObject:self withObject:request.error];
+	//MBL_RELEASE_SAFELY(_jobListRequest);
+	
+	//[_loadOverlay remove];
 }
 
 

@@ -21,6 +21,8 @@
 	SNInfluencersListView *_influencersListView;
 	SNListInfoView_iPhone *_listInfoView;
 	BOOL _isExpanded;
+	
+	UIButton *_subscribeBtn;
 }
 
 -(id)initWithFrame:(CGRect)frame listVO:(SNListVO *)vo;

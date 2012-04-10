@@ -31,6 +31,7 @@
 	
 	int _cardIndex;
 	BOOL _isLastCard;
+	int _list_id;
 	
 	SNShareSheetView_iPhone *_shareSheetView;
 	
