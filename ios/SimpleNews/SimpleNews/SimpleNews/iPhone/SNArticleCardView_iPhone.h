@@ -33,6 +33,7 @@
 	
 	UIView *_headerBgView;
 	UIImageView *_commentsBGImgView;
+	UITextField *_commentTxtField;
 	UILabel *_commentsLabel;
 	UIButton *_collapseButton;
 	

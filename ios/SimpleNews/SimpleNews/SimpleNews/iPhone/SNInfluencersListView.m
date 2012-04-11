@@ -24,14 +24,37 @@
 		self.layer.borderColor = [[UIColor colorWithWhite:0.671 alpha:1.0] CGColor];
 		self.layer.borderWidth = 1.0;
 		
-		_listInfoView = [[SNListInfoView_iPhone alloc] initWithFrame:CGRectMake(15.0, 4.0, self.frame.size.width - 30.0, 80.0) listVO:_vo];
-		[self addSubview:_listInfoView];
+		UIView *headerView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 45.0)] autorelease];
+		[headerView setBackgroundColor:[UIColor colorWithWhite:0.941 alpha:1.0]];
+		[self addSubview:headerView];
 		
-		UIImageView *gripImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(135.0, 0.0, 49.0, 14.0)] autorelease];
-		gripImgView.image = [UIImage imageNamed:@"gripDown.png"];
-		[self addSubview:gripImgView];
+		UIView *headerLineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 45.0, self.frame.size.width, 1.0)] autorelease];
+		[headerLineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
+		[self addSubview:headerLineView];
 		
-		_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 70.0, self.frame.size.width, self.frame.size.height - 70.0) style:UITableViewStylePlain];
+		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(15.0, 14.0, 200.0, 20.0)] autorelease];
+		titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:18];
+		titleLabel.textColor = [UIColor blackColor];
+		titleLabel.backgroundColor = [UIColor clearColor];
+		titleLabel.text = _vo.list_name;
+		[self addSubview:titleLabel];
+		
+		UIImageView *verifiedImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 58.0, 24.0, 24.0)] autorelease];
+		verifiedImgView.image = [UIImage imageNamed:@"verifiedIcon.png"];
+		[self addSubview:verifiedImgView];
+		
+		UILabel *curatorLabel = [[[UILabel alloc] initWithFrame:CGRectMake(38.0, 60.0, 200.0, 20.0)] autorelease];
+		curatorLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14];
+		curatorLabel.textColor = [UIColor blackColor];
+		curatorLabel.backgroundColor = [UIColor clearColor];
+		curatorLabel.text = [NSString stringWithFormat:@"by %@", _vo.curator];
+		[self addSubview:curatorLabel];
+		
+		UIView *subheaderLineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 95.0, self.frame.size.width, 1.0)] autorelease];
+		[subheaderLineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
+		[self addSubview:subheaderLineView];
+		
+		_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 95.0, self.frame.size.width, self.frame.size.height - 95.0) style:UITableViewStylePlain];
 		[_tableView setBackgroundColor:[UIColor clearColor]];
 		_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 		_tableView.rowHeight = 60.0;
@@ -91,31 +114,6 @@
 #pragma mark - TableView Delegates
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return (60.0);
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-	return (29.0);
-}
-
--(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-	//NSLog(@"viewForHeaderInSection:[%@]", [_categories objectAtIndex:section]);
-	
-	UIView *sectionHeaderView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, _tableView.frame.size.width, 29.0)] autorelease];
-	
-	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 297.0, 29.0)] autorelease];
-	bgImgView.image = [UIImage imageNamed:@"listHeaderBG.png"];
-	[sectionHeaderView addSubview:bgImgView];
-	
-	UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 5.0, 296.0, 16.0)] autorelease];
-	titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:11];
-	titleLabel.textColor = [UIColor colorWithWhite:0.7 alpha:1.0];
-	titleLabel.backgroundColor = [UIColor clearColor];
-	titleLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:1.0];
-	titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-	titleLabel.text = [NSString stringWithFormat:@"Following (%d)", [_influencers count]];;
-	[sectionHeaderView addSubview:titleLabel];
-	
-	return (sectionHeaderView);
 }
 
 

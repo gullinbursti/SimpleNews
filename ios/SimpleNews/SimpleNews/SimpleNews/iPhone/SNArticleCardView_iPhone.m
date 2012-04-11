@@ -89,20 +89,20 @@
 		_inputBgImgView.userInteractionEnabled = YES;
 		[_holderView addSubview:_inputBgImgView];
 		
-		UITextField *commentTxtField = [[[UITextField alloc] initWithFrame:CGRectMake(23.0, 21.0, 270.0, 16.0)] autorelease];
-		[commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
-		[commentTxtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
-		[commentTxtField setAutocorrectionType:UITextAutocorrectionTypeNo];
-		[commentTxtField setBackgroundColor:[UIColor clearColor]];
-		[commentTxtField setReturnKeyType:UIReturnKeyDone];
-		[commentTxtField addTarget:self action:@selector(_onTxtDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
-		commentTxtField.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
-		commentTxtField.keyboardType = UIKeyboardTypeDefault;
-		commentTxtField.text = @"";
-		commentTxtField.delegate = self;
-		[_inputBgImgView addSubview:commentTxtField];
+		_commentTxtField = [[[UITextField alloc] initWithFrame:CGRectMake(23.0, 21.0, 270.0, 16.0)] autorelease];
+		[_commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+		[_commentTxtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
+		[_commentTxtField setAutocorrectionType:UITextAutocorrectionTypeNo];
+		[_commentTxtField setBackgroundColor:[UIColor clearColor]];
+		[_commentTxtField setReturnKeyType:UIReturnKeyDone];
+		[_commentTxtField addTarget:self action:@selector(_onTxtDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
+		_commentTxtField.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
+		_commentTxtField.keyboardType = UIKeyboardTypeDefault;
+		_commentTxtField.text = @"";
+		_commentTxtField.delegate = self;
+		//[_inputBgImgView addSubview:_commentTxtField];
 		
-		_commentsLabel = [[UILabel alloc] initWithFrame:commentTxtField.frame];
+		_commentsLabel = [[UILabel alloc] initWithFrame:_commentTxtField.frame];
 		_commentsLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
 		_commentsLabel.textColor = [UIColor blackColor];
 		_commentsLabel.backgroundColor = [UIColor clearColor];
@@ -117,25 +117,25 @@
 //		[inputBgImgView addSubview:emoticonButton];
 		
 		
-		UIImageView *scoreBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(261.0, 35.0, 64.0, 94.0)];
-		scoreBgImgView.image = [UIImage imageNamed:@"scoreMeterBG.png"];
-		scoreBgImgView.userInteractionEnabled = YES;
-		[self addSubview:scoreBgImgView];
-		
-		UIButton *scoreFavoriteButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		scoreFavoriteButton.frame = CGRectMake(22.0, 18.0, 24.0, 24.0);
-		[scoreFavoriteButton setBackgroundImage:[UIImage imageNamed:@"likeIcon_nonActive.png"] forState:UIControlStateNormal];
-		[scoreFavoriteButton setBackgroundImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
-		[scoreFavoriteButton addTarget:self action:@selector(_goFavorite) forControlEvents:UIControlEventTouchUpInside];
-		[scoreBgImgView addSubview:scoreFavoriteButton];
-		
-		UIButton *scoreShareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		scoreShareButton.frame = CGRectMake(22.0, 58.0, 24.0, 24.0);
-		[scoreShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconB_nonActive.png"] forState:UIControlStateNormal];
-		[scoreShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconB_Active.png"] forState:UIControlStateHighlighted];
-		[scoreShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-		[scoreBgImgView addSubview:scoreShareButton];
-		
+//		UIImageView *scoreBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(261.0, 35.0, 64.0, 94.0)];
+//		scoreBgImgView.image = [UIImage imageNamed:@"scoreMeterBG.png"];
+//		scoreBgImgView.userInteractionEnabled = YES;
+//		[self addSubview:scoreBgImgView];
+//		
+//		UIButton *scoreFavoriteButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+//		scoreFavoriteButton.frame = CGRectMake(22.0, 18.0, 24.0, 24.0);
+//		[scoreFavoriteButton setBackgroundImage:[UIImage imageNamed:@"likeIcon_nonActive.png"] forState:UIControlStateNormal];
+//		[scoreFavoriteButton setBackgroundImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
+//		[scoreFavoriteButton addTarget:self action:@selector(_goFavorite) forControlEvents:UIControlEventTouchUpInside];
+//		[scoreBgImgView addSubview:scoreFavoriteButton];
+//		
+//		UIButton *scoreShareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+//		scoreShareButton.frame = CGRectMake(22.0, 58.0, 24.0, 24.0);
+//		[scoreShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconB_nonActive.png"] forState:UIControlStateNormal];
+//		[scoreShareButton setBackgroundImage:[UIImage imageNamed:@"shareIconB_Active.png"] forState:UIControlStateHighlighted];
+//		[scoreShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+//		[scoreBgImgView addSubview:scoreShareButton];
+//		
 		_collapseButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 		_collapseButton.frame = CGRectMake(320.0, -64.0, 64.0, 64.0);
 		[_collapseButton setBackgroundImage:[UIImage imageNamed:@"topLeftClose_nonActive.png"] forState:UIControlStateNormal];
@@ -261,7 +261,7 @@
 		
 		UISwipeGestureRecognizer *swipeDnRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_goExpandCollapse:)];
 		swipeDnRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
-		[self addGestureRecognizer:swipeDnRecognizer];
+		//[self addGestureRecognizer:swipeDnRecognizer];
 		[swipeDnRecognizer release];
 	}
 	
@@ -300,7 +300,7 @@
 
 -(void)introContent {
 	[UIView animateWithDuration:0.25 animations:^(void) {
-		_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - (kBaseHeaderHeight + 5.0), _holderView.frame.size.width, _holderView.frame.size.height);
+		_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - kBaseHeaderHeight, _holderView.frame.size.width, _holderView.frame.size.height);
 		_holderView.alpha = 1.0;
 		
 		if (_vo.type_id > 4)
@@ -365,6 +365,10 @@
 	
 	} else {
 		ang = 0;
+		
+		//if ([_commentTxtField isFirstResponder])
+		//	[_commentTxtField resignFirstResponder];
+		
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"START_TIMER" object:nil];
 		[UIView animateWithDuration:0.33 animations:^(void) {
 			_collapseButton.frame = CGRectMake(320.0, -64.0, 64.0, 64.0);

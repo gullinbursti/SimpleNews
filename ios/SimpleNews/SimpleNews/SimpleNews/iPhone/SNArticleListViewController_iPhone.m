@@ -211,6 +211,9 @@
 	_loaderView = [[SNLoaderView_iPhone alloc] initWithFrame:self.view.frame];
 	[self.view addSubview:_loaderView];
 	
+	_paginationView = [[SNPaginationView_iPhone alloc] initWithFrame:CGRectMake(278.0, 460.0, 48.0, 9.0)];
+	[self.view addSubview:_paginationView];
+	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
@@ -309,6 +312,8 @@
 			_cardIndex++;
 			_isLastCard = NO;
 			
+			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
+			
 		}];
 			
 	} else {
@@ -369,6 +374,8 @@
 			[nextCardView introContent];
 			_cardIndex--;
 			_isLastCard = NO;
+			
+			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
 		}];
 				
 	} else {

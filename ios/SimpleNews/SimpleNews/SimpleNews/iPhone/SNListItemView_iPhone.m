@@ -22,15 +22,15 @@
 		[self addSubview:thumbImgView];
 		
 		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(70.0, 18.0, frame.size.width, 20.0)] autorelease];
-		titleLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
+		titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14];
 		titleLabel.textColor = [UIColor blackColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.text = _vo.list_name;
 		[self addSubview:titleLabel];
 		
-		UILabel *curatorLabel = [[[UILabel alloc] initWithFrame:CGRectMake(70.0, 33.0, 200.0, 20.0)] autorelease];
-		curatorLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14];
-		curatorLabel.textColor = [UIColor colorWithWhite:0.325 alpha:1.0];
+		UILabel *curatorLabel = [[[UILabel alloc] initWithFrame:CGRectMake(70.0, 38.0, 200.0, 16.0)] autorelease];
+		curatorLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+		curatorLabel.textColor = [UIColor colorWithWhite:0.471 alpha:1.0];
 		curatorLabel.backgroundColor = [UIColor clearColor];
 		
 		if (_vo.totalSubscribers == 1)

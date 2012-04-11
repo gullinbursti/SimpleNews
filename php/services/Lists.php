@@ -109,7 +109,7 @@
 		function getSubscribedLists($user_id) {
 			$list_arr = array();
             
-			$query = 'SELECT `tblLists`.`id`, `tblLists`.`title`, `tblLists`.`info`, `tblCurators`.`name`, `tblLists`.`image_url`, `tblLists`.`thumb_url` FROM `tblLists` INNER JOIN `tblCurators` ON `tblLists`.`curator_id` = `tblCurators`.`id` INNER JOIN `tblUsersLists` ON `tblLists`.`id` = `tblUsersLists`.`list_id` WHERE `tblUsersLists`.`user_id` = "'. $user_id .'" AND `tblLists`.`active` = "Y";';
+			$query = 'SELECT `tblLists`.`id`, `tblLists`.`title`, `tblLists`.`info`, `tblCurators`.`name`, `tblLists`.`image_url`, `tblLists`.`thumb_url` FROM `tblLists` INNER JOIN `tblCurators` ON `tblLists`.`curator_id` = `tblCurators`.`id` INNER JOIN `tblUsersLists` ON `tblLists`.`id` = `tblUsersLists`.`list_id` WHERE `tblUsersLists`.`user_id` = "'. $user_id .'" AND `tblLists`.`active` = "Y" ORDER BY `tblLists`.`modified`;';
 			$list_result = mysql_query($query);
 			
             while ($list_row = mysql_fetch_array($list_result, MYSQL_BOTH)) {

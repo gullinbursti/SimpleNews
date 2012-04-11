@@ -40,6 +40,7 @@
 	UIView *_blackMatteView;
 	SNLoaderView_iPhone *_loaderView;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
+	SNPaginationView_iPhone	*_paginationView;
 	
 	NSTimer *_timer;
 }

@@ -10,19 +10,17 @@
 
 #import "SNListVO.h"
 #import "SNInfluencersListView.h"
-#import "EGOImageView.h"
-#import "SNListInfoView_iPhone.h"
 
 @interface SNListCardView_iPhone : UIView {
 	SNListVO *_vo;
 	UIImageView *_testImgView;
-	EGOImageView *_coverImgView;
+	UIView *_holderView;
 	
 	SNInfluencersListView *_influencersListView;
-	SNListInfoView_iPhone *_listInfoView;
 	BOOL _isFlipped;
 	
-	UIButton *_subscribeBtn;
+	UIButton *_doneButton;
+	UIButton *_flipBtn;
 	UIButton *_articlesButton;
 }
 
