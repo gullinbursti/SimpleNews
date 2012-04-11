@@ -19,6 +19,8 @@
 #import "SNReactionVO.h"
 #import "SNArticleReactionItemView.h"
 
+
+
 @interface SNArticleCardView_iPhone()
 -(void)_goExpandCollapse:(id)sender;
 -(void)_goPlayVideo;
@@ -82,10 +84,10 @@
 		_scrollView.contentSize = CGSizeMake(self.frame.size.width, _holderView.frame.size.height);
 		[_holderView addSubview:_scrollView];
 		
-		UIImageView *inputBgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, self.frame.size.height - 54.0, self.frame.size.width, 54.0)] autorelease];
-		inputBgImgView.image = [UIImage imageNamed:@"inputFieldBG.png"];
-		inputBgImgView.userInteractionEnabled = YES;
-		[_holderView addSubview:inputBgImgView];
+		_inputBgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, self.frame.size.height - 54.0, self.frame.size.width, 54.0)] autorelease];
+		_inputBgImgView.image = [UIImage imageNamed:@"inputFieldBG.png"];
+		_inputBgImgView.userInteractionEnabled = YES;
+		[_holderView addSubview:_inputBgImgView];
 		
 		UITextField *commentTxtField = [[[UITextField alloc] initWithFrame:CGRectMake(23.0, 21.0, 270.0, 16.0)] autorelease];
 		[commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
@@ -97,9 +99,15 @@
 		commentTxtField.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
 		commentTxtField.keyboardType = UIKeyboardTypeDefault;
 		commentTxtField.text = @"";
-		commentTxtField.placeholder = @"Comment";
 		commentTxtField.delegate = self;
-		[inputBgImgView addSubview:commentTxtField];
+		[_inputBgImgView addSubview:commentTxtField];
+		
+		_commentsLabel = [[UILabel alloc] initWithFrame:commentTxtField.frame];
+		_commentsLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
+		_commentsLabel.textColor = [UIColor blackColor];
+		_commentsLabel.backgroundColor = [UIColor clearColor];
+		_commentsLabel.text = @"Comment";
+		[_inputBgImgView addSubview:_commentsLabel];
 		
 //		UIButton *emoticonButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 //		emoticonButton.frame = CGRectMake(280.0, 13.0, 24.0, 24.0);
@@ -422,9 +430,15 @@
 
 #pragma mark - TextField Delegates
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
-	[UIView animateWithDuration:0.33 animations:^(void){
+	_commentsLabel.hidden = YES;
+	
+	if (![SNAppDelegate twitterHandle])
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=TWITTER"]];
+	
+	[UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^(void){
 		_scrollView.contentOffset = CGPointMake(0.0, _scrollView.contentSize.height - 250.0);
-	}];
+		_inputBgImgView.frame = CGRectMake(_inputBgImgView.frame.origin.x, _inputBgImgView.frame.origin.y - 215.0, _inputBgImgView.frame.size.width, _inputBgImgView.frame.size.height);
+	} completion:nil];
 }
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -435,40 +449,50 @@
 -(void)textFieldDidEndEditing:(UITextField *)textField {
 	[textField resignFirstResponder];
 	
-	_commentSubmitRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
-	[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", 9] forKey:@"action"];
-	[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"userID"];
-	[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
-	[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", _list_id] forKey:@"listID"];
-	[_commentSubmitRequest setPostValue:textField.text forKey:@"content"];
+	if ([textField.text length] > 0) {
+		_commentSubmitRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+		[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", 9] forKey:@"action"];
+		[_commentSubmitRequest setPostValue:[SNAppDelegate twitterHandle] forKey:@"handle"];
+		[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+		[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", _list_id] forKey:@"listID"];
+		[_commentSubmitRequest setPostValue:textField.text forKey:@"content"];
+		
+		[_commentSubmitRequest setTimeOutSeconds:30];
+		[_commentSubmitRequest setDelegate:self];
+		[_commentSubmitRequest startAsynchronous];
+		
+		NSLog(@"USER:%d, ARTICLE:%d, LIST:%d, CONTENT:%@", 1, _vo.article_id, _list_id, textField.text);
+		
+		
+		NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+									 @"0", @"reaction_id",
+									 @"https://si0.twimg.com/profile_images/180710325/andvari.jpg", @"thumb_url", 
+									 @"https://twitter.com/#!/andvari", @"user_url", 
+									 @"http://shelby.tv", @"reaction_url", 
+									 textField.text, @"content", nil];
+		SNReactionVO *vo = [SNReactionVO reactionWithDictionary:dict];
+		CGSize commentSize = [textField.text sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:24] constrainedToSize:CGSizeMake(230.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		
+		SNArticleReactionItemView *reactionView = [[[SNArticleReactionItemView alloc] initWithFrame:CGRectMake(0.0, _commentsOffset, _scrollView.frame.size.width, 30.0 + commentSize.height) reactionVO:vo] autorelease];
+		[_reactionViews addObject:reactionView];
+		[_commentsBGImgView addSubview:reactionView];
+		
+		_commentsOffset += (30.0 + commentSize.height);
+		
+		textField.text = @"";
+				
+		CGSize size = _scrollView.contentSize;
+		size.height += (30.0 + commentSize.height);
+		
+		_scrollView.contentSize = size;
+	}
 	
-	[_commentSubmitRequest setTimeOutSeconds:30];
-	[_commentSubmitRequest setDelegate:self];
-	[_commentSubmitRequest startAsynchronous];
+	_commentsLabel.hidden = NO;
 	
-	NSLog(@"USER:%d, ARTICLE:%d, LIST:%d, CONTENT:%@", 1, _vo.article_id, _list_id, textField.text);
-	
-	
-	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-								 @"0", @"reaction_id",
-								 @"https://si0.twimg.com/profile_images/180710325/andvari.jpg", @"thumb_url", 
-								 @"https://twitter.com/#!/andvari", @"user_url", 
-								 @"http://shelby.tv", @"reaction_url", 
-								 textField.text, @"content", 
-								 nil];
-	SNReactionVO *vo = [SNReactionVO reactionWithDictionary:dict];
-	CGSize commentSize = [textField.text sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:24] constrainedToSize:CGSizeMake(230.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-	
-	SNArticleReactionItemView *reactionView = [[[SNArticleReactionItemView alloc] initWithFrame:CGRectMake(0.0, _commentsOffset, _scrollView.frame.size.width, 30.0 + commentSize.height) reactionVO:vo] autorelease];
-	[_reactionViews addObject:reactionView];
-	[_commentsBGImgView addSubview:reactionView];
-	
-	_commentsOffset += (30.0 + commentSize.height);
-	
-	textField.text = @"";
-	
-	//_holderView.frame = CGRectMake(_holderView.frame.origin.x, self.frame.size.height - kBaseHeaderHeight, _holderView.frame.size.width, _titleSize.height + _contentSize.height + _commentsOffset + 150.0);
-	//_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, _holderView.frame.size.height);
+	[UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void){
+		_inputBgImgView.frame = CGRectMake(_inputBgImgView.frame.origin.x, _inputBgImgView.frame.origin.y + 215.0, _inputBgImgView.frame.size.width, _inputBgImgView.frame.size.height);
+		_scrollView.contentOffset = CGPointMake(0.0, _scrollView.contentSize.height);
+	} completion:nil];
 }
 
 #pragma mark - ScrollView Delegates

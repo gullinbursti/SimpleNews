@@ -20,9 +20,10 @@
 	
 	SNInfluencersListView *_influencersListView;
 	SNListInfoView_iPhone *_listInfoView;
-	BOOL _isExpanded;
+	BOOL _isFlipped;
 	
 	UIButton *_subscribeBtn;
+	UIButton *_articlesButton;
 }
 
 -(id)initWithFrame:(CGRect)frame listVO:(SNListVO *)vo;

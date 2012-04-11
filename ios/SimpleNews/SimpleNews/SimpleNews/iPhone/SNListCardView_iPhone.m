@@ -17,7 +17,7 @@
 -(id)initWithFrame:(CGRect)frame listVO:(SNListVO *)vo {
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
-		_isExpanded = NO;
+		_isFlipped = NO;
 		
 		_testImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)] autorelease];
 		_testImgView.image = [UIImage imageNamed:@"storyImageTest.jpg"];
@@ -42,15 +42,13 @@
 		_listInfoView = [[SNListInfoView_iPhone alloc] initWithFrame:CGRectMake(10.0, 400.0, self.frame.size.width - 30.0, 80.0) listVO:_vo];
 		[self addSubview:_listInfoView];
 		
-		_influencersListView = [[SNInfluencersListView alloc] initWithFrame:CGRectMake(12.0, 360.0, 297.0, 450.0) listVO:_vo];
+		_influencersListView = [[SNInfluencersListView alloc] initWithFrame:CGRectMake(12.0, 12.0, 297.0, 450.0) listVO:_vo];
 		[_influencersListView setBackgroundColor:[UIColor whiteColor]];
-		_influencersListView.hidden = YES;
-		[self addSubview:_influencersListView];
 		
-		UIButton *articlesButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
-		articlesButton.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
-		[articlesButton addTarget:self action:@selector(_goArticles) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:articlesButton];
+		_articlesButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		_articlesButton.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
+		[_articlesButton addTarget:self action:@selector(_goArticles) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:_articlesButton];
 		
 		_subscribeBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 		_subscribeBtn.frame = CGRectMake(214.0, 23, 84.0, 44.0);
@@ -81,43 +79,37 @@
 -(void)_goExpandCollapse:(id)sender {
 	NSLog(@"LIST");
 	
-	_isExpanded = !_isExpanded;
+	_isFlipped = !_isFlipped;
 	
 	
-	if (_isExpanded) {
-		_influencersListView.hidden = NO;
+	if (_isFlipped) {
+		[_articlesButton removeTarget:self action:@selector(_goArticles) forControlEvents:UIControlEventTouchUpInside];
 		
-		CABasicAnimation *flipAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.y"];
-		flipAnimation.fromValue = [NSNumber numberWithFloat:0.0];
-		flipAnimation.toValue = [NSNumber numberWithFloat:M_PI];
-		flipAnimation.duration = 0.33;
-		flipAnimation.fillMode = kCAFillModeForwards;
-		flipAnimation.removedOnCompletion = NO;
-		[_coverImgView.layer addAnimation:flipAnimation forKey:@"flipAnimation"];
-		
-		[UIView animateWithDuration:0.33 animations:^(void) {
+		[UIView animateWithDuration:0.125 animations:^(void) {
+			_listInfoView.alpha = 0.0;
 			_subscribeBtn.alpha = 0.0;
-			//_influencersListView.frame = CGRectMake(_influencersListView.frame.origin.x, 12.0, _influencersListView.frame.size.width, _influencersListView.frame.size.height);
-		} completion:^(BOOL finished) {
-			
-		}];
-	
-	} else {
-		CABasicAnimation *flipAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.y"];
-		flipAnimation.fromValue = [NSNumber numberWithFloat:M_PI];
-		flipAnimation.toValue = [NSNumber numberWithFloat:0.0];
-		flipAnimation.duration = 0.33;
-		flipAnimation.fillMode = kCAFillModeForwards;
-		flipAnimation.removedOnCompletion = NO;
-		[_coverImgView.layer addAnimation:flipAnimation forKey:@"flipAnimation"];
 		
-		[UIView animateWithDuration:0.33 animations:^(void) {
-			_subscribeBtn.alpha = 1.0;
-			//_influencersListView.frame = CGRectMake(_influencersListView.frame.origin.x, 360.0, _influencersListView.frame.size.width, _influencersListView.frame.size.height);
-			
 		} completion:^(BOOL finished) {
-			_influencersListView.hidden = YES;
+			[UIView beginAnimations:nil context:nil];
+			[UIView setAnimationDuration:0.33];
+			[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:_coverImgView cache:YES];
+			[UIView commitAnimations];
+			[_coverImgView addSubview:_influencersListView];
 		}];
+		
+	} else {
+		[_articlesButton addTarget:self action:@selector(_goArticles) forControlEvents:UIControlEventTouchUpInside];
+		
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.33];
+		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:_coverImgView cache:YES];
+		[UIView commitAnimations];
+		[_influencersListView removeFromSuperview];
+		
+		[UIView animateWithDuration:0.25 delay:0.33 options:UIViewAnimationCurveLinear animations:^(void) {
+			_listInfoView.alpha = 1.0;
+			_subscribeBtn.alpha = 1.0;			
+		} completion:nil];
 	}
 }
 

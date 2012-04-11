@@ -10,7 +10,6 @@
 
 #import <Twitter/Twitter.h>
 #import "SNGraphCaller.h"
-#import "SNTwitterCaller.h"
 
 #import "SNArticleListViewController_iPhone.h"
 #import "SNArticleCardView_iPhone.h"
@@ -64,9 +63,8 @@
 		_articles = [NSMutableArray new];
 		_cardViews = [NSMutableArray new];
 		_timelineTweets = [NSMutableArray new];
-		
-		[[SNTwitterCaller sharedInstance] userTimeline];
 	}
+	
 	return (self);
 }
 

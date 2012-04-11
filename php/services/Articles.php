@@ -719,7 +719,17 @@
 			return (true);
 		}
 		
-		function submitComment($user_id, $list_id, $article_id, $content) {
+		function submitComment($handle, $list_id, $article_id, $content) {
+			$query = 'SELECT `user_id` FROM `tblUsers` WHERE `handle` = "'. $handle .'";';
+			$result = mysql_query($query);
+			
+			$user_id = "0";
+			if (mysql_num_rows($result) > 0) {
+				$row = mysql_fetch_row($result);
+				$user_id = $row[0];
+			}
+			
+			
 			$query = 'INSERT INTO `tblComments` (';
 			$query .= '`id`, `article_id`, `list_id`, `user_id`, `content`, `added`) ';
 			$query .= 'VALUES (NULL, "'. $article_id .'", "'. $list_id .'", "'. $user_id .'", "'. $content .'", NOW());';
@@ -791,8 +801,8 @@
 				break;
 				
 			case "9":
-				if (isset($_POST['userID']) && isset($_POST['listID']) && isset($_POST['articleID']) && isset($_POST['content']))
-					$articles->submitComment($_POST['userID'], $_POST['listID'], $_POST['articleID'], $_POST['content']);
+				if (isset($_POST['handle']) && isset($_POST['listID']) && isset($_POST['articleID']) && isset($_POST['content']))
+					$articles->submitComment($_POST['handle'], $_POST['listID'], $_POST['articleID'], $_POST['content']);
 				break;
     	}
 	}

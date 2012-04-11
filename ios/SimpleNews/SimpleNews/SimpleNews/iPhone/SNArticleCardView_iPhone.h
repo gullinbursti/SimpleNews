@@ -29,9 +29,11 @@
 	UIButton *_playButton;
 	UIScrollView *_scrollView;
 	UIView *_iconsCoverView;
+	UIImageView *_inputBgImgView;
 	
 	UIView *_headerBgView;
 	UIImageView *_commentsBGImgView;
+	UILabel *_commentsLabel;
 	UIButton *_collapseButton;
 	
 	BOOL _isExpanded;

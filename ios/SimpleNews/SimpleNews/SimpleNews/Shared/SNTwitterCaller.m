@@ -43,7 +43,7 @@ static SNTwitterCaller *sharedInstance = nil;
 
 -(id)init {
 	if ((self = [super init])) {
-		//[self _fetchData];
+		[self _fetchData];
 	}
 	
 	return (self);
@@ -63,6 +63,11 @@ static SNTwitterCaller *sharedInstance = nil;
 				if(granted) {
 					self.accounts = [self.accountStore accountsWithAccountType:accountTypeTwitter];
 					self.account = [self.accounts objectAtIndex:0];
+					
+					NSLog(@"ACCOUNT:%@", self.account);
+					
+					[[NSUserDefaults standardUserDefaults] setObject:self.account.username forKey:@"twitterHandle"];
+					[[NSUserDefaults standardUserDefaults] synchronize];
 					
 					for (ACAccount *account in self.accounts) {
 						//NSLog(@"USERNAME:%@", account.username);

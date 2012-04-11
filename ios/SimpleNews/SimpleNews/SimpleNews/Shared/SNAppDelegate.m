@@ -11,6 +11,7 @@
 
 #import "SNAppDelegate.h"
 #import "SNSplashViewController_iPhone.h"
+#import "SNTwitterCaller.h"
 
 static NSString *kFacebookAppId = @"316539575066102";
 NSString *const kSNProfileInfoKey = @"ProfileInfo";
@@ -154,6 +155,11 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 }
 
 
++(NSString *)twitterHandle {
+	return ([[NSUserDefaults standardUserDefaults] objectForKey:@"twitterHandle"]);
+}
+
+
 
 +(NSDictionary *)fbProfile {
 	return [[NSUserDefaults standardUserDefaults] objectForKey:kSNProfileInfoKey];
@@ -186,6 +192,8 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[defaults setObject:@"NO" forKey:@"airplay_enabled"];
 	[defaults synchronize];
+	
+	SNTwitterCaller *twitterCaller = [[[SNTwitterCaller alloc] init] autorelease];
 	
 	if (![defaults objectForKey:@"boot_total"]) {
 		[defaults setObject:[NSNumber numberWithInt:0] forKey:@"boot_total"];

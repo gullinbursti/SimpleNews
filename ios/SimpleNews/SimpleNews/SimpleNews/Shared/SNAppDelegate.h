@@ -36,6 +36,7 @@
 
 +(void)twitterToggle:(BOOL)isSignedIn;
 +(BOOL)twitterEnabled;
++(NSString *)twitterHandle;
 
 
 +(void)writeInfluencers:(NSString *)influencers;
