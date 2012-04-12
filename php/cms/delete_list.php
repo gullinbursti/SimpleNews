@@ -10,13 +10,19 @@ require './_db_open.php';
 
 if (isset($_GET['id'])) {
 	
-	$query = 'DELETE FROM `tblArticles` WHERE `follower_id` = "'. $_GET['id'] .'";';
+	$query = 'DELETE FROM `tblListsCurators` WHERE `list_id` = "'. $_GET['id'] .'";';
 	$result = mysql_query($query);
 	
-	$query = 'DELETE FROM `tblFollowers` WHERE `id` = "'. $_GET['id'] .'";';
+	$query = 'DELETE FROM `tblListsInfluencers` WHERE `list_id` = "'. $_GET['id'] .'";';
 	$result = mysql_query($query);
 	
-	header('Location: followers.php');
+	$query = 'DELETE FROM `tblArticlesLists` WHERE `list_id` = "'. $_GET['id'] .'";';
+	$result = mysql_query($query);
+	
+	$query = 'DELETE FROM `tblLists` WHERE `id` = "'. $_GET['id'] .'";';
+	$result = mysql_query($query);
+	
+	header('Location: lists.php');
 }
 	
 ?>
