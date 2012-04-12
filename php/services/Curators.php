@@ -91,15 +91,12 @@
 			$curator_result = mysql_query($query);
 			
             while ($curator_row = mysql_fetch_array($curator_result, MYSQL_BOTH)) {
-				$query = 'SELECT `id` FROM `tblLists` WHERE `curator_id` = "'. $curator_row['id'] .'" AND `active` = "Y";';
-				$list_result = mysql_query($query);
-				
 				array_push($follower_arr, array(
 					"curator_id" => $curator_row['id'], 
 					"name" => $curator_row['name'], 
 					"info" => $curator_row['info'], 
 					"fb_id" => $curator_row['fb_id'], 
-					"total" => mysql_num_rows($list_result)
+					"total" => 0
 				));
 			}
             

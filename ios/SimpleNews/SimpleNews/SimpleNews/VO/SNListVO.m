@@ -7,11 +7,12 @@
 //
 
 #import "SNListVO.h"
+#import "SNCuratorVO.h"
 
 @implementation SNListVO
 
 @synthesize dictionary;
-@synthesize list_id, totalInfluencers, totalSubscribers, list_name, list_info, curator, imageURL, thumbURL;
+@synthesize list_id, totalInfluencers, totalSubscribers, list_name, list_info, curator, curators, imageURL, thumbURL;
 
 +(SNListVO *)listWithDictionary:(NSDictionary *)dictionary {
 	SNListVO *vo = [[SNListVO alloc] init];
@@ -21,10 +22,13 @@
 	vo.totalInfluencers = [[dictionary objectForKey:@"influencers"] intValue];
 	vo.totalSubscribers = [[dictionary objectForKey:@"subscribers"] intValue];
 	vo.list_name = [dictionary objectForKey:@"name"];
-	vo.curator = [dictionary objectForKey:@"curator"];
 	vo.imageURL = [dictionary objectForKey:@"image_url"];
 	vo.thumbURL = [dictionary objectForKey:@"thumb_url"];
 	vo.list_info = [dictionary objectForKey:@"info"];
+	vo.curators = [NSMutableArray new];
+	
+	for (NSDictionary *curator in [dictionary objectForKey:@"curators"])
+		[vo.curators addObject:[SNCuratorVO curatorWithDictionary:curator]];
 	
 	return (vo);
 }
@@ -45,6 +49,7 @@
 	self.curator = nil;
 	self.imageURL = nil;
 	self.thumbURL = nil;
+	self.curators = nil;
 	
 	[super dealloc];
 }

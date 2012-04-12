@@ -109,10 +109,26 @@
 		function getSubscribedLists($user_id) {
 			$list_arr = array();
             
-			$query = 'SELECT `tblLists`.`id`, `tblLists`.`title`, `tblLists`.`info`, `tblCurators`.`name`, `tblLists`.`image_url`, `tblLists`.`thumb_url` FROM `tblLists` INNER JOIN `tblCurators` ON `tblLists`.`curator_id` = `tblCurators`.`id` INNER JOIN `tblUsersLists` ON `tblLists`.`id` = `tblUsersLists`.`list_id` WHERE `tblUsersLists`.`user_id` = "'. $user_id .'" AND `tblLists`.`active` = "Y" ORDER BY `tblLists`.`modified`;';
+			$query = 'SELECT `tblLists`.`id`, `tblLists`.`title`, `tblLists`.`info`, `tblLists`.`image_url`, `tblLists`.`thumb_url` FROM `tblLists` INNER JOIN `tblUsersLists` ON `tblLists`.`id` = `tblUsersLists`.`list_id` WHERE `tblUsersLists`.`user_id` = "'. $user_id .'" AND `tblLists`.`active` = "Y" ORDER BY `tblLists`.`modified`;';
 			$list_result = mysql_query($query);
 			
             while ($list_row = mysql_fetch_array($list_result, MYSQL_BOTH)) {
+	            $query = 'SELECT * FROM `tblListsCurators` WHERE `list_id` = "'. $list_row['id'] .'";';
+				$result = mysql_query($query);
+				
+				$curator_arr = array();
+				while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
+					$query = 'SELECT * FROM `tblCurators` WHERE `id` = "'. $row['curator_id'] .'";';
+					$curator_row = mysql_fetch_row(mysql_query($query));
+					
+				    array_push($curator_arr, array(
+						"curator_id" => $curator_row[0], 
+						"handle" => $curator_row[1], 
+						"name" => $curator_row[2], 
+						"info" => $curator_row[3] 
+					));
+				}
+	
 				$query = 'SELECT * FROM `tblListsInfluencers` WHERE `list_id` = "'. $list_row['id'] .'";';
 				$influencer_result = mysql_query($query);
 				
@@ -123,7 +139,7 @@
 					"list_id" => $list_row['id'], 
 					"name" => $list_row['title'],
 					"info" => $list_row['info'], 
-					"curator" => $list_row['name'], 
+					"curators" => $curator_arr, 
 					"image_url" => $list_row['image_url'], 
 					"thumb_url" => $list_row['thumb_url'], 
 					"influencers" => mysql_num_rows($influencer_result),
