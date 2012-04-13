@@ -16,9 +16,6 @@ if (isset($_GET['id'])) {
 	$query = 'DELETE FROM `tblListsInfluencers` WHERE `list_id` = "'. $_GET['id'] .'";';
 	$result = mysql_query($query);
 	
-	$query = 'DELETE FROM `tblArticlesLists` WHERE `list_id` = "'. $_GET['id'] .'";';
-	$result = mysql_query($query);
-	
 	$query = 'DELETE FROM `tblLists` WHERE `id` = "'. $_GET['id'] .'";';
 	$result = mysql_query($query);
 	

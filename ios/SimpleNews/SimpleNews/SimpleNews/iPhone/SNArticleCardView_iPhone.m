@@ -11,7 +11,6 @@
 #import "SNArticleCardView_iPhone.h"
 
 #import "SNAppDelegate.h"
-#import "SNTagVO.h"
 
 #import "EGOImageLoader.h"
 #import "SNArticleInfluencerInfoView_iPhone.h"

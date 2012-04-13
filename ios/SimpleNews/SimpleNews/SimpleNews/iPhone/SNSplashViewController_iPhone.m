@@ -7,7 +7,6 @@
 //
 
 #import "SNSplashViewController_iPhone.h"
-#import "SNInfluencerGridViewController_iPhone.h"
 
 @interface SNSplashViewController_iPhone()
 -(void)_goGrid;

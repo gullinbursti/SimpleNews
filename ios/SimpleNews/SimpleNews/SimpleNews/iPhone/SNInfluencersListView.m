@@ -11,6 +11,7 @@
 #import "SNInfluencersListView.h"
 #import "SNInfluencerListViewCell_iPhone.h"
 #import "SNInfluencerVO.h"
+#import "SNCuratorVO.h"
 #import "SNAppDelegate.h"
 
 @implementation SNInfluencersListView
@@ -43,11 +44,15 @@
 		verifiedImgView.image = [UIImage imageNamed:@"verifiedIcon.png"];
 		[self addSubview:verifiedImgView];
 		
+		NSString *curators = @"By ";
+		for (SNCuratorVO *vo in _vo.curators)
+			curators = [curators stringByAppendingString:[NSString stringWithFormat:@"%@, ", vo.curator_name]];
+		
 		UILabel *curatorLabel = [[[UILabel alloc] initWithFrame:CGRectMake(38.0, 60.0, 200.0, 20.0)] autorelease];
 		curatorLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14];
 		curatorLabel.textColor = [UIColor blackColor];
 		curatorLabel.backgroundColor = [UIColor clearColor];
-		curatorLabel.text = [NSString stringWithFormat:@"by %@", _vo.curator];
+		curatorLabel.text = [curators substringToIndex:[curators length] - 2];
 		[self addSubview:curatorLabel];
 		
 		UIView *subheaderLineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 95.0, self.frame.size.width, 1.0)] autorelease];

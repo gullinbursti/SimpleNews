@@ -7,13 +7,12 @@
 //
 
 #import "SNArticleVO.h"
-#import "SNTagVO.h"
 #import "SNReactionVO.h"
 
 @implementation SNArticleVO
 
 @synthesize dictionary;
-@synthesize article_id, type_id, title, article_url, short_url, twitterName, twitterInfo, twitterHandle, tweet_id, tweetMessage, content, bgImage_url, thumb_url, video_url, avatarImage_url, isDark, added, tags, reactions;
+@synthesize article_id, type_id, title, article_url, short_url, twitterName, twitterInfo, twitterHandle, tweet_id, tweetMessage, content, bgImage_url, thumb_url, video_url, avatarImage_url, isDark, added, reactions;
 
 +(SNArticleVO *)articleWithDictionary:(NSDictionary *)dictionary {
 	
@@ -36,16 +35,12 @@
 	vo.video_url = [dictionary objectForKey:@"video_url"];
 	vo.avatarImage_url = [dictionary objectForKey:@"avatar_url"];
 	vo.isDark = (BOOL)([[dictionary objectForKey:@"is_dark"] isEqualToString:@"Y"]);
-	vo.tags = [NSMutableArray new];
 	vo.reactions = [NSMutableArray new];
 	
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
 	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 	vo.added = [dateFormat dateFromString:[dictionary objectForKey:@"added"]];
 	[dateFormat release];
-	
-	for (NSDictionary *tag in [dictionary objectForKey:@"tags"])
-		[vo.tags addObject:[SNTagVO tagWithDictionary:tag]];
 	
 	for (NSDictionary *reaction in [dictionary objectForKey:@"reactions"])
 		[vo.reactions addObject:[SNReactionVO reactionWithDictionary:reaction]];
@@ -67,7 +62,6 @@
 	self.avatarImage_url = nil;
 	self.video_url = nil;
 	self.added = nil;
-	self.tags = nil;
 	self.reactions = nil;
 	
 	[super dealloc];

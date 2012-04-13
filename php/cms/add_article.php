@@ -65,17 +65,6 @@ if (isset($_POST['txtArticleSource'])) {
 	
 	//echo ($query);
 	
-	$tagID_arr = explode("|", $_POST['hidIDs']);
-
-	for ($i=0; $i<count($tagID_arr); $i++) {
-		$tag_id = $tagID_arr[$i];
-		
-		$query = 'INSERT INTO `tblArticlesTags` (';
-		$query .= '`article_id`, `tag_id`) ';
-		$query .= 'VALUES ("'. $article_id .'", "'. $tag_id .'");';
-		$result = mysql_query($query);
-	}
-	
 	//echo ($query);
 	header('Location: tweets.php?id='. $follower_id .'&handle='. $handle);
 }

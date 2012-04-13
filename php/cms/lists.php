@@ -57,7 +57,7 @@ $result = mysql_query($query);
 						}
 
 						$tweetLookup_obj = $connection->get('users/lookup', array('screen_name' => substr_replace($handles_str, "", -1)));
-						$curator_html = "<table cellspacing=\"10\" cellpadding=\"0\" border=\"0\"><tr>"; 
+						$curator_html = "<table cellspacing=\"10\" cellpadding=\"0\" border=\"0\"><tr>";
 						
 						foreach ($tweetLookup_obj as $key => $val) {
 							$curator_html .= "<td><img src=\"". $tweetLookup_obj[$key]->profile_image_url ."\" alt=\"". $tweetLookup_obj[$key]->name ."\" /><br />";
@@ -83,14 +83,20 @@ $result = mysql_query($query);
 						}
 						$follower_html .= "</tr></table>";
 						
+						$query = 'SELECT `title` FROM `tblListTypes` WHERE `id` ='. $row['type_id'] .';';
+						$type_row = mysql_fetch_row(mysql_query($query));
+						
+						
 						$pre_html = "<tr><td><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\">";
 						$post_html = "</table></td></tr>";
 						
 						echo ($pre_html);
-						echo ("<tr><td rowspan=\"5\" width=\"137\"><img src=\"". $row['image_url'] ."\" width=\"137\" height=\"194\" /></td>");
+						echo ("<tr><td rowspan=\"6\" width=\"137\"><img src=\"". $row['image_url'] ."\" width=\"137\" height=\"194\" /></td>");
 						echo ("<td width=\"100\">Name:</td><td>". $row['title'] ."</td>");
 						echo ("<tr><td width=\"100\">Info:</td><td>". $row['info'] ."</td></tr>");
-						echo ("<tr><td width=\"100\">Status:</td><td>". $row['type_id'] ."</td></tr>");
+						echo ("<tr><td width=\"100\">Status:</td><td>". $type_row[0] ."</td></tr>");
+						//echo ("<tr><td width=\"100\">Share:</td><td><a href=\"http://dev.gullinbursti.cc/projs/simplenews/signup/index.php?l=". str_replace('=', '%3D', $row['enc_name']) ."\" target=\"_blank\">http://dev.gullinbursti.cc/projs/simplenews/signup/index.php?l=". str_replace('=', '%3D', $row['enc_name']) ."</a></td></tr>");
+						echo ("<tr><td width=\"100\">Share:</td><td><a href=\"http://dev.gullinbursti.cc/projs/simplenews/signup/index.php?lID=". $row['id'] ."\" target=\"_blank\">http://dev.gullinbursti.cc/projs/simplenews/signup/index.php?lID=". $row['id'] ."</a></td></tr>");
 						echo ("<tr><td width=\"100\">Curators:</td><td>". $curator_html ."</td></tr>");
 						echo ("<tr><td width=\"100\">Influencers:</td><td>". $follower_html ."</td></tr>");
 						echo ("<tr><td colspan=\"3\" align=\"left\"><input type=\"button\" value=\"Delete\" onclick=\"remove('". $row['id'] ."');\" /><input type=\"button\" value=\"Edit\" onclick=\"edit('". $row['id'] ."');\" /></td></tr>");

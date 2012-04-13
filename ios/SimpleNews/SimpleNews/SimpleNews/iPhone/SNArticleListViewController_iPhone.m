@@ -68,56 +68,6 @@
 	return (self);
 }
 
--(id)initAsMostRecent {
-	if ((self = [self init])) {
-		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
-		[_articlesRequest setTimeOutSeconds:30];
-		[_articlesRequest setDelegate:self];
-		[_articlesRequest startAsynchronous];
-	}
-	
-	return (self);
-}
-
--(id)initWithInfluencers {
-	if ((self = [self init])) {
-		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-		[_articlesRequest setPostValue:[SNAppDelegate subscribedInfluencers] forKey:@"influencers"];
-		[_articlesRequest setTimeOutSeconds:30];
-		[_articlesRequest setDelegate:self];
-		[_articlesRequest startAsynchronous];
-	}
-	
-	return (self);
-}
-
--(id)initWithTag:(int)tag_id {
-	if ((self = [self init])) {
-		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", tag_id] forKey:@"tagID"];
-		[_articlesRequest setTimeOutSeconds:30];
-		[_articlesRequest setDelegate:self];
-		[_articlesRequest startAsynchronous];
-	}
-	
-	return (self);
-}
-
--(id)initWithTags:(NSString *)tags {
-	if ((self = [self init])) {
-		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 5] forKey:@"action"];
-		[_articlesRequest setPostValue:tags forKey:@"tags"];
-		[_articlesRequest setTimeOutSeconds:30];
-		[_articlesRequest setDelegate:self];
-		[_articlesRequest startAsynchronous];
-	}
-	
-	return (self);
-}
 
 -(id)initWithList:(int)list_id {
 	if ((self = [self init])) {
@@ -166,7 +116,6 @@
 	[_cardHolderView release];
 	[_shareSheetView release];
 	[_blackMatteView release];
-	[_loaderView release];
 	
 	[_rootListButton release];
 	
@@ -207,10 +156,7 @@
 
 	_shareSheetView = [[SNShareSheetView_iPhone alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
 	[self.view addSubview:_shareSheetView];
-	
-	_loaderView = [[SNLoaderView_iPhone alloc] initWithFrame:self.view.frame];
-	[self.view addSubview:_loaderView];
-	
+		
 	_paginationView = [[SNPaginationView_iPhone alloc] initWithFrame:CGRectMake(278.0, 460.0, 48.0, 9.0)];
 	[self.view addSubview:_paginationView];
 	
@@ -399,11 +345,6 @@
 //			[dateFormat release];
 //		}
 	}
-}
-
-
--(void)_doneLoading {
-	[_loaderView outroMe];	
 }
 
 

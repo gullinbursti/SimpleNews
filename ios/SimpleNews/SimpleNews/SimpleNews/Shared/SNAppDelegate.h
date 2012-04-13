@@ -33,6 +33,11 @@
 +(void)writeFBProfile:(NSDictionary *)profile;
 +(NSDictionary *)fbProfile;
 
++(void)writeUserProfile:(NSDictionary *)userInfo;
++(NSDictionary *)profileForUser;
+
++(void)writeDeviceToken:(NSString *)token;
++(NSString *)deviceToken;
 
 +(void)twitterToggle:(BOOL)isSignedIn;
 +(BOOL)twitterEnabled;

@@ -88,26 +88,12 @@ $row = mysql_fetch_row($ts_result);
 $sql_time = $row[0];
 
 
-//$query = 'SELECT * FROM `tblLists` INNER JOIN `tblUsersLists` ON `tblLists`.`id` = `tblUsersLists`.`list_id` WHERE `tblUsersLists`.`user_id` =1;';
-$query = 'SELECT * FROM `tblInfluencers` INNER JOIN `tblListsInfluencers` ON `tblInfluencers`.`id` = `tblListsInfluencers`.`influencer_id` INNER JOIN `tblUsersLists` ON `tblListsInfluencers`.`list_id` = `tblUsersLists`.`list_id` WHERE `tblUsersLists`.`user_id` =1;';
-$list_result = mysql_query($query);
+$query = 'SELECT * FROM `tblLists`;';
+$result = mysql_query($query);
 
-while ($list_row = mysql_fetch_array($list_result, MYSQL_BOTH)) {
-	echo ("[". $list_row['id'] ."]\t". $list_row['handle'] ."\t". $list_row['list_id'] ."<br />");
-	
-	$query = 'SELECT * FROM `tblArticles` WHERE `influencer_id` = "'. $list_row['id'] .'";';
-	$article_result = mysql_query($query);
-	
-	while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
-		echo ("[". $article_row['id'] ."]\t". $article_row['title'] ."<br />");
-		
-		$query = 'INSERT INTO `tblArticlesLists` (';
-		$query .= '`article_id`, `list_id`) ';
-		$query .= 'VALUES ("'. $article_row['id'] .'", "'. $list_row['id'] .'");';
-		$result = mysql_query($query);
-	}
-	
-	echo ("<br /><br />");
+while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {	
+	$query = 'UPDATE `tblLists` SET `enc_name` = "'. base64_encode($row['title']) .'" WHERE `id` ='. $row['id'] .';';
+	$res = mysql_query($query);
 }
 
 

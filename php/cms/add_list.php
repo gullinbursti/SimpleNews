@@ -15,14 +15,13 @@ require_once('_twitter_conn.php');
 if (isset($_GET['a'])) {
 	$curator_arr = parseIDs($_POST['txtCurators']);
 	$follower_arr = parseIDs($_POST['txtInfluencers']);
-	$img_url = uploadCoverImage();
-    
+	$img_url = uploadCoverImage();	
+	
 	$query = 'INSERT INTO `tblLists` (';
-	$query .= '`id`, `title`, `info`, `type_id`, `thumb_url`, `image_url`, `active`, `added`, `modified`) ';
-	$query .= 'VALUES (NULL, "'. $_POST['txtTitle'] .'", "'. $_POST['txtInfo'] .'", 3, "", "'. $img_url .'", "Y", NOW(), CURRENT_TIMESTAMP);';
+	$query .= '`id`, `title`, `info`, `type_id`, `thumb_url`, `image_url`, `enc_name`, `active`, `added`, `modified`) ';
+	$query .= 'VALUES (NULL, "'. $_POST['txtTitle'] .'", "'. $_POST['txtInfo'] .'", 3, "", "'. $img_url .'", "'. base64_encode($_POST['txtTitle']) .'", "Y", NOW(), CURRENT_TIMESTAMP);';
 	$result = mysql_query($query);
 	$list_id = mysql_insert_id();
-	
 	
 	foreach ($curator_arr as $twitter_id) {
 		$tweet_obj = $connection->get('users/lookup', array('user_id' => $twitter_id));
@@ -70,17 +69,6 @@ if (isset($_GET['a'])) {
 		$query .= '`list_id`, `influencer_id`) ';
 		$query .= 'VALUES ("'. $list_id .'", "'. $influencer_id .'");';
 		$result = mysql_query($query);
-
-
-		$query = 'SELECT `id` FROM `tblArticles` WHERE `influencer_id` = "'. $influencer_id .'";';
-		$article_result = mysql_query($query);
-
-		while ($row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
-			$query = 'INSERT INTO `tblArticlesLists` (';
-			$query .= '`article_id`, `list_id`) ';
-			$query .= 'VALUES ("'. $row['id'] .'", "'. $list_id .'");';
-			$result = mysql_query($query);	
-		}
 	}/**/
 		
 	//header('Location: lists.php');

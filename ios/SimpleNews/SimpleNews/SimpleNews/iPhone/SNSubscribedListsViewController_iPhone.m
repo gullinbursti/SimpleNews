@@ -14,7 +14,6 @@
 #import "SNArticleListViewController_iPhone.h"
 
 @interface SNSubscribedListsViewController_iPhone()
--(void)_goArticles;
 @end
 
 @implementation SNSubscribedListsViewController_iPhone
@@ -112,21 +111,34 @@
 	[self.navigationController popViewControllerAnimated:YES];	
 }
 
--(void)_goArticles {
-	[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initAsMostRecent] autorelease] animated:NO];	
-}
-
 
 #pragma mark - Notification handlers
 -(void)_listArticles:(NSNotification *)notification {
 	SNListVO *vo = (SNListVO *)[notification object];
 	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
+	if (![SNAppDelegate twitterHandle]) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 	
-	} completion:^(BOOL finished) {
-		[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initWithList:vo.list_id] autorelease] animated:YES];
-	}];
+		[alert show];
+		[alert release];
+	
+	} else {
+		
+		_userRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]] retain];
+		[_userRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[_userRequest setPostValue:[SNAppDelegate deviceToken] forKey:@"token"];
+		[_userRequest setPostValue:[SNAppDelegate twitterHandle] forKey:@"handle"];
+		[_userRequest setDelegate:self];
+		[_userRequest startAsynchronous];
+		
+		
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
+	
+		} completion:^(BOOL finished) {
+			[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initWithList:vo.list_id] autorelease] animated:YES];
+		}];
+	}
 	
 }
 
@@ -169,33 +181,47 @@
 -(void)requestFinished:(ASIHTTPRequest *)request { 
 	NSLog(@"SNSubscribedListsViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
-	@autoreleasepool {
-		NSError *error = nil;
-		NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-		if (error != nil)
-			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+	if ([request isEqual:_listsRequest]) {
+		@autoreleasepool {
+			NSError *error = nil;
+			NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+			
+			else {
+				NSMutableArray *list = [NSMutableArray array];
+				for (NSDictionary *serverList in parsedLists) {
+					SNListVO *vo = [SNListVO listWithDictionary:serverList];
+					NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
+					
+					if (vo != nil)
+						[list addObject:vo];
+				}
+				
+				_subscribedLists = [list retain];
+				
+				int cnt = 0;
+				for (SNListVO *vo in _subscribedLists) {
+					SNListCardView_iPhone *listCardView = [[[SNListCardView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) listVO:vo] autorelease];
+					[_scrollView addSubview:listCardView];
+					
+					cnt++;
+				}
+				
+				_scrollView.contentSize = CGSizeMake([_subscribedLists count] * self.view.frame.size.width, self.view.frame.size.height);
+			}
+		}
 		
-		else {
-			NSMutableArray *list = [NSMutableArray array];
-			for (NSDictionary *serverList in parsedLists) {
-				SNListVO *vo = [SNListVO listWithDictionary:serverList];
-				NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
-				
-				if (vo != nil)
-					[list addObject:vo];
+	} else if ([request isEqual:_userRequest]) {
+		@autoreleasepool {
+			NSError *error = nil;
+			NSDictionary *parsedUser = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+			
+			else {
+				[SNAppDelegate writeUserProfile:parsedUser];
 			}
-			
-			_subscribedLists = [list retain];
-			
-			int cnt = 0;
-			for (SNListVO *vo in _subscribedLists) {
-				SNListCardView_iPhone *listCardView = [[[SNListCardView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) listVO:vo] autorelease];
-				[_scrollView addSubview:listCardView];
-				
-				cnt++;
-			}
-			
-			_scrollView.contentSize = CGSizeMake([_subscribedLists count] * self.view.frame.size.width, self.view.frame.size.height);
 		}
 	}
 }

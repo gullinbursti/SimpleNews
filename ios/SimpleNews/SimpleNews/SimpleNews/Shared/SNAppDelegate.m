@@ -121,6 +121,16 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 }
 
 
++(void)writeDeviceToken:(NSString *)token {
+	[[NSUserDefaults standardUserDefaults] setObject:token forKey:@"device_token"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++(NSString *)deviceToken {
+	return ([[NSUserDefaults standardUserDefaults] objectForKey:@"device_token"]);
+}
+
+
 +(void)notificationsToggle:(BOOL)isOn {
 	NSString *bool_str;
 	if (isOn)
@@ -178,6 +188,16 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:kSNProfileInfoKey];
 	
 	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+
++(void)writeUserProfile:(NSDictionary *)userInfo {
+	[[NSUserDefaults standardUserDefaults] setObject:userInfo forKey:@"user_info"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++(NSDictionary *)profileForUser {
+	return ([[NSUserDefaults standardUserDefaults] objectForKey:@"user_info"]);
 }
 
 
@@ -306,6 +326,7 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
  **/
 -(void)applicationDidBecomeActive:(UIApplication *)application {
 	[facebook extendAccessTokenIfNeeded];
+	SNTwitterCaller *twitterCaller = [[[SNTwitterCaller alloc] init] autorelease];
 }
 
 /**
@@ -466,6 +487,11 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 	// Updates the device token and registers the token with UA
 	[[UAPush shared] registerDeviceToken:deviceToken];
 	
+	NSString *deviceID = [[deviceToken description] substringFromIndex:1];
+	deviceID = [deviceID substringToIndex:[deviceID length] - 1];
+	deviceID = [deviceID stringByReplacingOccurrencesOfString:@" " withString:@""];
+	[SNAppDelegate writeDeviceToken:deviceID];
+	
 	//NSString *deviceID = [[deviceToken description] substringFromIndex:1];
 	//deviceID = [deviceID substringToIndex:[deviceID length] - 1];
 	//deviceID = [deviceID stringByReplacingOccurrencesOfString:@" " withString:@""];
@@ -536,6 +562,8 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *) error {
 	UALOG(@"Failed To Register For Remote Notifications With Error: %@", error);
+	
+	[SNAppDelegate writeDeviceToken:[NSString stringWithFormat:@"%064d", 0]];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
