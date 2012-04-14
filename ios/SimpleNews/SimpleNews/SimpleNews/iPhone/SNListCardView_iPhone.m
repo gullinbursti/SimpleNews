@@ -20,7 +20,7 @@
 		_vo = vo;
 		_isFlipped = NO;
 		
-		_holderView = [[UIView alloc] initWithFrame:CGRectMake(10.0, 12.0, 300.0, 450.0)];
+		_holderView = [[UIView alloc] initWithFrame:CGRectMake(12.0, 12.0, 295.0, 450.0)];
 		[_holderView setBackgroundColor:[UIColor whiteColor]];
 		_holderView.layer.cornerRadius = 8.0;
 		_holderView.clipsToBounds = YES;
@@ -32,22 +32,14 @@
 		_testImgView.image = [UIImage imageNamed:@"storyImageTest.jpg"];
 		//[self addSubview:_testImgView];
 		
-		EGOImageView *coverImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(10.0, 10.0, 280.0, 389.0)] autorelease];
+		EGOImageView *coverImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(10.0, 10.0, 275.0, 389.0)] autorelease];
 		coverImgView.imageURL = [NSURL URLWithString:_vo.imageURL];
 		[_holderView addSubview:coverImgView];
 		
-		CABasicAnimation *initAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-		initAnimation.beginTime = CACurrentMediaTime();
-		initAnimation.toValue = [NSNumber numberWithDouble:0.93];
-		initAnimation.duration = 0.1;
-		initAnimation.fillMode = kCAFillModeForwards;
-		initAnimation.removedOnCompletion = NO;
-		//[coverImgView.layer addAnimation:initAnimation forKey:@"initAnimation"];
-		
-		SNListInfoView_iPhone *listInfoView = [[SNListInfoView_iPhone alloc] initWithFrame:CGRectMake(10.0, 10.0, _holderView.frame.size.width - 20.0, 80.0) listVO:_vo];
+		SNListInfoView_iPhone *listInfoView = [[SNListInfoView_iPhone alloc] initWithFrame:CGRectMake(10.0, 10.0, _holderView.frame.size.width - 20.0, 65.0) listVO:_vo];
 		[_holderView addSubview:listInfoView];
 		
-		UIImageView *verifiedImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 412.0, 24.0, 24.0)] autorelease];
+		UIImageView *verifiedImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(10.0, 412.0, 24.0, 24.0)] autorelease];
 		verifiedImgView.image = [UIImage imageNamed:@"verifiedIcon.png"];
 		[_holderView addSubview:verifiedImgView];
 		
@@ -55,7 +47,7 @@
 		verifiedLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
 		verifiedLabel.textColor = [UIColor blackColor];
 		verifiedLabel.backgroundColor = [UIColor clearColor];
-		verifiedLabel.text = @"Verified";
+		verifiedLabel.text = @"Curators Verified";
 		[_holderView addSubview:verifiedLabel];
 		
 		_articlesButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
@@ -64,29 +56,27 @@
 		[self addSubview:_articlesButton];
 		
 		_flipBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_flipBtn.frame = CGRectMake(245.0, 35.0, 49.0, 49.0);
+		_flipBtn.frame = CGRectMake(232.0, 22.0, 64.0, 64.0);
 		[_flipBtn setBackgroundImage:[UIImage imageNamed:@"flipListButton_nonActive.png"] forState:UIControlStateNormal];
 		[_flipBtn setBackgroundImage:[UIImage imageNamed:@"flipListButton_Active.png"] forState:UIControlStateHighlighted];
 		[_flipBtn addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_flipBtn];
 		
 		UIButton *subscribeBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		subscribeBtn.frame = CGRectMake(210.0, 410.0, 80.0, 25.0);
-		[subscribeBtn setBackgroundColor:[UIColor blackColor]];
-		subscribeBtn.layer.cornerRadius = 3.0;
-		subscribeBtn.clipsToBounds = YES;
+		subscribeBtn.frame = CGRectMake(202.0, 409.0, 84.0, 30.0);
+		[subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followButton_nonActive.png"] forState:UIControlStateNormal];
+		[subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followButton_Active.png"] forState:UIControlStateHighlighted];
+		[subscribeBtn addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
 		subscribeBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
 		subscribeBtn.titleLabel.textAlignment = UITextAlignmentCenter;
 		[subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 		[subscribeBtn setTitle:@"Follow Topic" forState:UIControlStateNormal];
-		[subscribeBtn addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
 		[_holderView addSubview:subscribeBtn];
 		
 		_doneButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_doneButton.frame = CGRectMake(246.0, 23.0, 50.0, 25.0);
-		[_doneButton setBackgroundColor:[UIColor blackColor]];
-		_doneButton.layer.cornerRadius = 3.0;
-		_doneButton.clipsToBounds = YES;
+		_doneButton.frame = CGRectMake(245.0, 20.0, 54.0, 30.0);
+		[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_nonActive.png"] forState:UIControlStateNormal];
+		[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_Active.png"] forState:UIControlStateHighlighted];
 		_doneButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
 		_doneButton.titleLabel.textAlignment = UITextAlignmentCenter;
 		[_doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -97,18 +87,6 @@
 		
 		_influencersListView = [[SNInfluencersListView alloc] initWithFrame:CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height) listVO:_vo];
 		[_influencersListView setBackgroundColor:[UIColor whiteColor]];
-		
-		
-//		
-//		UISwipeGestureRecognizer *swipeUpRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_goFlip:)];
-//		swipeUpRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
-//		[self addGestureRecognizer:swipeUpRecognizer];
-//		[swipeUpRecognizer release];
-//		
-//		UISwipeGestureRecognizer *swipDnRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_goFlip:)];
-//		swipDnRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
-//		[self addGestureRecognizer:swipDnRecognizer];
-//		[swipDnRecognizer release];
 	}
 	
 	return (self);
@@ -116,10 +94,7 @@
 
 #pragma mark - Interaction handlers
 -(void)_goFlip {
-	NSLog(@"LIST");
-	
-	_isFlipped = !_isFlipped;
-	
+	_isFlipped = !_isFlipped;	
 	
 	if (_isFlipped) {
 		[_articlesButton removeTarget:self action:@selector(_goArticles) forControlEvents:UIControlEventTouchUpInside];

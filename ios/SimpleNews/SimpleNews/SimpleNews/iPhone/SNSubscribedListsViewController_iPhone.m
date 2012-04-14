@@ -136,7 +136,7 @@
 			_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
 	
 		} completion:^(BOOL finished) {
-			[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initWithList:vo.list_id] autorelease] animated:YES];
+			[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initWithListVO:vo] autorelease] animated:YES];
 		}];
 	}
 	

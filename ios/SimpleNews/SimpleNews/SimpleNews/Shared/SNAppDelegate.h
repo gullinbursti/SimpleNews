@@ -42,6 +42,7 @@
 +(void)twitterToggle:(BOOL)isSignedIn;
 +(BOOL)twitterEnabled;
 +(NSString *)twitterHandle;
++(NSString *)twitterAvatar;
 
 
 +(void)writeInfluencers:(NSString *)influencers;

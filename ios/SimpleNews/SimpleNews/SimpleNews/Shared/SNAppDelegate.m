@@ -169,6 +169,9 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 	return ([[NSUserDefaults standardUserDefaults] objectForKey:@"twitterHandle"]);
 }
 
++(NSString *)twitterAvatar {
+	return ([[NSUserDefaults standardUserDefaults] objectForKey:@"twitterAvatar"]);
+}
 
 
 +(NSDictionary *)fbProfile {
@@ -212,6 +215,15 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[defaults setObject:@"NO" forKey:@"airplay_enabled"];
 	[defaults synchronize];
+	
+	for (NSString *name in [UIFont familyNames]) {
+		NSLog(@"Family name : %@", name);
+		for (NSString *font in [UIFont fontNamesForFamilyName:name]) {
+			NSLog(@"Font name : %@", font);             
+		}
+	}
+	
+	
 	
 	SNTwitterCaller *twitterCaller = [[[SNTwitterCaller alloc] init] autorelease];
 	

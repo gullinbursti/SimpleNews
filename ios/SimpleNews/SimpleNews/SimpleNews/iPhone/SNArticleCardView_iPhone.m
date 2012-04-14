@@ -99,7 +99,7 @@
 		_commentTxtField.keyboardType = UIKeyboardTypeDefault;
 		_commentTxtField.text = @"";
 		_commentTxtField.delegate = self;
-		//[_inputBgImgView addSubview:_commentTxtField];
+		[_inputBgImgView addSubview:_commentTxtField];
 		
 		_commentsLabel = [[UILabel alloc] initWithFrame:_commentTxtField.frame];
 		_commentsLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
@@ -108,25 +108,11 @@
 		_commentsLabel.text = @"Comment";
 		[_inputBgImgView addSubview:_commentsLabel];
 		
-//		UIButton *emoticonButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-//		emoticonButton.frame = CGRectMake(280.0, 13.0, 24.0, 24.0);
-//		[emoticonButton setBackgroundImage:[UIImage imageNamed:@"emoticon_nonActive.png"] forState:UIControlStateNormal];
-//		[emoticonButton setBackgroundImage:[UIImage imageNamed:@"emoticon_Active.png"] forState:UIControlStateHighlighted];
-//		[emoticonButton addTarget:self action:@selector(_goEmoticon) forControlEvents:UIControlEventTouchUpInside];
-//		[inputBgImgView addSubview:emoticonButton];
-		
-		
 //		UIImageView *scoreBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(261.0, 35.0, 64.0, 94.0)];
 //		scoreBgImgView.image = [UIImage imageNamed:@"scoreMeterBG.png"];
 //		scoreBgImgView.userInteractionEnabled = YES;
 //		[self addSubview:scoreBgImgView];
 //		
-//		UIButton *scoreFavoriteButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-//		scoreFavoriteButton.frame = CGRectMake(22.0, 18.0, 24.0, 24.0);
-//		[scoreFavoriteButton setBackgroundImage:[UIImage imageNamed:@"likeIcon_nonActive.png"] forState:UIControlStateNormal];
-//		[scoreFavoriteButton setBackgroundImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
-//		[scoreFavoriteButton addTarget:self action:@selector(_goFavorite) forControlEvents:UIControlEventTouchUpInside];
-//		[scoreBgImgView addSubview:scoreFavoriteButton];
 //		
 //		UIButton *scoreShareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 //		scoreShareButton.frame = CGRectMake(22.0, 58.0, 24.0, 24.0);
@@ -179,12 +165,12 @@
 		iconsBgImgView.userInteractionEnabled = YES;
 		[_scrollView addSubview:iconsBgImgView];
 		
-		UIButton *favoriteButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		favoriteButton.frame = CGRectMake(90.0, 12.0, 24.0, 24.0);
-		[favoriteButton setBackgroundImage:[UIImage imageNamed:@"likeIcon_nonActive.png"] forState:UIControlStateNormal];
-		[favoriteButton setBackgroundImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
-		[favoriteButton addTarget:self action:@selector(_goFavorite) forControlEvents:UIControlEventTouchUpInside];
-		[iconsBgImgView addSubview:favoriteButton];
+		UIButton *likeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		likeButton.frame = CGRectMake(90.0, 12.0, 44.0, 34.0);
+		[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
+		[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
+		[likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+		[iconsBgImgView addSubview:likeButton];
 		
 		UIButton *shareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 		shareButton.frame = CGRectMake(143.0, 12.0, 24.0, 24.0);
@@ -399,7 +385,7 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SOURCE_PAGE" object:_vo.article_url];
 }
 
--(void)_goFavorite {
+-(void)_goLike {
 	
 }
 
@@ -466,11 +452,10 @@
 		
 		NSLog(@"USER:%d, ARTICLE:%d, LIST:%d, CONTENT:%@", 1, _vo.article_id, _list_id, textField.text);
 		
-		
 		NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
 									 @"0", @"reaction_id",
-									 @"https://si0.twimg.com/profile_images/180710325/andvari.jpg", @"thumb_url", 
-									 @"https://twitter.com/#!/andvari", @"user_url", 
+									 [SNAppDelegate twitterAvatar], @"thumb_url", 
+									 [NSString stringWithFormat:@"https://twitter.com/#!/%@", [SNAppDelegate twitterHandle]], @"user_url", 
 									 @"http://shelby.tv", @"reaction_url", 
 									 textField.text, @"content", nil];
 		SNReactionVO *vo = [SNReactionVO reactionWithDictionary:dict];

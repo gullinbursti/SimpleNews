@@ -11,17 +11,16 @@
 
 #import "ASIFormDataRequest.h"
 #import "SNShareSheetView_iPhone.h"
-#import "SNPaginationView_iPhone.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
+#import "SNListVO.h"
 
-#import "Facebook.h"
-
-@interface SNArticleListViewController_iPhone : UIViewController <UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate, ASIHTTPRequestDelegate, FBRequestDelegate> {
+@interface SNArticleListViewController_iPhone : UIViewController <UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate> {
 	NSMutableArray *_articles;
 	ASIFormDataRequest *_articlesRequest;
 	ASIFormDataRequest *_latestArticlesRequest;
 	ASIFormDataRequest *_olderArticlesRequest;
 	
+	UIScrollView *_scrollView;
 	UIView *_overlayView;
 	UIView *_cardHolderView;
 	
@@ -30,19 +29,14 @@
 	
 	int _cardIndex;
 	BOOL _isLastCard;
-	int _list_id;
+	SNListVO *_vo;
 	
 	SNShareSheetView_iPhone *_shareSheetView;
 	
-	UIButton *_rootListButton;
-	
 	UIView *_blackMatteView;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
-	SNPaginationView_iPhone	*_paginationView;
-	
-	NSTimer *_timer;
 }
 
--(id)initWithList:(int)list_id;
+-(id)initWithListVO:(SNListVO *)vo;
 
 @end

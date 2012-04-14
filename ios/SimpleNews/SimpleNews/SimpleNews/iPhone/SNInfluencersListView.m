@@ -40,26 +40,32 @@
 		titleLabel.text = _vo.list_name;
 		[self addSubview:titleLabel];
 		
-		UIImageView *verifiedImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 58.0, 24.0, 24.0)] autorelease];
+		UIImageView *verifiedImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 55.0, 24.0, 24.0)] autorelease];
 		verifiedImgView.image = [UIImage imageNamed:@"verifiedIcon.png"];
 		[self addSubview:verifiedImgView];
 		
-		NSString *curators = @"By ";
-		for (SNCuratorVO *vo in _vo.curators)
-			curators = [curators stringByAppendingString:[NSString stringWithFormat:@"%@, ", vo.curator_name]];
-		
-		UILabel *curatorLabel = [[[UILabel alloc] initWithFrame:CGRectMake(38.0, 60.0, 200.0, 20.0)] autorelease];
-		curatorLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14];
+		UILabel *curatorLabel = [[[UILabel alloc] initWithFrame:CGRectMake(38.0, 57.0, 200.0, 20.0)] autorelease];
+		curatorLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
 		curatorLabel.textColor = [UIColor blackColor];
 		curatorLabel.backgroundColor = [UIColor clearColor];
-		curatorLabel.text = [curators substringToIndex:[curators length] - 2];
+		curatorLabel.text = @"Curators Verified";
 		[self addSubview:curatorLabel];
 		
-		UIView *subheaderLineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 95.0, self.frame.size.width, 1.0)] autorelease];
+		CGSize infoSize = [_vo.list_info sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		
+		UILabel *infoLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 91.0, 270.0, infoSize.height)] autorelease];
+		infoLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
+		infoLabel.textColor = [UIColor colorWithWhite:0.486 alpha:1.0];
+		infoLabel.backgroundColor = [UIColor clearColor];
+		infoLabel.numberOfLines = 0;
+		infoLabel.text = _vo.list_info;
+		[self addSubview:infoLabel];
+		
+		UIView *subheaderLineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 104.0 + infoSize.height, self.frame.size.width, 1.0)] autorelease];
 		[subheaderLineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
 		[self addSubview:subheaderLineView];
 		
-		_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 95.0, self.frame.size.width, self.frame.size.height - 95.0) style:UITableViewStylePlain];
+		_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 104.0 + infoSize.height, self.frame.size.width, self.frame.size.height - (104.0 + infoSize.height)) style:UITableViewStylePlain];
 		[_tableView setBackgroundColor:[UIColor clearColor]];
 		_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 		_tableView.rowHeight = 60.0;

@@ -67,6 +67,7 @@ static SNTwitterCaller *sharedInstance = nil;
 					NSLog(@"ACCOUNT:%@", self.account);
 					
 					[[NSUserDefaults standardUserDefaults] setObject:self.account.username forKey:@"twitterHandle"];
+					[[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"https://api.twitter.com/1/users/profile_image?screen_name=%@&size=reasonably_small", self.account.username] forKey:@"twitterAvatar"];
 					[[NSUserDefaults standardUserDefaults] synchronize];
 					
 					for (ACAccount *account in self.accounts) {

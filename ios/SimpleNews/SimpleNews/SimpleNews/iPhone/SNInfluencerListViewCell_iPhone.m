@@ -32,11 +32,15 @@
 		_avatarImgView.layer.borderWidth = 1.0;
 		[self addSubview:_avatarImgView];
 		
-		_twitterNameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(67.0, 20.0, 256.0, 20.0)] autorelease];
+		_twitterNameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(62.0, 19.0, 256.0, 20.0)] autorelease];
 		_twitterNameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
-		_twitterNameLabel.textColor = [UIColor colorWithWhite:0.325 alpha:1.0];
+		_twitterNameLabel.textColor = [UIColor blackColor];
 		_twitterNameLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_twitterNameLabel];
+		
+		UIImageView *verifiedIcoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(263.0, 18.0, 24.0, 24.0)] autorelease];
+		verifiedIcoImgView.image = [UIImage imageNamed:@"verifiedCuratorIcon.png"];
+		[self addSubview:verifiedIcoImgView];
 		
 		UIView *lineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 59.0, self.frame.size.width, 1.0)] autorelease];
 		[lineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];

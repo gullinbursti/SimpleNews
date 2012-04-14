@@ -18,21 +18,23 @@
 		
 		[self setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.67]];
 		
-		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(15.0, 15.0, 200.0, 24.0)] autorelease];
+		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(15.0, 10.0, 200.0, 24.0)] autorelease];
 		titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:18];
 		titleLabel.textColor = [UIColor whiteColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
+		titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+		titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 		titleLabel.text = _vo.list_name;
 		[self addSubview:titleLabel];
 		
-		NSString *curators = @"By ";
+		NSString *curators = @"by ";
 		
 		for (SNCuratorVO *vo in _vo.curators)
 			curators = [curators stringByAppendingString:[NSString stringWithFormat:@"%@, ", vo.curator_name]];
 		
-		UILabel *curatorLabel = [[[UILabel alloc] initWithFrame:CGRectMake(15.0, 40.0, 200.0, 20.0)] autorelease];
+		UILabel *curatorLabel = [[[UILabel alloc] initWithFrame:CGRectMake(15.0, 35.0, 200.0, 20.0)] autorelease];
 		curatorLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14];
-		curatorLabel.textColor = [UIColor whiteColor];
+		curatorLabel.textColor = [UIColor colorWithWhite:0.824 alpha:1.0];
 		curatorLabel.backgroundColor = [UIColor clearColor];
 		curatorLabel.text = [curators substringToIndex:[curators length] - 2];
 		

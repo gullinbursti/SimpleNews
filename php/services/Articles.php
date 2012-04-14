@@ -139,7 +139,7 @@
 		}
 		
 		function submitComment($handle, $list_id, $article_id, $content) {
-			$query = 'SELECT `user_id` FROM `tblUsers` WHERE `handle` = "'. $handle .'";';
+			$query = 'SELECT `id` FROM `tblUsers` WHERE `handle` = "'. $handle .'";';
 			$result = mysql_query($query);
 			
 			$user_id = "0";

@@ -12,19 +12,15 @@
 #import "SNGraphCaller.h"
 
 #import "SNArticleListViewController_iPhone.h"
-#import "SNArticleCardView_iPhone.h"
+#import "SNArticleItemView_iPhone.h"
 
 #import "SNAppDelegate.h"
 #import "SNTweetVO.h"
 
-#import "SNFacebookCardView_iPhone.h"
 #import "SNOptionsPageViewController.h"
 
 @interface SNArticleListViewController_iPhone()
 -(void)_goBack;
--(void)_introFirstCard;
--(void)_prevCard:(id)sender;
--(void)_nextCard:(id)sender;
 @end
 
 @implementation SNArticleListViewController_iPhone
@@ -46,9 +42,6 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_emailShare:) name:@"EMAIL_SHARE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cancelShare:) name:@"CANCEL_SHARE" object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startTimer:) name:@"START_TIMER" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_stopTimer:) name:@"STOP_TIMER" object:nil];
-		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTweetPage:) name:@"SHOW_TWEET_PAGE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSourcePage:) name:@"SHOW_SOURCE_PAGE" object:nil];
@@ -69,12 +62,12 @@
 }
 
 
--(id)initWithList:(int)list_id {
+-(id)initWithListVO:(SNListVO *)vo {
 	if ((self = [self init])) {
-		_list_id = list_id;
+		_vo = vo;
 		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 8] forKey:@"action"];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", list_id] forKey:@"listID"];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
 		[_articlesRequest setTimeOutSeconds:30];
 		[_articlesRequest setDelegate:self];
 		[_articlesRequest startAsynchronous];
@@ -105,21 +98,12 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_REACTION_PROFILE" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_REACTION_PAGE" object:nil];
 	
-	//[_articles release];
-	//[_cardViews release];
-	
-	//[_latestArticlesRequest release];
-	//[_olderArticlesRequest release];
 	[_articlesRequest release];;
 	
 	[_overlayView release];
 	[_cardHolderView release];
 	[_shareSheetView release];
 	[_blackMatteView release];
-	
-	[_rootListButton release];
-	
-	//[_videoPlayerView release];
 	
 	[super dealloc];
 }
@@ -128,37 +112,60 @@
 -(void)loadView {
 	[super loadView];
 	
-//	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
-//	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
-//	[self.view addSubview:bgImgView];
+	[self.view setBackgroundColor:[UIColor colorWithWhite:0.941 alpha:1.0]];
+	
+	UIButton *backButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	backButton.frame = CGRectMake(4.0, 4.0, 44.0, 44.0);
+	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_nonActive.png"] forState:UIControlStateNormal];
+	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_Active.png"] forState:UIControlStateHighlighted];
+	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:backButton];
+	
+	UIButton *flipButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	flipButton.frame = CGRectMake(272.0, 4.0, 44.0, 44.0);
+	[flipButton setBackgroundImage:[UIImage imageNamed:@"flipListButtonHeader_nonActive.png"] forState:UIControlStateNormal];
+	[flipButton setBackgroundImage:[UIImage imageNamed:@"flipListButtonHeader_Active.png"] forState:UIControlStateHighlighted];
+	[flipButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:flipButton];
+	
+	UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(64.0, 12.0, 192.0, 24)] autorelease];
+	titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:18];
+	titleLabel.textColor = [UIColor blackColor];
+	titleLabel.backgroundColor = [UIColor clearColor];
+	titleLabel.textAlignment = UITextAlignmentCenter;
+	titleLabel.text = _vo.list_name;
+	[self.view addSubview:titleLabel];
+	
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 53.0, self.view.frame.size.width, self.view.frame.size.height - 53.0)];
+	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	[_scrollView setBackgroundColor:[UIColor whiteColor]];
+	_scrollView.opaque = YES;
+	_scrollView.scrollsToTop = NO;
+	_scrollView.pagingEnabled = NO;
+	_scrollView.delegate = self;
+	_scrollView.showsHorizontalScrollIndicator = NO;
+	_scrollView.showsVerticalScrollIndicator = YES;
+	_scrollView.alwaysBounceVertical = NO;
+	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
+	[self.view addSubview:_scrollView];
+	
 	
 	_cardHolderView = [[UIView alloc] initWithFrame:self.view.frame];
-	[self.view addSubview:_cardHolderView];
-	
-	//_overlayView = [[UIView alloc] initWithFrame:self.view.frame];
-	//[self.view addSubview:_overlayView];
+	//[self.view addSubview:_cardHolderView];
 	
 	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
 	_blackMatteView.alpha = 0.0;
-	[self.view addSubview:_blackMatteView];
+	//[self.view addSubview:_blackMatteView];
 	
 	_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:self.view.frame];
 	_videoPlayerView.hidden = YES;
-	[self.view addSubview:_videoPlayerView];
+	//[self.view addSubview:_videoPlayerView];
 	
-	_rootListButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
-	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeftArrow_nonActive.png"] forState:UIControlStateNormal];
-	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeftArrow_Active.png"] forState:UIControlStateHighlighted];
-	[_rootListButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:_rootListButton];
+	
 
 	_shareSheetView = [[SNShareSheetView_iPhone alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
 	[self.view addSubview:_shareSheetView];
-		
-	_paginationView = [[SNPaginationView_iPhone alloc] initWithFrame:CGRectMake(278.0, 460.0, 48.0, 9.0)];
-	[self.view addSubview:_paginationView];
 	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
@@ -167,12 +174,12 @@
 	UISwipeGestureRecognizer *swipeRtRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_prevCard:)];
 	swipeRtRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
 	[_cardHolderView addGestureRecognizer:swipeRtRecognizer];
-	[swipeRtRecognizer release];
+	//[swipeRtRecognizer release];
 	
 	UISwipeGestureRecognizer *swipeLtRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_nextCard:)];
 	swipeLtRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
 	[_cardHolderView addGestureRecognizer:swipeLtRecognizer];
-	[swipeLtRecognizer release];
+	//[swipeLtRecognizer release];
 }
 
 -(void)viewDidLoad {
@@ -184,10 +191,6 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
-	} completion:nil];
-	
 	[super viewDidAppear:animated];
 }
 
@@ -195,16 +198,13 @@
 #pragma mark - Navigation
 -(void)_goBack {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ARTICLES_RETURN" object:nil];	
-	//[self.navigationController popToRootViewControllerAnimated:NO];
 	[self.navigationController popViewControllerAnimated:YES];
-	
-	[_timer invalidate];
-	_timer = nil;
 }
 
 
 #pragma mark - Interaction handlers
--(void)_introFirstCard {
+/*
+ -(void)_introFirstCard {
 	SNArticleCardView_iPhone *articleCardView = (SNArticleCardView_iPhone *)[_cardViews lastObject];
 	
 	CABasicAnimation *zoomAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
@@ -226,7 +226,6 @@
 		}
 	}
 	
-	_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
 	[articleCardView setTweets:tweets];
 }
 
@@ -234,15 +233,7 @@
 	NSLog(@"PREV CARD");
 	
 	if (_cardIndex < [_cardViews count] - 1) {
-		
-		if (!_isLastCard) {
-			[_timer invalidate];
-			_timer = nil;
-		}
-		
-		
-		_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
-		
+				
 		SNBaseArticleCardView_iPhone *previousCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex + 1];
 		SNBaseArticleCardView_iPhone *currentCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
 
@@ -258,45 +249,17 @@
 			_cardIndex++;
 			_isLastCard = NO;
 			
-			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
-			
 		}];
 			
-	} else {
+	} else
 		_isLastCard = YES;
-		
-//		if (![_loaderView isLoading]) {
-//			[_loaderView introMe];
-//			[self performSelector:@selector(_doneLoading) withObject:nil afterDelay:3.0];
-//			
-//			NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-//			[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-//			
-//			_latestArticlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
-//			[_latestArticlesRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
-//			[_latestArticlesRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles lastObject]).added] forKey:@"date"];
-//			[_latestArticlesRequest setPostValue:[SNAppDelegate subscribedInfluencers] forKey:@"influencers"];
-//			[_latestArticlesRequest setTimeOutSeconds:30];
-//			[_latestArticlesRequest setDelegate:self];
-//			//[_latestArticlesRequest startAsynchronous];
-//			
-//			[dateFormat release];
-//		}
-	}
 }
 
 -(void)_nextCard:(id)sender {
 	NSLog(@"NEXT CARD");
 	
 	if (_cardIndex > 0) {
-		
-		if (!_isLastCard) {
-			[_timer invalidate];
-			_timer = nil;
-		}
-		
-		_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
-		
+				
 		SNBaseArticleCardView_iPhone *currentCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
 		SNBaseArticleCardView_iPhone *nextCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex - 1];
 		
@@ -320,32 +283,12 @@
 			[nextCardView introContent];
 			_cardIndex--;
 			_isLastCard = NO;
-			
-			[_paginationView changePage:round((([_cardViews count] - 1) - _cardIndex) / 3)];
 		}];
 				
-	} else {
+	} else
 		_isLastCard = YES;
-		
-//		if (![_loaderView isLoading]) {
-//			[_loaderView introMe];
-//			[self performSelector:@selector(_doneLoading) withObject:nil afterDelay:3.0];
-//			
-//			NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-//			[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-//			
-//			_olderArticlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
-//			[_olderArticlesRequest setPostValue:[NSString stringWithFormat:@"%d", 6] forKey:@"action"];
-//			[_olderArticlesRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles objectAtIndex:0]).added] forKey:@"date"];
-//			[_latestArticlesRequest setPostValue:[SNAppDelegate subscribedInfluencers] forKey:@"influencers"];
-//			[_olderArticlesRequest setTimeOutSeconds:30];
-//			[_olderArticlesRequest setDelegate:self];
-//			//[_olderArticlesRequest startAsynchronous];
-//			
-//			[dateFormat release];
-//		}
-	}
 }
+ */
 
 
 #pragma mark - Notification handlers
@@ -354,13 +297,6 @@
 	
 	_videoPlayerView.hidden = NO;
 	[_videoPlayerView changeArticleVO:vo];
-	
-	[_timer invalidate];
-	_timer = nil;
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
-	} completion:nil];
 }
 
 -(void)_videoStarted:(NSNotification *)notification {
@@ -373,15 +309,9 @@
 	
 	_videoPlayerView.hidden = YES;
 	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
-	} completion:nil];
-	
 	[UIView animateWithDuration:0.5 animations:^(void) {
 		_blackMatteView.alpha = 0.0;
 	} completion:nil];
-	
-	_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
 }
 
 -(void)_tagSearch:(NSNotification *)notification {
@@ -407,14 +337,6 @@
 
 
 -(void)_facebookShare:(NSNotification *)notification {
-	//SNArticleVO *vo = (SNArticleVO *)[notification object];
-
-	//NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys: @"SELECT uid, name, pic FROM user WHERE uid=me()", @"query", nil];
-	
-	//[[[SNAppDelegate sharedInstance] facebook] requestWithMethodName:@"fql.query" andParams:params andHttpMethod:@"POST" andDelegate:self];
-	//[[SNGraphCaller sharedInstance] postFeed:@"DERP"];
-	//[[[SNAppDelegate sharedInstance] facebook] requestWithGraphPath:@"me/feed" andDelegate:self];
-	[[[SNAppDelegate sharedInstance] facebook] requestWithGraphPath:@"me/feed" andParams:[NSDictionary dictionaryWithObjectsAndKeys:@"DERP", @"feed", nil] andHttpMethod:@"POST" andDelegate:self];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CANCEL_SHARE" object:nil];	
 }
 -(void)_twitterShare:(NSNotification *)notification {
@@ -474,29 +396,6 @@
 	} completion:^(BOOL finished) {
 		_blackMatteView.hidden = YES;
 	}];
-	
-	_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
-}
-
--(void)_startTimer:(NSNotification *)notification {
-	//_rootListButton.hidden = NO;
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
-	} completion:nil];
-	
-	_timer = [NSTimer scheduledTimerWithTimeInterval:15.0 target:self selector:@selector(_nextCard:) userInfo:nil repeats:NO];
-}
-
--(void)_stopTimer:(NSNotification *)notification {
-	//_rootListButton.hidden = YES;
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
-	} completion:nil];
-	
-	[_timer invalidate];
-	_timer = nil;
 }
 
 -(void)_twitterTimeline:(NSNotification *)notification {
@@ -531,6 +430,39 @@
 	SNOptionsPageViewController *tweetPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]]] autorelease];
 	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:tweetPageViewController animated:YES];
+}
+
+
+#pragma mark - ScrollView Delegates
+// any offset changes
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {	
+}
+
+
+// called on start of dragging (may require some time and or distance to move)
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+}
+
+
+// called on finger up if the user dragged. velocity is in points/second. targetContentOffset may be changed to adjust where the scroll view comes to rest. not called when pagingEnabled is YES
+-(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+}
+
+// called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
+}
+
+
+// called on finger up as we are moving
+-(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+}
+
+// called when setContentOffset/scrollRectVisible:animated: finishes. not called if not animating
+-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+}
+
+// called when scroll view grinds to a halt
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
 }
 
 
@@ -570,47 +502,6 @@
 }
 
 
-#pragma mark - FBRequestDelegate Methods
-/**
- * Called when the Facebook API request has returned a response. This callback
- * gives you access to the raw response. It's called before
- * (void)request:(FBRequest *)request didLoad:(id)result,
- * which is passed the parsed response object.
- */
-- (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response {
-	//NSLog(@"received response");
-}
-
-/**
- * Called when a request returns and its response has been parsed into
- * an object. The resulting object may be a dictionary, an array, a string,
- * or a number, depending on the format of the API response. If you need access
- * to the raw response, use:
- *
- * (void)request:(FBRequest *)request
- *      didReceiveResponse:(NSURLResponse *)response
- */
-- (void)request:(FBRequest *)request didLoad:(id)result {
-	if ([result isKindOfClass:[NSArray class]]) {
-		result = [result objectAtIndex:0];
-	}
-
-	NSLog(@"%@", result);
-}
-
-/**
- * Called when an error prevents the Facebook API request from completing
- * successfully.
- */
-- (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
-	NSLog(@"Err: %@", error);
-	NSLog(@"Err message: %@", [[error userInfo] objectForKey:@"error_msg"]);
-	NSLog(@"Err code: %d", [error code]);
-}
-
-
-
-
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
 	NSLog(@"SNArticleListViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
@@ -636,26 +527,20 @@
 					if (vo != nil)
 						[articleList addObject:vo];
 					
-					
-					SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:_cardHolderView.frame articleVO:vo listID:_list_id] autorelease];
-					[_cardViews addObject:(SNBaseArticleCardView_iPhone *)articleCardView];
+					SNArticleItemView_iPhone *articleItemView = [[[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 200.0 * tot, _scrollView.frame.size.width, 200.0) articleVO:vo] autorelease];
+					[_cardViews addObject:articleItemView];
+					//SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:_cardHolderView.frame articleVO:vo listID:_list_id] autorelease];
 					
 					tot++;
 				}
 				
 				_articles = [articleList retain];
 				
-				for (SNArticleCardView_iPhone *cardView in _cardViews) {
-					[_cardHolderView addSubview:cardView];
+				for (SNArticleItemView_iPhone *itemView in _cardViews) {
+					[_scrollView addSubview:itemView];
 				}
 				
-				[self _introFirstCard];
-				
-//				SNFacebookCardView_iPhone *facebookCardView = [[[SNFacebookCardView_iPhone alloc] initWithFrame:self.view.frame] autorelease];
-//				[_cardViews insertObject:(SNBaseArticleCardView_iPhone *)facebookCardView atIndex:[_cardViews count] - 3];
-//				[_cardHolderView insertSubview:facebookCardView atIndex:[_cardViews count] - 3];
-				
-				_cardIndex = [_cardViews count] - 1;
+				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, 200.0 * tot);
 			}
 		}	
 	}
