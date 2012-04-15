@@ -12,10 +12,13 @@
 #define degreesToRadian(x) (M_PI * (x) / 180.0)
 
 @interface SNArticleVideoPlayerView_iPhone()
+-(void)_initPlayer;
+
 -(void)_goPlayPause;
 -(void)_goStopVideo;
--(void)_timerTick;
+-(void)_goClose;
 
+-(void)_timerTick;
 -(void)_fadeInControls;
 -(void)_fadeOutControls;
 @end
@@ -24,11 +27,15 @@
 
 @synthesize mpc;
 
--(id)initWithFrame:(CGRect)frame {
+-(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo {
 	if ((self = [super initWithFrame:frame])) {
+		_vo = vo;
+		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_playingChangeCallback:) name:MPMoviePlayerNowPlayingMovieDidChangeNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_playbackStateChangedCallback:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_loadStateChangedCallback:) name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_killVideo:) name:@"KILL_VIDEO" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startScrubbing:) name:@"START_VIDEO_SCRUB" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_stopScrubbing:) name:@"STOP_VIDEO_SCRUB" object:nil];
@@ -39,36 +46,32 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_enteredFullscreen:) name:@"UIMoviePlayerControllerDidEnterFullscreenNotification" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_leftFullscreen:) name:@"UIMoviePlayerControllerDidExitFullscreenNotification" object:nil];
 		
-		_isFlipped = NO;
-		
-		
-		_bgImgView = [[UIImageView alloc] initWithFrame:self.frame];
-		_bgImgView.image = [UIImage imageNamed:@"background_root.png"];
-		[self addSubview:_bgImgView];
-		
-		_videoHolderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 150.0, self.frame.size.width, 180.0)];
-		_videoHolderView.alpha = 0.0;
+		_videoHolderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
 		[self addSubview:_videoHolderView];
+		
+		_screenshotImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)] autorelease];
+		_screenshotImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
+		[_videoHolderView addSubview:_screenshotImgView];
 		
 		_progressBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 435.0, 480.0, 45.0)];
 		_progressBgImgView.image = [UIImage imageNamed:@"playerPlayHeadBG.png"];
-		[self addSubview:_progressBgImgView];
+		//[self addSubview:_progressBgImgView];
 		
 		_progressImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 435.0, 0.0, 45.0)];
 		_progressImgView.image = [UIImage imageNamed:@"playerPlayHeadProgression.png"];
-		[self addSubview:_progressImgView];
+		//[self addSubview:_progressImgView];
 		
 		MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:CGRectMake(270.0, 440.0, 40.0, 20.0)] autorelease];
 		[volumeView setShowsVolumeSlider:NO];
 		[volumeView sizeToFit];
-		[self addSubview:volumeView];
+		//[self addSubview:volumeView];
 		
 		_closeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 		_closeButton.frame = CGRectMake(0.0, 435.0, 47.0, 45.0);
 		[_closeButton setBackgroundImage:[[UIImage imageNamed:@"playerPlayHeadCloseButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_closeButton setBackgroundImage:[[UIImage imageNamed:@"playerPlayHeadCloseButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[_closeButton addTarget:self action:@selector(_goClose) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:_closeButton];
+		//[self addSubview:_closeButton];
 		
 		_timeSize = [[NSString stringWithFormat:@"%@", @"0:00"] sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
 		_timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 420.0, _timeSize.width, _timeSize.height)];
@@ -78,27 +81,29 @@
 		_timeLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
 		_timeLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 		_timeLabel.text = @"0:00";
-		[self addSubview:_timeLabel];
+		//[self addSubview:_timeLabel];
 		
 		_playButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
-		_playButton.frame = CGRectMake(116.0, 193.0, 94.0, 94.0);
-		_playButton.alpha = 0.0;
-		[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-		[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+		_playButton.frame = CGRectMake(99.0, 68.0, 44.0, 44.0);
+		_playButton.alpha = 1.0;
+		[_playButton setBackgroundImage:[[UIImage imageNamed:@"smallPlayButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+		[_playButton setBackgroundImage:[[UIImage imageNamed:@"smallPlayButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[_playButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_playButton];
 		
 		_pauseButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
-		_pauseButton.frame = CGRectMake(116.0, 193.0, 94.0, 94.0);
-		_pauseButton.alpha = 1.0;
-		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"pauseButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"pauseButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+		_pauseButton.frame = CGRectMake(99.0, 68.0, 44.0, 44.0);
+		_pauseButton.alpha = 0.0;
+		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"smallPauseButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"smallPauseButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[_pauseButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_pauseButton];
 		
-		UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.frame] autorelease];
-		overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
-		[self addSubview:overlayImgView];
+		NSLog(@"YOUTUBE ID:[%@]", _vo.video_url);
+		
+		_videoInfoRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.youtube.com/get_video_info?html5=1&video_id=%@&eurl=http%3A%2F%2Fshelby.tv%2F&ps=native&el=embedded&hl=en_US", _vo.video_url]]];
+		_videoInfoRequest.delegate = self;
+		[_videoInfoRequest startAsynchronous];
 	}
 	
 	return (self);
@@ -108,6 +113,8 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerNowPlayingMovieDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerLoadStateDidChangeNotification object:nil];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"KILL_VIDEO" object:nil];
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"START_VIDEO_SCRUB" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"STOP_VIDEO_SCRUB" object:nil];
@@ -121,35 +128,57 @@
 	[super dealloc];
 }
 
--(void)changeArticleVO:(SNArticleVO *)vo {
-	_vo = vo;
+-(void)startPlayback {
+	[self _initPlayer];
+}
+
+-(void)stopPlayback {
+	[self _goClose];
+}
+
+-(void)_initPlayer {
+	MPMoviePlayerController *mp = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:_videoURL]];
+	self.mpc = mp;
+	[mp release];
+	
 	_isFullscreen = NO;
 	
-	NSLog(@"YOUTUBE ID:[%@]", _vo.video_url);
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startedCallback:) name:MPMoviePlayerNowPlayingMovieDidChangeNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_finishedCallback:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
 	
-	[self setBackgroundColor:[UIColor blackColor]];
+	self.mpc.controlStyle = MPMovieControlStyleNone;
+	self.mpc.view.frame = CGRectMake(0.0, 0.0, _videoHolderView.frame.size.width, 180.0);
+	self.mpc.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	self.mpc.shouldAutoplay = YES;
+	self.mpc.allowsAirPlay = YES;
+	self.mpc.movieSourceType = MPMovieSourceTypeFile;
+	[self.mpc setFullscreen:YES];
+	//[self.mpc pause];
 	
-	UIView *headerView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 50.0)] autorelease];
-	[self addSubview:headerView];
+	[_videoHolderView addSubview:self.mpc.view];
 	
-	_articleInfluencerView = [[[SNArticleInfluencerInfoView_iPhone alloc] initWithFrame:CGRectMake(0.0, -90.0, 250.0, 90.0) articleVO:_vo] autorelease];
+	_progressImgView.frame = CGRectMake(_progressImgView.frame.origin.x, _progressImgView.frame.origin.y, 0.0, _progressImgView.frame.size.height);
+	_timeSize = [[NSString stringWithFormat:@"%@", @"0:00"] sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
+	_timeLabel.frame = CGRectMake(0.0, _timeLabel.frame.origin.y, _timeSize.width, _timeSize.height);
+	_timeLabel.text = @"0:00";
 	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_articleInfluencerView.frame = CGRectMake(0.0, 0.0, 250.0, 90.0);
-	}];
-	
-	[headerView addSubview:_articleInfluencerView];
-	
-	_videoInfoRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.youtube.com/get_video_info?html5=1&video_id=%@&eurl=http%3A%2F%2Fshelby.tv%2F&ps=native&el=embedded&hl=en_US", _vo.video_url]]];
-	_videoInfoRequest.delegate = self;
-	[_videoInfoRequest startAsynchronous];
+//	UIImage *thumbImage = [self.mpc thumbnailImageAtTime:10.0 timeOption:MPMovieTimeOptionNearestKeyFrame];
+//	if (thumbImage == nil)
+//		NSLog(@"NO THUMB!!");
+//	
+//	else {
+//		_screenshotImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)] autorelease];
+//		_screenshotImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
+//		[_videoHolderView addSubview:_screenshotImgView];
+//	}
 }
 
 
 #pragma mark - Control handlers
 -(void)_goClose {
-	
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerNowPlayingMovieDidChangeNotification object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
+	
 	_isFinished = YES;
 	
 	[_hudTimer invalidate];
@@ -159,15 +188,12 @@
 	_progressTimer = nil;
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_playButton.alpha = 0.0;
-		_videoHolderView.alpha = 0.0;
+		_playButton.alpha = 1.0;
+		_screenshotImgView.alpha = 1.0;
 		
 	} completion:^(BOOL finished) {
 		[self.mpc stop];
-		[_articleInfluencerView removeFromSuperview];
 		[self.mpc.view removeFromSuperview];
-		
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
 	}];
 }
 
@@ -192,13 +218,7 @@
 
 -(void)_timerTick {
 	//NSLog(@"VIDEO POS:[%f/%f]", self.mpc.currentPlaybackTime, self.mpc.duration);
-	
-	if (!_isFlipped) {
-		_progressImgView.frame = CGRectMake(0.0, 435.0, 320.0 * (self.mpc.currentPlaybackTime / self.mpc.duration), _progressImgView.frame.size.height);
-		
-	} else {
-		_progressImgView.frame = CGRectMake(0.0, 275.0, 480.0 * (self.mpc.currentPlaybackTime / self.mpc.duration), _progressImgView.frame.size.height);
-	}
+	_progressImgView.frame = CGRectMake(0.0, 435.0, 320.0 * (self.mpc.currentPlaybackTime / self.mpc.duration), _progressImgView.frame.size.height);
 	
 	//int hours = (int)self.mpc.currentPlaybackTime / 3600;
 	
@@ -206,29 +226,11 @@
 	_timeSize = [formattedTime sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
 	_timeLabel.text = formattedTime;
 	
-	if (_timeSize.width * 0.5 < _progressImgView.frame.size.width) {
-		if (!_isFlipped)
-			_timeLabel.frame = CGRectMake(_progressImgView.frame.size.width - (_timeSize.width * 0.5), 420.0, _timeSize.width, _timeSize.height);
-		
-		else
-			_timeLabel.frame = CGRectMake(_progressImgView.frame.size.width - (_timeSize.width * 0.5), 260.0, _timeSize.width, _timeSize.height);
-	}
+	if (_timeSize.width * 0.5 < _progressImgView.frame.size.width)
+		_timeLabel.frame = CGRectMake(_progressImgView.frame.size.width - (_timeSize.width * 0.5), 420.0, _timeSize.width, _timeSize.height);
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-	//UITouch *touch = [touches anyObject];
-	
-	//NSLog(@"TOUCHED SELF:%d", [touch view] == self);
-	//NSLog(@"TOUCHED PLAYER:%d", [touch view] == self.mpc.view);
-	//NSLog(@"TOUCHED HOLDER:%d", [touch view] == _videoHolderView);
-	//NSLog(@"TOUCHED BG:%d", [touch view] == _bgImgView);
-	
-	//	if ([touch view] != self.view) {
-	//		[self _goPlayPause];
-	//		return;
-	//	}
-	
-	
 	if (_isControls) {
 		[_hudTimer invalidate];
 		_hudTimer = nil;
@@ -253,7 +255,6 @@
 		else if (self.mpc.playbackState == MPMoviePlaybackStatePaused)
 			_playButton.alpha = 1.0;
 		
-		_articleInfluencerView.alpha = 1.0;
 		_progressBgImgView.alpha = 1.0;
 		_progressImgView.alpha = 1.0;
 		_timeLabel.alpha = 1.0;
@@ -270,7 +271,6 @@
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_playButton.alpha = 0.0;
 		_pauseButton.alpha = 0.0;
-		_articleInfluencerView.alpha = 0.0;
 		_progressBgImgView.alpha = 0.0;
 		_progressImgView.alpha = 0.0;
 		_timeLabel.alpha = 0.0;
@@ -301,11 +301,7 @@
 	
 	[_progressTimer invalidate];
 	_progressTimer = nil;
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_videoHolderView.alpha = 1.0;
-	}];
-	
+		
 	[self _fadeOutControls];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_STARTED" object:nil];
@@ -325,10 +321,9 @@
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_playButton.alpha = 0.0;
-		_videoHolderView.alpha = 0.0;
+		_screenshotImgView.alpha = 1.0;
 		
 	} completion:^(BOOL finished) {
-		[_articleInfluencerView removeFromSuperview];
 		[self.mpc.view removeFromSuperview];
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
@@ -341,12 +336,6 @@
 	switch (self.mpc.loadState) {
 		case MPMovieLoadStatePlayable:
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_DURATION" object:[NSNumber numberWithFloat:self.mpc.duration]];
-			
-			self.mpc.view.hidden = NO;
-			[UIView animateWithDuration:0.5 delay:0.125 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
-				self.mpc.view.alpha = 1.0;
-			} completion:nil];
-			
 			break;
 			
 		case 3:
@@ -370,11 +359,14 @@
 	
 	switch (self.mpc.playbackState) {
 		case MPMoviePlaybackStatePlaying:
+			[UIView animateWithDuration:0.33 animations:^(void) {
+				_screenshotImgView.alpha = 0.0;
+			}];
 			break;
 			
 			//case 2:
 			//[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
-			break;
+			//break;
 			
 	}
 }
@@ -382,6 +374,10 @@
 
 -(void)_playingChangeCallback:(NSNotification *)notification {
 	NSLog(@"----[PLAYING CHANGED[%d]]----", self.mpc.playbackState);
+}
+
+-(void)_killVideo:(NSNotification *)notification {
+	[self _goClose];
 }
 
 -(void)_startScrubbing:(NSNotification *)notification {
@@ -457,39 +453,13 @@
 	}
 	
 	NSString *videoURL = [videoURLs objectForKey:@"sd"];
+	_videoURL = videoURL;
 	
 	//if ([videoURLs objectForKey:@"hd"])
 	//	videoURL = [videoURLs objectForKey:@"hd"];
 	
 	
 	NSLog(@"%@", videoURLs);
-	
-	
-	MPMoviePlayerController *mp = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:videoURL]];
-	self.mpc = mp;
-	[mp release];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startedCallback:) name:MPMoviePlayerNowPlayingMovieDidChangeNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_finishedCallback:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
-	
-	self.mpc.controlStyle = MPMovieControlStyleNone;
-	self.mpc.view.frame = CGRectMake(0.0, 0.0, _videoHolderView.frame.size.width, 180.0);
-	self.mpc.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	self.mpc.shouldAutoplay = YES;
-	self.mpc.allowsAirPlay = YES;
-	self.mpc.movieSourceType = MPMovieSourceTypeFile;
-	[self.mpc prepareToPlay];
-	[self.mpc setFullscreen:YES];
-	[self.mpc play];
-	
-	self.mpc.view.alpha = 0.0;
-	self.mpc.view.hidden = YES;
-	[_videoHolderView addSubview:self.mpc.view];
-	
-	_progressImgView.frame = CGRectMake(_progressImgView.frame.origin.x, _progressImgView.frame.origin.y, 0.0, _progressImgView.frame.size.height);
-	_timeSize = [[NSString stringWithFormat:@"%@", @"0:00"] sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
-	_timeLabel.frame = CGRectMake(0.0, _timeLabel.frame.origin.y, _timeSize.width, _timeSize.height);
-	_timeLabel.text = @"0:00";
 	
 	//NSLog(@"%@", [@"http%3A%2F%2Fo-o.preferred.comcast-lax1.v21.lscache4.c.youtube.com%2Fvideoplayback%3Fupn%3DNjE0NjE0NjY0NzY4NDEzNDA5OA%253D%253D%26sparams%3Dcp%252Cid%252Cip%252Cipbits%252Citag%252Cratebypass%252Csource%252Cupn%252Cexpire%26fexp%3D902904%252C904820%252C901601%26itag%3D37%26ip%3D98.0.0.0%26signature%3DAC36EF98C4CFECF8E5BFEA29EE9A009A40D18106.4BE3C83EE174FEC7EEDC72303CD49FCBE4F9F150%26sver%3D3%26ratebypass%3Dyes%26source%3Dyoutube%26expire%3D1332511088%26key%3Dyt1%26ipbits%3D8%26cp%3DU0hSR1VMT19NUkNOMl9NRlNBOjNqczdGMmdmd2pJ%26id%3Dd5783ada74dc476c" stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
 }

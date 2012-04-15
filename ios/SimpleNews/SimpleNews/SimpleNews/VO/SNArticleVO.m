@@ -12,7 +12,7 @@
 @implementation SNArticleVO
 
 @synthesize dictionary;
-@synthesize article_id, type_id, title, article_url, short_url, twitterName, twitterInfo, twitterHandle, tweet_id, tweetMessage, content, bgImage_url, thumb_url, video_url, avatarImage_url, isDark, added, reactions;
+@synthesize article_id, type_id, title, article_url, short_url, twitterName, twitterInfo, twitterHandle, tweet_id, tweetMessage, content, bgImage_url, articleSource, video_url, avatarImage_url, isDark, added, reactions;
 
 +(SNArticleVO *)articleWithDictionary:(NSDictionary *)dictionary {
 	
@@ -31,7 +31,7 @@
 	vo.tweetMessage = [dictionary objectForKey:@"tweet_msg"]; 
 	vo.content = [dictionary objectForKey:@"content"];
 	vo.bgImage_url = [dictionary objectForKey:@"bg_url"];
-	vo.thumb_url = [dictionary objectForKey:@"thumb_url"];
+	vo.articleSource = [dictionary objectForKey:@"source"];
 	vo.video_url = [dictionary objectForKey:@"video_url"];
 	vo.avatarImage_url = [dictionary objectForKey:@"avatar_url"];
 	vo.isDark = (BOOL)([[dictionary objectForKey:@"is_dark"] isEqualToString:@"Y"]);
@@ -58,7 +58,7 @@
 	self.tweetMessage = nil;
 	self.content = nil;
 	self.bgImage_url = nil;
-	self.thumb_url = nil;
+	self.articleSource = nil;
 	self.avatarImage_url = nil;
 	self.video_url = nil;
 	self.added = nil;

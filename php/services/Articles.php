@@ -121,7 +121,7 @@
 						"twitter_handle" => $influencer_row['handle'],
 						"twitter_info" => $influencer_row['info'], 
 						"bg_url" => $article_row['image_url'], 
-						"thumb_url" => $article_row['thumb_url'], 
+						"source" => $article_row['source'], 
 						"content" => $article_row['content'], 
 						"avatar_url" => $influencer_row['avatar_url'], 
 						"video_url" => $article_row['video_url'], 

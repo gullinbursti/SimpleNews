@@ -29,11 +29,6 @@
 
 -(id)init {
 	if ((self = [super init])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_startVideo:) name:@"START_VIDEO" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoStarted:) name:@"VIDEO_STARTED" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_tagSearch:) name:@"TAG_SEARCH" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_leaveArticles:) name:@"LEAVE_ARTICLES" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_shareSheet:) name:@"SHARE_SHEET" object:nil];
 		
@@ -81,9 +76,6 @@
 }
 
 -(void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"START_VIDEO" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"VIDEO_ENDED" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"TAG_SEARCH" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LEAVE_ARTICLES" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHARE_SHEET" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FACEBOOK_SHARE" object:nil];
@@ -101,7 +93,6 @@
 	[_articlesRequest release];;
 	
 	[_overlayView release];
-	[_cardHolderView release];
 	[_shareSheetView release];
 	[_blackMatteView release];
 	
@@ -149,20 +140,10 @@
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
 	[self.view addSubview:_scrollView];
 	
-	
-	_cardHolderView = [[UIView alloc] initWithFrame:self.view.frame];
-	//[self.view addSubview:_cardHolderView];
-	
 	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
 	_blackMatteView.alpha = 0.0;
-	//[self.view addSubview:_blackMatteView];
-	
-	_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:self.view.frame];
-	_videoPlayerView.hidden = YES;
-	//[self.view addSubview:_videoPlayerView];
-	
-	
+	[self.view addSubview:_blackMatteView];
 
 	_shareSheetView = [[SNShareSheetView_iPhone alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
 	[self.view addSubview:_shareSheetView];
@@ -170,16 +151,6 @@
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
-	
-	UISwipeGestureRecognizer *swipeRtRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_prevCard:)];
-	swipeRtRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-	[_cardHolderView addGestureRecognizer:swipeRtRecognizer];
-	//[swipeRtRecognizer release];
-	
-	UISwipeGestureRecognizer *swipeLtRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_nextCard:)];
-	swipeLtRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
-	[_cardHolderView addGestureRecognizer:swipeLtRecognizer];
-	//[swipeLtRecognizer release];
 }
 
 -(void)viewDidLoad {
@@ -198,126 +169,12 @@
 #pragma mark - Navigation
 -(void)_goBack {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ARTICLES_RETURN" object:nil];	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
 
-#pragma mark - Interaction handlers
-/*
- -(void)_introFirstCard {
-	SNArticleCardView_iPhone *articleCardView = (SNArticleCardView_iPhone *)[_cardViews lastObject];
-	
-	CABasicAnimation *zoomAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-	zoomAnimation.beginTime = CACurrentMediaTime();
-	zoomAnimation.toValue = [NSNumber numberWithDouble:1.0];
-	zoomAnimation.duration = 0.15;
-	zoomAnimation.fillMode = kCAFillModeForwards;
-	zoomAnimation.removedOnCompletion = NO;
-	zoomAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-	[articleCardView.bgView.layer addAnimation:zoomAnimation forKey:@"zoomAnimation"];
-	
-	[articleCardView introContent];
-	
-	NSMutableArray *tweets = [NSMutableArray new];
-	SNArticleVO *articleVO = (SNArticleVO *)[_articles objectAtIndex:_cardIndex];
-	for (SNTweetVO *tweetVO in _timelineTweets) {
-		if ([tweetVO.content rangeOfString:articleVO.article_url].location > 0 || [tweetVO.content rangeOfString:articleVO.short_url].location > 0) {
-			[tweets addObject:tweetVO];
-		}
-	}
-	
-	[articleCardView setTweets:tweets];
-}
-
--(void)_prevCard:(id)sender {
-	NSLog(@"PREV CARD");
-	
-	if (_cardIndex < [_cardViews count] - 1) {
-				
-		SNBaseArticleCardView_iPhone *previousCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex + 1];
-		SNBaseArticleCardView_iPhone *currentCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
-
-		[UIView animateWithDuration:0.33 animations:^(void) {
-			previousCardView.frame = CGRectMake(0.0, 0.0, previousCardView.frame.size.width, previousCardView.frame.size.height);
-			currentCardView.frame = CGRectMake(self.view.frame.size.width, 0.0, currentCardView.frame.size.width, currentCardView.frame.size.height);
-			
-		} completion:^(BOOL finished) {
-			
-			[previousCardView introContent];
-			[currentCardView resetContent];
-			
-			_cardIndex++;
-			_isLastCard = NO;
-			
-		}];
-			
-	} else
-		_isLastCard = YES;
-}
-
--(void)_nextCard:(id)sender {
-	NSLog(@"NEXT CARD");
-	
-	if (_cardIndex > 0) {
-				
-		SNBaseArticleCardView_iPhone *currentCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex];
-		SNBaseArticleCardView_iPhone *nextCardView = (SNBaseArticleCardView_iPhone *)[_cardViews objectAtIndex:_cardIndex - 1];
-		
-		nextCardView.frame = CGRectMake(0.0, 0.0, nextCardView.frame.size.width, nextCardView.frame.size.height);
-		
-		CABasicAnimation *zoomAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-		zoomAnimation.beginTime = CACurrentMediaTime() + 0.25;
-		zoomAnimation.toValue = [NSNumber numberWithDouble:1.0];
-		zoomAnimation.duration = 0.15;
-		zoomAnimation.fillMode = kCAFillModeForwards;
-		zoomAnimation.removedOnCompletion = NO;
-		zoomAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut];
-		[nextCardView.bgView.layer addAnimation:zoomAnimation forKey:@"zoomAnimation"];
-		
-		[UIView animateWithDuration:0.33 animations:^(void) {
-			currentCardView.frame = CGRectMake(-self.view.frame.size.width, 0.0, currentCardView.frame.size.width, currentCardView.frame.size.height);
-			
-		} completion:^(BOOL finished) {
-			
-			[currentCardView resetContent];
-			[nextCardView introContent];
-			_cardIndex--;
-			_isLastCard = NO;
-		}];
-				
-	} else
-		_isLastCard = YES;
-}
- */
-
-
 #pragma mark - Notification handlers
--(void)_startVideo:(NSNotification *)notification {
-	SNArticleVO *vo = (SNArticleVO *)[notification object];
-	
-	_videoPlayerView.hidden = NO;
-	[_videoPlayerView changeArticleVO:vo];
-}
-
--(void)_videoStarted:(NSNotification *)notification {
-	[UIView animateWithDuration:0.25 delay:0.25 options:UIViewAnimationCurveLinear animations:^(void) {
-		_blackMatteView.alpha = 1.0;
-	} completion:nil];
-}
-
--(void)_videoEnded:(NSNotification *)notification {
-	
-	_videoPlayerView.hidden = YES;
-	
-	[UIView animateWithDuration:0.5 animations:^(void) {
-		_blackMatteView.alpha = 0.0;
-	} completion:nil];
-}
-
--(void)_tagSearch:(NSNotification *)notification {
-	[self _goBack];
-}
-
 -(void)_leaveArticles:(NSNotification *)notification {
 	[self _goBack];
 }
@@ -519,6 +376,7 @@
 				_cardViews = [NSMutableArray new];
 				
 				int tot = 0;
+				int offset = 0;
 				for (NSDictionary *serverArticle in parsedArticles) {
 					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
 					
@@ -527,10 +385,28 @@
 					if (vo != nil)
 						[articleList addObject:vo];
 					
-					SNArticleItemView_iPhone *articleItemView = [[[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, 200.0 * tot, _scrollView.frame.size.width, 200.0) articleVO:vo] autorelease];
-					[_cardViews addObject:articleItemView];
-					//SNArticleCardView_iPhone *articleCardView = [[[SNArticleCardView_iPhone alloc] initWithFrame:_cardHolderView.frame articleVO:vo listID:_list_id] autorelease];
+					int height = 150;
+					CGSize size;
 					
+					size = [vo.tweetMessage sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(252.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+					height += size.height;
+					
+					size = [vo.title sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(252.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+					height += size.height;
+					
+					size = [vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(252.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+					height += size.height;
+					
+					if (vo.type_id > 4)
+						height += 196;
+					
+					else 
+						height += 16;
+					
+					SNArticleItemView_iPhone *articleItemView = [[[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, offset, _scrollView.frame.size.width, height) articleVO:vo] autorelease];
+					[_cardViews addObject:articleItemView];
+					
+					offset += height;
 					tot++;
 				}
 				
@@ -540,7 +416,7 @@
 					[_scrollView addSubview:itemView];
 				}
 				
-				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, 200.0 * tot);
+				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
 			}
 		}	
 	}

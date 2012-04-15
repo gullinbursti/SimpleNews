@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 
 #import "SNArticleVO.h"
+#import "SNArticleVideoPlayerView_iPhone.h"
 
 @interface SNArticleItemView_iPhone : UIView {
 	SNArticleVO *_vo;
+	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
 }
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;

@@ -216,13 +216,14 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 	[defaults setObject:@"NO" forKey:@"airplay_enabled"];
 	[defaults synchronize];
 	
+	/*
 	for (NSString *name in [UIFont familyNames]) {
 		NSLog(@"Family name : %@", name);
 		for (NSString *font in [UIFont fontNamesForFamilyName:name]) {
 			NSLog(@"Font name : %@", font);             
 		}
 	}
-	
+	*/
 	
 	
 	SNTwitterCaller *twitterCaller = [[[SNTwitterCaller alloc] init] autorelease];

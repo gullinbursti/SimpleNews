@@ -10,8 +10,8 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 #import "SNArticleVO.h"
-#import "SNArticleInfluencerInfoView_iPhone.h"
 #import "ASIHTTPRequest.h"
+#import "EGOImageView.h"
 
 @interface SNArticleVideoPlayerView_iPhone : UIView <ASIHTTPRequestDelegate> {
 	
@@ -19,7 +19,6 @@
 	BOOL _isStalled;
 	BOOL _isPaused;
 	BOOL _isFinished;
-	BOOL _isFlipped;
 	BOOL _isControls;
 	
 	ASIHTTPRequest *_videoInfoRequest;
@@ -27,9 +26,7 @@
 	NSTimer *_hudTimer;
 	
 	SNArticleVO *_vo;
-	SNArticleInfluencerInfoView_iPhone *_articleInfluencerView;
 	
-	UIImageView *_bgImgView;
 	UIView *_videoHolderView;
 	UIImageView *_progressBgImgView;
 	UIImageView *_progressImgView;
@@ -37,12 +34,17 @@
 	UIButton *_closeButton;
 	CGSize _timeSize;
 	
+	EGOImageView *_screenshotImgView;
 	UIButton *_playButton;
 	UIButton *_pauseButton;
+	
+	NSString *_videoURL;
 }
 
 @property (nonatomic, retain) MPMoviePlayerController *mpc;
 
--(void)changeArticleVO:(SNArticleVO *)vo;
+-(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;
+-(void)startPlayback;
+-(void)stopPlayback;
 
 @end
