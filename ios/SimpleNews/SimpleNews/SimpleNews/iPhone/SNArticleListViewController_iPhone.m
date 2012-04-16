@@ -13,6 +13,7 @@
 
 #import "SNArticleListViewController_iPhone.h"
 #import "SNArticleItemView_iPhone.h"
+#import "SNArticleCommentsViewController_iPhone.h"
 
 #import "SNAppDelegate.h"
 #import "SNTweetVO.h"
@@ -29,6 +30,7 @@
 
 -(id)init {
 	if ((self = [super init])) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showComments:) name:@"SHOW_COMMENTS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_leaveArticles:) name:@"LEAVE_ARTICLES" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_shareSheet:) name:@"SHARE_SHEET" object:nil];
 		
@@ -177,6 +179,10 @@
 #pragma mark - Notification handlers
 -(void)_leaveArticles:(NSNotification *)notification {
 	[self _goBack];
+}
+
+-(void)_showComments:(NSNotification *)notification {
+	[self.navigationController pushViewController:[[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object] listID:_vo.list_id] autorelease] animated:YES];
 }
 
 -(void)_shareSheet:(NSNotification *)notification {

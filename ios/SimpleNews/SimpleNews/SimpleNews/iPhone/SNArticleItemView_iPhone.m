@@ -147,7 +147,7 @@
 }
 
 -(void)_goComment {
-	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_COMMENTS" object:_vo];
 }
 
 -(void)_goAddlOptions {

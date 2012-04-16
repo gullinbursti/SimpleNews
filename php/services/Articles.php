@@ -94,7 +94,7 @@
 				$article_result = mysql_query($query);
 				
 				while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
-					$query = 'SELECT * FROM `tblComments` WHERE `article_id` = "'. $article_row['id'] .'" AND `list_id` = "'. $list_id .'";';
+					$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = "'. $article_row['id'] .'" AND `tblComments`.`list_id` = "'. $list_id .'";';
 					$comments_result = mysql_query($query);
 				
 					$reaction_arr = array();
@@ -102,7 +102,8 @@
 						array_push($reaction_arr, array(
 							"reaction_id" => $comment_row['id'], 
 							"thumb_url" => "https://si0.twimg.com/profile_images/180710325/andvari.jpg", 
-							"user_url" => "https://twitter.com/#!/andvari", 
+							"name" => $comment_row['name'], 
+							"handle" => $comment_row['handle'], 
 							"reaction_url" => "http://shelby.tv", 
 							"content" => $comment_row['content']
 						 ));

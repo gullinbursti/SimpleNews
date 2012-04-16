@@ -56,7 +56,7 @@
 
 #pragma mark - Navigation
 -(void)_goReactionPage {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_REACTION_PAGE" object:_vo.user_url];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_REACTION_PAGE" object:[NSString stringWithFormat:@"https://twitter.com/#!/%@", _vo.twitterHandle]];
 }
 
 -(void)_goReactionProfile {

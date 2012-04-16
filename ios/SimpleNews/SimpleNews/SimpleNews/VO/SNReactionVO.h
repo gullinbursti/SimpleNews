@@ -16,7 +16,8 @@
 
 @property (nonatomic) int reaction_id;
 @property (nonatomic, retain) NSString *thumb_url;
-@property (nonatomic, retain) NSString *user_url;
+@property (nonatomic, retain) NSString *twitterName;
+@property (nonatomic, retain) NSString *twitterHandle;
 @property (nonatomic, retain) NSString *reaction_url;
 @property (nonatomic, retain) NSString *content;
 
