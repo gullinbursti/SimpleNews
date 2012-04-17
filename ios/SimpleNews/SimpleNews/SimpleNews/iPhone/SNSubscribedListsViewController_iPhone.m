@@ -28,7 +28,7 @@
 		_listsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
 		[_listsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		//[_listsRequest setPostValue:[[SNAppDelegate fbProfile] objectForKey:@"id"] forKey:@"userID"];
-		[_listsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"userID"];
+		[_listsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[_listsRequest setTimeOutSeconds:30];
 		[_listsRequest setDelegate:self];
 	}
@@ -87,6 +87,13 @@
 	[self.view addSubview:overlayImgView];
 		
 	[_listsRequest startAsynchronous];
+	
+	_userRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]] retain];
+	[_userRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+	[_userRequest setPostValue:[SNAppDelegate deviceToken] forKey:@"token"];
+	[_userRequest setPostValue:[SNAppDelegate twitterHandle] forKey:@"handle"];
+	[_userRequest setDelegate:self];
+	[_userRequest startAsynchronous];
 }
 
 -(void)viewDidLoad {
@@ -123,15 +130,6 @@
 		[alert release];
 	
 	} else {
-		
-		_userRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]] retain];
-		[_userRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-		[_userRequest setPostValue:[SNAppDelegate deviceToken] forKey:@"token"];
-		[_userRequest setPostValue:[SNAppDelegate twitterHandle] forKey:@"handle"];
-		[_userRequest setDelegate:self];
-		[_userRequest startAsynchronous];
-		
-		
 		[UIView animateWithDuration:0.33 animations:^(void) {
 			_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
 	

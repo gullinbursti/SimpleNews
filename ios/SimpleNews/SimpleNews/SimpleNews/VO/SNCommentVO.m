@@ -1,27 +1,32 @@
 //
-//  SNReactionVO.m
+//  SNCommentVO.m
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.28.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import "SNReactionVO.h"
+#import "SNCommentVO.h"
 
-@implementation SNReactionVO
+@implementation SNCommentVO
 
 @synthesize dictionary;
-@synthesize reaction_id, thumb_url, twitterName, twitterHandle, reaction_url, content;
+@synthesize comment_id, thumb_url, twitterName, twitterHandle, comment_url, content, added;
 
-+(SNReactionVO *)reactionWithDictionary:(NSDictionary *)dictionary {
-	SNReactionVO *vo = [[SNReactionVO alloc] init];
++(SNCommentVO *)commentWithDictionary:(NSDictionary *)dictionary {
+	SNCommentVO *vo = [[SNCommentVO alloc] init];
 	
 	vo.dictionary = dictionary;
 	vo.thumb_url = [dictionary objectForKey:@"thumb_url"];
 	vo.twitterName = [dictionary objectForKey:@"name"];
 	vo.twitterHandle = [dictionary objectForKey:@"handle"];
-	vo.reaction_url = [dictionary objectForKey:@"reaction_url"];
+	vo.comment_url = [dictionary objectForKey:@"comment_url"];
 	vo.content = [dictionary objectForKey:@"content"];
+	
+	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+	vo.added = [dateFormat dateFromString:[dictionary objectForKey:@"added"]];
+	[dateFormat release];
 	
 	return (vo);
 }
@@ -31,7 +36,7 @@
 	self.thumb_url = nil;
 	self.twitterName = nil;
 	self.twitterHandle = nil;
-	self.reaction_url = nil;
+	self.comment_url = nil;
 	self.content = nil;
 	
 	[super dealloc];

@@ -10,19 +10,18 @@
 
 #import "SNOptionsViewController_iPhone.h"
 
-#import "SNOptionItemView_iPhone.h"
+#import "SNOptionViewCell_iPhone.h"
 #import "SNOptionVO.h"
 
 #import "SNAppDelegate.h"
 
-#import "SNOptionsPageViewController.h"
+#import "SNHeaderView_iPhone.h"
+#import "SNWebPageViewController.h"
 
 @implementation SNOptionsViewController_iPhone
 
 -(id)init {
 	if ((self = [super init])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_optionSelected:) name:@"OPTION_SELECTED" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_optionDeselected:) name:@"OPTION_DESELECTED" object:nil];
 	}
 	
 	return (self);
@@ -32,10 +31,7 @@
 	[super didReceiveMemoryWarning];
 }
 
--(void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"OPTION_SELECTED" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"OPTION_DESELECTED" object:nil];
-	
+-(void)dealloc {	
 	[super dealloc];
 }
 
@@ -48,67 +44,41 @@
 	_optionViews = [[NSMutableArray alloc] init];
 	_optionVOs = [[NSMutableArray alloc] init];
 	
-	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
-	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
-	[self.view addSubview:bgImgView];
+	SNHeaderView_iPhone *headerView = [[[SNHeaderView_iPhone alloc] initWithTitle:@"settings"] autorelease];
+	[self.view addSubview:headerView];
 	
+	UIButton *doneButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+	doneButton.frame = CGRectMake(250.0, 3.0, 64.0, 48.0);
+	[doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_nonActive.png"] forState:UIControlStateNormal];
+	[doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_Active.png"] forState:UIControlStateHighlighted];
+	doneButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
+	doneButton.titleLabel.textAlignment = UITextAlignmentCenter;
+	[doneButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+	[doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+	[doneButton setTitle:@"Done" forState:UIControlStateNormal];
+	[doneButton addTarget:self action:@selector(_goDone) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:doneButton];
 	
-	UIImageView *headerImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, 56.0)] autorelease];
-	headerImgView.image = [UIImage imageNamed:@"subheaderBG.png"];
-	[self.view addSubview:headerImgView];
-	
-	
-	UIImageView *titleImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(100.0, 21.0, 114.0, 14.0)] autorelease];
-	titleImgView.image = [UIImage imageNamed:@"titleOptions.png"];
-	[self.view addSubview:titleImgView];
-	
-	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 56.0, self.view.frame.size.width, self.view.frame.size.height)];
-	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	_scrollView.opaque = NO;
-	_scrollView.scrollsToTop = YES;
-	_scrollView.pagingEnabled = NO;
-	_scrollView.delegate = self;
-	_scrollView.showsHorizontalScrollIndicator = NO;
-	_scrollView.showsVerticalScrollIndicator = NO;
-	_scrollView.alwaysBounceVertical = YES;
-	_scrollView.contentInset = UIEdgeInsetsMake(0.0, 0.0f, 0.0f, 0.0f);
-	_scrollView.contentOffset = CGPointMake(0.0, 0.0);
-	_scrollView.contentSize = self.view.frame.size;
-	[self.view addSubview:_scrollView];
+	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 53.0, self.view.frame.size.width, self.view.frame.size.height - 53.0) style:UITableViewStylePlain];
+	[_tableView setBackgroundColor:[UIColor whiteColor]];
+	_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+	_tableView.rowHeight = 74.0;
+	_tableView.delegate = self;
+	_tableView.dataSource = self;
+	_tableView.userInteractionEnabled = YES;
+	_tableView.scrollsToTop = NO;
+	_tableView.showsVerticalScrollIndicator = NO;
+	[self.view addSubview:_tableView];
+		
+	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
+	[self.view addSubview:overlayImgView];
 	
 	NSString *testOptionsPath = [[NSBundle mainBundle] pathForResource:@"options" ofType:@"plist"];
 	NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:testOptionsPath] options:NSPropertyListImmutable format:nil error:nil];
 	
-	int cnt = 0;
-	for (NSDictionary *testOption in plist) {
-		SNOptionVO *vo = [SNOptionVO optionWithDictionary:testOption];
-		SNOptionItemView_iPhone *itemView = [[[SNOptionItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, cnt * 64, self.view.frame.size.width, 64) withVO:vo] autorelease];
-		
-		if (vo.option_id == 3 && [SNAppDelegate notificationsEnabled])
-			[itemView toggleSelected:YES];
-		
-		[_optionViews addObject:itemView];
-		[_optionVOs addObject:vo];
-		[_scrollView addSubview:itemView];
-		cnt++;
-	}
-	
-	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, cnt * 64);
-	
-	UIButton *backButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
-	backButton.frame = CGRectMake(12.0, 12.0, 64.0, 34.0);
-	[backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-	[backButton setBackgroundImage:[[UIImage imageNamed:@"backButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-	backButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-	backButton.titleLabel.textAlignment = UITextAlignmentCenter;
-	[backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-	backButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 4.0, 0.0, -4.0);
-	backButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-	backButton.titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-	[backButton setTitle:@"Back" forState:UIControlStateNormal];
-	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:backButton];
+	for (NSDictionary *testOption in plist)
+		[_optionVOs addObject:[SNOptionVO optionWithDictionary:testOption]];
 }
 
 -(void)viewDidLoad {
@@ -122,65 +92,105 @@
 
 
 #pragma mark - Navigation
--(void)_goBack {
+-(void)_goDone {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"OPTIONS_RETURN" object:nil];
-	[self.navigationController popViewControllerAnimated:YES];
+	[self.navigationController dismissModalViewControllerAnimated:YES];
+}
+
+-(void)_goNotificationsToggle:(UISwitch *)switchView {
+	
+	//UITableViewCell *cell = (UITableViewCell *)[switchView superview];
+	//UITableView *table = (UITableView *)[cell superview];
+	//NSIndexPath *switchViewIndexPath = [table indexPathForCell:cell];
+	
+	[SNAppDelegate notificationsToggle:switchView.on];
+}
+
+-(void)_goTwitterToggle:(UISwitch *)switchView {
+	
+	//UITableViewCell *cell = (UITableViewCell *)[switchView superview];
+	//UITableView *table = (UITableView *)[cell superview];
+	//NSIndexPath *switchViewIndexPath = [table indexPathForCell:cell];
+	
+	//[SNAppDelegate notificationsToggle:switchView.on];
 }
 
 
-#pragma mark - Notification handlers
--(void)_optionSelected:(NSNotification *)notification {
-	SNOptionVO *vo = (SNOptionVO *)[notification object];
- 	
-	SNOptionsPageViewController *optionsPageViewController;
-	TWTweetComposeViewController *twitter;
-	
-	switch (vo.option_id) {
-		case 1:
-			break;
-			
-		case 2:
-			twitter = [[[TWTweetComposeViewController alloc] init] autorelease];
-			[twitter addURL:[NSURL URLWithString:[NSString stringWithString:vo.option_url]]];
-			[twitter setInitialText:vo.option_info];
-			[self presentModalViewController:twitter animated:YES];
-			
-			twitter.completionHandler = ^(TWTweetComposeViewControllerResult result) {
-				
-				if (result == TWTweetComposeViewControllerResultDone)
-					[SNAppDelegate twitterToggle:YES];
-				
-				else if (result == TWTweetComposeViewControllerResultCancelled)
-					[SNAppDelegate twitterToggle:NO];
-				
-				[self dismissModalViewControllerAnimated:YES];
-			};	
-			break;
-			
-		case 3:
-			[SNAppDelegate notificationsToggle:YES];
-			break;
-			
-		case 4:
-			optionsPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:vo.option_url]] autorelease];
-			[self.navigationController setNavigationBarHidden:YES];
-			[self.navigationController pushViewController:optionsPageViewController animated:YES];
-			break;
-			
-		case 5:
-			optionsPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:vo.option_url]] autorelease];
-			[self.navigationController setNavigationBarHidden:YES];
-			[self.navigationController pushViewController:optionsPageViewController animated:YES];
-			break;
- 	}
+
+#pragma mark - TableView DataSource Delegates
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	NSLog(@"numberOfRowsInSection:[%d]", [_optionVOs count]);
+	return ([_optionVOs count]);
 }
 
--(void)_optionDeselected:(NSNotification *)notification {
-	SNOptionVO *vo = (SNOptionVO *)[notification object];
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return (1);
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	SNOptionViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNOptionViewCell_iPhone cellReuseIdentifier]];
 	
-	if (vo.option_id == 2) {
-		[SNAppDelegate notificationsToggle:NO];
- 	}
+	if (cell == nil)
+		cell = [[[SNOptionViewCell_iPhone alloc] init] autorelease];
+	
+	cell.optionVO = (SNOptionVO *)[_optionVOs objectAtIndex:indexPath.row];
+	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+
+	if (indexPath.row == 0 || indexPath.row == 1) {
+		UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
+		switchView.on = YES;
+		cell.accessoryView = switchView;
+		
+		if (indexPath.row == 0) {
+			switchView.on = [SNAppDelegate notificationsEnabled];
+			[switchView addTarget:self action:@selector(_goNotificationsToggle:) forControlEvents:UIControlEventValueChanged];
+		
+		} else if (indexPath.row == 1) {
+			if (![SNAppDelegate twitterHandle])
+				switchView.on = NO;
+			
+			[switchView addTarget:self action:@selector(_goTwitterToggle:) forControlEvents:UIControlEventValueChanged];
+		}
+		
+		[switchView release];
+	
+	} else {
+		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(285.0, 23.0, 24, 24)];		
+		chevronView.image = [UIImage imageNamed:@"chevron.png"];
+		[cell addSubview:chevronView];
+		[chevronView release];
+	}
+	
+	
+	return cell;	
+}
+
+
+#pragma mark - TableView Delegates
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return (74.0);
+}
+
+
+-(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	if (indexPath.row == 0 || indexPath.row == 1)
+		return (nil);
+	
+	return (indexPath);
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
+	
+	NSLog(@"SELECTED");
+	
+	if (indexPath.row == 2 || indexPath.row == 3) {
+		SNOptionVO *vo = (SNOptionVO *)[_optionVOs objectAtIndex:indexPath.row];
+		SNWebPageViewController *optionsPageViewController = [[[SNWebPageViewController alloc] initWithURL:[NSURL URLWithString:vo.option_url] title:vo.option_title] autorelease];
+		[self.navigationController setNavigationBarHidden:YES];
+		[self.navigationController pushViewController:optionsPageViewController animated:YES];
+	}
 }
 
 @end

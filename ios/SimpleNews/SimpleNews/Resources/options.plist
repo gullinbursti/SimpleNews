@@ -4,9 +4,9 @@
 <array>
 	<dict>
 		<key>option_id</key>
-		<integer>3</integer>
+		<integer>1</integer>
 		<key>title</key>
-		<string>Most Popular</string>
+		<string>Push notifications</string>
 		<key>url</key>
 		<string></string>
 		<key>info</key>
@@ -14,7 +14,17 @@
 	</dict>
 	<dict>
 		<key>option_id</key>
-		<integer>4</integer>
+		<integer>2</integer>
+		<key>title</key>
+		<string>Twitter</string>
+		<key>url</key>
+		<string></string>
+		<key>info</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>option_id</key>
+		<integer>3</integer>
 		<key>title</key>
 		<string>About Assembly</string>
 		<key>url</key>
@@ -24,11 +34,11 @@
 	</dict>
 	<dict>
 		<key>option_id</key>
-		<integer>5</integer>
+		<integer>4</integer>
 		<key>title</key>
-		<string>Privacy Policy</string>
+		<string>Terms of Serice</string>
 		<key>url</key>
-		<string>http://dev.gullinbursti.cc/projs/simplenews/support/privacy.htm</string>
+		<string>http://dev.gullinbursti.cc/projs/simplenews/support/tos.htm</string>
 		<key>info</key>
 		<string></string>
 	</dict>

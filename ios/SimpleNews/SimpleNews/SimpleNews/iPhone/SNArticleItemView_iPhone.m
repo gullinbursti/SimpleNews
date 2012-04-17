@@ -20,6 +20,8 @@
 		int offset = 46;
 		CGSize size;
 		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
+		
 		EGOImageView *thumbImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 35.0, 35.0)] autorelease];
 		thumbImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
 		[self addSubview:thumbImgView];
@@ -75,6 +77,8 @@
 		[self addSubview:titleLabel];
 		offset += size.height + 16;
 		
+		int offset2 = offset - size.height - 20;
+		
 		size = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(242.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		UILabel *sourceLabel = [[[UILabel alloc] initWithFrame:CGRectMake(66.0, offset, 242.0, size.height)] autorelease];
 		sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
@@ -88,12 +92,10 @@
 			_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(66.0, offset, 242.0, 180.0) articleVO:_vo];
 			[self addSubview:_videoPlayerView];
 			
-			UIButton *videoButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-			videoButton.frame = CGRectMake(60.0, offset, 242.0, 160.0);
-			//[videoButton setBackgroundColor:[UIColor greenColor]];
-			//videoButton.alpha = 0.33;
-			[videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
-			[self addSubview:videoButton];
+			_videoButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			_videoButton.frame = CGRectMake(60.0, offset, 242.0, 160.0);
+			[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
+			[self addSubview:_videoButton];
 			
 			offset += 180.0 + 16;
 		}
@@ -109,6 +111,11 @@
 		commentButton.frame = CGRectMake(110.0, offset, 84.0, 34.0);
 		[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_nonActive.png"] forState:UIControlStateNormal];
 		[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_Active.png"] forState:UIControlStateHighlighted];
+		commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:9.0];
+		commentButton.titleLabel.textAlignment = UITextAlignmentCenter;
+		[commentButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+		commentButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, -10.0);
+		[commentButton setTitle:@"Comments" forState:UIControlStateNormal];
 		[commentButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:commentButton];
 		
@@ -121,6 +128,9 @@
 		
 		offset += 50;
 		
+		UIView *ltLineView = [[[UIView alloc] initWithFrame:CGRectMake(56, offset2, 1.0, offset - offset2)] autorelease];
+		[ltLineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
+		[self addSubview:ltLineView];	
 		
 		UIView *lineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, offset, self.frame.size.width, 1.0)] autorelease];
 		[lineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
@@ -131,13 +141,23 @@
 }
 
 -(void)dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"VIDEO_ENDED" object:nil];
+}
+
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [touches anyObject];
+	CGPoint touchPoint = [touch locationInView:self];
 	
+	if (CGRectContainsPoint(_videoPlayerView.frame, touchPoint))
+		[_videoPlayerView toggleControls];//NSLog(@"TOUCHED:(%f, %f)", touchPoint.x, touchPoint.y);
 }
 
 
 #pragma mark - Navigation
 -(void)_goVideo {
 	//[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
+	[_videoButton removeTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
+	[_videoButton removeFromSuperview];
 	[_videoPlayerView startPlayback];
 }
 
@@ -152,6 +172,13 @@
 
 -(void)_goAddlOptions {
 	
+}
+
+
+#pragma mark - Notification handlers
+-(void)_videoEnded:(NSNotification *)notification {
+	[self addSubview:_videoButton];
+	[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
 }
 
 @end

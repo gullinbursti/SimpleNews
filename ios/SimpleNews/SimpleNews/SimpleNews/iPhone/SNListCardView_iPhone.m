@@ -74,12 +74,13 @@
 		[_holderView addSubview:subscribeBtn];
 		
 		_doneButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_doneButton.frame = CGRectMake(245.0, 20.0, 54.0, 30.0);
+		_doneButton.frame = CGRectMake(243.0, 11.0, 64.0, 48.0);
 		[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_nonActive.png"] forState:UIControlStateNormal];
 		[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_Active.png"] forState:UIControlStateHighlighted];
 		_doneButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
 		_doneButton.titleLabel.textAlignment = UITextAlignmentCenter;
-		[_doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		[_doneButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+		[_doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
 		[_doneButton setTitle:@"Done" forState:UIControlStateNormal];
 		[_doneButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 		_doneButton.alpha = 0.0;

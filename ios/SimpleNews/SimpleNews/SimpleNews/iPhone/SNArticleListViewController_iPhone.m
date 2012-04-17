@@ -14,11 +14,12 @@
 #import "SNArticleListViewController_iPhone.h"
 #import "SNArticleItemView_iPhone.h"
 #import "SNArticleCommentsViewController_iPhone.h"
+#import "SNHeaderView_iPhone.h"
 
 #import "SNAppDelegate.h"
 #import "SNTweetVO.h"
 
-#import "SNOptionsPageViewController.h"
+#import "SNWebPageViewController.h"
 
 @interface SNArticleListViewController_iPhone()
 -(void)_goBack;
@@ -43,12 +44,9 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTweetPage:) name:@"SHOW_TWEET_PAGE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSourcePage:) name:@"SHOW_SOURCE_PAGE" object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showReactionProfile:) name:@"SHOW_REACTION_PROFILE" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showReactionPage:) name:@"SHOW_REACTION_PAGE" object:nil];
-		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterTimeline:) name:@"TWITTER_TIMELINE" object:nil];
 		
-		_isLastCard = NO;
+		_isFlipped = NO;
 		
 		_articles = [NSMutableArray new];
 		_cardViews = [NSMutableArray new];
@@ -89,8 +87,6 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_TWITTER_PROFILE" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_TWEET_PAGE" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_SOURCE_PAGE" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_REACTION_PROFILE" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_REACTION_PAGE" object:nil];
 	
 	[_articlesRequest release];;
 	
@@ -101,33 +97,39 @@
 	[super dealloc];
 }
 
+
 #pragma mark - View lifecycle
 -(void)loadView {
 	[super loadView];
 	
-	[self.view setBackgroundColor:[UIColor colorWithWhite:0.941 alpha:1.0]];
+	SNHeaderView_iPhone *headerView = [[[SNHeaderView_iPhone alloc] initWithTitle:_vo.list_name] autorelease];
+	[self.view addSubview:headerView];
 	
-	UIButton *backButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	UIButton *backButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 	backButton.frame = CGRectMake(4.0, 4.0, 44.0, 44.0);
 	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_nonActive.png"] forState:UIControlStateNormal];
 	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_Active.png"] forState:UIControlStateHighlighted];
 	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:backButton];
 	
-	UIButton *flipButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	UIButton *flipButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 	flipButton.frame = CGRectMake(272.0, 4.0, 44.0, 44.0);
 	[flipButton setBackgroundImage:[UIImage imageNamed:@"flipListButtonHeader_nonActive.png"] forState:UIControlStateNormal];
 	[flipButton setBackgroundImage:[UIImage imageNamed:@"flipListButtonHeader_Active.png"] forState:UIControlStateHighlighted];
 	[flipButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:flipButton];
 	
-	UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(64.0, 12.0, 192.0, 24)] autorelease];
-	titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:18];
-	titleLabel.textColor = [UIColor blackColor];
-	titleLabel.backgroundColor = [UIColor clearColor];
-	titleLabel.textAlignment = UITextAlignmentCenter;
-	titleLabel.text = _vo.list_name;
-	[self.view addSubview:titleLabel];
+	_doneButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_doneButton.frame = CGRectMake(250.0, 3.0, 64.0, 48.0);
+	[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_nonActive.png"] forState:UIControlStateNormal];
+	[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_Active.png"] forState:UIControlStateHighlighted];
+	_doneButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
+	_doneButton.titleLabel.textAlignment = UITextAlignmentCenter;
+	[_doneButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+	[_doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+	[_doneButton setTitle:@"Done" forState:UIControlStateNormal];
+	[_doneButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
+	_doneButton.alpha = 0.0;
 	
 	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 53.0, self.view.frame.size.width, self.view.frame.size.height - 53.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -149,6 +151,9 @@
 
 	_shareSheetView = [[SNShareSheetView_iPhone alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
 	[self.view addSubview:_shareSheetView];
+	
+	
+	_flippedView = [[SNFlippedArticleView_iPhone alloc] initWithFrame:self.view.frame listVO:_vo];
 	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
@@ -175,6 +180,37 @@
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
+-(void)_goFlip {
+	_isFlipped = !_isFlipped;	
+	
+	if (_isFlipped) {
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.4];
+		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.view cache:YES];
+		[UIView commitAnimations];
+		[self.view addSubview:_flippedView];
+		
+		[UIView animateWithDuration:0.25 delay:0.4 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
+			[self.view addSubview:_doneButton];
+			_doneButton.alpha = 1.0;
+		} completion:nil];
+		
+					
+	} else {
+		[UIView animateWithDuration:0.25 animations:^(void) {
+			_doneButton.alpha = 0.0;
+		
+		} completion:^(BOOL finished) {
+			[_doneButton removeFromSuperview];
+			
+			[UIView beginAnimations:nil context:nil];
+			[UIView setAnimationDuration:0.4];
+			[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.view cache:YES];
+			[UIView commitAnimations];
+			[_flippedView removeFromSuperview];
+		}];
+	}
+}
 
 #pragma mark - Notification handlers
 -(void)_leaveArticles:(NSNotification *)notification {
@@ -251,6 +287,7 @@
 		[alert release];
 	}
 }
+
 -(void)_cancelShare:(NSNotification *)notification {
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_blackMatteView.alpha = 0.0;
@@ -266,35 +303,22 @@
 }
 
 -(void)_showTwitterProfile:(NSNotification *)notification {
-	SNOptionsPageViewController *tweetPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]]] autorelease];
+	SNWebPageViewController *tweetPageViewController = [[[SNWebPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
 	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:tweetPageViewController animated:YES];
 }
 
 -(void)_showTweetPage:(NSNotification *)notification {
-	SNOptionsPageViewController *tweetPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]]] autorelease];
+	SNWebPageViewController *tweetPageViewController = [[[SNWebPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
 	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:tweetPageViewController animated:YES];
 }
 
 -(void)_showSourcePage:(NSNotification *)notification {
-	SNOptionsPageViewController *tweetPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]]] autorelease];
+	SNWebPageViewController *tweetPageViewController = [[[SNWebPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
 	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:tweetPageViewController animated:YES];
 }
-
--(void)_showReactionPage:(NSNotification *)notification {
-	SNOptionsPageViewController *tweetPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]]] autorelease];
-	[self.navigationController setNavigationBarHidden:YES];
-	[self.navigationController pushViewController:tweetPageViewController animated:YES];
-}
-
--(void)_showReactionProfile:(NSNotification *)notification {
-	SNOptionsPageViewController *tweetPageViewController = [[[SNOptionsPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]]] autorelease];
-	[self.navigationController setNavigationBarHidden:YES];
-	[self.navigationController pushViewController:tweetPageViewController animated:YES];
-}
-
 
 #pragma mark - ScrollView Delegates
 // any offset changes

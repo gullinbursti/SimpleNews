@@ -12,7 +12,7 @@
 @implementation SNListVO
 
 @synthesize dictionary;
-@synthesize list_id, totalInfluencers, totalSubscribers, list_name, list_info, curator, curators, imageURL, thumbURL;
+@synthesize list_id, totalInfluencers, totalSubscribers, list_name, list_info, curatorNames, curators, imageURL, thumbURL;
 
 +(SNListVO *)listWithDictionary:(NSDictionary *)dictionary {
 	SNListVO *vo = [[SNListVO alloc] init];
@@ -30,6 +30,13 @@
 	for (NSDictionary *curator in [dictionary objectForKey:@"curators"])
 		[vo.curators addObject:[SNCuratorVO curatorWithDictionary:curator]];
 	
+	vo.curatorNames = @"by ";
+	
+	for (SNCuratorVO *curatorVO in vo.curators)
+		vo.curatorNames = [vo.curatorNames stringByAppendingString:[NSString stringWithFormat:@"%@, ", curatorVO.curator_name]];
+	
+	vo.curatorNames = [vo.curatorNames substringToIndex:[vo.curatorNames length] - 2];
+	
 	return (vo);
 }
 
@@ -46,7 +53,7 @@
 	self.dictionary = nil;
 	self.list_name = nil;
 	self.list_info = nil;
-	self.curator = nil;
+	self.curatorNames = nil;
 	self.imageURL = nil;
 	self.thumbURL = nil;
 	self.curators = nil;

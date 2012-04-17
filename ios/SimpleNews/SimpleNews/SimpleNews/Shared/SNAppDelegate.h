@@ -67,6 +67,7 @@
 +(void)notificationsToggle:(BOOL)isOn;
 +(BOOL)notificationsEnabled;
 
++(int)secondsAfterDate:(NSDate *)date;
 +(int)minutesAfterDate:(NSDate *)date;
 +(int)hoursAfterDate:(NSDate *)date;
 +(int)daysAfterDate:(NSDate *)date;

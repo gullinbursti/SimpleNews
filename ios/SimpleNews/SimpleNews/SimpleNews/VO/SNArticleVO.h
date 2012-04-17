@@ -30,7 +30,7 @@
 @property (nonatomic, retain) NSString *video_url;
 @property (nonatomic, retain) NSString *avatarImage_url;
 @property (nonatomic, retain) NSDate *added;
-@property (nonatomic, retain) NSMutableArray *reactions;
+@property (nonatomic, retain) NSMutableArray *comments;
 @property (nonatomic) BOOL isDark;
 
 @end

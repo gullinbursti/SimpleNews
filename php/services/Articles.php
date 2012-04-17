@@ -94,18 +94,19 @@
 				$article_result = mysql_query($query);
 				
 				while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
-					$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = "'. $article_row['id'] .'" AND `tblComments`.`list_id` = "'. $list_id .'";';
+					$query = 'SELECT `tblComments`.`id`, `tblComments`.`content`, `tblComments`.`added`, `tblUsers`.`name`, `tblUsers`.`handle` FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = "'. $article_row['id'] .'" AND `tblComments`.`list_id` = "'. $list_id .'";';
 					$comments_result = mysql_query($query);
 				
 					$reaction_arr = array();
 					while ($comment_row = mysql_fetch_array($comments_result, MYSQL_BOTH)) {
 						array_push($reaction_arr, array(
 							"reaction_id" => $comment_row['id'], 
-							"thumb_url" => "https://si0.twimg.com/profile_images/180710325/andvari.jpg", 
+							"thumb_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
 							"name" => $comment_row['name'], 
 							"handle" => $comment_row['handle'], 
-							"reaction_url" => "http://shelby.tv", 
-							"content" => $comment_row['content']
+							"comment_url" => "http://shelby.tv", 
+							"content" => $comment_row['content'], 
+							"added" => $comment_row['added']
 						 ));
 					}
 					

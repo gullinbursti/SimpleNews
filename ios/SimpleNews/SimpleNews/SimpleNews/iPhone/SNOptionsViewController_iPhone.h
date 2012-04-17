@@ -8,12 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SNOptionsViewController_iPhone : UIViewController <UIGestureRecognizerDelegate, UIScrollViewDelegate> {
+@interface SNOptionsViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate> {
 	
 	NSMutableArray *_optionViews;
 	NSMutableArray *_optionVOs;
-	
-	UIScrollView *_scrollView;
+	UITableView *_tableView;
 }
 
 @end

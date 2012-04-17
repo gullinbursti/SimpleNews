@@ -7,20 +7,25 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
+
 #import "ASIFormDataRequest.h"
 #import "SNArticleVO.h"
 
-@interface SNArticleCommentsViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, ASIHTTPRequestDelegate>{
+@interface SNArticleCommentsViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, UITextFieldDelegate, ASIHTTPRequestDelegate>{
 	SNArticleVO *_vo;
 	ASIFormDataRequest *_commentSubmitRequest;
 	
-	UITableView *_tableView;
+	UIScrollView *_scrollView;
 	UIImageView *_commentsBGImgView;
 	UITextField *_commentTxtField;
 	UILabel *_commentsLabel;
 	UIImageView *_inputBgImgView;
 	
+	NSMutableArray *_commentViews;
+	
 	int _list_id;
+	int _commentOffset;
 }
 
 -(id)initWithArticleVO:(SNArticleVO *)vo listID:(int)listID;

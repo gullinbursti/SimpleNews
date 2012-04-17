@@ -19,6 +19,8 @@
 
 +(NSString *)cellReuseIdentifier;
 
+-(id)initFromList;
+
 @property(nonatomic, retain) SNInfluencerVO *influencerVO;
 
 @end

@@ -72,12 +72,8 @@
 		_tableView.delegate = self;
 		_tableView.dataSource = self;
 		_tableView.allowsSelection = NO;
-		_tableView.pagingEnabled = NO;
-		_tableView.opaque = NO;
 		_tableView.scrollsToTop = NO;
-		_tableView.showsHorizontalScrollIndicator = NO;
 		_tableView.showsVerticalScrollIndicator = NO;
-		_tableView.alwaysBounceVertical = NO;
 		[self addSubview:_tableView];
 		
 		_influencers = [NSMutableArray new];
@@ -112,7 +108,7 @@
 	SNInfluencerListViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNInfluencerListViewCell_iPhone cellReuseIdentifier]];
 	
 	if (cell == nil)
-		cell = [[[SNInfluencerListViewCell_iPhone alloc] init] autorelease];
+		cell = [[[SNInfluencerListViewCell_iPhone alloc] initFromList] autorelease];
 	
 	cell.influencerVO = (SNInfluencerVO *)[_influencers objectAtIndex:indexPath.row];
 	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];

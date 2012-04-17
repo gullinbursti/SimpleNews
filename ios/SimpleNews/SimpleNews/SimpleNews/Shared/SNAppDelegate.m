@@ -107,6 +107,9 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 	return ([[[NSUserDefaults standardUserDefaults] objectForKey:@"airplay_enabled"] isEqualToString:@"YES"]);
 }
 
++(int)secondsAfterDate:(NSDate *)date {
+	return ([[[NSDate new] autorelease] timeIntervalSinceDate:date]);
+}
 
 +(int)minutesAfterDate:(NSDate *)date {
 	return ([[[NSDate new] autorelease] timeIntervalSinceDate:date] / 60);
@@ -454,8 +457,8 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 //		[delegate setUserPermissions:[[result objectForKey:@"data"] objectAtIndex:0]];
 //	}
 	
+	/*
 	NSMutableDictionary *profile = [NSMutableDictionary new];
-	
 	if ([result isKindOfClass:[NSDictionary class]]) {
 		NSString *strBirthDay = [[NSString alloc] initWithFormat:@"%@", [result objectForKey:@"birthday"]];
 		NSString *strBirthYear = [[NSString alloc] initWithFormat:@"%@", [(NSArray *)[strBirthDay componentsSeparatedByString:@"/"] lastObject]];
@@ -480,6 +483,7 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 	}
 	
 	[SNAppDelegate writeFBProfile:profile];
+	 */
 }
 
 /**

@@ -53,13 +53,13 @@
 		_screenshotImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 		[_videoHolderView addSubview:_screenshotImgView];
 		
-		_progressBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 435.0, 480.0, 45.0)];
+		_progressBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, _videoHolderView.frame.size.height - 8.0, _videoHolderView.frame.size.width, 8.0)];
 		_progressBgImgView.image = [UIImage imageNamed:@"playerPlayHeadBG.png"];
-		//[self addSubview:_progressBgImgView];
+		[self addSubview:_progressBgImgView];
 		
-		_progressImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 435.0, 0.0, 45.0)];
+		_progressImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, _videoHolderView.frame.size.height - 8.0, 0.0, 8.0)];
 		_progressImgView.image = [UIImage imageNamed:@"playerPlayHeadProgression.png"];
-		//[self addSubview:_progressImgView];
+		[self addSubview:_progressImgView];
 		
 		MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:CGRectMake(270.0, 440.0, 40.0, 20.0)] autorelease];
 		[volumeView setShowsVolumeSlider:NO];
@@ -74,14 +74,14 @@
 		//[self addSubview:_closeButton];
 		
 		_timeSize = [[NSString stringWithFormat:@"%@", @"0:00"] sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
-		_timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 420.0, _timeSize.width, _timeSize.height)];
+		_timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, _videoHolderView.frame.size.height - 18.0, _timeSize.width, _timeSize.height)];
 		_timeLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:10];
 		_timeLabel.textColor = [UIColor colorWithWhite:1.0 alpha:1.0];
 		_timeLabel.backgroundColor = [UIColor clearColor];
 		_timeLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
 		_timeLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 		_timeLabel.text = @"0:00";
-		//[self addSubview:_timeLabel];
+		[self addSubview:_timeLabel];
 		
 		_playButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 		_playButton.frame = CGRectMake(99.0, 68.0, 44.0, 44.0);
@@ -194,6 +194,8 @@
 	} completion:^(BOOL finished) {
 		[self.mpc stop];
 		[self.mpc.view removeFromSuperview];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
 	}];
 }
 
@@ -218,7 +220,7 @@
 
 -(void)_timerTick {
 	//NSLog(@"VIDEO POS:[%f/%f]", self.mpc.currentPlaybackTime, self.mpc.duration);
-	_progressImgView.frame = CGRectMake(0.0, 435.0, 320.0 * (self.mpc.currentPlaybackTime / self.mpc.duration), _progressImgView.frame.size.height);
+	_progressImgView.frame = CGRectMake(0.0, _videoHolderView.frame.size.height - 8.0, _videoHolderView.frame.size.width * (self.mpc.currentPlaybackTime / self.mpc.duration), _progressImgView.frame.size.height);
 	
 	//int hours = (int)self.mpc.currentPlaybackTime / 3600;
 	
@@ -226,23 +228,23 @@
 	_timeSize = [formattedTime sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
 	_timeLabel.text = formattedTime;
 	
-	if (_timeSize.width * 0.5 < _progressImgView.frame.size.width)
-		_timeLabel.frame = CGRectMake(_progressImgView.frame.size.width - (_timeSize.width * 0.5), 420.0, _timeSize.width, _timeSize.height);
+	if (_timeSize.width * 0.5 < _progressImgView.frame.size.width && _timeLabel.frame.origin.x < _videoHolderView.frame.size.width - (_timeSize.width + 5.0))
+		_timeLabel.frame = CGRectMake(_progressImgView.frame.size.width - (_timeSize.width * 0.5), _videoHolderView.frame.size.height - 18.0, _timeSize.width, _timeSize.height);
 }
 
--(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+-(void)toggleControls {
 	if (_isControls) {
 		[_hudTimer invalidate];
 		_hudTimer = nil;
 		
-		[self _fadeOutControls];
-		
+		if (self.mpc.playbackState == MPMoviePlaybackStatePlaying)
+			[self _fadeOutControls];
+				
 	} else {
 		[self _fadeInControls];
 		_hudTimer = [NSTimer scheduledTimerWithTimeInterval:2.33 target:self selector:@selector(_fadeOutControls) userInfo:nil repeats:NO];
 	}
 }
-
 
 -(void)_fadeInControls {
 	_isControls = YES;

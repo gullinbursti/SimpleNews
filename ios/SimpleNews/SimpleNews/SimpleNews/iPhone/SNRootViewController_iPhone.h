@@ -9,12 +9,21 @@
 #import <UIKit/UIKit.h>
 #import "ASIFormDataRequest.h"
 
-@interface SNRootViewController_iPhone : UIViewController <ASIHTTPRequestDelegate> {
-	ASIFormDataRequest *_listsRequest;
-	NSMutableArray *_lists;
+@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, ASIHTTPRequestDelegate> {
+	ASIFormDataRequest *_subscribedListsRequest;
+	ASIFormDataRequest *_popularListsRequest;
 	
-	UIScrollView *_scrollView;
+	NSMutableArray *_subscribedLists;
+	NSMutableArray *_popularLists;
+	
+	UITableView *_subscribedTableView;
+	UITableView *_popularTableView;
 	UIButton *_articlesButton;
+	
+	UIImageView *_toggleLtImgView;
+	UIImageView *_toggleRtImgView;
+	
+	BOOL _isFollowingList;
 }
 
 @end

@@ -14,6 +14,7 @@
 @interface SNArticleItemView_iPhone : UIView {
 	SNArticleVO *_vo;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
+	UIButton *_videoButton;
 }
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;

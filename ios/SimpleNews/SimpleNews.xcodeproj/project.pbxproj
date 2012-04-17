@@ -51,8 +51,6 @@
 		4C23BF921523E32E002D028B /* UASubscriptionTableViewDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C23BF2E1523E32E002D028B /* UASubscriptionTableViewDelegate.m */; };
 		4C23BF931523E32E002D028B /* UASubscriptionUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C23BF301523E32E002D028B /* UASubscriptionUI.m */; };
 		4C23BF941523E32E002D028B /* UASubscriptionUIUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C23BF321523E32E002D028B /* UASubscriptionUIUtil.m */; };
-		4C23BFA71523F4E6002D028B /* SNArticleReactionItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C23BFA61523F4E6002D028B /* SNArticleReactionItemView.m */; };
-		4C23BFAA1523F52B002D028B /* SNReactionVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C23BFA91523F52B002D028B /* SNReactionVO.m */; };
 		4C24CF711527FBD700CA04F0 /* SNInfluencerVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C24CF701527FBD700CA04F0 /* SNInfluencerVO.m */; };
 		4C3904D315172BCD00278B95 /* pagination_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3904CF15172BCD00278B95 /* pagination_off.png */; };
 		4C3904D415172BCD00278B95 /* pagination_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3904D015172BCD00278B95 /* pagination_off@2x.png */; };
@@ -78,9 +76,32 @@
 		4C535F01152C0EB600EBD60E /* SNArticleVideoPlayerView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C535F00152C0EB500EBD60E /* SNArticleVideoPlayerView_iPhone.m */; };
 		4C535F04152CC2DC00EBD60E /* SNInfluencersListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C535F03152CC2DC00EBD60E /* SNInfluencersListView.m */; };
 		4C535F0A152CE98100EBD60E /* SNInfluencerListViewCell_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C535F09152CE98100EBD60E /* SNInfluencerListViewCell_iPhone.m */; };
-		4C64DB6C153BC1CA005C536F /* SNArticleCommentViewCell_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C64DB6B153BC1CA005C536F /* SNArticleCommentViewCell_iPhone.m */; };
+		4C64DB70153CA697005C536F /* SNArticleCommentView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C64DB6F153CA697005C536F /* SNArticleCommentView_iPhone.m */; };
+		4C64DB73153CB3F3005C536F /* SNCommentVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C64DB72153CB3F3005C536F /* SNCommentVO.m */; };
+		4C64DB78153CBE6E005C536F /* rightArrowButton_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB74153CBE6B005C536F /* rightArrowButton_Active.png */; };
+		4C64DB79153CBE6E005C536F /* rightArrowButton_Active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB75153CBE6C005C536F /* rightArrowButton_Active@2x.png */; };
+		4C64DB7A153CBE6E005C536F /* rightArrowButton_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB76153CBE6D005C536F /* rightArrowButton_nonActive.png */; };
+		4C64DB7B153CBE6E005C536F /* rightArrowButton_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB77153CBE6D005C536F /* rightArrowButton_nonActive@2x.png */; };
+		4C64DB80153CBF68005C536F /* optionsButton_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB7C153CBF66005C536F /* optionsButton_Active.png */; };
+		4C64DB81153CBF68005C536F /* optionsButton_Active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB7D153CBF66005C536F /* optionsButton_Active@2x.png */; };
+		4C64DB82153CBF68005C536F /* optionsButton_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB7E153CBF67005C536F /* optionsButton_nonActive.png */; };
+		4C64DB83153CBF68005C536F /* optionsButton_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB7F153CBF67005C536F /* optionsButton_nonActive@2x.png */; };
+		4C64DB88153CBF96005C536F /* reportButton_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB84153CBF95005C536F /* reportButton_Active.png */; };
+		4C64DB89153CBF96005C536F /* reportButton_Active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB85153CBF95005C536F /* reportButton_Active@2x.png */; };
+		4C64DB8A153CBF96005C536F /* reportButton_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB86153CBF96005C536F /* reportButton_nonActive.png */; };
+		4C64DB8B153CBF96005C536F /* reportButton_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB87153CBF96005C536F /* reportButton_nonActive@2x.png */; };
+		4C64DB90153CBFD1005C536F /* toggleBGLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB8C153CBFCD005C536F /* toggleBGLeft.png */; };
+		4C64DB91153CBFD1005C536F /* toggleBGLeft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB8D153CBFCE005C536F /* toggleBGLeft@2x.png */; };
+		4C64DB92153CBFD1005C536F /* toggleBGRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB8E153CBFD0005C536F /* toggleBGRight.png */; };
+		4C64DB93153CBFD1005C536F /* toggleBGRight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DB8F153CBFD0005C536F /* toggleBGRight@2x.png */; };
+		4C64DB96153CC85A005C536F /* SNRootListViewCell_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C64DB95153CC85A005C536F /* SNRootListViewCell_iPhone.m */; };
+		4C64DB99153CD617005C536F /* SNWebPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C64DB98153CD617005C536F /* SNWebPageViewController.m */; };
+		4C64DB9C153CD7FB005C536F /* SNOptionViewCell_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C64DB9B153CD7FB005C536F /* SNOptionViewCell_iPhone.m */; };
+		4C64DBA3153CDBFC005C536F /* chevron.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DBA1153CDBFC005C536F /* chevron.png */; };
+		4C64DBA4153CDBFC005C536F /* chevron@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C64DBA2153CDBFC005C536F /* chevron@2x.png */; };
+		4C64DBA8153CE9EC005C536F /* SNHeaderView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C64DBA7153CE9EC005C536F /* SNHeaderView_iPhone.m */; };
+		4C64DBAF153D2893005C536F /* SNFlippedArticleView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C64DBAE153D2892005C536F /* SNFlippedArticleView_iPhone.m */; };
 		4C6B2178151063470027AEE4 /* SNArticleListViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B2177151063470027AEE4 /* SNArticleListViewController_iPhone.m */; };
-		4C6B217E151063E00027AEE4 /* SNArticleCardView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B217D151063E00027AEE4 /* SNArticleCardView_iPhone.m */; };
 		4C6B218D15106ECB0027AEE4 /* SNArticleVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6B218C15106ECB0027AEE4 /* SNArticleVO.m */; };
 		4C6B21901510739B0027AEE4 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C6B218E1510739A0027AEE4 /* Default.png */; };
 		4C6B21911510739B0027AEE4 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C6B218F1510739A0027AEE4 /* Default@2x.png */; };
@@ -153,7 +174,6 @@
 		4C9E00BE15194B9B00AEB803 /* README.rst in Resources */ = {isa = PBXBuildFile; fileRef = 4C9E001A15194B9B00AEB803 /* README.rst */; };
 		4C9F9B9C150D56CB00E842FA /* youtube_player.html in Resources */ = {isa = PBXBuildFile; fileRef = 4C9F9B9B150D56CB00E842FA /* youtube_player.html */; };
 		4CAF9D401506AFEB00AB3735 /* channels.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CAF9D3F1506AFEB00AB3735 /* channels.plist */; };
-		4CAF9D4B1506D1D100AB3735 /* SNOptionItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CAF9D481506D1CA00AB3735 /* SNOptionItemView_iPhone.m */; };
 		4CB2289A14F3529600F5618D /* HelveticaNeueLTStd-Bd.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4CB2289714F3529600F5618D /* HelveticaNeueLTStd-Bd.otf */; };
 		4CB2289B14F3529600F5618D /* HelveticaNeueLTStd-Md.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4CB2289814F3529600F5618D /* HelveticaNeueLTStd-Md.otf */; };
 		4CB2289C14F3529600F5618D /* HelveticaNeueLTStd-Roman.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4CB2289914F3529600F5618D /* HelveticaNeueLTStd-Roman.otf */; };
@@ -162,7 +182,6 @@
 		4CB62BBC1528D66D00B15626 /* SNRootViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB62BBB1528D66D00B15626 /* SNRootViewController_iPhone.m */; };
 		4CB62BBF1528D7B000B15626 /* SNSubscribedListsViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB62BBE1528D7B000B15626 /* SNSubscribedListsViewController_iPhone.m */; };
 		4CB62BC31528E2C400B15626 /* SNCuratorVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB62BC21528E2C400B15626 /* SNCuratorVO.m */; };
-		4CB62BCA1528F5C600B15626 /* SNListItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB62BC91528F5C600B15626 /* SNListItemView_iPhone.m */; };
 		4CB62BCD1528FA1000B15626 /* SNListCardView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB62BCC1528FA1000B15626 /* SNListCardView_iPhone.m */; };
 		4CB62BD2152A3E5E00B15626 /* topLeft_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CB62BCE152A3E5E00B15626 /* topLeft_Active.png */; };
 		4CB62BD3152A3E5E00B15626 /* topLeft_Active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CB62BCF152A3E5E00B15626 /* topLeft_Active@2x.png */; };
@@ -228,7 +247,6 @@
 		4CD01B69151405F0005B490C /* shareCancelButton_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01B65151405F0005B490C /* shareCancelButton_nonActive@2x.png */; };
 		4CD01B8715142F7B005B490C /* SNOptionsViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD01B8615142F7B005B490C /* SNOptionsViewController_iPhone.m */; };
 		4CD01B8A151440F9005B490C /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD01B88151440E7005B490C /* Twitter.framework */; };
-		4CD01BA515149100005B490C /* SNBaseArticleCardView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD01BA4151490FF005B490C /* SNBaseArticleCardView_iPhone.m */; };
 		4CD01BC1151550E6005B490C /* Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD01BA8151550E6005B490C /* Facebook.m */; };
 		4CD01BC2151550E6005B490C /* FBDialog.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01BAA151550E6005B490C /* FBDialog.bundle */; };
 		4CD01BC3151550E6005B490C /* FBDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD01BAC151550E6005B490C /* FBDialog.m */; };
@@ -245,7 +263,6 @@
 		4CD01BE61515B47C005B490C /* Aller_BdIt.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01BE21515B47C005B490C /* Aller_BdIt.ttf */; };
 		4CD01BE71515B47C005B490C /* Aller_It.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01BE31515B47C005B490C /* Aller_It.ttf */; };
 		4CD01BE81515B47C005B490C /* Aller_Rg.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4CD01BE41515B47C005B490C /* Aller_Rg.ttf */; };
-		4CD9199A151E4CE0004081B7 /* SNOptionsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD91999151E4CE0004081B7 /* SNOptionsPageViewController.m */; };
 		4CD919AC151E7E4A004081B7 /* SNGraphCaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD919AB151E7E4A004081B7 /* SNGraphCaller.m */; };
 		4CD919B4151E9D8A004081B7 /* SNTwitterCaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD919B3151E9D89004081B7 /* SNTwitterCaller.m */; };
 		4CD919B7151E9F6B004081B7 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD919B5151E9F5B004081B7 /* Accounts.framework */; };
@@ -403,10 +420,6 @@
 		4C23BF301523E32E002D028B /* UASubscriptionUI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UASubscriptionUI.m; sourceTree = "<group>"; };
 		4C23BF311523E32E002D028B /* UASubscriptionUIUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UASubscriptionUIUtil.h; sourceTree = "<group>"; };
 		4C23BF321523E32E002D028B /* UASubscriptionUIUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UASubscriptionUIUtil.m; sourceTree = "<group>"; };
-		4C23BFA51523F4E6002D028B /* SNArticleReactionItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNArticleReactionItemView.h; sourceTree = "<group>"; };
-		4C23BFA61523F4E6002D028B /* SNArticleReactionItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNArticleReactionItemView.m; sourceTree = "<group>"; };
-		4C23BFA81523F52B002D028B /* SNReactionVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNReactionVO.h; sourceTree = "<group>"; };
-		4C23BFA91523F52B002D028B /* SNReactionVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNReactionVO.m; sourceTree = "<group>"; };
 		4C24CF6F1527FBD700CA04F0 /* SNInfluencerVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNInfluencerVO.h; sourceTree = "<group>"; };
 		4C24CF701527FBD700CA04F0 /* SNInfluencerVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNInfluencerVO.m; sourceTree = "<group>"; };
 		4C3904CF15172BCD00278B95 /* pagination_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pagination_off.png; sourceTree = "<group>"; };
@@ -440,12 +453,40 @@
 		4C535F03152CC2DC00EBD60E /* SNInfluencersListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNInfluencersListView.m; sourceTree = "<group>"; };
 		4C535F08152CE98100EBD60E /* SNInfluencerListViewCell_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNInfluencerListViewCell_iPhone.h; sourceTree = "<group>"; };
 		4C535F09152CE98100EBD60E /* SNInfluencerListViewCell_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNInfluencerListViewCell_iPhone.m; sourceTree = "<group>"; };
-		4C64DB6A153BC1CA005C536F /* SNArticleCommentViewCell_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNArticleCommentViewCell_iPhone.h; sourceTree = "<group>"; };
-		4C64DB6B153BC1CA005C536F /* SNArticleCommentViewCell_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNArticleCommentViewCell_iPhone.m; sourceTree = "<group>"; };
+		4C64DB6E153CA696005C536F /* SNArticleCommentView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNArticleCommentView_iPhone.h; sourceTree = "<group>"; };
+		4C64DB6F153CA697005C536F /* SNArticleCommentView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNArticleCommentView_iPhone.m; sourceTree = "<group>"; };
+		4C64DB71153CB3F3005C536F /* SNCommentVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNCommentVO.h; sourceTree = "<group>"; };
+		4C64DB72153CB3F3005C536F /* SNCommentVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNCommentVO.m; sourceTree = "<group>"; };
+		4C64DB74153CBE6B005C536F /* rightArrowButton_Active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rightArrowButton_Active.png; sourceTree = "<group>"; };
+		4C64DB75153CBE6C005C536F /* rightArrowButton_Active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rightArrowButton_Active@2x.png"; sourceTree = "<group>"; };
+		4C64DB76153CBE6D005C536F /* rightArrowButton_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rightArrowButton_nonActive.png; sourceTree = "<group>"; };
+		4C64DB77153CBE6D005C536F /* rightArrowButton_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rightArrowButton_nonActive@2x.png"; sourceTree = "<group>"; };
+		4C64DB7C153CBF66005C536F /* optionsButton_Active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = optionsButton_Active.png; sourceTree = "<group>"; };
+		4C64DB7D153CBF66005C536F /* optionsButton_Active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "optionsButton_Active@2x.png"; sourceTree = "<group>"; };
+		4C64DB7E153CBF67005C536F /* optionsButton_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = optionsButton_nonActive.png; sourceTree = "<group>"; };
+		4C64DB7F153CBF67005C536F /* optionsButton_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "optionsButton_nonActive@2x.png"; sourceTree = "<group>"; };
+		4C64DB84153CBF95005C536F /* reportButton_Active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reportButton_Active.png; sourceTree = "<group>"; };
+		4C64DB85153CBF95005C536F /* reportButton_Active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reportButton_Active@2x.png"; sourceTree = "<group>"; };
+		4C64DB86153CBF96005C536F /* reportButton_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reportButton_nonActive.png; sourceTree = "<group>"; };
+		4C64DB87153CBF96005C536F /* reportButton_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reportButton_nonActive@2x.png"; sourceTree = "<group>"; };
+		4C64DB8C153CBFCD005C536F /* toggleBGLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = toggleBGLeft.png; sourceTree = "<group>"; };
+		4C64DB8D153CBFCE005C536F /* toggleBGLeft@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toggleBGLeft@2x.png"; sourceTree = "<group>"; };
+		4C64DB8E153CBFD0005C536F /* toggleBGRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = toggleBGRight.png; sourceTree = "<group>"; };
+		4C64DB8F153CBFD0005C536F /* toggleBGRight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toggleBGRight@2x.png"; sourceTree = "<group>"; };
+		4C64DB94153CC85A005C536F /* SNRootListViewCell_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNRootListViewCell_iPhone.h; sourceTree = "<group>"; };
+		4C64DB95153CC85A005C536F /* SNRootListViewCell_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNRootListViewCell_iPhone.m; sourceTree = "<group>"; };
+		4C64DB97153CD617005C536F /* SNWebPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNWebPageViewController.h; sourceTree = "<group>"; };
+		4C64DB98153CD617005C536F /* SNWebPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNWebPageViewController.m; sourceTree = "<group>"; };
+		4C64DB9A153CD7FB005C536F /* SNOptionViewCell_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNOptionViewCell_iPhone.h; sourceTree = "<group>"; };
+		4C64DB9B153CD7FB005C536F /* SNOptionViewCell_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNOptionViewCell_iPhone.m; sourceTree = "<group>"; };
+		4C64DBA1153CDBFC005C536F /* chevron.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chevron.png; sourceTree = "<group>"; };
+		4C64DBA2153CDBFC005C536F /* chevron@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron@2x.png"; sourceTree = "<group>"; };
+		4C64DBA6153CE9EC005C536F /* SNHeaderView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNHeaderView_iPhone.h; sourceTree = "<group>"; };
+		4C64DBA7153CE9EC005C536F /* SNHeaderView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNHeaderView_iPhone.m; sourceTree = "<group>"; };
+		4C64DBAD153D2892005C536F /* SNFlippedArticleView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNFlippedArticleView_iPhone.h; sourceTree = "<group>"; };
+		4C64DBAE153D2892005C536F /* SNFlippedArticleView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNFlippedArticleView_iPhone.m; sourceTree = "<group>"; };
 		4C6B2176151063470027AEE4 /* SNArticleListViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNArticleListViewController_iPhone.h; sourceTree = "<group>"; };
 		4C6B2177151063470027AEE4 /* SNArticleListViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNArticleListViewController_iPhone.m; sourceTree = "<group>"; };
-		4C6B217C151063E00027AEE4 /* SNArticleCardView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNArticleCardView_iPhone.h; sourceTree = "<group>"; };
-		4C6B217D151063E00027AEE4 /* SNArticleCardView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNArticleCardView_iPhone.m; sourceTree = "<group>"; };
 		4C6B218B15106ECB0027AEE4 /* SNArticleVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNArticleVO.h; sourceTree = "<group>"; };
 		4C6B218C15106ECB0027AEE4 /* SNArticleVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNArticleVO.m; sourceTree = "<group>"; };
 		4C6B218E1510739A0027AEE4 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -591,8 +632,6 @@
 		4C9EFFFF15194B9B00AEB803 /* UAInboxMessageList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAInboxMessageList.h; sourceTree = "<group>"; };
 		4C9F9B9B150D56CB00E842FA /* youtube_player.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = youtube_player.html; sourceTree = "<group>"; };
 		4CAF9D3F1506AFEB00AB3735 /* channels.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = channels.plist; sourceTree = "<group>"; };
-		4CAF9D471506D1C900AB3735 /* SNOptionItemView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNOptionItemView_iPhone.h; sourceTree = "<group>"; };
-		4CAF9D481506D1CA00AB3735 /* SNOptionItemView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNOptionItemView_iPhone.m; sourceTree = "<group>"; };
 		4CB2289714F3529600F5618D /* HelveticaNeueLTStd-Bd.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeueLTStd-Bd.otf"; sourceTree = "<group>"; };
 		4CB2289814F3529600F5618D /* HelveticaNeueLTStd-Md.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeueLTStd-Md.otf"; sourceTree = "<group>"; };
 		4CB2289914F3529600F5618D /* HelveticaNeueLTStd-Roman.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HelveticaNeueLTStd-Roman.otf"; sourceTree = "<group>"; };
@@ -605,8 +644,6 @@
 		4CB62BBE1528D7B000B15626 /* SNSubscribedListsViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSubscribedListsViewController_iPhone.m; sourceTree = "<group>"; };
 		4CB62BC11528E2C400B15626 /* SNCuratorVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNCuratorVO.h; sourceTree = "<group>"; };
 		4CB62BC21528E2C400B15626 /* SNCuratorVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNCuratorVO.m; sourceTree = "<group>"; };
-		4CB62BC81528F5C600B15626 /* SNListItemView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNListItemView_iPhone.h; sourceTree = "<group>"; };
-		4CB62BC91528F5C600B15626 /* SNListItemView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNListItemView_iPhone.m; sourceTree = "<group>"; };
 		4CB62BCB1528FA1000B15626 /* SNListCardView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNListCardView_iPhone.h; sourceTree = "<group>"; };
 		4CB62BCC1528FA1000B15626 /* SNListCardView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNListCardView_iPhone.m; sourceTree = "<group>"; };
 		4CB62BCE152A3E5E00B15626 /* topLeft_Active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topLeft_Active.png; sourceTree = "<group>"; };
@@ -675,8 +712,6 @@
 		4CD01B8515142F7B005B490C /* SNOptionsViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNOptionsViewController_iPhone.h; sourceTree = "<group>"; };
 		4CD01B8615142F7B005B490C /* SNOptionsViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNOptionsViewController_iPhone.m; sourceTree = "<group>"; };
 		4CD01B88151440E7005B490C /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
-		4CD01BA3151490FF005B490C /* SNBaseArticleCardView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNBaseArticleCardView_iPhone.h; sourceTree = "<group>"; };
-		4CD01BA4151490FF005B490C /* SNBaseArticleCardView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNBaseArticleCardView_iPhone.m; sourceTree = "<group>"; };
 		4CD01BA7151550E6005B490C /* Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Facebook.h; sourceTree = "<group>"; };
 		4CD01BA8151550E6005B490C /* Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Facebook.m; sourceTree = "<group>"; };
 		4CD01BA9151550E6005B490C /* FBConnect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBConnect.h; sourceTree = "<group>"; };
@@ -706,8 +741,6 @@
 		4CD01BE21515B47C005B490C /* Aller_BdIt.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Aller_BdIt.ttf; sourceTree = "<group>"; };
 		4CD01BE31515B47C005B490C /* Aller_It.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Aller_It.ttf; sourceTree = "<group>"; };
 		4CD01BE41515B47C005B490C /* Aller_Rg.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Aller_Rg.ttf; sourceTree = "<group>"; };
-		4CD91998151E4CE0004081B7 /* SNOptionsPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNOptionsPageViewController.h; sourceTree = "<group>"; };
-		4CD91999151E4CE0004081B7 /* SNOptionsPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNOptionsPageViewController.m; sourceTree = "<group>"; };
 		4CD919AA151E7E4A004081B7 /* SNGraphCaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNGraphCaller.h; sourceTree = "<group>"; };
 		4CD919AB151E7E4A004081B7 /* SNGraphCaller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNGraphCaller.m; sourceTree = "<group>"; };
 		4CD919B2151E9D88004081B7 /* SNTwitterCaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNTwitterCaller.h; sourceTree = "<group>"; };
@@ -1058,31 +1091,36 @@
 			name = Buttons;
 			sourceTree = "<group>";
 		};
+		4C64DBA5153CE954005C536F /* Nav */ = {
+			isa = PBXGroup;
+			children = (
+				4C64DBA6153CE9EC005C536F /* SNHeaderView_iPhone.h */,
+				4C64DBA7153CE9EC005C536F /* SNHeaderView_iPhone.m */,
+			);
+			name = Nav;
+			sourceTree = "<group>";
+		};
 		4C6B216E15105C1D0027AEE4 /* Articles */ = {
 			isa = PBXGroup;
 			children = (
-				4CD01BA3151490FF005B490C /* SNBaseArticleCardView_iPhone.h */,
-				4CD01BA4151490FF005B490C /* SNBaseArticleCardView_iPhone.m */,
-				4C6B217C151063E00027AEE4 /* SNArticleCardView_iPhone.h */,
-				4C6B217D151063E00027AEE4 /* SNArticleCardView_iPhone.m */,
 				4C92175215392C4400AAD992 /* SNArticleItemView_iPhone.h */,
 				4C92175315392C4500AAD992 /* SNArticleItemView_iPhone.m */,
 				4C6B2176151063470027AEE4 /* SNArticleListViewController_iPhone.h */,
 				4C6B2177151063470027AEE4 /* SNArticleListViewController_iPhone.m */,
+				4CC329281527CE9900F6183D /* SNArticleInfluencerInfoView_iPhone.h */,
+				4CC329291527CE9900F6183D /* SNArticleInfluencerInfoView_iPhone.m */,
 				4C3904D7151821E000278B95 /* SNShareSheetView_iPhone.h */,
 				4C3904D8151821E000278B95 /* SNShareSheetView_iPhone.m */,
 				4C3904DA1518227A00278B95 /* SNPaginationView_iPhone.h */,
 				4C3904DB1518227A00278B95 /* SNPaginationView_iPhone.m */,
-				4C23BFA51523F4E6002D028B /* SNArticleReactionItemView.h */,
-				4C23BFA61523F4E6002D028B /* SNArticleReactionItemView.m */,
 				4C535EFF152C0EB500EBD60E /* SNArticleVideoPlayerView_iPhone.h */,
 				4C535F00152C0EB500EBD60E /* SNArticleVideoPlayerView_iPhone.m */,
-				4CC329281527CE9900F6183D /* SNArticleInfluencerInfoView_iPhone.h */,
-				4CC329291527CE9900F6183D /* SNArticleInfluencerInfoView_iPhone.m */,
+				4C64DB6E153CA696005C536F /* SNArticleCommentView_iPhone.h */,
+				4C64DB6F153CA697005C536F /* SNArticleCommentView_iPhone.m */,
 				4C921755153B720800AAD992 /* SNArticleCommentsViewController_iPhone.h */,
 				4C921756153B720D00AAD992 /* SNArticleCommentsViewController_iPhone.m */,
-				4C64DB6A153BC1CA005C536F /* SNArticleCommentViewCell_iPhone.h */,
-				4C64DB6B153BC1CA005C536F /* SNArticleCommentViewCell_iPhone.m */,
+				4C64DBAD153D2892005C536F /* SNFlippedArticleView_iPhone.h */,
+				4C64DBAE153D2892005C536F /* SNFlippedArticleView_iPhone.m */,
 			);
 			name = Articles;
 			sourceTree = "<group>";
@@ -1109,6 +1147,12 @@
 		4C9216F91537E2EE00AAD992 /* Global */ = {
 			isa = PBXGroup;
 			children = (
+				4C64DBA1153CDBFC005C536F /* chevron.png */,
+				4C64DBA2153CDBFC005C536F /* chevron@2x.png */,
+				4C64DB8C153CBFCD005C536F /* toggleBGLeft.png */,
+				4C64DB8D153CBFCE005C536F /* toggleBGLeft@2x.png */,
+				4C64DB8E153CBFD0005C536F /* toggleBGRight.png */,
+				4C64DB8F153CBFD0005C536F /* toggleBGRight@2x.png */,
 				4C3904CF15172BCD00278B95 /* pagination_off.png */,
 				4C3904D015172BCD00278B95 /* pagination_off@2x.png */,
 				4C3904D115172BCD00278B95 /* pagination_on.png */,
@@ -1149,6 +1193,18 @@
 		4C9216FB1537E3B200AAD992 /* Nav */ = {
 			isa = PBXGroup;
 			children = (
+				4C64DB84153CBF95005C536F /* reportButton_Active.png */,
+				4C64DB85153CBF95005C536F /* reportButton_Active@2x.png */,
+				4C64DB86153CBF96005C536F /* reportButton_nonActive.png */,
+				4C64DB87153CBF96005C536F /* reportButton_nonActive@2x.png */,
+				4C64DB7C153CBF66005C536F /* optionsButton_Active.png */,
+				4C64DB7D153CBF66005C536F /* optionsButton_Active@2x.png */,
+				4C64DB7E153CBF67005C536F /* optionsButton_nonActive.png */,
+				4C64DB7F153CBF67005C536F /* optionsButton_nonActive@2x.png */,
+				4C64DB74153CBE6B005C536F /* rightArrowButton_Active.png */,
+				4C64DB75153CBE6C005C536F /* rightArrowButton_Active@2x.png */,
+				4C64DB76153CBE6D005C536F /* rightArrowButton_nonActive.png */,
+				4C64DB77153CBE6D005C536F /* rightArrowButton_nonActive@2x.png */,
 				4C9217141538DC3600AAD992 /* backButton_Active.png */,
 				4C9217151538DC3700AAD992 /* backButton_Active@2x.png */,
 				4C9217161538DC3900AAD992 /* backButton_nonActive.png */,
@@ -1385,12 +1441,10 @@
 		4CAF9D4F1506D21600AB3735 /* Options */ = {
 			isa = PBXGroup;
 			children = (
-				4CAF9D471506D1C900AB3735 /* SNOptionItemView_iPhone.h */,
-				4CAF9D481506D1CA00AB3735 /* SNOptionItemView_iPhone.m */,
+				4C64DB9A153CD7FB005C536F /* SNOptionViewCell_iPhone.h */,
+				4C64DB9B153CD7FB005C536F /* SNOptionViewCell_iPhone.m */,
 				4CD01B8515142F7B005B490C /* SNOptionsViewController_iPhone.h */,
 				4CD01B8615142F7B005B490C /* SNOptionsViewController_iPhone.m */,
-				4CD91998151E4CE0004081B7 /* SNOptionsPageViewController.h */,
-				4CD91999151E4CE0004081B7 /* SNOptionsPageViewController.m */,
 			);
 			name = Options;
 			sourceTree = "<group>";
@@ -1400,10 +1454,12 @@
 			children = (
 				4C45B7A4150BD8520039F45B /* SNSplashViewController_iPhone.h */,
 				4C45B7A5150BD8520039F45B /* SNSplashViewController_iPhone.m */,
-				4CB62BC81528F5C600B15626 /* SNListItemView_iPhone.h */,
-				4CB62BC91528F5C600B15626 /* SNListItemView_iPhone.m */,
+				4C64DB94153CC85A005C536F /* SNRootListViewCell_iPhone.h */,
+				4C64DB95153CC85A005C536F /* SNRootListViewCell_iPhone.m */,
 				4CB62BBA1528D66D00B15626 /* SNRootViewController_iPhone.h */,
 				4CB62BBB1528D66D00B15626 /* SNRootViewController_iPhone.m */,
+				4C64DB97153CD617005C536F /* SNWebPageViewController.h */,
+				4C64DB98153CD617005C536F /* SNWebPageViewController.m */,
 			);
 			name = Root;
 			sourceTree = "<group>";
@@ -1732,6 +1788,7 @@
 		4CDC8C1214F2D07000D42EA5 /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
+				4C64DBA5153CE954005C536F /* Nav */,
 				4CAF9D501506D22C00AB3735 /* Root */,
 				4CAF9D4F1506D21600AB3735 /* Options */,
 				4CB62BC01528D7BC00B15626 /* Lists */,
@@ -1899,8 +1956,8 @@
 				4CB62BB41528D48900B15626 /* SNListVO.m */,
 				4CEF4A6C1506D46E00A1AD7E /* SNOptionVO.h */,
 				4CEF4A6D1506D46E00A1AD7E /* SNOptionVO.m */,
-				4C23BFA81523F52B002D028B /* SNReactionVO.h */,
-				4C23BFA91523F52B002D028B /* SNReactionVO.m */,
+				4C64DB71153CB3F3005C536F /* SNCommentVO.h */,
+				4C64DB72153CB3F3005C536F /* SNCommentVO.m */,
 				4CD919B8151ECCFA004081B7 /* SNTweetVO.h */,
 				4CD919B9151ECCFA004081B7 /* SNTweetVO.m */,
 			);
@@ -2150,6 +2207,24 @@
 				4C92174F1538E85300AAD992 /* commentButton_Active@2x.png in Resources */,
 				4C9217501538E85300AAD992 /* commentButton_nonActive.png in Resources */,
 				4C9217511538E85300AAD992 /* commentButton_nonActive@2x.png in Resources */,
+				4C64DB78153CBE6E005C536F /* rightArrowButton_Active.png in Resources */,
+				4C64DB79153CBE6E005C536F /* rightArrowButton_Active@2x.png in Resources */,
+				4C64DB7A153CBE6E005C536F /* rightArrowButton_nonActive.png in Resources */,
+				4C64DB7B153CBE6E005C536F /* rightArrowButton_nonActive@2x.png in Resources */,
+				4C64DB80153CBF68005C536F /* optionsButton_Active.png in Resources */,
+				4C64DB81153CBF68005C536F /* optionsButton_Active@2x.png in Resources */,
+				4C64DB82153CBF68005C536F /* optionsButton_nonActive.png in Resources */,
+				4C64DB83153CBF68005C536F /* optionsButton_nonActive@2x.png in Resources */,
+				4C64DB88153CBF96005C536F /* reportButton_Active.png in Resources */,
+				4C64DB89153CBF96005C536F /* reportButton_Active@2x.png in Resources */,
+				4C64DB8A153CBF96005C536F /* reportButton_nonActive.png in Resources */,
+				4C64DB8B153CBF96005C536F /* reportButton_nonActive@2x.png in Resources */,
+				4C64DB90153CBFD1005C536F /* toggleBGLeft.png in Resources */,
+				4C64DB91153CBFD1005C536F /* toggleBGLeft@2x.png in Resources */,
+				4C64DB92153CBFD1005C536F /* toggleBGRight.png in Resources */,
+				4C64DB93153CBFD1005C536F /* toggleBGRight@2x.png in Resources */,
+				4C64DBA3153CDBFC005C536F /* chevron.png in Resources */,
+				4C64DBA4153CDBFC005C536F /* chevron@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2178,16 +2253,13 @@
 				4CDC8C5814F2D71800D42EA5 /* MBProgressHUD.m in Sources */,
 				4CDC8C7714F2D80300D42EA5 /* Reachability.m in Sources */,
 				4C91180214FD61D5001F8FD0 /* SNLogoView.m in Sources */,
-				4CAF9D4B1506D1D100AB3735 /* SNOptionItemView_iPhone.m in Sources */,
 				4CEF4A6E1506D46E00A1AD7E /* SNOptionVO.m in Sources */,
 				4CEF4AB91506F44000A1AD7E /* SNPaginationView.m in Sources */,
 				4C45B7A6150BD8520039F45B /* SNSplashViewController_iPhone.m in Sources */,
 				4C45B7AD150C1F360039F45B /* SNSplashHighlightView.m in Sources */,
 				4C6B2178151063470027AEE4 /* SNArticleListViewController_iPhone.m in Sources */,
-				4C6B217E151063E00027AEE4 /* SNArticleCardView_iPhone.m in Sources */,
 				4C6B218D15106ECB0027AEE4 /* SNArticleVO.m in Sources */,
 				4CD01B8715142F7B005B490C /* SNOptionsViewController_iPhone.m in Sources */,
-				4CD01BA515149100005B490C /* SNBaseArticleCardView_iPhone.m in Sources */,
 				4CD01BC1151550E6005B490C /* Facebook.m in Sources */,
 				4CD01BC3151550E6005B490C /* FBDialog.m in Sources */,
 				4CD01BC4151550E6005B490C /* FBFrictionlessRequestSettings.m in Sources */,
@@ -2201,7 +2273,6 @@
 				4CD01BCC151550E6005B490C /* SBJsonWriter.m in Sources */,
 				4C3904D9151821E000278B95 /* SNShareSheetView_iPhone.m in Sources */,
 				4C3904DC1518227A00278B95 /* SNPaginationView_iPhone.m in Sources */,
-				4CD9199A151E4CE0004081B7 /* SNOptionsPageViewController.m in Sources */,
 				4CD919AC151E7E4A004081B7 /* SNGraphCaller.m in Sources */,
 				4CD919B4151E9D8A004081B7 /* SNTwitterCaller.m in Sources */,
 				4CD919BA151ECCFA004081B7 /* SNTweetVO.m in Sources */,
@@ -2243,15 +2314,12 @@
 				4C23BF921523E32E002D028B /* UASubscriptionTableViewDelegate.m in Sources */,
 				4C23BF931523E32E002D028B /* UASubscriptionUI.m in Sources */,
 				4C23BF941523E32E002D028B /* UASubscriptionUIUtil.m in Sources */,
-				4C23BFA71523F4E6002D028B /* SNArticleReactionItemView.m in Sources */,
-				4C23BFAA1523F52B002D028B /* SNReactionVO.m in Sources */,
 				4CC3292A1527CE9900F6183D /* SNArticleInfluencerInfoView_iPhone.m in Sources */,
 				4C24CF711527FBD700CA04F0 /* SNInfluencerVO.m in Sources */,
 				4CB62BB51528D48900B15626 /* SNListVO.m in Sources */,
 				4CB62BBC1528D66D00B15626 /* SNRootViewController_iPhone.m in Sources */,
 				4CB62BBF1528D7B000B15626 /* SNSubscribedListsViewController_iPhone.m in Sources */,
 				4CB62BC31528E2C400B15626 /* SNCuratorVO.m in Sources */,
-				4CB62BCA1528F5C600B15626 /* SNListItemView_iPhone.m in Sources */,
 				4CB62BCD1528FA1000B15626 /* SNListCardView_iPhone.m in Sources */,
 				4C535F01152C0EB600EBD60E /* SNArticleVideoPlayerView_iPhone.m in Sources */,
 				4C535F04152CC2DC00EBD60E /* SNInfluencersListView.m in Sources */,
@@ -2259,7 +2327,13 @@
 				4CF39876152D560300460BD2 /* SNListInfoView_iPhone.m in Sources */,
 				4C92175415392C4600AAD992 /* SNArticleItemView_iPhone.m in Sources */,
 				4C921757153B722400AAD992 /* SNArticleCommentsViewController_iPhone.m in Sources */,
-				4C64DB6C153BC1CA005C536F /* SNArticleCommentViewCell_iPhone.m in Sources */,
+				4C64DB70153CA697005C536F /* SNArticleCommentView_iPhone.m in Sources */,
+				4C64DB73153CB3F3005C536F /* SNCommentVO.m in Sources */,
+				4C64DB96153CC85A005C536F /* SNRootListViewCell_iPhone.m in Sources */,
+				4C64DB99153CD617005C536F /* SNWebPageViewController.m in Sources */,
+				4C64DB9C153CD7FB005C536F /* SNOptionViewCell_iPhone.m in Sources */,
+				4C64DBA8153CE9EC005C536F /* SNHeaderView_iPhone.m in Sources */,
+				4C64DBAF153D2893005C536F /* SNFlippedArticleView_iPhone.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

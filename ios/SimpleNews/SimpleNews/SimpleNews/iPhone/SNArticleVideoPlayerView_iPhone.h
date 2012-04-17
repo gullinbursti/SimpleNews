@@ -46,5 +46,6 @@
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;
 -(void)startPlayback;
 -(void)stopPlayback;
+-(void)toggleControls;
 
 @end

@@ -9,30 +9,42 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "SNRootViewController_iPhone.h"
-#import "SNListItemView_iPhone.h"
 #import "SNListVO.h"
 #import "SNOptionVO.h"
 
 #import "SNSubscribedListsViewController_iPhone.h"
+#import "SNHeaderView_iPhone.h"
 #import "SNArticleListViewController_iPhone.h"
-#import "SNOptionItemView_iPhone.h"
+#import "SNRootListViewCell_iPhone.h"
 #import "SNAppDelegate.h"
+#import "SNOptionsViewController_iPhone.h"
+#import "SNArticleListViewController_iPhone.h"
 
 @interface SNRootViewController_iPhone()
--(void)_goLists;
+-(void)_goSubscribedLists;
+-(void)_goListsToggle;
 @end
 
 @implementation SNRootViewController_iPhone
 
 -(id)init {
 	if ((self = [super init])) {
-		_lists = [NSMutableArray new];
+		_subscribedLists = [NSMutableArray new];
+		_popularLists = [NSMutableArray new];
 		
-		_listsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
-		[_listsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-		[_listsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"userID"];
-		[_listsRequest setTimeOutSeconds:30];
-		[_listsRequest setDelegate:self];
+		_isFollowingList = YES;
+		
+		_subscribedListsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+		[_subscribedListsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[_subscribedListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[_subscribedListsRequest setTimeOutSeconds:30];
+		[_subscribedListsRequest setDelegate:self];
+		
+		_popularListsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+		[_popularListsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
+		[_popularListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[_popularListsRequest setTimeOutSeconds:30];
+		[_popularListsRequest setDelegate:self];
 	}
 	
 	return (self);
@@ -46,39 +58,101 @@
 -(void)loadView {
 	[super loadView];
 	
-	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
-	bgImgView.image = [UIImage imageNamed:@"background_stripes.png"];
-	[self.view addSubview:bgImgView];
+	SNHeaderView_iPhone *headerView = [[[SNHeaderView_iPhone alloc] init] autorelease];
+	[self.view addSubview:headerView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(12.0, 7.0, self.view.frame.size.width - 24.0, self.view.frame.size.height - 29.0)];
-	[_scrollView setBackgroundColor:[UIColor whiteColor]];
-	_scrollView.layer.cornerRadius = 8.0;
-	_scrollView.clipsToBounds = YES;
-	_scrollView.layer.borderColor = [[UIColor colorWithWhite:0.671 alpha:1.0] CGColor];
-	_scrollView.layer.borderWidth = 1.0;
-	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	_scrollView.opaque = YES;
-	_scrollView.scrollsToTop = NO;
-	_scrollView.pagingEnabled = NO;
-	_scrollView.showsHorizontalScrollIndicator = NO;
-	_scrollView.showsVerticalScrollIndicator = NO;
-	_scrollView.alwaysBounceVertical = NO;
-	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width - 24.0, self.view.frame.size.height);
-	[self.view addSubview:_scrollView];
+	UIButton *optionsButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	optionsButton.frame = CGRectMake(4.0, 4.0, 44.0, 44.0);
+	[optionsButton setBackgroundImage:[UIImage imageNamed:@"optionsButton_nonActive.png"] forState:UIControlStateNormal];
+	[optionsButton setBackgroundImage:[UIImage imageNamed:@"optionsButton_Active.png"] forState:UIControlStateHighlighted];
+	[optionsButton addTarget:self action:@selector(_goOptions) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:optionsButton];
 	
-	_articlesButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_articlesButton.frame = CGRectMake(320.0, -64.0, 64.0, 64.0);
-	[_articlesButton setBackgroundImage:[[UIImage imageNamed:@"topRight_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-	[_articlesButton setBackgroundImage:[[UIImage imageNamed:@"topRight_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-	[_articlesButton addTarget:self action:@selector(_goLists) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:_articlesButton];
+	_toggleLtImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(78.0, 4.0, 164.0, 44.0)] autorelease];
+	_toggleLtImgView.image = [UIImage imageNamed:@"toggleBGLeft.png"];
+	[self.view addSubview:_toggleLtImgView];
 	
-	[_listsRequest startAsynchronous];
+	UILabel *followingOnLabel = [[UILabel alloc] initWithFrame:CGRectMake(17.0, 14.0, 100.0, 16.0)];
+	followingOnLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	followingOnLabel.textColor = [UIColor colorWithWhite:0.659 alpha:1.0];
+	followingOnLabel.backgroundColor = [UIColor clearColor];
+	followingOnLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+	followingOnLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+	followingOnLabel.text = @"Following";
+	[_toggleLtImgView addSubview:followingOnLabel];
+	
+	UILabel *popularOffLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 14.0, 100.0, 16.0)];
+	popularOffLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	popularOffLabel.textColor = [UIColor blackColor];
+	popularOffLabel.backgroundColor = [UIColor clearColor];
+	popularOffLabel.text = @"Popular";
+	[_toggleLtImgView addSubview:popularOffLabel];
+	
+	_toggleRtImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(78.0, 4.0, 164.0, 44.0)] autorelease];
+	_toggleRtImgView.image = [UIImage imageNamed:@"toggleBGRight.png"];
+	_toggleRtImgView.hidden = YES;
+	[self.view addSubview:_toggleRtImgView];
+	
+	UILabel *followingOffLabel = [[UILabel alloc] initWithFrame:CGRectMake(17.0, 14.0, 100.0, 16.0)];
+	followingOffLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	followingOffLabel.textColor = [UIColor blackColor];
+	followingOffLabel.backgroundColor = [UIColor clearColor];
+	followingOffLabel.text = @"Following";
+	[_toggleRtImgView addSubview:followingOffLabel];
+	
+	UILabel *popularOnLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 14.0, 100.0, 16.0)];
+	popularOnLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	popularOnLabel.textColor = [UIColor colorWithWhite:0.659 alpha:1.0];
+	popularOnLabel.backgroundColor = [UIColor clearColor];
+	popularOnLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+	popularOnLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+	popularOnLabel.text = @"Popular";
+	[_toggleRtImgView addSubview:popularOnLabel];
+	
+	UIButton *toggleButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	toggleButton.frame = CGRectMake(78.0, 4.0, 164.0, 44.0);
+	[toggleButton addTarget:self action:@selector(_goListsToggle) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:toggleButton];
+		
+	UIButton *subscribedButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	subscribedButton.frame = CGRectMake(272.0, 4.0, 44.0, 44.0);
+	[subscribedButton setBackgroundImage:[UIImage imageNamed:@"rightArrowButton_nonActive.png"] forState:UIControlStateNormal];
+	[subscribedButton setBackgroundImage:[UIImage imageNamed:@"rightArrowButton_Active.png"] forState:UIControlStateHighlighted];
+	[subscribedButton addTarget:self action:@selector(_goSubscribedLists) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:subscribedButton];
+	
+	_subscribedTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 53.0, self.view.frame.size.width, self.view.frame.size.height - 53.0) style:UITableViewStylePlain];
+	[_subscribedTableView setBackgroundColor:[UIColor whiteColor]];
+	_subscribedTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+	_subscribedTableView.rowHeight = 74.0;
+	_subscribedTableView.delegate = self;
+	_subscribedTableView.dataSource = self;
+	_subscribedTableView.scrollsToTop = NO;
+	_subscribedTableView.showsVerticalScrollIndicator = NO;
+	[self.view addSubview:_subscribedTableView];
+	
+	_popularTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 53.0, self.view.frame.size.width, self.view.frame.size.height - 53.0) style:UITableViewStylePlain];
+	[_popularTableView setBackgroundColor:[UIColor whiteColor]];
+	_popularTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+	_popularTableView.rowHeight = 74.0;
+	_popularTableView.delegate = self;
+	_popularTableView.dataSource = self;
+	_popularTableView.scrollsToTop = NO;
+	_popularTableView.showsVerticalScrollIndicator = NO;
+	_popularTableView.hidden = YES;
+	[self.view addSubview:_popularTableView];
+	
+	[_subscribedListsRequest startAsynchronous];
+	[_popularListsRequest startAsynchronous];
+	
+	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
+	[self.view addSubview:overlayImgView];
 }
 
 -(void)viewDidLoad {
 	[super viewDidLoad];
-	[self _goLists];
+	[self _goSubscribedLists];
 }
 
 -(void)viewDidUnload {
@@ -95,13 +169,88 @@
 
 
 #pragma mark - Navigation
--(void)_goLists {
+-(void)_goListsToggle {
+	_isFollowingList = !_isFollowingList;
+	
+	_toggleLtImgView.hidden = !_isFollowingList;
+	_toggleRtImgView.hidden = _isFollowingList;
+	
+	_subscribedTableView.hidden = !_isFollowingList;
+	_popularTableView.hidden = _isFollowingList;
+}
+
+-(void)_goOptions {
+	SNOptionsViewController_iPhone *optionsViewController = [[[SNOptionsViewController_iPhone alloc] init] autorelease];
+	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:optionsViewController] autorelease];
+	
+	[navigationController setNavigationBarHidden:YES];
+	[self.navigationController presentModalViewController:navigationController animated:YES];
+}
+
+-(void)_goSubscribedLists {
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_articlesButton.frame = CGRectMake(320.0, -64.0, 64.0, 64.0);
 	} completion:^(BOOL finished) {
 		[self.navigationController pushViewController:[[[SNSubscribedListsViewController_iPhone alloc] init] autorelease] animated:YES];
-	}];
+	}];	
+}
+
+
+#pragma mark - TableView DataSource Delegates
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	
+	if ([tableView isEqual:_subscribedTableView]) {
+		NSLog(@"numberOfRowsInSection:[%d]", [_subscribedLists count]);
+		return ([_subscribedLists count]);
+		
+	} else {
+		NSLog(@"numberOfRowsInSection:[%d]", [_popularLists count]);
+		return ([_popularLists count]);
+	}
+}
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return (1);
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	SNRootListViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNRootListViewCell_iPhone cellReuseIdentifier]];
+	
+	if (cell == nil)
+		cell = [[[SNRootListViewCell_iPhone alloc] init] autorelease];
+	
+	if ([tableView isEqual:_subscribedTableView])
+		cell.listVO = (SNListVO *)[_subscribedLists objectAtIndex:indexPath.row];
+	
+	else
+		cell.listVO = (SNListVO *)[_popularLists objectAtIndex:indexPath.row];
+		
+	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+	
+	return cell;	
+}
+
+
+#pragma mark - TableView Delegates
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return (74.0);
+}
+
+-(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	return (indexPath);
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
+	
+	if ([tableView isEqual:_popularTableView]) {
+		NSLog(@"SELECTED %@", ((SNListVO *)[_popularLists objectAtIndex:indexPath.row]).list_name);
+		[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_popularLists objectAtIndex:indexPath.row]] autorelease] animated:YES];
+		
+	} else if ([tableView isEqual:_subscribedTableView]) {
+		NSLog(@"SELECTED %@", ((SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]).list_name);
+		[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]] autorelease] animated:YES];
+	}
 }
 
 
@@ -109,57 +258,55 @@
 -(void)requestFinished:(ASIHTTPRequest *)request { 
 	NSLog(@"SNRootViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
-	@autoreleasepool {
-		NSError *error = nil;
-		NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-		if (error != nil)
-			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
-		
-		else {
-			NSMutableArray *list = [NSMutableArray array];
-			for (NSDictionary *serverList in parsedLists) {
-				SNListVO *vo = [SNListVO listWithDictionary:serverList];
-				NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
+	if ([request isEqual:_subscribedListsRequest]) {	
+		@autoreleasepool {
+			NSError *error = nil;
+			NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+			
+			else {
+				NSMutableArray *list = [NSMutableArray array];
+				for (NSDictionary *serverList in parsedLists) {
+					SNListVO *vo = [SNListVO listWithDictionary:serverList];
+					NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
+					
+					if (vo != nil)
+						[list addObject:vo];
+				}
 				
-				if (vo != nil)
-					[list addObject:vo];
+				_subscribedLists = [list retain];
+				[_subscribedTableView reloadData];
 			}
+		}
+	
+	} else if ([request isEqual:_popularListsRequest]) {
+		@autoreleasepool {
+			NSError *error = nil;
+			NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
 			
-			_lists = [list retain];
-			
-			int cnt = 0;
-			for (SNListVO *vo in _lists) {
-				SNListItemView_iPhone *listItemView = [[[SNListItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, cnt * 70.0, self.view.frame.size.width, 70.0) listVO:vo] autorelease];
-				[_scrollView addSubview:listItemView];
+			else {
+				NSMutableArray *list = [NSMutableArray array];
+				for (NSDictionary *serverList in parsedLists) {
+					SNListVO *vo = [SNListVO listWithDictionary:serverList];
+					NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
+					
+					if (vo != nil)
+						[list addObject:vo];
+				}
 				
-				cnt++;
+				_popularLists = [list retain];
+				[_popularTableView reloadData];
 			}
-			
-			NSString *testOptionsPath = [[NSBundle mainBundle] pathForResource:@"options" ofType:@"plist"];
-			NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:testOptionsPath] options:NSPropertyListImmutable format:nil error:nil];
-			
-			for (NSDictionary *testOption in plist) {
-				SNOptionVO *vo = [SNOptionVO optionWithDictionary:testOption];
-				SNOptionItemView_iPhone *itemView = [[[SNOptionItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, cnt * 70, self.view.frame.size.width, 64) withVO:vo] autorelease];
-				
-				//if (vo.option_id == 3 && [SNAppDelegate notificationsEnabled])
-				//	[itemView toggleSelected:YES];
-				
-				//[_optionViews addObject:itemView];
-				//[_optionVOs addObject:vo];
-				[_scrollView addSubview:itemView];
-				cnt++;
-			}
-			
-			
-			_scrollView.contentSize = CGSizeMake(self.view.frame.size.width - 24.0, cnt * 70.0);
 		}
 	}
 }
 
 
 -(void)requestFailed:(ASIHTTPRequest *)request {
-	if (request == _listsRequest) {
+	if (request == _subscribedListsRequest) {
 		//[_delegates perform:@selector(jobList:didFailLoadWithError:) withObject:self withObject:request.error];
 		//MBL_RELEASE_SAFELY(_jobListRequest);
 	}

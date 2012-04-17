@@ -1,5 +1,5 @@
 //
-//  SNOptionsPageViewController.h
+//  SNWebPageViewController.h
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.24.12.
@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SNOptionsPageViewController : UIViewController <UIWebViewDelegate> {
+@interface SNWebPageViewController : UIViewController <UIWebViewDelegate> {
+	NSString *_pageTitle;
 	NSURL *_url;
 	UIWebView *_webView;
 }
 
--(id)initWithURL:(NSURL *)url;
+-(id)initWithURL:(NSURL *)url title:(NSString *)title;
 
 @end
