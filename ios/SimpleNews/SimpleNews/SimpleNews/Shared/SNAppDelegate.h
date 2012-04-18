@@ -45,10 +45,6 @@
 +(NSString *)twitterAvatar;
 
 
-+(void)writeInfluencers:(NSString *)influencers;
-+(NSString *)subscribedInfluencers;
-
-
 +(UIFont *)snHelveticaNeueFontRegular;
 +(UIFont *)snHelveticaNeueFontBold;
 +(UIFont *)snHelveticaNeueFontMedium;
@@ -57,6 +53,9 @@
 +(UIFont *)snAllerFontBold;
 +(UIFont *)snAllerFontItalic;
 +(UIFont *)snAllerFontBoldItalic;
+
++(UIColor *)snLineColor;
++(UIColor *)snHeaderColor;
 
 
 +(void)playMP3:(NSString *)filename;

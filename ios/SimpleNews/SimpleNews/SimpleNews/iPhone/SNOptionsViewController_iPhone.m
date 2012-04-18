@@ -16,7 +16,7 @@
 #import "SNAppDelegate.h"
 
 #import "SNHeaderView_iPhone.h"
-#import "SNWebPageViewController.h"
+#import "SNWebPageViewController_iPhone.h"
 
 @implementation SNOptionsViewController_iPhone
 
@@ -187,7 +187,7 @@
 	
 	if (indexPath.row == 2 || indexPath.row == 3) {
 		SNOptionVO *vo = (SNOptionVO *)[_optionVOs objectAtIndex:indexPath.row];
-		SNWebPageViewController *optionsPageViewController = [[[SNWebPageViewController alloc] initWithURL:[NSURL URLWithString:vo.option_url] title:vo.option_title] autorelease];
+		SNWebPageViewController_iPhone *optionsPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:vo.option_url] title:vo.option_title] autorelease];
 		[self.navigationController setNavigationBarHidden:YES];
 		[self.navigationController pushViewController:optionsPageViewController animated:YES];
 	}

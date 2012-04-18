@@ -75,8 +75,13 @@
 		titleLabel.text = _vo.title;
 		titleLabel.numberOfLines = 0;
 		[self addSubview:titleLabel];
-		offset += size.height + 16;
 		
+		UIButton *detailsButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		detailsButton.frame = CGRectMake(66.0, offset, 242.0, size.height);
+		[detailsButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:detailsButton];
+		
+		offset += size.height + 16;
 		int offset2 = offset - size.height - 20;
 		
 		size = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(242.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
@@ -119,12 +124,12 @@
 		[commentButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:commentButton];
 		
-		UIButton *moreButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		moreButton.frame = CGRectMake(262.0, offset, 49.0, 34.0);
-		[moreButton setBackgroundImage:[UIImage imageNamed:@"moreOptionsButton_nonActive.png"] forState:UIControlStateNormal];
-		[moreButton setBackgroundImage:[UIImage imageNamed:@"moreOptionsButton_Active.png"] forState:UIControlStateHighlighted];
-		[moreButton addTarget:self action:@selector(_goAddlOptions) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:moreButton];
+		UIButton *shareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		shareButton.frame = CGRectMake(262.0, offset, 49.0, 34.0);
+		[shareButton setBackgroundImage:[UIImage imageNamed:@"moreOptionsButton_nonActive.png"] forState:UIControlStateNormal];
+		[shareButton setBackgroundImage:[UIImage imageNamed:@"moreOptionsButton_Active.png"] forState:UIControlStateHighlighted];
+		[shareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:shareButton];
 		
 		offset += 50;
 		
@@ -154,13 +159,9 @@
 
 
 #pragma mark - Navigation
--(void)_goVideo {
-	//[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
-	[_videoButton removeTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
-	[_videoButton removeFromSuperview];
-	[_videoPlayerView startPlayback];
+-(void)_goDetails {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_DETAILS" object:_vo];
 }
-
 
 -(void)_goLike {
 	
@@ -170,9 +171,17 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_COMMENTS" object:_vo];
 }
 
--(void)_goAddlOptions {
-	
+-(void)_goShare {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHARE_SHEET" object:_vo];
 }
+
+-(void)_goVideo {
+	//[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
+	[_videoButton removeTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
+	[_videoButton removeFromSuperview];
+	[_videoPlayerView startPlayback];
+}
+
 
 
 #pragma mark - Notification handlers

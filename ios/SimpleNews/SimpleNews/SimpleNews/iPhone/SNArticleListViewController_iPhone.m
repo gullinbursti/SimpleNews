@@ -14,12 +14,13 @@
 #import "SNArticleListViewController_iPhone.h"
 #import "SNArticleItemView_iPhone.h"
 #import "SNArticleCommentsViewController_iPhone.h"
+#import "SNArticleDetailsViewController_iPhone.h"
 #import "SNHeaderView_iPhone.h"
 
 #import "SNAppDelegate.h"
 #import "SNTweetVO.h"
 
-#import "SNWebPageViewController.h"
+#import "SNWebPageViewController_iPhone.h"
 
 @interface SNArticleListViewController_iPhone()
 -(void)_goBack;
@@ -40,6 +41,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_emailShare:) name:@"EMAIL_SHARE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cancelShare:) name:@"CANCEL_SHARE" object:nil];
 		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTweetPage:) name:@"SHOW_TWEET_PAGE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSourcePage:) name:@"SHOW_SOURCE_PAGE" object:nil];
@@ -302,20 +304,26 @@
 	_timelineTweets = (NSMutableArray *)[notification object];
 }
 
+-(void)_showArticleDetails:(NSNotification *)notification {
+	SNArticleDetailsViewController_iPhone *articleDetailsViewController = [[[SNArticleDetailsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]] autorelease];
+	[self.navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:articleDetailsViewController animated:YES];
+}
+
 -(void)_showTwitterProfile:(NSNotification *)notification {
-	SNWebPageViewController *tweetPageViewController = [[[SNWebPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
+	SNWebPageViewController_iPhone *tweetPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
 	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:tweetPageViewController animated:YES];
 }
 
 -(void)_showTweetPage:(NSNotification *)notification {
-	SNWebPageViewController *tweetPageViewController = [[[SNWebPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
+	SNWebPageViewController_iPhone *tweetPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
 	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:tweetPageViewController animated:YES];
 }
 
 -(void)_showSourcePage:(NSNotification *)notification {
-	SNWebPageViewController *tweetPageViewController = [[[SNWebPageViewController alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
+	SNWebPageViewController_iPhone *tweetPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
 	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:tweetPageViewController animated:YES];
 }

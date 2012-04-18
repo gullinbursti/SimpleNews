@@ -74,14 +74,9 @@
 		[_holderView addSubview:subscribeBtn];
 		
 		_doneButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_doneButton.frame = CGRectMake(243.0, 11.0, 64.0, 48.0);
-		[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_nonActive.png"] forState:UIControlStateNormal];
-		[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_Active.png"] forState:UIControlStateHighlighted];
-		_doneButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
-		_doneButton.titleLabel.textAlignment = UITextAlignmentCenter;
-		[_doneButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-		[_doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-		[_doneButton setTitle:@"Done" forState:UIControlStateNormal];
+		_doneButton.frame = CGRectMake(241.0, 18.0, 64.0, 34.0);
+		[_doneButton setBackgroundImage:[UIImage imageNamed:@"smallDoneButton_nonActive.png"] forState:UIControlStateNormal];
+		[_doneButton setBackgroundImage:[UIImage imageNamed:@"smallDoneButtonActive.png"] forState:UIControlStateHighlighted];
 		[_doneButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 		_doneButton.alpha = 0.0;
 		[self addSubview:_doneButton];
@@ -146,14 +141,6 @@
 	[_holderView.layer addAnimation:zoomAnimation forKey:@"zoomAnimation"];
 	
 	[self performSelector:@selector(_outroMe) withObject:nil afterDelay:0.2];
-	
-//	CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
-//	animationGroup.animations = [NSArray arrayWithObjects:zoomAnimation, scaleAnim, opacityAnim, nil];
-//	animationGroup.duration = 0.5;
-//	[_testImgView.layer addAnimation:animationGroup forKey:nil];
-	
-	
-	//
 }
 
 -(void)_goSubscribe {

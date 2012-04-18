@@ -1,17 +1,17 @@
 //
-//  SNWebPageViewController.m
+//  SNWebPageViewController_iPhone.m
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 03.24.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import "SNWebPageViewController.h"
+#import "SNWebPageViewController_iPhone.h"
 
 #import "SNHeaderView_iPhone.h"
 #import "SNAppDelegate.h"
 
-@implementation SNWebPageViewController
+@implementation SNWebPageViewController_iPhone
 
 - (id)initWithURL:(NSURL *)url title:(NSString *)title {
 	if ((self = [super init])) {

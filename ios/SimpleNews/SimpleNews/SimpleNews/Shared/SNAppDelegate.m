@@ -31,11 +31,6 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 }
 
 
-+(void)writeInfluencers:(NSString *)influencers {
-	[[NSUserDefaults standardUserDefaults] setObject:influencers forKey:@"influencers"];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-}
-
 +(NSString *)subscribedInfluencers {
 	return ([[NSUserDefaults standardUserDefaults] objectForKey:@"influencers"]);
 }
@@ -83,6 +78,14 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 
 +(UIFont *)snAllerFontBoldItalic {
 	return [UIFont fontWithName:@"Aller-BoldItalic" size:14.0];
+}
+
++(UIColor *)snLineColor {
+	return ([UIColor colorWithWhite:0.702 alpha:1.0]);
+}
+
++(UIColor *)snHeaderColor {
+	return ([UIColor colorWithWhite:0.941 alpha:1.0]);
 }
 
 
@@ -258,9 +261,6 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 		}
 	}
 	
-	//if (![SNAppDelegate subscribedInfluencers])
-		[SNAppDelegate writeInfluencers:@""];
-	
 	self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
 	UINavigationController *rootNavigationController;
 	
@@ -296,11 +296,13 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 		}
 		*/
 		
-		SNSplashViewController_iPhone *splashViewController = [[[SNSplashViewController_iPhone alloc] init] autorelease];
-		UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:splashViewController] autorelease];
-		
-		[navigationController setNavigationBarHidden:YES];
-		[rootNavigationController presentModalViewController:navigationController animated:NO];
+		if (![SNAppDelegate profileForUser]) {
+			SNSplashViewController_iPhone *splashViewController = [[[SNSplashViewController_iPhone alloc] init] autorelease];
+			UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:splashViewController] autorelease];
+			
+			[navigationController setNavigationBarHidden:YES];
+			[rootNavigationController presentModalViewController:navigationController animated:NO];
+		}
 		
 		// Show a splash screen immediately
 		//SNSplashViewController_iPhone *splashViewController = [[[SNSplashViewController_iPhone alloc] init] autorelease];
