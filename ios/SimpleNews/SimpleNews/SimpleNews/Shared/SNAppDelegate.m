@@ -137,6 +137,33 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 }
 
 
++(void)writeFontFactor:(int)factor {
+	[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:factor] forKey:@"uiFontFactor"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++(int)fontFactor {
+	return ([[[NSUserDefaults standardUserDefaults] objectForKey:@"uiFontFactor"] intValue]);
+}
+
++(void)writeDarkStyleUI:(BOOL)isDark {
+	NSString *bool_str;
+	if (isDark)
+		bool_str = [NSString stringWithString:@"YES"];
+	
+	else
+		bool_str = [NSString stringWithString:@"NO"];
+	
+	[[NSUserDefaults standardUserDefaults] setObject:bool_str forKey:@"uiDarkStyle"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++(BOOL)isDarkStyleUI {
+	return ([[[NSUserDefaults standardUserDefaults] objectForKey:@"uiDarkStyle"] isEqualToString:@"YES"]);
+}
+
+
+
 +(void)notificationsToggle:(BOOL)isOn {
 	NSString *bool_str;
 	if (isOn)
@@ -220,6 +247,32 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[defaults setObject:@"NO" forKey:@"airplay_enabled"];
+	[defaults synchronize];
+	
+	
+	if(![defaults objectForKey:@"uiFontFactor"])
+		[SNAppDelegate writeFontFactor:2];
+	
+	
+	if(![defaults objectForKey:@"uiDarkStyle"])
+		[SNAppDelegate writeDarkStyleUI:NO];
+	
+	
+//	NSArray *fontSizes = [NSArray arrayWithObjects:
+//									 [NSArray arrayWithObjects:[NSNumber numberWithInt:12], [NSNumber numberWithInt:12], [NSNumber numberWithInt:10], [NSNumber numberWithInt:10], nil], 
+//									 [NSArray arrayWithObjects:[NSNumber numberWithInt:14], [NSNumber numberWithInt:13], [NSNumber numberWithInt:11], [NSNumber numberWithInt:12], nil], 
+//									 [NSArray arrayWithObjects:[NSNumber numberWithInt:16], [NSNumber numberWithInt:14], [NSNumber numberWithInt:12], [NSNumber numberWithInt:16], nil], 
+//									 [NSArray arrayWithObjects:[NSNumber numberWithInt:18], [NSNumber numberWithInt:16], [NSNumber numberWithInt:13], [NSNumber numberWithInt:18], nil], 
+//									 nil];
+	
+	NSArray *fontSizes = [NSArray arrayWithObjects:
+								 [NSArray arrayWithObjects:[NSNumber numberWithInt:12], [NSNumber numberWithInt:12], [NSNumber numberWithInt:10], [NSNumber numberWithInt:8], nil], 
+								 [NSArray arrayWithObjects:[NSNumber numberWithInt:14], [NSNumber numberWithInt:13], [NSNumber numberWithInt:11], [NSNumber numberWithInt:12], nil], 
+								 [NSArray arrayWithObjects:[NSNumber numberWithInt:16], [NSNumber numberWithInt:14], [NSNumber numberWithInt:12], [NSNumber numberWithInt:16], nil], 
+								 [NSArray arrayWithObjects:[NSNumber numberWithInt:18], [NSNumber numberWithInt:16], [NSNumber numberWithInt:13], [NSNumber numberWithInt:24], nil], 
+								 nil];
+	
+	[defaults setObject:fontSizes forKey:@"uiFontSizes"];
 	[defaults synchronize];
 	
 	/*

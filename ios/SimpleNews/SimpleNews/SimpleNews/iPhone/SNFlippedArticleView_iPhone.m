@@ -82,7 +82,6 @@
 
 #pragma mark - TableView DataSource Delegates
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	NSLog(@"numberOfRowsInSection:[%d]", [_influencers count]);
 	return ([_influencers count]);
 }
 
@@ -121,7 +120,7 @@
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
-	NSLog(@"SNInfluencersListView_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	//NSLog(@"SNFlippedArticleView_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
 	@autoreleasepool {
 		NSError *error = nil;
@@ -133,7 +132,7 @@
 			NSMutableArray *list = [NSMutableArray array];
 			for (NSDictionary *serverInfluencer in parsedInfluencers) {
 				SNInfluencerVO *vo = [SNInfluencerVO influencerWithDictionary:serverInfluencer];
-				NSLog(@"LIST \"@%@\"", vo.handle);
+				//NSLog(@"LIST \"@%@\"", vo.handle);
 				
 				if (vo != nil)
 					[list addObject:vo];

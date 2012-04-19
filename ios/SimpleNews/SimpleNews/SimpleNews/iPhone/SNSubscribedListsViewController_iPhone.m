@@ -87,13 +87,6 @@
 	[self.view addSubview:overlayImgView];
 		
 	[_listsRequest startAsynchronous];
-	
-	_userRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]] retain];
-	[_userRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-	[_userRequest setPostValue:[SNAppDelegate deviceToken] forKey:@"token"];
-	[_userRequest setPostValue:[SNAppDelegate twitterHandle] forKey:@"handle"];
-	[_userRequest setDelegate:self];
-	[_userRequest startAsynchronous];
 }
 
 -(void)viewDidLoad {
@@ -177,49 +170,35 @@
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
-	NSLog(@"SNSubscribedListsViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	//NSLog(@"SNSubscribedListsViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
-	if ([request isEqual:_listsRequest]) {
-		@autoreleasepool {
-			NSError *error = nil;
-			NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-			if (error != nil)
-				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
-			
-			else {
-				NSMutableArray *list = [NSMutableArray array];
-				for (NSDictionary *serverList in parsedLists) {
-					SNListVO *vo = [SNListVO listWithDictionary:serverList];
-					NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
-					
-					if (vo != nil)
-						[list addObject:vo];
-				}
-				
-				_subscribedLists = [list retain];
-				
-				int cnt = 0;
-				for (SNListVO *vo in _subscribedLists) {
-					SNListCardView_iPhone *listCardView = [[[SNListCardView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) listVO:vo] autorelease];
-					[_scrollView addSubview:listCardView];
-					
-					cnt++;
-				}
-				
-				_scrollView.contentSize = CGSizeMake([_subscribedLists count] * self.view.frame.size.width, self.view.frame.size.height);
-			}
-		}
+	@autoreleasepool {
+		NSError *error = nil;
+		NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+		if (error != nil)
+			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
 		
-	} else if ([request isEqual:_userRequest]) {
-		@autoreleasepool {
-			NSError *error = nil;
-			NSDictionary *parsedUser = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-			if (error != nil)
-				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
-			
-			else {
-				[SNAppDelegate writeUserProfile:parsedUser];
+		else {
+			NSMutableArray *list = [NSMutableArray array];
+			for (NSDictionary *serverList in parsedLists) {
+				SNListVO *vo = [SNListVO listWithDictionary:serverList];
+				NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
+				
+				if (vo != nil)
+					[list addObject:vo];
 			}
+			
+			_subscribedLists = [list retain];
+			
+			int cnt = 0;
+			for (SNListVO *vo in _subscribedLists) {
+				SNListCardView_iPhone *listCardView = [[[SNListCardView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) listVO:vo] autorelease];
+				[_scrollView addSubview:listCardView];
+				
+				cnt++;
+			}
+			
+			_scrollView.contentSize = CGSizeMake([_subscribedLists count] * self.view.frame.size.width, self.view.frame.size.height);
 		}
 	}
 }

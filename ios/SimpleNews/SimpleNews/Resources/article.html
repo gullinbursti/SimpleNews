@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale = 1.0, user-scalable = no, width = 274.0"/>
+		
+		<style type="text/css" rel="stylesheet">
+			body {
+				margin:0px; 
+				padding:0px; 
+				font-family:"HelveticaNeueBold", "HelveticaNeue-Bold", "Helvetica Neue Bold", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosBold', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;}
+		</style>
+	</head>
+	<body id="bodPage">
+		<div id="divContent"></div>
+		
+		<script type="text/javascript">
+			var body_obj = document.getElementById('bodPage')
+			var contentTout_obj = document.getElementById('divContent');
+			
+			function populate(html) {
+				contentTout_obj.innerHTML = html;
+				sendValue('state', "POPULATED");
+			}
+			
+			function goDarkUI() {
+				body_obj.style.color = 'white';
+				body_obj.style.backgroundColor = 'black';
+				sendValue('theme', "DARK");
+			}
+			
+			function goLightUI() {
+				body_obj.style.color = 'black';
+				body_obj.style.backgroundColor = 'white';
+				sendValue('theme', "LIGHT");
+			}
+			
+			function changeFontFactor(factor) {
+				var size;
+				
+				switch (factor) {
+					case 0:
+						size = '0.5em';
+						break;
+					
+					case 1:
+						size = '0.75em';
+						break;
+					
+					case 2:
+						size = '1em';
+						break;
+					
+					case 3:
+						size = '1.5em';
+						break;
+					
+				}
+				
+				contentTout_obj.style.fontSize = size;
+				sendValue('height', contentTout_obj.offsetHeight);
+			}
+			
+			function sendValue(key, val) {
+				location.href = 'result://keyval/' + key + '/' + val;
+			}
+		</script>
+	</body>
+</html>

@@ -379,6 +379,7 @@
 }
 
 -(void)_killVideo:(NSNotification *)notification {
+	[self.mpc stop];
 	[self _goClose];
 }
 

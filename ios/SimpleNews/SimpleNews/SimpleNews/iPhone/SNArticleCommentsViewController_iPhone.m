@@ -232,7 +232,7 @@
 									 [SNAppDelegate twitterHandle], @"handle", 
 									 [[SNAppDelegate profileForUser] objectForKey:@"name"], @"name", 
 									 [NSString stringWithFormat:@"https://twitter.com/#!/%@", [SNAppDelegate twitterHandle]], @"user_url", 
-									 @"http://shelby.tv", @"comment_url", 
+									 @"", @"comment_url", 
 									 added, @"added",  
 									 textField.text, @"content", nil];
 		SNCommentVO *vo = [SNCommentVO commentWithDictionary:dict];

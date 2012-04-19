@@ -10,8 +10,10 @@
 #import "ASIFormDataRequest.h"
 
 @interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, ASIHTTPRequestDelegate> {
+	ASIFormDataRequest *_userRequest;
 	ASIFormDataRequest *_subscribedListsRequest;
 	ASIFormDataRequest *_popularListsRequest;
+	ASIHTTPRequest *_twitterRequest;
 	
 	NSMutableArray *_subscribedLists;
 	NSMutableArray *_popularLists;

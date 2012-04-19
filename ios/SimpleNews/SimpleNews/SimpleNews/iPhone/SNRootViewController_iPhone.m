@@ -34,6 +34,13 @@
 		
 		_isFollowingList = YES;
 		
+		_userRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]] retain];
+		[_userRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[_userRequest setPostValue:[SNAppDelegate deviceToken] forKey:@"token"];
+		[_userRequest setPostValue:[SNAppDelegate twitterHandle] forKey:@"handle"];
+		[_userRequest setDelegate:self];
+		[_userRequest startAsynchronous];
+		
 		_subscribedListsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
 		[_subscribedListsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		[_subscribedListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
@@ -142,9 +149,6 @@
 	_popularTableView.hidden = YES;
 	[self.view addSubview:_popularTableView];
 	
-	[_subscribedListsRequest startAsynchronous];
-	[_popularListsRequest startAsynchronous];
-	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
@@ -200,11 +204,9 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	
 	if ([tableView isEqual:_subscribedTableView]) {
-		NSLog(@"numberOfRowsInSection:[%d]", [_subscribedLists count]);
 		return ([_subscribedLists count]);
 		
 	} else {
-		NSLog(@"numberOfRowsInSection:[%d]", [_popularLists count]);
 		return ([_popularLists count]);
 	}
 }
@@ -256,7 +258,7 @@
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
-	NSLog(@"SNRootViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	//NSLog(@"SNRootViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
 	if ([request isEqual:_subscribedListsRequest]) {	
 		@autoreleasepool {
@@ -301,6 +303,44 @@
 				[_popularTableView reloadData];
 			}
 		}
+		
+	} else if ([request isEqual:_userRequest]) {
+		@autoreleasepool {
+			NSError *error = nil;
+			NSDictionary *parsedUser = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+			
+			else {
+				[SNAppDelegate writeUserProfile:parsedUser];
+			}
+		}
+		
+		if ([[[SNAppDelegate profileForUser] objectForKey:@"name"] isEqualToString:@""]) {		
+			_twitterRequest = [[ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1/users/show.json?screen_name=%@", [SNAppDelegate twitterHandle]]]] retain];
+			[_twitterRequest setDelegate:self];
+			[_twitterRequest startAsynchronous];
+		
+		} else {
+			[_subscribedListsRequest startAsynchronous];
+			[_popularListsRequest startAsynchronous];	
+		}
+		
+	} else if ([request isEqual:_twitterRequest]) {
+		@autoreleasepool {
+			NSError *error = nil;
+			NSDictionary *parsedUser = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			
+			NSLog(@"NAME:%@", [parsedUser objectForKey:@"name"]);
+			_userRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]] retain];
+			[_userRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
+			[_userRequest setPostValue:[parsedUser objectForKey:@"name"] forKey:@"userName"];
+			[_userRequest setDelegate:self];
+			[_userRequest startAsynchronous];
+		}
+		
+		[_subscribedListsRequest startAsynchronous];
+		[_popularListsRequest startAsynchronous];
 	}
 }
 

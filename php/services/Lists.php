@@ -87,7 +87,7 @@
 		function getPublicLists() {
 			$list_arr = array();
             
-			$query = 'SELECT `id`, `title`, `info`, `image_url`, `thumb_url` FROM `tblLists` WHERE `active` = "Y" ORDER BY `modified` DESC;';
+			$query = 'SELECT `id`, `title`, `info`, `image_url`, `thumb_url` FROM `tblLists` WHERE `active` = "Y" ORDER BY `title` DESC;';
 			$list_result = mysql_query($query);
 			
             while ($list_row = mysql_fetch_array($list_result, MYSQL_BOTH)) {

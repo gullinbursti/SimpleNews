@@ -39,6 +39,13 @@
 +(void)writeDeviceToken:(NSString *)token;
 +(NSString *)deviceToken;
 
++(void)writeFontFactor:(int)factor;
++(int)fontFactor;
+
++(void)writeDarkStyleUI:(BOOL)isDark;
++(BOOL)isDarkStyleUI;
+
+
 +(void)twitterToggle:(BOOL)isSignedIn;
 +(BOOL)twitterEnabled;
 +(NSString *)twitterHandle;

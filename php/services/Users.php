@@ -126,9 +126,21 @@
 		}
 		
 		
-		function updateUser($user_id) {
-			$query = 'UPDATE `tblUsers` SET `modified` = CURRENT_TIMESTAMP WHERE `id` ='. $user_id .';';
+		function updateName($user_id, $user_name) {
+			$query = 'UPDATE `tblUsers` SET `name` = "'. $user_name .'" WHERE `id` ='. $user_id .';';
 			$result = mysql_query($query);
+			
+			$query = 'SELECT * FROM `tblUsers` WHERE `id` = "'. $user_id .'";';
+			$row = mysql_fetch_row(mysql_query($query));
+			$user_arr = array(
+				"id" => $row[0], 
+				"handle" => $row[1], 
+				"name" => $row[2], 
+				"token" => $row[3]					
+			);
+			
+			$this->sendResponse(200, json_encode($user_arr));
+			return (true);
 		}
 	
 	
@@ -156,8 +168,8 @@
 				break;
 				
 			case "2":
-				if (isset($_POST['userID']))
-					$users->updateUser($_POST['userID']);
+				if (isset($_POST['userID']) && isset($_POST['userName']))
+					$users->updateName($_POST['userID'], $_POST['userName']);
 				break;
 			
     	}

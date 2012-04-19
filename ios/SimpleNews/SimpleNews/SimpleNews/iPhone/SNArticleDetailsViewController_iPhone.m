@@ -18,6 +18,10 @@
 	if ((self = [super init])) {
 		_vo = vo;
 		_isOptions = NO;
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_changeFontSize:) name:@"CHANGE_FONT_SIZE" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_uiThemedDark:) name:@"UI_THEMED_DARK" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_uiThemedLight:) name:@"UI_THEMED_LIGHT" object:nil];
 	}
 	
 	return (self);
@@ -31,7 +35,20 @@
 -(void)loadView {
 	[super loadView];
 	
-	[self.view setBackgroundColor:[UIColor whiteColor]];
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 53.0, self.view.frame.size.width, self.view.frame.size.height - 53.0)];
+	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	
+	if ([SNAppDelegate isDarkStyleUI])
+		[_scrollView setBackgroundColor:[UIColor blackColor]];
+	
+	else
+		[_scrollView setBackgroundColor:[UIColor whiteColor]];
+	
+	_scrollView.scrollsToTop = NO;
+	_scrollView.pagingEnabled = NO;
+	_scrollView.showsVerticalScrollIndicator = NO;
+	[self.view addSubview:_scrollView];
+	
 	
 	_articleOptionsView = [[SNArticleOptionsView_iPhone alloc] init];
 	[self.view addSubview:_articleOptionsView];
@@ -53,35 +70,44 @@
 	[_viewOptionsButton addTarget:self action:@selector(_goOptions) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_viewOptionsButton];
 	
-	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 54.0, self.view.frame.size.width, self.view.frame.size.height - 54.0)];
-	[self.view addSubview:_holderView];
-	
-	
 	CGSize size;
 	int offset = 22;
+	NSArray *fontSizes = [[[NSUserDefaults standardUserDefaults] objectForKey:@"uiFontSizes"] objectAtIndex:[SNAppDelegate fontFactor]];
 	
-	size = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-	UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, size.height)] autorelease];
-	titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
-	titleLabel.textColor = [UIColor blackColor];
-	titleLabel.backgroundColor = [UIColor clearColor];
-	titleLabel.text = _vo.title;
-	titleLabel.numberOfLines = 0;
-	[_holderView addSubview:titleLabel];
+	size = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+	_titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, size.height)] autorelease];
+	_titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]];
+	
+	if ([SNAppDelegate isDarkStyleUI])
+		_titleLabel.textColor = [UIColor whiteColor];
+	
+	else
+		_titleLabel.textColor = [UIColor blackColor];
+	
+	_titleLabel.backgroundColor = [UIColor clearColor];
+	_titleLabel.text = _vo.title;
+	_titleLabel.numberOfLines = 0;
+	[_scrollView addSubview:_titleLabel];
 	offset += size.height + 22;
 	
-	size = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-	UILabel *sourceLabel = [[[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, size.height)] autorelease];
-	sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
-	sourceLabel.textColor = [UIColor blackColor];
-	sourceLabel.backgroundColor = [UIColor clearColor];
-	sourceLabel.text = _vo.articleSource;
-	[_holderView addSubview:sourceLabel];
+	size = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:1] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+	_sourceLabel = [[[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, size.height)] autorelease];
+	_sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:1] intValue]];
+	
+	if ([SNAppDelegate isDarkStyleUI])
+		_sourceLabel.textColor = [UIColor whiteColor];
+	
+	else
+		_sourceLabel.textColor = [UIColor blackColor];
+	
+	_sourceLabel.backgroundColor = [UIColor clearColor];
+	_sourceLabel.text = _vo.articleSource;
+	[_scrollView addSubview:_sourceLabel];
 	offset += size.height + 22;
 	
 	if (_vo.type_id > 4) {
 		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, 180.0) articleVO:_vo];
-		[_holderView addSubview:_videoPlayerView];		
+		[_scrollView addSubview:_videoPlayerView];		
 		offset += _videoPlayerView.frame.size.height + 22;
 	}
 	
@@ -90,23 +116,26 @@
 	NSString *dateString = [dateFormatter stringFromDate:_vo.added];
 	[dateFormatter release];
 	
-	UILabel *dateLabel = [[[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 100.0, 16.0)] autorelease];
-	dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
-	dateLabel.textColor = [UIColor blackColor];
-	dateLabel.backgroundColor = [UIColor clearColor];
-	dateLabel.text = dateString;
-	[_holderView addSubview:dateLabel];
+	_dateLabel = [[[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 100.0, 16.0)] autorelease];
+	_dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:2] intValue]];
+	_dateLabel.textColor = [UIColor blackColor];
+	_dateLabel.backgroundColor = [UIColor clearColor];
+	_dateLabel.text = dateString;
+	[_scrollView addSubview:_dateLabel];
 	offset += 22 + 16;
 	
-	size = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-	UILabel *contentLabel = [[[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, size.height)] autorelease];
-	contentLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
-	contentLabel.textColor = [UIColor blackColor];
-	contentLabel.backgroundColor = [UIColor clearColor];
-	contentLabel.text = _vo.content;
-	contentLabel.numberOfLines = 0;
-	[_holderView addSubview:contentLabel];
-	offset += size.height + 22;
+	size = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:3] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+	_webView = [[UIWebView alloc] initWithFrame:CGRectMake(22.0, offset, self.view.frame.size.width - 44.0, size.height + (90.0 + ([SNAppDelegate fontFactor] * 40.0)))];
+	_webView.delegate = self;
+	_webView.scrollView.bounces = NO;
+	_webView.scrollView.userInteractionEnabled = NO;
+	_webView.scrollView.contentSize = _webView.frame.size;
+	[_webView setBackgroundColor:[UIColor whiteColor]];
+	[_webView loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"article" ofType:@"html"]]]];
+	[_scrollView addSubview:_webView];				
+	
+	offset += size.height + (90.0 + ([SNAppDelegate fontFactor] * 40.0));
+	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, offset);
 }
 
 -(void)viewDidLoad {
@@ -130,8 +159,9 @@
 		[_viewOptionsButton setBackgroundImage:[UIImage imageNamed:@"fontButton_Selected.png"] forState:UIControlStateNormal];
 		
 		[UIView animateWithDuration:0.33 animations:^(void) {
-			_articleOptionsView.frame = CGRectMake(_articleOptionsView.frame.origin.x, 54.0, _articleOptionsView.frame.size.width, _articleOptionsView.frame.size.height);
-			_holderView.frame = CGRectMake(0.0, _holderView.frame.origin.y + _articleOptionsView.frame.size.height, _holderView.frame.size.width, _holderView.frame.size.height);
+			_articleOptionsView.frame = CGRectMake(_articleOptionsView.frame.origin.x, 53.0, _articleOptionsView.frame.size.width, _articleOptionsView.frame.size.height);
+			_scrollView.contentOffset = CGPointMake(0.0, -_articleOptionsView.frame.size.height);
+			//_scrollView.frame = CGRectMake(0.0, _scrollView.frame.origin.y + _articleOptionsView.frame.size.height, _scrollView.frame.size.width, _scrollView.frame.size.height);
 		}];
 		
 	} else {
@@ -139,9 +169,113 @@
 		
 		[UIView animateWithDuration:0.33 animations:^(void) {
 			_articleOptionsView.frame = CGRectMake(_articleOptionsView.frame.origin.x, -26.0, _articleOptionsView.frame.size.width, _articleOptionsView.frame.size.height);
-			_holderView.frame = CGRectMake(0.0, _holderView.frame.origin.y - _articleOptionsView.frame.size.height, _holderView.frame.size.width, _holderView.frame.size.height);
+			_scrollView.contentOffset = CGPointZero;
+			//_scrollView.frame = CGRectMake(0.0, _scrollView.frame.origin.y - _articleOptionsView.frame.size.height, _scrollView.frame.size.width, _scrollView.frame.size.height);
 		}];
 	}
+}
+
+
+#pragma mark - Notification handlers
+-(void)_changeFontSize:(NSNotification *)notification {
+	
+	CGSize size;
+	int offset = 22;
+	
+	NSArray *fontSizes = [[[NSUserDefaults standardUserDefaults] objectForKey:@"uiFontSizes"] objectAtIndex:[SNAppDelegate fontFactor]];
+	
+	size = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+	_titleLabel.frame = CGRectMake(_titleLabel.frame.origin.y, offset, _titleLabel.frame.size.width, size.height);
+	_titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]];
+	offset += size.height + 22;
+	
+	size = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:1] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+	_sourceLabel.frame = CGRectMake(_sourceLabel.frame.origin.x, offset, _sourceLabel.frame.size.width, size.height);
+	_sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:1] intValue]];
+	offset += size.height + 22;
+	
+	if (_vo.type_id > 4) {
+		_videoPlayerView.frame = CGRectMake(_videoPlayerView.frame.origin.x, offset, _videoPlayerView.frame.size.width, _videoPlayerView.frame.size.height);
+		offset += _videoPlayerView.frame.size.height + 22;
+	}
+	
+	_dateLabel.frame = CGRectMake(_dateLabel.frame.origin.x, offset, _dateLabel.frame.size.width, size.height);
+	_dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:2] intValue]];
+	offset += 22 + 16;
+	
+	size = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:3] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+	_webView.frame = CGRectMake(_webView.frame.origin.x, offset, _webView.frame.size.width, size.height + (90.0 + ([SNAppDelegate fontFactor] * 40.0)));
+	offset += size.height + (90.0 + ([SNAppDelegate fontFactor] * 40.0));
+	
+	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, offset);
+	[_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"changeFontFactor(%d);", [SNAppDelegate fontFactor]]];
+}
+
+-(void)_uiThemedDark:(NSNotification *)notification {
+	[_scrollView setBackgroundColor:[UIColor blackColor]];
+	_titleLabel.textColor = [UIColor whiteColor];
+	_sourceLabel.textColor = [UIColor whiteColor];
+	_dateLabel.textColor = [UIColor whiteColor];
+	
+	[_webView stringByEvaluatingJavaScriptFromString:@"goDarkUI();"];
+}
+
+-(void)_uiThemedLight:(NSNotification *)notification {
+	[_scrollView setBackgroundColor:[UIColor whiteColor]];
+	_titleLabel.textColor = [UIColor blackColor];
+	_sourceLabel.textColor = [UIColor blackColor];
+	_dateLabel.textColor = [UIColor blackColor];
+	
+	[_webView stringByEvaluatingJavaScriptFromString:@"goLightUI();"];
+}
+
+
+#pragma mark - WebView delegates
+-(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+	NSString *urlString = [[request URL] absoluteString];
+	
+	if ([urlString hasPrefix:@"result:"]) {
+		NSArray *pathComponents = [[[request URL] path] pathComponents];
+		
+		NSString *key = [pathComponents objectAtIndex:1];
+		NSString *value = [pathComponents objectAtIndex:2];
+		
+		NSLog(@"['%@'] = \"%@\"", key, value);
+		
+		if ([key isEqualToString:@"height"]) {
+			webView.frame = CGRectMake(webView.frame.origin.x, webView.frame.origin.y, webView.frame.size.width, [value intValue]);
+			//_scrollView.contentSize = CGSizeMake(_scrollView.frame.size.width, [value intValue]);
+		
+		} else if ([key isEqualToString:@"time"]) {			
+		} else if ([key isEqualToString:@"state"]) {
+		}
+		
+		return (NO);
+		
+	} else
+		return (YES);
+}
+
+
+-(void)webViewDidStartLoad:(UIWebView *)webView {
+	NSLog(@"webViewDidStartLoad");
+}
+
+-(void)webViewDidFinishLoad:(UIWebView *)webView {
+	NSLog(@"webViewDidFinishLoad");
+	
+	[_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"populate('%@');", _vo.content]];
+	[_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"changeFontFactor(%d);", [SNAppDelegate fontFactor]]];
+	
+	if ([SNAppDelegate isDarkStyleUI])
+		[self _uiThemedDark:nil];
+	
+	else
+		[self _uiThemedLight:nil];
+}
+
+-(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {	
+	NSLog(@"didFailLoadWithError:[%@]", error);
 }
 
 @end

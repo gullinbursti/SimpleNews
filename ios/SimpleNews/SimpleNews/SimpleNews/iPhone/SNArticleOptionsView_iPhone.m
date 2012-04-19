@@ -17,8 +17,8 @@
 -(id)init {
 	if ((self = [super initWithFrame:CGRectMake(0.0, -26.0, 320.0, 77.0)])) {
 		_isRevealed = NO;
-		_isDark = NO;
-		_fontSize = 3;
+		_isDark = [SNAppDelegate isDarkStyleUI];
+		_fontSize = [SNAppDelegate fontFactor];
 		
 		[self setBackgroundColor:[SNAppDelegate snHeaderColor]];
 		
@@ -40,7 +40,7 @@
 		sizeBGImgView.image = [UIImage imageNamed:@"fontNotches.png"];
 		[self addSubview:sizeBGImgView];
 		
-		_sizeIndicatorImgView = [[UIImageView alloc] initWithFrame:CGRectMake(35.0 + (kKobInc * _fontSize), 30.0, 14.0, 14.0)];
+		_sizeIndicatorImgView = [[UIImageView alloc] initWithFrame:CGRectMake(50.0 + (kKobInc * _fontSize), 30.0, 14.0, 14.0)];
 		_sizeIndicatorImgView.image = [UIImage imageNamed:@"fontNotches_Selected.png"];
 		[self addSubview:_sizeIndicatorImgView];
 		
@@ -63,7 +63,13 @@
 		[self addSubview:brightnessBGImgView];
 		
 		_brightnessButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
-		_brightnessButton.frame = CGRectMake(204.0, 20.0, 34.0, 34.0);
+		
+		if (_isDark)
+			_brightnessButton.frame = CGRectMake(250.0, 20.0, 34.0, 34.0);
+		
+		else
+			_brightnessButton.frame = CGRectMake(204.0, 20.0, 34.0, 34.0);
+		
 		[_brightnessButton setBackgroundImage:[UIImage imageNamed:@"gripButton_nonActive.png"] forState:UIControlStateNormal];
 		[_brightnessButton setBackgroundImage:[UIImage imageNamed:@"gripButton_Active.png"] forState:UIControlStateHighlighted];
 		[self addSubview:_brightnessButton];
@@ -94,15 +100,17 @@
 
 #pragma mark - Navigation
 -(void)_goMinus {
-	_fontSize = MIN(4, MAX(--_fontSize, 1));
-	_sizeIndicatorImgView.frame = CGRectMake(35.0 + (15.0 * _fontSize), _sizeIndicatorImgView.frame.origin.y, _sizeIndicatorImgView.frame.size.width, _sizeIndicatorImgView.frame.size.height);
+	_fontSize = MIN(3, MAX(--_fontSize, 0));
+	[SNAppDelegate writeFontFactor:_fontSize];
+	_sizeIndicatorImgView.frame = CGRectMake(50.0 + (15.0 * _fontSize), _sizeIndicatorImgView.frame.origin.y, _sizeIndicatorImgView.frame.size.width, _sizeIndicatorImgView.frame.size.height);
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_FONT_SIZE" object:[NSNumber numberWithInt:_fontSize]];
 }
 
 -(void)_goPlus {
-	_fontSize = MIN(4, MAX(++_fontSize, 1));
-	_sizeIndicatorImgView.frame = CGRectMake(35.0 + (15.0 * _fontSize), _sizeIndicatorImgView.frame.origin.y, _sizeIndicatorImgView.frame.size.width, _sizeIndicatorImgView.frame.size.height);
+	_fontSize = MIN(3, MAX(++_fontSize, 0));
+	[SNAppDelegate writeFontFactor:_fontSize];
+	_sizeIndicatorImgView.frame = CGRectMake(50.0 + (15.0 * _fontSize), _sizeIndicatorImgView.frame.origin.y, _sizeIndicatorImgView.frame.size.width, _sizeIndicatorImgView.frame.size.height);
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_FONT_SIZE" object:[NSNumber numberWithInt:_fontSize]];
 }
@@ -113,6 +121,7 @@
 	
 	} completion:^(BOOL finished) {
 		_isDark = YES;
+		[SNAppDelegate writeDarkStyleUI:_isDark];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"UI_THEMED_DARK" object:[NSNumber numberWithInt:_fontSize]];
 	}];
 }
@@ -123,6 +132,7 @@
 	
 	} completion:^(BOOL finished) {
 		_isDark = NO;
+		[SNAppDelegate writeDarkStyleUI:_isDark];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"UI_THEMED_LIGHT" object:[NSNumber numberWithInt:_fontSize]];
 	}];
 }

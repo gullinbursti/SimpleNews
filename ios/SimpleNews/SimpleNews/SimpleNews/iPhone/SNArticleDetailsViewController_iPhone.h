@@ -12,12 +12,16 @@
 #import "SNArticleVideoPlayerView_iPhone.h"
 #import "SNArticleOptionsView_iPhone.h"
 
-@interface SNArticleDetailsViewController_iPhone : UIViewController {
+@interface SNArticleDetailsViewController_iPhone : UIViewController <UIWebViewDelegate> {
 	SNArticleVO *_vo;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
 	SNArticleOptionsView_iPhone *_articleOptionsView;
+	UIScrollView *_scrollView;
+	UIWebView *_webView;
+	UILabel *_titleLabel;
+	UILabel *_sourceLabel;
+	UILabel *_dateLabel;
 	
-	UIView *_holderView;
 	UIButton *_viewOptionsButton;
 	BOOL _isOptions;
 }

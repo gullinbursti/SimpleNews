@@ -119,7 +119,6 @@
 
 #pragma mark - TableView DataSource Delegates
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	NSLog(@"numberOfRowsInSection:[%d]", [_optionVOs count]);
 	return ([_optionVOs count]);
 }
 

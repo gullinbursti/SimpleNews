@@ -14,7 +14,6 @@
 @interface SNSubscribedListsViewController_iPhone : UIViewController <ASIHTTPRequestDelegate, UIScrollViewDelegate> {
 	NSMutableArray *_subscribedLists;
 	ASIFormDataRequest *_listsRequest;
-	ASIFormDataRequest *_userRequest;
 	
 	UIView *_holderView;
 	UIScrollView *_scrollView;

@@ -105,7 +105,7 @@
 							"name" => $comment_row['name'], 
 							"handle" => $comment_row['handle'], 
 							"comment_url" => "http://shelby.tv", 
-							"content" => $comment_row['content'], 
+							"content" => htmlentities($comment_row['content'], ENT_QUOTES), 
 							"added" => $comment_row['added']
 						 ));
 					}
