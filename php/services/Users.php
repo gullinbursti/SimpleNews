@@ -110,6 +110,11 @@
 				$result = mysql_query($query);
 				$user_id = mysql_insert_id();
 				
+				for ($i=4; $i<=7; $i++) {
+					$query = 'INSERT INTO `tblUsersLists` (`user_id`, `list_id`) VALUES ('. $user_id .', '. $i .');';
+					$result = mysql_query($query);
+				}
+				
 				$query = 'SELECT * FROM `tblUsers` WHERE `id` ='. $user_id .';';
 				$row = mysql_fetch_row(mysql_query($query));
 				

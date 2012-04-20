@@ -110,6 +110,15 @@
 				$query = 'SELECT * FROM `tblListsInfluencers` WHERE `list_id` = "'. $list_row['id'] .'";';
 				$influencer_result = mysql_query($query);
 				
+				$likes_tot = 0;
+				while ($influencer_row = mysql_fetch_array($influencer_result, MYSQL_BOTH)) {
+					$query = 'SELECT `likes` FROM `tblArticles` WHERE `influencer_id` = "'. $influencer_row['influencer_id'] .'";';
+					$article_result = mysql_query($query);
+					
+					while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH))
+						$likes_tot += $article_row['likes'];
+				}
+				
 				$query = 'SELECT * FROM `tblUsersLists` WHERE `list_id` = "'. $list_row['id'] .'";';
 				$user_result = mysql_query($query);
 				
@@ -121,7 +130,8 @@
 					"image_url" => $list_row['image_url'], 
 					"thumb_url" => $list_row['thumb_url'], 
 					"influencers" => mysql_num_rows($influencer_result),
-					"subscribers" => mysql_num_rows($user_result)
+					"subscribers" => mysql_num_rows($user_result), 
+					"likes" => $likes_tot
 				));				
 			}
             
@@ -155,6 +165,15 @@
 				$query = 'SELECT * FROM `tblListsInfluencers` WHERE `list_id` = "'. $list_row['id'] .'";';
 				$influencer_result = mysql_query($query);
 				
+				$likes_tot = 0;
+				while ($influencer_row = mysql_fetch_array($influencer_result, MYSQL_BOTH)) {
+					$query = 'SELECT `likes` FROM `tblArticles` WHERE `influencer_id` = "'. $influencer_row['influencer_id'] .'";';
+					$article_result = mysql_query($query);
+					
+					while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH))
+						$likes_tot += $article_row['likes'];
+				}
+				
 				$query = 'SELECT * FROM `tblUsersLists` WHERE `list_id` = "'. $list_row['id'] .'";';
 				$user_result = mysql_query($query);
 				
@@ -166,7 +185,8 @@
 					"image_url" => $list_row['image_url'], 
 					"thumb_url" => $list_row['thumb_url'], 
 					"influencers" => mysql_num_rows($influencer_result),
-					"subscribers" => mysql_num_rows($user_result)
+					"subscribers" => mysql_num_rows($user_result), 
+					"likes" => $likes_tot
 				));				
 			}
             

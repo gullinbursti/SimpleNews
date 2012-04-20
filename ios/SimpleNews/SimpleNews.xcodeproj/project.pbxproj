@@ -52,6 +52,7 @@
 		4C23BF931523E32E002D028B /* UASubscriptionUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C23BF301523E32E002D028B /* UASubscriptionUI.m */; };
 		4C23BF941523E32E002D028B /* UASubscriptionUIUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C23BF321523E32E002D028B /* UASubscriptionUIUtil.m */; };
 		4C24CF711527FBD700CA04F0 /* SNInfluencerVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C24CF701527FBD700CA04F0 /* SNInfluencerVO.m */; };
+		4C37CF3215409FDD004B438C /* SNArticleDetailsFooterView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C37CF3115409FDD004B438C /* SNArticleDetailsFooterView_iPhone.m */; };
 		4C3904D315172BCD00278B95 /* pagination_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3904CF15172BCD00278B95 /* pagination_off.png */; };
 		4C3904D415172BCD00278B95 /* pagination_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3904D015172BCD00278B95 /* pagination_off@2x.png */; };
 		4C3904D515172BCD00278B95 /* pagination_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3904D115172BCD00278B95 /* pagination_on.png */; };
@@ -460,6 +461,8 @@
 		4C23BF321523E32E002D028B /* UASubscriptionUIUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UASubscriptionUIUtil.m; sourceTree = "<group>"; };
 		4C24CF6F1527FBD700CA04F0 /* SNInfluencerVO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNInfluencerVO.h; sourceTree = "<group>"; };
 		4C24CF701527FBD700CA04F0 /* SNInfluencerVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNInfluencerVO.m; sourceTree = "<group>"; };
+		4C37CF3015409FDD004B438C /* SNArticleDetailsFooterView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNArticleDetailsFooterView_iPhone.h; sourceTree = "<group>"; };
+		4C37CF3115409FDD004B438C /* SNArticleDetailsFooterView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNArticleDetailsFooterView_iPhone.m; sourceTree = "<group>"; };
 		4C3904CF15172BCD00278B95 /* pagination_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pagination_off.png; sourceTree = "<group>"; };
 		4C3904D015172BCD00278B95 /* pagination_off@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pagination_off@2x.png"; sourceTree = "<group>"; };
 		4C3904D115172BCD00278B95 /* pagination_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pagination_on.png; sourceTree = "<group>"; };
@@ -1203,6 +1206,8 @@
 				4C64DBAE153D2892005C536F /* SNFlippedArticleView_iPhone.m */,
 				4CB391BC153E1CE900C1324D /* SNArticleOptionsView_iPhone.h */,
 				4CB391BD153E1CE900C1324D /* SNArticleOptionsView_iPhone.m */,
+				4C37CF3015409FDD004B438C /* SNArticleDetailsFooterView_iPhone.h */,
+				4C37CF3115409FDD004B438C /* SNArticleDetailsFooterView_iPhone.m */,
 			);
 			name = Articles;
 			sourceTree = "<group>";
@@ -2490,6 +2495,7 @@
 				4CB39171153DF1A500C1324D /* SNArticleDetailsViewController_iPhone.m in Sources */,
 				4CB39175153DF1FF00C1324D /* SNWebPageViewController_iPhone.m in Sources */,
 				4CB391BE153E1CEA00C1324D /* SNArticleOptionsView_iPhone.m in Sources */,
+				4C37CF3215409FDD004B438C /* SNArticleDetailsFooterView_iPhone.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

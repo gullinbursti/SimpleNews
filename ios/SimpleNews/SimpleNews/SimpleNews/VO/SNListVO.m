@@ -12,7 +12,7 @@
 @implementation SNListVO
 
 @synthesize dictionary;
-@synthesize list_id, totalInfluencers, totalSubscribers, list_name, list_info, curatorNames, curators, imageURL, thumbURL;
+@synthesize list_id, totalInfluencers, totalSubscribers, totalLikes, list_name, list_info, curatorNames, curators, imageURL, thumbURL;
 
 +(SNListVO *)listWithDictionary:(NSDictionary *)dictionary {
 	SNListVO *vo = [[SNListVO alloc] init];
@@ -21,6 +21,7 @@
 	vo.list_id = [[dictionary objectForKey:@"list_id"] intValue];
 	vo.totalInfluencers = [[dictionary objectForKey:@"influencers"] intValue];
 	vo.totalSubscribers = [[dictionary objectForKey:@"subscribers"] intValue];
+	vo.totalLikes = [[dictionary objectForKey:@"likes"] intValue];
 	vo.list_name = [dictionary objectForKey:@"name"];
 	vo.imageURL = [dictionary objectForKey:@"image_url"];
 	vo.thumbURL = [dictionary objectForKey:@"thumb_url"];

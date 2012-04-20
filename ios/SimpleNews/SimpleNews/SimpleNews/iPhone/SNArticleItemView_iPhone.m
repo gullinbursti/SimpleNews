@@ -67,6 +67,16 @@
 		[self addSubview:tweetLabel];
 		offset += size.height + 25;
 		
+		//EGOImageView *articleImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(56.0, offset, 252.0, 125.0)] autorelease];
+		//articleImgView.delegate = self;
+		//articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
+		//[self addSubview:articleImgView];
+		
+		//offset += 125.0;
+		
+		//CGSize imgSize = NSLog(@"IMAGE SIZE:(%d, %d)", (int)[UIImage imageNamed:@"overlay.png"].size.width, (int)[UIImage imageNamed:@"overlay.png"].size.height);
+		
+		
 		size = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(242.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(66.0, offset, 242.0, size.height)] autorelease];
 		titleLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:16];
@@ -164,7 +174,13 @@
 }
 
 -(void)_goLike {
+	NSLog(@"GO LIKE");
 	
+	ASIFormDataRequest *likeRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+	[likeRequest setTimeOutSeconds:30];
+	[likeRequest startAsynchronous];
 }
 
 -(void)_goComment {

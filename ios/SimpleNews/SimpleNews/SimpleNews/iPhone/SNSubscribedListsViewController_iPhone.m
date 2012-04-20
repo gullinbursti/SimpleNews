@@ -174,7 +174,10 @@
 	
 	@autoreleasepool {
 		NSError *error = nil;
-		NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+		NSSortDescriptor *descriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] autorelease];
+		NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+		NSArray *parsedLists = [unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+		
 		if (error != nil)
 			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
 		

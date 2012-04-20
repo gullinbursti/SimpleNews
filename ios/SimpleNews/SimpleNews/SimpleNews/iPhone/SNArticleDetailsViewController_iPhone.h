@@ -7,15 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 
 #import "SNArticleVO.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 #import "SNArticleOptionsView_iPhone.h"
 
-@interface SNArticleDetailsViewController_iPhone : UIViewController <UIWebViewDelegate> {
+#import "SNShareSheetView_iPhone.h"
+
+@interface SNArticleDetailsViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIWebViewDelegate> {
 	SNArticleVO *_vo;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
 	SNArticleOptionsView_iPhone *_articleOptionsView;
+	
 	UIScrollView *_scrollView;
 	UIWebView *_webView;
 	UILabel *_titleLabel;
@@ -24,6 +28,9 @@
 	
 	UIButton *_viewOptionsButton;
 	BOOL _isOptions;
+	
+	SNShareSheetView_iPhone *_shareSheetView;
+	UIView *_blackMatteView;
 }
 
 -(id)initWithArticleVO:(SNArticleVO *)vo;

@@ -6,10 +6,14 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import <Twitter/Twitter.h>
+
 #import "SNArticleDetailsViewController_iPhone.h"
 
 #import "SNAppDelegate.h"
 #import "SNHeaderView_iPhone.h"
+#import "SNArticleCommentsViewController_iPhone.h"
+#import "SNArticleDetailsFooterView_iPhone.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 
 @implementation SNArticleDetailsViewController_iPhone
@@ -22,6 +26,10 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_changeFontSize:) name:@"CHANGE_FONT_SIZE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_uiThemedDark:) name:@"UI_THEMED_DARK" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_uiThemedLight:) name:@"UI_THEMED_LIGHT" object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_detailsShowComments:) name:@"DETAILS_SHOW_COMMENTS" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_detailsShowShare:) name:@"DETAILS_SHOW_SHARE" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cancelShare:) name:@"CANCEL_SHARE" object:nil];
 	}
 	
 	return (self);
@@ -53,8 +61,11 @@
 	_articleOptionsView = [[SNArticleOptionsView_iPhone alloc] init];
 	[self.view addSubview:_articleOptionsView];
 	
-	SNHeaderView_iPhone *headView = [[[SNHeaderView_iPhone alloc] initWithTitle:_vo.title] autorelease];
-	[self.view addSubview:headView];
+	SNHeaderView_iPhone *headerView = [[[SNHeaderView_iPhone alloc] initWithTitle:_vo.title] autorelease];
+	[self.view addSubview:headerView];
+	
+	SNArticleDetailsFooterView_iPhone *footerView = [[[SNArticleDetailsFooterView_iPhone alloc] init] autorelease];
+	[self.view addSubview:footerView];
 	
 	UIButton *backButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 	backButton.frame = CGRectMake(4.0, 4.0, 44.0, 44.0);
@@ -73,6 +84,11 @@
 	CGSize size;
 	int offset = 22;
 	NSArray *fontSizes = [[[NSUserDefaults standardUserDefaults] objectForKey:@"uiFontSizes"] objectAtIndex:[SNAppDelegate fontFactor]];
+	
+	EGOImageView *articleImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, 160.0)] autorelease];
+	articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
+	[_scrollView addSubview:articleImgView];
+	offset += 160.0;
 	
 	size = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 	_titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, size.height)] autorelease];
@@ -128,7 +144,7 @@
 	_webView = [[UIWebView alloc] initWithFrame:CGRectMake(22.0, offset, self.view.frame.size.width - 44.0, size.height + (90.0 + ([SNAppDelegate fontFactor] * 40.0)))];
 	_webView.delegate = self;
 	_webView.scrollView.bounces = NO;
-	_webView.scrollView.userInteractionEnabled = NO;
+	//_webView.scrollView.userInteractionEnabled = NO;
 	_webView.scrollView.contentSize = _webView.frame.size;
 	[_webView setBackgroundColor:[UIColor whiteColor]];
 	[_webView loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"article" ofType:@"html"]]]];
@@ -136,6 +152,18 @@
 	
 	offset += size.height + (90.0 + ([SNAppDelegate fontFactor] * 40.0));
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, offset);
+	
+	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
+	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
+	_blackMatteView.alpha = 0.0;
+	[self.view addSubview:_blackMatteView];
+	
+	_shareSheetView = [[SNShareSheetView_iPhone alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
+	[self.view addSubview:_shareSheetView];
+	
+	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
+	[self.view addSubview:overlayImgView];
 }
 
 -(void)viewDidLoad {
@@ -227,6 +255,86 @@
 	_dateLabel.textColor = [UIColor blackColor];
 	
 	[_webView stringByEvaluatingJavaScriptFromString:@"goLightUI();"];
+}
+
+-(void)_detailsShowComments:(NSNotification *)notification {
+	[self.navigationController pushViewController:[[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:_vo listID:_vo.list_id] autorelease] animated:YES];
+}
+
+-(void)_detailsShowShare:(NSNotification *)notification {
+	[_shareSheetView setVo:_vo];
+	
+	_blackMatteView.hidden = NO;
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_blackMatteView.alpha = 0.67;
+		_shareSheetView.frame = CGRectMake(0.0, self.view.frame.size.height - _shareSheetView.frame.size.height, _shareSheetView.frame.size.width, _shareSheetView.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+	}];
+}
+
+
+-(void)_facebookShare:(NSNotification *)notification {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"CANCEL_SHARE" object:nil];	
+}
+-(void)_twitterShare:(NSNotification *)notification {
+	SNArticleVO *vo = (SNArticleVO *)[notification object];
+	
+	TWTweetComposeViewController *twitter = [[[TWTweetComposeViewController alloc] init] autorelease];
+	
+	//[twitter addImage:[UIImage imageNamed:@"iOSDevTips.png"]];
+	[twitter addURL:[NSURL URLWithString:[NSString stringWithString:[NSString stringWithFormat:@"http://assemb.ly/tweets?id=%@", vo.tweet_id]]]];
+	[twitter setInitialText:[NSString stringWithFormat:@"via Assembly - %@", vo.title]];
+	
+	[self presentModalViewController:twitter animated:YES];
+	
+	twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+		
+		
+		//NSString *msg; 
+		
+		//if (result == TWTweetComposeViewControllerResultDone)
+		//	msg = @"Tweet compostion completed.";
+		
+		//else if (result == TWTweetComposeViewControllerResultCancelled)
+		//	msg = @"Tweet composition canceled.";
+		
+		
+		//UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Tweet Status" message:msg delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+		//[alertView show];
+		
+		[self dismissModalViewControllerAnimated:YES];
+	};
+}
+
+-(void)_emailShare:(NSNotification *)notification {
+	SNArticleVO *vo = (SNArticleVO *)[notification object];
+	
+	if ([MFMailComposeViewController canSendMail]) {
+		MFMailComposeViewController *mfViewController = [[MFMailComposeViewController alloc] init];
+		mfViewController.mailComposeDelegate = self;
+		[mfViewController setSubject:[NSString stringWithFormat:@"Assembly - %@", vo.title]];
+		[mfViewController setMessageBody:vo.content isHTML:NO];
+		
+		[self presentViewController:mfViewController animated:YES completion:nil];
+		[mfViewController release];
+		
+	} else {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"Your phone is not currently configured to send mail." delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+		
+		[alert show];
+		[alert release];
+	}
+}
+
+-(void)_cancelShare:(NSNotification *)notification {
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_blackMatteView.alpha = 0.0;
+		_shareSheetView.frame = CGRectMake(0.0, self.view.frame.size.height, _shareSheetView.frame.size.width, _shareSheetView.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+		_blackMatteView.hidden = YES;
+	}];
 }
 
 

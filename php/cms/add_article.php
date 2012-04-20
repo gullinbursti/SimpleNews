@@ -42,13 +42,6 @@ if (isset($_POST['txtArticleSource'])) {
 	$image_url = $_POST['txtImageURL_1'];
 	$video_url = $_POST['txtVideoURL'];
 	
-	
-	if ($_POST['radTint'] == "0")
-		$isDark = 'N';
-	
-	else
-		$isDark = 'Y';
-	
 	if (strlen($video_url) == 0)
 		$type_id -= 4;
 		
@@ -58,8 +51,8 @@ if (isset($_POST['txtArticleSource'])) {
 	
 		
 	$query = 'INSERT INTO `tblArticles` (';
-	$query .= '`id`, `influencer_id`, `tweet_id`, `tweet_msg`, `source_id`, `type_id`, `article_url`, `title`, `content`, `image_url`, `video_url`, `isDark`, `added`) ';
-	$query .= 'VALUES (NULL, "'. $influencer_id .'", "'. $tweet_id .'", "'. $tweet_msg .'", "'. $network_id .'", "'. $type_id .'", "'. $source_url .'", "'. $title .'", "'. $content .'",  "'. $image_url .'", "'. $video_url .'", "'. $isDark .'", NOW());';
+	$query .= '`id`, `influencer_id`, `tweet_id`, `tweet_msg`, `source_id`, `type_id`, `article_url`, `title`, `content`, `image_url`, `video_url`, `likes`, `added`) ';
+	$query .= 'VALUES (NULL, "'. $influencer_id .'", "'. $tweet_id .'", "'. $tweet_msg .'", "'. $network_id .'", "'. $type_id .'", "'. $source_url .'", "'. $title .'", "'. $content .'",  "'. $image_url .'", "'. $video_url .'", 0, NOW());';
 	$result = mysql_query($query);
 	$article_id = mysql_insert_id();
 	

@@ -263,7 +263,10 @@
 	if ([request isEqual:_subscribedListsRequest]) {	
 		@autoreleasepool {
 			NSError *error = nil;
-			NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			NSSortDescriptor *descriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] autorelease];
+			NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			NSArray *parsedLists = [unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+			
 			if (error != nil)
 				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
 			
@@ -285,7 +288,11 @@
 	} else if ([request isEqual:_popularListsRequest]) {
 		@autoreleasepool {
 			NSError *error = nil;
-			NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			NSSortDescriptor *descriptor = [[[NSSortDescriptor alloc] initWithKey:@"likes" ascending:YES] autorelease];
+			NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			NSArray *parsedLists = [unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+			
+			//NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
 			if (error != nil)
 				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
 			

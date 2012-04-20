@@ -62,7 +62,7 @@
 	_listVO = listVO;
 	
 	_avatarImgView.imageURL = [NSURL URLWithString:_listVO.thumbURL];
-	_nameLabel.text = _listVO.list_name;
+	_nameLabel.text = [NSString stringWithFormat:@"%@ (%d)", _listVO.list_name, _listVO.totalLikes];
 	_curatorsLabel.text = _listVO.curatorNames;
 }
 

@@ -17,6 +17,7 @@
 @property (nonatomic) int list_id;
 @property (nonatomic) int totalInfluencers;
 @property (nonatomic) int totalSubscribers;
+@property (nonatomic) int totalLikes;
 @property (nonatomic, retain) NSMutableArray *curators;
 @property (nonatomic, retain) NSString *curatorNames;
 @property (nonatomic, retain) NSString *list_name;

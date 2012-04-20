@@ -12,7 +12,7 @@
 @implementation SNArticleVO
 
 @synthesize dictionary;
-@synthesize article_id, type_id, title, article_url, short_url, twitterName, twitterInfo, twitterHandle, tweet_id, tweetMessage, content, bgImage_url, articleSource, video_url, avatarImage_url, isDark, added, comments;
+@synthesize article_id, list_id, type_id, title, article_url, short_url, twitterName, twitterInfo, twitterHandle, tweet_id, tweetMessage, content, bgImage_url, articleSource, video_url, avatarImage_url, totalLikes, added, comments;
 
 +(SNArticleVO *)articleWithDictionary:(NSDictionary *)dictionary {
 	
@@ -20,6 +20,7 @@
 	vo.dictionary = dictionary;
 	
 	vo.article_id = [[dictionary objectForKey:@"article_id"] intValue];
+	vo.list_id = [[dictionary objectForKey:@"list_id"] intValue];
 	vo.type_id = [[dictionary objectForKey:@"type_id"] intValue];
 	vo.title = [dictionary objectForKey:@"title"];
 	vo.tweet_id = [dictionary objectForKey:@"tweet_id"];
@@ -34,7 +35,7 @@
 	vo.articleSource = [dictionary objectForKey:@"source"];
 	vo.video_url = [dictionary objectForKey:@"video_url"];
 	vo.avatarImage_url = [dictionary objectForKey:@"avatar_url"];
-	vo.isDark = (BOOL)([[dictionary objectForKey:@"is_dark"] isEqualToString:@"Y"]);
+	vo.totalLikes = [[dictionary objectForKey:@"likes"] intValue];
 	vo.comments = [NSMutableArray new];
 	
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];

@@ -112,6 +112,7 @@
 					
 					array_push($article_arr, array(
 						"article_id" => $article_row['id'], 
+						"list_id" => $list_id, 
 						"type_id" => $article_row['type_id'], 
 						"source_id" => $article_row['source_id'], 
 						"title" => $article_row['title'], 
@@ -127,7 +128,7 @@
 						"content" => $article_row['content'], 
 						"avatar_url" => $influencer_row['avatar_url'], 
 						"video_url" => $article_row['video_url'], 
-						"is_dark" => $article_row['isDark'], 
+						"likes" => $article_row['likes'], 
 						"added" => $article_row['added'], 
 						"tags" => array(), 
 						"reactions" => $reaction_arr
@@ -162,6 +163,19 @@
 			)));
 			return (true);
 		}
+				
+		function addLike($article_id) {
+			$query = 'SELECT `likes` FROM `tblArticles` WHERE `id` ='. $article_id .';';
+			$row = mysql_fetch_row(mysql_query($query));
+			$likes_tot = $row[0];
+			$likes_tot++;
+				
+			$query = 'UPDATE `tblArticles` SET `likes` = "'. $likes_tot .'" WHERE `id` ='. $article_id .';';
+			$result = mysql_query($query);
+			
+			$this->sendResponse(200, json_encode(array()));
+			return (true);
+		}
 		
 		
 		function test() {
@@ -181,6 +195,11 @@
 			
 			case "0":
 				break;
+				
+			case "1":
+				if (isset($_POST['articleID']))
+					$articles->addLike($_POST['articleID']);
+				break;					
 				
 			case "8":
 			 	if (isset($_POST['listID']))
