@@ -29,7 +29,7 @@
 		_avatarImgView.layer.borderColor = [[UIColor colorWithWhite:0.671 alpha:1.0] CGColor];
 		_avatarImgView.layer.borderWidth = 1.0;
 		[self addSubview:_avatarImgView];
-		
+				
 		_twitterNameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(62.0, 19.0, 256.0, 20.0)] autorelease];
 		_twitterNameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 		_twitterNameLabel.textColor = [UIColor blackColor];

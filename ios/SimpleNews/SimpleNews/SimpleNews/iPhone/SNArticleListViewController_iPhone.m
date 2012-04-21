@@ -311,21 +311,24 @@
 }
 
 -(void)_showTwitterProfile:(NSNotification *)notification {
-	SNWebPageViewController_iPhone *tweetPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
+	SNWebPageViewController_iPhone *webPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]] autorelease];
 	[self.navigationController setNavigationBarHidden:YES];
-	[self.navigationController pushViewController:tweetPageViewController animated:YES];
+	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
 -(void)_showTweetPage:(NSNotification *)notification {
-	SNWebPageViewController_iPhone *tweetPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
+	NSString *handle = [[notification object] objectForKey:@"handle"];
+	NSString *tweetID = [[notification object] objectForKey:@"tweetID"];
+	
+	SNWebPageViewController_iPhone *webPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/status/%@/", handle, tweetID]] title:[NSString stringWithFormat:@"@%@", handle]] autorelease];
 	[self.navigationController setNavigationBarHidden:YES];
-	[self.navigationController pushViewController:tweetPageViewController animated:YES];
+	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
 -(void)_showSourcePage:(NSNotification *)notification {
-	SNWebPageViewController_iPhone *tweetPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
+	SNWebPageViewController_iPhone *webPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
 	[self.navigationController setNavigationBarHidden:YES];
-	[self.navigationController pushViewController:tweetPageViewController animated:YES];
+	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
 #pragma mark - ScrollView Delegates
@@ -428,6 +431,8 @@
 					
 					size = [vo.tweetMessage sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(252.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 					height += size.height;
+					
+					height += 252.0 * vo.imgRatio;
 					
 					size = [vo.title sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(252.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 					height += size.height;

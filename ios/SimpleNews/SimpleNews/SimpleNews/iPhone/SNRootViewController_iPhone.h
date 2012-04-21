@@ -8,12 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "ASIFormDataRequest.h"
+#import "EGORefreshTableHeaderView.h"
 
-@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, ASIHTTPRequestDelegate> {
+@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate> {
 	ASIFormDataRequest *_userRequest;
 	ASIFormDataRequest *_subscribedListsRequest;
 	ASIFormDataRequest *_popularListsRequest;
 	ASIHTTPRequest *_twitterRequest;
+	
+	EGORefreshTableHeaderView *_subscribedHeaderView;
+	EGORefreshTableHeaderView *_popularHeaderView;
+	
 	
 	NSMutableArray *_subscribedLists;
 	NSMutableArray *_popularLists;
@@ -26,6 +31,11 @@
 	UIImageView *_toggleRtImgView;
 	
 	BOOL _isFollowingList;
+	
+	BOOL _reloading;
 }
+
+- (void)reloadTableViewDataSource;
+- (void)doneLoadingTableViewData;
 
 @end

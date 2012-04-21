@@ -129,6 +129,7 @@
 						"avatar_url" => $influencer_row['avatar_url'], 
 						"video_url" => $article_row['video_url'], 
 						"likes" => $article_row['likes'], 
+						"img_ratio" => $article_row['img_ratio'], 
 						"added" => $article_row['added'], 
 						"tags" => array(), 
 						"reactions" => $reaction_arr

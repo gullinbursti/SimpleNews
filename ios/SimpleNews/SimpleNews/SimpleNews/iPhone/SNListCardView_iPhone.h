@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+#import "SNBaseListCardView_iPhone.h"
 #import "SNListVO.h"
 #import "SNInfluencersListView.h"
 
-@interface SNListCardView_iPhone : UIView {
+@interface SNListCardView_iPhone : SNBaseListCardView_iPhone {
 	SNListVO *_vo;
 	UIImageView *_testImgView;
-	UIView *_holderView;
 	
 	SNInfluencersListView *_influencersListView;
 	BOOL _isFlipped;

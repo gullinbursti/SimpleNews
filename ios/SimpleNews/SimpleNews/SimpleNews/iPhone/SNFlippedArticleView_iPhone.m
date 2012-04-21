@@ -61,7 +61,7 @@
 		_tableView.rowHeight = 60.0;
 		_tableView.delegate = self;
 		_tableView.dataSource = self;
-		_tableView.allowsSelection = NO;
+		//_tableView.allowsSelection = NO;
 		_tableView.scrollsToTop = NO;
 		_tableView.showsVerticalScrollIndicator = NO;
 		[self addSubview:_tableView];
@@ -97,7 +97,6 @@
 	
 	cell.influencerVO = (SNInfluencerVO *)[_influencers objectAtIndex:indexPath.row];
 	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-	[cell setUserInteractionEnabled:NO];
 	
 	return cell;	
 }
@@ -110,13 +109,15 @@
 
 
 -(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {	
-	return (nil);
+	return (indexPath);
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
+	
+	SNInfluencerVO *vo = (SNInfluencerVO *)[_influencers objectAtIndex:indexPath.row];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TWITTER_PROFILE" object:vo.handle];
 }
-
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 

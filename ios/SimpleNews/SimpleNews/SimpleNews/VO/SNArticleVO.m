@@ -12,7 +12,7 @@
 @implementation SNArticleVO
 
 @synthesize dictionary;
-@synthesize article_id, list_id, type_id, title, article_url, short_url, twitterName, twitterInfo, twitterHandle, tweet_id, tweetMessage, content, bgImage_url, articleSource, video_url, avatarImage_url, totalLikes, added, comments;
+@synthesize article_id, list_id, type_id, title, article_url, short_url, twitterName, twitterInfo, twitterHandle, tweet_id, tweetMessage, content, bgImage_url, articleSource, video_url, avatarImage_url, imgRatio, totalLikes, added, comments;
 
 +(SNArticleVO *)articleWithDictionary:(NSDictionary *)dictionary {
 	
@@ -36,6 +36,7 @@
 	vo.video_url = [dictionary objectForKey:@"video_url"];
 	vo.avatarImage_url = [dictionary objectForKey:@"avatar_url"];
 	vo.totalLikes = [[dictionary objectForKey:@"likes"] intValue];
+	vo.imgRatio = [[dictionary objectForKey:@"img_ratio"] floatValue];
 	vo.comments = [NSMutableArray new];
 	
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];

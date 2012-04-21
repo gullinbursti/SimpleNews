@@ -88,6 +88,7 @@ $row = mysql_fetch_row($ts_result);
 $sql_time = $row[0];
 
 
+/*
 $query = 'SELECT * FROM `tblLists`;';
 $result = mysql_query($query);
 
@@ -95,7 +96,10 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 	$query = 'UPDATE `tblLists` SET `enc_name` = "'. base64_encode($row['title']) .'" WHERE `id` ='. $row['id'] .';';
 	$res = mysql_query($query);
 }
+*/
 
+$query = 'UPDATE `tblArticles` SET `img_ratio` =1.5;';
+$res = mysql_query($query);
 
 
 ?>

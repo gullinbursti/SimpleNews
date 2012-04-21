@@ -13,6 +13,9 @@
 #import "SNListCardView_iPhone.h"
 #import "SNArticleListViewController_iPhone.h"
 
+#import "SNFinalListCardView_iPhone.h"
+#import "SNWebPageViewController_iPhone.h"
+
 @interface SNSubscribedListsViewController_iPhone()
 @end
 
@@ -21,13 +24,12 @@
 -(id)init {
 	if ((self = [super init])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_listArticles:) name:@"LIST_ARTICLES" object:nil];
-		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE2" object:nil];
 		
 		_subscribedLists = [NSMutableArray new];
 		
 		_listsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
 		[_listsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-		//[_listsRequest setPostValue:[[SNAppDelegate fbProfile] objectForKey:@"id"] forKey:@"userID"];
 		[_listsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[_listsRequest setTimeOutSeconds:30];
 		[_listsRequest setDelegate:self];
@@ -130,7 +132,12 @@
 			[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initWithListVO:vo] autorelease] animated:YES];
 		}];
 	}
-	
+}
+
+-(void)_showTwitterProfile:(NSNotification *)notification {
+	SNWebPageViewController_iPhone *webPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]] autorelease];
+	[self.navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
 
@@ -177,6 +184,7 @@
 		NSSortDescriptor *descriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] autorelease];
 		NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
 		NSArray *parsedLists = [unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+		NSMutableArray *finalList = [NSMutableArray new];
 		
 		if (error != nil)
 			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
@@ -195,13 +203,21 @@
 			
 			int cnt = 0;
 			for (SNListVO *vo in _subscribedLists) {
-				SNListCardView_iPhone *listCardView = [[[SNListCardView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) listVO:vo] autorelease];
-				[_scrollView addSubview:listCardView];
 				
-				cnt++;
+				if (cnt < 3) {
+					SNListCardView_iPhone *listCardView = [[[SNListCardView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) listVO:vo] autorelease];
+					[_scrollView addSubview:listCardView];
+					cnt++;
+					
+				} else {
+					[finalList addObject:vo];
+				}
 			}
 			
-			_scrollView.contentSize = CGSizeMake([_subscribedLists count] * self.view.frame.size.width, self.view.frame.size.height);
+			SNFinalListCardView_iPhone *finalListCardView = [[[SNFinalListCardView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) addlLists:finalList] autorelease];
+			[_scrollView addSubview:finalListCardView];
+			
+			_scrollView.contentSize = CGSizeMake((cnt + 1) * self.view.frame.size.width, self.view.frame.size.height);
 		}
 	}
 }

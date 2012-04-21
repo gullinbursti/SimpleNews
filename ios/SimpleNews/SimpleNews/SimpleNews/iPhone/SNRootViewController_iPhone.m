@@ -149,6 +149,16 @@
 	_popularTableView.hidden = YES;
 	[self.view addSubview:_popularTableView];
 	
+	_subscribedHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+	_subscribedHeaderView.delegate = self;
+	[_subscribedTableView addSubview:_subscribedHeaderView];
+	[_subscribedHeaderView refreshLastUpdatedDate];
+	
+	_popularHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+	_popularHeaderView.delegate = self;
+	[_popularTableView addSubview:_popularHeaderView];
+	[_popularHeaderView refreshLastUpdatedDate];
+	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
@@ -197,6 +207,21 @@
 	} completion:^(BOOL finished) {
 		[self.navigationController pushViewController:[[[SNSubscribedListsViewController_iPhone alloc] init] autorelease] animated:YES];
 	}];	
+}
+
+
+- (void)reloadTableViewDataSource{
+	_reloading = YES;	
+}
+
+- (void)doneLoadingTableViewData{
+	_reloading = NO;
+	
+	if (_isFollowingList)
+		[_subscribedHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_subscribedTableView];
+	
+	else
+		[_popularHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_popularTableView];
 }
 
 
@@ -256,6 +281,41 @@
 }
 
 
+#pragma mark - ScrollView Delegates
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {	
+	
+	if (_isFollowingList)
+		[_subscribedHeaderView egoRefreshScrollViewDidScroll:scrollView];
+	
+	else
+		[_popularHeaderView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+	
+	if (_isFollowingList)
+		[_subscribedHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+	
+	else
+		[_popularHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+#pragma mark EGORefreshTableHeaderDelegate Methods
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
+	[self reloadTableViewDataSource];
+	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView *)view {
+	return _reloading; // should return if data source model is reloading
+}
+
+- (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView *)view {
+	return [NSDate date]; // should return date data source was last change	
+}
+
+
+
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
 	//NSLog(@"SNRootViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
@@ -288,7 +348,7 @@
 	} else if ([request isEqual:_popularListsRequest]) {
 		@autoreleasepool {
 			NSError *error = nil;
-			NSSortDescriptor *descriptor = [[[NSSortDescriptor alloc] initWithKey:@"likes" ascending:YES] autorelease];
+			NSSortDescriptor *descriptor = [[[NSSortDescriptor alloc] initWithKey:@"likes" ascending:NO] autorelease];
 			NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
 			NSArray *parsedLists = [unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
 			

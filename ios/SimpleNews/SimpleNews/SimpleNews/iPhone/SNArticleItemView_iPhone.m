@@ -26,6 +26,11 @@
 		thumbImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
 		[self addSubview:thumbImgView];
 		
+		UIButton *avatarButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		avatarButton.frame = CGRectMake(12.0, 12.0, 35.0, 35.0);
+		[avatarButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:avatarButton];
+		
 		UILabel *twitterName = [[[UILabel alloc] initWithFrame:CGRectMake(56.0, 21.0, 256.0, 20.0)] autorelease];
 		twitterName.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 		twitterName.textColor = [UIColor blackColor];
@@ -65,14 +70,19 @@
 		tweetLabel.text = _vo.tweetMessage;
 		tweetLabel.numberOfLines = 0;
 		[self addSubview:tweetLabel];
+		
+		
+		UIButton *tweetButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		tweetButton.frame = CGRectMake(56.0, 46.0, 252.0, size.height);
+		[tweetButton addTarget:self action:@selector(_goTweetPage) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:tweetButton];
+		
 		offset += size.height + 25;
 		
-		//EGOImageView *articleImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(56.0, offset, 252.0, 125.0)] autorelease];
-		//articleImgView.delegate = self;
-		//articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
-		//[self addSubview:articleImgView];
-		
-		//offset += 125.0;
+		EGOImageView *articleImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(56.0, offset, 252.0, 252.0 * _vo.imgRatio)] autorelease];
+		articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
+		[self addSubview:articleImgView];
+		offset += (252.0 * _vo.imgRatio);
 		
 		//CGSize imgSize = NSLog(@"IMAGE SIZE:(%d, %d)", (int)[UIImage imageNamed:@"overlay.png"].size.width, (int)[UIImage imageNamed:@"overlay.png"].size.height);
 		
@@ -196,6 +206,15 @@
 	[_videoButton removeTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
 	[_videoButton removeFromSuperview];
 	[_videoPlayerView startPlayback];
+}
+
+-(void)_goTwitterProfile {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TWITTER_PROFILE" object:_vo.twitterHandle];
+}
+
+-(void)_goTweetPage {
+	NSLog(@"SHOW TWEET");
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TWEET_PAGE" object:[NSDictionary dictionaryWithObjectsAndKeys:_vo.twitterHandle, @"handle", _vo.tweet_id, @"tweetID", nil]];
 }
 
 

@@ -20,14 +20,6 @@
 		_vo = vo;
 		_isFlipped = NO;
 		
-		_holderView = [[UIView alloc] initWithFrame:CGRectMake(12.0, 12.0, 295.0, 450.0)];
-		[_holderView setBackgroundColor:[UIColor whiteColor]];
-		_holderView.layer.cornerRadius = 8.0;
-		_holderView.clipsToBounds = YES;
-		_holderView.layer.borderColor = [[UIColor colorWithWhite:0.671 alpha:1.0] CGColor];
-		_holderView.layer.borderWidth = 1.0;
-		[self addSubview:_holderView];
-		
 		_testImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)] autorelease];
 		_testImgView.image = [UIImage imageNamed:@"storyImageTest.jpg"];
 		//[self addSubview:_testImgView];
@@ -93,6 +85,7 @@
 	_isFlipped = !_isFlipped;	
 	
 	if (_isFlipped) {
+		[_articlesButton removeFromSuperview];
 		[_articlesButton removeTarget:self action:@selector(_goArticles) forControlEvents:UIControlEventTouchUpInside];
 		
 		[UIView animateWithDuration:0.125 animations:^(void) {
@@ -111,6 +104,7 @@
 		}];
 		
 	} else {
+		[self addSubview:_articlesButton];
 		[_articlesButton addTarget:self action:@selector(_goArticles) forControlEvents:UIControlEventTouchUpInside];
 		
 		[UIView beginAnimations:nil context:nil];

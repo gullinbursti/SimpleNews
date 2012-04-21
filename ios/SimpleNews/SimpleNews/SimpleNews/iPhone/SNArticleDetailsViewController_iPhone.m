@@ -39,6 +39,18 @@
 	[super didReceiveMemoryWarning];
 }
 
+-(void)dealloc {
+//	[_scrollView release];
+//	[_titleLabel release];
+//	[_sourceLabel release];
+//	[_blackMatteView release];
+//	[_dateLabel release];
+//	[_shareSheetView release];
+	[_webView release];
+	
+	[super dealloc];
+}
+
 #pragma mark - View lifecycle
 -(void)loadView {
 	[super loadView];
@@ -85,10 +97,10 @@
 	int offset = 22;
 	NSArray *fontSizes = [[[NSUserDefaults standardUserDefaults] objectForKey:@"uiFontSizes"] objectAtIndex:[SNAppDelegate fontFactor]];
 	
-	EGOImageView *articleImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, 160.0)] autorelease];
+	EGOImageView *articleImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(22.0, offset, 252.0, 252.0 * _vo.imgRatio)] autorelease];
 	articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 	[_scrollView addSubview:articleImgView];
-	offset += 160.0;
+	offset += (252.0 * _vo.imgRatio);
 	
 	size = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 	_titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, size.height)] autorelease];
