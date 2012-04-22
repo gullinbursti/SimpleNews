@@ -40,14 +40,6 @@
 }
 
 -(void)dealloc {
-//	[_scrollView release];
-//	[_titleLabel release];
-//	[_sourceLabel release];
-//	[_blackMatteView release];
-//	[_dateLabel release];
-//	[_shareSheetView release];
-	[_webView release];
-	
 	[super dealloc];
 }
 
@@ -69,24 +61,23 @@
 	_scrollView.showsVerticalScrollIndicator = NO;
 	[self.view addSubview:_scrollView];
 	
-	
 	_articleOptionsView = [[SNArticleOptionsView_iPhone alloc] init];
 	[self.view addSubview:_articleOptionsView];
 	
-	SNHeaderView_iPhone *headerView = [[[SNHeaderView_iPhone alloc] initWithTitle:_vo.title] autorelease];
+	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.title];
 	[self.view addSubview:headerView];
 	
-	SNArticleDetailsFooterView_iPhone *footerView = [[[SNArticleDetailsFooterView_iPhone alloc] init] autorelease];
+	SNArticleDetailsFooterView_iPhone *footerView = [[SNArticleDetailsFooterView_iPhone alloc] init];
 	[self.view addSubview:footerView];
 	
-	UIButton *backButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+	UIButton *backButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 	backButton.frame = CGRectMake(4.0, 4.0, 44.0, 44.0);
 	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_nonActive.png"] forState:UIControlStateNormal];
 	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_Active.png"] forState:UIControlStateHighlighted];
 	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:backButton];
 	
-	_viewOptionsButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+	_viewOptionsButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 	_viewOptionsButton.frame = CGRectMake(262.0, -6.0, 64.0, 64.0);
 	[_viewOptionsButton setBackgroundImage:[UIImage imageNamed:@"fontButton_nonActive.png"] forState:UIControlStateNormal];
 	[_viewOptionsButton setBackgroundImage:[UIImage imageNamed:@"fontButton_Active.png"] forState:UIControlStateHighlighted];
@@ -97,13 +88,13 @@
 	int offset = 22;
 	NSArray *fontSizes = [[[NSUserDefaults standardUserDefaults] objectForKey:@"uiFontSizes"] objectAtIndex:[SNAppDelegate fontFactor]];
 	
-	EGOImageView *articleImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(22.0, offset, 252.0, 252.0 * _vo.imgRatio)] autorelease];
+	EGOImageView *articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(22.0, offset, 252.0, 252.0 * _vo.imgRatio)];
 	articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 	[_scrollView addSubview:articleImgView];
 	offset += (252.0 * _vo.imgRatio);
 	
 	size = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-	_titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, size.height)] autorelease];
+	_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, size.height)];
 	_titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]];
 	
 	if ([SNAppDelegate isDarkStyleUI])
@@ -119,7 +110,7 @@
 	offset += size.height + 22;
 	
 	size = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:1] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-	_sourceLabel = [[[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, size.height)] autorelease];
+	_sourceLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, size.height)];
 	_sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:1] intValue]];
 	
 	if ([SNAppDelegate isDarkStyleUI])
@@ -135,6 +126,7 @@
 	
 	if (_vo.type_id > 4) {
 		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, 180.0) articleVO:_vo];
+		//[_videoPlayerView startPlayback];
 		[_scrollView addSubview:_videoPlayerView];		
 		offset += _videoPlayerView.frame.size.height + 22;
 	}
@@ -142,9 +134,9 @@
 	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 	[dateFormatter setDateStyle:NSDateFormatterMediumStyle];
 	NSString *dateString = [dateFormatter stringFromDate:_vo.added];
-	[dateFormatter release];
+	//[dateFormatter release];
 	
-	_dateLabel = [[[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 100.0, 16.0)] autorelease];
+	_dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 100.0, 16.0)];
 	_dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:2] intValue]];
 	_dateLabel.textColor = [UIColor blackColor];
 	_dateLabel.backgroundColor = [UIColor clearColor];

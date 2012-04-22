@@ -104,6 +104,10 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 	[wifiReachability startNotifier];
 	
 	return ([wifiReachability currentReachabilityStatus] == kReachableViaWiFi);
+	
+//	Reachability *hostReachability = [Reachability reachabilityForInternetConnection];	
+//	NetworkStatus networkStatus = [hostReachability currentReachabilityStatus];	
+//	return !(networkStatus == NotReachable);
 }
 
 +(BOOL)hasAirplay {
@@ -246,8 +250,6 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setObject:@"NO" forKey:@"airplay_enabled"];
-	[defaults synchronize];
 	
 	
 	if(![defaults objectForKey:@"uiFontFactor"])
@@ -257,13 +259,6 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 	if(![defaults objectForKey:@"uiDarkStyle"])
 		[SNAppDelegate writeDarkStyleUI:NO];
 	
-	
-//	NSArray *fontSizes = [NSArray arrayWithObjects:
-//									 [NSArray arrayWithObjects:[NSNumber numberWithInt:12], [NSNumber numberWithInt:12], [NSNumber numberWithInt:10], [NSNumber numberWithInt:10], nil], 
-//									 [NSArray arrayWithObjects:[NSNumber numberWithInt:14], [NSNumber numberWithInt:13], [NSNumber numberWithInt:11], [NSNumber numberWithInt:12], nil], 
-//									 [NSArray arrayWithObjects:[NSNumber numberWithInt:16], [NSNumber numberWithInt:14], [NSNumber numberWithInt:12], [NSNumber numberWithInt:16], nil], 
-//									 [NSArray arrayWithObjects:[NSNumber numberWithInt:18], [NSNumber numberWithInt:16], [NSNumber numberWithInt:13], [NSNumber numberWithInt:18], nil], 
-//									 nil];
 	
 	NSArray *fontSizes = [NSArray arrayWithObjects:
 								 [NSArray arrayWithObjects:[NSNumber numberWithInt:12], [NSNumber numberWithInt:12], [NSNumber numberWithInt:10], [NSNumber numberWithInt:8], nil], 
@@ -283,6 +278,13 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 		}
 	}
 	*/
+	
+	if (![SNAppDelegate hasWiFi]) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Wi-Fi Connection" message:@"Please connect to a wi-fi ." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		
+		[alert show];
+		[alert release];
+	}
 	
 	
 	SNTwitterCaller *twitterCaller = [[[SNTwitterCaller alloc] init] autorelease];

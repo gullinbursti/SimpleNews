@@ -11,7 +11,7 @@
 @implementation SNCommentVO
 
 @synthesize dictionary;
-@synthesize comment_id, thumb_url, twitterName, twitterHandle, comment_url, content, added;
+@synthesize comment_id, thumb_url, twitterName, twitterHandle, comment_url, content, isLiked, added;
 
 +(SNCommentVO *)commentWithDictionary:(NSDictionary *)dictionary {
 	SNCommentVO *vo = [[SNCommentVO alloc] init];
@@ -22,6 +22,7 @@
 	vo.twitterHandle = [dictionary objectForKey:@"handle"];
 	vo.comment_url = [dictionary objectForKey:@"comment_url"];
 	vo.content = [dictionary objectForKey:@"content"];
+	vo.isLiked = [[dictionary objectForKey:@"liked"] isEqualToString:@"Y"];
 	
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
 	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];

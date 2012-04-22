@@ -18,8 +18,6 @@
 		_vo = vo;
 		_listID = list_id;
 		
-		CGSize size = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(256.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-		
 		EGOImageView *avatarImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 40.0, 40.0)] autorelease];
 		avatarImgView.layer.cornerRadius = 8.0;
 		avatarImgView.clipsToBounds = YES;
@@ -65,7 +63,8 @@
 		dateLabel.text = timeSince;
 		[self addSubview:dateLabel];
 		
-		UILabel *twitterBlurbLabel = [[UILabel alloc] initWithFrame:CGRectMake(62.0, 42.0, 256.0, size.height)];
+		CGSize size = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(256.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		UILabel *twitterBlurbLabel = [[UILabel alloc] initWithFrame:CGRectMake(62.0, 36.0, 256.0, size.height)];
 		twitterBlurbLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 		twitterBlurbLabel.textColor = [UIColor colorWithWhite:0.482 alpha:1.0];
 		twitterBlurbLabel.numberOfLines = 0;
@@ -73,7 +72,15 @@
 		twitterBlurbLabel.text = _vo.content;
 		[self addSubview:twitterBlurbLabel];
 		
-		UIView *lineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, size.height + 56.0, self.frame.size.width, 1.0)] autorelease];
+		int offset = 0;
+		if (_vo.isLiked) {
+			UIImageView *likeIcoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(62.0, size.height + 48.0, 25.0, 25.0)] autorelease];
+			likeIcoImgView.image = [UIImage imageNamed:@"smallDoneButton_nonActive.png"];
+			[self addSubview:likeIcoImgView];
+			offset = 30.0;
+		}
+		
+		UIView *lineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, offset + size.height + 48.0, self.frame.size.width, 1.0)] autorelease];
 		[lineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
 		[self addSubview:lineView];	
 	}

@@ -16,6 +16,7 @@
 	UITableView *_tableView;
 	
 	ASIFormDataRequest *_influencersRequest;
+	
 	SNListVO *_vo;
 	SNListInfoView_iPhone *_listInfoView;
 }

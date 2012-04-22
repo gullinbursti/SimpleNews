@@ -34,10 +34,10 @@
 		_nameLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_nameLabel];
 		
-		_curatorsLabel = [[[UILabel alloc] initWithFrame:CGRectMake(70.0, 36.0, 256.0, 20.0)] autorelease];
+		_curatorsLabel = [[[UILabel alloc] initWithFrame:CGRectMake(70.0, 36.0, 210.0, 20.0)] autorelease];
 		_curatorsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 		_curatorsLabel.textColor = [UIColor colorWithWhite:0.694 alpha:1.0];
-		_curatorsLabel.lineBreakMode = UILineBreakModeHeadTruncation;
+		_curatorsLabel.lineBreakMode = UILineBreakModeTailTruncation;
 		_curatorsLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_curatorsLabel];
 		

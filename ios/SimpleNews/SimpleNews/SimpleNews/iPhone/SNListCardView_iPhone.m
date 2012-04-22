@@ -12,6 +12,7 @@
 #import "SNAppDelegate.h"
 #import "SNListInfoView_iPhone.h"
 #import "EGOImageView.h"
+#import "ASIFormDataRequest.h"
 
 @implementation SNListCardView_iPhone
 
@@ -26,6 +27,7 @@
 		
 		EGOImageView *coverImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(10.0, 10.0, 275.0, 389.0)] autorelease];
 		coverImgView.imageURL = [NSURL URLWithString:_vo.imageURL];
+		coverImgView.userInteractionEnabled = YES;
 		[_holderView addSubview:coverImgView];
 		
 		SNListInfoView_iPhone *listInfoView = [[SNListInfoView_iPhone alloc] initWithFrame:CGRectMake(10.0, 10.0, _holderView.frame.size.width - 20.0, 65.0) listVO:_vo];
@@ -39,13 +41,20 @@
 		verifiedLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
 		verifiedLabel.textColor = [UIColor blackColor];
 		verifiedLabel.backgroundColor = [UIColor clearColor];
-		verifiedLabel.text = @"Curators Verified";
+		
+		if (_vo.isApproved) {
+			verifiedLabel.text = @"Curators Verified";
+		
+		} else {
+			verifiedLabel.text = @"Curators Pending";
+		}
+		
 		[_holderView addSubview:verifiedLabel];
 		
 		_articlesButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		_articlesButton.frame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
+		_articlesButton.frame = CGRectMake(0.0, 0.0, coverImgView.frame.size.width, coverImgView.frame.size.height);
 		[_articlesButton addTarget:self action:@selector(_goArticles) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:_articlesButton];
+		[coverImgView addSubview:_articlesButton];
 		
 		_flipBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 		_flipBtn.frame = CGRectMake(232.0, 22.0, 64.0, 64.0);
@@ -54,16 +63,24 @@
 		[_flipBtn addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_flipBtn];
 		
-		UIButton *subscribeBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-		subscribeBtn.frame = CGRectMake(202.0, 409.0, 84.0, 30.0);
-		[subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followButton_nonActive.png"] forState:UIControlStateNormal];
-		[subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followButton_Active.png"] forState:UIControlStateHighlighted];
-		[subscribeBtn addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
-		subscribeBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
-		subscribeBtn.titleLabel.textAlignment = UITextAlignmentCenter;
-		[subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-		[subscribeBtn setTitle:@"Follow Topic" forState:UIControlStateNormal];
-		[_holderView addSubview:subscribeBtn];
+		_subscribeBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		_subscribeBtn.frame = CGRectMake(202.0, 409.0, 84.0, 30.0);
+		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followButton_nonActive.png"] forState:UIControlStateNormal];
+		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followButton_Active.png"] forState:UIControlStateHighlighted];
+		_subscribeBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
+		_subscribeBtn.titleLabel.textAlignment = UITextAlignmentCenter;
+		[_subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		
+		if (_vo.isSubscribed) {
+			[_subscribeBtn setTitle:@"Unfollow" forState:UIControlStateNormal];
+			[_subscribeBtn addTarget:self action:@selector(_goUnsubscribe) forControlEvents:UIControlEventTouchUpInside];
+		
+		} else {
+			[_subscribeBtn setTitle:@"Follow Topic" forState:UIControlStateNormal];
+			[_subscribeBtn addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
+		}
+		
+		[_holderView addSubview:_subscribeBtn];
 		
 		_doneButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 		_doneButton.frame = CGRectMake(241.0, 18.0, 64.0, 34.0);
@@ -85,9 +102,6 @@
 	_isFlipped = !_isFlipped;	
 	
 	if (_isFlipped) {
-		[_articlesButton removeFromSuperview];
-		[_articlesButton removeTarget:self action:@selector(_goArticles) forControlEvents:UIControlEventTouchUpInside];
-		
 		[UIView animateWithDuration:0.125 animations:^(void) {
 			_flipBtn.alpha = 0.0;
 			
@@ -104,9 +118,6 @@
 		}];
 		
 	} else {
-		[self addSubview:_articlesButton];
-		[_articlesButton addTarget:self action:@selector(_goArticles) forControlEvents:UIControlEventTouchUpInside];
-		
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.4];
 		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:_holderView cache:YES];
@@ -138,7 +149,47 @@
 }
 
 -(void)_goSubscribe {
-	
+	if (![SNAppDelegate twitterHandle]) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		
+		[alert show];
+		[alert release];
+		
+	} else {
+		ASIFormDataRequest *subscribeRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+		[subscribeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+		[subscribeRequest setTimeOutSeconds:30];
+		[subscribeRequest setDelegate:self];
+		[subscribeRequest startAsynchronous];
+		
+		[_subscribeBtn setTitle:@"Unfollow" forState:UIControlStateNormal];
+		[_subscribeBtn removeTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
+		[_subscribeBtn addTarget:self action:@selector(_goUnsubscribe) forControlEvents:UIControlEventTouchUpInside];
+	}
+}
+
+-(void)_goUnsubscribe {
+	if (![SNAppDelegate twitterHandle]) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		
+		[alert show];
+		[alert release];
+		
+	} else {
+		ASIFormDataRequest *subscribeRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
+		[subscribeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+		[subscribeRequest setTimeOutSeconds:30];
+		[subscribeRequest setDelegate:self];
+		[subscribeRequest startAsynchronous];
+		
+		[_subscribeBtn setTitle:@"Follow Topic" forState:UIControlStateNormal];
+		[_subscribeBtn removeTarget:self action:@selector(_goUnsubscribe) forControlEvents:UIControlEventTouchUpInside];
+		[_subscribeBtn addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
+	}
 }
 
 
@@ -156,6 +207,13 @@
 	resetAnimation.fillMode = kCAFillModeForwards;
 	resetAnimation.removedOnCompletion = NO;
 	[_holderView.layer addAnimation:resetAnimation forKey:@"resetAnimation"];
+}
+
+#pragma mark - ASI Delegates
+-(void)requestFinished:(ASIHTTPRequest *)request { 
+	NSLog(@"SNListCardView_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_SUBSCRIBED_LIST" object:nil];
 }
 
 @end

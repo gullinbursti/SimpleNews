@@ -12,7 +12,7 @@
 @implementation SNListVO
 
 @synthesize dictionary;
-@synthesize list_id, totalInfluencers, totalSubscribers, totalLikes, list_name, list_info, curatorNames, curators, imageURL, thumbURL;
+@synthesize list_id, totalInfluencers, totalSubscribers, isSubscribed, isApproved, totalLikes, list_name, list_info, curatorNames, curators, imageURL, thumbURL;
 
 +(SNListVO *)listWithDictionary:(NSDictionary *)dictionary {
 	SNListVO *vo = [[SNListVO alloc] init];
@@ -26,6 +26,8 @@
 	vo.imageURL = [dictionary objectForKey:@"image_url"];
 	vo.thumbURL = [dictionary objectForKey:@"thumb_url"];
 	vo.list_info = [dictionary objectForKey:@"info"];
+	vo.isSubscribed = (BOOL)[[dictionary objectForKey:@"isSubscribed"] intValue];
+	vo.isApproved = (BOOL)[[dictionary objectForKey:@"approved"] intValue];
 	vo.curators = [NSMutableArray new];
 	
 	for (NSDictionary *curator in [dictionary objectForKey:@"curators"])

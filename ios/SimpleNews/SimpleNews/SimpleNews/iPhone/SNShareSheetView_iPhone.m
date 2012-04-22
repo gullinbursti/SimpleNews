@@ -9,6 +9,7 @@
 #import "SNShareSheetView_iPhone.h"
 
 #import "SNAppDelegate.h"
+#import "ASIFormDataRequest.h"
 
 @implementation SNShareSheetView_iPhone
 
@@ -20,18 +21,18 @@
 		bgImgView.image = [UIImage imageNamed:@"shareBG.png"];
 		[self addSubview:bgImgView];
 		
-		UIButton *facebookButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
-		facebookButton.frame = CGRectMake(38.0, 38.0, 244.0, 64.0);
-		[facebookButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-		[facebookButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-		facebookButton.titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14.0];
-		facebookButton.titleLabel.textAlignment = UITextAlignmentCenter;
-		[facebookButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-		facebookButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-		facebookButton.titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-		[facebookButton setTitle:@"Facebook" forState:UIControlStateNormal];
-		[facebookButton addTarget:self action:@selector(_goFacebook) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:facebookButton];
+		UIButton *readLaterButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		readLaterButton.frame = CGRectMake(38.0, 38.0, 244.0, 64.0);
+		[readLaterButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+		[readLaterButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+		readLaterButton.titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14.0];
+		readLaterButton.titleLabel.textAlignment = UITextAlignmentCenter;
+		[readLaterButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		readLaterButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+		readLaterButton.titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+		[readLaterButton setTitle:@"Read Later" forState:UIControlStateNormal];
+		[readLaterButton addTarget:self action:@selector(_goReadLater) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:readLaterButton];
 		
 		UIButton *twitterButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 		twitterButton.frame = CGRectMake(38.0, 112.0, 244.0, 64.0);
@@ -86,8 +87,17 @@
 
 
 #pragma mark - Navigation
--(void)_goFacebook {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"FACEBOOK_SHARE" object:_vo];
+-(void)_goReadLater {
+	ASIFormDataRequest *readLaterRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+	[readLaterRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
+	[readLaterRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+	[readLaterRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+	[readLaterRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+	[readLaterRequest setTimeOutSeconds:30];
+	[readLaterRequest setDelegate:self];
+	[readLaterRequest startAsynchronous];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"READ_LATER" object:_vo];
 }
 
 -(void)_goTwitter {
@@ -100,6 +110,15 @@
 
 -(void)_goCancel {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CANCEL_SHARE" object:_vo];
+}
+
+#pragma mark - ASI Delegates
+-(void)requestFinished:(ASIHTTPRequest *)request { 
+	NSLog(@"SNShareSheetView_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+}
+
+-(void)requestFailed:(ASIHTTPRequest *)request {
+	NSLog(@"SNShareSheetView_iPhone [_asiFormRequest error]=\n%@\n\n", [request error]);
 }
 
 @end

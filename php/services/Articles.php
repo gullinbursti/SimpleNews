@@ -90,11 +90,11 @@
 			$influencer_result = mysql_query($query);
 			
 			while ($influencer_row = mysql_fetch_array($influencer_result, MYSQL_BOTH)) { 
-				$query = 'SELECT * FROM `tblArticles` WHERE `influencer_id` = "'. $influencer_row['id'] .'";';
+				$query = 'SELECT * FROM `tblArticles` WHERE `influencer_id` = '. $influencer_row['id'] .' ORDER BY `added` DESC;';
 				$article_result = mysql_query($query);
 				
 				while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
-					$query = 'SELECT `tblComments`.`id`, `tblComments`.`content`, `tblComments`.`added`, `tblUsers`.`name`, `tblUsers`.`handle` FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = "'. $article_row['id'] .'" AND `tblComments`.`list_id` = "'. $list_id .'";';
+					$query = 'SELECT `tblComments`.`id`, `tblComments`.`content`, `tblComments`.`liked`, `tblComments`.`added`, `tblUsers`.`name`, `tblUsers`.`handle` FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row['id'] .' AND `tblComments`.`list_id` = '. $list_id .' ORDER BY `tblComments`.`added` DESC;';
 					$comments_result = mysql_query($query);
 				
 					$reaction_arr = array();
@@ -106,6 +106,7 @@
 							"handle" => $comment_row['handle'], 
 							"comment_url" => "http://shelby.tv", 
 							"content" => htmlentities($comment_row['content'], ENT_QUOTES), 
+							"liked" => $comment_row['liked'], 
 							"added" => $comment_row['added']
 						 ));
 					}
@@ -142,7 +143,7 @@
 			return (true);
 		}
 		
-		function submitComment($handle, $list_id, $article_id, $content) {
+		function submitComment($handle, $list_id, $article_id, $content, $isLiked) {
 			$query = 'SELECT `id` FROM `tblUsers` WHERE `handle` = "'. $handle .'";';
 			$result = mysql_query($query);
 			
@@ -152,12 +153,21 @@
 				$user_id = $row[0];
 			}
 			
-			
 			$query = 'INSERT INTO `tblComments` (';
-			$query .= '`id`, `article_id`, `list_id`, `user_id`, `content`, `added`) ';
-			$query .= 'VALUES (NULL, "'. $article_id .'", "'. $list_id .'", "'. $user_id .'", "'. $content .'", NOW());';
+			$query .= '`id`, `article_id`, `list_id`, `user_id`, `content`, `liked`, `added`) ';
+			$query .= 'VALUES (NULL, "'. $article_id .'", "'. $list_id .'", "'. $user_id .'", "'. $content .'", "'. $isLiked .'", NOW());';
 			$result = mysql_query($query);
 			$comment_id = mysql_insert_id();
+			
+			if ($isLiked == "Y") {
+				$query = 'SELECT `likes` FROM `tblArticles` WHERE `id` ='. $article_id .';';
+				$row = mysql_fetch_row(mysql_query($query));
+				$likes_tot = $row[0];
+				$likes_tot++;
+				
+				$query = 'UPDATE `tblArticles` SET `likes` = "'. $likes_tot .'" WHERE `id` ='. $article_id .';';
+				$result = mysql_query($query);
+			}
 			
 			$this->sendResponse(200, json_encode(array(
 				"comment_id" => $comment_id
@@ -177,6 +187,19 @@
 			$this->sendResponse(200, json_encode(array()));
 			return (true);
 		}
+		
+		function readLater($user_id, $list_id, $article_id) {
+			$query = 'SELECT `added` FROM `tblUsersReadLater` WHERE `user_id` ='. $article_id .' AND `list_id` ='. $list_id .' AND `article_id` ='. $article_id .';';
+			
+			if (mysql_num_rows(mysql_query($query)) == 0) {
+				$query = 'INSERT INTO `tblUsersReadLater` (`user_id`, `list_id`, `article_id`, `added`) VALUES ('. $user_id .', '. $list_id .', '. $article_id .', NOW());';
+				$result = mysql_query($query);
+			}
+			
+			$this->sendResponse(200, json_encode(array()));
+			return (true);
+		}
+		
 		
 		
 		function test() {
@@ -200,7 +223,12 @@
 			case "1":
 				if (isset($_POST['articleID']))
 					$articles->addLike($_POST['articleID']);
-				break;					
+				break;
+				
+			case "2":
+				if (isset($_POST['userID']) && isset($_POST['listID']) && isset($_POST['articleID']))
+					$articles->readLater($_POST['userID'], $_POST['listID'], $_POST['articleID']);
+				break;				
 				
 			case "8":
 			 	if (isset($_POST['listID']))
@@ -208,8 +236,8 @@
 				break;
 				
 			case "9":
-				if (isset($_POST['handle']) && isset($_POST['listID']) && isset($_POST['articleID']) && isset($_POST['content']))
-					$articles->submitComment($_POST['handle'], $_POST['listID'], $_POST['articleID'], $_POST['content']);
+				if (isset($_POST['handle']) && isset($_POST['listID']) && isset($_POST['articleID']) && isset($_POST['content']) && isset($_POST['liked']))
+					$articles->submitComment($_POST['handle'], $_POST['listID'], $_POST['articleID'], $_POST['content'], $_POST['liked']);
 				break;
     	}
 	}

@@ -84,10 +84,10 @@
 		}
 	
 		
-		function getPublicLists() {
+		function getPublicLists($user_id) {
 			$list_arr = array();
             
-			$query = 'SELECT `id`, `title`, `info`, `image_url`, `thumb_url` FROM `tblLists` WHERE `active` = "Y" ORDER BY `title` DESC;';
+			$query = 'SELECT `id`, `title`, `info`, `image_url`, `thumb_url`, `type_id` FROM `tblLists` WHERE `active` = "Y" ORDER BY `title` DESC;';
 			$list_result = mysql_query($query);
 			
             while ($list_row = mysql_fetch_array($list_result, MYSQL_BOTH)) {
@@ -103,7 +103,8 @@
 						"curator_id" => $curator_row[0], 
 						"handle" => $curator_row[1], 
 						"name" => $curator_row[2], 
-						"info" => $curator_row[3] 
+						"info" => $curator_row[3], 
+						"approved" => ($row['curator_id'] == $curator_row[0])
 					));
 				}
 	
@@ -122,6 +123,12 @@
 				$query = 'SELECT * FROM `tblUsersLists` WHERE `list_id` = "'. $list_row['id'] .'";';
 				$user_result = mysql_query($query);
 				
+				$isSubscribed = false;
+				while ($row = mysql_fetch_array($user_result, MYSQL_BOTH)) {
+					if ($row['user_id'] == $user_id)
+						$isSubscribed = true;
+				}			
+				
 				array_push($list_arr, array(
 					"list_id" => $list_row['id'], 
 					"name" => $list_row['title'],
@@ -131,6 +138,8 @@
 					"thumb_url" => $list_row['thumb_url'], 
 					"influencers" => mysql_num_rows($influencer_result),
 					"subscribers" => mysql_num_rows($user_result), 
+					"isSubscribed" => $isSubscribed, 
+					"approved" => ($list_row['type_id'] != 3), 
 					"likes" => $likes_tot
 				));				
 			}
@@ -142,7 +151,7 @@
 		function getSubscribedLists($user_id) {
 			$list_arr = array();
             
-			$query = 'SELECT `tblLists`.`id`, `tblLists`.`title`, `tblLists`.`info`, `tblLists`.`image_url`, `tblLists`.`thumb_url` FROM `tblLists` INNER JOIN `tblUsersLists` ON `tblLists`.`id` = `tblUsersLists`.`list_id` WHERE `tblUsersLists`.`user_id` = "'. $user_id .'" AND `tblLists`.`active` = "Y" ORDER BY `tblLists`.`modified` DESC;';
+			$query = 'SELECT `tblLists`.`id`, `tblLists`.`title`, `tblLists`.`info`, `tblLists`.`image_url`, `tblLists`.`thumb_url`, `tblLists`.`type_id` FROM `tblLists` INNER JOIN `tblUsersLists` ON `tblLists`.`id` = `tblUsersLists`.`list_id` WHERE `tblUsersLists`.`user_id` = "'. $user_id .'" AND `tblLists`.`active` = "Y" ORDER BY `tblLists`.`modified` DESC;';
 			$list_result = mysql_query($query);
 			
             while ($list_row = mysql_fetch_array($list_result, MYSQL_BOTH)) {
@@ -158,7 +167,8 @@
 						"curator_id" => $curator_row[0], 
 						"handle" => $curator_row[1], 
 						"name" => $curator_row[2], 
-						"info" => $curator_row[3] 
+						"info" => $curator_row[3],
+						"approved" => ($row['curator_id'] == $curator_row[0]) 
 					));
 				}
 	
@@ -186,6 +196,8 @@
 					"thumb_url" => $list_row['thumb_url'], 
 					"influencers" => mysql_num_rows($influencer_result),
 					"subscribers" => mysql_num_rows($user_result), 
+					"isSubscribed" => true, 
+					"approved" => ($list_row['type_id'] != 3), 
 					"likes" => $likes_tot
 				));				
 			}
@@ -216,7 +228,27 @@
 			return (true);
 		}
 		
+		function subscribeToList($user_id, $list_id) {
+			$query = 'SELECT * FROM `tblUsersLists` WHERE `user_id` ='. $user_id .' AND `list_id` ='. $list_id .';';
+			$result = mysql_query($query);
+			
+			if (mysql_num_rows($result) == 0) {
+				$query = 'INSERT INTO `tblUsersLists` (`user_id`, `list_id`) VALUES ('. $user_id .', '. $list_id .');';
+				$result = mysql_query($query);
+			}
+			
+			$this->sendResponse(200, json_encode(array()));
+			return (true);
+		}
 		
+		
+		function unsubscribeToList($user_id, $list_id) {
+			$query = 'DELETE FROM `tblUsersLists` WHERE `user_id` = '. $user_id .' AND `list_id` = '. $list_id .';';
+			$result = mysql_query($query);
+			
+			$this->sendResponse(200, json_encode(array()));
+			return (true);
+		}
 		
 	   
 		function test() {
@@ -235,17 +267,28 @@
 		switch ($_POST['action']) {
 			
 			case "0":
-				$lists->getPublicLists();
+				if (isset($_POST['userID']))
+					$lists->getPublicLists($_POST['userID']);
 				break;
 				
 			case "1":
-				if ($_POST['userID'])
+				if (isset($_POST['userID']))
 					$lists->getSubscribedLists($_POST['userID']);
 				break;
 				
 			case "2":
-				if ($_POST['listID'])
+				if (isset($_POST['listID']))
 					$lists->getInfluencersInfoByList($_POST['listID']);
+				break;
+				
+			case "3":
+				if (isset($_POST['userID']) && isset($_POST['listID']))
+					$lists->subscribeToList($_POST['userID'], $_POST['listID']);
+				break;
+				
+			case "4":
+				if (isset($_POST['userID']) && isset($_POST['listID']))
+					$lists->unsubscribeToList($_POST['userID'], $_POST['listID']);
 				break;
     	}
 	}

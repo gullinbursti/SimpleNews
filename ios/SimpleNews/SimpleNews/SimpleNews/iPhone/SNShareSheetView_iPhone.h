@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 
 #import "SNArticleVO.h"
+#import "ASIFormDataRequest.h"
 
-@interface SNShareSheetView_iPhone : UIView {
+@interface SNShareSheetView_iPhone : UIView <ASIHTTPRequestDelegate> {
 	SNArticleVO *_vo;
 }
 

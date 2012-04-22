@@ -13,7 +13,7 @@
 #import "ASIHTTPRequest.h"
 #import "EGOImageView.h"
 
-@interface SNArticleVideoPlayerView_iPhone : UIView <ASIHTTPRequestDelegate> {
+@interface SNArticleVideoPlayerView_iPhone : UIView <UIGestureRecognizerDelegate, ASIHTTPRequestDelegate> {
 	
 	BOOL _isFullscreen;
 	BOOL _isStalled;
@@ -33,6 +33,7 @@
 	UILabel *_timeLabel;
 	UIButton *_closeButton;
 	CGSize _timeSize;
+	UIImageView *_bufferingImgView;
 	
 	EGOImageView *_screenshotImgView;
 	UIButton *_playButton;

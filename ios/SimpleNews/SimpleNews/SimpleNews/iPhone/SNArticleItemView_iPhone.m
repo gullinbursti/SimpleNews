@@ -8,6 +8,7 @@
 
 #import "SNArticleItemView_iPhone.h"
 #import "SNAppDelegate.h"
+#import "SNUnderlinedLabel.h"
 
 #import "EGOImageView.h"
 
@@ -21,6 +22,10 @@
 		CGSize size;
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
+		
+		UIView *lineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, -1.0, self.frame.size.width, 1.0)] autorelease];
+		[lineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
+		[self addSubview:lineView];
 		
 		EGOImageView *thumbImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 35.0, 35.0)] autorelease];
 		thumbImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
@@ -88,7 +93,7 @@
 		
 		
 		size = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(242.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(66.0, offset, 242.0, size.height)] autorelease];
+		SNUnderlinedLabel *titleLabel = [[[SNUnderlinedLabel alloc] initWithFrame:CGRectMake(66.0, offset, 242.0, size.height)] autorelease];
 		titleLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:16];
 		titleLabel.textColor = [UIColor blackColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
@@ -151,15 +156,11 @@
 		[shareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:shareButton];
 		
-		offset += 50;
+		offset += 64;
 		
 		UIView *ltLineView = [[[UIView alloc] initWithFrame:CGRectMake(56, offset2, 1.0, offset - offset2)] autorelease];
 		[ltLineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
 		[self addSubview:ltLineView];	
-		
-		UIView *lineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, offset, self.frame.size.width, 1.0)] autorelease];
-		[lineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
-		[self addSubview:lineView];
 	}
 	
 	return (self);

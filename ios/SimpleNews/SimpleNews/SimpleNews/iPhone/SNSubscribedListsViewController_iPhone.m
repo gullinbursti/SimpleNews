@@ -29,8 +29,12 @@
 		_subscribedLists = [NSMutableArray new];
 		
 		_listsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
-		[_listsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-		[_listsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[_listsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
+		if ([[SNAppDelegate profileForUser] objectForKey:@"id"])
+			[_listsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		
+		else
+			[_listsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"userID"];
 		[_listsRequest setTimeOutSeconds:30];
 		[_listsRequest setDelegate:self];
 	}
@@ -60,7 +64,6 @@
 	
 	_holderView = [[UIView alloc] initWithFrame:self.view.frame];
 	[self.view addSubview:_holderView];
-
 	
 	_scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -73,9 +76,8 @@
 	_scrollView.alwaysBounceVertical = NO;
 	[self.view addSubview:_scrollView];
 	
-	
 	_rootListButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
+	_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
 	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_nonActive.png"] forState:UIControlStateNormal];
 	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_Active.png"] forState:UIControlStateHighlighted];
 	[_rootListButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
@@ -87,7 +89,7 @@
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
-		
+	
 	[_listsRequest startAsynchronous];
 }
 
@@ -100,9 +102,9 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-	[UIView animateWithDuration:0.33 animations:^(void) {
+	//[UIView animateWithDuration:0.33 animations:^(void) {
 		_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
-	} completion:nil];
+	//} completion:nil];
 	
 	[super viewDidAppear:animated];
 }
@@ -110,7 +112,7 @@
 
 #pragma mark - Navigation
 -(void)_goBack {
-	[self.navigationController popViewControllerAnimated:YES];	
+	[self.navigationController popToRootViewControllerAnimated:YES];
 }
 
 
@@ -125,12 +127,12 @@
 		[alert release];
 	
 	} else {
-		[UIView animateWithDuration:0.33 animations:^(void) {
-			_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
+		//[UIView animateWithDuration:0.33 animations:^(void) {
+		//	_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
 	
-		} completion:^(BOOL finished) {
+		//} completion:^(BOOL finished) {
 			[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initWithListVO:vo] autorelease] animated:YES];
-		}];
+		//}];
 	}
 }
 
@@ -177,7 +179,7 @@
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
-	//NSLog(@"SNSubscribedListsViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	NSLog(@"SNSubscribedListsViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
 	@autoreleasepool {
 		NSError *error = nil;
@@ -193,7 +195,7 @@
 			NSMutableArray *list = [NSMutableArray array];
 			for (NSDictionary *serverList in parsedLists) {
 				SNListVO *vo = [SNListVO listWithDictionary:serverList];
-				NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
+				NSLog(@"LIST \"@%@\" %d [%d]", vo.list_name, vo.totalInfluencers, vo.isSubscribed);
 				
 				if (vo != nil)
 					[list addObject:vo];
@@ -203,7 +205,6 @@
 			
 			int cnt = 0;
 			for (SNListVO *vo in _subscribedLists) {
-				
 				if (cnt < 3) {
 					SNListCardView_iPhone *listCardView = [[[SNListCardView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) listVO:vo] autorelease];
 					[_scrollView addSubview:listCardView];

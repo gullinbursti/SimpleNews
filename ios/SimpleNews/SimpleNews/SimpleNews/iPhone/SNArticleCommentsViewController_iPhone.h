@@ -26,6 +26,7 @@
 	
 	int _list_id;
 	int _commentOffset;
+	BOOL _isLiked;
 }
 
 -(id)initWithArticleVO:(SNArticleVO *)vo listID:(int)listID;

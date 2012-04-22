@@ -48,7 +48,13 @@
 		curatorLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
 		curatorLabel.textColor = [UIColor blackColor];
 		curatorLabel.backgroundColor = [UIColor clearColor];
-		curatorLabel.text = @"Curators Verified";
+		
+		if (_vo.isApproved)
+			curatorLabel.text = @"Curators Verified";
+		
+		else
+			curatorLabel.text = @"Curators Pending";
+		
 		[self addSubview:curatorLabel];
 		
 		CGSize infoSize = [_vo.list_info sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
@@ -61,11 +67,26 @@
 		infoLabel.text = _vo.list_info;
 		[self addSubview:infoLabel];
 		
-		UIView *subheaderLineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 104.0 + infoSize.height, self.frame.size.width, 1.0)] autorelease];
+		int offset = 0;
+		if (!_vo.isSubscribed) {
+			UIButton *subscribeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			subscribeButton.frame = CGRectMake(12.0, 104.0 + infoSize.height, 84.0, 30.0);
+			[subscribeButton setBackgroundImage:[UIImage imageNamed:@"followButton_nonActive.png"] forState:UIControlStateNormal];
+			[subscribeButton setBackgroundImage:[UIImage imageNamed:@"followButton_Active.png"] forState:UIControlStateHighlighted];
+			[subscribeButton addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
+			subscribeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
+			subscribeButton.titleLabel.textAlignment = UITextAlignmentCenter;
+			[subscribeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+			[subscribeButton setTitle:@"Follow Topic" forState:UIControlStateNormal];
+			[self addSubview:subscribeButton];
+			offset = 44;
+		}
+		
+		UIView *subheaderLineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, offset + 104.0 + infoSize.height, self.frame.size.width, 1.0)] autorelease];
 		[subheaderLineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
 		[self addSubview:subheaderLineView];
 		
-		_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 104.0 + infoSize.height, self.frame.size.width, self.frame.size.height - (104.0 + infoSize.height)) style:UITableViewStylePlain];
+		_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, offset + 104.0 + infoSize.height, self.frame.size.width, self.frame.size.height - (offset + 104.0 + infoSize.height)) style:UITableViewStylePlain];
 		[_tableView setBackgroundColor:[UIColor clearColor]];
 		_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 		_tableView.rowHeight = 60.0;
@@ -92,6 +113,25 @@
 	[super dealloc];
 }
 
+
+#pragma mark - Navigation 
+-(void)_goSubscribe {
+	if (![SNAppDelegate twitterHandle]) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		
+		[alert show];
+		[alert release];
+		
+	} else {
+		ASIFormDataRequest *subscribeRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+		[subscribeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+		[subscribeRequest setTimeOutSeconds:30];
+		[subscribeRequest setDelegate:self];
+		[subscribeRequest startAsynchronous];
+	}
+}
 
 #pragma mark - TableView DataSource Delegates
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

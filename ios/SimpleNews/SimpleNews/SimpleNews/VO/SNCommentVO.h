@@ -15,6 +15,7 @@
 @property (nonatomic, retain) NSDictionary *dictionary;
 
 @property (nonatomic) int comment_id;
+@property (nonatomic) BOOL isLiked;
 @property (nonatomic, retain) NSString *thumb_url;
 @property (nonatomic, retain) NSString *twitterName;
 @property (nonatomic, retain) NSString *twitterHandle;

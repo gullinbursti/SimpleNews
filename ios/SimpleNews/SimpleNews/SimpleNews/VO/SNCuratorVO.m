@@ -11,7 +11,7 @@
 @implementation SNCuratorVO
 
 @synthesize dictionary;
-@synthesize curator_id, twitter_handle, blurb, curator_name, totalLists;
+@synthesize curator_id, twitter_handle, blurb, curator_name, totalLists, hasApproved;
 
 +(SNCuratorVO *)curatorWithDictionary:(NSDictionary *)dictionary {
 	SNCuratorVO *vo = [[SNCuratorVO alloc] init];
@@ -22,6 +22,7 @@
 	vo.curator_name = [dictionary objectForKey:@"name"];
 	vo.twitter_handle = [dictionary objectForKey:@"handle"];
 	vo.blurb = [dictionary objectForKey:@"info"];
+	vo.hasApproved = (BOOL)[[dictionary objectForKey:@"approved"] intValue];
 	
 	return (vo);
 }

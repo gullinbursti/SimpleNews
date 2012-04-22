@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSString *twitter_handle;
 @property (nonatomic, retain) NSString *curator_name;
 @property (nonatomic, retain) NSString *blurb;
+@property (nonatomic) BOOL hasApproved;
 @property (nonatomic) int totalLists;
 
 @end

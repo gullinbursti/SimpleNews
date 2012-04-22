@@ -43,8 +43,8 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_ffScrub:) name:@"FF_VIDEO_TIME" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_rrScrub:) name:@"RR_VIDEO_TIME" object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_enteredFullscreen:) name:@"UIMoviePlayerControllerDidEnterFullscreenNotification" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_leftFullscreen:) name:@"UIMoviePlayerControllerDidExitFullscreenNotification" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_enteredFullscreen:) name:MPMoviePlayerWillEnterFullscreenNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_leftFullscreen:) name:MPMoviePlayerWillExitFullscreenNotification object:nil];
 		
 		_videoHolderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
 		[self addSubview:_videoHolderView];
@@ -84,7 +84,7 @@
 		[self addSubview:_timeLabel];
 		
 		_playButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
-		_playButton.frame = CGRectMake(99.0, 68.0, 44.0, 44.0);
+		_playButton.frame = CGRectMake((self.frame.size.width * 0.5) - 22.0, (self.frame.size.height * 0.5) - 22.0, 44.0, 44.0);
 		_playButton.alpha = 1.0;
 		[_playButton setBackgroundImage:[[UIImage imageNamed:@"smallPlayButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_playButton setBackgroundImage:[[UIImage imageNamed:@"smallPlayButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
@@ -104,6 +104,11 @@
 		_videoInfoRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.youtube.com/get_video_info?html5=1&video_id=%@&eurl=http%3A%2F%2Fshelby.tv%2F&ps=native&el=embedded&hl=en_US", _vo.video_url]]];
 		_videoInfoRequest.delegate = self;
 		[_videoInfoRequest startAsynchronous];
+		
+		UITapGestureRecognizer *dblTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_dblTap:)];
+		dblTapRecognizer.numberOfTapsRequired = 2;
+		[self addGestureRecognizer:dblTapRecognizer];
+		[dblTapRecognizer release];
 	}
 	
 	return (self);
@@ -136,6 +141,13 @@
 	[self _goClose];
 }
 
+-(void)_dblTap:(UIGestureRecognizer *)gestureRecognizer {
+	NSLog(@"DBL TAP");
+	
+	[self.mpc setFullscreen:YES animated:YES];
+	self.mpc.controlStyle = MPMovieControlStyleDefault;
+}
+
 -(void)_initPlayer {
 	MPMoviePlayerController *mp = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:_videoURL]];
 	self.mpc = mp;
@@ -152,8 +164,6 @@
 	self.mpc.shouldAutoplay = YES;
 	self.mpc.allowsAirPlay = YES;
 	self.mpc.movieSourceType = MPMovieSourceTypeFile;
-	[self.mpc setFullscreen:YES];
-	//[self.mpc pause];
 	
 	[_videoHolderView addSubview:self.mpc.view];
 	
@@ -200,18 +210,23 @@
 }
 
 -(void)_goPlayPause {
-	if (self.mpc.playbackState == MPMoviePlaybackStatePlaying) {
-		[self.mpc pause];
-		_playButton.alpha = 1.0;
-		_pauseButton.alpha = 0.0;
-		
-	} else if (self.mpc.playbackState == MPMoviePlaybackStatePaused) {
-		[self.mpc play];
-		_playButton.alpha = 0.0;
-		_pauseButton.alpha = 1.0;
-	}
 	
-	_isPaused = (self.mpc.playbackState == MPMoviePlaybackStatePaused);
+	if (self.mpc) {
+		if (self.mpc.playbackState == MPMoviePlaybackStatePlaying) {
+			[self.mpc pause];
+			_playButton.alpha = 1.0;
+			_pauseButton.alpha = 0.0;
+			
+		} else if (self.mpc.playbackState == MPMoviePlaybackStatePaused) {
+			[self.mpc play];
+			_playButton.alpha = 0.0;
+			_pauseButton.alpha = 1.0;
+		}
+		
+		_isPaused = (self.mpc.playbackState == MPMoviePlaybackStatePaused);
+		
+	} else
+		[self _initPlayer];
 }
 
 -(void)_goStopVideo {
@@ -288,9 +303,8 @@
 
 -(void)_leftFullscreen:(NSNotification *)notification {
 	NSLog(@"_leftFullscreen");
-	
 	_isFullscreen = NO;
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
+	self.mpc.controlStyle = MPMovieControlStyleNone;
 }
 
 -(void)_startedCallback:(NSNotification *)notification {
@@ -303,6 +317,16 @@
 	
 	[_progressTimer invalidate];
 	_progressTimer = nil;
+	
+	_bufferingImgView = [[UIImageView alloc] initWithFrame:CGRectMake((_videoHolderView.frame.size.width * 0.5) - 32.0, (_videoHolderView.frame.size.height * 0.5) - 32.0, 64.0, 64.0)];
+	[_bufferingImgView setBackgroundColor:[UIColor greenColor]];
+	_bufferingImgView.alpha = 0.0;
+	//_bufferingImgView.image = [UIImage imageNamed:@"playerPlayHeadBG.png"];
+	[self addSubview:_bufferingImgView];
+	
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		_bufferingImgView.alpha = 1.0;
+	}];
 		
 	[self _fadeOutControls];
 	
@@ -324,6 +348,7 @@
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_playButton.alpha = 0.0;
 		_screenshotImgView.alpha = 1.0;
+		[_bufferingImgView removeFromSuperview];
 		
 	} completion:^(BOOL finished) {
 		[self.mpc.view removeFromSuperview];
@@ -360,15 +385,23 @@
 	NSLog(@"----[PLAYBACK STATE CHANGED[%d]]----", self.mpc.playbackState);	
 	
 	switch (self.mpc.playbackState) {
+		case MPMoviePlaybackStateStopped:
+			if (_isFullscreen) {
+				[self.mpc setFullscreen:NO animated:YES];
+				self.mpc.controlStyle = MPMovieControlStyleNone;
+			}
+			
+			break;
+			
 		case MPMoviePlaybackStatePlaying:
 			[UIView animateWithDuration:0.33 animations:^(void) {
 				_screenshotImgView.alpha = 0.0;
+				_bufferingImgView.alpha = 0.0;
 			}];
 			break;
 			
-			//case 2:
-			//[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
-			//break;
+		case 2:
+			break;
 			
 	}
 }

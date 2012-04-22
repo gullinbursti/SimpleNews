@@ -34,12 +34,7 @@
 		
 		_isFollowingList = YES;
 		
-		_userRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]] retain];
-		[_userRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-		[_userRequest setPostValue:[SNAppDelegate deviceToken] forKey:@"token"];
-		[_userRequest setPostValue:[SNAppDelegate twitterHandle] forKey:@"handle"];
-		[_userRequest setDelegate:self];
-		[_userRequest startAsynchronous];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshSubscribedList:) name:@"REFRESH_SUBSCRIBED_LIST" object:nil];
 		
 		_subscribedListsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
 		[_subscribedListsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
@@ -49,9 +44,16 @@
 		
 		_popularListsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
 		[_popularListsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
-		[_popularListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		
+		if ([[SNAppDelegate profileForUser] objectForKey:@"id"])
+			[_popularListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		
+		else
+			[_popularListsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"userID"];
+		
 		[_popularListsRequest setTimeOutSeconds:30];
 		[_popularListsRequest setDelegate:self];
+		[_popularListsRequest startAsynchronous];	
 	}
 	
 	return (self);
@@ -210,11 +212,11 @@
 }
 
 
-- (void)reloadTableViewDataSource{
+- (void)reloadTableViewDataSource {
 	_reloading = YES;	
 }
 
-- (void)doneLoadingTableViewData{
+- (void)doneLoadingTableViewData {
 	_reloading = NO;
 	
 	if (_isFollowingList)
@@ -224,6 +226,18 @@
 		[_popularHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_popularTableView];
 }
 
+
+#pragma mark - Notification handlers
+-(void)_refreshSubscribedList:(NSNotification *)notification {
+	NSLog(@"REFRESHING");
+	
+	_subscribedListsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+	[_subscribedListsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+	[_subscribedListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+	[_subscribedListsRequest setTimeOutSeconds:30];
+	[_subscribedListsRequest setDelegate:self];
+	[_subscribedListsRequest startAsynchronous];
+}
 
 #pragma mark - TableView DataSource Delegates
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -369,6 +383,15 @@
 				_popularLists = [list retain];
 				[_popularTableView reloadData];
 			}
+			
+			if ([SNAppDelegate twitterHandle]) {
+				_userRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]] retain];
+				[_userRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+				[_userRequest setPostValue:[SNAppDelegate deviceToken] forKey:@"token"];
+				[_userRequest setPostValue:[SNAppDelegate twitterHandle] forKey:@"handle"];
+				[_userRequest setDelegate:self];
+				[_userRequest startAsynchronous];			
+			}
 		}
 		
 	} else if ([request isEqual:_userRequest]) {
@@ -390,7 +413,6 @@
 		
 		} else {
 			[_subscribedListsRequest startAsynchronous];
-			[_popularListsRequest startAsynchronous];	
 		}
 		
 	} else if ([request isEqual:_twitterRequest]) {
@@ -407,7 +429,6 @@
 		}
 		
 		[_subscribedListsRequest startAsynchronous];
-		[_popularListsRequest startAsynchronous];
 	}
 }
 

@@ -11,8 +11,9 @@
 #import "SNBaseListCardView_iPhone.h"
 #import "SNListVO.h"
 #import "SNInfluencersListView.h"
+#import "ASIFormDataRequest.h"
 
-@interface SNListCardView_iPhone : SNBaseListCardView_iPhone {
+@interface SNListCardView_iPhone : SNBaseListCardView_iPhone <ASIHTTPRequestDelegate> {
 	SNListVO *_vo;
 	UIImageView *_testImgView;
 	
@@ -22,6 +23,7 @@
 	UIButton *_doneButton;
 	UIButton *_flipBtn;
 	UIButton *_articlesButton;
+	UIButton *_subscribeBtn;
 }
 
 -(id)initWithFrame:(CGRect)frame listVO:(SNListVO *)vo;

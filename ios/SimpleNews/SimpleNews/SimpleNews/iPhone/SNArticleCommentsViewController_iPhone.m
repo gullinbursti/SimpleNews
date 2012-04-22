@@ -20,6 +20,7 @@
 	if ((self = [super init])) {
 		_vo = vo;
 		_list_id = listID;
+		_isLiked = NO;
 		
 		_commentViews = [NSMutableArray new];
 	}
@@ -94,6 +95,13 @@
 	_commentsLabel.text = @"Comment";
 	[_inputBgImgView addSubview:_commentsLabel];
 	
+	UIButton *likeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	likeButton.frame = CGRectMake(280.0, 12.0, 25.0, 25.0);
+	[likeButton setBackgroundImage:[UIImage imageNamed:@"smallDoneButton_nonActive.png"] forState:UIControlStateNormal];
+	[likeButton setBackgroundImage:[UIImage imageNamed:@"smallDoneButtonActive.png"] forState:UIControlStateHighlighted];
+	[likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	[_inputBgImgView addSubview:likeButton];
+	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
@@ -107,6 +115,9 @@
 		SNArticleCommentView_iPhone *commentView = [[[SNArticleCommentView_iPhone alloc] initWithFrame:CGRectMake(0.0, _commentOffset, _scrollView.frame.size.width, kItemHeight + txtSize.height) commentVO:vo listID:_list_id] autorelease];
 		[_commentViews addObject:commentView];
 		[_scrollView addSubview:commentView];
+		
+		if (vo.isLiked)
+			_commentOffset += 30;
 		
 		_commentOffset += (kItemHeight + txtSize.height);
 	}
@@ -142,6 +153,10 @@
 		[alert show];
 		[alert release];
 	}
+}
+
+-(void)_goLike {
+	_isLiked = YES;
 }
 
 -(void)_onTxtDoneEditing:(id)sender {
@@ -208,11 +223,17 @@
 	[textField resignFirstResponder];
 	
 	if ([textField.text length] > 0) {
+		NSString *isLiked = @"N";
+		if (_isLiked)
+			isLiked = @"Y";
+		
 		_commentSubmitRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
 		[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", 9] forKey:@"action"];
 		[_commentSubmitRequest setPostValue:[SNAppDelegate twitterHandle] forKey:@"handle"];
 		[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
 		[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", _list_id] forKey:@"listID"];
+		[_commentSubmitRequest setPostValue:isLiked forKey:@"liked"];
+		
 		[_commentSubmitRequest setPostValue:textField.text forKey:@"content"];
 		
 		[_commentSubmitRequest setTimeOutSeconds:30];
@@ -234,7 +255,8 @@
 									 [NSString stringWithFormat:@"https://twitter.com/#!/%@", [SNAppDelegate twitterHandle]], @"user_url", 
 									 @"", @"comment_url", 
 									 added, @"added",  
-									 textField.text, @"content", nil];
+									 textField.text, @"content", 
+									 isLiked, @"liked", nil];
 		SNCommentVO *vo = [SNCommentVO commentWithDictionary:dict];
 		[_vo.comments addObject:vo];
 		
@@ -247,10 +269,10 @@
 		_commentOffset += (kItemHeight + commentSize.height);
 		
 		textField.text = @"";
+		_isLiked = NO;
 		
 		CGSize size = _scrollView.contentSize;
 		size.height += (kItemHeight + commentSize.height);
-		
 		_scrollView.contentSize = size;
 	}
 	
