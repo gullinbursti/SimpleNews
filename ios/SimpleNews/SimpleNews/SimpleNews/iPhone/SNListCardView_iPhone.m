@@ -160,7 +160,6 @@
 		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 		[subscribeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-		[subscribeRequest setTimeOutSeconds:30];
 		[subscribeRequest setDelegate:self];
 		[subscribeRequest startAsynchronous];
 		
@@ -182,7 +181,6 @@
 		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
 		[subscribeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-		[subscribeRequest setTimeOutSeconds:30];
 		[subscribeRequest setDelegate:self];
 		[subscribeRequest startAsynchronous];
 		

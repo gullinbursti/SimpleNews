@@ -13,10 +13,13 @@
 #import "SNShareSheetView_iPhone.h"
 #import "SNFlippedArticleView_iPhone.h"
 #import "SNListVO.h"
+#import "EGORefreshTableHeaderView.h"
 
-@interface SNArticleListViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate> {
+@interface SNArticleListViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate> {
 	NSMutableArray *_articles;
 	ASIFormDataRequest *_articlesRequest;
+	EGORefreshTableHeaderView *_refreshHeaderView;
+	BOOL _reloading;
 	
 	UIScrollView *_scrollView;
 	UIView *_overlayView;

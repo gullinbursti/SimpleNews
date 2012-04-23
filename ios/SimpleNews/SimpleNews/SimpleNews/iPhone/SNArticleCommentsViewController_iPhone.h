@@ -20,7 +20,7 @@
 	UIImageView *_commentsBGImgView;
 	UITextField *_commentTxtField;
 	UILabel *_commentsLabel;
-	UIImageView *_inputBgImgView;
+	UIView *_bgView;
 	
 	NSMutableArray *_commentViews;
 	

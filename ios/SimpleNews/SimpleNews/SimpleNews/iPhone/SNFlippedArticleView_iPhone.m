@@ -90,7 +90,6 @@
 		_influencersRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
 		[_influencersRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
 		[_influencersRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-		[_influencersRequest setTimeOutSeconds:30];
 		[_influencersRequest setDelegate:self];
 		[_influencersRequest startAsynchronous];
 	}
@@ -111,7 +110,6 @@
 		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 		[subscribeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-		[subscribeRequest setTimeOutSeconds:30];
 		[subscribeRequest setDelegate:self];
 		[subscribeRequest startAsynchronous];
 	}

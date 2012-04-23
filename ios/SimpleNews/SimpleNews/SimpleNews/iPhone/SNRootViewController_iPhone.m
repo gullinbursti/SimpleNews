@@ -39,7 +39,6 @@
 		_subscribedListsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
 		[_subscribedListsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		[_subscribedListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		[_subscribedListsRequest setTimeOutSeconds:30];
 		[_subscribedListsRequest setDelegate:self];
 		
 		_popularListsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
@@ -51,7 +50,6 @@
 		else
 			[_popularListsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"userID"];
 		
-		[_popularListsRequest setTimeOutSeconds:30];
 		[_popularListsRequest setDelegate:self];
 		[_popularListsRequest startAsynchronous];	
 	}
@@ -234,7 +232,6 @@
 	_subscribedListsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
 	[_subscribedListsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 	[_subscribedListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[_subscribedListsRequest setTimeOutSeconds:30];
 	[_subscribedListsRequest setDelegate:self];
 	[_subscribedListsRequest startAsynchronous];
 }

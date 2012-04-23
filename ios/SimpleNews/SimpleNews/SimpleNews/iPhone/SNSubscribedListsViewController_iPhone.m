@@ -35,7 +35,6 @@
 		
 		else
 			[_listsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"userID"];
-		[_listsRequest setTimeOutSeconds:30];
 		[_listsRequest setDelegate:self];
 	}
 	

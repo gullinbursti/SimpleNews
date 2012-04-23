@@ -11,10 +11,13 @@
 #import "SNArticleVO.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 
-@interface SNArticleItemView_iPhone : UIView {
+#import "ASIFormDataRequest.h"
+
+@interface SNArticleItemView_iPhone : UIView <ASIHTTPRequestDelegate> {
 	SNArticleVO *_vo;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
 	UIButton *_videoButton;
+	UIButton *_likeButton;
 }
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;

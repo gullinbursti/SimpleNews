@@ -12,6 +12,7 @@
 #import "SNArticleVO.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 #import "SNArticleOptionsView_iPhone.h"
+#import "SNUnderlinedLabel.h"
 
 #import "SNShareSheetView_iPhone.h"
 

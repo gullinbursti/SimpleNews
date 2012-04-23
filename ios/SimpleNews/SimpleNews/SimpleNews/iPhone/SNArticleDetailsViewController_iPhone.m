@@ -41,6 +41,7 @@
 
 -(void)dealloc {
 	[super dealloc];
+	[_webView dealloc];
 }
 
 #pragma mark - View lifecycle
@@ -88,11 +89,6 @@
 	int offset = 22;
 	NSArray *fontSizes = [[[NSUserDefaults standardUserDefaults] objectForKey:@"uiFontSizes"] objectAtIndex:[SNAppDelegate fontFactor]];
 	
-	EGOImageView *articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(22.0, offset, 252.0, 252.0 * _vo.imgRatio)];
-	articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
-	[_scrollView addSubview:articleImgView];
-	offset += (252.0 * _vo.imgRatio);
-	
 	size = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 	_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, size.height)];
 	_titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]];
@@ -124,6 +120,11 @@
 	[_scrollView addSubview:_sourceLabel];
 	offset += size.height + 22;
 	
+	EGOImageView *articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, 274.0 * _vo.imgRatio)];
+	articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
+	[_scrollView addSubview:articleImgView];
+	offset += (274.0 * _vo.imgRatio);
+	
 	if (_vo.type_id > 4) {
 		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, 180.0) articleVO:_vo];
 		//[_videoPlayerView startPlayback];
@@ -134,7 +135,7 @@
 	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 	[dateFormatter setDateStyle:NSDateFormatterMediumStyle];
 	NSString *dateString = [dateFormatter stringFromDate:_vo.added];
-	//[dateFormatter release];
+	[dateFormatter release];
 	
 	_dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 100.0, 16.0)];
 	_dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:2] intValue]];
@@ -156,6 +157,7 @@
 	
 	offset += size.height + (90.0 + ([SNAppDelegate fontFactor] * 40.0));
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, offset);
+	
 	
 	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_blackMatteView setBackgroundColor:[UIColor blackColor]];

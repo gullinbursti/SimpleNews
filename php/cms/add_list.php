@@ -69,7 +69,14 @@ if (isset($_GET['a'])) {
 		$query .= '`list_id`, `influencer_id`) ';
 		$query .= 'VALUES ("'. $list_id .'", "'. $influencer_id .'");';
 		$result = mysql_query($query);
-	}/**/
+	}
+	
+	$query = 'INSERT INTO `tblListsInfluencers` (';
+	$query .= '`list_id`, `influencer_id`) ';
+	$query .= 'VALUES ("'. $list_id .'", 3);';
+	$result = mysql_query($query)
+		
+		/**/
 		
 	//header('Location: lists.php');
 }

@@ -88,18 +88,16 @@ $row = mysql_fetch_row($ts_result);
 $sql_time = $row[0];
 
 
-/*
-$query = 'SELECT * FROM `tblLists`;';
+$query = 'SELECT * FROM `tblListsInfluencers`;';
 $result = mysql_query($query);
 
-while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {	
-	$query = 'UPDATE `tblLists` SET `enc_name` = "'. base64_encode($row['title']) .'" WHERE `id` ='. $row['id'] .';';
+while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
+	$query = 'UPDATE `tblArticles` SET `list_id` = '. $row['list_id'] .' WHERE `influencer_id` ='. $row['influencer_id'] .';';
 	$res = mysql_query($query);
 }
-*/
 
-$query = 'UPDATE `tblArticles` SET `img_ratio` =1.5;';
-$res = mysql_query($query);
+//$query = 'UPDATE `tblArticles` SET `source_id` =1 WHERE `source_id` =0;';
+//$res = mysql_query($query);
 
 
 ?>

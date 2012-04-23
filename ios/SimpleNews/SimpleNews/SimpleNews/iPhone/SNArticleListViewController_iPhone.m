@@ -43,7 +43,6 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTweetPage:) name:@"SHOW_TWEET_PAGE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSourcePage:) name:@"SHOW_SOURCE_PAGE" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterTimeline:) name:@"TWITTER_TIMELINE" object:nil];
@@ -65,7 +64,6 @@
 		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 8] forKey:@"action"];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-		[_articlesRequest setTimeOutSeconds:30];
 		[_articlesRequest setDelegate:self];
 		[_articlesRequest startAsynchronous];
 	}
@@ -140,12 +138,16 @@
 	_scrollView.scrollsToTop = NO;
 	_scrollView.pagingEnabled = NO;
 	_scrollView.delegate = self;
-	_scrollView.showsHorizontalScrollIndicator = NO;
-	_scrollView.showsVerticalScrollIndicator = YES;
+	_scrollView.showsVerticalScrollIndicator = NO;
 	_scrollView.alwaysBounceVertical = NO;
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
 	[self.view addSubview:_scrollView];
 	
+	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+	_refreshHeaderView.delegate = self;
+	[_scrollView addSubview:_refreshHeaderView];
+	[_refreshHeaderView refreshLastUpdatedDate];
+
 	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
 	_blackMatteView.alpha = 0.0;
@@ -172,6 +174,16 @@
 
 -(void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
+}
+
+- (void)reloadTableViewDataSource {
+	_reloading = YES;	
+}
+
+- (void)doneLoadingTableViewData {
+	_reloading = NO;
+	
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_scrollView];
 }
 
 
@@ -253,7 +265,13 @@
 	
 	twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
 		
-		
+		ASIFormDataRequest *readRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+		[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+		[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+		[readRequest setPostValue:[NSString stringWithFormat:@"%d", vo.article_id] forKey:@"articleID"];
+		[readRequest setDelegate:self];
+		[readRequest startAsynchronous];
 		//NSString *msg; 
 		
 		//if (result == TWTweetComposeViewControllerResultDone)
@@ -281,6 +299,14 @@
 		
 		[self presentViewController:mfViewController animated:YES completion:nil];
 		[mfViewController release];
+		
+		ASIFormDataRequest *readRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+		[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+		[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+		[readRequest setPostValue:[NSString stringWithFormat:@"%d", vo.article_id] forKey:@"articleID"];
+		[readRequest setDelegate:self];
+		[readRequest startAsynchronous];
 		
 	} else {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"Your phone is not currently configured to send mail." delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
@@ -316,24 +342,30 @@
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
--(void)_showTweetPage:(NSNotification *)notification {
-	NSString *handle = [[notification object] objectForKey:@"handle"];
-	NSString *tweetID = [[notification object] objectForKey:@"tweetID"];
-	
-	SNWebPageViewController_iPhone *webPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/status/%@/", handle, tweetID]] title:[NSString stringWithFormat:@"@%@", handle]] autorelease];
-	[self.navigationController setNavigationBarHidden:YES];
-	[self.navigationController pushViewController:webPageViewController animated:YES];
-}
-
 -(void)_showSourcePage:(NSNotification *)notification {
 	SNWebPageViewController_iPhone *webPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
 	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
+#pragma mark EGORefreshTableHeaderDelegate Methods
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
+	[self reloadTableViewDataSource];
+	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView *)view {
+	return _reloading; // should return if data source model is reloading
+}
+
+- (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView *)view {
+	return [NSDate date]; // should return date data source was last change	
+}
+
 #pragma mark - ScrollView Delegates
 // any offset changes
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {	
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
 }
 
 
@@ -344,10 +376,12 @@
 
 // called on finger up if the user dragged. velocity is in points/second. targetContentOffset may be changed to adjust where the scroll view comes to rest. not called when pagingEnabled is YES
 -(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 // called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 
@@ -425,26 +459,29 @@
 					
 					if (vo != nil)
 						[articleList addObject:vo];
+					int height;
 					
-					int height = 150;
-					CGSize size;
+						if (vo.source_id > 0) {
+							height = 127;
+							CGSize size;
+							
+							if (vo.type_id > 1) {
+								height += 227.0 * vo.imgRatio;
+								height += 20;
+							}
+							
+							size = [vo.title sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+							height += size.height;
+							
+							if (vo.type_id > 4)
+								height += 180;
+							
+							height += 16;
 					
-					size = [vo.tweetMessage sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(252.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-					height += size.height;
+						} else {
+							height = 59;
+						}
 					
-					height += 252.0 * vo.imgRatio;
-					
-					size = [vo.title sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(252.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-					height += size.height;
-					
-					size = [vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(252.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-					height += size.height;
-					
-					if (vo.type_id > 4)
-						height += 196;
-					
-					else 
-						height += 16;
 					
 					SNArticleItemView_iPhone *articleItemView = [[[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, offset, _scrollView.frame.size.width, height) articleVO:vo] autorelease];
 					[_cardViews addObject:articleItemView];

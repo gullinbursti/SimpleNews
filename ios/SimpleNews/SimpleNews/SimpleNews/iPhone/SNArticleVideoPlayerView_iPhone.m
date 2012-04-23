@@ -92,7 +92,7 @@
 		[self addSubview:_playButton];
 		
 		_pauseButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
-		_pauseButton.frame = CGRectMake(99.0, 68.0, 44.0, 44.0);
+		_pauseButton.frame = CGRectMake((self.frame.size.width * 0.5) - 22.0, (self.frame.size.height * 0.5) - 22.0, 44.0, 44.0);
 		_pauseButton.alpha = 0.0;
 		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"smallPauseButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"smallPauseButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
@@ -305,6 +305,11 @@
 	NSLog(@"_leftFullscreen");
 	_isFullscreen = NO;
 	self.mpc.controlStyle = MPMovieControlStyleNone;
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_playButton.alpha = 1.0;
+		_screenshotImgView.alpha = 1.0;
+	}];
 }
 
 -(void)_startedCallback:(NSNotification *)notification {

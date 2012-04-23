@@ -86,56 +86,69 @@
 		function getArticlesForList($list_id) {
 			$article_arr = array();
 			
-			$query = 'SELECT * FROM `tblInfluencers` INNER JOIN `tblListsInfluencers` ON `tblInfluencers`.`id` = `tblListsInfluencers`.`influencer_id` WHERE `tblListsInfluencers`.`list_id` = "'. $list_id .'";';
-			$influencer_result = mysql_query($query);
+			$query = 'SELECT * FROM `tblArticles` WHERE `list_id` = '. $list_id .' ORDER BY `added` DESC;';
+			$article_result = mysql_query($query);
 			
-			while ($influencer_row = mysql_fetch_array($influencer_result, MYSQL_BOTH)) { 
-				$query = 'SELECT * FROM `tblArticles` WHERE `influencer_id` = '. $influencer_row['id'] .' ORDER BY `added` DESC;';
-				$article_result = mysql_query($query);
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 				
+				$query = 'SELECT `tblComments`.`id`, `tblComments`.`content`, `tblComments`.`liked`, `tblComments`.`added`, `tblUsers`.`name`, `tblUsers`.`handle` FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row['id'] .' AND `tblComments`.`list_id` = '. $list_id .' ORDER BY `tblComments`.`added` DESC;';
+				$comments_result = mysql_query($query);
 				
-				while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
-					$query = 'SELECT `tblComments`.`id`, `tblComments`.`content`, `tblComments`.`liked`, `tblComments`.`added`, `tblUsers`.`name`, `tblUsers`.`handle` FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row['id'] .' AND `tblComments`.`list_id` = '. $list_id .' ORDER BY `tblComments`.`added` DESC;';
-					$comments_result = mysql_query($query);
+				$comment_arr = array();
+				while ($comment_row = mysql_fetch_array($comments_result, MYSQL_BOTH)) {
+					array_push($comment_arr, array(
+						"reaction_id" => $comment_row['id'], 
+						"thumb_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"name" => $comment_row['name'], 
+						"handle" => $comment_row['handle'], 
+						"comment_url" => "http://shelby.tv", 
+						"content" => htmlentities($comment_row['content'], ENT_QUOTES), 
+						"liked" => $comment_row['liked'], 
+						"added" => $comment_row['added']
+					 ));
+				}
 				
-					$reaction_arr = array();
-					while ($comment_row = mysql_fetch_array($comments_result, MYSQL_BOTH)) {
-						array_push($reaction_arr, array(
-							"reaction_id" => $comment_row['id'], 
-							"thumb_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
-							"name" => $comment_row['name'], 
-							"handle" => $comment_row['handle'], 
-							"comment_url" => "http://shelby.tv", 
-							"content" => htmlentities($comment_row['content'], ENT_QUOTES), 
-							"liked" => $comment_row['liked'], 
-							"added" => $comment_row['added']
-						 ));
-					}
-					
-					array_push($article_arr, array(
-						"article_id" => $article_row['id'], 
-						"list_id" => $list_id, 
-						"type_id" => $article_row['type_id'], 
-						"source_id" => $article_row['source_id'], 
-						"title" => $article_row['title'], 
-						"article_url" => $article_row['article_url'], 
-						"short_url" => $article_row['short_url'], 
-						"tweet_id" => $article_row['tweet_id'], 
-						"tweet_msg" => $article_row['tweet_msg'], 
-						"twitter_name" => $influencer_row['name'], 
-						"twitter_handle" => $influencer_row['handle'],
-						"twitter_info" => $influencer_row['info'], 
-						"bg_url" => $article_row['image_url'], 
-						"source" => $article_row['source'], 
-						"content" => $article_row['content'], 
-						"avatar_url" => $influencer_row['avatar_url'], 
-						"video_url" => $article_row['video_url'], 
-						"likes" => $article_row['likes'], 
-						"img_ratio" => $article_row['img_ratio'], 
-						"added" => $article_row['added'], 
-						"tags" => array(), 
-						"reactions" => $reaction_arr
+				$query = 'SELECT `tblUsers`.`handle`, `tblUsers`.`name` FROM `tblUsers` INNER JOIN `tblUsersReadArticles` ON `tblUsers`.`id` = `tblUsersReadArticles`.`user_id` WHERE `tblUsersReadArticles`.`list_id` = '. $list_id .' AND `tblUsersReadArticles`.`article_id` = '. $article_row['id'] .' ORDER BY `tblUsersReadArticles`.`added` DESC LIMIT 16;';
+				$users_result = mysql_query($query);
+				$user_arr = array();
+				while ($user_row = mysql_fetch_array($users_result, MYSQL_BOTH)) {
+					array_push($user_arr, array(
+						"handle" => $user_row['handle'], 
+						"name" => $user_row['name']
 					));
 				}
+				
+				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `user_id` = 1 AND `list_id` = '. $list_id .' AND `article_id` = '. $article_row['id'] .';';
+				$isLiked = (mysql_num_rows(mysql_query($query)) > 0);
+				
+				$query = 'SELECT * FROM `tblInfluencers` WHERE `id` = '. $article_row['influencer_id'] .';';
+				$influencer_row = mysql_fetch_row(mysql_query($query));
+				
+				array_push($article_arr, array(
+					"article_id" => $article_row['id'], 
+					"list_id" => $list_id, 
+					"type_id" => $article_row['type_id'], 
+					"source_id" => $article_row['source_id'], 
+					"title" => $article_row['title'], 
+					"article_url" => $article_row['article_url'], 
+					"short_url" => $article_row['short_url'], 
+					"tweet_id" => $article_row['tweet_id'], 
+					"tweet_msg" => $article_row['tweet_msg'], 
+					"twitter_name" => $influencer_row[2], 
+					"twitter_handle" => $influencer_row[1],
+					"twitter_info" => $influencer_row[4], 
+					"bg_url" => $article_row['image_url'], 
+					"source" => $article_row['source'], 
+					"content" => $article_row['content'], 
+					"avatar_url" => $influencer_row[3], 
+					"video_url" => $article_row['video_url'], 
+					"likes" => $article_row['likes'], 
+					"liked" => $isLiked, 
+					"img_ratio" => $article_row['img_ratio'], 
+					"added" => $article_row['added'], 
+					"tags" => array(), 
+					"reads" => $user_arr, 
+					"reactions" => $comment_arr
+				)); 
 			}
 			
 			
@@ -155,7 +168,7 @@
 			
 			$query = 'INSERT INTO `tblComments` (';
 			$query .= '`id`, `article_id`, `list_id`, `user_id`, `content`, `liked`, `added`) ';
-			$query .= 'VALUES (NULL, "'. $article_id .'", "'. $list_id .'", "'. $user_id .'", "'. $content .'", "'. $isLiked .'", NOW());';
+			$query .= 'VALUES (NULL, '. $article_id .', '. $list_id .', '. $user_id .', "'. $content .'", "'. $isLiked .'", NOW());';
 			$result = mysql_query($query);
 			$comment_id = mysql_insert_id();
 			
@@ -165,38 +178,43 @@
 				$likes_tot = $row[0];
 				$likes_tot++;
 				
-				$query = 'UPDATE `tblArticles` SET `likes` = "'. $likes_tot .'" WHERE `id` ='. $article_id .';';
+				$query = 'UPDATE `tblArticles` SET `likes` = '. $likes_tot .' WHERE `id` = '. $article_id .';';
 				$result = mysql_query($query);
 			}
 			
-			$this->sendResponse(200, json_encode(array(
-				"comment_id" => $comment_id
-			)));
+			$this->sendResponse(200, json_encode(array("comment_id" => $comment_id)));
 			return (true);
 		}
 				
-		function addLike($article_id) {
-			$query = 'SELECT `likes` FROM `tblArticles` WHERE `id` ='. $article_id .';';
+		function addLike($user_id, $list_id, $article_id) {
+			$query = 'SELECT `likes` FROM `tblArticles` WHERE `id` = '. $article_id .';';
 			$row = mysql_fetch_row(mysql_query($query));
 			$likes_tot = $row[0];
 			$likes_tot++;
 				
-			$query = 'UPDATE `tblArticles` SET `likes` = "'. $likes_tot .'" WHERE `id` ='. $article_id .';';
+			$query = 'UPDATE `tblArticles` SET `likes` = '. $likes_tot .' WHERE `id` ='. $article_id .';';
 			$result = mysql_query($query);
 			
-			$this->sendResponse(200, json_encode(array()));
+			$query = 'INSERT INTO `tblUsersLikedArticles` (`user_id`, `list_id`, `article_id`, `added`) VALUES ('. $user_id .', '. $list_id .', '. $article_id .', NOW());';
+			$result = mysql_query($query);
+			
+			$this->sendResponse(200, json_encode(array("success" => true)));
 			return (true);
 		}
 		
 		function readLater($user_id, $list_id, $article_id) {
-			$query = 'SELECT `added` FROM `tblUsersReadLater` WHERE `user_id` ='. $article_id .' AND `list_id` ='. $list_id .' AND `article_id` ='. $article_id .';';
+			$query = 'INSERT INTO `tblUsersReadLater` (`user_id`, `list_id`, `article_id`, `added`) VALUES ('. $user_id .', '. $list_id .', '. $article_id .', NOW());';
+			$result = mysql_query($query);
 			
-			if (mysql_num_rows(mysql_query($query)) == 0) {
-				$query = 'INSERT INTO `tblUsersReadLater` (`user_id`, `list_id`, `article_id`, `added`) VALUES ('. $user_id .', '. $list_id .', '. $article_id .', NOW());';
-				$result = mysql_query($query);
-			}
+			$this->sendResponse(200, json_encode(array("success" => true)));
+			return (true);
+		}
+		
+		function readArticle($user_id, $list_id, $article_id) {
+			$query = 'INSERT INTO `tblUsersReadArticles` (`user_id`, `list_id`, `article_id`, `added`) VALUES ('. $user_id .', '. $list_id .', '. $article_id .', NOW());';
+			$result = mysql_query($query);
 			
-			$this->sendResponse(200, json_encode(array()));
+		  	$this->sendResponse(200, json_encode(array("success" => true)));
 			return (true);
 		}
 		
@@ -221,14 +239,19 @@
 				break;
 				
 			case "1":
-				if (isset($_POST['articleID']))
-					$articles->addLike($_POST['articleID']);
+				if (isset($_POST['userID']) && isset($_POST['listID']) && isset($_POST['articleID']))
+					$articles->addLike($_POST['userID'], $_POST['listID'], $_POST['articleID']);
 				break;
 				
 			case "2":
 				if (isset($_POST['userID']) && isset($_POST['listID']) && isset($_POST['articleID']))
 					$articles->readLater($_POST['userID'], $_POST['listID'], $_POST['articleID']);
-				break;				
+				break;
+				
+			case "3":
+				if (isset($_POST['userID']) && isset($_POST['listID']) && isset($_POST['articleID']))
+					$articles->readArticle($_POST['userID'], $_POST['listID'], $_POST['articleID']);
+				break;
 				
 			case "8":
 			 	if (isset($_POST['listID']))

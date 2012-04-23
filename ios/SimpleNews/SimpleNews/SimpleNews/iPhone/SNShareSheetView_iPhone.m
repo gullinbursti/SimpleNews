@@ -21,19 +21,6 @@
 		bgImgView.image = [UIImage imageNamed:@"shareBG.png"];
 		[self addSubview:bgImgView];
 		
-		UIButton *readLaterButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
-		readLaterButton.frame = CGRectMake(38.0, 38.0, 244.0, 64.0);
-		[readLaterButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-		[readLaterButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-		readLaterButton.titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14.0];
-		readLaterButton.titleLabel.textAlignment = UITextAlignmentCenter;
-		[readLaterButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-		readLaterButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
-		readLaterButton.titleLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-		[readLaterButton setTitle:@"Read Later" forState:UIControlStateNormal];
-		[readLaterButton addTarget:self action:@selector(_goReadLater) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:readLaterButton];
-		
 		UIButton *twitterButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
 		twitterButton.frame = CGRectMake(38.0, 112.0, 244.0, 64.0);
 		[twitterButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
@@ -87,19 +74,6 @@
 
 
 #pragma mark - Navigation
--(void)_goReadLater {
-	ASIFormDataRequest *readLaterRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
-	[readLaterRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
-	[readLaterRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[readLaterRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-	[readLaterRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
-	[readLaterRequest setTimeOutSeconds:30];
-	[readLaterRequest setDelegate:self];
-	[readLaterRequest startAsynchronous];
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"READ_LATER" object:_vo];
-}
-
 -(void)_goTwitter {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TWITTER_SHARE" object:_vo];
 }

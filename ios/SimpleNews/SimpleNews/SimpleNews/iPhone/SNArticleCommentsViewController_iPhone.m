@@ -70,10 +70,14 @@
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
 	[self.view addSubview:_scrollView];
 	
-	_inputBgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 50.0, self.view.frame.size.width, 50.0)] autorelease];
-	_inputBgImgView.image = [UIImage imageNamed:@"inputFieldBG.png"];
-	_inputBgImgView.userInteractionEnabled = YES;
-	[self.view addSubview:_inputBgImgView];
+	_bgView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 50.0, self.view.frame.size.width, 50.0)] autorelease];
+	[_bgView setBackgroundColor:[UIColor colorWithWhite:0.914 alpha:1.0]];
+	[self.view addSubview:_bgView];
+	
+	UIImageView *inputBgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(8.0, 8.0, 184.0, 34.0)] autorelease];
+	inputBgImgView.image = [UIImage imageNamed:@"inputFieldBG.png"];
+	inputBgImgView.userInteractionEnabled = YES;
+	[_bgView addSubview:inputBgImgView];
 	
 	_commentTxtField = [[[UITextField alloc] initWithFrame:CGRectMake(23.0, 17.0, 270.0, 16.0)] autorelease];
 	[_commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
@@ -86,21 +90,35 @@
 	_commentTxtField.keyboardType = UIKeyboardTypeDefault;
 	_commentTxtField.text = @"";
 	_commentTxtField.delegate = self;
-	[_inputBgImgView addSubview:_commentTxtField];
+	[_bgView addSubview:_commentTxtField];
 	
 	_commentsLabel = [[UILabel alloc] initWithFrame:_commentTxtField.frame];
 	_commentsLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
 	_commentsLabel.textColor = [UIColor blackColor];
 	_commentsLabel.backgroundColor = [UIColor clearColor];
-	_commentsLabel.text = @"Comment";
-	[_inputBgImgView addSubview:_commentsLabel];
+	_commentsLabel.text = @"Say something…";
+	[_bgView addSubview:_commentsLabel];
 	
 	UIButton *likeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	likeButton.frame = CGRectMake(280.0, 12.0, 25.0, 25.0);
-	[likeButton setBackgroundImage:[UIImage imageNamed:@"smallDoneButton_nonActive.png"] forState:UIControlStateNormal];
-	[likeButton setBackgroundImage:[UIImage imageNamed:@"smallDoneButtonActive.png"] forState:UIControlStateHighlighted];
+	likeButton.frame = CGRectMake(186.0, 9.0, 34.0, 34.0);
+	[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
+	[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
 	[likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-	[_inputBgImgView addSubview:likeButton];
+	[_bgView addSubview:likeButton];
+	
+	UIButton *favButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	favButton.frame = CGRectMake(230.0, 9.0, 34.0, 34.0);
+	[favButton setBackgroundImage:[UIImage imageNamed:@"favButton_nonActive.png"] forState:UIControlStateNormal];
+	[favButton setBackgroundImage:[UIImage imageNamed:@"favButton_Active.png"] forState:UIControlStateHighlighted];
+	[favButton addTarget:self action:@selector(_goReadLater) forControlEvents:UIControlEventTouchUpInside];
+	[_bgView addSubview:favButton];
+	
+	UIButton *shareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	shareButton.frame = CGRectMake(264.0, 9.0, 34.0, 34.0);
+	[shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_nonActive.png"] forState:UIControlStateNormal];
+	[shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_Active.png"] forState:UIControlStateHighlighted];
+	[shareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+	[_bgView addSubview:shareButton];
 	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
@@ -159,6 +177,14 @@
 	_isLiked = YES;
 }
 
+-(void)_goReadLater {
+	
+}
+
+-(void)_goShare {
+	
+}
+
 -(void)_onTxtDoneEditing:(id)sender {
 	[sender resignFirstResponder];
 	
@@ -210,7 +236,7 @@
 	
 	[UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^(void){
 		//_scrollView.contentOffset = CGPointMake(0.0, _scrollView.contentSize.height - 250.0);
-		_inputBgImgView.frame = CGRectMake(_inputBgImgView.frame.origin.x, _inputBgImgView.frame.origin.y - 215.0, _inputBgImgView.frame.size.width, _inputBgImgView.frame.size.height);
+		_bgView.frame = CGRectMake(_bgView.frame.origin.x, _bgView.frame.origin.y - 215.0, _bgView.frame.size.width, _bgView.frame.size.height);
 	} completion:nil];
 }
 
@@ -233,10 +259,7 @@
 		[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
 		[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", _list_id] forKey:@"listID"];
 		[_commentSubmitRequest setPostValue:isLiked forKey:@"liked"];
-		
 		[_commentSubmitRequest setPostValue:textField.text forKey:@"content"];
-		
-		[_commentSubmitRequest setTimeOutSeconds:30];
 		[_commentSubmitRequest setDelegate:self];
 		[_commentSubmitRequest startAsynchronous];
 		
@@ -279,7 +302,7 @@
 	_commentsLabel.hidden = NO;
 	
 	[UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void){
-		_inputBgImgView.frame = CGRectMake(_inputBgImgView.frame.origin.x, _inputBgImgView.frame.origin.y + 215.0, _inputBgImgView.frame.size.width, _inputBgImgView.frame.size.height);
+		_bgView.frame = CGRectMake(_bgView.frame.origin.x, _bgView.frame.origin.y + 215.0, _bgView.frame.size.width, _bgView.frame.size.height);
 	} completion:nil];
 }
 
