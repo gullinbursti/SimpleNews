@@ -7,15 +7,16 @@
 //
 
 #import "SNSplashViewController_iPhone.h"
+#import "SNRootViewController_iPhone.h"
 
 @interface SNSplashViewController_iPhone()
--(void)_goGrid;
 @end
 
 @implementation SNSplashViewController_iPhone
 
 -(id)init {
 	if ((self = [super init])) {
+		_frameIndex = 1;
 	}
 	
 	return (self);
@@ -26,15 +27,7 @@
 }
 		  
 -(void)dealloc {
-	[_stripsImgView release];
-	[_highlightImgView release];
-	
 	[super dealloc];
-}
-
--(void)_goGrid {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SPLASH_DISMISSED" object:nil];
-	[self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - View lifecycle
@@ -45,47 +38,11 @@
 	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[self.view addSubview:bgImgView];
 	
-	_stripsImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, -self.view.frame.size.height + 21.0, self.view.frame.size.width, self.view.frame.size.height)];
-	_stripsImgView.image = [UIImage imageNamed:@"loaderBG.jpg"];
-	[self.view addSubview:_stripsImgView];
+	_logoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(118, 198, 84.0, 84.0)] autorelease];
+	_logoImgView.image = [UIImage imageNamed:@"logo_01.png"];
+	[self.view addSubview:_logoImgView];
 	
-	UIImageView *logoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(43.0, 221.0, 234.0, 34.0)] autorelease];
-	logoImgView.image = [UIImage imageNamed:@"logo.png"];
-	[self.view addSubview:logoImgView];
-	
-	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
-	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
-	[self.view addSubview:overlayImgView];
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_stripsImgView.frame = CGRectMake(0.0, -self.view.frame.size.height + 21.0, self.view.frame.size.width, self.view.frame.size.height);	
-		
-	} completion:^(BOOL finished) {
-		_highlightImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-74.0, 12.0, 74.0, 9.0)];
-		_highlightImgView.image = [UIImage imageNamed:@"loaderHighlight.png"];
-		[self.view addSubview:_highlightImgView];
-		
-		[UIView animateWithDuration:1.5 delay:0.33 options:UIViewAnimationCurveLinear animations:^(void) {
-			_highlightImgView.frame = CGRectMake(self.view.frame.size.width, _highlightImgView.frame.origin.y, _highlightImgView.frame.size.width, _highlightImgView.frame.size.height);
-			
-		} completion:^(BOOL finished) {
-			_highlightImgView.frame = CGRectMake(-_highlightImgView.frame.size.width, _highlightImgView.frame.origin.y, _highlightImgView.frame.size.width, _highlightImgView.frame.size.height);
-			
-			[UIView animateWithDuration:1.5 delay:0.0 options:UIViewAnimationCurveLinear animations:^(void) {
-				_highlightImgView.frame = CGRectMake(self.view.frame.size.width, _highlightImgView.frame.origin.y, _highlightImgView.frame.size.width, _highlightImgView.frame.size.height);
-				
-			} completion:^(BOOL finished) {
-				[_highlightImgView removeFromSuperview];
-				
-				[UIView animateWithDuration:0.67 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^(void) {
-					_stripsImgView.frame = CGRectMake(0.0, 0.0, _stripsImgView.frame.size.width, _stripsImgView.frame.size.height);
-					
-				} completion:^(BOOL finished) {
-					[self _goGrid];
-				}];
-			}];
-		}];
-	}];
+	_frameTimer = [NSTimer scheduledTimerWithTimeInterval:0.33 target:self selector:@selector(_nextFrame) userInfo:nil repeats:YES];
 }
 
 -(void)viewDidLoad {
@@ -96,6 +53,26 @@
 	[super viewDidUnload];
 }
 
+
+-(void)_nextFrame {
+	NSLog(@"TIMER TICK");
+	
+	_frameIndex++;
+	
+	if (_frameIndex == 7) {
+		[_frameTimer invalidate];
+		_frameTimer = nil;
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SPLASH_DISMISSED" object:nil];
+		
+		SNRootViewController_iPhone *rootViewController = [[[SNRootViewController_iPhone alloc] init] autorelease];
+		UINavigationController *rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:rootViewController] autorelease];
+		[rootNavigationController setNavigationBarHidden:YES animated:NO];
+		[self.navigationController pushViewController:rootViewController animated:NO];
+	}
+	
+	_logoImgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"logo_0%d.png", _frameIndex]];
+}
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
 	return (interfaceOrientation == UIInterfaceOrientationPortrait);

@@ -32,6 +32,7 @@
 		_subscribedLists = [NSMutableArray new];
 		_popularLists = [NSMutableArray new];
 		
+		_isIntro = YES;
 		_isFollowingList = YES;
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshSubscribedList:) name:@"REFRESH_SUBSCRIBED_LIST" object:nil];
@@ -64,6 +65,10 @@
 #pragma mark - View lifecycle
 -(void)loadView {
 	[super loadView];
+	
+	UIImageView *logoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(118, 198, 84.0, 84.0)] autorelease];
+	logoImgView.image = [UIImage imageNamed:@"logo_01.png"];
+	[self.view addSubview:logoImgView];
 	
 	SNHeaderView_iPhone *headerView = [[[SNHeaderView_iPhone alloc] init] autorelease];
 	[self.view addSubview:headerView];
@@ -166,7 +171,7 @@
 
 -(void)viewDidLoad {
 	[super viewDidLoad];
-	[self _goSubscribedLists];
+	[self.navigationController pushViewController:[[[SNSubscribedListsViewController_iPhone alloc] initWithAnimation:_isIntro] autorelease] animated:NO];
 }
 
 -(void)viewDidUnload {
@@ -174,10 +179,6 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_articlesButton.frame = CGRectMake(256.0, 0.0, 64.0, 64.0);
-	} completion:nil];
-	
 	[super viewDidAppear:animated];
 }
 
@@ -202,11 +203,7 @@
 }
 
 -(void)_goSubscribedLists {
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_articlesButton.frame = CGRectMake(320.0, -64.0, 64.0, 64.0);
-	} completion:^(BOOL finished) {
-		[self.navigationController pushViewController:[[[SNSubscribedListsViewController_iPhone alloc] init] autorelease] animated:YES];
-	}];	
+	[self.navigationController pushViewController:[[[SNSubscribedListsViewController_iPhone alloc] initWithAnimation:NO] autorelease] animated:YES];
 }
 
 

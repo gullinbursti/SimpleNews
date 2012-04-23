@@ -13,23 +13,16 @@
 #import "SNSplashViewController_iPhone.h"
 #import "SNTwitterCaller.h"
 
-static NSString *kFacebookAppId = @"316539575066102";
 NSString *const kSNProfileInfoKey = @"ProfileInfo";
 
 @implementation SNAppDelegate
 
 @synthesize window = _window;
-@synthesize facebook;
 @synthesize userPermissions;
 
 +(SNAppDelegate *)sharedInstance {
 	return (SNAppDelegate *)[UIApplication sharedApplication].delegate;
 }
-
-+(Facebook *)facebook {
-	return [[SNAppDelegate sharedInstance] facebook];
-}
-
 
 +(NSString *)subscribedInfluencers {
 	return ([[NSUserDefaults standardUserDefaults] objectForKey:@"influencers"]);
@@ -320,50 +313,19 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 	UINavigationController *rootNavigationController;
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-		//_splashViewController_iPhone = [[SNSplashViewController_iPhone alloc] init];
-		//rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_splashViewController_iPhone] autorelease];
 		
-		_rootViewController_iPhone = [[SNRootViewController_iPhone alloc] init];
-		rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_rootViewController_iPhone] autorelease];
+		if (![SNAppDelegate profileForUser]) {
+			_splashViewController_iPhone = [[SNSplashViewController_iPhone alloc] init];
+			rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_splashViewController_iPhone] autorelease];
 		
-		
-		// Initialize Facebook
-		facebook = [[Facebook alloc] initWithAppId:kFacebookAppId andDelegate:self];
-		userPermissions = [[NSArray arrayWithObjects:@"read_stream", @"publish_stream", @"offline_access", @"user_location", nil] retain];
-		
-		// Check and retrieve authorization information
-		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-		if ([defaults objectForKey:@"FBAccessTokenKey"] && [defaults objectForKey:@"FBExpirationDateKey"]) {
-			facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
-			facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
+		} else {
+			_rootViewController_iPhone = [[SNRootViewController_iPhone alloc] init];
+			rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_rootViewController_iPhone] autorelease];
 		}
 		
 		[rootNavigationController setNavigationBarHidden:YES];
 		[self.window setRootViewController:rootNavigationController];
 		[self.window makeKeyAndVisible];
-		
-		/*
-		if (![facebook isSessionValid]) {
-			[facebook authorize:userPermissions];
-			
-		} else {
-			NSLog(@"ALREADY LOGGED IN");
-		}
-		*/
-		
-		if (![SNAppDelegate profileForUser]) {
-			SNSplashViewController_iPhone *splashViewController = [[[SNSplashViewController_iPhone alloc] init] autorelease];
-			UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:splashViewController] autorelease];
-			
-			[navigationController setNavigationBarHidden:YES];
-			[rootNavigationController presentModalViewController:navigationController animated:NO];
-		}
-		
-		// Show a splash screen immediately
-		//SNSplashViewController_iPhone *splashViewController = [[[SNSplashViewController_iPhone alloc] init] autorelease];
-		//UINavigationController *splashNavigationController = [[[UINavigationController alloc] initWithRootViewController:splashViewController] autorelease];
-		//[splashNavigationController setNavigationBarHidden:YES animated:NO];
-		//[rootNavigationController pushViewController:splashViewController animated:NO];
 	
 	} else {
 		//_gridViewController_iPad = [[SNVideoGridViewController_iPad alloc] init];
@@ -398,7 +360,6 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
  Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
  **/
 -(void)applicationDidBecomeActive:(UIApplication *)application {
-	[facebook extendAccessTokenIfNeeded];
 	SNTwitterCaller *twitterCaller = [[[SNTwitterCaller alloc] init] autorelease];
 }
 
@@ -407,153 +368,6 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
  **/
 - (void)applicationWillTerminate:(UIApplication *)application {
 }
-
--(BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-	return [facebook handleOpenURL:url]; 
-}
-
-// For iOS 4.2+ support
--(BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-	return [facebook handleOpenURL:url]; 
-}
-
-
-
--(void)storeAuthData:(NSString *)accessToken expiresAt:(NSDate *)expiresAt {
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setObject:accessToken forKey:@"FBAccessTokenKey"];
-	[defaults setObject:expiresAt forKey:@"FBExpirationDateKey"];
-	[defaults synchronize];
-}
-
-
-#pragma mark - FBSessionDelegate Methods
-/**
- * Called when the user has logged in successfully.
- */
-- (void)fbDidLogin {
-	SNAppDelegate *delegate = (SNAppDelegate *)[[UIApplication sharedApplication] delegate];
-	[self storeAuthData:[[delegate facebook] accessToken] expiresAt:[[delegate facebook] expirationDate]];
-	
-	NSLog(@"FB LOGGED IN");
-	[facebook requestWithGraphPath:@"me" andDelegate:self];
-}
-
--(void)fbDidExtendToken:(NSString *)accessToken expiresAt:(NSDate *)expiresAt {
-	NSLog(@"token extended");
-	
-	[self storeAuthData:accessToken expiresAt:expiresAt];
-	[facebook requestWithGraphPath:@"me" andDelegate:self];
-}
-
-/**
- * Called when the user canceled the authorization dialog.
- */
--(void)fbDidNotLogin:(BOOL)cancelled {
-}
-
-/**
- * Called when the request logout has succeeded.
- */
-- (void)fbDidLogout {
-	
-	// Remove saved authorization information if it exists and it is
-	// ok to clear it (logout, session invalid, app unauthorized)
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults removeObjectForKey:@"FBAccessTokenKey"];
-	[defaults removeObjectForKey:@"FBExpirationDateKey"];
-	[defaults synchronize];
-}
-
-/**
- * Called when the session has expired.
- */
-- (void)fbSessionInvalidated {
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Auth Exception" message:@"Your session has expired." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-	[alertView show];
-	[alertView release];
-	[self fbDidLogout];
-}
-
-
-
-#pragma mark - FBRequestDelegate Methods
-/**
- * Called when the Facebook API request has returned a response. This callback
- * gives you access to the raw response. It's called before
- * (void)request:(FBRequest *)request didLoad:(id)result,
- * which is passed the parsed response object.
- */
-- (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response {
-	//NSLog(@"received response");
-}
-
-/**
- * Called when a request returns and its response has been parsed into
- * an object. The resulting object may be a dictionary, an array, a string,
- * or a number, depending on the format of the API response. If you need access
- * to the raw response, use:
- *
- * (void)request:(FBRequest *)request
- *      didReceiveResponse:(NSURLResponse *)response
- */
-- (void)request:(FBRequest *)request didLoad:(id)result {
-//	if ([result isKindOfClass:[NSArray class]]) {
-//		result = [result objectAtIndex:0];
-//	}
-//	// This callback can be a result of getting the user's basic
-//	// information or getting the user's permissions.
-//	if ([result objectForKey:@"name"]) {
-//		NSLog(@"%@", [result objectForKey:@"name"]);
-//		UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[result objectForKey:@"pic"]]]];
-//		
-//	} else {
-//		// Processing permissions information
-//		SNAppDelegate *delegate = (SNAppDelegate *)[[UIApplication sharedApplication] delegate];
-//		[delegate setUserPermissions:[[result objectForKey:@"data"] objectAtIndex:0]];
-//	}
-	
-	/*
-	NSMutableDictionary *profile = [NSMutableDictionary new];
-	if ([result isKindOfClass:[NSDictionary class]]) {
-		NSString *strBirthDay = [[NSString alloc] initWithFormat:@"%@", [result objectForKey:@"birthday"]];
-		NSString *strBirthYear = [[NSString alloc] initWithFormat:@"%@", [(NSArray *)[strBirthDay componentsSeparatedByString:@"/"] lastObject]];
-		
-		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-		[formatter setDateFormat:@"YYYY"];	  
-		NSString *strCurrentYear = [formatter stringFromDate:[NSDate date]];
-		
-		[profile setObject:[result objectForKey:@"id"] forKey:@"id"];
-		[profile setObject:[result objectForKey:@"username"] forKey:@"handle"];
-		[profile setObject:[[NSString alloc] initWithFormat:@"%@ %@", [result objectForKey:@"first_name"], [result objectForKey:@"last_name"]] forKey:@"name"];
-		[profile setObject:[result objectForKey:@"first_name"] forKey:@"fName"];
-		[profile setObject:[result objectForKey:@"last_name"] forKey:@"lName"];
-		[profile setObject:[result objectForKey:@"gender"] forKey:@"sex"];
-		[profile setObject:[NSNumber numberWithInteger:[strCurrentYear intValue] - [strBirthYear intValue]] forKey:@"age"];
-		[profile setObject:[(NSDictionary *)[result objectForKey:@"location"] objectForKey:@"name"] forKey:@"location"];
-		[profile setObject:[(NSDictionary *)[result objectForKey:@"hometown"] objectForKey:@"name"] forKey:@"hometown"];
-		[profile setObject:[(NSDictionary *)[(NSDictionary *)[(NSArray *)[result objectForKey:@"work"] objectAtIndex:0] objectForKey:@"employer"] objectForKey:@"name"] forKey:@"work"];
-		[profile setObject:[(NSDictionary *)[(NSArray *)[result objectForKey:@"education"] lastObject] objectForKey:@"type"] forKey:@"education"];
-		[profile setObject:@"" forKey:@"profession"];
-		[profile setObject:@"0" forKey:@"friends"];
-	}
-	
-	[SNAppDelegate writeFBProfile:profile];
-	 */
-}
-
-/**
- * Called when an error prevents the Facebook API request from completing
- * successfully.
- */
-- (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
-	NSLog(@"Err message: %@", [[error userInfo] objectForKey:@"error_msg"]);
-	NSLog(@"Err code: %d", [error code]);
-}
-
-
-
 
 #pragma mark - PushNotification Delegates
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {

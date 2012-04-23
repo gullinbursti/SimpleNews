@@ -10,28 +10,20 @@
 #import "SNSplashViewController_iPhone.h"
 
 #import "SNRootViewController_iPhone.h"
-
-#import "Facebook.h"
 #import "UAPushNotificationHandler.h"
 
 
 @class SNViewController;
 
-@interface SNAppDelegate : UIResponder <UIApplicationDelegate, FBSessionDelegate, FBRequestDelegate, UAPushNotificationDelegate> {
+@interface SNAppDelegate : UIResponder <UIApplicationDelegate> {
 	SNSplashViewController_iPhone *_splashViewController_iPhone;
 	
 	SNRootViewController_iPhone *_rootViewController_iPhone;
-	
-	Facebook *facebook;
-	NSArray *userPermissions;
 }
 
 #define kServerPath @"http://dev.gullinbursti.cc/projs/simplenews/services"
 
 +(SNAppDelegate *)sharedInstance;
-
-+(void)writeFBProfile:(NSDictionary *)profile;
-+(NSDictionary *)fbProfile;
 
 +(void)writeUserProfile:(NSDictionary *)userInfo;
 +(NSDictionary *)profileForUser;
@@ -79,7 +71,6 @@
 +(int)daysAfterDate:(NSDate *)date;
 
 @property (strong, nonatomic) UIWindow *window;
-@property (nonatomic, retain) Facebook *facebook;
 @property (nonatomic, retain) NSArray *userPermissions;
 
 @end

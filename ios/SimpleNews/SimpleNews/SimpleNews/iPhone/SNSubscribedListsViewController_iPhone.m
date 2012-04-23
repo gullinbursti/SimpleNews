@@ -21,8 +21,9 @@
 
 @implementation SNSubscribedListsViewController_iPhone
 
--(id)init {
+-(id)initWithAnimation:(BOOL)intro {
 	if ((self = [super init])) {
+		_isIntroed = intro;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_listArticles:) name:@"LIST_ARTICLES" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE2" object:nil];
 		
@@ -57,11 +58,15 @@
 -(void)loadView {
 	[super loadView];
 	
-	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height)] autorelease];
+	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	bgImgView.image = [UIImage imageNamed:@"background_stripes.png"];
 	[self.view addSubview:bgImgView];
 	
-	_holderView = [[UIView alloc] initWithFrame:self.view.frame];
+	UIImageView *logoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(118, 198, 84.0, 84.0)] autorelease];
+	logoImgView.image = [UIImage imageNamed:@"logo_01.png"];
+	[self.view addSubview:logoImgView];
+	
+	_holderView = [[UIView alloc] initWithFrame:CGRectMake(320.0 * (int)_isIntroed, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
 	[self.view addSubview:_holderView];
 	
 	_scrollView = [[UIScrollView alloc] initWithFrame:self.view.frame];
@@ -73,17 +78,17 @@
 	_scrollView.showsHorizontalScrollIndicator = NO;
 	_scrollView.showsVerticalScrollIndicator = NO;
 	_scrollView.alwaysBounceVertical = NO;
-	[self.view addSubview:_scrollView];
+	[_holderView addSubview:_scrollView];
 	
 	_rootListButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-	_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
+	_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
 	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_nonActive.png"] forState:UIControlStateNormal];
 	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_Active.png"] forState:UIControlStateHighlighted];
 	[_rootListButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_rootListButton];
 	
 	_paginationView = [[SNPaginationView_iPhone alloc] initWithFrame:CGRectMake(136.0, 467.0, 48.0, 9.0)];
-	[self.view addSubview:_paginationView];
+	[_holderView addSubview:_paginationView];
 	
 	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
@@ -101,9 +106,14 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-	//[UIView animateWithDuration:0.33 animations:^(void) {
-		_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
-	//} completion:nil];
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_holderView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
+		
+	} completion:^(BOOL finished) {
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
+		} completion:nil];
+	}];
 	
 	[super viewDidAppear:animated];
 }
@@ -111,7 +121,7 @@
 
 #pragma mark - Navigation
 -(void)_goBack {
-	[self.navigationController popToRootViewControllerAnimated:YES];
+	[self.navigationController popViewControllerAnimated:YES];
 }
 
 

@@ -21,6 +21,10 @@
 	UIButton *_rootListButton;
 	
 	SNPaginationView_iPhone	*_paginationView;
+	BOOL _isIntroed;
 }
+
+
+-(id)initWithAnimation:(BOOL)intro;
 
 @end

@@ -25,14 +25,13 @@
 	
 	UITableView *_subscribedTableView;
 	UITableView *_popularTableView;
-	UIButton *_articlesButton;
 	
 	UIImageView *_toggleLtImgView;
 	UIImageView *_toggleRtImgView;
 	
 	BOOL _isFollowingList;
-	
 	BOOL _reloading;
+	BOOL _isIntro;
 }
 
 - (void)reloadTableViewDataSource;

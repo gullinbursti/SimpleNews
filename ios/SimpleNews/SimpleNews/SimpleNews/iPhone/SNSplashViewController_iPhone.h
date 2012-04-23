@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface SNSplashViewController_iPhone : UIViewController {
-	UIImageView *_stripsImgView;
-	UIImageView *_highlightImgView;
+	NSTimer *_frameTimer;
+	int _frameIndex;
+	UIImageView *_logoImgView;
 }
 
 @end
