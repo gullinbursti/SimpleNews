@@ -8,12 +8,16 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import "Reachability.h"
+#import "GANTracker.h"
 
 #import "SNAppDelegate.h"
 #import "SNSplashViewController_iPhone.h"
 #import "SNTwitterCaller.h"
 
 NSString *const kSNProfileInfoKey = @"ProfileInfo";
+
+static const NSInteger kGANDispatchPeriodSec = 10;
+static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 
 @implementation SNAppDelegate
 
@@ -235,6 +239,7 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 
 
 -(void)dealloc {
+	[[GANTracker sharedTracker] stopTracker];
 	[_window release];
 	
 	[super dealloc];
@@ -293,8 +298,15 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 		[defaults setObject:[NSNumber numberWithInt:boot_total] forKey:@"boot_total"];
 		[defaults synchronize];
 		
-		if ([[defaults objectForKey:@"boot_total"] intValue] > 2) {
-			if (![[NSUserDefaults standardUserDefaults] objectForKey:@"notifications"] || [SNAppDelegate notificationsEnabled]) {
+		if ([[defaults objectForKey:@"boot_total"] intValue] == 4) {
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Rate Assembly" message:@"Why not rate Assembly in the app store!" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"App Store", nil];
+			
+			[alert show];
+			[alert release];
+		}
+		
+		//if ([[defaults objectForKey:@"boot_total"] intValue] > 2) {
+		//if (![[NSUserDefaults standardUserDefaults] objectForKey:@"notifications"] || [SNAppDelegate notificationsEnabled]) {
 				[SNAppDelegate notificationsToggle:YES];
 				
 				// init Airship launch options
@@ -306,8 +318,17 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 				[[UAPush shared] resetBadge];//zero badge on startup
 				[[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 			}	
-		}
-	}
+		//}
+	//}
+	
+	[[GANTracker sharedTracker] startTrackerWithAccountID:kAnalyticsAccountId
+														dispatchPeriod:kGANDispatchPeriodSec
+																delegate:nil];
+	[[GANTracker sharedTracker] setDryRun:YES];
+	
+	NSError *error;
+	if (![[GANTracker sharedTracker] trackPageview:@"/bootup" withError:&error])
+		NSLog(@"error in trackPageview");
 	
 	self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
 	UINavigationController *rootNavigationController;
@@ -514,6 +535,17 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 	 
 	 [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
 	 */
+}
+
+
+#pragma mark - AlertView delegates
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	switch(buttonIndex) {
+		case 1:
+			//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms://itunes.apple.com/us/app/id284417350?mt=8"]];
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms://itunes.com/apps/getassembly"]];
+			break;
+	}
 }
 
 

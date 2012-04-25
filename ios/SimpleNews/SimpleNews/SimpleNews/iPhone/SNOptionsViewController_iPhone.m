@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import "GANTracker.h"
+
 #import <Twitter/Twitter.h>
 
 #import "SNOptionsViewController_iPhone.h"
@@ -22,6 +24,9 @@
 
 -(id)init {
 	if ((self = [super init])) {
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackPageview:@"/options" withError:&error])
+			NSLog(@"error in trackPageview");
 	}
 	
 	return (self);

@@ -8,6 +8,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+#import "GANTracker.h"
 #import "SNListCardView_iPhone.h"
 #import "SNAppDelegate.h"
 #import "SNListInfoView_iPhone.h"
@@ -21,14 +22,12 @@
 		_vo = vo;
 		_isFlipped = NO;
 		
-		_testImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)] autorelease];
-		_testImgView.image = [UIImage imageNamed:@"storyImageTest.jpg"];
-		//[self addSubview:_testImgView];
-		
 		EGOImageView *coverImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(10.0, 10.0, 275.0, 389.0)] autorelease];
-		coverImgView.imageURL = [NSURL URLWithString:_vo.imageURL];
+		//coverImgView.imageURL = [NSURL URLWithString:_vo.imageURL];
 		coverImgView.userInteractionEnabled = YES;
 		[_holderView addSubview:coverImgView];
+		
+		coverImgView.image = [[EGOImageLoader sharedImageLoader] imageForURL:[NSURL URLWithString:_vo.imageURL] shouldLoadWithObserver:nil];
 		
 		SNListInfoView_iPhone *listInfoView = [[SNListInfoView_iPhone alloc] initWithFrame:CGRectMake(10.0, 10.0, _holderView.frame.size.width - 20.0, 65.0) listVO:_vo];
 		[_holderView addSubview:listInfoView];
@@ -145,6 +144,10 @@
 	zoomAnimation.removedOnCompletion = NO;
 	[_holderView.layer addAnimation:zoomAnimation forKey:@"zoomAnimation"];
 	
+	NSError *error;
+	if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/lists/%@", _vo.list_name] withError:&error])
+		NSLog(@"error in trackPageview");
+	
 	[self performSelector:@selector(_outroMe) withObject:nil afterDelay:0.2];
 }
 
@@ -166,6 +169,10 @@
 		[_subscribeBtn setTitle:@"Unfollow" forState:UIControlStateNormal];
 		[_subscribeBtn removeTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
 		[_subscribeBtn addTarget:self action:@selector(_goUnsubscribe) forControlEvents:UIControlEventTouchUpInside];
+		
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackEvent:@"Following Topic" action:_vo.list_name label:nil value:-1 withError:&error])
+			NSLog(@"error in trackEvent");
 	}
 }
 
@@ -187,6 +194,10 @@
 		[_subscribeBtn setTitle:@"Follow Topic" forState:UIControlStateNormal];
 		[_subscribeBtn removeTarget:self action:@selector(_goUnsubscribe) forControlEvents:UIControlEventTouchUpInside];
 		[_subscribeBtn addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
+		
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackEvent:@"Unfollowed Topic" action:_vo.list_name label:nil value:-1 withError:&error])
+			NSLog(@"error in trackEvent");
 	}
 }
 

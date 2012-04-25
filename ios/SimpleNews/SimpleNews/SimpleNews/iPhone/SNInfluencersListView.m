@@ -8,6 +8,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+#import "GANTracker.h"
 #import "SNInfluencersListView.h"
 #import "SNInfluencerListViewCell_iPhone.h"
 #import "SNInfluencerVO.h"
@@ -128,6 +129,10 @@
 		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
 		[subscribeRequest setDelegate:self];
 		[subscribeRequest startAsynchronous];
+		
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackEvent:@"Following Topic" action:_vo.list_name label:nil value:-1 withError:&error])
+			NSLog(@"error in trackEvent");
 	}
 }
 

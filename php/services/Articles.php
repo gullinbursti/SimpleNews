@@ -86,7 +86,7 @@
 		function getArticlesForList($list_id) {
 			$article_arr = array();
 			
-			$query = 'SELECT * FROM `tblArticles` WHERE `list_id` = '. $list_id .' ORDER BY `added` DESC;';
+			$query = 'SELECT * FROM `tblArticles` WHERE `list_id` = '. $list_id .' AND `active` = "Y" ORDER BY `added` DESC;';
 			$article_result = mysql_query($query);
 			
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 				
@@ -130,7 +130,82 @@
 					"source_id" => $article_row['source_id'], 
 					"title" => $article_row['title'], 
 					"article_url" => $article_row['article_url'], 
-					"short_url" => $article_row['short_url'], 
+					"short_url" => "", 
+					"affiliate_url" => $article_row['affiliate_url'], 
+					"tweet_id" => $article_row['tweet_id'], 
+					"tweet_msg" => $article_row['tweet_msg'], 
+					"twitter_name" => $influencer_row[2], 
+					"twitter_handle" => $influencer_row[1],
+					"twitter_info" => $influencer_row[4], 
+					"bg_url" => $article_row['image_url'], 
+					"source" => $article_row['source'], 
+					"content" => $article_row['content'], 
+					"avatar_url" => $influencer_row[3], 
+					"video_url" => $article_row['video_url'], 
+					"likes" => $article_row['likes'], 
+					"liked" => $isLiked, 
+					"img_ratio" => $article_row['img_ratio'], 
+					"added" => $article_row['added'], 
+					"tags" => array(), 
+					"reads" => $user_arr, 
+					"reactions" => $comment_arr
+				)); 
+			}
+			
+			
+			$this->sendResponse(200, json_encode($article_arr));
+			return (true);
+		}
+		
+		function getListArticlesAfterDate($list_id, $datetime) {
+			$article_arr = array();
+			
+			$query = 'SELECT * FROM `tblArticles` WHERE `list_id` = '. $list_id .' AND `active` = "Y" AND `added` > "'. $datetime .'" ORDER BY `added` DESC;';
+			$article_result = mysql_query($query);
+			
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 				
+				$query = 'SELECT `tblComments`.`id`, `tblComments`.`content`, `tblComments`.`liked`, `tblComments`.`added`, `tblUsers`.`name`, `tblUsers`.`handle` FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row['id'] .' AND `tblComments`.`list_id` = '. $list_id .' ORDER BY `tblComments`.`added` DESC;';
+				$comments_result = mysql_query($query);
+				
+				$comment_arr = array();
+				while ($comment_row = mysql_fetch_array($comments_result, MYSQL_BOTH)) {
+					array_push($comment_arr, array(
+						"reaction_id" => $comment_row['id'], 
+						"thumb_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"name" => $comment_row['name'], 
+						"handle" => $comment_row['handle'], 
+						"comment_url" => "http://shelby.tv", 
+						"content" => htmlentities($comment_row['content'], ENT_QUOTES), 
+						"liked" => $comment_row['liked'], 
+						"added" => $comment_row['added']
+					 ));
+				}
+				
+				$query = 'SELECT `tblUsers`.`handle`, `tblUsers`.`name` FROM `tblUsers` INNER JOIN `tblUsersReadArticles` ON `tblUsers`.`id` = `tblUsersReadArticles`.`user_id` WHERE `tblUsersReadArticles`.`list_id` = '. $list_id .' AND `tblUsersReadArticles`.`article_id` = '. $article_row['id'] .' ORDER BY `tblUsersReadArticles`.`added` DESC LIMIT 16;';
+				$users_result = mysql_query($query);
+				$user_arr = array();
+				while ($user_row = mysql_fetch_array($users_result, MYSQL_BOTH)) {
+					array_push($user_arr, array(
+						"handle" => $user_row['handle'], 
+						"name" => $user_row['name']
+					));
+				}
+				
+				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `user_id` = 1 AND `list_id` = '. $list_id .' AND `article_id` = '. $article_row['id'] .';';
+				$isLiked = (mysql_num_rows(mysql_query($query)) > 0);
+				
+				$query = 'SELECT * FROM `tblInfluencers` WHERE `id` = '. $article_row['influencer_id'] .';';
+				$influencer_row = mysql_fetch_row(mysql_query($query));
+				
+				array_push($article_arr, array(
+					"article_id" => $article_row['id'], 
+					"list_id" => $list_id, 
+					"type_id" => $article_row['type_id'], 
+					"source_id" => $article_row['source_id'], 
+					"title" => $article_row['title'], 
+					"article_url" => $article_row['article_url'], 
+					"short_url" => "",
+					"affiliate" => $article_row['affiliate_url'], 
 					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
 					"twitter_name" => $influencer_row[2], 
@@ -251,6 +326,11 @@
 			case "3":
 				if (isset($_POST['userID']) && isset($_POST['listID']) && isset($_POST['articleID']))
 					$articles->readArticle($_POST['userID'], $_POST['listID'], $_POST['articleID']);
+				break;
+				
+			case "4":
+				if (isset($_POST['listID']) && isset($_POST['datetime']))
+					$articles->getListArticlesAfterDate($_POST['listID'], $_POST['datetime']);
 				break;
 				
 			case "8":

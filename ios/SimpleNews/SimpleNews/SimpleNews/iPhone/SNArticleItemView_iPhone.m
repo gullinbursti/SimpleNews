@@ -47,7 +47,7 @@
 				timeSince = [NSString stringWithFormat:@"%dm", mins];
 		}
 		
-		size = [timeSince sizeWithFont:[SNAppDelegate snAllerFontRegular] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		size = [timeSince sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 		UILabel *dateLabel = [[[UILabel alloc] initWithFrame:CGRectMake(80.0, 24.0, size.width, 16.0)] autorelease];
 		dateLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:12];
 		dateLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
@@ -55,8 +55,8 @@
 		dateLabel.text = timeSince;
 		[self addSubview:dateLabel];
 		
-		CGSize size2 = [[NSString stringWithFormat:@"@%@", _vo.twitterHandle] sizeWithFont:[SNAppDelegate snHelveticaNeueFontBold] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *twitterNameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(80.0 + size.width, 24.0, size2.width, 16.0)] autorelease];
+		CGSize size2 = [[NSString stringWithFormat:@"@%@", _vo.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *twitterNameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(85.0 + size.width, 24.0, size2.width, 16.0)] autorelease];
 		twitterNameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 		twitterNameLabel.textColor = [UIColor colorWithWhite:0.525 alpha:1.0];
 		twitterNameLabel.backgroundColor = [UIColor clearColor];
@@ -64,7 +64,7 @@
 		[self addSubview:twitterNameLabel];
 		
 		if (_vo.source_id == 0) {
-			UILabel *messageLabel = [[[UILabel alloc] initWithFrame:CGRectMake(70.0 + size.width + size2.width, 24.0, 100.0, 16.0)] autorelease];
+			UILabel *messageLabel = [[[UILabel alloc] initWithFrame:CGRectMake(90.0 + size.width + size2.width, 24.0, 100.0, 16.0)] autorelease];
 			messageLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:12];
 			messageLabel.textColor = [UIColor colorWithWhite:0.525 alpha:1.0];
 			messageLabel.backgroundColor = [UIColor clearColor];
@@ -100,20 +100,40 @@
 		int offset2 = offset + 25;
 		
 		if (_vo.type_id > 1) {
-			EGOImageView *articleImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(80.0, offset, 227.0, 227.0 * _vo.imgRatio)] autorelease];
-			articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
-			[self addSubview:articleImgView];
+			_articleImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(80.0, offset, 227.0, 227.0 * _vo.imgRatio)] autorelease];
+			_articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
+			_articleImgView.userInteractionEnabled = YES;
+			[self addSubview:_articleImgView];
 			
-			UIButton *ctaButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-			ctaButton.frame = articleImgView.frame;
-			ctaButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, (articleImgView.frame.size.width * 0.5) - 11.0, 0.0, -((articleImgView.frame.size.width * 0.5) - 11.0));
-			[ctaButton setImage:[UIImage imageNamed:@"ctaButton_nonActive.png"] forState:UIControlStateNormal];
-			[ctaButton setImage:[UIImage imageNamed:@"ctaButton_Active.png"] forState:UIControlStateHighlighted];
-			[ctaButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
-			[self addSubview:ctaButton];
+			UITapGestureRecognizer *dblTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photoZoomIn:)];
+			dblTapRecognizer.numberOfTapsRequired = 2;
+			[_articleImgView addGestureRecognizer:dblTapRecognizer];
+			[dblTapRecognizer release];
+			
+			UIImageView *ctaImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(_articleImgView.frame.size.width - 20.0, _articleImgView.frame.size.height * 0.5, 44.0, 44.0)] autorelease];
+			ctaImgView.image = [UIImage imageNamed:@"ctaButton_nonActive.png"];
+			[_articleImgView addSubview:ctaImgView];
 			
 			offset += (227.0 * _vo.imgRatio);
 			offset += 20;
+		}
+		
+		if ([_vo.affiliateURL length] > 0) {
+			UIImageView *affiliateImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(80.0, offset, 34.0, 34.0)] autorelease];
+			affiliateImgView.image = [UIImage imageNamed:@"favButton_nonActive.png"];
+			[self addSubview:affiliateImgView];
+			
+			size = [_vo.affiliateURL sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];	
+			
+			UIButton *affiliateButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			affiliateButton.frame = CGRectMake(120.0, offset, size.width, 34.0);
+			[affiliateButton addTarget:self action:@selector(_goAffiliate) forControlEvents:UIControlEventTouchUpInside];
+			affiliateButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+			[affiliateButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+			[affiliateButton setTitle:_vo.affiliateURL forState:UIControlStateNormal];
+			[self addSubview:affiliateButton];
+			
+			offset += 48;
 		}
 		
 		//CGSize imgSize = NSLog(@"IMAGE SIZE:(%d, %d)", (int)[UIImage imageNamed:@"overlay.png"].size.width, (int)[UIImage imageNamed:@"overlay.png"].size.height);
@@ -132,21 +152,22 @@
 		offset += 12;
 		
 		int imgOffset = 80;
-		for (NSDictionary *dict in _vo.seenBy) {
-			EGOImageView *readImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(imgOffset, offset, 24.0, 24.0)] autorelease];
-			readImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1/users/profile_image?screen_name=%@&size=reasonably_small", [dict objectForKey:@"handle"]]];
-			[self addSubview:readImgView];
-			
-			UIButton *avatarButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
-			avatarButton.frame = readImgView.frame;
-			[avatarButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
-			[self addSubview:avatarButton];
-			
-			imgOffset += 34;
-		}
-		
 		
 		if (_vo.source_id > 0) {
+			for (NSDictionary *dict in _vo.seenBy) {
+				EGOImageView *readImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(imgOffset, offset, 24.0, 24.0)] autorelease];
+				readImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1/users/profile_image?screen_name=%@&size=reasonably_small", [dict objectForKey:@"handle"]]];
+				[self addSubview:readImgView];
+				
+				UIButton *avatarButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+				avatarButton.frame = readImgView.frame;
+				[avatarButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
+				[self addSubview:avatarButton];
+				
+				imgOffset += 34;
+			}
+			
+		
 			UIButton *commentButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 			commentButton.frame = CGRectMake(imgOffset - 10.0, offset - 10.0, 44.0, 44.0);
 			[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
@@ -172,6 +193,14 @@
 			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
 			[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:_likeButton];
+			
+			_likesLabel = [[[UILabel alloc] initWithFrame:CGRectMake(15.0, offset2 + 25.0, 35.0, 16.0)] autorelease];
+			_likesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
+			_likesLabel.textColor = [UIColor blackColor];
+			_likesLabel.textAlignment = UITextAlignmentCenter;
+			_likesLabel.backgroundColor = [UIColor clearColor];
+			_likesLabel.text = [NSString stringWithFormat:@"%d", _vo.totalLikes];
+			[self addSubview:_likesLabel];
 			
 			UIButton *favButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
 			favButton.frame = CGRectMake(15.0, offset2 + 59.0, 34.0, 34.0);
@@ -254,8 +283,24 @@
 	[_videoPlayerView startPlayback];
 }
 
+-(void)_photoZoomIn:(UIGestureRecognizer *)gestureRecognizer {
+	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+								 @"photo", @"type", 
+								 _vo, @"VO", 
+								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
+								 [NSValue valueWithCGRect:_articleImgView.frame], @"frame", nil];
+	
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_FULLSCREEN_MEDIA" object:dict];
+}
+
+
+-(void)_goAffiliate {
+	NSLog(@"AFFILIATE");
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:_vo.affiliateURL]];
+}
+
 -(void)_goLike {
-	NSLog(@"GO LIKE");
 	ASIFormDataRequest *readRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
 	[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 	[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
@@ -274,6 +319,9 @@
 	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
 	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
 	[likeRequest startAsynchronous];
+	
+	_vo.totalLikes++;
+	_likesLabel.text = [NSString stringWithFormat:@"%d", _vo.totalLikes];
 }
 
 -(void)_goReadLater {

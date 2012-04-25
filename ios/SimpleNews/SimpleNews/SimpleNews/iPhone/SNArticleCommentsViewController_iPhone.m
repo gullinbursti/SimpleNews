@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import "GANTracker.h"
+
 #import "SNArticleCommentsViewController_iPhone.h"
 #import "SNArticleCommentView_iPhone.h"
 #import "SNHeaderView_iPhone.h"
@@ -23,6 +25,10 @@
 		_isLiked = NO;
 		
 		_commentViews = [NSMutableArray new];
+		
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/lists/%d/%@/comments", _vo.list_id, _vo.title] withError:&error])
+			NSLog(@"error in trackPageview");
 	}
 	
 	return (self);

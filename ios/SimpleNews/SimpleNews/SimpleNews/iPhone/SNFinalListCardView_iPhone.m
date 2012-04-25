@@ -25,9 +25,74 @@
 		_tableView.scrollsToTop = NO;
 		_tableView.showsVerticalScrollIndicator = NO;
 		[_holderView addSubview:_tableView];
+		
+		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
+		_refreshHeaderView.delegate = self;
+		[_tableView addSubview:_refreshHeaderView];
+		[_refreshHeaderView refreshLastUpdatedDate];
 	}
 	
 	return (self);
+}
+
+- (void)reloadTableViewDataSource {
+	_reloading = YES;	
+}
+
+- (void)doneLoadingTableViewData {
+	_reloading = NO;
+	
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_tableView];
+}
+
+
+#pragma mark EGORefreshTableHeaderDelegate Methods
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
+	[self reloadTableViewDataSource];
+	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView *)view {
+	return _reloading; // should return if data source model is reloading
+}
+
+- (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView *)view {
+	return [NSDate date]; // should return date data source was last change	
+}
+
+#pragma mark - ScrollView Delegates
+// any offset changes
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+
+// called on start of dragging (may require some time and or distance to move)
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+}
+
+
+// called on finger up if the user dragged. velocity is in points/second. targetContentOffset may be changed to adjust where the scroll view comes to rest. not called when pagingEnabled is YES
+-(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+// called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+
+// called on finger up as we are moving
+-(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+}
+
+// called when setContentOffset/scrollRectVisible:animated: finishes. not called if not animating
+-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+}
+
+// called when scroll view grinds to a halt
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
 }
 
 #pragma mark - TableView DataSource Delegates

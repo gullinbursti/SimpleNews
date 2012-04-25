@@ -13,6 +13,8 @@
 #import "SNListCardView_iPhone.h"
 #import "SNArticleListViewController_iPhone.h"
 
+#import "EGOImageLoader.h"
+
 #import "SNFinalListCardView_iPhone.h"
 #import "SNWebPageViewController_iPhone.h"
 
@@ -106,7 +108,7 @@
 }
 
 -(void)viewDidAppear:(BOOL)animated {
-	[UIView animateWithDuration:0.33 animations:^(void) {
+	[UIView animateWithDuration:0.33 delay:0.67 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
 		_holderView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
 		
 	} completion:^(BOOL finished) {
@@ -188,7 +190,7 @@
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
-	NSLog(@"SNSubscribedListsViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	//NSLog(@"SNSubscribedListsViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
 	@autoreleasepool {
 		NSError *error = nil;

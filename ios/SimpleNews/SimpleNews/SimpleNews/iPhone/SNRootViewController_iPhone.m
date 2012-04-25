@@ -208,7 +208,15 @@
 
 
 - (void)reloadTableViewDataSource {
-	_reloading = YES;	
+	_reloading = YES;
+	
+	if (!_isFollowingList) {
+		_updateRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+		[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", 5] forKey:@"action"];
+		[_updateRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[_updateRequest setDelegate:self];
+		[_updateRequest startAsynchronous];
+	}
 }
 
 - (void)doneLoadingTableViewData {
@@ -311,7 +319,9 @@
 #pragma mark EGORefreshTableHeaderDelegate Methods
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
 	[self reloadTableViewDataSource];
-	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
+	
+	if (_isFollowingList)
+		[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:0.5];
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView *)view {
@@ -351,6 +361,8 @@
 				_subscribedLists = [list retain];
 				[_subscribedTableView reloadData];
 			}
+			
+			//EGOImageLoader *firstCover = [[EGOImageLoader sharedImageLoader] imageForURL:[NSURL URLWithString:((SNListVO *)[_subscribedLists objectAtIndex:0]).imageURL] shouldLoadWithObserver:nil];
 		}
 	
 	} else if ([request isEqual:_popularListsRequest]) {
@@ -423,6 +435,38 @@
 		}
 		
 		[_subscribedListsRequest startAsynchronous];
+	
+	} else if ([request isEqual:_updateRequest]) {
+		if (_isFollowingList) {
+			
+		} else {
+			@autoreleasepool {
+				NSError *error = nil;
+				NSSortDescriptor *descriptor = [[[NSSortDescriptor alloc] initWithKey:@"likes" ascending:NO] autorelease];
+				NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+				NSArray *parsedLists = [unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+				
+				//NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+				if (error != nil)
+					NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+				
+				else {
+					NSMutableArray *list = [NSMutableArray array];
+					for (NSDictionary *serverList in parsedLists) {
+						SNListVO *vo = [SNListVO listWithDictionary:serverList];
+						NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
+						
+						if (vo != nil)
+							[list addObject:vo];
+					}
+					
+					_popularLists = [list retain];
+					[_popularTableView reloadData];
+				}
+			}
+			
+			[self doneLoadingTableViewData];
+		}
 	}
 }
 

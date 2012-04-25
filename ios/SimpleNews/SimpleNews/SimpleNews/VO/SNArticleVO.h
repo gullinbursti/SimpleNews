@@ -28,7 +28,7 @@
 @property (nonatomic, retain) NSString *twitterHandle;
 @property (nonatomic, retain) NSString *tweetMessage;
 @property (nonatomic, retain) NSString *article_url;
-@property (nonatomic, retain) NSString *short_url;
+@property (nonatomic, retain) NSString *affiliateURL;
 @property (nonatomic, retain) NSString *content;
 @property (nonatomic, retain) NSString *bgImage_url;
 @property (nonatomic, retain) NSString *articleSource;

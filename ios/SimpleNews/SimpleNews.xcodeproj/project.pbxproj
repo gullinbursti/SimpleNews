@@ -115,6 +115,7 @@
 		4C78D134154230CA006C4A4E /* SNFinalListCardView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C78D133154230CA006C4A4E /* SNFinalListCardView_iPhone.m */; };
 		4C78D13715424107006C4A4E /* SNListItemViewCell_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C78D13615424107006C4A4E /* SNListItemViewCell_iPhone.m */; };
 		4C78D13A15424932006C4A4E /* SNBaseListCardView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C78D13915424932006C4A4E /* SNBaseListCardView_iPhone.m */; };
+		4C7954F71547AFCF009E40DC /* libGoogleAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7954F61547AFCF009E40DC /* libGoogleAnalytics.a */; };
 		4C7D600E14FF02B600156054 /* fpo_startVideo.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4C7D600D14FF02B600156054 /* fpo_startVideo.mp3 */; };
 		4C8671941543D00A00E27CCA /* SNUnderlinedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8671931543D00A00E27CCA /* SNUnderlinedLabel.m */; };
 		4C86719A1544C45900E27CCA /* shareButton_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C8671961544C45900E27CCA /* shareButton_Active.png */; };
@@ -573,6 +574,8 @@
 		4C78D13615424107006C4A4E /* SNListItemViewCell_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNListItemViewCell_iPhone.m; sourceTree = "<group>"; };
 		4C78D13815424931006C4A4E /* SNBaseListCardView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNBaseListCardView_iPhone.h; sourceTree = "<group>"; };
 		4C78D13915424932006C4A4E /* SNBaseListCardView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNBaseListCardView_iPhone.m; sourceTree = "<group>"; };
+		4C7954F51547AFCF009E40DC /* GANTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GANTracker.h; sourceTree = "<group>"; };
+		4C7954F61547AFCF009E40DC /* libGoogleAnalytics.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleAnalytics.a; sourceTree = "<group>"; };
 		4C7D600D14FF02B600156054 /* fpo_startVideo.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fpo_startVideo.mp3; sourceTree = "<group>"; };
 		4C8671921543D00A00E27CCA /* SNUnderlinedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNUnderlinedLabel.h; sourceTree = "<group>"; };
 		4C8671931543D00A00E27CCA /* SNUnderlinedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNUnderlinedLabel.m; sourceTree = "<group>"; };
@@ -999,6 +1002,7 @@
 				4C8B444A14FEA89600F89F7C /* AVFoundation.framework in Frameworks */,
 				4CD919B7151E9F6B004081B7 /* Accounts.framework in Frameworks */,
 				4C9E00BC15194B9B00AEB803 /* libUAirship-1.1.1.a in Frameworks */,
+				4C7954F71547AFCF009E40DC /* libGoogleAnalytics.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1269,6 +1273,16 @@
 			);
 			name = EGOTableViews;
 			path = SimpleNews/EGOTableViews;
+			sourceTree = "<group>";
+		};
+		4C7954F41547AFCF009E40DC /* Google Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				4C7954F51547AFCF009E40DC /* GANTracker.h */,
+				4C7954F61547AFCF009E40DC /* libGoogleAnalytics.a */,
+			);
+			name = "Google Analytics";
+			path = "SimpleNews/Google Analytics";
 			sourceTree = "<group>";
 		};
 		4C8B444414FEA74D00F89F7C /* SFX */ = {
@@ -1892,6 +1906,7 @@
 				4CDC8C2414F2D71800D42EA5 /* ASI */,
 				4CDC8C3914F2D71800D42EA5 /* EGOImageLoading */,
 				4C78D1131541DAC1006C4A4E /* EGOTableViews */,
+				4C7954F41547AFCF009E40DC /* Google Analytics */,
 				4CDC8C4814F2D71800D42EA5 /* MBProgressHUD */,
 				4CDC8C7414F2D80300D42EA5 /* Reachability */,
 				4CDC8BF714F2CDEB00D42EA5 /* SimpleNews */,
@@ -2680,6 +2695,7 @@
 					"\"$(SRCROOT)/SimpleNews/cURL\"",
 					"\"$(SRCROOT)/SimpleNews/curl\"",
 					"\"$(SRCROOT)/SimpleNews/openssl\"",
+					"\"$(SRCROOT)/SimpleNews/Google Analytics\"",
 				);
 				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = "";
@@ -2700,6 +2716,7 @@
 					"\"$(SRCROOT)/SimpleNews/cURL\"",
 					"\"$(SRCROOT)/SimpleNews/curl\"",
 					"\"$(SRCROOT)/SimpleNews/openssl\"",
+					"\"$(SRCROOT)/SimpleNews/Google Analytics\"",
 				);
 				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = "";
@@ -2724,7 +2741,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8B9F7F52-BF7D-467D-A90E-B03C414C485A";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F3FFDCCE-3DC1-4CFD-99AD-D94E112148E4";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -2744,6 +2761,7 @@
 					"\"$(SRCROOT)/SimpleNews/cURL\"",
 					"\"$(SRCROOT)/SimpleNews/curl\"",
 					"\"$(SRCROOT)/SimpleNews/openssl\"",
+					"\"$(SRCROOT)/SimpleNews/Google Analytics\"",
 				);
 				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = "";

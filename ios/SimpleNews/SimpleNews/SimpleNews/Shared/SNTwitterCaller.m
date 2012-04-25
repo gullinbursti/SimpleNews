@@ -64,7 +64,7 @@ static SNTwitterCaller *sharedInstance = nil;
 					self.accounts = [self.accountStore accountsWithAccountType:accountTypeTwitter];
 					self.account = [self.accounts objectAtIndex:0];
 					
-					NSLog(@"ACCOUNT:%@", self.account);
+					//NSLog(@"ACCOUNT:%@", self.account);
 					
 					//if (self.account) {
 						[[NSUserDefaults standardUserDefaults] setObject:self.account.username forKey:@"twitterHandle"];

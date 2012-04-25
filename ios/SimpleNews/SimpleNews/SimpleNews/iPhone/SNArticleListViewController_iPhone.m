@@ -7,8 +7,8 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
-
 #import <Twitter/Twitter.h>
+#import "GANTracker.h"
 
 #import "SNArticleListViewController_iPhone.h"
 #import "SNArticleItemView_iPhone.h"
@@ -34,6 +34,9 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showComments:) name:@"SHOW_COMMENTS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_leaveArticles:) name:@"LEAVE_ARTICLES" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_shareSheet:) name:@"SHARE_SHEET" object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showFullscreenMedia:) name:@"SHOW_FULLSCREEN_MEDIA" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideFullscreenMedia:) name:@"HIDE_FULLSCREEN_MEDIA" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_readLater:) name:@"READ_LATER" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterShare:) name:@"TWITTER_SHARE" object:nil];
@@ -65,6 +68,10 @@
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
 		[_articlesRequest setDelegate:self];
 		[_articlesRequest startAsynchronous];
+		
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/lists/%d", _vo.list_id] withError:&error])
+			NSLog(@"error in trackPageview");
 	}
 	
 	return (self);
@@ -176,7 +183,17 @@
 }
 
 - (void)reloadTableViewDataSource {
-	_reloading = YES;	
+	_reloading = YES;
+	
+	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+	
+	_updateRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+	[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
+	[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+	[_updateRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles objectAtIndex:0]).added] forKey:@"datetime"];
+	[_updateRequest setDelegate:self];
+	[_updateRequest startAsynchronous];
 }
 
 - (void)doneLoadingTableViewData {
@@ -228,6 +245,53 @@
 #pragma mark - Notification handlers
 -(void)_leaveArticles:(NSNotification *)notification {
 	[self _goBack];
+}
+
+-(void)_showFullscreenMedia:(NSNotification *)notification {
+	NSDictionary *dict = [notification object];
+	
+	SNArticleVO *vo = [dict objectForKey:@"VO"];
+	float offset = [[dict objectForKey:@"offset"] floatValue];
+	CGRect frame = [[dict objectForKey:@"frame"] CGRectValue];
+	NSString *type = [dict objectForKey:@"type"];
+	
+	frame.origin.y = 53.0 + ((frame.origin.y + offset) - _scrollView.contentOffset.y);
+	_fullscreenFrame = frame;
+	
+	if ([type isEqualToString:@"photo"]) {
+		_fullscreenImgView = [[EGOImageView alloc] initWithFrame:frame];
+		_fullscreenImgView.imageURL = [NSURL URLWithString:vo.bgImage_url];
+		_fullscreenImgView.userInteractionEnabled = YES;
+		[self.view addSubview:_fullscreenImgView];
+		
+	} else if ([type isEqualToString:@"video"]) {
+		
+	}
+	
+	
+	_blackMatteView.hidden = NO;
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_blackMatteView.alpha = 0.85;
+		_fullscreenImgView.frame = CGRectMake(0.0, (self.view.frame.size.height - (self.view.frame.size.width * vo.imgRatio)) * 0.5, self.view.frame.size.width, self.view.frame.size.width * vo.imgRatio);
+		
+	} completion:^(BOOL finished) {
+		UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_hideFullscreenImage:)];
+		tapRecognizer.numberOfTapsRequired = 1;
+		[_fullscreenImgView addGestureRecognizer:tapRecognizer];
+		[tapRecognizer release];
+
+	}];
+}
+
+-(void)_hideFullscreenImage:(UIGestureRecognizer *)gestureRecognizer {
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		_blackMatteView.alpha = 0.0;
+		_fullscreenImgView.frame = _fullscreenFrame;
+	
+	} completion:^(BOOL finished) {
+		_blackMatteView.hidden = YES;
+		[_fullscreenImgView removeFromSuperview];
+	}];
 }
 
 -(void)_showComments:(NSNotification *)notification {
@@ -350,7 +414,6 @@
 #pragma mark EGORefreshTableHeaderDelegate Methods
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
 	[self reloadTableViewDataSource];
-	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView *)view {
@@ -435,10 +498,9 @@
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
-	NSLog(@"SNArticleListViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	//NSLog(@"SNArticleListViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
 	if ([request isEqual:_articlesRequest]) {
-	
 		@autoreleasepool {
 			NSError *error = nil;
 			NSArray *parsedArticles = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
@@ -458,8 +520,8 @@
 					
 					if (vo != nil)
 						[articleList addObject:vo];
-					int height;
 					
+					int height;
 						if (vo.source_id > 0) {
 							height = 127;
 							CGSize size;
@@ -468,6 +530,9 @@
 								height += 227.0 * vo.imgRatio;
 								height += 20;
 							}
+							
+							if (![vo.affiliateURL isEqualToString:@""])
+								height += 50;
 							
 							size = [vo.title sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 							height += size.height;
@@ -498,9 +563,113 @@
 					[_scrollView addSubview:itemView];
 				}
 				
+				_lastDate = ((SNArticleVO *)[_articles objectAtIndex:0]).added;
 				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
 			}
 		}	
+	
+	} else if ([request isEqual:_updateRequest]) {
+		@autoreleasepool {
+			NSError *error = nil;
+			NSArray *parsedArticles = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+			
+			else {
+				int tot = 0;
+				int offset = 0;
+				for (NSDictionary *serverArticle in parsedArticles) {
+					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
+					
+					int height;
+					if (vo.source_id > 0) {
+						height = 127;
+						CGSize size;
+						
+						if (vo.type_id > 1) {
+							height += 227.0 * vo.imgRatio;
+							height += 20;
+						}
+						
+						size = [vo.title sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+						height += size.height;
+						
+						if ([vo.affiliateURL length] > 0)
+							height += 48;
+						
+						if (vo.type_id > 4)
+							height += 180;
+						
+						height += 16;
+						
+					} else {
+						height = 59;
+					}
+					
+					offset += height;
+					tot++;
+				}
+				
+				for (SNArticleItemView_iPhone *articleItemView in _cardViews) {
+					[UIView animateWithDuration:0.5 animations:^(void) {
+						articleItemView.frame = CGRectMake(0.0, articleItemView.frame.origin.y + offset, articleItemView.frame.size.width, articleItemView.frame.size.height);
+					}];
+				}
+				
+				int cnt = 0;
+				offset = 0;
+				
+				NSMutableArray *articleList = [NSMutableArray array];
+				for (NSDictionary *serverArticle in parsedArticles) {
+					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
+					
+					if (vo != nil)
+						[articleList addObject:vo];
+					
+					int height;
+					if (vo.source_id > 0) {
+						height = 127;
+						CGSize size;
+						
+						if (vo.type_id > 1) {
+							height += 227.0 * vo.imgRatio;
+							height += 20;
+						}
+						
+						size = [vo.title sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+						height += size.height;
+						
+						if (vo.type_id > 4)
+							height += 180;
+						
+						height += 16;
+						
+					} else {
+						height = 59;
+					}
+					
+					SNArticleItemView_iPhone *articleItemView = [[[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, offset, _scrollView.frame.size.width, height) articleVO:vo] autorelease];
+					[_cardViews addObject:articleItemView];
+					
+					offset += height;
+					cnt++;
+				}
+				
+				for (SNArticleItemView_iPhone *itemView in _cardViews) {
+					[_scrollView insertSubview:itemView atIndex:0];
+				}
+				
+				
+				NSMutableArray *updatedArticles = [NSMutableArray arrayWithArray:articleList];
+				[updatedArticles addObjectsFromArray:_articles];
+				_articles = [updatedArticles retain];
+				_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
+				
+				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, _scrollView.contentSize.height + offset);
+			}
+		}
+		
+		[self doneLoadingTableViewData];
 	}
 }
 

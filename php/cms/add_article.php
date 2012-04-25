@@ -36,6 +36,7 @@ $src_result = mysql_query($query);
 if (isset($_POST['txtArticleSource'])) {
 	$type_id = 7;
 	$source_url = $_POST['txtArticleSource'];
+	$affiliate_url = $_POST['txtAffiliate'];
 	$network_id = $_POST['selNetworks'];
 	$title = $_POST['txtArticleTitle'];
 	$content = $_POST['txtArticleText'];
@@ -53,8 +54,8 @@ if (isset($_POST['txtArticleSource'])) {
 	
 	foreach ($list_arr as $val) { 
 		$query = 'INSERT INTO `tblArticles` (';
-		$query .= '`id`, `influencer_id`, `list_id`, `tweet_id`, `tweet_msg`, `source_id`, `type_id`, `article_url`, `title`, `content`, `image_url`, `video_url`, `img_ratio`, `likes`, `added`) ';
-		$query .= 'VALUES (NULL, "'. $influencer_id .'", "'. $val .'", "'. $tweet_id .'", "'. $tweet_msg .'", "'. $network_id .'", "'. $type_id .'", "'. $source_url .'", "'. $title .'", "'. $content .'",  "'. $image_url .'", "'. $video_url .'", '. $img_ratio .', 0, NOW());';
+		$query .= '`id`, `influencer_id`, `list_id`, `tweet_id`, `tweet_msg`, `source_id`, `type_id`, `article_url`, `affiliate_url`, `title`, `content`, `image_url`, `video_url`, `img_ratio`, `likes`, `added`) ';
+		$query .= 'VALUES (NULL, "'. $influencer_id .'", "'. $val .'", "'. $tweet_id .'", "'. $tweet_msg .'", "'. $network_id .'", "'. $type_id .'", "'. $source_url .'", "'. $affiliate_url .'", "'. $title .'", "'. $content .'",  "'. $image_url .'", "'. $video_url .'", '. $img_ratio .', 0, NOW());';
 		$result = mysql_query($query);
 		$article_id = mysql_insert_id();
 		

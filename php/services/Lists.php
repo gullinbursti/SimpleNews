@@ -249,6 +249,69 @@
 			return (true);
 		}
 		
+		function getUpdatedPublicLists($user_id) {
+			$list_arr = array();
+            
+			$query = 'SELECT `id`, `title`, `info`, `image_url`, `thumb_url`, `type_id` FROM `tblLists` WHERE `active` = "Y" ORDER BY `title` DESC;';
+			$list_result = mysql_query($query);
+			
+            while ($list_row = mysql_fetch_array($list_result, MYSQL_BOTH)) {
+	            $query = 'SELECT * FROM `tblListsCurators` WHERE `list_id` = "'. $list_row['id'] .'";';
+				$result = mysql_query($query);
+				
+				$curator_arr = array();
+				while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
+					$query = 'SELECT * FROM `tblCurators` WHERE `id` = "'. $row['curator_id'] .'";';
+					$curator_row = mysql_fetch_row(mysql_query($query));
+					
+				    array_push($curator_arr, array(
+						"curator_id" => $curator_row[0], 
+						"handle" => $curator_row[1], 
+						"name" => $curator_row[2], 
+						"info" => $curator_row[3], 
+						"approved" => ($row['curator_id'] == $curator_row[0])
+					));
+				}
+	
+				$query = 'SELECT * FROM `tblListsInfluencers` WHERE `list_id` = "'. $list_row['id'] .'";';
+				$influencer_result = mysql_query($query);
+				
+				$likes_tot = 0;
+				$query = 'SELECT `likes` FROM `tblArticles` WHERE `list_id` = "'. $list_row['id'] .'";';
+				$article_result = mysql_query($query);
+					
+				while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH))
+					$likes_tot += $article_row['likes'];
+						
+				
+				$query = 'SELECT * FROM `tblUsersLists` WHERE `list_id` = "'. $list_row['id'] .'";';
+				$user_result = mysql_query($query);
+				
+				$isSubscribed = false;
+				while ($row = mysql_fetch_array($user_result, MYSQL_BOTH)) {
+					if ($row['user_id'] == $user_id)
+						$isSubscribed = true;
+				}			
+				
+				array_push($list_arr, array(
+					"list_id" => $list_row['id'], 
+					"name" => $list_row['title'],
+					"info" => $list_row['info'], 
+					"curators" => $curator_arr, 
+					"image_url" => $list_row['image_url'], 
+					"thumb_url" => $list_row['thumb_url'], 
+					"influencers" => mysql_num_rows($influencer_result),
+					"subscribers" => mysql_num_rows($user_result), 
+					"isSubscribed" => $isSubscribed, 
+					"approved" => ($list_row['type_id'] != 3), 
+					"likes" => $likes_tot
+				));				
+			}
+            
+			$this->sendResponse(200, json_encode($list_arr));
+			return (true);	
+		}
+		
 	   
 		function test() {
 			$this->sendResponse(200, json_encode(array(
@@ -288,6 +351,11 @@
 			case "4":
 				if (isset($_POST['userID']) && isset($_POST['listID']))
 					$lists->unsubscribeToList($_POST['userID'], $_POST['listID']);
+				break;
+				
+			case "5":
+				if (isset($_POST['userID']))
+					$lists->getUpdatedPublicLists($_POST['userID']);
 				break;
     	}
 	}

@@ -14,6 +14,8 @@
 	ASIFormDataRequest *_userRequest;
 	ASIFormDataRequest *_subscribedListsRequest;
 	ASIFormDataRequest *_popularListsRequest;
+	ASIFormDataRequest *_updateRequest;
+	
 	ASIHTTPRequest *_twitterRequest;
 	
 	EGORefreshTableHeaderView *_subscribedHeaderView;

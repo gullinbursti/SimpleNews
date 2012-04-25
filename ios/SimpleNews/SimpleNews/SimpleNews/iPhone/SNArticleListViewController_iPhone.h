@@ -14,10 +14,12 @@
 #import "SNFlippedArticleView_iPhone.h"
 #import "SNListVO.h"
 #import "EGORefreshTableHeaderView.h"
+#import "EGOImageView.h"
 
 @interface SNArticleListViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate> {
 	NSMutableArray *_articles;
 	ASIFormDataRequest *_articlesRequest;
+	ASIFormDataRequest *_updateRequest;
 	EGORefreshTableHeaderView *_refreshHeaderView;
 	BOOL _reloading;
 	
@@ -35,6 +37,9 @@
 	SNFlippedArticleView_iPhone *_flippedView;
 	
 	UIView *_blackMatteView;
+	EGOImageView *_fullscreenImgView;
+	CGRect _fullscreenFrame;
+	NSDate *_lastDate;
 }
 
 -(id)initWithListVO:(SNListVO *)vo;

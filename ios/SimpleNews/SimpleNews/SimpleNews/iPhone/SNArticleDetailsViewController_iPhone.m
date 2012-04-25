@@ -8,6 +8,7 @@
 
 #import <Twitter/Twitter.h>
 
+#import "GANTracker.h"
 #import "SNArticleDetailsViewController_iPhone.h"
 
 #import "SNAppDelegate.h"
@@ -30,6 +31,10 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_detailsShowComments:) name:@"DETAILS_SHOW_COMMENTS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_detailsShowShare:) name:@"DETAILS_SHOW_SHARE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cancelShare:) name:@"CANCEL_SHARE" object:nil];
+		
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/lists/%d/%@/comments", _vo.list_id, _vo.title] withError:&error])
+			NSLog(@"error in trackPageview");
 	}
 	
 	return (self);
@@ -125,6 +130,25 @@
 	[_scrollView addSubview:articleImgView];
 	offset += (274.0 * _vo.imgRatio);
 	
+	if ([_vo.affiliateURL length] > 0) {
+		UIImageView *affiliateImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(22.0, offset, 34.0, 34.0)] autorelease];
+		affiliateImgView.image = [UIImage imageNamed:@"favButton_nonActive.png"];
+		[_scrollView addSubview:affiliateImgView];
+		
+		size = [_vo.affiliateURL sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(280.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];	
+		UIButton *affiliateButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		affiliateButton.frame = CGRectMake(62.0, offset, size.width, 34.0);
+		[affiliateButton addTarget:self action:@selector(_goAffiliate) forControlEvents:UIControlEventTouchUpInside];
+		affiliateButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		[affiliateButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+		[affiliateButton setTitle:_vo.affiliateURL forState:UIControlStateNormal];
+		[_scrollView addSubview:affiliateButton];
+		
+		offset += 48;
+	}
+	
+	
+	
 	if (_vo.type_id > 4) {
 		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, 180.0) articleVO:_vo];
 		//[_videoPlayerView startPlayback];
@@ -184,6 +208,11 @@
 #pragma mark - Navigation
 -(void)_goBack {
 	[self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)_goAffiliate {
+	NSLog(@"AFFILIATE");
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:_vo.affiliateURL]];
 }
 
 -(void)_goOptions {

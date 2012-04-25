@@ -18,6 +18,8 @@
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
 	UIButton *_videoButton;
 	UIButton *_likeButton;
+	EGOImageView *_articleImgView;
+	UILabel *_likesLabel;
 }
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;

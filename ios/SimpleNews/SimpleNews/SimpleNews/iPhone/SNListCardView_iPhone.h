@@ -15,7 +15,6 @@
 
 @interface SNListCardView_iPhone : SNBaseListCardView_iPhone <ASIHTTPRequestDelegate> {
 	SNListVO *_vo;
-	UIImageView *_testImgView;
 	
 	SNInfluencersListView *_influencersListView;
 	BOOL _isFlipped;
