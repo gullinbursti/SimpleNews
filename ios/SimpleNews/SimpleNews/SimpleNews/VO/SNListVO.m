@@ -60,8 +60,6 @@
 	self.imageURL = nil;
 	self.thumbURL = nil;
 	self.curators = nil;
-	
-	[super dealloc];
 }
 
 @end

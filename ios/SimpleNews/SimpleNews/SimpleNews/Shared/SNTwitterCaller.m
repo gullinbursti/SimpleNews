@@ -50,7 +50,6 @@ static SNTwitterCaller *sharedInstance = nil;
 }
 
 -(void)dealloc {
-	[super dealloc];
 }
 
 

@@ -209,8 +209,6 @@ static void logNetworkStatus_(const char *name, int line, NetworkStatus status) 
 	
 	self.key = nil;
 	
-	[super dealloc];
-	
 } // dealloc
 
 

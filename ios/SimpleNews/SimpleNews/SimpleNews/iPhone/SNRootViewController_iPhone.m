@@ -37,12 +37,12 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshSubscribedList:) name:@"REFRESH_SUBSCRIBED_LIST" object:nil];
 		
-		_subscribedListsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+		_subscribedListsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 		[_subscribedListsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		[_subscribedListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[_subscribedListsRequest setDelegate:self];
 		
-		_popularListsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+		_popularListsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 		[_popularListsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
 		
 		if ([[SNAppDelegate profileForUser] objectForKey:@"id"])
@@ -66,21 +66,21 @@
 -(void)loadView {
 	[super loadView];
 	
-	UIImageView *logoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(118, 198, 84.0, 84.0)] autorelease];
+	UIImageView *logoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(118, 198, 84.0, 84.0)];
 	logoImgView.image = [UIImage imageNamed:@"logo_01.png"];
 	[self.view addSubview:logoImgView];
 	
-	SNHeaderView_iPhone *headerView = [[[SNHeaderView_iPhone alloc] init] autorelease];
+	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] init];
 	[self.view addSubview:headerView];
 	
-	UIButton *optionsButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	UIButton *optionsButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	optionsButton.frame = CGRectMake(4.0, 4.0, 44.0, 44.0);
 	[optionsButton setBackgroundImage:[UIImage imageNamed:@"optionsButton_nonActive.png"] forState:UIControlStateNormal];
 	[optionsButton setBackgroundImage:[UIImage imageNamed:@"optionsButton_Active.png"] forState:UIControlStateHighlighted];
 	[optionsButton addTarget:self action:@selector(_goOptions) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:optionsButton];
 	
-	_toggleLtImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(78.0, 4.0, 164.0, 44.0)] autorelease];
+	_toggleLtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 4.0, 164.0, 44.0)];
 	_toggleLtImgView.image = [UIImage imageNamed:@"toggleBGLeft.png"];
 	[self.view addSubview:_toggleLtImgView];
 	
@@ -100,7 +100,7 @@
 	popularOffLabel.text = @"Popular";
 	[_toggleLtImgView addSubview:popularOffLabel];
 	
-	_toggleRtImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(78.0, 4.0, 164.0, 44.0)] autorelease];
+	_toggleRtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 4.0, 164.0, 44.0)];
 	_toggleRtImgView.image = [UIImage imageNamed:@"toggleBGRight.png"];
 	_toggleRtImgView.hidden = YES;
 	[self.view addSubview:_toggleRtImgView];
@@ -121,12 +121,12 @@
 	popularOnLabel.text = @"Popular";
 	[_toggleRtImgView addSubview:popularOnLabel];
 	
-	UIButton *toggleButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	UIButton *toggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	toggleButton.frame = CGRectMake(78.0, 4.0, 164.0, 44.0);
 	[toggleButton addTarget:self action:@selector(_goListsToggle) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:toggleButton];
 		
-	UIButton *subscribedButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	UIButton *subscribedButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	subscribedButton.frame = CGRectMake(272.0, 4.0, 44.0, 44.0);
 	[subscribedButton setBackgroundImage:[UIImage imageNamed:@"rightArrowButton_nonActive.png"] forState:UIControlStateNormal];
 	[subscribedButton setBackgroundImage:[UIImage imageNamed:@"rightArrowButton_Active.png"] forState:UIControlStateHighlighted];
@@ -164,14 +164,14 @@
 	[_popularTableView addSubview:_popularHeaderView];
 	[_popularHeaderView refreshLastUpdatedDate];
 	
-	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
 }
 
 -(void)viewDidLoad {
 	[super viewDidLoad];
-	[self.navigationController pushViewController:[[[SNSubscribedListsViewController_iPhone alloc] initWithAnimation:_isIntro] autorelease] animated:NO];
+	[self.navigationController pushViewController:[[SNSubscribedListsViewController_iPhone alloc] initWithAnimation:_isIntro] animated:NO];
 }
 
 -(void)viewDidUnload {
@@ -195,15 +195,15 @@
 }
 
 -(void)_goOptions {
-	SNOptionsViewController_iPhone *optionsViewController = [[[SNOptionsViewController_iPhone alloc] init] autorelease];
-	UINavigationController *navigationController = [[[UINavigationController alloc] initWithRootViewController:optionsViewController] autorelease];
+	SNOptionsViewController_iPhone *optionsViewController = [[SNOptionsViewController_iPhone alloc] init];
+	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:optionsViewController];
 	
 	[navigationController setNavigationBarHidden:YES];
 	[self.navigationController presentModalViewController:navigationController animated:YES];
 }
 
 -(void)_goSubscribedLists {
-	[self.navigationController pushViewController:[[[SNSubscribedListsViewController_iPhone alloc] initWithAnimation:NO] autorelease] animated:YES];
+	[self.navigationController pushViewController:[[SNSubscribedListsViewController_iPhone alloc] initWithAnimation:NO] animated:YES];
 }
 
 
@@ -211,7 +211,7 @@
 	_reloading = YES;
 	
 	if (!_isFollowingList) {
-		_updateRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+		_updateRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 		[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", 5] forKey:@"action"];
 		[_updateRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[_updateRequest setDelegate:self];
@@ -234,7 +234,7 @@
 -(void)_refreshSubscribedList:(NSNotification *)notification {
 	NSLog(@"REFRESHING");
 	
-	_subscribedListsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+	_subscribedListsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 	[_subscribedListsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 	[_subscribedListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 	[_subscribedListsRequest setDelegate:self];
@@ -260,7 +260,7 @@
 	SNRootListViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNRootListViewCell_iPhone cellReuseIdentifier]];
 	
 	if (cell == nil)
-		cell = [[[SNRootListViewCell_iPhone alloc] init] autorelease];
+		cell = [[SNRootListViewCell_iPhone alloc] init];
 	
 	if ([tableView isEqual:_subscribedTableView])
 		cell.listVO = (SNListVO *)[_subscribedLists objectAtIndex:indexPath.row];
@@ -288,11 +288,11 @@
 	
 	if ([tableView isEqual:_popularTableView]) {
 		NSLog(@"SELECTED %@", ((SNListVO *)[_popularLists objectAtIndex:indexPath.row]).list_name);
-		[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_popularLists objectAtIndex:indexPath.row]] autorelease] animated:YES];
+		[self.navigationController pushViewController:[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_popularLists objectAtIndex:indexPath.row]] animated:YES];
 		
 	} else if ([tableView isEqual:_subscribedTableView]) {
 		NSLog(@"SELECTED %@", ((SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]).list_name);
-		[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]] autorelease] animated:YES];
+		[self.navigationController pushViewController:[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]] animated:YES];
 	}
 }
 
@@ -341,7 +341,7 @@
 	if ([request isEqual:_subscribedListsRequest]) {	
 		@autoreleasepool {
 			NSError *error = nil;
-			NSSortDescriptor *descriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] autorelease];
+			NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
 			NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
 			NSArray *parsedLists = [unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
 			
@@ -358,7 +358,7 @@
 						[list addObject:vo];
 				}
 				
-				_subscribedLists = [list retain];
+				_subscribedLists = [list copy];
 				[_subscribedTableView reloadData];
 			}
 			
@@ -368,7 +368,7 @@
 	} else if ([request isEqual:_popularListsRequest]) {
 		@autoreleasepool {
 			NSError *error = nil;
-			NSSortDescriptor *descriptor = [[[NSSortDescriptor alloc] initWithKey:@"likes" ascending:NO] autorelease];
+			NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"likes" ascending:NO];
 			NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
 			NSArray *parsedLists = [unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
 			
@@ -386,12 +386,12 @@
 						[list addObject:vo];
 				}
 				
-				_popularLists = [list retain];
+				_popularLists = [list copy];
 				[_popularTableView reloadData];
 			}
 			
 			if ([SNAppDelegate twitterHandle]) {
-				_userRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]] retain];
+				_userRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
 				[_userRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 				[_userRequest setPostValue:[SNAppDelegate deviceToken] forKey:@"token"];
 				[_userRequest setPostValue:[SNAppDelegate twitterHandle] forKey:@"handle"];
@@ -413,7 +413,7 @@
 		}
 		
 		if ([[[SNAppDelegate profileForUser] objectForKey:@"name"] isEqualToString:@""]) {		
-			_twitterRequest = [[ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1/users/show.json?screen_name=%@", [SNAppDelegate twitterHandle]]]] retain];
+			_twitterRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1/users/show.json?screen_name=%@", [SNAppDelegate twitterHandle]]]];
 			[_twitterRequest setDelegate:self];
 			[_twitterRequest startAsynchronous];
 		
@@ -427,7 +427,7 @@
 			NSDictionary *parsedUser = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
 			
 			NSLog(@"NAME:%@", [parsedUser objectForKey:@"name"]);
-			_userRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]] retain];
+			_userRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
 			[_userRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
 			[_userRequest setPostValue:[parsedUser objectForKey:@"name"] forKey:@"userName"];
 			[_userRequest setDelegate:self];
@@ -442,7 +442,7 @@
 		} else {
 			@autoreleasepool {
 				NSError *error = nil;
-				NSSortDescriptor *descriptor = [[[NSSortDescriptor alloc] initWithKey:@"likes" ascending:NO] autorelease];
+				NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"likes" ascending:NO];
 				NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
 				NSArray *parsedLists = [unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
 				
@@ -460,7 +460,7 @@
 							[list addObject:vo];
 					}
 					
-					_popularLists = [list retain];
+					_popularLists = [list copy];
 					[_popularTableView reloadData];
 				}
 			}

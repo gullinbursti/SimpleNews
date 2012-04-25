@@ -19,7 +19,7 @@
 		_totPages = total;
 		_currPage = 0.0;
 		
-		_bgButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		_bgButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_bgButton.frame = CGRectMake(-MARGIN_SIZE, -17.0, 32.0 + (total * LED_SIZE), 34.0);
 		[_bgButton setBackgroundImage:[[UIImage imageNamed:@"paginationBG.png"] stretchableImageWithLeftCapWidth:17.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_bgButton setBackgroundImage:[[UIImage imageNamed:@"paginationBG.png"] stretchableImageWithLeftCapWidth:17.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
@@ -29,7 +29,7 @@
 		int xOffset = 0;
 		
 		for (int i=0; i<_totPages; i++) {
-			UIImageView *ledImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(xOffset, -(LED_SIZE * 0.5), LED_SIZE, LED_SIZE)] autorelease];
+			UIImageView *ledImgView = [[UIImageView alloc] initWithFrame:CGRectMake(xOffset, -(LED_SIZE * 0.5), LED_SIZE, LED_SIZE)];
 			[ledImgView setImage:[UIImage imageNamed:@"pagination_nonActive.png"]];
 			[self addSubview:ledImgView];
 			xOffset += (4.0 + SPACING_SIZE);
@@ -53,11 +53,6 @@
 }
 
 -(void)dealloc {
-	[_onImgView release];
-	[_bgButton release];
-	[_offImgView release];
-	
-	[super dealloc];
 }
 
 @end

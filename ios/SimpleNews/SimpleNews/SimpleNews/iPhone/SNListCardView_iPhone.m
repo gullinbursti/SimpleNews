@@ -22,7 +22,7 @@
 		_vo = vo;
 		_isFlipped = NO;
 		
-		EGOImageView *coverImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(10.0, 10.0, 275.0, 389.0)] autorelease];
+		EGOImageView *coverImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(10.0, 10.0, 275.0, 389.0)];
 		//coverImgView.imageURL = [NSURL URLWithString:_vo.imageURL];
 		coverImgView.userInteractionEnabled = YES;
 		[_holderView addSubview:coverImgView];
@@ -32,11 +32,11 @@
 		SNListInfoView_iPhone *listInfoView = [[SNListInfoView_iPhone alloc] initWithFrame:CGRectMake(10.0, 10.0, _holderView.frame.size.width - 20.0, 65.0) listVO:_vo];
 		[_holderView addSubview:listInfoView];
 		
-		UIImageView *verifiedImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(10.0, 412.0, 24.0, 24.0)] autorelease];
+		UIImageView *verifiedImgView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, 412.0, 24.0, 24.0)];
 		verifiedImgView.image = [UIImage imageNamed:@"verifiedIcon.png"];
 		[_holderView addSubview:verifiedImgView];
 		
-		UILabel *verifiedLabel = [[[UILabel alloc] initWithFrame:CGRectMake(42.0, 414.0, 256.0, 20.0)] autorelease];
+		UILabel *verifiedLabel = [[UILabel alloc] initWithFrame:CGRectMake(42.0, 414.0, 256.0, 20.0)];
 		verifiedLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
 		verifiedLabel.textColor = [UIColor blackColor];
 		verifiedLabel.backgroundColor = [UIColor clearColor];
@@ -50,19 +50,19 @@
 		
 		[_holderView addSubview:verifiedLabel];
 		
-		_articlesButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		_articlesButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_articlesButton.frame = CGRectMake(0.0, 0.0, coverImgView.frame.size.width, coverImgView.frame.size.height);
 		[_articlesButton addTarget:self action:@selector(_goArticles) forControlEvents:UIControlEventTouchUpInside];
 		[coverImgView addSubview:_articlesButton];
 		
-		_flipBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		_flipBtn = [UIButton buttonWithType:UIButtonTypeCustom];
 		_flipBtn.frame = CGRectMake(232.0, 22.0, 64.0, 64.0);
 		[_flipBtn setBackgroundImage:[UIImage imageNamed:@"flipListButton_nonActive.png"] forState:UIControlStateNormal];
 		[_flipBtn setBackgroundImage:[UIImage imageNamed:@"flipListButton_Active.png"] forState:UIControlStateHighlighted];
 		[_flipBtn addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_flipBtn];
 		
-		_subscribeBtn = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		_subscribeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
 		_subscribeBtn.frame = CGRectMake(202.0, 409.0, 84.0, 30.0);
 		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followButton_nonActive.png"] forState:UIControlStateNormal];
 		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followButton_Active.png"] forState:UIControlStateHighlighted];
@@ -81,7 +81,7 @@
 		
 		[_holderView addSubview:_subscribeBtn];
 		
-		_doneButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		_doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_doneButton.frame = CGRectMake(241.0, 18.0, 64.0, 34.0);
 		[_doneButton setBackgroundImage:[UIImage imageNamed:@"smallDoneButton_nonActive.png"] forState:UIControlStateNormal];
 		[_doneButton setBackgroundImage:[UIImage imageNamed:@"smallDoneButtonActive.png"] forState:UIControlStateHighlighted];
@@ -156,10 +156,9 @@
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		
 		[alert show];
-		[alert release];
 		
 	} else {
-		ASIFormDataRequest *subscribeRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+		ASIFormDataRequest *subscribeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 		[subscribeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
@@ -181,10 +180,9 @@
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		
 		[alert show];
-		[alert release];
 		
 	} else {
-		ASIFormDataRequest *subscribeRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+		ASIFormDataRequest *subscribeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
 		[subscribeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];

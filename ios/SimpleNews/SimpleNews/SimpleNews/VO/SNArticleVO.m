@@ -45,7 +45,6 @@
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
 	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 	vo.added = [dateFormat dateFromString:[dictionary objectForKey:@"added"]];
-	[dateFormat release];
 	
 	for (NSDictionary *comment in [dictionary objectForKey:@"reactions"])
 		[vo.comments addObject:[SNCommentVO commentWithDictionary:comment]];
@@ -69,8 +68,6 @@
 	self.video_url = nil;
 	self.added = nil;
 	self.comments = nil;
-	
-	[super dealloc];
 }
 
 @end

@@ -15,7 +15,7 @@
 
 +(SNTweetVO *)tweetWithDictionary:(NSDictionary *)dictionary {
 	
-	SNTweetVO *vo = [[[SNTweetVO alloc] init] autorelease];
+	SNTweetVO *vo = [[SNTweetVO alloc] init];
 	vo.dictionary = dictionary;
 	
 	vo.tweet_id = [dictionary objectForKey:@"tweet_id"];
@@ -31,8 +31,6 @@
 	self.tweet_id = nil;
 	self.author = nil;
 	self.content = nil;
-	
-	[super dealloc];
 }
 
 @end

@@ -37,7 +37,6 @@
 }
 
 -(void)dealloc {	
-	[super dealloc];
 }
 
 
@@ -49,10 +48,10 @@
 	_optionViews = [[NSMutableArray alloc] init];
 	_optionVOs = [[NSMutableArray alloc] init];
 	
-	SNHeaderView_iPhone *headerView = [[[SNHeaderView_iPhone alloc] initWithTitle:@"settings"] autorelease];
+	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"settings"];
 	[self.view addSubview:headerView];
 	
-	UIButton *doneButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+	UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	doneButton.frame = CGRectMake(250.0, 3.0, 64.0, 48.0);
 	[doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_nonActive.png"] forState:UIControlStateNormal];
 	[doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_Active.png"] forState:UIControlStateHighlighted];
@@ -75,7 +74,7 @@
 	_tableView.showsVerticalScrollIndicator = NO;
 	[self.view addSubview:_tableView];
 		
-	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
 	
@@ -135,7 +134,7 @@
 	SNOptionViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNOptionViewCell_iPhone cellReuseIdentifier]];
 	
 	if (cell == nil)
-		cell = [[[SNOptionViewCell_iPhone alloc] init] autorelease];
+		cell = [[SNOptionViewCell_iPhone alloc] init];
 	
 	cell.optionVO = (SNOptionVO *)[_optionVOs objectAtIndex:indexPath.row];
 	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
@@ -155,14 +154,11 @@
 			
 			[switchView addTarget:self action:@selector(_goTwitterToggle:) forControlEvents:UIControlEventValueChanged];
 		}
-		
-		[switchView release];
 	
 	} else {
 		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(285.0, 23.0, 24, 24)];		
 		chevronView.image = [UIImage imageNamed:@"chevron.png"];
 		[cell addSubview:chevronView];
-		[chevronView release];
 	}
 	
 	
@@ -191,7 +187,7 @@
 	
 	if (indexPath.row == 2 || indexPath.row == 3) {
 		SNOptionVO *vo = (SNOptionVO *)[_optionVOs objectAtIndex:indexPath.row];
-		SNWebPageViewController_iPhone *optionsPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:vo.option_url] title:vo.option_title] autorelease];
+		SNWebPageViewController_iPhone *optionsPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:vo.option_url] title:vo.option_title];
 		[self.navigationController setNavigationBarHidden:YES];
 		[self.navigationController pushViewController:optionsPageViewController animated:YES];
 	}

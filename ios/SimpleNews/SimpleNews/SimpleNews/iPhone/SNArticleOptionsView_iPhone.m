@@ -22,21 +22,21 @@
 		
 		[self setBackgroundColor:[SNAppDelegate snHeaderColor]];
 		
-		UIButton *minusButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		UIButton *minusButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		minusButton.frame = CGRectMake(13.0, 20.0, 34.0, 34.0);
 		[minusButton setBackgroundImage:[UIImage imageNamed:@"minus_nonActive.png"] forState:UIControlStateNormal];
 		[minusButton setBackgroundImage:[UIImage imageNamed:@"minus_Active.png"] forState:UIControlStateHighlighted];
 		[minusButton addTarget:self action:@selector(_goMinus) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:minusButton];
 		
-		UIButton *plusButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		UIButton *plusButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		plusButton.frame = CGRectMake(110.0, 20.0, 34.0, 34.0);
 		[plusButton setBackgroundImage:[UIImage imageNamed:@"plus_nonActive.png"] forState:UIControlStateNormal];
 		[plusButton setBackgroundImage:[UIImage imageNamed:@"plus_Active.png"] forState:UIControlStateHighlighted];
 		[plusButton addTarget:self action:@selector(_goPlus) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:plusButton];
 		
-		UIImageView *sizeBGImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(47.0, 30.0, 64.0, 14.0)] autorelease];
+		UIImageView *sizeBGImgView = [[UIImageView alloc] initWithFrame:CGRectMake(47.0, 30.0, 64.0, 14.0)];
 		sizeBGImgView.image = [UIImage imageNamed:@"fontNotches.png"];
 		[self addSubview:sizeBGImgView];
 		
@@ -44,25 +44,25 @@
 		_sizeIndicatorImgView.image = [UIImage imageNamed:@"fontNotches_Selected.png"];
 		[self addSubview:_sizeIndicatorImgView];
 		
-		UIButton *sunButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		UIButton *sunButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		sunButton.frame = CGRectMake(175.0, 25.0, 24.0, 24.0);
 		[sunButton setBackgroundImage:[UIImage imageNamed:@"sunIcon_nonActive.png"] forState:UIControlStateNormal];
 		[sunButton setBackgroundImage:[UIImage imageNamed:@"sunIcon_Active.png"] forState:UIControlStateHighlighted];
 		[sunButton addTarget:self action:@selector(_goBright) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:sunButton];
 		
-		UIButton *moonButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		UIButton *moonButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		moonButton.frame = CGRectMake(285.0, 25.0, 24.0, 24.0);
 		[moonButton setBackgroundImage:[UIImage imageNamed:@"moonIcon_nonActive.png"] forState:UIControlStateNormal];
 		[moonButton setBackgroundImage:[UIImage imageNamed:@"moonIcon_Active.png"] forState:UIControlStateHighlighted];
 		[moonButton addTarget:self action:@selector(_goDark) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:moonButton];
 		
-		UIImageView *brightnessBGImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(202.0, 20.0, 84.0, 34.0)] autorelease];
+		UIImageView *brightnessBGImgView = [[UIImageView alloc] initWithFrame:CGRectMake(202.0, 20.0, 84.0, 34.0)];
 		brightnessBGImgView.image = [UIImage imageNamed:@"gripBackground.png"];
 		[self addSubview:brightnessBGImgView];
 		
-		_brightnessButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		_brightnessButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		
 		if (_isDark)
 			_brightnessButton.frame = CGRectMake(250.0, 20.0, 34.0, 34.0);
@@ -74,11 +74,11 @@
 		[_brightnessButton setBackgroundImage:[UIImage imageNamed:@"gripButton_Active.png"] forState:UIControlStateHighlighted];
 		[self addSubview:_brightnessButton];
 		
-		UIView *centerLineView = [[[UIView alloc] initWithFrame:CGRectMake(160.0, 0.0, 1.0, 77.0)] autorelease];
+		UIView *centerLineView = [[UIView alloc] initWithFrame:CGRectMake(160.0, 0.0, 1.0, 77.0)];
 		[centerLineView setBackgroundColor:[SNAppDelegate snLineColor]];
 		[self addSubview:centerLineView];
 		
-		UIView *bottomLineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 77.0, 320.0, 1.0)] autorelease];
+		UIView *bottomLineView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 77.0, 320.0, 1.0)];
 		[bottomLineView setBackgroundColor:[SNAppDelegate snLineColor]];
 		[self addSubview:bottomLineView];
 		
@@ -86,12 +86,10 @@
 		UISwipeGestureRecognizer *swipeRtRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_swipeRt:)];
 		swipeRtRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
 		[self addGestureRecognizer:swipeRtRecognizer];
-		[swipeRtRecognizer release];
 		
 		UISwipeGestureRecognizer *swipeLtRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_swipeLt:)];
 		swipeLtRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
 		[self addGestureRecognizer:swipeLtRecognizer];
-		[swipeLtRecognizer release];
 	}
 	
 	return (self);

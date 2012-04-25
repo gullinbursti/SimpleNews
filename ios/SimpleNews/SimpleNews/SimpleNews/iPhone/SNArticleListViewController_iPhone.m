@@ -63,7 +63,7 @@
 -(id)initWithListVO:(SNListVO *)vo {
 	if ((self = [self init])) {
 		_vo = vo;
-		_articlesRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 8] forKey:@"action"];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
 		[_articlesRequest setDelegate:self];
@@ -93,14 +93,6 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_TWITTER_PROFILE" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_TWEET_PAGE" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_SOURCE_PAGE" object:nil];
-	
-	[_articlesRequest release];;
-	
-	[_overlayView release];
-	[_shareSheetView release];
-	[_blackMatteView release];
-	
-	[super dealloc];
 }
 
 
@@ -108,24 +100,24 @@
 -(void)loadView {
 	[super loadView];
 	
-	SNHeaderView_iPhone *headerView = [[[SNHeaderView_iPhone alloc] initWithTitle:_vo.list_name] autorelease];
+	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.list_name];
 	[self.view addSubview:headerView];
 	
-	UIButton *backButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+	UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	backButton.frame = CGRectMake(4.0, 4.0, 44.0, 44.0);
 	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_nonActive.png"] forState:UIControlStateNormal];
 	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_Active.png"] forState:UIControlStateHighlighted];
 	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:backButton];
 	
-	UIButton *flipButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+	UIButton *flipButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	flipButton.frame = CGRectMake(272.0, 4.0, 44.0, 44.0);
 	[flipButton setBackgroundImage:[UIImage imageNamed:@"flipListButtonHeader_nonActive.png"] forState:UIControlStateNormal];
 	[flipButton setBackgroundImage:[UIImage imageNamed:@"flipListButtonHeader_Active.png"] forState:UIControlStateHighlighted];
 	[flipButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:flipButton];
 	
-	_doneButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_doneButton.frame = CGRectMake(250.0, 3.0, 64.0, 48.0);
 	[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_nonActive.png"] forState:UIControlStateNormal];
 	[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_Active.png"] forState:UIControlStateHighlighted];
@@ -165,7 +157,7 @@
 	
 	_flippedView = [[SNFlippedArticleView_iPhone alloc] initWithFrame:self.view.frame listVO:_vo];
 	
-	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
 }
@@ -188,7 +180,7 @@
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
 	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 	
-	_updateRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+	_updateRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 	[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
 	[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
 	[_updateRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles objectAtIndex:0]).added] forKey:@"datetime"];
@@ -278,7 +270,6 @@
 		UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_hideFullscreenImage:)];
 		tapRecognizer.numberOfTapsRequired = 1;
 		[_fullscreenImgView addGestureRecognizer:tapRecognizer];
-		[tapRecognizer release];
 
 	}];
 }
@@ -295,7 +286,7 @@
 }
 
 -(void)_showComments:(NSNotification *)notification {
-	[self.navigationController pushViewController:[[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object] listID:_vo.list_id] autorelease] animated:YES];
+	[self.navigationController pushViewController:[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object] listID:_vo.list_id] animated:YES];
 }
 
 -(void)_shareSheet:(NSNotification *)notification {
@@ -318,7 +309,7 @@
 -(void)_twitterShare:(NSNotification *)notification {
 	SNArticleVO *vo = (SNArticleVO *)[notification object];
 	
-	TWTweetComposeViewController *twitter = [[[TWTweetComposeViewController alloc] init] autorelease];
+	TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
 	
 	//[twitter addImage:[UIImage imageNamed:@"iOSDevTips.png"]];
 	[twitter addURL:[NSURL URLWithString:[NSString stringWithString:[NSString stringWithFormat:@"http://assemb.ly/tweets?id=%@", vo.tweet_id]]]];
@@ -328,7 +319,7 @@
 	
 	twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
 		
-		ASIFormDataRequest *readRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+		ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 		[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 		[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
@@ -361,9 +352,8 @@
 		[mfViewController setMessageBody:vo.content isHTML:NO];
 		
 		[self presentViewController:mfViewController animated:YES completion:nil];
-		[mfViewController release];
 		
-		ASIFormDataRequest *readRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+		ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 		[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 		[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
@@ -375,7 +365,6 @@
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"Your phone is not currently configured to send mail." delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
 		
 		[alert show];
-		[alert release];
 	}
 }
 
@@ -394,19 +383,19 @@
 }
 
 -(void)_showArticleDetails:(NSNotification *)notification {
-	SNArticleDetailsViewController_iPhone *articleDetailsViewController = [[[SNArticleDetailsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]] autorelease];
+	SNArticleDetailsViewController_iPhone *articleDetailsViewController = [[SNArticleDetailsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]];
 	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:articleDetailsViewController animated:YES];
 }
 
 -(void)_showTwitterProfile:(NSNotification *)notification {
-	SNWebPageViewController_iPhone *webPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]] autorelease];
+	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]];
 	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
 -(void)_showSourcePage:(NSNotification *)notification {
-	SNWebPageViewController_iPhone *webPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""] autorelease];
+	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""];
 	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
@@ -490,9 +479,6 @@
 	}
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
-	
-	
-	[alert release];
 }
 
 
@@ -547,7 +533,7 @@
 						}
 					
 					
-					SNArticleItemView_iPhone *articleItemView = [[[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, offset, _scrollView.frame.size.width, height) articleVO:vo] autorelease];
+					SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, offset, _scrollView.frame.size.width, height) articleVO:vo];
 					[_cardViews addObject:articleItemView];
 					
 					offset += height;
@@ -557,7 +543,7 @@
 						break;
 				}
 				
-				_articles = [articleList retain];
+				_articles = [articleList copy];
 				
 				for (SNArticleItemView_iPhone *itemView in _cardViews) {
 					[_scrollView addSubview:itemView];
@@ -648,7 +634,7 @@
 						height = 59;
 					}
 					
-					SNArticleItemView_iPhone *articleItemView = [[[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, offset, _scrollView.frame.size.width, height) articleVO:vo] autorelease];
+					SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, offset, _scrollView.frame.size.width, height) articleVO:vo];
 					[_cardViews addObject:articleItemView];
 					
 					offset += height;
@@ -662,7 +648,7 @@
 				
 				NSMutableArray *updatedArticles = [NSMutableArray arrayWithArray:articleList];
 				[updatedArticles addObjectsFromArray:_articles];
-				_articles = [updatedArticles retain];
+				_articles = [updatedArticles copy];
 				_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
 				
 				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, _scrollView.contentSize.height + offset);

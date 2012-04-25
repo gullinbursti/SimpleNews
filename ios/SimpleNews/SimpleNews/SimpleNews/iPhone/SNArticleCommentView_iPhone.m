@@ -18,7 +18,7 @@
 		_vo = vo;
 		_listID = list_id;
 		
-		EGOImageView *avatarImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 40.0, 40.0)] autorelease];
+		EGOImageView *avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 40.0, 40.0)];
 		avatarImgView.layer.cornerRadius = 8.0;
 		avatarImgView.clipsToBounds = YES;
 		avatarImgView.layer.borderColor = [[UIColor colorWithWhite:0.671 alpha:1.0] CGColor];
@@ -26,7 +26,7 @@
 		avatarImgView.imageURL = [NSURL URLWithString:_vo.thumb_url];
 		[self addSubview:avatarImgView];
 		
-		UILabel *twitterNameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(62.0, 16.0, 256.0, 20.0)] autorelease];
+		UILabel *twitterNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(62.0, 16.0, 256.0, 20.0)];
 		twitterNameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 		twitterNameLabel.textColor = [UIColor blackColor];
 		twitterNameLabel.backgroundColor = [UIColor clearColor];
@@ -74,13 +74,13 @@
 		
 		int offset = 0;
 		if (_vo.isLiked) {
-			UIImageView *likeIcoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(62.0, size.height + 48.0, 25.0, 25.0)] autorelease];
+			UIImageView *likeIcoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(62.0, size.height + 48.0, 25.0, 25.0)];
 			likeIcoImgView.image = [UIImage imageNamed:@"smallDoneButton_nonActive.png"];
 			[self addSubview:likeIcoImgView];
 			offset = 30.0;
 		}
 		
-		UIView *lineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, offset + size.height + 48.0, self.frame.size.width, 1.0)] autorelease];
+		UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0, offset + size.height + 48.0, self.frame.size.width, 1.0)];
 		[lineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
 		[self addSubview:lineView];	
 	}
@@ -89,7 +89,6 @@
 }
 
 -(void)dealloc {
-	[super dealloc];
 }
 
 

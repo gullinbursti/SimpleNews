@@ -39,24 +39,23 @@
 }
 
 -(void)dealloc {
-	[super dealloc];
 }
 
 #pragma mark - View lifecycle
 -(void)loadView {
 	[super loadView];
 	
-	SNHeaderView_iPhone *headerView = [[[SNHeaderView_iPhone alloc] initWithTitle:_vo.title] autorelease];
+	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.title];
 	[self.view addSubview:headerView];
 	
-	UIButton *backButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	backButton.frame = CGRectMake(4.0, 4.0, 44.0, 44.0);
 	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_nonActive.png"] forState:UIControlStateNormal];
 	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_Active.png"] forState:UIControlStateHighlighted];
 	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:backButton];
 	
-	UIButton *reportButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	UIButton *reportButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	reportButton.frame = CGRectMake(272.0, 4.0, 44.0, 44.0);
 	[reportButton setBackgroundImage:[UIImage imageNamed:@"reportButton_nonActive.png"] forState:UIControlStateNormal];
 	[reportButton setBackgroundImage:[UIImage imageNamed:@"reportButton_Active.png"] forState:UIControlStateHighlighted];
@@ -76,16 +75,16 @@
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
 	[self.view addSubview:_scrollView];
 	
-	_bgView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 50.0, self.view.frame.size.width, 50.0)] autorelease];
+	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 50.0, self.view.frame.size.width, 50.0)];
 	[_bgView setBackgroundColor:[UIColor colorWithWhite:0.914 alpha:1.0]];
 	[self.view addSubview:_bgView];
 	
-	UIImageView *inputBgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(8.0, 8.0, 184.0, 34.0)] autorelease];
+	UIImageView *inputBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(8.0, 8.0, 184.0, 34.0)];
 	inputBgImgView.image = [UIImage imageNamed:@"inputFieldBG.png"];
 	inputBgImgView.userInteractionEnabled = YES;
 	[_bgView addSubview:inputBgImgView];
 	
-	_commentTxtField = [[[UITextField alloc] initWithFrame:CGRectMake(23.0, 17.0, 270.0, 16.0)] autorelease];
+	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(23.0, 17.0, 270.0, 16.0)];
 	[_commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 	[_commentTxtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 	[_commentTxtField setAutocorrectionType:UITextAutocorrectionTypeNo];
@@ -105,28 +104,28 @@
 	_commentsLabel.text = @"Say something…";
 	[_bgView addSubview:_commentsLabel];
 	
-	UIButton *likeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	UIButton *likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	likeButton.frame = CGRectMake(186.0, 9.0, 34.0, 34.0);
 	[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
 	[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
 	[likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	[_bgView addSubview:likeButton];
 	
-	UIButton *favButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	UIButton *favButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	favButton.frame = CGRectMake(230.0, 9.0, 34.0, 34.0);
 	[favButton setBackgroundImage:[UIImage imageNamed:@"favButton_nonActive.png"] forState:UIControlStateNormal];
 	[favButton setBackgroundImage:[UIImage imageNamed:@"favButton_Active.png"] forState:UIControlStateHighlighted];
 	[favButton addTarget:self action:@selector(_goReadLater) forControlEvents:UIControlEventTouchUpInside];
 	[_bgView addSubview:favButton];
 	
-	UIButton *shareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	shareButton.frame = CGRectMake(264.0, 9.0, 34.0, 34.0);
 	[shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_nonActive.png"] forState:UIControlStateNormal];
 	[shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_Active.png"] forState:UIControlStateHighlighted];
 	[shareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 	[_bgView addSubview:shareButton];
 	
-	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
 	
@@ -136,7 +135,7 @@
 		
 		CGSize txtSize = [vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(230.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		
-		SNArticleCommentView_iPhone *commentView = [[[SNArticleCommentView_iPhone alloc] initWithFrame:CGRectMake(0.0, _commentOffset, _scrollView.frame.size.width, kItemHeight + txtSize.height) commentVO:vo listID:_list_id] autorelease];
+		SNArticleCommentView_iPhone *commentView = [[SNArticleCommentView_iPhone alloc] initWithFrame:CGRectMake(0.0, _commentOffset, _scrollView.frame.size.width, kItemHeight + txtSize.height) commentVO:vo listID:_list_id];
 		[_commentViews addObject:commentView];
 		[_scrollView addSubview:commentView];
 		
@@ -169,13 +168,11 @@
 		[mfViewController setMessageBody:@"There's inappropriate comments in this article." isHTML:NO];
 		
 		[self presentViewController:mfViewController animated:YES completion:nil];
-		[mfViewController release];
 		
 	} else {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"Your phone is not currently configured to send mail." delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
 		
 		[alert show];
-		[alert release];
 	}
 }
 
@@ -259,7 +256,7 @@
 		if (_isLiked)
 			isLiked = @"Y";
 		
-		_commentSubmitRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+		_commentSubmitRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 		[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", 9] forKey:@"action"];
 		[_commentSubmitRequest setPostValue:[SNAppDelegate twitterHandle] forKey:@"handle"];
 		[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
@@ -274,7 +271,6 @@
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 		[dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 		NSString *added = [dateFormatter stringFromDate:[NSDate date]];
-		[dateFormatter release];
 		
 		NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
 									 @"0", @"comment_id",
@@ -291,7 +287,7 @@
 		
 		CGSize commentSize = [textField.text sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(256.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		
-		SNArticleCommentView_iPhone *commentView = [[[SNArticleCommentView_iPhone alloc] initWithFrame:CGRectMake(0.0, _commentOffset, _scrollView.frame.size.width, kItemHeight + commentSize.height) commentVO:vo listID:_list_id] autorelease];
+		SNArticleCommentView_iPhone *commentView = [[SNArticleCommentView_iPhone alloc] initWithFrame:CGRectMake(0.0, _commentOffset, _scrollView.frame.size.width, kItemHeight + commentSize.height) commentVO:vo listID:_list_id];
 		[_commentViews addObject:commentView];
 		[_scrollView addSubview:commentView];
 		
@@ -343,9 +339,6 @@
 	}
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
-	
-	
-	[alert release];
 }
 
 

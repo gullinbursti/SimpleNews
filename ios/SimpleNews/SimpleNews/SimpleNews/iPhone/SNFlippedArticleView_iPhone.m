@@ -21,21 +21,21 @@
 		
 		[self setBackgroundColor:[UIColor whiteColor]];
 		
-		SNHeaderView_iPhone *headerView = [[[SNHeaderView_iPhone alloc] init] autorelease];
+		SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] init];
 		[self addSubview:headerView];
 		
-		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(15.0, 14.0, 200.0, 20.0)] autorelease];
+		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 14.0, 200.0, 20.0)];
 		titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:18];
 		titleLabel.textColor = [UIColor blackColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.text = _vo.list_name;
 		[self addSubview:titleLabel];
 		
-		UIImageView *verifiedImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(12.0, 55.0, 24.0, 24.0)] autorelease];
+		UIImageView *verifiedImgView = [[UIImageView alloc] initWithFrame:CGRectMake(12.0, 55.0, 24.0, 24.0)];
 		verifiedImgView.image = [UIImage imageNamed:@"verifiedIcon.png"];
 		[self addSubview:verifiedImgView];
 		
-		UILabel *curatorLabel = [[[UILabel alloc] initWithFrame:CGRectMake(38.0, 57.0, 200.0, 20.0)] autorelease];
+		UILabel *curatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(38.0, 57.0, 200.0, 20.0)];
 		curatorLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
 		curatorLabel.textColor = [UIColor blackColor];
 		curatorLabel.backgroundColor = [UIColor clearColor];
@@ -44,7 +44,7 @@
 		
 		CGSize infoSize = [_vo.list_info sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		
-		UILabel *infoLabel = [[[UILabel alloc] initWithFrame:CGRectMake(12.0, 91.0, 270.0, infoSize.height)] autorelease];
+		UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 91.0, 270.0, infoSize.height)];
 		infoLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
 		infoLabel.textColor = [UIColor colorWithWhite:0.486 alpha:1.0];
 		infoLabel.backgroundColor = [UIColor clearColor];
@@ -54,7 +54,7 @@
 		
 		int offset = 0;
 		if (!_vo.isSubscribed) {
-			UIButton *subscribeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			UIButton *subscribeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			subscribeButton.frame = CGRectMake(12.0, 104.0 + infoSize.height, 84.0, 30.0);
 			[subscribeButton setBackgroundImage:[UIImage imageNamed:@"followButton_nonActive.png"] forState:UIControlStateNormal];
 			[subscribeButton setBackgroundImage:[UIImage imageNamed:@"followButton_Active.png"] forState:UIControlStateHighlighted];
@@ -67,7 +67,7 @@
 			offset = 44;
 		}
 		
-		UIView *subheaderLineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, offset + 104.0 + infoSize.height, self.frame.size.width, 1.0)] autorelease];
+		UIView *subheaderLineView = [[UIView alloc] initWithFrame:CGRectMake(0.0, offset + 104.0 + infoSize.height, self.frame.size.width, 1.0)];
 		[subheaderLineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
 		[self addSubview:subheaderLineView];
 		
@@ -82,13 +82,13 @@
 		_tableView.showsVerticalScrollIndicator = NO;
 		[self addSubview:_tableView];
 		
-		UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.frame] autorelease];
+		UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.frame];
 		overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 		[self addSubview:overlayImgView];
 		
 		_influencers = [NSMutableArray new];
 		
-		_influencersRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+		_influencersRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 		[_influencersRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
 		[_influencersRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
 		[_influencersRequest setDelegate:self];
@@ -104,10 +104,9 @@
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		
 		[alert show];
-		[alert release];
 		
 	} else {
-		ASIFormDataRequest *subscribeRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+		ASIFormDataRequest *subscribeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 		[subscribeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
@@ -134,7 +133,7 @@
 	SNInfluencerListViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNInfluencerListViewCell_iPhone cellReuseIdentifier]];
 	
 	if (cell == nil)
-		cell = [[[SNInfluencerListViewCell_iPhone alloc] init] autorelease];
+		cell = [[SNInfluencerListViewCell_iPhone alloc] init];
 	
 	cell.influencerVO = (SNInfluencerVO *)[_influencers objectAtIndex:indexPath.row];
 	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
@@ -180,7 +179,7 @@
 					[list addObject:vo];
 			}
 			
-			_influencers = [list retain];
+			_influencers = [list copy];
 			[_tableView reloadData];
 		}
 	}

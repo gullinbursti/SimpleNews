@@ -27,7 +27,6 @@
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
 	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 	vo.added = [dateFormat dateFromString:[dictionary objectForKey:@"added"]];
-	[dateFormat release];
 	
 	return (vo);
 }
@@ -39,8 +38,6 @@
 	self.twitterHandle = nil;
 	self.comment_url = nil;
 	self.content = nil;
-	
-	[super dealloc];
 }
 
 @end

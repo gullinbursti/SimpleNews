@@ -23,9 +23,6 @@
 }
 
 -(void)dealloc {
-	[_webView release];
-	
-	[super dealloc];
 }
 
 #pragma mark - View lifecycle
@@ -34,10 +31,10 @@
 	[super loadView];
 	[self.view setBackgroundColor:[UIColor whiteColor]];
 	
-	SNHeaderView_iPhone *headerView = [[[SNHeaderView_iPhone alloc] initWithTitle:_pageTitle] autorelease];
+	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_pageTitle];
 	[self.view addSubview:headerView];
 	
-	UIButton *backButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+	UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	backButton.frame = CGRectMake(4.0, 4.0, 44.0, 44.0);
 	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_nonActive.png"] forState:UIControlStateNormal];
 	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_Active.png"] forState:UIControlStateHighlighted];
@@ -51,7 +48,7 @@
 	[_webView loadRequest:[NSURLRequest requestWithURL:_url]];	
 	[self.view addSubview:_webView];
 	
-	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
 }

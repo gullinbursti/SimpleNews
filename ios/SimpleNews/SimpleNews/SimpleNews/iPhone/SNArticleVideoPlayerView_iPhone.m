@@ -49,7 +49,7 @@
 		_videoHolderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
 		[self addSubview:_videoHolderView];
 		
-		_screenshotImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)] autorelease];
+		_screenshotImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
 		_screenshotImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 		[_videoHolderView addSubview:_screenshotImgView];
 		
@@ -61,12 +61,12 @@
 		_progressImgView.image = [UIImage imageNamed:@"playerPlayHeadProgression.png"];
 		[self addSubview:_progressImgView];
 		
-		MPVolumeView *volumeView = [[[MPVolumeView alloc] initWithFrame:CGRectMake(270.0, 440.0, 40.0, 20.0)] autorelease];
+		MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(270.0, 440.0, 40.0, 20.0)];
 		[volumeView setShowsVolumeSlider:NO];
 		[volumeView sizeToFit];
 		//[self addSubview:volumeView];
 		
-		_closeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		_closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_closeButton.frame = CGRectMake(0.0, 435.0, 47.0, 45.0);
 		[_closeButton setBackgroundImage:[[UIImage imageNamed:@"playerPlayHeadCloseButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_closeButton setBackgroundImage:[[UIImage imageNamed:@"playerPlayHeadCloseButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
@@ -83,7 +83,7 @@
 		_timeLabel.text = @"0:00";
 		[self addSubview:_timeLabel];
 		
-		_playButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		_playButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_playButton.frame = CGRectMake((self.frame.size.width * 0.5) - 22.0, (self.frame.size.height * 0.5) - 22.0, 44.0, 44.0);
 		_playButton.alpha = 1.0;
 		[_playButton setBackgroundImage:[[UIImage imageNamed:@"smallPlayButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
@@ -91,7 +91,7 @@
 		[_playButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_playButton];
 		
-		_pauseButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		_pauseButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_pauseButton.frame = CGRectMake((self.frame.size.width * 0.5) - 22.0, (self.frame.size.height * 0.5) - 22.0, 44.0, 44.0);
 		_pauseButton.alpha = 0.0;
 		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"smallPauseButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
@@ -108,7 +108,6 @@
 		UITapGestureRecognizer *dblTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_dblTap:)];
 		dblTapRecognizer.numberOfTapsRequired = 2;
 		[self addGestureRecognizer:dblTapRecognizer];
-		[dblTapRecognizer release];
 	}
 	
 	return (self);
@@ -129,8 +128,6 @@
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"UIMoviePlayerControllerDidEnterFullscreenNotification" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"UIMoviePlayerControllerDidExitFullscreenNotification" object:nil];
-	
-	[super dealloc];
 }
 
 -(void)startPlayback {
@@ -151,7 +148,6 @@
 -(void)_initPlayer {
 	MPMoviePlayerController *mp = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL URLWithString:_videoURL]];
 	self.mpc = mp;
-	[mp release];
 	
 	_isFullscreen = NO;
 	
@@ -239,7 +235,7 @@
 	
 	//int hours = (int)self.mpc.currentPlaybackTime / 3600;
 	
-	NSString *formattedTime = [[[NSString alloc] initWithFormat:@"%d:%02d", ((int)(self.mpc.currentPlaybackTime / 60) % 60), ((int)self.mpc.currentPlaybackTime % 60)] autorelease];
+	NSString *formattedTime = [[NSString alloc] initWithFormat:@"%d:%02d", ((int)(self.mpc.currentPlaybackTime / 60) % 60), ((int)self.mpc.currentPlaybackTime % 60)];
 	_timeSize = [formattedTime sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
 	_timeLabel.text = formattedTime;
 	
@@ -404,10 +400,6 @@
 				_bufferingImgView.alpha = 0.0;
 			}];
 			break;
-			
-		case 2:
-			break;
-			
 	}
 }
 

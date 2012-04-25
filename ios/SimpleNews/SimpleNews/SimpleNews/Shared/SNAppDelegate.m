@@ -90,14 +90,14 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 +(void)playMP3:(NSString *)filename {
 	NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@.mp3", [[NSBundle mainBundle] resourcePath], filename]];
 	
-	AVAudioPlayer *audioPlayer = [[[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil] autorelease];
+	AVAudioPlayer *audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
 	audioPlayer.numberOfLoops = 0;
 	[audioPlayer play];
 }
 
 
 +(BOOL)hasWiFi {
-	Reachability *wifiReachability = [[[Reachability reachabilityForLocalWiFi] retain] autorelease];
+	Reachability *wifiReachability = [Reachability reachabilityForLocalWiFi];
 	[wifiReachability startNotifier];
 	
 	return ([wifiReachability currentReachabilityStatus] == kReachableViaWiFi);
@@ -112,19 +112,19 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 }
 
 +(int)secondsAfterDate:(NSDate *)date {
-	return ([[[NSDate new] autorelease] timeIntervalSinceDate:date]);
+	return ([[NSDate new] timeIntervalSinceDate:date]);
 }
 
 +(int)minutesAfterDate:(NSDate *)date {
-	return ([[[NSDate new] autorelease] timeIntervalSinceDate:date] / 60);
+	return ([[NSDate new] timeIntervalSinceDate:date] / 60);
 }
 
 +(int)hoursAfterDate:(NSDate *)date {;
-	return ([[[NSDate new] autorelease] timeIntervalSinceDate:date] / 3600);
+	return ([[NSDate new] timeIntervalSinceDate:date] / 3600);
 }
 
 +(int)daysAfterDate:(NSDate *)date {
-	return ([[[NSDate new] autorelease] timeIntervalSinceDate:date] / 86400);
+	return ([[NSDate new] timeIntervalSinceDate:date] / 86400);
 }
 
 
@@ -240,9 +240,6 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 
 -(void)dealloc {
 	[[GANTracker sharedTracker] stopTracker];
-	[_window release];
-	
-	[super dealloc];
 }
 
 -(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -281,11 +278,10 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Wi-Fi Connection" message:@"Please connect to a wi-fi ." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		
 		[alert show];
-		[alert release];
 	}
 	
 	
-	SNTwitterCaller *twitterCaller = [[[SNTwitterCaller alloc] init] autorelease];
+	SNTwitterCaller *twitterCaller = [[SNTwitterCaller alloc] init];
 	
 	if (![defaults objectForKey:@"boot_total"]) {
 		[defaults setObject:[NSNumber numberWithInt:0] forKey:@"boot_total"];
@@ -302,7 +298,6 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Rate Assembly" message:@"Why not rate Assembly in the app store!" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"App Store", nil];
 			
 			[alert show];
-			[alert release];
 		}
 		
 		//if ([[defaults objectForKey:@"boot_total"] intValue] > 2) {
@@ -310,7 +305,7 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 				[SNAppDelegate notificationsToggle:YES];
 				
 				// init Airship launch options
-				NSMutableDictionary *takeOffOptions = [[[NSMutableDictionary alloc] init] autorelease];
+				NSMutableDictionary *takeOffOptions = [[NSMutableDictionary alloc] init];
 				[takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
 				
 				// create Airship singleton that's used to talk to Urban Airhship servers, populate AirshipConfig.plist with your info from http://go.urbanairship.com
@@ -330,18 +325,18 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 	if (![[GANTracker sharedTracker] trackPageview:@"/bootup" withError:&error])
 		NSLog(@"error in trackPageview");
 	
-	self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	UINavigationController *rootNavigationController;
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 		
 		if (![SNAppDelegate profileForUser]) {
 			_splashViewController_iPhone = [[SNSplashViewController_iPhone alloc] init];
-			rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_splashViewController_iPhone] autorelease];
+			rootNavigationController = [[UINavigationController alloc] initWithRootViewController:_splashViewController_iPhone];
 		
 		} else {
 			_rootViewController_iPhone = [[SNRootViewController_iPhone alloc] init];
-			rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:_rootViewController_iPhone] autorelease];
+			rootNavigationController = [[UINavigationController alloc] initWithRootViewController:_rootViewController_iPhone];
 		}
 		
 		[rootNavigationController setNavigationBarHidden:YES];
@@ -381,7 +376,7 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
  Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
  **/
 -(void)applicationDidBecomeActive:(UIApplication *)application {
-	SNTwitterCaller *twitterCaller = [[[SNTwitterCaller alloc] init] autorelease];
+	SNTwitterCaller *twitterCaller = [[SNTwitterCaller alloc] init];
 }
 
 /**

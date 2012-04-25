@@ -18,7 +18,7 @@
 		
 		[self setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.67]];
 		
-		UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(15.0, 10.0, 200.0, 24.0)] autorelease];
+		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 10.0, 200.0, 24.0)];
 		titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:18];
 		titleLabel.textColor = [UIColor whiteColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
@@ -32,7 +32,7 @@
 		for (SNCuratorVO *vo in _vo.curators)
 			curators = [curators stringByAppendingString:[NSString stringWithFormat:@"%@, ", vo.curator_name]];
 		
-		UILabel *curatorLabel = [[[UILabel alloc] initWithFrame:CGRectMake(15.0, 35.0, 200.0, 20.0)] autorelease];
+		UILabel *curatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 35.0, 200.0, 20.0)];
 		curatorLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14];
 		curatorLabel.textColor = [UIColor colorWithWhite:0.824 alpha:1.0];
 		curatorLabel.backgroundColor = [UIColor clearColor];
@@ -46,7 +46,6 @@
 
 
 -(void)dealloc {
-	[super dealloc];
 }
 
 @end

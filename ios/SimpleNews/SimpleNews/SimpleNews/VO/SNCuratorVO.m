@@ -32,7 +32,5 @@
 	self.curator_name = nil;
 	self.twitter_handle = nil;
 	self.blurb = nil;
-	
-	[super dealloc];
 }
 @end

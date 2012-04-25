@@ -31,7 +31,7 @@
 		int days = [SNAppDelegate daysAfterDate:_vo.added];
 		
 		if (_vo.source_id == 0) {
-			UIImageView *linesImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 60.0)] autorelease];
+			UIImageView *linesImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 60.0)];
 			linesImgView.image = [[UIImage imageNamed:@"nonContentRow.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:10.0];
 			[self addSubview:linesImgView];
 		}
@@ -48,7 +48,7 @@
 		}
 		
 		size = [timeSince sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *dateLabel = [[[UILabel alloc] initWithFrame:CGRectMake(80.0, 24.0, size.width, 16.0)] autorelease];
+		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(80.0, 24.0, size.width, 16.0)];
 		dateLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:12];
 		dateLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 		dateLabel.backgroundColor = [UIColor clearColor];
@@ -56,7 +56,7 @@
 		[self addSubview:dateLabel];
 		
 		CGSize size2 = [[NSString stringWithFormat:@"@%@", _vo.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *twitterNameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(85.0 + size.width, 24.0, size2.width, 16.0)] autorelease];
+		UILabel *twitterNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(85.0 + size.width, 24.0, size2.width, 16.0)];
 		twitterNameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 		twitterNameLabel.textColor = [UIColor colorWithWhite:0.525 alpha:1.0];
 		twitterNameLabel.backgroundColor = [UIColor clearColor];
@@ -64,7 +64,7 @@
 		[self addSubview:twitterNameLabel];
 		
 		if (_vo.source_id == 0) {
-			UILabel *messageLabel = [[[UILabel alloc] initWithFrame:CGRectMake(90.0 + size.width + size2.width, 24.0, 100.0, 16.0)] autorelease];
+			UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(90.0 + size.width + size2.width, 24.0, 100.0, 16.0)];
 			messageLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:12];
 			messageLabel.textColor = [UIColor colorWithWhite:0.525 alpha:1.0];
 			messageLabel.backgroundColor = [UIColor clearColor];
@@ -74,7 +74,7 @@
 		
 		offset += 20;
 		
-		UIButton *handleButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		UIButton *handleButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		handleButton.frame = twitterNameLabel.frame;
 		[handleButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:handleButton];
@@ -82,7 +82,7 @@
 		
 		if (_vo.source_id > 0) {
 			size = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-			UILabel *titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(80.0, offset, 227.0, size.height)] autorelease];
+			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(80.0, offset, 227.0, size.height)];
 			titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:16];
 			titleLabel.textColor = [UIColor blackColor];
 			titleLabel.backgroundColor = [UIColor clearColor];
@@ -90,7 +90,7 @@
 			titleLabel.numberOfLines = 0;
 			[self addSubview:titleLabel];
 			
-			UIButton *detailsButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			UIButton *detailsButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			detailsButton.frame = titleLabel.frame;
 			[detailsButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:detailsButton];
@@ -100,7 +100,7 @@
 		int offset2 = offset + 25;
 		
 		if (_vo.type_id > 1) {
-			_articleImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(80.0, offset, 227.0, 227.0 * _vo.imgRatio)] autorelease];
+			_articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(80.0, offset, 227.0, 227.0 * _vo.imgRatio)];
 			_articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 			_articleImgView.userInteractionEnabled = YES;
 			[self addSubview:_articleImgView];
@@ -108,9 +108,8 @@
 			UITapGestureRecognizer *dblTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photoZoomIn:)];
 			dblTapRecognizer.numberOfTapsRequired = 2;
 			[_articleImgView addGestureRecognizer:dblTapRecognizer];
-			[dblTapRecognizer release];
 			
-			UIImageView *ctaImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(_articleImgView.frame.size.width - 20.0, _articleImgView.frame.size.height * 0.5, 44.0, 44.0)] autorelease];
+			UIImageView *ctaImgView = [[UIImageView alloc] initWithFrame:CGRectMake(_articleImgView.frame.size.width - 20.0, _articleImgView.frame.size.height * 0.5, 44.0, 44.0)];
 			ctaImgView.image = [UIImage imageNamed:@"ctaButton_nonActive.png"];
 			[_articleImgView addSubview:ctaImgView];
 			
@@ -119,13 +118,13 @@
 		}
 		
 		if ([_vo.affiliateURL length] > 0) {
-			UIImageView *affiliateImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(80.0, offset, 34.0, 34.0)] autorelease];
+			UIImageView *affiliateImgView = [[UIImageView alloc] initWithFrame:CGRectMake(80.0, offset, 34.0, 34.0)];
 			affiliateImgView.image = [UIImage imageNamed:@"favButton_nonActive.png"];
 			[self addSubview:affiliateImgView];
 			
 			size = [_vo.affiliateURL sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];	
 			
-			UIButton *affiliateButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			UIButton *affiliateButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			affiliateButton.frame = CGRectMake(120.0, offset, size.width, 34.0);
 			[affiliateButton addTarget:self action:@selector(_goAffiliate) forControlEvents:UIControlEventTouchUpInside];
 			affiliateButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
@@ -142,7 +141,7 @@
 			_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(80.0, offset, 227.0, 180.0) articleVO:_vo];
 			[self addSubview:_videoPlayerView];
 			
-			_videoButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			_videoButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			_videoButton.frame = CGRectMake(60.0, offset, 242.0, 160.0);
 			[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:_videoButton];
@@ -155,11 +154,11 @@
 		
 		if (_vo.source_id > 0) {
 			for (NSDictionary *dict in _vo.seenBy) {
-				EGOImageView *readImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(imgOffset, offset, 24.0, 24.0)] autorelease];
+				EGOImageView *readImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(imgOffset, offset, 24.0, 24.0)];
 				readImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1/users/profile_image?screen_name=%@&size=reasonably_small", [dict objectForKey:@"handle"]]];
 				[self addSubview:readImgView];
 				
-				UIButton *avatarButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+				UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
 				avatarButton.frame = readImgView.frame;
 				[avatarButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
 				[self addSubview:avatarButton];
@@ -168,7 +167,7 @@
 			}
 			
 		
-			UIButton *commentButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			commentButton.frame = CGRectMake(imgOffset - 10.0, offset - 10.0, 44.0, 44.0);
 			[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
 			[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
@@ -177,11 +176,11 @@
 			
 			offset += 46;
 			
-			UIImageView *linesImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, offset)] autorelease];
+			UIImageView *linesImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, offset)];
 			linesImgView.image = [[UIImage imageNamed:@"contentRow.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:10.0];
 			[self addSubview:linesImgView];
 			
-			_likeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			_likeButton.frame = CGRectMake(15.0, offset2, 34.0, 34.0);
 			
 			if (_vo.hasLiked)
@@ -194,7 +193,7 @@
 			[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:_likeButton];
 			
-			_likesLabel = [[[UILabel alloc] initWithFrame:CGRectMake(15.0, offset2 + 25.0, 35.0, 16.0)] autorelease];
+			_likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, offset2 + 25.0, 35.0, 16.0)];
 			_likesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
 			_likesLabel.textColor = [UIColor blackColor];
 			_likesLabel.textAlignment = UITextAlignmentCenter;
@@ -202,14 +201,14 @@
 			_likesLabel.text = [NSString stringWithFormat:@"%d", _vo.totalLikes];
 			[self addSubview:_likesLabel];
 			
-			UIButton *favButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			UIButton *favButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			favButton.frame = CGRectMake(15.0, offset2 + 59.0, 34.0, 34.0);
 			[favButton setBackgroundImage:[UIImage imageNamed:@"favButton_nonActive.png"] forState:UIControlStateNormal];
 			[favButton setBackgroundImage:[UIImage imageNamed:@"favButton_Active.png"] forState:UIControlStateHighlighted];
 			[favButton addTarget:self action:@selector(_goReadLater) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:favButton];
 			
-			UIButton *shareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			shareButton.frame = CGRectMake(15.0, offset2 + 118.0, 34.0, 34.0);
 			[shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_nonActive.png"] forState:UIControlStateNormal];
 			[shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_Active.png"] forState:UIControlStateHighlighted];
@@ -217,7 +216,7 @@
 			[self addSubview:shareButton];
 		
 		} else {
-			UIButton *commentButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+			UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			commentButton.frame = CGRectMake(270.0, 10.0, 44.0, 44.0);
 			[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
 			[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
@@ -225,13 +224,13 @@
 			[self addSubview:commentButton];
 		}
 		
-		EGOImageView *thumbImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 35.0, 35.0)] autorelease];
+		EGOImageView *thumbImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 12.0, 35.0, 35.0)];
 		thumbImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
 		thumbImgView.layer.cornerRadius = 8.0;
 		thumbImgView.clipsToBounds = YES;
 		[self addSubview:thumbImgView];
 		
-		UIButton *avatarButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		avatarButton.frame = thumbImgView.frame;
 		[avatarButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:avatarButton];
@@ -256,7 +255,7 @@
 
 #pragma mark - Navigation
 -(void)_goDetails {
-	ASIFormDataRequest *readRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+	ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 	[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 	[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
@@ -269,7 +268,7 @@
 }
 
 -(void)_goVideo {
-	ASIFormDataRequest *readRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+	ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 	[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 	[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
@@ -301,7 +300,7 @@
 }
 
 -(void)_goLike {
-	ASIFormDataRequest *readRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+	ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 	[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 	[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
@@ -313,7 +312,7 @@
 	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActiveSelected.png"] forState:UIControlStateHighlighted];
 	[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	
-	ASIFormDataRequest *likeRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+	ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 	[likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
@@ -325,7 +324,7 @@
 }
 
 -(void)_goReadLater {
-	ASIFormDataRequest *readRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+	ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 	[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 	[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
@@ -333,7 +332,7 @@
 	[readRequest setDelegate:self];
 	[readRequest startAsynchronous];
 	
-	ASIFormDataRequest *readLaterRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+	ASIFormDataRequest *readLaterRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 	[readLaterRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
 	[readLaterRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 	[readLaterRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
@@ -347,7 +346,7 @@
 
 
 -(void)_goComment {
-	ASIFormDataRequest *readRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]] retain];
+	ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 	[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 	[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];

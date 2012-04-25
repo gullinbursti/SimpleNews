@@ -19,7 +19,7 @@
 
 -(id)init {
 	if ((self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[self class] cellReuseIdentifier]])) {
-		_titleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(16.0, 28.0, 256.0, 20.0)] autorelease];
+		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(16.0, 28.0, 256.0, 20.0)];
 		_titleLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:16];
 		_titleLabel.textColor = [UIColor blackColor];
 		_titleLabel.backgroundColor = [UIColor clearColor];

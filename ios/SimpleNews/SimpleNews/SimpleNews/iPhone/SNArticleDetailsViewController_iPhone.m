@@ -45,8 +45,6 @@
 }
 
 -(void)dealloc {
-	[super dealloc];
-	[_webView dealloc];
 }
 
 #pragma mark - View lifecycle
@@ -76,14 +74,14 @@
 	SNArticleDetailsFooterView_iPhone *footerView = [[SNArticleDetailsFooterView_iPhone alloc] init];
 	[self.view addSubview:footerView];
 	
-	UIButton *backButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	backButton.frame = CGRectMake(4.0, 4.0, 44.0, 44.0);
 	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_nonActive.png"] forState:UIControlStateNormal];
 	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_Active.png"] forState:UIControlStateHighlighted];
 	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:backButton];
 	
-	_viewOptionsButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_viewOptionsButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_viewOptionsButton.frame = CGRectMake(262.0, -6.0, 64.0, 64.0);
 	[_viewOptionsButton setBackgroundImage:[UIImage imageNamed:@"fontButton_nonActive.png"] forState:UIControlStateNormal];
 	[_viewOptionsButton setBackgroundImage:[UIImage imageNamed:@"fontButton_Active.png"] forState:UIControlStateHighlighted];
@@ -131,12 +129,12 @@
 	offset += (274.0 * _vo.imgRatio);
 	
 	if ([_vo.affiliateURL length] > 0) {
-		UIImageView *affiliateImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(22.0, offset, 34.0, 34.0)] autorelease];
+		UIImageView *affiliateImgView = [[UIImageView alloc] initWithFrame:CGRectMake(22.0, offset, 34.0, 34.0)];
 		affiliateImgView.image = [UIImage imageNamed:@"favButton_nonActive.png"];
 		[_scrollView addSubview:affiliateImgView];
 		
 		size = [_vo.affiliateURL sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(280.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];	
-		UIButton *affiliateButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		UIButton *affiliateButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		affiliateButton.frame = CGRectMake(62.0, offset, size.width, 34.0);
 		[affiliateButton addTarget:self action:@selector(_goAffiliate) forControlEvents:UIControlEventTouchUpInside];
 		affiliateButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
@@ -159,7 +157,6 @@
 	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 	[dateFormatter setDateStyle:NSDateFormatterMediumStyle];
 	NSString *dateString = [dateFormatter stringFromDate:_vo.added];
-	[dateFormatter release];
 	
 	_dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 100.0, 16.0)];
 	_dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:2] intValue]];
@@ -191,7 +188,7 @@
 	_shareSheetView = [[SNShareSheetView_iPhone alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
 	[self.view addSubview:_shareSheetView];
 	
-	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
 }
@@ -293,7 +290,7 @@
 }
 
 -(void)_detailsShowComments:(NSNotification *)notification {
-	[self.navigationController pushViewController:[[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:_vo listID:_vo.list_id] autorelease] animated:YES];
+	[self.navigationController pushViewController:[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:_vo listID:_vo.list_id] animated:YES];
 }
 
 -(void)_detailsShowShare:(NSNotification *)notification {
@@ -315,7 +312,7 @@
 -(void)_twitterShare:(NSNotification *)notification {
 	SNArticleVO *vo = (SNArticleVO *)[notification object];
 	
-	TWTweetComposeViewController *twitter = [[[TWTweetComposeViewController alloc] init] autorelease];
+	TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
 	
 	//[twitter addImage:[UIImage imageNamed:@"iOSDevTips.png"]];
 	[twitter addURL:[NSURL URLWithString:[NSString stringWithString:[NSString stringWithFormat:@"http://assemb.ly/tweets?id=%@", vo.tweet_id]]]];
@@ -352,13 +349,11 @@
 		[mfViewController setMessageBody:vo.content isHTML:NO];
 		
 		[self presentViewController:mfViewController animated:YES completion:nil];
-		[mfViewController release];
 		
 	} else {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"Your phone is not currently configured to send mail." delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
 		
 		[alert show];
-		[alert release];
 	}
 }
 

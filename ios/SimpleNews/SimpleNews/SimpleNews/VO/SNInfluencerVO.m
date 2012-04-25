@@ -36,8 +36,6 @@
 	self.avatar_url = nil;
 	self.blurb = nil;
 	self.sources = nil;
-	
-	[super dealloc];
 }
 
 @end

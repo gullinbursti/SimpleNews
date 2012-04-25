@@ -21,8 +21,6 @@
 }
 
 -(void)dealloc {
-	[_overlayView release];
-	[super dealloc];
 }
 
 @end

@@ -22,27 +22,27 @@
 
 -(id)init {
 	if ((self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[self class] cellReuseIdentifier]])) {
-		_avatarImgView = [[[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 9.0, 50.0, 50.0)] autorelease];
+		_avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 9.0, 50.0, 50.0)];
 		_avatarImgView.layer.cornerRadius = 8.0;
 		_avatarImgView.clipsToBounds = YES;
 		_avatarImgView.layer.borderColor = [[UIColor colorWithWhite:0.671 alpha:1.0] CGColor];
 		_avatarImgView.layer.borderWidth = 1.0;
 		[self addSubview:_avatarImgView];
 		
-		_nameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(70.0, 16.0, 256.0, 20.0)] autorelease];
+		_nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(70.0, 16.0, 256.0, 20.0)];
 		_nameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 		_nameLabel.textColor = [UIColor blackColor];
 		_nameLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_nameLabel];
 		
-		_curatorsLabel = [[[UILabel alloc] initWithFrame:CGRectMake(70.0, 36.0, 220.0, 20.0)] autorelease];
+		_curatorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(70.0, 36.0, 220.0, 20.0)];
 		_curatorsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 		_curatorsLabel.textColor = [UIColor colorWithWhite:0.694 alpha:1.0];
 		_curatorsLabel.lineBreakMode = UILineBreakModeTailTruncation;
 		_curatorsLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_curatorsLabel];
 		
-		UIView *lineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 74.0, self.frame.size.width, 1.0)] autorelease];
+		UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 74.0, self.frame.size.width, 1.0)];
 		[lineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
 		//[self addSubview:lineView];
 	}

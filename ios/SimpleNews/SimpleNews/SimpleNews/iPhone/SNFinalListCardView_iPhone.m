@@ -108,7 +108,7 @@
 	SNListItemViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNListItemViewCell_iPhone cellReuseIdentifier]];
 	
 	if (cell == nil)
-		cell = [[[SNListItemViewCell_iPhone alloc] init] autorelease];
+		cell = [[SNListItemViewCell_iPhone alloc] init];
 	
 	cell.listVO = (SNListVO *)[_lists objectAtIndex:indexPath.row];
 	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];

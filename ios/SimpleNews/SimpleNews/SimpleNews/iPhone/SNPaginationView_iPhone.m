@@ -18,7 +18,7 @@
 		
 		float offset = 0.0;
 		for (int i=0; i<3; i++) {
-			UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(offset, 0.0, 9.0, 9.0)] autorelease];
+			UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(offset, 0.0, 9.0, 9.0)];
 			bgImgView.image = [UIImage imageNamed:@"pagination_off.png"];
 			[self addSubview:bgImgView];
 			
@@ -39,9 +39,6 @@
 }
 
 -(void)dealloc {
-	[_onImgView release];
-	
-	[super dealloc];	
 }
 
 @end

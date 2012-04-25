@@ -13,11 +13,11 @@
 
 -(id)initAtPosition:(CGPoint)pos {
 	if ((self = [super initWithFrame:CGRectMake(pos.x, pos.y, 200.0, 100.0)])) {
-		UIView *bgView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 56.0, 56.0)] autorelease];
+		UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 56.0, 56.0)];
 		[bgView setBackgroundColor:[UIColor blueColor]];
 		[self addSubview:bgView];
 		
-		UILabel *logoCharLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0, -4, 56, 56)] autorelease];
+		UILabel *logoCharLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, -4, 56, 56)];
 		logoCharLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:40.0];
 		logoCharLabel.backgroundColor = [UIColor clearColor];
 		logoCharLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
@@ -27,7 +27,7 @@
 		logoCharLabel.text = @"a";
 		[bgView addSubview:logoCharLabel];
 		
-		UILabel *logoNameLabel = [[[UILabel alloc] initWithFrame:CGRectMake(0.0, 70.0, 200, 20)] autorelease];
+		UILabel *logoNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 70.0, 200, 20)];
 		logoNameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16.0];
 		logoNameLabel.backgroundColor = [UIColor clearColor];
 		logoNameLabel.textColor = [UIColor whiteColor];

@@ -16,19 +16,19 @@
 	if ((self = [super initWithFrame:CGRectMake(0.0, 480.0 - 46.0, 320.0, 46.0)])) {
 		[self setBackgroundColor:[UIColor colorWithWhite:0.941 alpha:1.0]];
 		
-		UIView *lineView = [[[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 1.0)] autorelease];
+		UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 1.0)];
 		[lineView setBackgroundColor:[SNAppDelegate snLineColor]];
 		[self addSubview:lineView];
 		
 		
-		UIButton *likeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		UIButton *likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		likeButton.frame = CGRectMake(6.0, 6.0, 44.0, 34.0);
 		[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
 		[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
 		[likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:likeButton];
 		
-		UIButton *commentButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		commentButton.frame = CGRectMake(54.0, 6.0, 84.0, 34.0);
 		[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_nonActive.png"] forState:UIControlStateNormal];
 		[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_Active.png"] forState:UIControlStateHighlighted];
@@ -40,7 +40,7 @@
 		[commentButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:commentButton];
 		
-		UIButton *shareButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+		UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		shareButton.frame = CGRectMake(265.0, 6.0, 49.0, 34.0);
 		[shareButton setBackgroundImage:[UIImage imageNamed:@"moreOptionsButton_nonActive.png"] forState:UIControlStateNormal];
 		[shareButton setBackgroundImage:[UIImage imageNamed:@"moreOptionsButton_Active.png"] forState:UIControlStateHighlighted];

@@ -17,11 +17,11 @@
 
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
-		UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 339.0)] autorelease];
+		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 339.0)];
 		bgImgView.image = [UIImage imageNamed:@"shareBG.png"];
 		[self addSubview:bgImgView];
 		
-		UIButton *twitterButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		UIButton *twitterButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		twitterButton.frame = CGRectMake(38.0, 112.0, 244.0, 64.0);
 		[twitterButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[twitterButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
@@ -34,7 +34,7 @@
 		[twitterButton addTarget:self action:@selector(_goTwitter) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:twitterButton];
 		
-		UIButton *emailButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		UIButton *emailButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		emailButton.frame = CGRectMake(38.0, 186.0, 244.0, 64.0);
 		[emailButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[emailButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
@@ -47,7 +47,7 @@
 		[emailButton addTarget:self action:@selector(_goEmail) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:emailButton];
 		
-		UIButton *cancelButton = [[[UIButton buttonWithType:UIButtonTypeCustom] retain] autorelease];
+		UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		cancelButton.frame = CGRectMake(38.0, 260.0, 244.0, 64.0);
 		[cancelButton setBackgroundImage:[[UIImage imageNamed:@"shareCancelButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[cancelButton setBackgroundImage:[[UIImage imageNamed:@"shareCancelButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
@@ -65,7 +65,6 @@
 }
 
 -(void)dealloc {
-	[super dealloc];
 }
 
 -(void)setVo:(SNArticleVO *)vo {

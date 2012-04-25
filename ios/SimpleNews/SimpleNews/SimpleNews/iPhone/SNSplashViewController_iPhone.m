@@ -27,18 +27,17 @@
 }
 		  
 -(void)dealloc {
-	[super dealloc];
 }
 
 #pragma mark - View lifecycle
 -(void)loadView {
 	[super loadView];
 	
-	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[self.view addSubview:bgImgView];
 	
-	_logoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(118, 198, 84.0, 84.0)] autorelease];
+	_logoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(118, 198, 84.0, 84.0)];
 	_logoImgView.image = [UIImage imageNamed:@"logo_01.png"];
 	[self.view addSubview:_logoImgView];
 	
@@ -65,8 +64,8 @@
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"SPLASH_DISMISSED" object:nil];
 		
-		SNRootViewController_iPhone *rootViewController = [[[SNRootViewController_iPhone alloc] init] autorelease];
-		UINavigationController *rootNavigationController = [[[UINavigationController alloc] initWithRootViewController:rootViewController] autorelease];
+		SNRootViewController_iPhone *rootViewController = [[SNRootViewController_iPhone alloc] init];
+		UINavigationController *rootNavigationController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
 		[rootNavigationController setNavigationBarHidden:YES animated:NO];
 		[self.navigationController pushViewController:rootViewController animated:NO];
 	}

@@ -14,7 +14,7 @@
 @synthesize option_id, option_title, option_url, option_info;
 
 +(SNOptionVO *)optionWithDictionary:(NSDictionary *)dictionary {
-	SNOptionVO *vo = [[[SNOptionVO alloc] init] autorelease];
+	SNOptionVO *vo = [[SNOptionVO alloc] init];
 	vo.dictionary = dictionary;
 	
 	vo.option_id = [[dictionary objectForKey:@"option_id"] intValue];
@@ -31,7 +31,5 @@
 	self.option_title = nil;
 	self.option_url = nil;
 	self.option_info = nil;
-	
-	[super dealloc];
 }
 @end

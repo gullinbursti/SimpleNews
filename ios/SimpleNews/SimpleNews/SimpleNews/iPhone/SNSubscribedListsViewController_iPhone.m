@@ -31,7 +31,7 @@
 		
 		_subscribedLists = [NSMutableArray new];
 		
-		_listsRequest = [[ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]] retain];
+		_listsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 		[_listsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
 		if ([[SNAppDelegate profileForUser] objectForKey:@"id"])
 			[_listsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
@@ -50,21 +50,17 @@
 
 -(void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LIST_ARTICLES" object:nil];
-	
-	[_paginationView release];
-	
-	[super dealloc];
 }
 
 #pragma mark - View lifecycle
 -(void)loadView {
 	[super loadView];
 	
-	UIImageView *bgImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	bgImgView.image = [UIImage imageNamed:@"background_stripes.png"];
 	[self.view addSubview:bgImgView];
 	
-	UIImageView *logoImgView = [[[UIImageView alloc] initWithFrame:CGRectMake(118, 198, 84.0, 84.0)] autorelease];
+	UIImageView *logoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(118, 198, 84.0, 84.0)];
 	logoImgView.image = [UIImage imageNamed:@"logo_01.png"];
 	[self.view addSubview:logoImgView];
 	
@@ -82,7 +78,7 @@
 	_scrollView.alwaysBounceVertical = NO;
 	[_holderView addSubview:_scrollView];
 	
-	_rootListButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
+	_rootListButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
 	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_nonActive.png"] forState:UIControlStateNormal];
 	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_Active.png"] forState:UIControlStateHighlighted];
@@ -92,7 +88,7 @@
 	_paginationView = [[SNPaginationView_iPhone alloc] initWithFrame:CGRectMake(136.0, 467.0, 48.0, 9.0)];
 	[_holderView addSubview:_paginationView];
 	
-	UIImageView *overlayImgView = [[[UIImageView alloc] initWithFrame:self.view.frame] autorelease];
+	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
 	
@@ -135,20 +131,19 @@
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 	
 		[alert show];
-		[alert release];
 	
 	} else {
 		//[UIView animateWithDuration:0.33 animations:^(void) {
 		//	_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
 	
 		//} completion:^(BOOL finished) {
-			[self.navigationController pushViewController:[[[SNArticleListViewController_iPhone alloc] initWithListVO:vo] autorelease] animated:YES];
+			[self.navigationController pushViewController:[[SNArticleListViewController_iPhone alloc] initWithListVO:vo] animated:YES];
 		//}];
 	}
 }
 
 -(void)_showTwitterProfile:(NSNotification *)notification {
-	SNWebPageViewController_iPhone *webPageViewController = [[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]] autorelease];
+	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]];
 	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
@@ -194,7 +189,7 @@
 	
 	@autoreleasepool {
 		NSError *error = nil;
-		NSSortDescriptor *descriptor = [[[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)] autorelease];
+		NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
 		NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
 		NSArray *parsedLists = [unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
 		NSMutableArray *finalList = [NSMutableArray new];
@@ -212,12 +207,12 @@
 					[list addObject:vo];
 			}
 			
-			_subscribedLists = [list retain];
+			_subscribedLists = [list copy];
 			
 			int cnt = 0;
 			for (SNListVO *vo in _subscribedLists) {
 				if (cnt < 3) {
-					SNListCardView_iPhone *listCardView = [[[SNListCardView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) listVO:vo] autorelease];
+					SNListCardView_iPhone *listCardView = [[SNListCardView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) listVO:vo];
 					[_scrollView addSubview:listCardView];
 					cnt++;
 					
@@ -226,7 +221,7 @@
 				}
 			}
 			
-			SNFinalListCardView_iPhone *finalListCardView = [[[SNFinalListCardView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) addlLists:finalList] autorelease];
+			SNFinalListCardView_iPhone *finalListCardView = [[SNFinalListCardView_iPhone alloc] initWithFrame:CGRectMake(cnt * self.view.frame.size.width, 0.0, self.view.frame.size.width, self.view.frame.size.height) addlLists:finalList];
 			[_scrollView addSubview:finalListCardView];
 			
 			_scrollView.contentSize = CGSizeMake((cnt + 1) * self.view.frame.size.width, self.view.frame.size.height);
