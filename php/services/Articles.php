@@ -100,10 +100,26 @@
 						"thumb_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
 						"name" => $comment_row['name'], 
 						"handle" => $comment_row['handle'], 
-						"comment_url" => "http://shelby.tv", 
+						"comment_url" => "", 
 						"content" => htmlentities($comment_row['content'], ENT_QUOTES), 
 						"liked" => $comment_row['liked'], 
 						"added" => $comment_row['added']
+					 ));
+				}
+				
+				$query = 'SELECT * FROM `tblRetweets` WHERE `tweet_id` = "'. $article_row['tweet_id'] .'" ORDER BY `created` DESC;';
+				$retweet_result = mysql_query($query);
+				
+				while ($retweet_row = mysql_fetch_array($retweet_result, MYSQL_BOTH)) {
+					array_push($comment_arr, array(
+						"reaction_id" => $retweet_row['id'], 
+						"thumb_url" => $retweet_row['avatar_url'], 
+						"name" => $retweet_row['name'], 
+						"handle" => $retweet_row['handle'], 
+						"comment_url" => "", 
+						"content" => htmlentities("RT", ENT_QUOTES), 
+						"liked" => "N", 
+						"added" => $retweet_row['created']
 					 ));
 				}
 				
@@ -178,6 +194,22 @@
 						"content" => htmlentities($comment_row['content'], ENT_QUOTES), 
 						"liked" => $comment_row['liked'], 
 						"added" => $comment_row['added']
+					 ));
+				}
+				
+				$query = 'SELECT * FROM `tblRetweets` WHERE `tweet_id` = "'. $article_row['tweet_id'] .'" ORDER BY `created` DESC;';
+				$retweet_result = mysql_query($query);
+				
+				while ($retweet_row = mysql_fetch_array($retweet_result, MYSQL_BOTH)) {
+					array_push($comment_arr, array(
+						"reaction_id" => $retweet_row['id'], 
+						"thumb_url" => $retweet_row['avatar_url'], 
+						"name" => $retweet_row['name'], 
+						"handle" => $retweet_row['handle'], 
+						"comment_url" => "", 
+						"content" => htmlentities("RT", ENT_QUOTES), 
+						"liked" => "N", 
+						"added" => $retweet_row['created']
 					 ));
 				}
 				

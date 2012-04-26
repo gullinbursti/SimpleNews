@@ -29,10 +29,26 @@ $list_result = mysql_query($query);
 $tot = mysql_num_rows($list_result);
 
 $query = 'SELECT * FROM `tblSourceTypes`;';
-$src_result = mysql_query($query); 
+$src_result = mysql_query($query);
 
+$retweet_obj = $connection->get('statuses/retweets/'. $tweet_id, array('count' => "10")); 
 
-
+$month_arr = array(
+	"jan" => "01", 
+	"feb" => "02", 
+	"mar" => "03", 
+	"apr" => "04", 
+	"may" => "05", 
+	"jun" => "06", 
+	"jul" => "07", 
+	"aug" => "08", 
+	"sep" => "09", 
+	"oct" => "10", 
+	"nov" => "11", 
+	"dec" => "12" 
+);
+	
+	
 if (isset($_POST['txtArticleSource'])) {
 	$type_id = 7;
 	$source_url = $_POST['txtArticleSource'];
@@ -42,7 +58,12 @@ if (isset($_POST['txtArticleSource'])) {
 	$content = $_POST['txtArticleText'];
 	$image_url = $_POST['txtImageURL_1'];
 	$video_url = $_POST['txtVideoURL'];
-	$img_ratio = $_POST['txtImageHeight'] / $_POST['txtImageWidth'];
+	
+	if ($_POST['txtImageHeight'] != "" && $_POST['txtImageWidth'] !="")
+		$img_ratio = $_POST['txtImageHeight'] / $_POST['txtImageWidth'];
+	
+	else	
+		$img_ratio = 0;
 	
 	if (strlen($video_url) == 0)
 		$type_id -= 4;
@@ -61,6 +82,29 @@ if (isset($_POST['txtArticleSource'])) {
 		
 		//echo ($query);
 	}
+	
+	foreach ($retweet_obj as $key => $val) {
+		$retweet_id = $retweet_obj[$key]->id_str;
+		$avatar_url = $retweet_obj[$key]->user->profile_image_url;
+		$twitter_name = $retweet_obj[$key]->user->name;
+		$handle = $retweet_obj[$key]->user->screen_name;
+		
+		$timestamp_arr = explode(' ', $retweet_obj[$key]->created_at);
+		$month = strtolower($timestamp_arr[1]);
+		$day = $timestamp_arr[2];
+		$time = $timestamp_arr[3];
+		$year = $timestamp_arr[5];
+		
+		$created = $year ."-". $month_arr[$month] ."-". $day ." ". $time;
+		
+		$query = 'INSERT INTO `tblRetweets` (';
+		$query .= '`id`, `tweet_id`, `retweet_id`, `handle`, `avatar_url`, `created`, `added`) ';
+		$query .= 'VALUES (NULL, "'. $tweet_id .'", "'. $retweet_obj[$key]->id_str .'", "'. $retweet_obj[$key]->user->screen_name .'", "'. $retweet_obj[$key]->user->profile_image_url .'", "'. $created .'" NOW());';
+		$result = mysql_query($query);
+		$retweet_id = mysql_insert_id();
+	}
+	
+	
 	
 	//echo ($query);
 	header('Location: tweets.php?id='. $influencer_id .'&handle='. $handle);
@@ -124,6 +168,7 @@ if (isset($_POST['txtArticleSource'])) {
 					<tr><td>Image URL:</td><td><input type="text" id="txtImageURL_1" name="txtImageURL_1" size="80" /></td></tr>
 					<tr><td>Image Size:</td><td><input type="text" id="txtImageWidth" name="txtImageWidth" />x<input type="text" id="txtImageHeight" name="txtImageHeight" /></td></tr>
 					<tr><td>Video URL:</td><td><input type="text" id="txtVideoURL" name="txtVideoURL" size="80" /></td></tr>
+					<tr><td>Affiliate URL:</td><td><input type="text" id="txtAffiliate" name="txtAffiliate" size="80" /></td></tr>
 					<tr><td>Lists:</td><td><?php 
 						$tot = 0;
 						while ($row = mysql_fetch_array($list_result, MYSQL_BOTH)) {
@@ -132,7 +177,20 @@ if (isset($_POST['txtArticleSource'])) {
 						}
 					?><input type="hidden" id="hidIDs" name="hidIDs" value="" /></td></tr>
 					<tr><td colspan="2"><hr /></td></tr>
-					<tr><td colspan="2"><input type="button" id="idSubmit" name="btnSubmit" value="Add Article" onclick="submitArticle()" /></td></tr>
+					<tr><td colspan="2"><input type="button" id="btnCancel" name="btnCancel" value="Cancel" onclick="history.back();" /><input type="button" id="idSubmit" name="btnSubmit" value="Add Article" onclick="submitArticle()" /></td></tr>
+					<tr><td colspan="2"><hr /><hr /></td></tr>
+					<tr><td colspan="2">Retweets:<br />
+						<table cellspacing="4" cellpadding="0" border="1"><tr><?php $cnt = 0; 
+						foreach ($retweet_obj as $key => $val) {
+							echo ("<td><img src=\"". $retweet_obj[$key]->user->profile_image_url ."\" /><br />");
+							echo (implode(' ', explode(' ', $retweet_obj[$key]->created_at, -2)) ."<br />");
+							echo ("<a href=\"https://twitter.com/#!/". $retweet_obj[$key]->user->screen_name ."\" target=\"_blank\">@". $retweet_obj[$key]->user->screen_name ."</a></td>");
+							$cnt++;
+							
+							if ($cnt % 5 == 0)
+								echo ("</tr><tr>");
+						} 
+					?></tr></table></td></tr>
 				</table></td>
 			</tr>
 		</table>

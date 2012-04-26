@@ -283,7 +283,7 @@
 									 textField.text, @"content", 
 									 isLiked, @"liked", nil];
 		SNCommentVO *vo = [SNCommentVO commentWithDictionary:dict];
-		[_vo.comments addObject:vo];
+		//[_vo.comments addObject:vo];
 		
 		CGSize commentSize = [textField.text sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(256.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		

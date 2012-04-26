@@ -39,15 +39,17 @@
 	vo.hasLiked = (BOOL)[[dictionary objectForKey:@"liked"] intValue];
 	vo.totalLikes = [[dictionary objectForKey:@"likes"] intValue];
 	vo.imgRatio = [[dictionary objectForKey:@"img_ratio"] floatValue];
-	vo.comments = [NSMutableArray new];
 	vo.seenBy = [dictionary objectForKey:@"reads"];
 	
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
 	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 	vo.added = [dateFormat dateFromString:[dictionary objectForKey:@"added"]];
 	
+	NSMutableArray *unsortedComments = [NSMutableArray new];
 	for (NSDictionary *comment in [dictionary objectForKey:@"reactions"])
-		[vo.comments addObject:[SNCommentVO commentWithDictionary:comment]];
+		[unsortedComments addObject:[SNCommentVO commentWithDictionary:comment]];
+	
+	vo.comments = [NSArray arrayWithArray:[unsortedComments sortedArrayUsingDescriptors:[NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"added" ascending:NO]]]];
 	
 	return (vo);
 }

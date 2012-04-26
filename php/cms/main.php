@@ -22,7 +22,7 @@ if (!isset($_SESSION['login']))
 		<table cellpadding="0" cellspacing="0" border="0">
 			<tr>
 				<td width="320" valign="top"><?php include './nav.php'; ?></td>
-				<td></td>
+				<td><a href="./redirect.php"><img src="./images/lighter.png" alt="Sign in with Twitter"/></a></td>
 			</tr>
 		</table>
 	</body>
