@@ -38,11 +38,6 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_listArticles:) name:@"LIST_ARTICLES" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshSubscribedList:) name:@"REFRESH_SUBSCRIBED_LIST" object:nil];
 		
-		_subscribedListsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
-		[_subscribedListsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-		[_subscribedListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		[_subscribedListsRequest setDelegate:self];
-		
 		_popularListsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 		[_popularListsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
 		
@@ -262,16 +257,17 @@
 		[_popularHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_popularTableView];
 }
 
-
 #pragma mark - Notification handlers
--(void)_refreshSubscribedList:(NSNotification *)notification {
-	NSLog(@"REFRESHING");
-	
-	_subscribedListsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
-	[_subscribedListsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-	[_subscribedListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[_subscribedListsRequest setDelegate:self];
-	[_subscribedListsRequest startAsynchronous];
+
+- (void)_refreshSubscribedList:(NSNotification *)notification {
+	if (_subscribedListsRequest == nil) {
+		NSLog(@"REFRESHING SUBSCRIBED LISTS");
+		_subscribedListsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
+		[_subscribedListsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[_subscribedListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[_subscribedListsRequest setDelegate:self];
+		[_subscribedListsRequest startAsynchronous];
+	}
 }
 
 -(void)_listArticles:(NSNotification *)notification {
@@ -380,8 +376,8 @@
 }
 
 
-
 #pragma mark - ASI Delegates
+
 -(void)requestFinished:(ASIHTTPRequest *)request { 
 	//NSLog(@"SNRootViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
@@ -411,6 +407,7 @@
 			
 			//EGOImageLoader *firstCover = [[EGOImageLoader sharedImageLoader] imageForURL:[NSURL URLWithString:((SNListVO *)[_subscribedLists objectAtIndex:0]).imageURL] shouldLoadWithObserver:nil];
 		}
+		_subscribedListsRequest = nil;
 	
 	} else if ([request isEqual:_popularListsRequest]) {
 		@autoreleasepool {
@@ -468,7 +465,7 @@
 			[_twitterRequest startAsynchronous];
 		
 		} else {
-			[_subscribedListsRequest startAsynchronous];
+			[self _refreshSubscribedList:nil];
 		}
 		
 	} else if ([request isEqual:_twitterRequest]) {
@@ -484,8 +481,8 @@
 			[_userRequest startAsynchronous];
 		}
 		
-		[_subscribedListsRequest startAsynchronous];
-	
+		[self _refreshSubscribedList:nil];
+		
 	} else if ([request isEqual:_updateRequest]) {
 		if (_isFollowingList) {
 			
@@ -525,6 +522,7 @@
 	if (request == _subscribedListsRequest) {
 		//[_delegates perform:@selector(jobList:didFailLoadWithError:) withObject:self withObject:request.error];
 		//MBL_RELEASE_SAFELY(_jobListRequest);
+		_subscribedListsRequest = nil;
 	}
 	
 	//[_loadOverlay remove];
