@@ -290,11 +290,11 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 	}
 	*/
 	
-	if (![SNAppDelegate hasWiFi]) {
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Wi-Fi Connection" message:@"Please connect to a wi-fi ." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-		
-		[alert show];
-	}
+//	if (![SNAppDelegate hasWiFi]) {
+//		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Wi-Fi Connection" message:@"Please connect to a wi-fi ." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//		
+//		[alert show];
+//	}
 	
 	
 	SNTwitterCaller *twitterCaller = [[SNTwitterCaller alloc] init];
