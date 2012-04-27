@@ -22,33 +22,15 @@
 		_vo = vo;
 		_isFlipped = NO;
 		
-		EGOImageView *coverImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(10.0, 10.0, 275.0, 389.0)];
+		EGOImageView *coverImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height)];
 		//coverImgView.imageURL = [NSURL URLWithString:_vo.imageURL];
 		coverImgView.userInteractionEnabled = YES;
 		[_holderView addSubview:coverImgView];
 		
 		coverImgView.image = [[EGOImageLoader sharedImageLoader] imageForURL:[NSURL URLWithString:_vo.imageURL] shouldLoadWithObserver:nil];
 		
-		SNListInfoView_iPhone *listInfoView = [[SNListInfoView_iPhone alloc] initWithFrame:CGRectMake(10.0, 10.0, _holderView.frame.size.width - 20.0, 65.0) listVO:_vo];
+		SNListInfoView_iPhone *listInfoView = [[SNListInfoView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, _holderView.frame.size.width, 65.0) listVO:_vo];
 		[_holderView addSubview:listInfoView];
-		
-		UIImageView *verifiedImgView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, 412.0, 24.0, 24.0)];
-		verifiedImgView.image = [UIImage imageNamed:@"verifiedIcon.png"];
-		[_holderView addSubview:verifiedImgView];
-		
-		UILabel *verifiedLabel = [[UILabel alloc] initWithFrame:CGRectMake(42.0, 414.0, 256.0, 20.0)];
-		verifiedLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
-		verifiedLabel.textColor = [UIColor blackColor];
-		verifiedLabel.backgroundColor = [UIColor clearColor];
-		
-		if (_vo.isApproved) {
-			verifiedLabel.text = @"Curators Verified";
-		
-		} else {
-			verifiedLabel.text = @"Curators Pending";
-		}
-		
-		[_holderView addSubview:verifiedLabel];
 		
 		_articlesButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_articlesButton.frame = CGRectMake(0.0, 0.0, coverImgView.frame.size.width, coverImgView.frame.size.height);
@@ -56,19 +38,24 @@
 		[coverImgView addSubview:_articlesButton];
 		
 		_flipBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-		_flipBtn.frame = CGRectMake(232.0, 22.0, 64.0, 64.0);
-		[_flipBtn setBackgroundImage:[UIImage imageNamed:@"flipListButton_nonActive.png"] forState:UIControlStateNormal];
-		[_flipBtn setBackgroundImage:[UIImage imageNamed:@"flipListButton_Active.png"] forState:UIControlStateHighlighted];
+		_flipBtn.frame = CGRectMake(232.0, 22.0, 64.0, 44.0);
+		[_flipBtn setBackgroundImage:[UIImage imageNamed:@"listInfluencersButton_nonActive.png"] forState:UIControlStateNormal];
+		[_flipBtn setBackgroundImage:[UIImage imageNamed:@"listInfluencersButton_Active.png"] forState:UIControlStateHighlighted];
 		[_flipBtn addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_flipBtn];
 		
+		UIView *btnBGView = [[UIView alloc] initWithFrame:CGRectMake(50.0, 365.0, 184.0, 35.0)];
+		[btnBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.75]];
+		btnBGView.layer.cornerRadius = 17.0;
+		[_holderView addSubview:btnBGView];
+		
 		_subscribeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-		_subscribeBtn.frame = CGRectMake(202.0, 409.0, 84.0, 30.0);
-		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followButton_nonActive.png"] forState:UIControlStateNormal];
-		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followButton_Active.png"] forState:UIControlStateHighlighted];
-		_subscribeBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
-		_subscribeBtn.titleLabel.textAlignment = UITextAlignmentCenter;
-		[_subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+		_subscribeBtn.frame = CGRectMake(0.0, 0.0, 105.0, 44.0);
+		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followTopicButton_nonActive.png"] forState:UIControlStateNormal];
+		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followTopicButton_Active.png"] forState:UIControlStateHighlighted];
+		[_subscribeBtn setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		_subscribeBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11.0];
+		_subscribeBtn.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, -10.0);
 		
 		if (_vo.isSubscribed) {
 			[_subscribeBtn setTitle:@"Unfollow" forState:UIControlStateNormal];
@@ -79,12 +66,21 @@
 			[_subscribeBtn addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
 		}
 		
-		[_holderView addSubview:_subscribeBtn];
+		[btnBGView addSubview:_subscribeBtn];
 		
+		UIButton *likesButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		likesButton.frame = CGRectMake(125.0, 0.0, 65.0, 44.0);
+		[likesButton setBackgroundImage:[UIImage imageNamed:@"likeButton_selected.png"] forState:UIControlStateNormal];
+		[likesButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		likesButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11.0];
+		likesButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
+		[likesButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
+		[btnBGView addSubview:likesButton];
+				
 		_doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_doneButton.frame = CGRectMake(241.0, 18.0, 64.0, 34.0);
-		[_doneButton setBackgroundImage:[UIImage imageNamed:@"smallDoneButton_nonActive.png"] forState:UIControlStateNormal];
-		[_doneButton setBackgroundImage:[UIImage imageNamed:@"smallDoneButtonActive.png"] forState:UIControlStateHighlighted];
+		_doneButton.frame = CGRectMake(241.0, 18.0, 64.0, 44.0);
+		[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_nonActive.png"] forState:UIControlStateNormal];
+		[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButtonActive.png"] forState:UIControlStateHighlighted];
 		[_doneButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 		_doneButton.alpha = 0.0;
 		[self addSubview:_doneButton];

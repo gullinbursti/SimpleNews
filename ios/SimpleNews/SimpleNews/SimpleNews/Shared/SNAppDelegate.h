@@ -21,7 +21,7 @@
 	SNRootViewController_iPhone *_rootViewController_iPhone;
 }
 
-#define kServerPath @"http://dev.gullinbursti.cc/projs/simplenews/services"
+#define kServerPath @"http://dev.gullinbursti-creations.com/simplenews/services"
 
 +(SNAppDelegate *)sharedInstance;
 
@@ -55,7 +55,11 @@
 
 +(UIColor *)snLineColor;
 +(UIColor *)snHeaderColor;
++(UIColor *)snLinkColor;
 
++(UIColor *)snDebugRedColor;
++(UIColor *)snDebugGreenColor;
++(UIColor *)snDebugBlueColor;
 
 +(void)playMP3:(NSString *)filename;
 

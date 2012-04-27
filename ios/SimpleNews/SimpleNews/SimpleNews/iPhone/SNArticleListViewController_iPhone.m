@@ -112,8 +112,8 @@
 	
 	UIButton *flipButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	flipButton.frame = CGRectMake(272.0, 4.0, 44.0, 44.0);
-	[flipButton setBackgroundImage:[UIImage imageNamed:@"flipListButtonHeader_nonActive.png"] forState:UIControlStateNormal];
-	[flipButton setBackgroundImage:[UIImage imageNamed:@"flipListButtonHeader_Active.png"] forState:UIControlStateHighlighted];
+	[flipButton setBackgroundImage:[UIImage imageNamed:@"articleInfluencersButton_nonActive.png"] forState:UIControlStateNormal];
+	[flipButton setBackgroundImage:[UIImage imageNamed:@"articleInfluencersButton_Active.png"] forState:UIControlStateHighlighted];
 	[flipButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:flipButton];
 	

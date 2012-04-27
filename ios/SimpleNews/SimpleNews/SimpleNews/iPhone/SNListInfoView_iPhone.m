@@ -16,7 +16,7 @@
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
 		
-		[self setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.67]];
+		[self setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
 		
 		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 10.0, 200.0, 24.0)];
 		titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:18];
@@ -27,17 +27,19 @@
 		titleLabel.text = _vo.list_name;
 		[self addSubview:titleLabel];
 		
-		NSString *curators = @"by ";
+		CGSize size = [@"created by " sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *createdLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 35.0, size.width, size.height)];
+		createdLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
+		createdLabel.textColor = [UIColor colorWithWhite:0.824 alpha:1.0];
+		createdLabel.backgroundColor = [UIColor clearColor];
+		createdLabel.text = @"created by ";
+		[self addSubview:createdLabel];
 		
-		for (SNCuratorVO *vo in _vo.curators)
-			curators = [curators stringByAppendingString:[NSString stringWithFormat:@"%@, ", vo.curator_name]];
-		
-		UILabel *curatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 35.0, 200.0, 20.0)];
+		UILabel *curatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0 + size.width, 35.0, 200.0, 20.0)];
 		curatorLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14];
-		curatorLabel.textColor = [UIColor colorWithWhite:0.824 alpha:1.0];
+		curatorLabel.textColor = [SNAppDelegate snLinkColor];
 		curatorLabel.backgroundColor = [UIColor clearColor];
-		curatorLabel.text = [curators substringToIndex:[curators length] - 2];
-		
+		curatorLabel.text = _vo.curatorHandles;
 		[self addSubview:curatorLabel];
 	}
 	

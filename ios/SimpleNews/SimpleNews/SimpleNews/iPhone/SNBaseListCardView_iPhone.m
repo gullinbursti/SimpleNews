@@ -14,7 +14,7 @@
 
 - (id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
-		_holderView = [[UIView alloc] initWithFrame:CGRectMake(12.0, 12.0, 295.0, 450.0)];
+		_holderView = [[UIView alloc] initWithFrame:CGRectMake(15.0, 15.0, 290.0, 423.0)];
 		[_holderView setBackgroundColor:[UIColor whiteColor]];
 		_holderView.layer.cornerRadius = 8.0;
 		_holderView.clipsToBounds = YES;

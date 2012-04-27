@@ -23,43 +23,32 @@
 		
 		self.layer.cornerRadius = 8.0;
 		self.clipsToBounds = YES;
-		self.layer.borderColor = [[UIColor colorWithWhite:0.671 alpha:1.0] CGColor];
+		self.layer.borderColor = [[SNAppDelegate snLineColor] CGColor];
 		self.layer.borderWidth = 1.0;
 		
-		UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 45.0)];
-		[headerView setBackgroundColor:[UIColor colorWithWhite:0.941 alpha:1.0]];
-		[self addSubview:headerView];
-		
-		UIView *headerLineView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 45.0, self.frame.size.width, 1.0)];
-		[headerLineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
-		[self addSubview:headerLineView];
-		
-		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 14.0, 200.0, 20.0)];
+		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0, 14.0, 200.0, 20.0)];
 		titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:18];
 		titleLabel.textColor = [UIColor blackColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.text = _vo.list_name;
 		[self addSubview:titleLabel];
 		
-		UIImageView *verifiedImgView = [[UIImageView alloc] initWithFrame:CGRectMake(12.0, 55.0, 24.0, 24.0)];
-		verifiedImgView.image = [UIImage imageNamed:@"verifiedIcon.png"];
-		[self addSubview:verifiedImgView];
+		CGSize size = [@"created by " sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *createdLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0, 35.0, size.width, size.height)];
+		createdLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
+		createdLabel.textColor = [UIColor colorWithWhite:0.824 alpha:1.0];
+		createdLabel.backgroundColor = [UIColor clearColor];
+		createdLabel.text = @"created by ";
+		[self addSubview:createdLabel];
 		
-		UILabel *curatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(38.0, 57.0, 200.0, 20.0)];
-		curatorLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
-		curatorLabel.textColor = [UIColor blackColor];
+		UILabel *curatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0 + size.width, 35.0, 200.0, 20.0)];
+		curatorLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14];
+		curatorLabel.textColor = [SNAppDelegate snLinkColor];
 		curatorLabel.backgroundColor = [UIColor clearColor];
-		
-		if (_vo.isApproved)
-			curatorLabel.text = @"Curators Verified";
-		
-		else
-			curatorLabel.text = @"Curators Pending";
-		
+		curatorLabel.text = _vo.curatorHandles;
 		[self addSubview:curatorLabel];
 		
 		CGSize infoSize = [_vo.list_info sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-		
 		UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 91.0, 270.0, infoSize.height)];
 		infoLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
 		infoLabel.textColor = [UIColor colorWithWhite:0.486 alpha:1.0];

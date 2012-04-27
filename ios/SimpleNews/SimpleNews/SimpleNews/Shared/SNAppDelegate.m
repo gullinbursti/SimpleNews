@@ -85,6 +85,22 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 	return ([UIColor colorWithWhite:0.941 alpha:1.0]);
 }
 
++(UIColor *)snLinkColor {
+	return ([UIColor colorWithRed:0.000 green:0.357 blue:0.953 alpha:1.0]);
+}
+
+
++(UIColor *)snDebugRedColor {
+	return ([UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.33]);
+}
+
++(UIColor *)snDebugGreenColor {
+	return ([UIColor colorWithRed:0.0 green:1.0 blue:0.0 alpha:0.33]);
+}
+
++(UIColor *)snDebugBlueColor {
+	return ([UIColor colorWithRed:0.0 green:0.0 blue:1.0 alpha:0.33]);
+}
 
 
 +(void)playMP3:(NSString *)filename {

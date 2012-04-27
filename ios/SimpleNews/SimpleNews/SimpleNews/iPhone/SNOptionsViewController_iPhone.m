@@ -98,7 +98,7 @@
 #pragma mark - Navigation
 -(void)_goDone {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"OPTIONS_RETURN" object:nil];
-	[self.navigationController dismissModalViewControllerAnimated:YES];
+	[self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)_goNotificationsToggle:(UISwitch *)switchView {

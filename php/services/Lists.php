@@ -208,7 +208,7 @@
 		function getInfluencersInfoByList($list_id) {
 			$influencers_arr = array();
             
-			$query = 'SELECT * FROM `tblInfluencers` INNER JOIN `tblListsInfluencers` ON `tblInfluencers`.`id` = `tblListsInfluencers`.`influencer_id` WHERE `tblListsInfluencers`.`list_id` = "'. $list_id .'";';
+			$query = 'SELECT * FROM `tblInfluencers` INNER JOIN `tblListsInfluencers` ON `tblInfluencers`.`id` = `tblListsInfluencers`.`influencer_id` WHERE `tblListsInfluencers`.`list_id` = "'. $list_id .'" AND `tblInfluencers`.`id` != 3;';
 			$influencer_result = mysql_query($query);
 			
 			while ($influencer_row = mysql_fetch_array($influencer_result, MYSQL_BOTH)) {

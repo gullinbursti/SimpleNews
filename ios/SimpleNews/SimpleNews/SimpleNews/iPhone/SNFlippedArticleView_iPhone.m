@@ -31,17 +31,6 @@
 		titleLabel.text = _vo.list_name;
 		[self addSubview:titleLabel];
 		
-		UIImageView *verifiedImgView = [[UIImageView alloc] initWithFrame:CGRectMake(12.0, 55.0, 24.0, 24.0)];
-		verifiedImgView.image = [UIImage imageNamed:@"verifiedIcon.png"];
-		[self addSubview:verifiedImgView];
-		
-		UILabel *curatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(38.0, 57.0, 200.0, 20.0)];
-		curatorLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
-		curatorLabel.textColor = [UIColor blackColor];
-		curatorLabel.backgroundColor = [UIColor clearColor];
-		curatorLabel.text = @"Curators Verified";
-		[self addSubview:curatorLabel];
-		
 		CGSize infoSize = [_vo.list_info sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		
 		UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 91.0, 270.0, infoSize.height)];

@@ -21,7 +21,7 @@
 
 -(id)init {
 	if ((self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[self class] cellReuseIdentifier]])) {
-		_avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 9.0, 50.0, 50.0)];
+		_avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 9.0, 37.0, 37.0)];
 		_avatarImgView.layer.cornerRadius = 8.0;
 		_avatarImgView.clipsToBounds = YES;
 		_avatarImgView.layer.borderColor = [[UIColor colorWithWhite:0.671 alpha:1.0] CGColor];
@@ -34,9 +34,17 @@
 		_nameLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_nameLabel];
 		
-		_curatorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(70.0, 36.0, 210.0, 20.0)];
-		_curatorsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
-		_curatorsLabel.textColor = [UIColor colorWithWhite:0.694 alpha:1.0];
+		CGSize size = [@"created by " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *createdLabel = [[UILabel alloc] initWithFrame:CGRectMake(70.0, 36.0, size.width, size.height)];
+		createdLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:14];
+		createdLabel.textColor = [UIColor colorWithWhite:0.639 alpha:1.0];
+		createdLabel.backgroundColor = [UIColor clearColor];
+		createdLabel.text = @"created by ";
+		[self addSubview:createdLabel];
+		
+		_curatorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(createdLabel.frame.origin.x + size.width, 36.0, 220.0, 20.0)];
+		_curatorsLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:14];
+		_curatorsLabel.textColor = [SNAppDelegate snLinkColor];
 		_curatorsLabel.lineBreakMode = UILineBreakModeTailTruncation;
 		_curatorsLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_curatorsLabel];
@@ -62,6 +70,6 @@
 	
 	_avatarImgView.imageURL = [NSURL URLWithString:_listVO.thumbURL];
 	_nameLabel.text = [NSString stringWithFormat:@"%@", _listVO.list_name];
-	_curatorsLabel.text = _listVO.curatorNames;
+	_curatorsLabel.text = _listVO.curatorHandles;
 }
 @end

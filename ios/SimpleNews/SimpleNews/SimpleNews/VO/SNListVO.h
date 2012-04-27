@@ -22,6 +22,7 @@
 @property (nonatomic) BOOL isApproved;
 @property (nonatomic, retain) NSMutableArray *curators;
 @property (nonatomic, retain) NSString *curatorNames;
+@property (nonatomic, retain) NSString *curatorHandles;
 @property (nonatomic, retain) NSString *list_name;
 @property (nonatomic, retain) NSString *imageURL;
 @property (nonatomic, retain) NSString *thumbURL;

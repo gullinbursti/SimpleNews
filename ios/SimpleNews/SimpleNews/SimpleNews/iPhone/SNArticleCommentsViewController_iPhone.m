@@ -171,7 +171,6 @@
 		
 	} else {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"Your phone is not currently configured to send mail." delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
-		
 		[alert show];
 	}
 }
