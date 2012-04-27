@@ -1,0 +1,17 @@
+.bundle
+db/*.sqlite3*
+log/*.log
+*.log
+tmp/**/*
+tmp/*
+doc/api
+doc/app
+*.swp
+*.mode1v3
+*.pbxuser
+xcuserdata
+*.xcworkspace
+*~
+.DS_Store
+.svn
+build
