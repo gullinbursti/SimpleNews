@@ -23,6 +23,7 @@
 	if ((self = [super init])) {
 		_vo = vo;
 		_isOptions = NO;
+		_isTextView = YES;
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_changeFontSize:) name:@"CHANGE_FONT_SIZE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_uiThemedDark:) name:@"UI_THEMED_DARK" object:nil];
@@ -51,7 +52,11 @@
 -(void)loadView {
 	[super loadView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 53.0, self.view.frame.size.width, self.view.frame.size.height - 53.0)];
+	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
+	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	[self.view addSubview:bgImgView];
+	
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height - 0.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	
 	if ([SNAppDelegate isDarkStyleUI])
@@ -60,41 +65,153 @@
 	else
 		[_scrollView setBackgroundColor:[UIColor whiteColor]];
 	
+	[_scrollView setBackgroundColor:[UIColor clearColor]];
+	
 	_scrollView.scrollsToTop = NO;
 	_scrollView.pagingEnabled = NO;
 	_scrollView.showsVerticalScrollIndicator = NO;
 	[self.view addSubview:_scrollView];
 	
 	_articleOptionsView = [[SNArticleOptionsView_iPhone alloc] init];
+	_articleOptionsView.hidden = YES;
 	[self.view addSubview:_articleOptionsView];
-	
-	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.title];
-	[self.view addSubview:headerView];
 	
 	SNArticleDetailsFooterView_iPhone *footerView = [[SNArticleDetailsFooterView_iPhone alloc] init];
 	[self.view addSubview:footerView];
 	
+	_toggleLtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 13.0, 164.0, 34.0)];
+	_toggleLtImgView.image = [UIImage imageNamed:@"toggleBGLeft.png"];
+	[_scrollView addSubview:_toggleLtImgView];
+	
+	UILabel *textOnLabel = [[UILabel alloc] initWithFrame:CGRectMake(17.0, 8.0, 100.0, 16.0)];
+	textOnLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	textOnLabel.textColor = [UIColor colorWithWhite:0.659 alpha:1.0];
+	textOnLabel.backgroundColor = [UIColor clearColor];
+	textOnLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+	textOnLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+	textOnLabel.text = @"Text View";
+	[_toggleLtImgView addSubview:textOnLabel];
+	
+	UILabel *webOffLabel = [[UILabel alloc] initWithFrame:CGRectMake(90.0, 8.0, 100.0, 16.0)];
+	webOffLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	webOffLabel.textColor = [UIColor blackColor];
+	webOffLabel.backgroundColor = [UIColor clearColor];
+	webOffLabel.text = @"Web View";
+	[_toggleLtImgView addSubview:webOffLabel];
+	
+	_toggleRtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 13.0, 164.0, 34.0)];
+	_toggleRtImgView.image = [UIImage imageNamed:@"toggleBGRight.png"];
+	_toggleRtImgView.hidden = YES;
+	[_scrollView addSubview:_toggleRtImgView];
+	
+	UILabel *textOffLabel = [[UILabel alloc] initWithFrame:CGRectMake(17.0, 8.0, 100.0, 16.0)];
+	textOffLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	textOffLabel.textColor = [UIColor blackColor];
+	textOffLabel.backgroundColor = [UIColor clearColor];
+	textOffLabel.text = @"Text View";
+	[_toggleRtImgView addSubview:textOffLabel];
+	
+	UILabel *webOnLabel = [[UILabel alloc] initWithFrame:CGRectMake(90.0, 8.0, 100.0, 16.0)];
+	webOnLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	webOnLabel.textColor = [UIColor colorWithWhite:0.659 alpha:1.0];
+	webOnLabel.backgroundColor = [UIColor clearColor];
+	webOnLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+	webOnLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+	webOnLabel.text = @"Web View";
+	[_toggleRtImgView addSubview:webOnLabel];
+	
+	UIButton *toggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	toggleButton.frame = _toggleLtImgView.frame;
+	[toggleButton addTarget:self action:@selector(_goTextToggle) forControlEvents:UIControlEventTouchUpInside];
+	[_scrollView addSubview:toggleButton];
+	
 	UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	backButton.frame = CGRectMake(4.0, 4.0, 44.0, 44.0);
-	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_nonActive.png"] forState:UIControlStateNormal];
-	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_Active.png"] forState:UIControlStateHighlighted];
+	backButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
+	[backButton setBackgroundImage:[UIImage imageNamed:@"topLeft_nonActive.png"] forState:UIControlStateNormal];
+	[backButton setBackgroundImage:[UIImage imageNamed:@"topLeft_Active.png"] forState:UIControlStateHighlighted];
 	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:backButton];
 	
 	_viewOptionsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_viewOptionsButton.frame = CGRectMake(262.0, -6.0, 64.0, 64.0);
+	_viewOptionsButton.frame = CGRectMake(264.0, 8.0, 44.0, 44.0);
 	[_viewOptionsButton setBackgroundImage:[UIImage imageNamed:@"fontButton_nonActive.png"] forState:UIControlStateNormal];
 	[_viewOptionsButton setBackgroundImage:[UIImage imageNamed:@"fontButton_Active.png"] forState:UIControlStateHighlighted];
 	[_viewOptionsButton addTarget:self action:@selector(_goOptions) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_viewOptionsButton];
 	
-	CGSize size;
-	int offset = 22;
+	int offset = 70;
+	EGOImageView *thumbImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, offset, 24.0, 24.0)];
+	thumbImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
+	thumbImgView.layer.cornerRadius = 4.0;
+	thumbImgView.clipsToBounds = YES;
+	[_scrollView addSubview:thumbImgView];
+	
+	UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	avatarButton.frame = thumbImgView.frame;
+	[avatarButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+	[_scrollView addSubview:avatarButton];
+	
+	offset += 4;
+	
+	NSString *timeSince = @"";
+	int mins = [SNAppDelegate minutesAfterDate:_vo.added];
+	int hours = [SNAppDelegate hoursAfterDate:_vo.added];
+	int days = [SNAppDelegate daysAfterDate:_vo.added];
+	
+	if (days > 0) {
+		timeSince = [NSString stringWithFormat:@"%dd from ", days];
+		
+	} else {
+		if (hours > 0)
+			timeSince = [NSString stringWithFormat:@"%dh from ", hours];
+		
+		else
+			timeSince = [NSString stringWithFormat:@"%dm from ", mins];
+	}
+	
+	CGSize size = [timeSince sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(59.0, offset, size.width, 16.0)];
+	dateLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
+	dateLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
+	dateLabel.backgroundColor = [UIColor clearColor];
+	dateLabel.text = timeSince;
+	[_scrollView addSubview:dateLabel];
+	
+	CGSize size2 = [[NSString stringWithFormat:@"@%@ ", _vo.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *twitterNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(dateLabel.frame.origin.x + size.width, offset, size2.width, 16.0)];
+	twitterNameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	twitterNameLabel.textColor = [SNAppDelegate snLinkColor];
+	twitterNameLabel.backgroundColor = [UIColor clearColor];
+	twitterNameLabel.text = [NSString stringWithFormat:@"@%@", _vo.twitterHandle];
+	[_scrollView addSubview:twitterNameLabel];
+	
+	UIButton *handleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	handleButton.frame = twitterNameLabel.frame;
+	[handleButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+	[_scrollView addSubview:handleButton];
+	
+	size = [@"via " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(twitterNameLabel.frame.origin.x + size2.width, offset, size.width, 16.0)];
+	viaLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
+	viaLabel.textColor = [UIColor colorWithWhite:0.525 alpha:1.0];
+	viaLabel.backgroundColor = [UIColor clearColor];
+	viaLabel.text = @"via ";
+	[_scrollView addSubview:viaLabel];	
+	
+	size2 = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *sourceLabel = [[UILabel alloc] initWithFrame:CGRectMake(viaLabel.frame.origin.x + size.width, offset, size2.width, 16.0)];
+	sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	sourceLabel.textColor = [SNAppDelegate snLinkColor];
+	sourceLabel.backgroundColor = [UIColor clearColor];
+	sourceLabel.text = _vo.articleSource;
+	[_scrollView addSubview:sourceLabel];
+	offset += 45;
+	
 	NSArray *fontSizes = [[[NSUserDefaults standardUserDefaults] objectForKey:@"uiFontSizes"] objectAtIndex:[SNAppDelegate fontFactor]];
 	
-	size = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-	_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, size.height)];
-	_titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]];
+	size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:[[fontSizes objectAtIndex:0] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+	_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25.0, offset, 274.0, size.height)];
+	_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:[[fontSizes objectAtIndex:0] intValue]];
 	
 	if ([SNAppDelegate isDarkStyleUI])
 		_titleLabel.textColor = [UIColor whiteColor];
@@ -103,33 +220,55 @@
 		_titleLabel.textColor = [UIColor blackColor];
 	
 	_titleLabel.backgroundColor = [UIColor clearColor];
+	_titleLabel.textAlignment = UITextAlignmentCenter;
 	_titleLabel.text = _vo.title;
 	_titleLabel.numberOfLines = 0;
 	[_scrollView addSubview:_titleLabel];
-	offset += size.height + 22;
+	offset += size.height + 38;
 	
-	size = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:1] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-	_sourceLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, size.height)];
-	_sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:1] intValue]];
+	UIView *btnBGView = [[UIView alloc] initWithFrame:CGRectMake(68.0, offset, 184.0, 35.0)];
+	[btnBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.60]];
+	btnBGView.layer.cornerRadius = 17.0;
+	[_scrollView addSubview:btnBGView];
+	offset += 34;
 	
-	if ([SNAppDelegate isDarkStyleUI])
-		_sourceLabel.textColor = [UIColor whiteColor];
+	
+	UIButton *readArticleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	readArticleButton.frame = CGRectMake(85.0, 0.0, 94.0, 34.0);
+	[readArticleButton setBackgroundImage:[UIImage imageNamed:@"readArticleButton_nonActive.png"] forState:UIControlStateNormal];
+	[readArticleButton setBackgroundImage:[UIImage imageNamed:@"readArticleButton_Active.png"] forState:UIControlStateHighlighted];
+	[readArticleButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
+	//			[readArticleButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+	//			readArticleButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+	//			readArticleButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
+	//			[readArticleButton setTitle:@"Read More" forState:UIControlStateNormal];
+	[btnBGView addSubview:readArticleButton];
+	
+	UIButton *likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	likeButton.frame = CGRectMake(5.0, -5.0, 65.0, 44.0);
+	[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
+	[likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	[likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+	likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+	likeButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
+	[likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
+	[btnBGView addSubview:likeButton];
+	
+	if (_vo.hasLiked)
+		[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_selected.png"] forState:UIControlStateNormal];
 	
 	else
-		_sourceLabel.textColor = [UIColor blackColor];
+		[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
 	
-	_sourceLabel.backgroundColor = [UIColor clearColor];
-	_sourceLabel.text = _vo.articleSource;
-	[_scrollView addSubview:_sourceLabel];
-	offset += size.height + 22;
+	offset += 38;
 	
-	EGOImageView *articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, 274.0 * _vo.imgRatio)];
+	EGOImageView *articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, 270.0 * _vo.imgRatio)];
 	articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 	[_scrollView addSubview:articleImgView];
-	offset += (274.0 * _vo.imgRatio);
+	offset += (270.0 * _vo.imgRatio);
 	
 	if ([_vo.affiliateURL length] > 0) {
-		UIImageView *affiliateImgView = [[UIImageView alloc] initWithFrame:CGRectMake(22.0, offset, 34.0, 34.0)];
+		UIImageView *affiliateImgView = [[UIImageView alloc] initWithFrame:CGRectMake(25.0, offset, 34.0, 34.0)];
 		affiliateImgView.image = [UIImage imageNamed:@"favButton_nonActive.png"];
 		[_scrollView addSubview:affiliateImgView];
 		
@@ -145,26 +284,24 @@
 		offset += 48;
 	}
 	
-	
-	
 	if (_vo.type_id > 4) {
-		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(22.0, offset, 274.0, 180.0) articleVO:_vo];
+		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, 202.0) articleVO:_vo];
 		//[_videoPlayerView startPlayback];
 		[_scrollView addSubview:_videoPlayerView];		
 		offset += _videoPlayerView.frame.size.height + 22;
 	}
 	
-	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-	[dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-	NSString *dateString = [dateFormatter stringFromDate:_vo.added];
-	
-	_dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 100.0, 16.0)];
-	_dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:2] intValue]];
-	_dateLabel.textColor = [UIColor blackColor];
-	_dateLabel.backgroundColor = [UIColor clearColor];
-	_dateLabel.text = dateString;
-	[_scrollView addSubview:_dateLabel];
-	offset += 22 + 16;
+	//	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	//	[dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+	//	NSString *dateString = [dateFormatter stringFromDate:_vo.added];
+	//	
+	//	_dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, offset, 100.0, 16.0)];
+	//	_dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:2] intValue]];
+	//	_dateLabel.textColor = [UIColor blackColor];
+	//	_dateLabel.backgroundColor = [UIColor clearColor];
+	//	_dateLabel.text = dateString;
+	//	[_scrollView addSubview:_dateLabel];
+	//	offset += 22 + 16;
 	
 	size = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:3] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 	_webView = [[UIWebView alloc] initWithFrame:CGRectMake(22.0, offset, self.view.frame.size.width - 44.0, size.height + (90.0 + ([SNAppDelegate fontFactor] * 40.0)))];
@@ -212,10 +349,18 @@
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:_vo.affiliateURL]];
 }
 
+-(void)_goTextToggle {
+	_isTextView = !_isTextView;
+	
+	_toggleLtImgView.hidden = !_isTextView;
+	_toggleRtImgView.hidden = _isTextView;
+}
+
 -(void)_goOptions {
 	_isOptions = !_isOptions;
 	
 	if (_isOptions) {
+		_articleOptionsView.hidden = NO;
 		[_viewOptionsButton setBackgroundImage:[UIImage imageNamed:@"fontButton_Selected.png"] forState:UIControlStateNormal];
 		
 		[UIView animateWithDuration:0.33 animations:^(void) {
@@ -225,6 +370,7 @@
 		}];
 		
 	} else {
+		_articleOptionsView.hidden = YES;
 		[_viewOptionsButton setBackgroundImage:[UIImage imageNamed:@"fontButton_nonActive.png"] forState:UIControlStateNormal];
 		
 		[UIView animateWithDuration:0.33 animations:^(void) {
@@ -249,11 +395,6 @@
 	_titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]];
 	offset += size.height + 22;
 	
-	size = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:1] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-	_sourceLabel.frame = CGRectMake(_sourceLabel.frame.origin.x, offset, _sourceLabel.frame.size.width, size.height);
-	_sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:1] intValue]];
-	offset += size.height + 22;
-	
 	if (_vo.type_id > 4) {
 		_videoPlayerView.frame = CGRectMake(_videoPlayerView.frame.origin.x, offset, _videoPlayerView.frame.size.width, _videoPlayerView.frame.size.height);
 		offset += _videoPlayerView.frame.size.height + 22;
@@ -272,18 +413,16 @@
 }
 
 -(void)_uiThemedDark:(NSNotification *)notification {
-	[_scrollView setBackgroundColor:[UIColor blackColor]];
+	//[_scrollView setBackgroundColor:[UIColor blackColor]];
 	_titleLabel.textColor = [UIColor whiteColor];
-	_sourceLabel.textColor = [UIColor whiteColor];
 	_dateLabel.textColor = [UIColor whiteColor];
 	
 	[_webView stringByEvaluatingJavaScriptFromString:@"goDarkUI();"];
 }
 
 -(void)_uiThemedLight:(NSNotification *)notification {
-	[_scrollView setBackgroundColor:[UIColor whiteColor]];
+	//[_scrollView setBackgroundColor:[UIColor whiteColor]];
 	_titleLabel.textColor = [UIColor blackColor];
-	_sourceLabel.textColor = [UIColor blackColor];
 	_dateLabel.textColor = [UIColor blackColor];
 	
 	[_webView stringByEvaluatingJavaScriptFromString:@"goLightUI();"];
@@ -383,7 +522,7 @@
 		if ([key isEqualToString:@"height"]) {
 			webView.frame = CGRectMake(webView.frame.origin.x, webView.frame.origin.y, webView.frame.size.width, [value intValue]);
 			//_scrollView.contentSize = CGSizeMake(_scrollView.frame.size.width, [value intValue]);
-		
+			
 		} else if ([key isEqualToString:@"time"]) {			
 		} else if ([key isEqualToString:@"state"]) {
 		}

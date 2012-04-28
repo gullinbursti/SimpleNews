@@ -66,7 +66,7 @@
 	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[self.view addSubview:bgImgView];
 	
-	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 580.0, self.view.frame.size.height)];
+	_holderView = [[UIView alloc] initWithFrame:CGRectMake(-270.0, 0.0, 580.0, self.view.frame.size.height)];
 	_holderView.userInteractionEnabled = YES;
 	[self.view addSubview:_holderView];
 	
@@ -181,6 +181,10 @@
 
 -(void)viewDidLoad {
 	[super viewDidLoad];
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
+	} completion:nil];
 }
 
 -(void)viewDidUnload {

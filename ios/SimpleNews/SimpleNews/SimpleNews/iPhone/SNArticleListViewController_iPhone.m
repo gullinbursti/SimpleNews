@@ -100,18 +100,57 @@
 -(void)loadView {
 	[super loadView];
 	
-	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.list_name];
-	[self.view addSubview:headerView];
+	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
+	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	[self.view addSubview:bgImgView];
+	
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height - 0.0)];
+	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	_scrollView.opaque = YES;
+	_scrollView.scrollsToTop = NO;
+	_scrollView.pagingEnabled = NO;
+	_scrollView.delegate = self;
+	_scrollView.showsVerticalScrollIndicator = NO;
+	_scrollView.alwaysBounceVertical = NO;
+	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
+	[self.view addSubview:_scrollView];
+	
+	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+	_refreshHeaderView.delegate = self;
+	[_scrollView addSubview:_refreshHeaderView];
+	[_refreshHeaderView refreshLastUpdatedDate];
+	
+	UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25.0, 25.0, 200.0, 24.0)];
+	titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:18];
+	titleLabel.textColor = [UIColor blackColor];
+	titleLabel.backgroundColor = [UIColor clearColor];
+	titleLabel.text = _vo.list_name;
+	[_scrollView addSubview:titleLabel];
+	
+	CGSize size = [@"created by " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *createdLabel = [[UILabel alloc] initWithFrame:CGRectMake(25.0, 50.0, size.width, size.height)];
+	createdLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:14];
+	createdLabel.textColor = [UIColor colorWithWhite:0.639 alpha:1.0];
+	createdLabel.backgroundColor = [UIColor clearColor];
+	createdLabel.text = @"created by ";
+	[_scrollView addSubview:createdLabel];
+	
+	UILabel *curatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(createdLabel.frame.origin.x + size.width, 50.0, 200.0, 20.0)];
+	curatorLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
+	curatorLabel.textColor = [SNAppDelegate snLinkColor];
+	curatorLabel.backgroundColor = [UIColor clearColor];
+	curatorLabel.text = _vo.curatorHandles;
+	[_scrollView addSubview:curatorLabel];
 	
 	UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	backButton.frame = CGRectMake(4.0, 4.0, 44.0, 44.0);
-	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_nonActive.png"] forState:UIControlStateNormal];
-	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_Active.png"] forState:UIControlStateHighlighted];
+	backButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
+	[backButton setBackgroundImage:[UIImage imageNamed:@"topLeft_nonActive.png"] forState:UIControlStateNormal];
+	[backButton setBackgroundImage:[UIImage imageNamed:@"topLeft_Active.png"] forState:UIControlStateHighlighted];
 	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:backButton];
 	
 	UIButton *flipButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	flipButton.frame = CGRectMake(272.0, 4.0, 44.0, 44.0);
+	flipButton.frame = CGRectMake(264.0, 8.0, 44.0, 44.0);
 	[flipButton setBackgroundImage:[UIImage imageNamed:@"articleInfluencersButton_nonActive.png"] forState:UIControlStateNormal];
 	[flipButton setBackgroundImage:[UIImage imageNamed:@"articleInfluencersButton_Active.png"] forState:UIControlStateHighlighted];
 	[flipButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
@@ -129,33 +168,15 @@
 	[_doneButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 	_doneButton.alpha = 0.0;
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 53.0, self.view.frame.size.width, self.view.frame.size.height - 53.0)];
-	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	[_scrollView setBackgroundColor:[UIColor whiteColor]];
-	_scrollView.opaque = YES;
-	_scrollView.scrollsToTop = NO;
-	_scrollView.pagingEnabled = NO;
-	_scrollView.delegate = self;
-	_scrollView.showsVerticalScrollIndicator = NO;
-	_scrollView.alwaysBounceVertical = NO;
-	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
-	[self.view addSubview:_scrollView];
+	_flippedView = [[SNFlippedArticleView_iPhone alloc] initWithFrame:self.view.frame listVO:_vo];
 	
-	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
-	_refreshHeaderView.delegate = self;
-	[_scrollView addSubview:_refreshHeaderView];
-	[_refreshHeaderView refreshLastUpdatedDate];
-
 	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
 	_blackMatteView.alpha = 0.0;
 	[self.view addSubview:_blackMatteView];
-
+	
 	_shareSheetView = [[SNShareSheetView_iPhone alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
 	[self.view addSubview:_shareSheetView];
-	
-	
-	_flippedView = [[SNFlippedArticleView_iPhone alloc] initWithFrame:self.view.frame listVO:_vo];
 	
 	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
@@ -217,11 +238,11 @@
 			_doneButton.alpha = 1.0;
 		} completion:nil];
 		
-					
+		
 	} else {
 		[UIView animateWithDuration:0.25 animations:^(void) {
 			_doneButton.alpha = 0.0;
-		
+			
 		} completion:^(BOOL finished) {
 			[_doneButton removeFromSuperview];
 			
@@ -270,7 +291,7 @@
 		UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_hideFullscreenImage:)];
 		tapRecognizer.numberOfTapsRequired = 1;
 		[_fullscreenImgView addGestureRecognizer:tapRecognizer];
-
+		
 	}];
 }
 
@@ -278,7 +299,7 @@
 	[UIView animateWithDuration:0.25 animations:^(void) {
 		_blackMatteView.alpha = 0.0;
 		_fullscreenImgView.frame = _fullscreenFrame;
-	
+		
 	} completion:^(BOOL finished) {
 		_blackMatteView.hidden = YES;
 		[_fullscreenImgView removeFromSuperview];
@@ -297,7 +318,7 @@
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_blackMatteView.alpha = 0.67;
 		_shareSheetView.frame = CGRectMake(0.0, self.view.frame.size.height - _shareSheetView.frame.size.height, _shareSheetView.frame.size.width, _shareSheetView.frame.size.height);
-	
+		
 	} completion:^(BOOL finished) {
 	}];
 }
@@ -372,7 +393,7 @@
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_blackMatteView.alpha = 0.0;
 		_shareSheetView.frame = CGRectMake(0.0, self.view.frame.size.height, _shareSheetView.frame.size.width, _shareSheetView.frame.size.height);
-	
+		
 	} completion:^(BOOL finished) {
 		_blackMatteView.hidden = YES;
 	}];
@@ -498,7 +519,7 @@
 				_cardViews = [NSMutableArray new];
 				
 				int tot = 0;
-				int offset = 0;
+				int offset = 90;
 				for (NSDictionary *serverArticle in parsedArticles) {
 					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
 					
@@ -508,29 +529,26 @@
 						[articleList addObject:vo];
 					
 					int height;
-						if (vo.source_id > 0) {
-							height = 127;
-							CGSize size;
-							
-							if (vo.type_id > 1) {
-								height += 227.0 * vo.imgRatio;
-								height += 20;
-							}
-							
-							if (![vo.affiliateURL isEqualToString:@""])
-								height += 50;
-							
-							size = [vo.title sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-							height += size.height;
-							
-							if (vo.type_id > 4)
-								height += 180;
-							
-							height += 16;
-					
-						} else {
-							height = 59;
+					if (vo.source_id > 0) {
+						height = 200;
+						CGSize size;
+						
+						if (vo.type_id > 1) {
+							height += 270.0 * vo.imgRatio;
+							height += 20;
 						}
+						
+						size = [vo.title sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+						height += size.height;
+						
+						if (vo.type_id > 4) {
+							height += 202;
+							offset += 20;
+						}
+						
+					} else {
+						height = 59;
+					}
 					
 					
 					SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, offset, _scrollView.frame.size.width, height) articleVO:vo];
@@ -553,7 +571,7 @@
 				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
 			}
 		}	
-	
+		
 	} else if ([request isEqual:_updateRequest]) {
 		@autoreleasepool {
 			NSError *error = nil;

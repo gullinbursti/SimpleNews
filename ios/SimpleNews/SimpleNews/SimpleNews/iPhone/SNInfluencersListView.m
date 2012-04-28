@@ -26,7 +26,7 @@
 		self.layer.borderColor = [[SNAppDelegate snLineColor] CGColor];
 		self.layer.borderWidth = 1.0;
 		
-		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0, 14.0, 200.0, 20.0)];
+		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0, 24.0, 200.0, 20.0)];
 		titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:18];
 		titleLabel.textColor = [UIColor blackColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
@@ -34,14 +34,14 @@
 		[self addSubview:titleLabel];
 		
 		CGSize size = [@"created by " sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *createdLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0, 35.0, size.width, size.height)];
+		UILabel *createdLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0, 51.0, size.width, size.height)];
 		createdLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
 		createdLabel.textColor = [UIColor colorWithWhite:0.824 alpha:1.0];
 		createdLabel.backgroundColor = [UIColor clearColor];
 		createdLabel.text = @"created by ";
 		[self addSubview:createdLabel];
 		
-		UILabel *curatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0 + size.width, 35.0, 200.0, 20.0)];
+		UILabel *curatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0 + size.width, 51.0, 200.0, 20.0)];
 		curatorLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14];
 		curatorLabel.textColor = [SNAppDelegate snLinkColor];
 		curatorLabel.backgroundColor = [UIColor clearColor];
@@ -49,7 +49,7 @@
 		[self addSubview:curatorLabel];
 		
 		CGSize infoSize = [_vo.list_info sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-		UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 91.0, 270.0, infoSize.height)];
+		UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 85.0, 270.0, infoSize.height)];
 		infoLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
 		infoLabel.textColor = [UIColor colorWithWhite:0.486 alpha:1.0];
 		infoLabel.backgroundColor = [UIColor clearColor];
@@ -58,28 +58,11 @@
 		[self addSubview:infoLabel];
 		
 		int offset = 0;
-		if (!_vo.isSubscribed) {
-			UIButton *subscribeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			subscribeButton.frame = CGRectMake(12.0, 104.0 + infoSize.height, 84.0, 30.0);
-			[subscribeButton setBackgroundImage:[UIImage imageNamed:@"followButton_nonActive.png"] forState:UIControlStateNormal];
-			[subscribeButton setBackgroundImage:[UIImage imageNamed:@"followButton_Active.png"] forState:UIControlStateHighlighted];
-			[subscribeButton addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
-			subscribeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
-			subscribeButton.titleLabel.textAlignment = UITextAlignmentCenter;
-			[subscribeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-			[subscribeButton setTitle:@"Follow Topic" forState:UIControlStateNormal];
-			[self addSubview:subscribeButton];
-			offset = 44;
-		}
-		
-		UIView *subheaderLineView = [[UIView alloc] initWithFrame:CGRectMake(0.0, offset + 104.0 + infoSize.height, self.frame.size.width, 1.0)];
-		[subheaderLineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
-		[self addSubview:subheaderLineView];
 		
 		_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, offset + 104.0 + infoSize.height, self.frame.size.width, self.frame.size.height - (offset + 104.0 + infoSize.height)) style:UITableViewStylePlain];
 		[_tableView setBackgroundColor:[UIColor clearColor]];
 		_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-		_tableView.rowHeight = 60.0;
+		_tableView.rowHeight = 50.0;
 		_tableView.delegate = self;
 		_tableView.dataSource = self;
 		_tableView.scrollsToTop = NO;
@@ -147,7 +130,7 @@
 
 #pragma mark - TableView Delegates
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return (60.0);
+	return (50.0);
 }
 
 

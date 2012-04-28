@@ -24,11 +24,13 @@
 	UIScrollView *_scrollView;
 	UIWebView *_webView;
 	UILabel *_titleLabel;
-	UILabel *_sourceLabel;
 	UILabel *_dateLabel;
+	UIImageView *_toggleLtImgView;
+	UIImageView *_toggleRtImgView;
 	
 	UIButton *_viewOptionsButton;
 	BOOL _isOptions;
+	BOOL _isTextView;
 	
 	SNShareSheetView_iPhone *_shareSheetView;
 	UIView *_blackMatteView;

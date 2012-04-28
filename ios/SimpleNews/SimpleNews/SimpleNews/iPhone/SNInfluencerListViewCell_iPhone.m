@@ -50,18 +50,18 @@
 		verifiedIcoImgView.image = [UIImage imageNamed:@"influencerApprovedIcon.png"];
 		[self addSubview:verifiedIcoImgView];
 		
-		UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 59.0, self.frame.size.width, 1.0)];
-		[lineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
-		[self addSubview:lineView];
+		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, 50.0, self.frame.size.width - 20.0, 1.0)];
+		lineImgView.image = [UIImage imageNamed:@"dividerLine.png"];
+		[self addSubview:lineImgView];
 	}
 	
 	return (self);
 }
 
 -(void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
+	[super setSelected:selected animated:animated];
+	
+	// Configure the view for the selected state
 }
 
 

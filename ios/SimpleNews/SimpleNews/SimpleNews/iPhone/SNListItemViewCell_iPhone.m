@@ -21,21 +21,21 @@
 
 -(id)init {
 	if ((self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[self class] cellReuseIdentifier]])) {
-		_avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 9.0, 37.0, 37.0)];
+		_avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(15.0, 15.0, 37.0, 37.0)];
 		_avatarImgView.layer.cornerRadius = 8.0;
 		_avatarImgView.clipsToBounds = YES;
 		_avatarImgView.layer.borderColor = [[UIColor colorWithWhite:0.671 alpha:1.0] CGColor];
 		_avatarImgView.layer.borderWidth = 1.0;
 		[self addSubview:_avatarImgView];
 		
-		_nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(70.0, 16.0, 256.0, 20.0)];
+		_nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(60.0, 16.0, 256.0, 20.0)];
 		_nameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 		_nameLabel.textColor = [UIColor blackColor];
 		_nameLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_nameLabel];
 		
 		CGSize size = [@"created by " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *createdLabel = [[UILabel alloc] initWithFrame:CGRectMake(70.0, 36.0, size.width, size.height)];
+		UILabel *createdLabel = [[UILabel alloc] initWithFrame:CGRectMake(60.0, 36.0, size.width, size.height)];
 		createdLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:14];
 		createdLabel.textColor = [UIColor colorWithWhite:0.639 alpha:1.0];
 		createdLabel.backgroundColor = [UIColor clearColor];
@@ -49,9 +49,9 @@
 		_curatorsLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_curatorsLabel];
 		
-		UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 74.0, self.frame.size.width, 1.0)];
-		[lineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
-		//[self addSubview:lineView];
+		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15.0, 62.0, self.frame.size.width - 60.0, 1.0)];
+		lineImgView.image = [UIImage imageNamed:@"dividerLine.png"];
+		[self addSubview:lineImgView];
 	}
 	
 	return (self);

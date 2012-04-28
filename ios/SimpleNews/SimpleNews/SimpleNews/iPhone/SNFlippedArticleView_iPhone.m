@@ -21,15 +21,28 @@
 		
 		[self setBackgroundColor:[UIColor whiteColor]];
 		
-		SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] init];
-		[self addSubview:headerView];
-		
 		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 14.0, 200.0, 20.0)];
 		titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:18];
 		titleLabel.textColor = [UIColor blackColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.text = _vo.list_name;
 		[self addSubview:titleLabel];
+		
+		CGSize size = [@"created by " sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *createdLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 51.0, size.width, size.height)];
+		createdLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
+		createdLabel.textColor = [UIColor colorWithWhite:0.639 alpha:1.0];
+		createdLabel.backgroundColor = [UIColor clearColor];
+		createdLabel.text = @"created by ";
+		[self addSubview:createdLabel];
+		
+		UILabel *curatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(createdLabel.frame.origin.x + size.width, 51.0, 200.0, 20.0)];
+		curatorLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14];
+		curatorLabel.textColor = [SNAppDelegate snLinkColor];
+		curatorLabel.backgroundColor = [UIColor clearColor];
+		curatorLabel.text = _vo.curatorHandles;
+		[self addSubview:curatorLabel];
+		
 		
 		CGSize infoSize = [_vo.list_info sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		
@@ -55,10 +68,6 @@
 			[self addSubview:subscribeButton];
 			offset = 44;
 		}
-		
-		UIView *subheaderLineView = [[UIView alloc] initWithFrame:CGRectMake(0.0, offset + 104.0 + infoSize.height, self.frame.size.width, 1.0)];
-		[subheaderLineView setBackgroundColor:[UIColor colorWithWhite:0.545 alpha:1.0]];
-		[self addSubview:subheaderLineView];
 		
 		_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, offset + 104.0 + infoSize.height, self.frame.size.width, self.frame.size.height - (offset + 104.0 + infoSize.height)) style:UITableViewStylePlain];
 		[_tableView setBackgroundColor:[UIColor clearColor]];

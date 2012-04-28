@@ -45,22 +45,22 @@
 		[self addSubview:_flipBtn];
 		
 		UIView *btnBGView = [[UIView alloc] initWithFrame:CGRectMake(50.0, 365.0, 184.0, 35.0)];
-		[btnBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.75]];
+		[btnBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.60]];
 		btnBGView.layer.cornerRadius = 17.0;
 		[_holderView addSubview:btnBGView];
 		
 		_subscribeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-		_subscribeBtn.frame = CGRectMake(0.0, 0.0, 105.0, 44.0);
+		_subscribeBtn.frame = CGRectMake(5.0, -5.0, 105.0, 44.0);
 		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followTopicButton_nonActive.png"] forState:UIControlStateNormal];
 		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followTopicButton_Active.png"] forState:UIControlStateHighlighted];
 		[_subscribeBtn setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		_subscribeBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11.0];
+		_subscribeBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
 		_subscribeBtn.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, -10.0);
 		
 		if (_vo.isSubscribed) {
 			[_subscribeBtn setTitle:@"Unfollow" forState:UIControlStateNormal];
 			[_subscribeBtn addTarget:self action:@selector(_goUnsubscribe) forControlEvents:UIControlEventTouchUpInside];
-		
+			
 		} else {
 			[_subscribeBtn setTitle:@"Follow Topic" forState:UIControlStateNormal];
 			[_subscribeBtn addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
@@ -69,18 +69,21 @@
 		[btnBGView addSubview:_subscribeBtn];
 		
 		UIButton *likesButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		likesButton.frame = CGRectMake(125.0, 0.0, 65.0, 44.0);
+		likesButton.frame = CGRectMake(115.0, -5.0, 65.0, 44.0);
 		[likesButton setBackgroundImage:[UIImage imageNamed:@"likeButton_selected.png"] forState:UIControlStateNormal];
 		[likesButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		likesButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11.0];
+		likesButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
 		likesButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
 		[likesButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
 		[btnBGView addSubview:likesButton];
-				
+		
 		_doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_doneButton.frame = CGRectMake(241.0, 18.0, 64.0, 44.0);
 		[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_nonActive.png"] forState:UIControlStateNormal];
 		[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButtonActive.png"] forState:UIControlStateHighlighted];
+		[_doneButton setTitleColor:[SNAppDelegate snLinkColor] forState:UIControlStateNormal];
+		_doneButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		[_doneButton setTitle:@"Done" forState:UIControlStateNormal];
 		[_doneButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 		_doneButton.alpha = 0.0;
 		[self addSubview:_doneButton];
