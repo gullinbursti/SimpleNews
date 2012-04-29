@@ -9,9 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "SNListVO.h"
 #import "EGOImageView.h"
+#import "ASIFormDataRequest.h"
 
-@interface SNListItemViewCell_iPhone : UITableViewCell {
+@interface SNListItemViewCell_iPhone : UITableViewCell <ASIHTTPRequestDelegate> {
 	EGOImageView *_avatarImgView;
+	
+	UIButton *_followingButton;
 	UILabel *_nameLabel;
 	UILabel *_curatorsLabel;
 }

@@ -35,7 +35,6 @@
 		
 		_lists = [list copy];
 		
-		
 		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
 		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_scrollView.opaque = YES;
@@ -65,10 +64,21 @@
 		[_scrollView addSubview:finalListCardView];
 		
 		_scrollView.contentSize = CGSizeMake((cnt + 1) * self.frame.size.width, self.frame.size.height);
+		
+		
+		_paginationView = [[SNPaginationView alloc] initWithTotal:4 coords:CGPointMake(160.0, 460.0)];
+		[self addSubview:_paginationView];
 
 	}
 	
 	return (self);
+}
+
+
+#pragma mark - ScrollView Delegates
+// any offset changes
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	[_paginationView updToPage:round(scrollView.contentOffset.x / self.frame.size.width)];
 }
 
 

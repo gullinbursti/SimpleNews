@@ -268,7 +268,7 @@
 	CGRect frame = [[dict objectForKey:@"frame"] CGRectValue];
 	NSString *type = [dict objectForKey:@"type"];
 	
-	frame.origin.y = 53.0 + ((frame.origin.y + offset) - _scrollView.contentOffset.y);
+	frame.origin.y = frame.origin.y + offset - _scrollView.contentOffset.y;
 	_fullscreenFrame = frame;
 	
 	if ([type isEqualToString:@"photo"]) {
@@ -441,11 +441,6 @@
 }
 
 
-// called on start of dragging (may require some time and or distance to move)
--(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-}
-
-
 // called on finger up if the user dragged. velocity is in points/second. targetContentOffset may be changed to adjust where the scroll view comes to rest. not called when pagingEnabled is YES
 -(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
 	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
@@ -455,20 +450,6 @@
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
 	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
-
-
-// called on finger up as we are moving
--(void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
-}
-
-// called when setContentOffset/scrollRectVisible:animated: finishes. not called if not animating
--(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-}
-
-// called when scroll view grinds to a halt
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-}
-
 
 #pragma mark - MailComposeViewController Delegates
 -(void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
@@ -530,7 +511,7 @@
 					
 					int height;
 					if (vo.source_id > 0) {
-						height = 200;
+						height = 220;
 						CGSize size;
 						
 						if (vo.type_id > 1) {
@@ -538,7 +519,7 @@
 							height += 20;
 						}
 						
-						size = [vo.title sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+						size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 						height += size.height;
 						
 						if (vo.type_id > 4) {
@@ -587,24 +568,24 @@
 					
 					int height;
 					if (vo.source_id > 0) {
-						height = 127;
+						height = 220;
 						CGSize size;
 						
 						if (vo.type_id > 1) {
-							height += 227.0 * vo.imgRatio;
+							height += 270.0 * vo.imgRatio;
 							height += 20;
 						}
 						
-						size = [vo.title sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+						size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 						height += size.height;
 						
 						if ([vo.affiliateURL length] > 0)
 							height += 48;
 						
-						if (vo.type_id > 4)
-							height += 180;
-						
-						height += 16;
+						if (vo.type_id > 4) {
+							height += 202;
+							offset += 20;
+						}
 						
 					} else {
 						height = 59;
@@ -621,7 +602,7 @@
 				}
 				
 				int cnt = 0;
-				offset = 0;
+				offset = 90;
 				
 				NSMutableArray *articleList = [NSMutableArray array];
 				for (NSDictionary *serverArticle in parsedArticles) {
@@ -632,21 +613,20 @@
 					
 					int height;
 					if (vo.source_id > 0) {
-						height = 127;
+						height = 220;
 						CGSize size;
 						
 						if (vo.type_id > 1) {
-							height += 227.0 * vo.imgRatio;
+							height += 270.0 * vo.imgRatio;
 							height += 20;
 						}
 						
-						size = [vo.title sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+						size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 						height += size.height;
 						
-						if (vo.type_id > 4)
-							height += 180;
-						
-						height += 16;
+						if (vo.type_id > 4) {
+							height += 202;
+						}
 						
 					} else {
 						height = 59;

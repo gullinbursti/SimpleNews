@@ -8,35 +8,26 @@
 
 #import "SNPaginationView.h"
 
-#define LED_SIZE 14.0
-#define MARGIN_SIZE 16.0
-#define SPACING_SIZE 8.0
+#define kLEDSize 8.0
+#define kSpacingSize 1.0
 
 @implementation SNPaginationView
 
 -(id)initWithTotal:(int)total coords:(CGPoint)pos {
-	if ((self = [super initWithFrame:CGRectMake(pos.x - ((total * LED_SIZE) * 0.5), pos.y, total * LED_SIZE, LED_SIZE)])) {
+	if ((self = [super initWithFrame:CGRectMake(pos.x - ((total * kLEDSize) * 0.5), pos.y, total * kLEDSize, kLEDSize)])) {
 		_totPages = total;
-		_currPage = 0.0;
-		
-		_bgButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_bgButton.frame = CGRectMake(-MARGIN_SIZE, -17.0, 32.0 + (total * LED_SIZE), 34.0);
-		[_bgButton setBackgroundImage:[[UIImage imageNamed:@"paginationBG.png"] stretchableImageWithLeftCapWidth:17.0 topCapHeight:0.0] forState:UIControlStateNormal];
-		[_bgButton setBackgroundImage:[[UIImage imageNamed:@"paginationBG.png"] stretchableImageWithLeftCapWidth:17.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-		[_bgButton addTarget:self action:@selector(_goDerp) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:_bgButton];
+		_currPage = 0;
 		
 		int xOffset = 0;
-		
 		for (int i=0; i<_totPages; i++) {
-			UIImageView *ledImgView = [[UIImageView alloc] initWithFrame:CGRectMake(xOffset, -(LED_SIZE * 0.5), LED_SIZE, LED_SIZE)];
-			[ledImgView setImage:[UIImage imageNamed:@"pagination_nonActive.png"]];
+			UIImageView *ledImgView = [[UIImageView alloc] initWithFrame:CGRectMake(xOffset, -(kLEDSize * 0.5), kLEDSize, kLEDSize)];
+			[ledImgView setImage:[UIImage imageNamed:@"pagination_off.png"]];
 			[self addSubview:ledImgView];
-			xOffset += (4.0 + SPACING_SIZE);
+			xOffset += (kLEDSize + kSpacingSize);
 		}
 		
-		_onImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, -(LED_SIZE * 0.5), LED_SIZE, LED_SIZE)];
-		[_onImgView setImage:[UIImage imageNamed:@"paginationActive.png"]];
+		_onImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, -(kLEDSize * 0.5), kLEDSize, kLEDSize)];
+		[_onImgView setImage:[UIImage imageNamed:@"pagination_on.png"]];
 		[self addSubview:_onImgView];
 	}
 	
@@ -45,14 +36,7 @@
 
 -(void)updToPage:(int)page {
 	_currPage = page;
-	_onImgView.frame = CGRectMake(_currPage * (4.0 + SPACING_SIZE), -(LED_SIZE * 0.5), LED_SIZE, LED_SIZE);
-}
-
--(void)_goDerp {
-	
-}
-
--(void)dealloc {
+	_onImgView.frame = CGRectMake(_currPage * (kLEDSize + kSpacingSize), -(kLEDSize * 0.5), kLEDSize, kLEDSize);
 }
 
 @end

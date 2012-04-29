@@ -46,6 +46,7 @@
 }
 
 -(void)dealloc {
+	_webView.delegate = nil;
 }
 
 #pragma mark - View lifecycle
@@ -55,6 +56,11 @@
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[self.view addSubview:bgImgView];
+	
+	_darkBGImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
+	_darkBGImgView.hidden = YES;
+	_darkBGImgView.image = [UIImage imageNamed:@"background_stripes.png"];
+	[self.view addSubview:_darkBGImgView];
 	
 	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height - 0.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -150,7 +156,6 @@
 	avatarButton.frame = thumbImgView.frame;
 	[avatarButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 	[_scrollView addSubview:avatarButton];
-	
 	offset += 4;
 	
 	NSString *timeSince = @"";
@@ -226,69 +231,70 @@
 	[_scrollView addSubview:_titleLabel];
 	offset += size.height + 38;
 	
-	UIView *btnBGView = [[UIView alloc] initWithFrame:CGRectMake(68.0, offset, 184.0, 35.0)];
-	[btnBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.60]];
-	btnBGView.layer.cornerRadius = 17.0;
-	[_scrollView addSubview:btnBGView];
+	_btnBGView = [[UIView alloc] initWithFrame:CGRectMake(68.0, offset, 184.0, 35.0)];
+	[_btnBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.60]];
+	_btnBGView.layer.cornerRadius = 17.0;
+	[_scrollView addSubview:_btnBGView];
 	offset += 34;
 	
+	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	_likeButton.frame = CGRectMake(5.0, -5.0, 65.0, 44.0);
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
+	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+	_likeButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
+	[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
+	[_btnBGView addSubview:_likeButton];
+	
+	if (_vo.hasLiked)
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_selected.png"] forState:UIControlStateNormal];
+	
+	else
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
 	
 	UIButton *readArticleButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	readArticleButton.frame = CGRectMake(85.0, 0.0, 94.0, 34.0);
 	[readArticleButton setBackgroundImage:[UIImage imageNamed:@"readArticleButton_nonActive.png"] forState:UIControlStateNormal];
 	[readArticleButton setBackgroundImage:[UIImage imageNamed:@"readArticleButton_Active.png"] forState:UIControlStateHighlighted];
-	[readArticleButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
-	//			[readArticleButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-	//			readArticleButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
-	//			readArticleButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
-	//			[readArticleButton setTitle:@"Read More" forState:UIControlStateNormal];
-	[btnBGView addSubview:readArticleButton];
+	[readArticleButton addTarget:self action:@selector(_goReadLater) forControlEvents:UIControlEventTouchUpInside];
+	[readArticleButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+	readArticleButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+	readArticleButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
+	//[readArticleButton setTitle:@"Purchase" forState:UIControlStateNormal];
+	[_btnBGView addSubview:readArticleButton];
 	
-	UIButton *likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	likeButton.frame = CGRectMake(5.0, -5.0, 65.0, 44.0);
-	[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
-	[likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-	[likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-	likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
-	likeButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
-	[likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
-	[btnBGView addSubview:likeButton];
-	
-	if (_vo.hasLiked)
-		[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_selected.png"] forState:UIControlStateNormal];
-	
-	else
-		[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
 	
 	offset += 38;
 	
-	EGOImageView *articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, 270.0 * _vo.imgRatio)];
-	articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
-	[_scrollView addSubview:articleImgView];
+	_articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, 270.0 * _vo.imgRatio)];
+	_articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
+	[_scrollView addSubview:_articleImgView];
 	offset += (270.0 * _vo.imgRatio);
 	
-	if ([_vo.affiliateURL length] > 0) {
-		UIImageView *affiliateImgView = [[UIImageView alloc] initWithFrame:CGRectMake(25.0, offset, 34.0, 34.0)];
-		affiliateImgView.image = [UIImage imageNamed:@"favButton_nonActive.png"];
-		[_scrollView addSubview:affiliateImgView];
-		
-		size = [_vo.affiliateURL sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(280.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];	
-		UIButton *affiliateButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		affiliateButton.frame = CGRectMake(62.0, offset, size.width, 34.0);
-		[affiliateButton addTarget:self action:@selector(_goAffiliate) forControlEvents:UIControlEventTouchUpInside];
-		affiliateButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-		[affiliateButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-		[affiliateButton setTitle:_vo.affiliateURL forState:UIControlStateNormal];
-		[_scrollView addSubview:affiliateButton];
-		
-		offset += 48;
-	}
+//	if ([_vo.affiliateURL length] > 0) {
+//		UIImageView *affiliateImgView = [[UIImageView alloc] initWithFrame:CGRectMake(25.0, offset, 34.0, 34.0)];
+//		affiliateImgView.image = [UIImage imageNamed:@"favButton_nonActive.png"];
+//		[_scrollView addSubview:affiliateImgView];
+//		
+//		size = [_vo.affiliateURL sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(280.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];	
+//		UIButton *affiliateButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//		affiliateButton.frame = CGRectMake(62.0, offset, size.width, 34.0);
+//		[affiliateButton addTarget:self action:@selector(_goAffiliate) forControlEvents:UIControlEventTouchUpInside];
+//		affiliateButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+//		[affiliateButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//		[affiliateButton setTitle:_vo.affiliateURL forState:UIControlStateNormal];
+//		[_scrollView addSubview:affiliateButton];
+//		
+//		offset += 48;
+//	}
 	
+	offset += 38;
 	if (_vo.type_id > 4) {
 		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, 202.0) articleVO:_vo];
 		//[_videoPlayerView startPlayback];
 		[_scrollView addSubview:_videoPlayerView];		
-		offset += _videoPlayerView.frame.size.height + 22;
+		offset += _videoPlayerView.frame.size.height + 38;
 	}
 	
 	//	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -304,18 +310,24 @@
 	//	offset += 22 + 16;
 	
 	size = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:3] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-	_webView = [[UIWebView alloc] initWithFrame:CGRectMake(22.0, offset, self.view.frame.size.width - 44.0, size.height + (90.0 + ([SNAppDelegate fontFactor] * 40.0)))];
+	_webView = [[UIWebView alloc] initWithFrame:CGRectMake(25.0, offset, self.view.frame.size.width - 50.0, size.height + (90.0 + ([SNAppDelegate fontFactor] * 40.0)))];
+	[_webView setBackgroundColor:[UIColor clearColor]];
 	_webView.delegate = self;
+	_webView.opaque = NO;
 	_webView.scrollView.bounces = NO;
-	//_webView.scrollView.userInteractionEnabled = NO;
 	_webView.scrollView.contentSize = _webView.frame.size;
-	[_webView setBackgroundColor:[UIColor whiteColor]];
 	[_webView loadRequest:[NSURLRequest requestWithURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"article" ofType:@"html"]]]];
 	[_scrollView addSubview:_webView];				
 	
 	offset += size.height + (90.0 + ([SNAppDelegate fontFactor] * 40.0));
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, offset);
 	
+	
+	_sourceWebView = [[UIWebView alloc] initWithFrame:CGRectMake(0.0, 70.0, self.view.frame.size.width, self.view.frame.size.height - 70.0)];
+	_sourceWebView.scrollView.bounces = NO;
+	_sourceWebView.hidden = YES;
+	[_sourceWebView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:_vo.article_url]]];
+	[self.view addSubview:_sourceWebView];			
 	
 	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
@@ -354,6 +366,8 @@
 	
 	_toggleLtImgView.hidden = !_isTextView;
 	_toggleRtImgView.hidden = _isTextView;
+	
+	_sourceWebView.hidden = _isTextView;
 }
 
 -(void)_goOptions {
@@ -381,28 +395,75 @@
 	}
 }
 
+-(void)_goLike {
+	ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
+	[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+	[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+	[readRequest setDelegate:self];
+	[readRequest startAsynchronous];
+	
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_selected.png"] forState:UIControlStateNormal];
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_selected.png"] forState:UIControlStateHighlighted];
+	[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	
+	ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
+	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+	[likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+	[likeRequest startAsynchronous];
+	
+	_vo.totalLikes++;
+	[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
+}
+
+-(void)_goReadLater {
+	ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
+	[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+	[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+	[readRequest setDelegate:self];
+	[readRequest startAsynchronous];
+	
+	ASIFormDataRequest *readLaterRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
+	[readLaterRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
+	[readLaterRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+	[readLaterRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+	[readLaterRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+	[readLaterRequest startAsynchronous];
+}
+
 
 #pragma mark - Notification handlers
 -(void)_changeFontSize:(NSNotification *)notification {
 	
 	CGSize size;
-	int offset = 22;
+	int offset = 70;
 	
 	NSArray *fontSizes = [[[NSUserDefaults standardUserDefaults] objectForKey:@"uiFontSizes"] objectAtIndex:[SNAppDelegate fontFactor]];
 	
-	size = [_vo.title sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-	_titleLabel.frame = CGRectMake(_titleLabel.frame.origin.y, offset, _titleLabel.frame.size.width, size.height);
-	_titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:[[fontSizes objectAtIndex:0] intValue]];
-	offset += size.height + 22;
+	offset += 45;
+	size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:[[fontSizes objectAtIndex:0] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+	_titleLabel.frame = CGRectMake(_titleLabel.frame.origin.x, offset, _titleLabel.frame.size.width, size.height);
+	_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:[[fontSizes objectAtIndex:0] intValue]];
+	offset += size.height + 38;
+	
+	_btnBGView.frame = CGRectMake(_btnBGView.frame.origin.x, offset, _btnBGView.frame.size.width, _btnBGView.frame.size.height);
+	offset += 34;
+	offset += 38;
+	
+	_articleImgView.frame = CGRectMake(_articleImgView.frame.origin.x, offset, _articleImgView.frame.size.width, _articleImgView.frame.size.height);
+	offset += (270.0 * _vo.imgRatio);
+	offset += 38;
 	
 	if (_vo.type_id > 4) {
 		_videoPlayerView.frame = CGRectMake(_videoPlayerView.frame.origin.x, offset, _videoPlayerView.frame.size.width, _videoPlayerView.frame.size.height);
 		offset += _videoPlayerView.frame.size.height + 22;
 	}
 	
-	_dateLabel.frame = CGRectMake(_dateLabel.frame.origin.x, offset, _dateLabel.frame.size.width, size.height);
-	_dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:2] intValue]];
-	offset += 22 + 16;
 	
 	size = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:[[fontSizes objectAtIndex:3] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 	_webView.frame = CGRectMake(_webView.frame.origin.x, offset, _webView.frame.size.width, size.height + (90.0 + ([SNAppDelegate fontFactor] * 40.0)));
@@ -413,7 +474,7 @@
 }
 
 -(void)_uiThemedDark:(NSNotification *)notification {
-	//[_scrollView setBackgroundColor:[UIColor blackColor]];
+	_darkBGImgView.hidden = NO;
 	_titleLabel.textColor = [UIColor whiteColor];
 	_dateLabel.textColor = [UIColor whiteColor];
 	
@@ -421,7 +482,7 @@
 }
 
 -(void)_uiThemedLight:(NSNotification *)notification {
-	//[_scrollView setBackgroundColor:[UIColor whiteColor]];
+	_darkBGImgView.hidden = YES;
 	_titleLabel.textColor = [UIColor blackColor];
 	_dateLabel.textColor = [UIColor blackColor];
 	

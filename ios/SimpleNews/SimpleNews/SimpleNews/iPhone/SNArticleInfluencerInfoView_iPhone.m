@@ -43,7 +43,7 @@
 		[self addSubview:twitterName];
 		
 		UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(72.0, 27.0, 210.0, 30.0)];
-		infoLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
+		infoLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 		infoLabel.textColor = [UIColor blackColor];
 		infoLabel.backgroundColor = [UIColor clearColor];
 		infoLabel.text = _vo.tweetMessage;

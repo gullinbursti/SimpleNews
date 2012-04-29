@@ -23,11 +23,16 @@
 	
 	UIScrollView *_scrollView;
 	UIWebView *_webView;
+	UIWebView *_sourceWebView;
 	UILabel *_titleLabel;
 	UILabel *_dateLabel;
 	UIImageView *_toggleLtImgView;
 	UIImageView *_toggleRtImgView;
+	UIImageView *_darkBGImgView;
+	UIView *_btnBGView;
+	EGOImageView *_articleImgView;
 	
+	UIButton *_likeButton;
 	UIButton *_viewOptionsButton;
 	BOOL _isOptions;
 	BOOL _isTextView;

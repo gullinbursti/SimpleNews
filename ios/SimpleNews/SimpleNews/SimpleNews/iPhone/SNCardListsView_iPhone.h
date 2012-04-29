@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SNPaginationView.h"
 
 @interface SNCardListsView_iPhone : UIView <UIScrollViewDelegate> {
 	
@@ -14,6 +15,7 @@
 	
 	UIButton *_rootListButton;
 	NSArray *_lists;
+	SNPaginationView *_paginationView;
 	
 	BOOL _isIntroed;
 }

@@ -25,7 +25,7 @@
 		twitterButton.frame = CGRectMake(38.0, 112.0, 244.0, 64.0);
 		[twitterButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[twitterButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-		twitterButton.titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14.0];
+		twitterButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14.0];
 		twitterButton.titleLabel.textAlignment = UITextAlignmentCenter;
 		[twitterButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 		twitterButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
@@ -38,7 +38,7 @@
 		emailButton.frame = CGRectMake(38.0, 186.0, 244.0, 64.0);
 		[emailButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[emailButton setBackgroundImage:[[UIImage imageNamed:@"shareButtons_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-		emailButton.titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14.0];
+		emailButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14.0];
 		emailButton.titleLabel.textAlignment = UITextAlignmentCenter;
 		[emailButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 		emailButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
@@ -51,7 +51,7 @@
 		cancelButton.frame = CGRectMake(38.0, 260.0, 244.0, 64.0);
 		[cancelButton setBackgroundImage:[[UIImage imageNamed:@"shareCancelButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[cancelButton setBackgroundImage:[[UIImage imageNamed:@"shareCancelButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-		cancelButton.titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14.0];
+		cancelButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14.0];
 		cancelButton.titleLabel.textAlignment = UITextAlignmentCenter;
 		[cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 		cancelButton.titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];

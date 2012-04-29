@@ -91,14 +91,14 @@
 	[_commentTxtField setBackgroundColor:[UIColor clearColor]];
 	[_commentTxtField setReturnKeyType:UIReturnKeyDone];
 	[_commentTxtField addTarget:self action:@selector(_onTxtDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
-	_commentTxtField.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
+	_commentTxtField.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 	_commentTxtField.keyboardType = UIKeyboardTypeDefault;
 	_commentTxtField.text = @"";
 	_commentTxtField.delegate = self;
 	[_bgView addSubview:_commentTxtField];
 	
 	_commentsLabel = [[UILabel alloc] initWithFrame:_commentTxtField.frame];
-	_commentsLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:12];
+	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 	_commentsLabel.textColor = [UIColor blackColor];
 	_commentsLabel.backgroundColor = [UIColor clearColor];
 	_commentsLabel.text = @"Say something…";

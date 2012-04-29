@@ -27,30 +27,30 @@
 		self.layer.borderWidth = 1.0;
 		
 		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0, 24.0, 200.0, 20.0)];
-		titleLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:18];
+		titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:18];
 		titleLabel.textColor = [UIColor blackColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.text = _vo.list_name;
 		[self addSubview:titleLabel];
 		
-		CGSize size = [@"created by " sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		CGSize size = [@"created by " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 		UILabel *createdLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0, 51.0, size.width, size.height)];
-		createdLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
+		createdLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
 		createdLabel.textColor = [UIColor colorWithWhite:0.824 alpha:1.0];
 		createdLabel.backgroundColor = [UIColor clearColor];
 		createdLabel.text = @"created by ";
 		[self addSubview:createdLabel];
 		
-		UILabel *curatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0 + size.width, 51.0, 200.0, 20.0)];
-		curatorLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:14];
+		UILabel *curatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0 + size.width, 51.0, 200.0, size.height)];
+		curatorLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 		curatorLabel.textColor = [SNAppDelegate snLinkColor];
 		curatorLabel.backgroundColor = [UIColor clearColor];
 		curatorLabel.text = _vo.curatorHandles;
 		[self addSubview:curatorLabel];
 		
-		CGSize infoSize = [_vo.list_info sizeWithFont:[[SNAppDelegate snAllerFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-		UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 85.0, 270.0, infoSize.height)];
-		infoLabel.font = [[SNAppDelegate snAllerFontRegular] fontWithSize:14];
+		CGSize infoSize = [_vo.list_info sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(21.0, 85.0, 270.0, infoSize.height)];
+		infoLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
 		infoLabel.textColor = [UIColor colorWithWhite:0.486 alpha:1.0];
 		infoLabel.backgroundColor = [UIColor clearColor];
 		infoLabel.numberOfLines = 0;

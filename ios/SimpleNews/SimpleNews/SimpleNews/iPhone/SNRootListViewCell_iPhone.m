@@ -23,7 +23,7 @@
 -(id)init {
 	if ((self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[self class] cellReuseIdentifier]])) {
 		_avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(15.0, 20.0, 37.0, 37.0)];
-		_avatarImgView.layer.cornerRadius = 8.0;
+		_avatarImgView.layer.cornerRadius = 4.0;
 		_avatarImgView.clipsToBounds = YES;
 		_avatarImgView.layer.borderColor = [[UIColor colorWithWhite:0.671 alpha:1.0] CGColor];
 		_avatarImgView.layer.borderWidth = 1.0;
@@ -35,16 +35,16 @@
 		_nameLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_nameLabel];
 		
-		CGSize size = [@"created by " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		CGSize size = [@"created by " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 		UILabel *createdLabel = [[UILabel alloc] initWithFrame:CGRectMake(62.0, 40.0, size.width, size.height)];
-		createdLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:14];
+		createdLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
 		createdLabel.textColor = [UIColor colorWithWhite:0.639 alpha:1.0];
 		createdLabel.backgroundColor = [UIColor clearColor];
 		createdLabel.text = @"created by ";
 		[self addSubview:createdLabel];
 		
-		_curatorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(createdLabel.frame.origin.x + size.width, 40.0, 135.0, 20.0)];
-		_curatorsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
+		_curatorsLabel = [[UILabel alloc] initWithFrame:CGRectMake(createdLabel.frame.origin.x + size.width, 40.0, 135.0, size.height)];
+		_curatorsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 		_curatorsLabel.textColor = [SNAppDelegate snLinkColor];
 		_curatorsLabel.lineBreakMode = UILineBreakModeTailTruncation;
 		_curatorsLabel.backgroundColor = [UIColor clearColor];

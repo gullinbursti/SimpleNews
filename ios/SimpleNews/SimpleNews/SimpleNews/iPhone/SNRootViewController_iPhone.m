@@ -161,7 +161,7 @@
 	[self.view addSubview:_cardListsButton];
 	
 	UIButton *optionsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	optionsButton.frame = CGRectMake(540.0, 440.0, 44.0, 44.0);
+	optionsButton.frame = CGRectMake(540.0, 435.0, 44.0, 44.0);
 	[optionsButton setBackgroundImage:[UIImage imageNamed:@"gearButton_nonActive.png"] forState:UIControlStateNormal];
 	[optionsButton setBackgroundImage:[UIImage imageNamed:@"gearButton_Active.png"] forState:UIControlStateHighlighted];
 	[optionsButton addTarget:self action:@selector(_goOptions) forControlEvents:UIControlEventTouchUpInside];

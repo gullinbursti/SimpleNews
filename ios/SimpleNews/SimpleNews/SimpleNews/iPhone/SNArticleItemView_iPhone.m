@@ -186,7 +186,7 @@
 		
 		int imgOffset = 25;
 		
-		if (_vo.source_id > 0) {
+		//if (_vo.source_id > 0) {
 			for (NSDictionary *dict in _vo.seenBy) {
 				EGOImageView *readImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(imgOffset, offset, 24.0, 24.0)];
 				readImgView.layer.cornerRadius = 4.0;
@@ -211,15 +211,6 @@
 			[self addSubview:commentButton];
 			
 			offset += 46;
-			
-		} else {
-			UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			commentButton.frame = CGRectMake(270.0, 10.0, 44.0, 44.0);
-			[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
-			[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
-			[commentButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
-			[self addSubview:commentButton];
-		}
 	}
 	
 	return (self);
@@ -306,23 +297,6 @@
 	
 	_vo.totalLikes++;
 	_likesLabel.text = [NSString stringWithFormat:@"%d", _vo.totalLikes];
-}
-
--(void)_goReadLater {
-	ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
-	[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-	[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
-	[readRequest setDelegate:self];
-	[readRequest startAsynchronous];
-	
-	ASIFormDataRequest *readLaterRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
-	[readLaterRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
-	[readLaterRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[readLaterRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-	[readLaterRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
-	[readLaterRequest startAsynchronous];
 }
 
 -(void)_goShare {

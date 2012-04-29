@@ -73,9 +73,9 @@
 		[_closeButton addTarget:self action:@selector(_goClose) forControlEvents:UIControlEventTouchUpInside];
 		//[self addSubview:_closeButton];
 		
-		_timeSize = [[NSString stringWithFormat:@"%@", @"0:00"] sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
+		_timeSize = [[NSString stringWithFormat:@"%@", @"0:00"] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
 		_timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, _videoHolderView.frame.size.height - 18.0, _timeSize.width, _timeSize.height)];
-		_timeLabel.font = [[SNAppDelegate snAllerFontBold] fontWithSize:10];
+		_timeLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
 		_timeLabel.textColor = [UIColor colorWithWhite:1.0 alpha:1.0];
 		_timeLabel.backgroundColor = [UIColor clearColor];
 		_timeLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
@@ -164,7 +164,7 @@
 	[_videoHolderView addSubview:self.mpc.view];
 	
 	_progressImgView.frame = CGRectMake(_progressImgView.frame.origin.x, _progressImgView.frame.origin.y, 0.0, _progressImgView.frame.size.height);
-	_timeSize = [[NSString stringWithFormat:@"%@", @"0:00"] sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
+	_timeSize = [[NSString stringWithFormat:@"%@", @"0:00"] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
 	_timeLabel.frame = CGRectMake(0.0, _timeLabel.frame.origin.y, _timeSize.width, _timeSize.height);
 	_timeLabel.text = @"0:00";
 	
@@ -236,7 +236,7 @@
 	//int hours = (int)self.mpc.currentPlaybackTime / 3600;
 	
 	NSString *formattedTime = [[NSString alloc] initWithFormat:@"%d:%02d", ((int)(self.mpc.currentPlaybackTime / 60) % 60), ((int)self.mpc.currentPlaybackTime % 60)];
-	_timeSize = [formattedTime sizeWithFont:[[SNAppDelegate snAllerFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
+	_timeSize = [formattedTime sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
 	_timeLabel.text = formattedTime;
 	
 	if (_timeSize.width * 0.5 < _progressImgView.frame.size.width && _timeLabel.frame.origin.x < _videoHolderView.frame.size.width - (_timeSize.width + 5.0))

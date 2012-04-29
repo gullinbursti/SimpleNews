@@ -12,7 +12,6 @@
 	int _currPage;
 	int _totPages;
 	
-	UIButton *_bgButton;
 	UIImageView *_offImgView;
 	UIImageView *_onImgView;
 }

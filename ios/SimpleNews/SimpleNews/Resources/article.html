@@ -6,11 +6,17 @@
 			body {
 				margin:0px; 
 				padding:0px; 
-				font-family:"HelveticaNeueBold", "HelveticaNeue-Bold", "Helvetica Neue Bold", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosBold', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;}
+				font-family:"HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosBold', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;}
+				background-color:transparent;
+				text-align:justify;
+				text-shadow:1px 1px 1px #ffffff;
+			}
+			
+			#divSandbox { font-size:64px; }
 		</style>
 	</head>
 	<body id="bodPage">
-		<!-- <div id="divSandbox"><a href="http://test.skimlinks.com">http://test.skimlinks.com</a></div> -->
+		<!-- <div id="divSandbox">DERP</div> -->
 		<div id="divContent"></div>
 		
 		<script type="text/javascript">
@@ -19,18 +25,24 @@
 			
 			function populate(html) {
 				contentTout_obj.innerHTML = html;
+				body_obj.style.textAlign = 'justify';
+				body_obj.style.textShadow = '1px 1px 1px #ffffff';
+				
 				sendValue('state', "POPULATED");
+				sendValue('height', contentTout_obj.offsetHeight);
 			}
 			
 			function goDarkUI() {
 				body_obj.style.color = 'white';
-				body_obj.style.backgroundColor = 'black';
+				body_obj.style.textShadow = '1px 1px 1px #666666';
+				
 				sendValue('theme', "DARK");
 			}
 			
 			function goLightUI() {
-				body_obj.style.color = 'black';
-				body_obj.style.backgroundColor = 'white';
+				body_obj.style.color = '#666666';
+				body_obj.style.textShadow = '1px 1px 1px #ffffff';
+				
 				sendValue('theme', "LIGHT");
 			}
 			
@@ -68,3 +80,6 @@
 		<script type="text/javascript" src="http://s.skimresources.com/js/31981X896314.skimlinks.js"></script>
 	</body>
 </html>
+
+
+<!-- <a href="http://test.skimlinks.com">http://test.skimlinks.com</a>-->
