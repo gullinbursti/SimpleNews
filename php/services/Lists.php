@@ -219,6 +219,7 @@
 					"avatar_url" => $influencer_row['avatar_url'], 
 					"blurb" => $influencer_row['description'], 
 					"article_total" => 0, 
+					"approved" => ($influencer_row['approved'] == "Y"), 
 					"source_types" => array()
 				));
 			}

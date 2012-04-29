@@ -11,7 +11,7 @@
 @implementation SNInfluencerVO
 
 @synthesize dictionary;
-@synthesize influencer_id, totalArticles, handle, influencer_name, avatar_url, blurb, sources;
+@synthesize influencer_id, totalArticles, isApproved, handle, influencer_name, avatar_url, blurb, sources;
 
 +(SNInfluencerVO *)influencerWithDictionary:(NSDictionary *)dictionary {
 	
@@ -25,6 +25,7 @@
 	vo.blurb = [dictionary objectForKey:@"blurb"];
 	vo.totalArticles = [[dictionary objectForKey:@"article_total"] intValue];
 	vo.sources = [dictionary objectForKey:@"source_types"];
+	vo.isApproved = (BOOL)[[dictionary objectForKey:@"approved"] intValue];
 	
 	return (vo);
 }

@@ -23,9 +23,9 @@
 
 -(id)initFromList {
 	if ((self = [self init])) {
-		UIImageView *verifiedIcoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(245.0, 18.0, 24.0, 24.0)];
-		verifiedIcoImgView.image = [UIImage imageNamed:@"influencerApprovedIcon.png"];
-		[self addSubview:verifiedIcoImgView];
+		_verifiedIcoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(245.0, 14.0, 24.0, 24.0)];
+		_verifiedIcoImgView.image = [UIImage imageNamed:@"influencerApprovedIcon.png"];
+		[self addSubview:_verifiedIcoImgView];
 	}
 	
 	return (self);
@@ -44,9 +44,9 @@
 		_twitterNameLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_twitterNameLabel];
 		
-		UIImageView *verifiedIcoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(self.frame.size.width - 40.0, 18.0, 24.0, 24.0)];
-		verifiedIcoImgView.image = [UIImage imageNamed:@"influencerApprovedIcon.png"];
-		[self addSubview:verifiedIcoImgView];
+		_verifiedIcoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(self.frame.size.width - 40.0, 14.0, 24.0, 24.0)];
+		_verifiedIcoImgView.image = [UIImage imageNamed:@"influencerApprovedIcon.png"];
+		[self addSubview:_verifiedIcoImgView];
 		
 		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, 50.0, self.frame.size.width - 20.0, 1.0)];
 		lineImgView.image = [UIImage imageNamed:@"dividerLine.png"];
@@ -69,6 +69,7 @@
 	
 	_avatarImgView.imageURL = [NSURL URLWithString:_influencerVO.avatar_url];
 	_twitterNameLabel.text = [NSString stringWithFormat:@"@%@", _influencerVO.handle];
+	_verifiedIcoImgView.hidden = !_influencerVO.isApproved;
 }
 
 @end

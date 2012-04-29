@@ -282,13 +282,20 @@
 									 textField.text, @"content", 
 									 isLiked, @"liked", nil];
 		SNCommentVO *vo = [SNCommentVO commentWithDictionary:dict];
-		//[_vo.comments addObject:vo];
+		[_vo.comments addObject:vo];
 		
 		CGSize commentSize = [textField.text sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(256.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		
-		SNArticleCommentView_iPhone *commentView = [[SNArticleCommentView_iPhone alloc] initWithFrame:CGRectMake(0.0, _commentOffset, _scrollView.frame.size.width, kItemHeight + commentSize.height) commentVO:vo listID:_list_id];
-		[_commentViews addObject:commentView];
-		[_scrollView addSubview:commentView];
+		for (SNArticleCommentView_iPhone *commentView in _commentViews) {
+			[UIView animateWithDuration:0.25 animations:^(void) {
+				commentView.frame = CGRectMake(commentView.frame.origin.x, commentView.frame.origin.y + kItemHeight + commentSize.height, commentView.frame.size.width, commentView.frame.size.height);
+			
+			} completion:nil];
+		}
+		
+		SNArticleCommentView_iPhone *commentView = [[SNArticleCommentView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, _scrollView.frame.size.width, kItemHeight + commentSize.height) commentVO:vo listID:_list_id];
+		[_commentViews insertObject:commentView atIndex:0];
+		[_scrollView addSubview:commentView];		
 		
 		_commentOffset += (kItemHeight + commentSize.height);
 		

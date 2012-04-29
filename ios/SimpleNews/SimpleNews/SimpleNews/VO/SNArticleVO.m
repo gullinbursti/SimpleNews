@@ -49,7 +49,7 @@
 	for (NSDictionary *comment in [dictionary objectForKey:@"reactions"])
 		[unsortedComments addObject:[SNCommentVO commentWithDictionary:comment]];
 	
-	vo.comments = [NSArray arrayWithArray:[unsortedComments sortedArrayUsingDescriptors:[NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"added" ascending:NO]]]];
+	vo.comments = [NSMutableArray arrayWithArray:[unsortedComments sortedArrayUsingDescriptors:[NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"added" ascending:NO]]]];
 	
 	return (vo);
 }

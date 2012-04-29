@@ -15,6 +15,7 @@
 	EGOImageView *_avatarImgView;
 	UILabel *_twitterNameLabel;
 	UILabel *_twitterBlurbLabel;
+	UIImageView *_verifiedIcoImgView;
 }
 
 +(NSString *)cellReuseIdentifier;

@@ -16,6 +16,7 @@
 
 @property (nonatomic) int influencer_id;
 @property (nonatomic) int totalArticles;
+@property (nonatomic) BOOL isApproved;;
 @property (nonatomic, retain) NSString *handle;
 @property (nonatomic, retain) NSString *influencer_name;
 @property (nonatomic, retain) NSString *avatar_url;
