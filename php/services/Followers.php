@@ -5,8 +5,8 @@
 	
 	  	function __construct() {
 		
-			$this->db_conn = mysql_connect('internal-db.s41232.gridserver.com', 'db41232_sn_usr', 'dope911t') or die("Could not connect to database.");
-			mysql_select_db('db41232_simplenews') or die("Could not select database.");
+			$this->db_conn = mysql_connect('localhost', 'db41232_sn_usr', 'dope911t') or die("Could not connect to database.");
+			mysql_select_db('assembly') or die("Could not select database.");
 		}
 	
 		function __destruct() {	

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>services/Lists.php</string>
+	<string>services/Categories.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -44,6 +44,14 @@
 			<key>sourceDirectory</key>
 			<string>signup</string>
 		</dict>
+		<dict>
+			<key>name</key>
+			<string>testing</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>sourceDirectory</key>
+			<string>testing</string>
+		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
 	<integer>207</integer>
@@ -54,9 +62,9 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>20</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>11</integer>
+				<integer>2</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -184,28 +192,144 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>5</integer>
+				<integer>26</integer>
 				<key>line</key>
-				<integer>122</integer>
+				<integer>7</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>30</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>26</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+		</dict>
+		<key>services/Categories.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>2</integer>
+				<key>line</key>
+				<integer>17</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>106</integer>
+			<integer>0</integer>
+		</dict>
+		<key>services/Curators.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>44</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>services/Followers.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>44</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>services/Influencers.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>44</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>services/Lists.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>45</integer>
+				<integer>44</integer>
 				<key>line</key>
-				<integer>276</integer>
+				<integer>7</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>320</integer>
+			<integer>0</integer>
+		</dict>
+		<key>services/Users.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>41</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>35</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>44</integer>
+				<key>line</key>
+				<integer>7</integer>
+			</dict>
+		</dict>
+		<key>signup/_db_open.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>20</integer>
+				<key>line</key>
+				<integer>11</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>signup/_oauth_cfg.php</key>
 		<dict>
@@ -285,17 +409,23 @@
 		<string>cms/tweets.php</string>
 		<string>cms/add_article.php</string>
 		<string>services/Articles.php</string>
+		<string>services/Categories.php</string>
+		<string>signup/_db_open.php</string>
+		<string>services/Curators.php</string>
+		<string>services/Followers.php</string>
+		<string>services/Influencers.php</string>
 		<string>cms/test.php</string>
 		<string>cms/callback.php</string>
 		<string>cms/_db_open.php</string>
 		<string>cms/_oauth_cfg.php</string>
 		<string>signup/_oauth_cfg.php</string>
 		<string>services/Lists.php</string>
+		<string>services/Users.php</string>
 		<string>cms/oauth/config.php</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{883, 250}, {1441, 1099}}</string>
+	<string>{{925, 62}, {1441, 1099}}</string>
 </dict>
 </plist>

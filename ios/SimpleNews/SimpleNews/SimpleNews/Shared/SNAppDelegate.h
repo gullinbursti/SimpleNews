@@ -21,7 +21,8 @@
 	SNRootViewController_iPhone *_rootViewController_iPhone;
 }
 
-#define kServerPath @"http://dev.gullinbursti-creations.com/simplenews/services"
+//#define kServerPath @"http://dev.gullinbursti-creations.com/simplenews/services"
+#define kServerPath @"http://ec2-23-20-197-174.compute-1.amazonaws.com/services"
 
 +(SNAppDelegate *)sharedInstance;
 
