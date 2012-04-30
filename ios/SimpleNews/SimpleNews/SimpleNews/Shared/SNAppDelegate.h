@@ -23,7 +23,7 @@
 
 //#define kServerPath @"http://dev.gullinbursti-creations.com/simplenews/services"
 //#define kServerPath @"http://ec2-23-20-197-174.compute-1.amazonaws.com/services"
-#define kServerPath @"107.20.161.159"
+#define kServerPath @"http://107.20.161.159/services"
 
 +(SNAppDelegate *)sharedInstance;
 
