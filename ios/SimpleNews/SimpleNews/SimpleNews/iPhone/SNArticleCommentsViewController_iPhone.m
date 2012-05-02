@@ -26,6 +26,11 @@
 		
 		_commentViews = [NSMutableArray new];
 		
+		if (![SNAppDelegate twitterHandle]) {
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+			[alert show];
+		}
+		
 		NSError *error;
 		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/lists/%d/%@/comments", _vo.list_id, _vo.title] withError:&error])
 			NSLog(@"error in trackPageview");
@@ -269,6 +274,8 @@
 		
 		NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 		[dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+		//[dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
+		[dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
 		NSString *added = [dateFormatter stringFromDate:[NSDate date]];
 		
 		NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -282,7 +289,7 @@
 									 textField.text, @"content", 
 									 isLiked, @"liked", nil];
 		SNCommentVO *vo = [SNCommentVO commentWithDictionary:dict];
-		[_vo.comments addObject:vo];
+		[_vo.comments insertObject:vo atIndex:0];
 		
 		CGSize commentSize = [textField.text sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(256.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		

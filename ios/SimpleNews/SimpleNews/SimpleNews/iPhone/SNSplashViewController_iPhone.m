@@ -67,7 +67,7 @@
 		SNRootViewController_iPhone *rootViewController = [[SNRootViewController_iPhone alloc] init];
 		UINavigationController *rootNavigationController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
 		[rootNavigationController setNavigationBarHidden:YES animated:NO];
-		[self.navigationController pushViewController:rootViewController animated:NO];
+		[self.navigationController pushViewController:rootViewController animated:YES];
 	}
 	
 	_logoImgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"logo_0%d.png", _frameIndex]];

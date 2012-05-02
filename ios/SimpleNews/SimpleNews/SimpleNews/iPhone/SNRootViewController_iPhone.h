@@ -29,6 +29,7 @@
 	UITableView *_popularTableView;
 	
 	UIView *_holderView;
+	UIButton *_plusButton;
 	UIButton *_rootListButton;
 	UIButton *_cardListsButton;
 	UIImageView *_toggleLtImgView;

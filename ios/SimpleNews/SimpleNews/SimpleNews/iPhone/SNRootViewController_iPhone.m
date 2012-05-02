@@ -66,16 +66,17 @@
 	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[self.view addSubview:bgImgView];
 	
-	_holderView = [[UIView alloc] initWithFrame:CGRectMake(-270.0, 0.0, 580.0, self.view.frame.size.height)];
+	//_holderView = [[UIView alloc] initWithFrame:CGRectMake(-270.0, 0.0, 580.0, self.view.frame.size.height)];
+	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 580.0, self.view.frame.size.height)];
 	_holderView.userInteractionEnabled = YES;
 	[self.view addSubview:_holderView];
 	
-	UIButton *plusButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	plusButton.frame = CGRectMake(12.0, 8.0, 44.0, 44.0);
-	[plusButton setBackgroundImage:[UIImage imageNamed:@"plusButton_nonActive.png"] forState:UIControlStateNormal];
-	[plusButton setBackgroundImage:[UIImage imageNamed:@"plusButton_Active.png"] forState:UIControlStateHighlighted];
-	[plusButton addTarget:self action:@selector(_goCreateList) forControlEvents:UIControlEventTouchUpInside];
-	[_holderView addSubview:plusButton];
+	_plusButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	_plusButton.frame = CGRectMake(12.0, 8.0, 44.0, 44.0);
+	[_plusButton setBackgroundImage:[UIImage imageNamed:@"plusButton_nonActive.png"] forState:UIControlStateNormal];
+	[_plusButton setBackgroundImage:[UIImage imageNamed:@"plusButton_Active.png"] forState:UIControlStateHighlighted];
+	[_plusButton addTarget:self action:@selector(_goCreateList) forControlEvents:UIControlEventTouchUpInside];
+	[_holderView addSubview:_plusButton];
 	
 	_toggleLtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 15.0, 164.0, 34.0)];
 	_toggleLtImgView.image = [UIImage imageNamed:@"toggleBGLeft.png"];
@@ -182,9 +183,27 @@
 -(void)viewDidLoad {
 	[super viewDidLoad];
 	
+	_plusButton.hidden = YES;
+	_toggleLtImgView.hidden = YES;
+	_toggleRtImgView.hidden = YES;
+	_subscribedTableView.hidden = YES;
+	_popularTableView.hidden = YES;
+	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
-	} completion:nil];
+		_holderView.frame = CGRectMake(-270.0, _holderView.frame.origin.y, _holderView.frame.size.width, _holderView.frame.size.height);
+	
+	} completion:^(BOOL finished) {
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
+		
+		} completion:^(BOOL finished) {
+			_plusButton.hidden = NO;
+			_toggleLtImgView.hidden = NO;
+			_toggleRtImgView.hidden = NO;
+			_subscribedTableView.hidden = NO;
+			_popularTableView.hidden = NO;
+		}];
+	}];
 }
 
 -(void)viewDidUnload {

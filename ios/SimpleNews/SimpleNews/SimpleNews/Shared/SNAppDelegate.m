@@ -128,19 +128,51 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 }
 
 +(int)secondsAfterDate:(NSDate *)date {
-	return ([[NSDate new] timeIntervalSinceDate:date]);
+	NSDateFormatter *utcFormatter = [[NSDateFormatter alloc] init];
+	[utcFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+	[utcFormatter setDateFormat:@"yyyy-MM-ddHH:mm:ss"];
+	
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	[dateFormatter setDateFormat:@"yyyy-MM-ddHH:mm:ss"];
+	NSDate *utcDate = [dateFormatter dateFromString:[utcFormatter stringFromDate:[NSDate new]]];
+	
+	return ([utcDate timeIntervalSinceDate:date]);
 }
 
 +(int)minutesAfterDate:(NSDate *)date {
-	return ([[NSDate new] timeIntervalSinceDate:date] / 60);
+	NSDateFormatter *utcFormatter = [[NSDateFormatter alloc] init];
+	[utcFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+	[utcFormatter setDateFormat:@"yyyy-MM-ddHH:mm:ss"];
+	
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	[dateFormatter setDateFormat:@"yyyy-MM-ddHH:mm:ss"];
+	NSDate *utcDate = [dateFormatter dateFromString:[utcFormatter stringFromDate:[NSDate new]]];
+	
+	return ([utcDate timeIntervalSinceDate:date] / 60);
 }
 
-+(int)hoursAfterDate:(NSDate *)date {;
-	return ([[NSDate new] timeIntervalSinceDate:date] / 3600);
++(int)hoursAfterDate:(NSDate *)date {
+	NSDateFormatter *utcFormatter = [[NSDateFormatter alloc] init];
+	[utcFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+	[utcFormatter setDateFormat:@"yyyy-MM-ddHH:mm:ss"];
+	
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	[dateFormatter setDateFormat:@"yyyy-MM-ddHH:mm:ss"];
+	NSDate *utcDate = [dateFormatter dateFromString:[utcFormatter stringFromDate:[NSDate new]]];
+	
+	return ([utcDate timeIntervalSinceDate:date] / 3600);
 }
 
 +(int)daysAfterDate:(NSDate *)date {
-	return ([[NSDate new] timeIntervalSinceDate:date] / 86400);
+	NSDateFormatter *utcFormatter = [[NSDateFormatter alloc] init];
+	[utcFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
+	[utcFormatter setDateFormat:@"yyyy-MM-ddHH:mm:ss"];
+	
+	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+	[dateFormatter setDateFormat:@"yyyy-MM-ddHH:mm:ss"];
+	NSDate *utcDate = [dateFormatter dateFromString:[utcFormatter stringFromDate:[NSDate new]]];
+	
+	return ([utcDate timeIntervalSinceDate:date] / 86400);
 }
 
 
@@ -346,14 +378,14 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
 		
-		if (![SNAppDelegate profileForUser]) {
+		//if (![SNAppDelegate profileForUser]) {
 			_splashViewController_iPhone = [[SNSplashViewController_iPhone alloc] init];
 			rootNavigationController = [[UINavigationController alloc] initWithRootViewController:_splashViewController_iPhone];
 		
-		} else {
-			_rootViewController_iPhone = [[SNRootViewController_iPhone alloc] init];
-			rootNavigationController = [[UINavigationController alloc] initWithRootViewController:_rootViewController_iPhone];
-		}
+		//} else {
+		//	_rootViewController_iPhone = [[SNRootViewController_iPhone alloc] init];
+		//	rootNavigationController = [[UINavigationController alloc] initWithRootViewController:_rootViewController_iPhone];
+		//}
 		
 		[rootNavigationController setNavigationBarHidden:YES];
 		[self.window setRootViewController:rootNavigationController];
