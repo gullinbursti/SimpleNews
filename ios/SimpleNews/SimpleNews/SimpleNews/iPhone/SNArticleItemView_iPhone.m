@@ -20,7 +20,7 @@
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
 		
-		int offset = 0;
+		int offset = 20;
 		CGSize size;
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
@@ -44,14 +44,14 @@
 		int days = [SNAppDelegate daysAfterDate:_vo.added];
 		
 		if (days > 0) {
-			timeSince = [NSString stringWithFormat:@"%dd from ", days];
+			timeSince = [NSString stringWithFormat:@"%dd via ", days];
 			
 		} else {
 			if (hours > 0)
-				timeSince = [NSString stringWithFormat:@"%dh from ", hours];
+				timeSince = [NSString stringWithFormat:@"%dh via ", hours];
 			
 			else
-				timeSince = [NSString stringWithFormat:@"%dm from ", mins];
+				timeSince = [NSString stringWithFormat:@"%dm via ", mins];
 		}
 		
 		size = [timeSince sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
@@ -62,53 +62,21 @@
 		dateLabel.text = timeSince;
 		[self addSubview:dateLabel];
 		
-		CGSize size2 = [[NSString stringWithFormat:@"@%@ ", _vo.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *twitterNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(dateLabel.frame.origin.x + size.width, offset, size2.width, 16.0)];
-		twitterNameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
-		twitterNameLabel.textColor = [SNAppDelegate snLinkColor];
-		twitterNameLabel.backgroundColor = [UIColor clearColor];
-		twitterNameLabel.text = [NSString stringWithFormat:@"@%@", _vo.twitterHandle];
-		[self addSubview:twitterNameLabel];
-		
-		UIButton *handleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		handleButton.frame = twitterNameLabel.frame;
-		[handleButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:handleButton];
-		
-		
-		if (_vo.source_id == 0) {
-			UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(twitterNameLabel.frame.origin.x + size2.width, offset, 100.0, 16.0)];
-			messageLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
-			messageLabel.textColor = [UIColor colorWithWhite:0.525 alpha:1.0];
-			messageLabel.backgroundColor = [UIColor clearColor];
-			messageLabel.text = _vo.title;
-			[self addSubview:messageLabel];	
-			
-		} else {
-			size = [@"via " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-			UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(twitterNameLabel.frame.origin.x + size2.width, offset, size.width, 16.0)];
-			viaLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
-			viaLabel.textColor = [UIColor colorWithWhite:0.525 alpha:1.0];
-			viaLabel.backgroundColor = [UIColor clearColor];
-			viaLabel.text = @"via ";
-			[self addSubview:viaLabel];	
-			
-			size2 = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-			UILabel *sourceLabel = [[UILabel alloc] initWithFrame:CGRectMake(viaLabel.frame.origin.x + size.width, offset, size2.width, 16.0)];
-			sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
-			sourceLabel.textColor = [SNAppDelegate snLinkColor];
-			sourceLabel.backgroundColor = [UIColor clearColor];
-			sourceLabel.text = _vo.articleSource;
-			[self addSubview:sourceLabel];	
-		}
+		CGSize size2 = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *sourceLabel = [[UILabel alloc] initWithFrame:CGRectMake(dateLabel.frame.origin.x + size.width, offset, size2.width, 16.0)];
+		sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+		sourceLabel.textColor = [SNAppDelegate snLinkColor];
+		sourceLabel.backgroundColor = [UIColor clearColor];
+		sourceLabel.text = _vo.articleSource;
+		[self addSubview:sourceLabel];	
 		
 		offset += 55;
 		
 		if (_vo.source_id > 0) {
-			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, size.height)];
-			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16];
-			titleLabel.textColor = [UIColor colorWithWhite:0.412 alpha:1.0];
+			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
+			titleLabel.textColor = [UIColor blackColor];
 			titleLabel.backgroundColor = [UIColor clearColor];
 			titleLabel.textAlignment = UITextAlignmentCenter;
 			titleLabel.text = _vo.title;

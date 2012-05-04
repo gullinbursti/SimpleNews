@@ -11,9 +11,8 @@
 #import "EGOImageView.h"
 
 @interface SNRootListViewCell_iPhone : UITableViewCell {
-	EGOImageView *_avatarImgView;
 	UILabel *_nameLabel;
-	UILabel *_curatorsLabel;
+	UIButton *_followButton;
 }
 
 +(NSString *)cellReuseIdentifier;

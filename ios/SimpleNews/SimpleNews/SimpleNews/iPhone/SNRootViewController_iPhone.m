@@ -14,12 +14,11 @@
 
 #import "SNWebPageViewController_iPhone.h"
 #import "SNHeaderView_iPhone.h"
-#import "SNArticleListViewController_iPhone.h"
 #import "SNRootListViewCell_iPhone.h"
 #import "SNAppDelegate.h"
 #import "SNOptionsViewController_iPhone.h"
 #import "SNArticleListViewController_iPhone.h"
-#import "SNCardListsView_iPhone.h"
+#import "SNArticleListView_iPhone.h"
 
 @interface SNRootViewController_iPhone()
 -(void)_goListsToggle;
@@ -37,6 +36,7 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_listArticles:) name:@"LIST_ARTICLES" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshSubscribedList:) name:@"REFRESH_SUBSCRIBED_LIST" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_articlesReturn:) name:@"ARTICLES_RETURN" object:nil];
 		
 		_popularListsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 		[_popularListsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
@@ -71,18 +71,18 @@
 	_holderView.userInteractionEnabled = YES;
 	[self.view addSubview:_holderView];
 	
-	_plusButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_plusButton.frame = CGRectMake(12.0, 8.0, 44.0, 44.0);
-	[_plusButton setBackgroundImage:[UIImage imageNamed:@"plusButton_nonActive.png"] forState:UIControlStateNormal];
-	[_plusButton setBackgroundImage:[UIImage imageNamed:@"plusButton_Active.png"] forState:UIControlStateHighlighted];
-	[_plusButton addTarget:self action:@selector(_goCreateList) forControlEvents:UIControlEventTouchUpInside];
-	[_holderView addSubview:_plusButton];
+	_profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	_profileButton.frame = CGRectMake(12.0, 8.0, 44.0, 44.0);
+	[_profileButton setBackgroundImage:[UIImage imageNamed:@"profileButton_nonActive.png"] forState:UIControlStateNormal];
+	[_profileButton setBackgroundImage:[UIImage imageNamed:@"profileButton_Active.png"] forState:UIControlStateHighlighted];
+	[_profileButton addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
+	[_holderView addSubview:_profileButton];
 	
-	_toggleLtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 15.0, 164.0, 34.0)];
+	_toggleLtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 8.0, 164.0, 44.0)];
 	_toggleLtImgView.image = [UIImage imageNamed:@"toggleBGLeft.png"];
 	[_holderView addSubview:_toggleLtImgView];
 	
-	UILabel *followingOnLabel = [[UILabel alloc] initWithFrame:CGRectMake(17.0, 9.0, 100.0, 16.0)];
+	UILabel *followingOnLabel = [[UILabel alloc] initWithFrame:CGRectMake(17.0, 14.0, 100.0, 16.0)];
 	followingOnLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 	followingOnLabel.textColor = [UIColor colorWithWhite:0.659 alpha:1.0];
 	followingOnLabel.backgroundColor = [UIColor clearColor];
@@ -91,32 +91,32 @@
 	followingOnLabel.text = @"Following";
 	[_toggleLtImgView addSubview:followingOnLabel];
 	
-	UILabel *popularOffLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 9.0, 100.0, 16.0)];
+	UILabel *popularOffLabel = [[UILabel alloc] initWithFrame:CGRectMake(91.0, 14.0, 100.0, 16.0)];
 	popularOffLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 	popularOffLabel.textColor = [UIColor blackColor];
 	popularOffLabel.backgroundColor = [UIColor clearColor];
-	popularOffLabel.text = @"Popular";
+	popularOffLabel.text = @"All Topics";
 	[_toggleLtImgView addSubview:popularOffLabel];
 	
-	_toggleRtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 15.0, 164.0, 34.0)];
+	_toggleRtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 8.0, 164.0, 44.0)];
 	_toggleRtImgView.image = [UIImage imageNamed:@"toggleBGRight.png"];
 	_toggleRtImgView.hidden = YES;
 	[_holderView addSubview:_toggleRtImgView];
 	
-	UILabel *followingOffLabel = [[UILabel alloc] initWithFrame:CGRectMake(17.0, 9.0, 100.0, 16.0)];
+	UILabel *followingOffLabel = [[UILabel alloc] initWithFrame:CGRectMake(17.0, 14.0, 100.0, 16.0)];
 	followingOffLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 	followingOffLabel.textColor = [UIColor blackColor];
 	followingOffLabel.backgroundColor = [UIColor clearColor];
 	followingOffLabel.text = @"Following";
 	[_toggleRtImgView addSubview:followingOffLabel];
 	
-	UILabel *popularOnLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 9.0, 100.0, 16.0)];
+	UILabel *popularOnLabel = [[UILabel alloc] initWithFrame:CGRectMake(91.0, 14.0, 100.0, 16.0)];
 	popularOnLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 	popularOnLabel.textColor = [UIColor colorWithWhite:0.659 alpha:1.0];
 	popularOnLabel.backgroundColor = [UIColor clearColor];
 	popularOnLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
 	popularOnLabel.shadowOffset = CGSizeMake(1.0, 1.0);
-	popularOnLabel.text = @"Popular";
+	popularOnLabel.text = @"All Topics";
 	[_toggleRtImgView addSubview:popularOnLabel];
 	
 	UIButton *toggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -127,7 +127,7 @@
 	_subscribedTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 53.0, 270.0, self.view.frame.size.height - 53.0) style:UITableViewStylePlain];
 	[_subscribedTableView setBackgroundColor:[UIColor clearColor]];
 	_subscribedTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-	_subscribedTableView.rowHeight = 80.0;
+	_subscribedTableView.rowHeight = 50.0;
 	_subscribedTableView.delegate = self;
 	_subscribedTableView.dataSource = self;
 	_subscribedTableView.scrollsToTop = NO;
@@ -137,7 +137,7 @@
 	_popularTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 53.0, 270.0, self.view.frame.size.height - 53.0) style:UITableViewStylePlain];
 	[_popularTableView setBackgroundColor:[UIColor clearColor]];
 	_popularTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-	_popularTableView.rowHeight = 80.0;
+	_popularTableView.rowHeight = 50.0;
 	_popularTableView.delegate = self;
 	_popularTableView.dataSource = self;
 	_popularTableView.scrollsToTop = NO;
@@ -168,13 +168,6 @@
 	[optionsButton addTarget:self action:@selector(_goOptions) forControlEvents:UIControlEventTouchUpInside];
 	[_holderView addSubview:optionsButton];
 	
-	_rootListButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
-	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_nonActive.png"] forState:UIControlStateNormal];
-	[_rootListButton setBackgroundImage:[UIImage imageNamed:@"topLeft_Active.png"] forState:UIControlStateHighlighted];
-	[_rootListButton addTarget:self action:@selector(_goRootLists) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:_rootListButton];
-	
 	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
@@ -183,27 +176,23 @@
 -(void)viewDidLoad {
 	[super viewDidLoad];
 	
-	_plusButton.hidden = YES;
-	_toggleLtImgView.hidden = YES;
-	_toggleRtImgView.hidden = YES;
-	_subscribedTableView.hidden = YES;
-	_popularTableView.hidden = YES;
+	//_profileButton.hidden = YES;
+	//_toggleLtImgView.hidden = YES;
+	//_toggleRtImgView.hidden = YES;
 	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_holderView.frame = CGRectMake(-270.0, _holderView.frame.origin.y, _holderView.frame.size.width, _holderView.frame.size.height);
-	
-	} completion:^(BOOL finished) {
-		[UIView animateWithDuration:0.33 animations:^(void) {
-			_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
-		
-		} completion:^(BOOL finished) {
-			_plusButton.hidden = NO;
-			_toggleLtImgView.hidden = NO;
-			_toggleRtImgView.hidden = NO;
-			_subscribedTableView.hidden = NO;
-			_popularTableView.hidden = NO;
-		}];
-	}];
+//	[UIView animateWithDuration:0.33 animations:^(void) {
+//		_holderView.frame = CGRectMake(-270.0, _holderView.frame.origin.y, _holderView.frame.size.width, _holderView.frame.size.height);
+//	
+//	} completion:^(BOOL finished) {
+//		[UIView animateWithDuration:0.33 animations:^(void) {
+//			_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
+//		
+//		} completion:^(BOOL finished) {
+//			_profileButton.hidden = NO;
+//			_toggleLtImgView.hidden = NO;
+//			_toggleRtImgView.hidden = NO;
+//		}];
+//	}];
 }
 
 -(void)viewDidUnload {
@@ -226,16 +215,6 @@
 	_popularTableView.hidden = _isFollowingList;
 }
 
--(void)_goRootLists {
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_rootListButton.frame = CGRectMake(-64.0, -64.0, 64.0, 64.0);
-		_holderView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-		
-	} completion:^(BOOL finished) {
-		_cardListsButton.hidden = NO;
-	}];
-}
-
 -(void)_goCardLists {
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_cardListsButton.hidden = YES;
@@ -243,12 +222,11 @@
 		
 	} completion:^(BOOL finished) {
 		[UIView animateWithDuration:0.33 animations:^(void) {
-			_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
 		} completion:nil];
 	}];
 }
 
--(void)_goCreateList {
+-(void)_goProfile {
 	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create a List" message:@"This feature is coming soon" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 	[alert show];
 }
@@ -291,6 +269,15 @@
 		[_subscribedListsRequest setDelegate:self];
 		[_subscribedListsRequest startAsynchronous];
 	}
+}
+
+-(void)_articlesReturn:(NSNotification *)notification {
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_holderView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+		_cardListsButton.hidden = NO;
+	}];
 }
 
 -(void)_listArticles:(NSNotification *)notification {
@@ -342,7 +329,7 @@
 
 #pragma mark - TableView Delegates
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return (80.0);
+	return (50.0);
 }
 
 -(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -354,10 +341,12 @@
 	
 	if ([tableView isEqual:_popularTableView]) {
 		NSLog(@"SELECTED %@", ((SNListVO *)[_popularLists objectAtIndex:indexPath.row]).list_name);
+		[self.navigationController setNavigationBarHidden:YES];
 		[self.navigationController pushViewController:[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_popularLists objectAtIndex:indexPath.row]] animated:YES];
 		
 	} else if ([tableView isEqual:_subscribedTableView]) {
 		NSLog(@"SELECTED %@", ((SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]).list_name);
+		[self.navigationController setNavigationBarHidden:YES];
 		[self.navigationController pushViewController:[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]] animated:YES];
 	}
 }
@@ -466,8 +455,8 @@
 				[_userRequest startAsynchronous];			
 			}
 			
-			SNCardListsView_iPhone *cardListsView = [[SNCardListsView_iPhone alloc] initWithLists:unsortedLists];
-			[_holderView addSubview:cardListsView];
+			SNArticleListView_iPhone *articleListView = [[SNArticleListView_iPhone alloc] initWithFrame:CGRectMake(270.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_popularLists objectAtIndex:0]];
+			[_holderView addSubview:articleListView];
 		}
 		
 	} else if ([request isEqual:_userRequest]) {

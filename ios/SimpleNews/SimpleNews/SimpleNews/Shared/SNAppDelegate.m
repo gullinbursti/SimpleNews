@@ -387,6 +387,17 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 		//	rootNavigationController = [[UINavigationController alloc] initWithRootViewController:_rootViewController_iPhone];
 		//}
 		
+		
+		
+		
+		[[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"header.png"] forBarMetrics:UIBarMetricsDefault];
+		[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackButtonBackgroundImage:[[UIImage imageNamed:@"backArrowButton_nonActive.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+		[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackButtonBackgroundImage:[[UIImage imageNamed:@"backArrowButton_Active.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0] forState:UIControlStateHighlighted barMetrics:UIBarMetricsDefault];
+		
+		//[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackgroundImage:[[UIImage imageNamed:@"navigation_button.png"] stretchableImageWithLeftCapWidth:14 topCapHeight:14] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+		[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[[SNAppDelegate snHelveticaFontBold] fontWithSize:14.0], UITextAttributeFont, [UIColor blackColor], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
+		
+		
 		[rootNavigationController setNavigationBarHidden:YES];
 		[self.window setRootViewController:rootNavigationController];
 		[self.window makeKeyAndVisible];

@@ -157,7 +157,7 @@
 	
 	} else {
 		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(285.0, 23.0, 24, 24)];		
-		chevronView.image = [UIImage imageNamed:@"chevron.png"];
+		chevronView.image = [UIImage imageNamed:@"chevron_nonActive.png"];
 		[cell addSubview:chevronView];
 	}
 	

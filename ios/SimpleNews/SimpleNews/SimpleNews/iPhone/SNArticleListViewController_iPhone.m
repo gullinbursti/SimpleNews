@@ -16,6 +16,10 @@
 #import "SNArticleDetailsViewController_iPhone.h"
 #import "SNHeaderView_iPhone.h"
 
+#import "SNHeaderView_iPhone.h"
+#import "SNNavTitleView.h"
+#import "SNNavListBtnView.h"
+#import "SNNavLogoBtnView.h"
 #import "SNAppDelegate.h"
 #import "SNTweetVO.h"
 
@@ -63,6 +67,7 @@
 -(id)initWithListVO:(SNListVO *)vo {
 	if ((self = [self init])) {
 		_vo = vo;
+		
 		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 8] forKey:@"action"];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
@@ -120,41 +125,17 @@
 	[_scrollView addSubview:_refreshHeaderView];
 	[_refreshHeaderView refreshLastUpdatedDate];
 	
-	UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25.0, 25.0, 200.0, 24.0)];
-	titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:18];
-	titleLabel.textColor = [UIColor blackColor];
-	titleLabel.backgroundColor = [UIColor clearColor];
-	titleLabel.text = _vo.list_name;
-	[_scrollView addSubview:titleLabel];
+	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.list_name];
+	[self.view addSubview:headerView];
 	
-	CGSize size = [@"created by " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:14] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *createdLabel = [[UILabel alloc] initWithFrame:CGRectMake(25.0, 50.0, size.width, size.height)];
-	createdLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:14];
-	createdLabel.textColor = [UIColor colorWithWhite:0.639 alpha:1.0];
-	createdLabel.backgroundColor = [UIColor clearColor];
-	createdLabel.text = @"created by ";
-	[_scrollView addSubview:createdLabel];
+	SNNavListBtnView *listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+	[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	[headerView addSubview:listBtnView];
 	
-	UILabel *curatorLabel = [[UILabel alloc] initWithFrame:CGRectMake(createdLabel.frame.origin.x + size.width, 50.0, 200.0, 20.0)];
-	curatorLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
-	curatorLabel.textColor = [SNAppDelegate snLinkColor];
-	curatorLabel.backgroundColor = [UIColor clearColor];
-	curatorLabel.text = _vo.curatorHandles;
-	[_scrollView addSubview:curatorLabel];
+	SNNavLogoBtnView *logoBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+	[[logoBtnView btn] addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
+	[headerView addSubview:logoBtnView];
 	
-	UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	backButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
-	[backButton setBackgroundImage:[UIImage imageNamed:@"topLeft_nonActive.png"] forState:UIControlStateNormal];
-	[backButton setBackgroundImage:[UIImage imageNamed:@"topLeft_Active.png"] forState:UIControlStateHighlighted];
-	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:backButton];
-	
-	UIButton *flipButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	flipButton.frame = CGRectMake(264.0, 8.0, 44.0, 44.0);
-	[flipButton setBackgroundImage:[UIImage imageNamed:@"articleInfluencersButton_nonActive.png"] forState:UIControlStateNormal];
-	[flipButton setBackgroundImage:[UIImage imageNamed:@"articleInfluencersButton_Active.png"] forState:UIControlStateHighlighted];
-	[flipButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:flipButton];
 	
 	_doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_doneButton.frame = CGRectMake(250.0, 3.0, 64.0, 48.0);
@@ -218,6 +199,8 @@
 
 #pragma mark - Navigation
 -(void)_goBack {
+	NSLog(@"DERP");
+	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ARTICLES_RETURN" object:nil];	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
 	[self.navigationController popViewControllerAnimated:YES];
@@ -500,7 +483,7 @@
 				_cardViews = [NSMutableArray new];
 				
 				int tot = 0;
-				int offset = 90;
+				int offset = 60;
 				for (NSDictionary *serverArticle in parsedArticles) {
 					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
 					
@@ -602,7 +585,7 @@
 				}
 				
 				int cnt = 0;
-				offset = 90;
+				offset = 60;
 				
 				NSMutableArray *articleList = [NSMutableArray array];
 				for (NSDictionary *serverArticle in parsedArticles) {

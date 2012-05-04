@@ -58,6 +58,7 @@
 		
 		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15.0, 62.0, self.frame.size.width - 60.0, 1.0)];
 		lineImgView.image = [UIImage imageNamed:@"dividerLine.png"];
+		lineImgView.image = [lineImgView.image stretchableImageWithLeftCapWidth:1.0 topCapHeight:0.0];
 		[self addSubview:lineImgView];
 	}
 	
