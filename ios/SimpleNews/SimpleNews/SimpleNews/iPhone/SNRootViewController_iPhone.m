@@ -12,13 +12,17 @@
 #import "SNListVO.h"
 #import "SNOptionVO.h"
 
+#import "SNProfileViewController_iPhone.h"
 #import "SNWebPageViewController_iPhone.h"
 #import "SNHeaderView_iPhone.h"
 #import "SNRootListViewCell_iPhone.h"
 #import "SNAppDelegate.h"
-#import "SNOptionsViewController_iPhone.h"
 #import "SNArticleListViewController_iPhone.h"
 #import "SNArticleListView_iPhone.h"
+#import "SNDiscoveryArticlesView_iPhone.h"
+#import "SNArticleDetailsViewController_iPhone.h"
+#import "SNArticleSourcesViewController_iPhone.h"
+#import "SNArticleCommentsViewController_iPhone.h"
 
 @interface SNRootViewController_iPhone()
 -(void)_goListsToggle;
@@ -36,6 +40,10 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_listArticles:) name:@"LIST_ARTICLES" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshSubscribedList:) name:@"REFRESH_SUBSCRIBED_LIST" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleSources:) name:@"SHOW_ARTICLE_SOURCES" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showComments:) name:@"SHOW_COMMENTS" object:nil];
+		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_articlesReturn:) name:@"ARTICLES_RETURN" object:nil];
 		
 		_popularListsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
@@ -161,13 +169,6 @@
 	[_cardListsButton addTarget:self action:@selector(_goCardLists) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_cardListsButton];
 	
-	UIButton *optionsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	optionsButton.frame = CGRectMake(540.0, 435.0, 44.0, 44.0);
-	[optionsButton setBackgroundImage:[UIImage imageNamed:@"gearButton_nonActive.png"] forState:UIControlStateNormal];
-	[optionsButton setBackgroundImage:[UIImage imageNamed:@"gearButton_Active.png"] forState:UIControlStateHighlighted];
-	[optionsButton addTarget:self action:@selector(_goOptions) forControlEvents:UIControlEventTouchUpInside];
-	[_holderView addSubview:optionsButton];
-	
 	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
@@ -175,6 +176,16 @@
 
 -(void)viewDidLoad {
 	[super viewDidLoad];
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_cardListsButton.hidden = YES;
+		_holderView.frame = CGRectMake(-270.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+		[UIView animateWithDuration:0.33 animations:^(void) {
+		} completion:nil];
+	}];
+	
 	
 	//_profileButton.hidden = YES;
 	//_toggleLtImgView.hidden = YES;
@@ -201,6 +212,11 @@
 
 -(void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
+	
+	_discoveryArticlesView.hidden = NO;
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_discoveryArticlesView.frame = CGRectMake(270.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
+	}];
 }
 
 
@@ -227,14 +243,15 @@
 }
 
 -(void)_goProfile {
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create a List" message:@"This feature is coming soon" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-	[alert show];
+	[UIView animateWithDuration:0.125 animations:^(void) {
+		_discoveryArticlesView.frame = CGRectMake(320.0, 0.0, self.view.frame.size.width, self.view.frame.size.width);
+		
+	}completion:^(BOOL finished) {
+		_discoveryArticlesView.hidden = YES;
+		SNProfileViewController_iPhone *profileViewController = [[SNProfileViewController_iPhone alloc] init];
+		[self.navigationController pushViewController:profileViewController animated:YES];
+	}];
 }
-
--(void)_goOptions {
-	[self.navigationController pushViewController:[[SNOptionsViewController_iPhone alloc] init] animated:YES];
-}
-
 
 - (void)reloadTableViewDataSource {
 	_reloading = YES;
@@ -286,10 +303,26 @@
 	[self.navigationController pushViewController:articleListViewController animated:YES];
 }
 
+-(void)_showComments:(NSNotification *)notification {
+	SNArticleCommentsViewController_iPhone *articleCommentsViewController = [[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object] listID:0];
+	[self.navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:articleCommentsViewController animated:YES];
+}
+
+-(void)_showArticleDetails:(NSNotification *)notification {
+	SNArticleDetailsViewController_iPhone *articleDetailsViewController = [[SNArticleDetailsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]];
+	[self.navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:articleDetailsViewController animated:YES];
+}
+
 -(void)_showTwitterProfile:(NSNotification *)notification {
 	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]];
 	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:webPageViewController animated:YES];
+}
+
+-(void)_showArticleSources:(NSNotification *)notification {
+	[self.navigationController pushViewController:[[SNArticleSourcesViewController_iPhone alloc] init] animated:YES];
 }
 
 
@@ -340,14 +373,26 @@
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 	
 	if ([tableView isEqual:_popularTableView]) {
-		NSLog(@"SELECTED %@", ((SNListVO *)[_popularLists objectAtIndex:indexPath.row]).list_name);
-		[self.navigationController setNavigationBarHidden:YES];
-		[self.navigationController pushViewController:[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_popularLists objectAtIndex:indexPath.row]] animated:YES];
+		[UIView animateWithDuration:0.125 animations:^(void) {
+			_discoveryArticlesView.frame = CGRectMake(320.0, 0.0, self.view.frame.size.width, self.view.frame.size.width);
+			
+		}completion:^(BOOL finished) {
+			_discoveryArticlesView.hidden = YES;
+			NSLog(@"SELECTED %@", ((SNListVO *)[_popularLists objectAtIndex:indexPath.row]).list_name);
+			[self.navigationController setNavigationBarHidden:YES];
+			[self.navigationController pushViewController:[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_popularLists objectAtIndex:indexPath.row]] animated:YES];
+		}];
 		
 	} else if ([tableView isEqual:_subscribedTableView]) {
-		NSLog(@"SELECTED %@", ((SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]).list_name);
-		[self.navigationController setNavigationBarHidden:YES];
-		[self.navigationController pushViewController:[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]] animated:YES];
+		[UIView animateWithDuration:0.125 animations:^(void) {
+			_discoveryArticlesView.frame = CGRectMake(320.0, 0.0, self.view.frame.size.width, self.view.frame.size.width);
+			
+		}completion:^(BOOL finished) {
+			_discoveryArticlesView.hidden = YES;
+			NSLog(@"SELECTED %@", ((SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]).list_name);
+			[self.navigationController setNavigationBarHidden:YES];
+			[self.navigationController pushViewController:[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]] animated:YES];
+		}];
 	}
 }
 
@@ -407,7 +452,7 @@
 				NSMutableArray *list = [NSMutableArray array];
 				for (NSDictionary *serverList in parsedLists) {
 					SNListVO *vo = [SNListVO listWithDictionary:serverList];
-					NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
+					//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
 					
 					if (vo != nil)
 						[list addObject:vo];
@@ -436,7 +481,7 @@
 				NSMutableArray *list = [NSMutableArray array];
 				for (NSDictionary *serverList in parsedLists) {
 					SNListVO *vo = [SNListVO listWithDictionary:serverList];
-					NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
+					//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
 					
 					if (vo != nil)
 						[list addObject:vo];
@@ -455,8 +500,8 @@
 				[_userRequest startAsynchronous];			
 			}
 			
-			SNArticleListView_iPhone *articleListView = [[SNArticleListView_iPhone alloc] initWithFrame:CGRectMake(270.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_popularLists objectAtIndex:0]];
-			[_holderView addSubview:articleListView];
+			_discoveryArticlesView = [[SNDiscoveryArticlesView_iPhone alloc] initWithFrame:CGRectMake(270.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_popularLists objectAtIndex:0]];
+			[_holderView addSubview:_discoveryArticlesView];
 		}
 		
 	} else if ([request isEqual:_userRequest]) {
@@ -513,7 +558,7 @@
 					NSMutableArray *list = [NSMutableArray array];
 					for (NSDictionary *serverList in parsedLists) {
 						SNListVO *vo = [SNListVO listWithDictionary:serverList];
-						NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
+						//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
 						
 						if (vo != nil)
 							[list addObject:vo];

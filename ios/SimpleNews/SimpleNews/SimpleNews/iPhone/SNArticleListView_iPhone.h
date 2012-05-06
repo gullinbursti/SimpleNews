@@ -10,8 +10,6 @@
 #import <MessageUI/MessageUI.h>
 
 #import "ASIFormDataRequest.h"
-#import "SNShareSheetView_iPhone.h"
-#import "SNFlippedArticleView_iPhone.h"
 #import "SNListVO.h"
 #import "EGORefreshTableHeaderView.h"
 #import "EGOImageView.h"
@@ -33,9 +31,6 @@
 	
 	BOOL _isFlipped;
 	SNListVO *_vo;
-	
-	SNShareSheetView_iPhone *_shareSheetView;
-	SNFlippedArticleView_iPhone *_flippedView;
 	
 	UIView *_blackMatteView;
 	EGOImageView *_fullscreenImgView;

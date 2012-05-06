@@ -63,7 +63,7 @@
 	subtitleLabel.text = @"from the last 24 hours…";
 	[self.view addSubview:subtitleLabel];
 	
-	_frameTimer = [NSTimer scheduledTimerWithTimeInterval:0.33 target:self selector:@selector(_nextFrame) userInfo:nil repeats:YES];
+	_frameTimer = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(_nextFrame) userInfo:nil repeats:YES];
 }
 
 -(void)viewDidLoad {
@@ -76,11 +76,11 @@
 
 
 -(void)_nextFrame {
-	NSLog(@"TIMER TICK");
+	//NSLog(@"TIMER TICK");
 	
 	_frameIndex++;
 	
-	if (_frameIndex == 7) {
+	if (_frameIndex == 7 * 3) {
 		[_frameTimer invalidate];
 		_frameTimer = nil;
 		
@@ -92,7 +92,7 @@
 		[self.navigationController pushViewController:rootViewController animated:YES];
 	}
 	
-	_logoImgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"logoLoader_00%d.png", _frameIndex]];
+	_logoImgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"logoLoader_00%d.png", (_frameIndex % 6) + 1]];
 }
 
 -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

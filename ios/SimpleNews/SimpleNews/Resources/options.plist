@@ -6,7 +6,7 @@
 		<key>option_id</key>
 		<integer>1</integer>
 		<key>title</key>
-		<string>Push notifications</string>
+		<string>Find Friends</string>
 		<key>url</key>
 		<string></string>
 		<key>info</key>
@@ -16,7 +16,7 @@
 		<key>option_id</key>
 		<integer>2</integer>
 		<key>title</key>
-		<string>Twitter</string>
+		<string>Articles you have read</string>
 		<key>url</key>
 		<string></string>
 		<key>info</key>
@@ -26,7 +26,7 @@
 		<key>option_id</key>
 		<integer>3</integer>
 		<key>title</key>
-		<string>About Assembly</string>
+		<string>Articles you have liked</string>
 		<key>url</key>
 		<string>http://dev.gullinbursti.cc/projs/simplenews/support/about.htm</string>
 		<key>info</key>
@@ -36,7 +36,17 @@
 		<key>option_id</key>
 		<integer>4</integer>
 		<key>title</key>
-		<string>Terms of Serice</string>
+		<string>Following</string>
+		<key>url</key>
+		<string>http://dev.gullinbursti.cc/projs/simplenews/support/tos.htm</string>
+		<key>info</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>option_id</key>
+		<integer>5</integer>
+		<key>title</key>
+		<string>Notifications</string>
 		<key>url</key>
 		<string>http://dev.gullinbursti.cc/projs/simplenews/support/tos.htm</string>
 		<key>info</key>

@@ -10,10 +10,11 @@
 
 #import "SNArticleVO.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
+#import "EGOImageView.h"
 
 #import "ASIFormDataRequest.h"
 
-@interface SNArticleItemView_iPhone : UIView <ASIHTTPRequestDelegate> {
+@interface SNArticleItemView_iPhone : UIView <ASIHTTPRequestDelegate, EGOImageViewDelegate> {
 	SNArticleVO *_vo;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
 	UIButton *_videoButton;

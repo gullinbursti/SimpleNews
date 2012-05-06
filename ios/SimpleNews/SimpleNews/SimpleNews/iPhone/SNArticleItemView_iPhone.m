@@ -11,8 +11,8 @@
 #import "SNArticleItemView_iPhone.h"
 #import "SNAppDelegate.h"
 #import "SNUnderlinedLabel.h"
-
-#import "EGOImageView.h"
+#import "SNWebPageViewController_iPhone.h"
+#import "ImageFilter.h"
 
 @implementation SNArticleItemView_iPhone
 
@@ -68,7 +68,14 @@
 		sourceLabel.textColor = [SNAppDelegate snLinkColor];
 		sourceLabel.backgroundColor = [UIColor clearColor];
 		sourceLabel.text = _vo.articleSource;
-		[self addSubview:sourceLabel];	
+		[self addSubview:sourceLabel];
+		
+		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		sourceButton.frame = CGRectMake(273.0, 16.0, 34.0, 34.0);
+		[sourceButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
+		[sourceButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
+		[sourceButton addTarget:self action:@selector(_goSourcePage) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:sourceButton];
 		
 		offset += 55;
 		
@@ -90,25 +97,25 @@
 			offset += size.height + 35;
 			
 			UIView *btnBGView = [[UIView alloc] initWithFrame:CGRectMake(68.0, offset, 184.0, 35.0)];
-			[btnBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.60]];
+			//[btnBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.60]];
 			btnBGView.layer.cornerRadius = 17.0;
 			[self addSubview:btnBGView];
 			offset += 72;
 			
 			
-			UIButton *readArticleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			readArticleButton.frame = CGRectMake(5.0, -0.0, 94.0, 34.0);
-			[readArticleButton setBackgroundImage:[UIImage imageNamed:@"readArticleButton_nonActive.png"] forState:UIControlStateNormal];
-			[readArticleButton setBackgroundImage:[UIImage imageNamed:@"readArticleButton_Active.png"] forState:UIControlStateHighlighted];
-			[readArticleButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
-			//			[readArticleButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-			//			readArticleButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
-			//			readArticleButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
-			//			[readArticleButton setTitle:@"Read More" forState:UIControlStateNormal];
-			[btnBGView addSubview:readArticleButton];
+			UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+			commentButton.frame = CGRectMake(5.0, 0.0, 94.0, 44.0);
+			[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_nonActive.png"] forState:UIControlStateNormal];
+			[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_Active.png"] forState:UIControlStateHighlighted];
+			[commentButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
+			[commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+			commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+			commentButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
+			[commentButton setTitle:@"Comment" forState:UIControlStateNormal];
+			[btnBGView addSubview:commentButton];
 			
 			_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			_likeButton.frame = CGRectMake(115.0, -5.0, 65.0, 44.0);
+			_likeButton.frame = CGRectMake(115.0, 0.0, 74.0, 44.0);
 			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
 			[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 			[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
@@ -118,7 +125,7 @@
 			[btnBGView addSubview:_likeButton];
 			
 			if (_vo.hasLiked)
-				[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_selected.png"] forState:UIControlStateNormal];
+				[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateNormal];
 			
 			else
 				[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
@@ -126,6 +133,7 @@
 		
 		if (_vo.type_id > 1) {
 			_articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, 270.0 * _vo.imgRatio)];
+			[_articleImgView setDelegate:self];
 			_articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 			_articleImgView.userInteractionEnabled = YES;
 			[self addSubview:_articleImgView];
@@ -172,7 +180,7 @@
 			
 			
 			UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			commentButton.frame = CGRectMake(imgOffset - 10.0, offset - 10.0, 44.0, 44.0);
+			commentButton.frame = CGRectMake(imgOffset - 5.0, offset - 5.0, 34.0, 34.0);
 			[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
 			[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
 			[commentButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
@@ -238,9 +246,12 @@
 }
 
 
--(void)_goAffiliate {
-	NSLog(@"AFFILIATE");
-	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:_vo.affiliateURL]];
+-(void)_goSourcePage {
+	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+								 _vo.article_url, @"url", 
+								 _vo.title, @"title", nil];
+								 
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SOURCE_PAGE" object:dict];
 }
 
 -(void)_goLike {
@@ -311,4 +322,12 @@
 -(void)requestFailed:(ASIHTTPRequest *)request {
 	NSLog(@"SNArticleItem_iPhone [_asiFormRequest error]=\n%@\n\n", [request error]);
 }
+
+#pragma mark - Image View delegates
+-(void)imageViewLoadedImage:(EGOImageView *)imageView {
+	NSLog(@"LOADED [%@]", imageView.imageURL);
+	UIImage *img = imageView.image;
+	imageView.image = [img saturate:(1 + 1 - 0.5)];
+}
+
 @end

@@ -9,6 +9,7 @@
 #import "SNWebPageViewController_iPhone.h"
 
 #import "SNHeaderView_iPhone.h"
+#import "SNNavBackBtnView.h"
 #import "SNAppDelegate.h"
 
 @implementation SNWebPageViewController_iPhone
@@ -34,12 +35,9 @@
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_pageTitle];
 	[self.view addSubview:headerView];
 	
-	UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	backButton.frame = CGRectMake(4.0, 4.0, 44.0, 44.0);
-	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_nonActive.png"] forState:UIControlStateNormal];
-	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_Active.png"] forState:UIControlStateHighlighted];
-	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:backButton];
+	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	[headerView addSubview:backBtnView];
 	
 	_webView = [[UIWebView alloc] initWithFrame:CGRectMake(0.0, 53.0, self.view.frame.size.width, self.view.frame.size.height - 53.0)];
 	[_webView setBackgroundColor:[UIColor clearColor]];

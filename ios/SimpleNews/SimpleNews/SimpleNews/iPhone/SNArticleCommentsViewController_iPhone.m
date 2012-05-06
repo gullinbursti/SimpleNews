@@ -13,6 +13,7 @@
 #import "SNHeaderView_iPhone.h"
 #import "SNCommentVO.h"
 #import "SNAppDelegate.h"
+#import "SNNavBackBtnView.h"
 
 #define kItemHeight 56.0
 
@@ -50,26 +51,20 @@
 -(void)loadView {
 	[super loadView];
 	
+	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
+	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	[self.view addSubview:bgImgView];
+	
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.title];
 	[self.view addSubview:headerView];
 	
-	UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	backButton.frame = CGRectMake(4.0, 4.0, 44.0, 44.0);
-	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_nonActive.png"] forState:UIControlStateNormal];
-	[backButton setBackgroundImage:[UIImage imageNamed:@"backButton_Active.png"] forState:UIControlStateHighlighted];
-	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:backButton];
-	
-	UIButton *reportButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	reportButton.frame = CGRectMake(272.0, 4.0, 44.0, 44.0);
-	[reportButton setBackgroundImage:[UIImage imageNamed:@"reportButton_nonActive.png"] forState:UIControlStateNormal];
-	[reportButton setBackgroundImage:[UIImage imageNamed:@"reportButton_Active.png"] forState:UIControlStateHighlighted];
-	[reportButton addTarget:self action:@selector(_goReport) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:reportButton];
+	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	[headerView addSubview:backBtnView];
 	
 	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 53.0, self.view.frame.size.width, self.view.frame.size.height - 103.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	[_scrollView setBackgroundColor:[UIColor whiteColor]];
+	[_scrollView setBackgroundColor:[UIColor clearColor]];
 	_scrollView.opaque = YES;
 	_scrollView.scrollsToTop = NO;
 	_scrollView.pagingEnabled = NO;
@@ -123,13 +118,6 @@
 	[favButton addTarget:self action:@selector(_goReadLater) forControlEvents:UIControlEventTouchUpInside];
 	[_bgView addSubview:favButton];
 	
-	UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	shareButton.frame = CGRectMake(264.0, 9.0, 34.0, 34.0);
-	[shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_nonActive.png"] forState:UIControlStateNormal];
-	[shareButton setBackgroundImage:[UIImage imageNamed:@"shareButton_Active.png"] forState:UIControlStateHighlighted];
-	[shareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-	[_bgView addSubview:shareButton];
-	
 	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
@@ -164,21 +152,21 @@
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
--(void)_goReport {
-	if ([MFMailComposeViewController canSendMail]) {
-		MFMailComposeViewController *mfViewController = [[MFMailComposeViewController alloc] init];
-		mfViewController.mailComposeDelegate = self;
-		[mfViewController setToRecipients:[NSArray arrayWithObject:@"abuse@getassembly.com"]];
-		[mfViewController setSubject:[NSString stringWithFormat:@"Report Abuse - %@", _vo.title]];
-		[mfViewController setMessageBody:@"There's inappropriate comments in this article." isHTML:NO];
-		
-		[self presentViewController:mfViewController animated:YES completion:nil];
-		
-	} else {
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"Your phone is not currently configured to send mail." delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
-		[alert show];
-	}
-}
+//-(void)_goReport {
+//	if ([MFMailComposeViewController canSendMail]) {
+//		MFMailComposeViewController *mfViewController = [[MFMailComposeViewController alloc] init];
+//		mfViewController.mailComposeDelegate = self;
+//		[mfViewController setToRecipients:[NSArray arrayWithObject:@"abuse@getassembly.com"]];
+//		[mfViewController setSubject:[NSString stringWithFormat:@"Report Abuse - %@", _vo.title]];
+//		[mfViewController setMessageBody:@"There's inappropriate comments in this article." isHTML:NO];
+//		
+//		[self presentViewController:mfViewController animated:YES completion:nil];
+//		
+//	} else {
+//		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"Your phone is not currently configured to send mail." delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+//		[alert show];
+//	}
+//}
 
 -(void)_goLike {
 	_isLiked = YES;

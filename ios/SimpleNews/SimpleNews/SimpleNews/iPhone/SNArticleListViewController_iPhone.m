@@ -23,6 +23,7 @@
 #import "SNAppDelegate.h"
 #import "SNTweetVO.h"
 
+#import "SNArticleSourcesViewController_iPhone.h"
 #import "SNWebPageViewController_iPhone.h"
 
 @interface SNArticleListViewController_iPhone()
@@ -37,15 +38,11 @@
 	if ((self = [super init])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showComments:) name:@"SHOW_COMMENTS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_leaveArticles:) name:@"LEAVE_ARTICLES" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_shareSheet:) name:@"SHARE_SHEET" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showFullscreenMedia:) name:@"SHOW_FULLSCREEN_MEDIA" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideFullscreenMedia:) name:@"HIDE_FULLSCREEN_MEDIA" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_readLater:) name:@"READ_LATER" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterShare:) name:@"TWITTER_SHARE" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_emailShare:) name:@"EMAIL_SHARE" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cancelShare:) name:@"CANCEL_SHARE" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
@@ -88,11 +85,6 @@
 
 -(void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LEAVE_ARTICLES" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHARE_SHEET" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FACEBOOK_SHARE" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"TWITTER_SHARE" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"EMAIL_SHARE" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"CANCEL_SHARE" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"START_TIMER" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"STOP_TIMER" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_TWITTER_PROFILE" object:nil];
@@ -149,15 +141,10 @@
 	[_doneButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 	_doneButton.alpha = 0.0;
 	
-	_flippedView = [[SNFlippedArticleView_iPhone alloc] initWithFrame:self.view.frame listVO:_vo];
-	
 	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
 	_blackMatteView.alpha = 0.0;
 	[self.view addSubview:_blackMatteView];
-	
-	_shareSheetView = [[SNShareSheetView_iPhone alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
-	[self.view addSubview:_shareSheetView];
 	
 	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
@@ -198,17 +185,19 @@
 
 
 #pragma mark - Navigation
--(void)_goBack {
-	NSLog(@"DERP");
-	
+-(void)_goBack {	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"ARTICLES_RETURN" object:nil];	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)_goFlip {
-	_isFlipped = !_isFlipped;	
+	_isFlipped = !_isFlipped;
 	
+	
+	[self.navigationController pushViewController:[[SNArticleSourcesViewController_iPhone alloc] init] animated:YES];
+	
+	/*
 	if (_isFlipped) {
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationDuration:0.4];
@@ -236,6 +225,7 @@
 			[_flippedView removeFromSuperview];
 		}];
 	}
+	 */
 }
 
 #pragma mark - Notification handlers
@@ -293,19 +283,6 @@
 	[self.navigationController pushViewController:[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object] listID:_vo.list_id] animated:YES];
 }
 
--(void)_shareSheet:(NSNotification *)notification {
-	SNArticleVO *vo = (SNArticleVO *)[notification object];
-	[_shareSheetView setVo:vo];
-	
-	_blackMatteView.hidden = NO;
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_blackMatteView.alpha = 0.67;
-		_shareSheetView.frame = CGRectMake(0.0, self.view.frame.size.height - _shareSheetView.frame.size.height, _shareSheetView.frame.size.width, _shareSheetView.frame.size.height);
-		
-	} completion:^(BOOL finished) {
-	}];
-}
-
 
 -(void)_readLater:(NSNotification *)notification {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CANCEL_SHARE" object:nil];	
@@ -346,42 +323,6 @@
 	};
 }
 
--(void)_emailShare:(NSNotification *)notification {
-	SNArticleVO *vo = (SNArticleVO *)[notification object];
-	
-	if ([MFMailComposeViewController canSendMail]) {
-		MFMailComposeViewController *mfViewController = [[MFMailComposeViewController alloc] init];
-		mfViewController.mailComposeDelegate = self;
-		[mfViewController setSubject:[NSString stringWithFormat:@"Assembly - %@", vo.title]];
-		[mfViewController setMessageBody:vo.content isHTML:NO];
-		
-		[self presentViewController:mfViewController animated:YES completion:nil];
-		
-		ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
-		[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-		[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-		[readRequest setPostValue:[NSString stringWithFormat:@"%d", vo.article_id] forKey:@"articleID"];
-		[readRequest setDelegate:self];
-		[readRequest startAsynchronous];
-		
-	} else {
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"Your phone is not currently configured to send mail." delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
-		
-		[alert show];
-	}
-}
-
--(void)_cancelShare:(NSNotification *)notification {
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_blackMatteView.alpha = 0.0;
-		_shareSheetView.frame = CGRectMake(0.0, self.view.frame.size.height, _shareSheetView.frame.size.width, _shareSheetView.frame.size.height);
-		
-	} completion:^(BOOL finished) {
-		_blackMatteView.hidden = YES;
-	}];
-}
-
 -(void)_twitterTimeline:(NSNotification *)notification {
 	_timelineTweets = (NSMutableArray *)[notification object];
 }
@@ -399,7 +340,7 @@
 }
 
 -(void)_showSourcePage:(NSNotification *)notification {
-	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""];
+	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[[notification object] objectForKey:@"url"]] title:[[notification object] objectForKey:@"title"]];
 	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
@@ -434,42 +375,9 @@
 	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
-#pragma mark - MailComposeViewController Delegates
--(void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"" delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
-	
-	switch (result) {
-		case MFMailComposeResultCancelled:
-			alert.message = @"Message Canceled";
-			break;
-			
-		case MFMailComposeResultSaved:
-			alert.message = @"Message Saved";
-			[alert show];
-			break;
-			
-		case MFMailComposeResultSent:
-			alert.message = @"Message Sent";
-			break;
-			
-		case MFMailComposeResultFailed:
-			alert.message = @"Message Failed";
-			[alert show];
-			break;
-			
-		default:
-			alert.message = @"Message Not Sent";
-			[alert show];
-			break;
-	}
-	
-	[self dismissViewControllerAnimated:YES completion:nil];
-}
-
-
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
-	NSLog(@"SNArticleListViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	//NSLog(@"SNArticleListViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
 	if ([request isEqual:_articlesRequest]) {
 		@autoreleasepool {

@@ -159,7 +159,7 @@
 			NSMutableArray *list = [NSMutableArray array];
 			for (NSDictionary *serverInfluencer in parsedInfluencers) {
 				SNInfluencerVO *vo = [SNInfluencerVO influencerWithDictionary:serverInfluencer];
-				NSLog(@"LIST \"@%@\" ((%d))", vo.handle, vo.isApproved);
+				//NSLog(@"LIST \"@%@\" ((%d))", vo.handle, vo.isApproved);
 				
 				if (vo != nil)
 					[list addObject:vo];

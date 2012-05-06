@@ -13,9 +13,13 @@
 
 #import "SNAppDelegate.h"
 #import "SNHeaderView_iPhone.h"
+#import "SNNavBackBtnView.h"
+#import "SNNavShareBtnView.h"
 #import "SNArticleCommentsViewController_iPhone.h"
-#import "SNArticleDetailsFooterView_iPhone.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
+#import "SNWebPageViewController_iPhone.h"
+
+#import "ImageFilter.h"
 
 @implementation SNArticleDetailsViewController_iPhone
 
@@ -30,7 +34,9 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_uiThemedLight:) name:@"UI_THEMED_LIGHT" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_detailsShowComments:) name:@"DETAILS_SHOW_COMMENTS" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_detailsShowShare:) name:@"DETAILS_SHOW_SHARE" object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterShare:) name:@"TWITTER_SHARE" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_emailShare:) name:@"EMAIL_SHARE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_cancelShare:) name:@"CANCEL_SHARE" object:nil];
 		
 		NSError *error;
@@ -62,7 +68,18 @@
 	_darkBGImgView.image = [UIImage imageNamed:@"background_stripes.png"];
 	[self.view addSubview:_darkBGImgView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height - 0.0)];
+	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.title];
+	[self.view addSubview:headerView];
+	
+	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	[headerView addSubview:backBtnView];
+	
+	SNNavShareBtnView *shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+	[[shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+	[headerView addSubview:shareBtnView];
+	
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 49.0, self.view.frame.size.width, self.view.frame.size.height - 49.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	
 	if ([SNAppDelegate isDarkStyleUI])
@@ -77,13 +94,6 @@
 	_scrollView.pagingEnabled = NO;
 	_scrollView.showsVerticalScrollIndicator = NO;
 	[self.view addSubview:_scrollView];
-	
-	_articleOptionsView = [[SNArticleOptionsView_iPhone alloc] init];
-	_articleOptionsView.hidden = YES;
-	[self.view addSubview:_articleOptionsView];
-	
-	SNArticleDetailsFooterView_iPhone *footerView = [[SNArticleDetailsFooterView_iPhone alloc] init];
-	[self.view addSubview:footerView];
 	
 	_toggleLtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 13.0, 164.0, 34.0)];
 	_toggleLtImgView.image = [UIImage imageNamed:@"toggleBGLeft.png"];
@@ -130,20 +140,13 @@
 	toggleButton.frame = _toggleLtImgView.frame;
 	[toggleButton addTarget:self action:@selector(_goTextToggle) forControlEvents:UIControlEventTouchUpInside];
 	[_scrollView addSubview:toggleButton];
-	
-	UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	backButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
-	[backButton setBackgroundImage:[UIImage imageNamed:@"topLeft_nonActive.png"] forState:UIControlStateNormal];
-	[backButton setBackgroundImage:[UIImage imageNamed:@"topLeft_Active.png"] forState:UIControlStateHighlighted];
-	[backButton addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:backButton];
-	
+		
 	_viewOptionsButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_viewOptionsButton.frame = CGRectMake(264.0, 8.0, 44.0, 44.0);
 	[_viewOptionsButton setBackgroundImage:[UIImage imageNamed:@"fontButton_nonActive.png"] forState:UIControlStateNormal];
 	[_viewOptionsButton setBackgroundImage:[UIImage imageNamed:@"fontButton_Active.png"] forState:UIControlStateHighlighted];
 	[_viewOptionsButton addTarget:self action:@selector(_goOptions) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:_viewOptionsButton];
+	//[self.view addSubview:_viewOptionsButton];
 	
 	int offset = 70;
 	EGOImageView *thumbImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, offset, 24.0, 24.0)];
@@ -232,13 +235,23 @@
 	offset += size.height + 38;
 	
 	_btnBGView = [[UIView alloc] initWithFrame:CGRectMake(68.0, offset, 184.0, 35.0)];
-	[_btnBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.60]];
 	_btnBGView.layer.cornerRadius = 17.0;
 	[_scrollView addSubview:_btnBGView];
 	offset += 34;
 	
+	UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	commentButton.frame = CGRectMake(5.0, 0.0, 94.0, 44.0);
+	[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_nonActive.png"] forState:UIControlStateNormal];
+	[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_Active.png"] forState:UIControlStateHighlighted];
+	[commentButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
+	[commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+	commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+	commentButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
+	[commentButton setTitle:@"Comment" forState:UIControlStateNormal];
+	[_btnBGView addSubview:commentButton];
+	
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_likeButton.frame = CGRectMake(5.0, -5.0, 65.0, 44.0);
+	_likeButton.frame = CGRectMake(115.0, 0.0, 74.0, 44.0);
 	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
@@ -248,26 +261,16 @@
 	[_btnBGView addSubview:_likeButton];
 	
 	if (_vo.hasLiked)
-		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_selected.png"] forState:UIControlStateNormal];
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateNormal];
 	
 	else
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
-	
-	UIButton *readArticleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	readArticleButton.frame = CGRectMake(85.0, 0.0, 94.0, 34.0);
-	[readArticleButton setBackgroundImage:[UIImage imageNamed:@"readArticleButton_nonActive.png"] forState:UIControlStateNormal];
-	[readArticleButton setBackgroundImage:[UIImage imageNamed:@"readArticleButton_Active.png"] forState:UIControlStateHighlighted];
-	[readArticleButton addTarget:self action:@selector(_goReadLater) forControlEvents:UIControlEventTouchUpInside];
-	[readArticleButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-	readArticleButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
-	readArticleButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
-	//[readArticleButton setTitle:@"Purchase" forState:UIControlStateNormal];
-	[_btnBGView addSubview:readArticleButton];
 	
 	
 	offset += 38;
 	
 	_articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, 270.0 * _vo.imgRatio)];
+	_articleImgView.delegate = self;
 	_articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 	[_scrollView addSubview:_articleImgView];
 	offset += (270.0 * _vo.imgRatio);
@@ -335,6 +338,7 @@
 	[self.view addSubview:_blackMatteView];
 	
 	_shareSheetView = [[SNShareSheetView_iPhone alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height, self.view.frame.size.width, 339.0)];
+	[_shareSheetView setVo:_vo];
 	[self.view addSubview:_shareSheetView];
 	
 	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
@@ -356,6 +360,12 @@
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
+-(void)_goTwitterProfile {
+	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/", _vo.twitterHandle]] title:[NSString stringWithFormat:@"@%@", _vo.twitterHandle]];
+	[self.navigationController setNavigationBarHidden:YES];
+	[self.navigationController pushViewController:webPageViewController animated:YES];
+}
+
 -(void)_goAffiliate {
 	NSLog(@"AFFILIATE");
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:_vo.affiliateURL]];
@@ -370,29 +380,14 @@
 	_sourceWebView.hidden = _isTextView;
 }
 
--(void)_goOptions {
-	_isOptions = !_isOptions;
-	
-	if (_isOptions) {
-		_articleOptionsView.hidden = NO;
-		[_viewOptionsButton setBackgroundImage:[UIImage imageNamed:@"fontButton_Selected.png"] forState:UIControlStateNormal];
+-(void)_goShare {
+	_blackMatteView.hidden = NO;
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_blackMatteView.alpha = 0.67;
+		_shareSheetView.frame = CGRectMake(0.0, self.view.frame.size.height - _shareSheetView.frame.size.height, _shareSheetView.frame.size.width, _shareSheetView.frame.size.height);
 		
-		[UIView animateWithDuration:0.33 animations:^(void) {
-			_articleOptionsView.frame = CGRectMake(_articleOptionsView.frame.origin.x, 53.0, _articleOptionsView.frame.size.width, _articleOptionsView.frame.size.height);
-			_scrollView.contentOffset = CGPointMake(0.0, -_articleOptionsView.frame.size.height);
-			//_scrollView.frame = CGRectMake(0.0, _scrollView.frame.origin.y + _articleOptionsView.frame.size.height, _scrollView.frame.size.width, _scrollView.frame.size.height);
-		}];
-		
-	} else {
-		_articleOptionsView.hidden = YES;
-		[_viewOptionsButton setBackgroundImage:[UIImage imageNamed:@"fontButton_nonActive.png"] forState:UIControlStateNormal];
-		
-		[UIView animateWithDuration:0.33 animations:^(void) {
-			_articleOptionsView.frame = CGRectMake(_articleOptionsView.frame.origin.x, -26.0, _articleOptionsView.frame.size.width, _articleOptionsView.frame.size.height);
-			_scrollView.contentOffset = CGPointZero;
-			//_scrollView.frame = CGRectMake(0.0, _scrollView.frame.origin.y - _articleOptionsView.frame.size.height, _scrollView.frame.size.width, _scrollView.frame.size.height);
-		}];
-	}
+	} completion:^(BOOL finished) {
+	}];
 }
 
 -(void)_goLike {
@@ -404,8 +399,8 @@
 	[readRequest setDelegate:self];
 	[readRequest startAsynchronous];
 	
-	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_selected.png"] forState:UIControlStateNormal];
-	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_selected.png"] forState:UIControlStateHighlighted];
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateNormal];
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateHighlighted];
 	[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	
 	ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
@@ -493,22 +488,6 @@
 	[self.navigationController pushViewController:[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:_vo listID:_vo.list_id] animated:YES];
 }
 
--(void)_detailsShowShare:(NSNotification *)notification {
-	[_shareSheetView setVo:_vo];
-	
-	_blackMatteView.hidden = NO;
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_blackMatteView.alpha = 0.67;
-		_shareSheetView.frame = CGRectMake(0.0, self.view.frame.size.height - _shareSheetView.frame.size.height, _shareSheetView.frame.size.width, _shareSheetView.frame.size.height);
-		
-	} completion:^(BOOL finished) {
-	}];
-}
-
-
--(void)_facebookShare:(NSNotification *)notification {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"CANCEL_SHARE" object:nil];	
-}
 -(void)_twitterShare:(NSNotification *)notification {
 	SNArticleVO *vo = (SNArticleVO *)[notification object];
 	
@@ -614,6 +593,47 @@
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {	
 	NSLog(@"didFailLoadWithError:[%@]", error);
+}
+
+
+#pragma mark - MailComposeViewController Delegates
+-(void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"" delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+	
+	switch (result) {
+		case MFMailComposeResultCancelled:
+			alert.message = @"Message Canceled";
+			break;
+			
+		case MFMailComposeResultSaved:
+			alert.message = @"Message Saved";
+			[alert show];
+			break;
+			
+		case MFMailComposeResultSent:
+			alert.message = @"Message Sent";
+			break;
+			
+		case MFMailComposeResultFailed:
+			alert.message = @"Message Failed";
+			[alert show];
+			break;
+			
+		default:
+			alert.message = @"Message Not Sent";
+			[alert show];
+			break;
+	}
+	
+	[self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+#pragma mark - Image View delegates
+-(void)imageViewLoadedImage:(EGOImageView *)imageView {
+	NSLog(@"LOADED [%@]", imageView.imageURL);
+	UIImage *img = imageView.image;
+	imageView.image = [img saturate:(1 + 1 - 0.5)];
 }
 
 @end

@@ -11,15 +11,13 @@
 
 #import "SNArticleVO.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
-#import "SNArticleOptionsView_iPhone.h"
 #import "SNUnderlinedLabel.h"
 
 #import "SNShareSheetView_iPhone.h"
 
-@interface SNArticleDetailsViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIWebViewDelegate> {
+@interface SNArticleDetailsViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIWebViewDelegate, EGOImageViewDelegate> {
 	SNArticleVO *_vo;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
-	SNArticleOptionsView_iPhone *_articleOptionsView;
 	
 	UIScrollView *_scrollView;
 	UIWebView *_webView;

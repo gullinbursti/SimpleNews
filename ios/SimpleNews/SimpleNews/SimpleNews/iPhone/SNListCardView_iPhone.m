@@ -69,8 +69,8 @@
 		[btnBGView addSubview:_subscribeBtn];
 		
 		UIButton *likesButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		likesButton.frame = CGRectMake(115.0, -5.0, 65.0, 44.0);
-		[likesButton setBackgroundImage:[UIImage imageNamed:@"likeButton_selected.png"] forState:UIControlStateNormal];
+		likesButton.frame = CGRectMake(115.0, -5.0, 74.0, 44.0);
+		[likesButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateNormal];
 		[likesButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 		likesButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
 		likesButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);

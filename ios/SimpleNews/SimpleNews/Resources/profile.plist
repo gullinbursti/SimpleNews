@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>option_id</key>
+		<integer>1</integer>
+		<key>title</key>
+		<string>Push notifications</string>
+		<key>url</key>
+		<string></string>
+		<key>info</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>option_id</key>
+		<integer>2</integer>
+		<key>title</key>
+		<string>Twitter</string>
+		<key>url</key>
+		<string></string>
+		<key>info</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>option_id</key>
+		<integer>3</integer>
+		<key>title</key>
+		<string>About Assembly</string>
+		<key>url</key>
+		<string>http://dev.gullinbursti.cc/projs/simplenews/support/about.htm</string>
+		<key>info</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>option_id</key>
+		<integer>4</integer>
+		<key>title</key>
+		<string>Terms of Serice</string>
+		<key>url</key>
+		<string>http://dev.gullinbursti.cc/projs/simplenews/support/tos.htm</string>
+		<key>info</key>
+		<string></string>
+	</dict>
+</array>
+</plist>

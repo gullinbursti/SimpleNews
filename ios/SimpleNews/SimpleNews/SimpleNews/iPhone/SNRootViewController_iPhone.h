@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ASIFormDataRequest.h"
 #import "EGORefreshTableHeaderView.h"
+#import "SNDiscoveryArticlesView_iPhone.h"
 
 @interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate> {
 	ASIFormDataRequest *_userRequest;
@@ -20,7 +21,7 @@
 	
 	EGORefreshTableHeaderView *_subscribedHeaderView;
 	EGORefreshTableHeaderView *_popularHeaderView;
-	
+	SNDiscoveryArticlesView_iPhone *_discoveryArticlesView;
 	
 	NSMutableArray *_subscribedLists;
 	NSMutableArray *_popularLists;

@@ -16,8 +16,8 @@
 	if ((self = [super initWithFrame:frame])) {
 		_btn = [UIButton buttonWithType:UIButtonTypeCustom];
 		_btn.frame = CGRectMake(0.0, 0.0, frame.size.width, frame.size.height);
-		[_btn setBackgroundImage:[UIImage imageNamed:@"backArrowButton_nonActive.png"] forState:UIControlStateNormal];
-		[_btn setBackgroundImage:[UIImage imageNamed:@"backArrowButton_Active.png"] forState:UIControlStateHighlighted];		
+		[_btn setBackgroundImage:[UIImage imageNamed:@"shareButton_nonActive.png"] forState:UIControlStateNormal];
+		[_btn setBackgroundImage:[UIImage imageNamed:@"shareButton_Active.png"] forState:UIControlStateHighlighted];		
 		[self addSubview:_btn];
 	}
 	

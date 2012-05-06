@@ -27,7 +27,7 @@
 		NSMutableArray *list = [NSMutableArray array];
 		for (NSDictionary *serverList in parsedLists) {
 			SNListVO *vo = [SNListVO listWithDictionary:serverList];
-			NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
+			//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
 			
 			if (vo != nil)
 				[list addObject:vo];
