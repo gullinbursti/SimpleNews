@@ -1,18 +1,16 @@
 //
-//  SNRootListViewCell_iPhone.m
+//  SNBaseRootListViewCell_iPhone.m
 //  SimpleNews
 //
-//  Created by Matthew Holcombe on 04.16.12.
+//  Created by Matthew Holcombe on 05.07.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
 #import <QuartzCore/QuartzCore.h>
-
-#import "SNRootListViewCell_iPhone.h"
+#import "SNBaseRootListViewCell_iPhone.h"
 #import "SNAppDelegate.h"
 
-
-@implementation SNRootListViewCell_iPhone
+@implementation SNBaseRootListViewCell_iPhone
 
 @synthesize listVO = _listVO;
 
@@ -27,13 +25,6 @@
 		_nameLabel.textColor = [UIColor blackColor];
 		_nameLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_nameLabel];
-		
-		_followButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_followButton.frame = CGRectMake(200.0, 10.0, 44.0, 44.0);
-		[_followButton setBackgroundImage:[UIImage imageNamed:@"followIcon_nonActive.png"] forState:UIControlStateNormal];
-		[_followButton setBackgroundImage:[UIImage imageNamed:@"followIcon_Active.png"] forState:UIControlStateHighlighted];
-		[_followButton addTarget:self action:@selector(_goToggleFollow) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:_followButton];
 		
 		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15.0, 50.0, self.frame.size.width - 30.0, 2.0)];
 		UIImage *img = [UIImage imageNamed:@"line.png"];
@@ -54,17 +45,7 @@
 #pragma mark - Accessors
 - (void)setListVO:(SNListVO *)listVO {
 	_listVO = listVO;
-	
 	_nameLabel.text = _listVO.list_name;
-	
-	if (_listVO.isSubscribed)
-		[_followButton setBackgroundImage:[UIImage imageNamed:@"followIcon_Selected.png"] forState:UIControlStateNormal];
-}
-
-
-#pragma mark - Navigation
--(void)_goToggleFollow {
-	
 }
 
 @end

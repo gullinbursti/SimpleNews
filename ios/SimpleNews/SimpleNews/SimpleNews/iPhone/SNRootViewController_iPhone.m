@@ -7,6 +7,7 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
+#import "GANTracker.h"
 
 #import "SNRootViewController_iPhone.h"
 #import "SNListVO.h"
@@ -15,7 +16,9 @@
 #import "SNProfileViewController_iPhone.h"
 #import "SNWebPageViewController_iPhone.h"
 #import "SNHeaderView_iPhone.h"
-#import "SNRootListViewCell_iPhone.h"
+#import "SNBaseRootListViewCell_iPhone.h"
+#import "SNAnyListViewCell_iPhone.h"
+#import "SNFollowingListViewCell_iPhone.h"
 #import "SNAppDelegate.h"
 #import "SNArticleListViewController_iPhone.h"
 #import "SNArticleListView_iPhone.h"
@@ -38,13 +41,15 @@
 		_isIntro = YES;
 		_isFollowingList = YES;
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_listArticles:) name:@"LIST_ARTICLES" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshSubscribedList:) name:@"REFRESH_SUBSCRIBED_LIST" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleSources:) name:@"SHOW_ARTICLE_SOURCES" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showComments:) name:@"SHOW_COMMENTS" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_articlesReturn:) name:@"ARTICLES_RETURN" object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_listSubscribe:) name:@"LIST_SUBSCRIBE" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_listUnsubscribe:) name:@"LIST_UNSUBSCRIBE" object:nil];
 		
 		_popularListsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 		[_popularListsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
@@ -297,12 +302,6 @@
 	}];
 }
 
--(void)_listArticles:(NSNotification *)notification {
-	SNArticleListViewController_iPhone *articleListViewController = [[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[notification object]];
-	[self.navigationController setNavigationBarHidden:YES];
-	[self.navigationController pushViewController:articleListViewController animated:YES];
-}
-
 -(void)_showComments:(NSNotification *)notification {
 	SNArticleCommentsViewController_iPhone *articleCommentsViewController = [[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object] listID:0];
 	[self.navigationController setNavigationBarHidden:YES];
@@ -326,6 +325,56 @@
 }
 
 
+-(void)_listSubscribe:(NSNotification *)notification {
+	//NSLog(@"SUBSCRIBING");
+	
+	if (![SNAppDelegate twitterHandle]) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		
+		[alert show];
+		
+	} else {
+		SNListVO *vo = (SNListVO *)[notification object];
+		
+		ASIFormDataRequest *subscribeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
+		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+		[subscribeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", vo.list_id] forKey:@"listID"];
+		[subscribeRequest setDelegate:self];
+		[subscribeRequest startAsynchronous];
+		
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackEvent:@"Following Topic" action:vo.list_name label:nil value:-1 withError:&error])
+			NSLog(@"error in trackEvent");
+	}
+} 
+
+
+-(void)_listUnsubscribe:(NSNotification *)notification {
+	//NSLog(@"UNSUBSCRIBING");
+	
+	if (![SNAppDelegate twitterHandle]) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		
+		[alert show];
+		
+	} else {
+		SNListVO *vo = (SNListVO *)[notification object];
+		
+		ASIFormDataRequest *subscribeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
+		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
+		[subscribeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", vo.list_id] forKey:@"listID"];
+		[subscribeRequest setDelegate:self];
+		[subscribeRequest startAsynchronous];
+		
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackEvent:@"Unfollowed Topic" action:vo.list_name label:nil value:-1 withError:&error])
+			NSLog(@"error in trackEvent");
+	}
+}
+
+
 
 #pragma mark - TableView DataSource Delegates
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -343,20 +392,38 @@
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	SNRootListViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNRootListViewCell_iPhone cellReuseIdentifier]];
 	
-	if (cell == nil)
-		cell = [[SNRootListViewCell_iPhone alloc] init];
-	
-	if ([tableView isEqual:_subscribedTableView])
+	if ([tableView isEqual:_subscribedTableView]) {
+		SNFollowingListViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNFollowingListViewCell_iPhone cellReuseIdentifier]];
+		
+		if (cell == nil)
+			cell = [[SNFollowingListViewCell_iPhone alloc] init];
+			
 		cell.listVO = (SNListVO *)[_subscribedLists objectAtIndex:indexPath.row];
+		[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+		return cell;	
 	
-	else
+	} else if ([tableView isEqual:_popularTableView]) {
+		SNAnyListViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNAnyListViewCell_iPhone cellReuseIdentifier]];
+		
+		if (cell == nil)
+			cell = [[SNAnyListViewCell_iPhone alloc] init];
+		
 		cell.listVO = (SNListVO *)[_popularLists objectAtIndex:indexPath.row];
+		[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+		return cell;	
+	}
 	
-	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-	
-	return cell;	
+	return (nil);
+}
+
+-(void)tableView:(UITableView*)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+}
+
+
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+	if (editingStyle == UITableViewCellEditingStyleDelete)
+		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade]; 
 }
 
 
@@ -434,7 +501,6 @@
 
 
 #pragma mark - ASI Delegates
-
 -(void)requestFinished:(ASIHTTPRequest *)request { 
 	//NSLog(@"SNRootViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
@@ -571,7 +637,9 @@
 			
 			[self doneLoadingTableViewData];
 		}
-	}
+	
+	} else
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_SUBSCRIBED_LIST" object:nil];
 }
 
 

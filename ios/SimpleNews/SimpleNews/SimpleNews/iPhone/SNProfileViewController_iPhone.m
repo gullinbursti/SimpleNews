@@ -14,6 +14,7 @@
 #import "SNAppDelegate.h"
 #import "EGOImageView.h"
 #import "SNWebPageViewController_iPhone.h"
+#import "SNProfileArticlesViewController_iPhone.h"
 
 @implementation SNProfileViewController_iPhone
 -(id)init {
@@ -159,16 +160,35 @@
 
 -(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-	if (indexPath.row == 0 || indexPath.row == 1)
+	if (indexPath.row == [_items count] - 1)
 		return (nil);
 	
 	return (indexPath);
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	NSLog(@"SELECTED");
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
 	
-	NSLog(@"SELECTED");
+	switch (indexPath.row) {
+		case 0:
+			break;
+			
+		case 1: // read
+			[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initAsArticlesRead] animated:YES];
+			break;
+			
+		case 2: // liked
+			[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initAsArticlesLiked] animated:YES];
+			break;
+			
+		case 3: // following
+			break;
+			
+		default:
+			break;
+	}
+	
 }
 
 

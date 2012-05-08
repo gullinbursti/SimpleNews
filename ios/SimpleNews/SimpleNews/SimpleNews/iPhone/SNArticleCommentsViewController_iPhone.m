@@ -75,6 +75,11 @@
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
 	[self.view addSubview:_scrollView];
 	
+	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+	_refreshHeaderView.delegate = self;
+	[_scrollView addSubview:_refreshHeaderView];
+	[_refreshHeaderView refreshLastUpdatedDate];
+	
 	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 50.0, self.view.frame.size.width, 50.0)];
 	[_bgView setBackgroundColor:[UIColor colorWithWhite:0.914 alpha:1.0]];
 	[self.view addSubview:_bgView];
@@ -147,6 +152,30 @@
 	[super viewDidUnload];
 }
 
+
+- (void)reloadTableViewDataSource {
+	_reloading = YES;
+	
+	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+	
+//	_updateRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
+//	[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
+//	[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+//	[_updateRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles objectAtIndex:0]).added] forKey:@"datetime"];
+//	[_updateRequest setDelegate:self];
+//	[_updateRequest startAsynchronous];
+	
+	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:0.33];
+}
+
+- (void)doneLoadingTableViewData {
+	_reloading = NO;
+	
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_scrollView];
+}
+
+
 #pragma mark - Navigation
 -(void)_goBack {
 	[self.navigationController popViewControllerAnimated:YES];
@@ -192,7 +221,8 @@
 
 #pragma mark - ScrollView Delegates
 // any offset changes
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {	
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
 }
 
 
@@ -203,10 +233,12 @@
 
 // called on finger up if the user dragged. velocity is in points/second. targetContentOffset may be changed to adjust where the scroll view comes to rest. not called when pagingEnabled is YES
 -(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 // called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 
@@ -221,6 +253,21 @@
 // called when scroll view grinds to a halt
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
 }
+
+
+#pragma mark EGORefreshTableHeaderDelegate Methods
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
+	[self reloadTableViewDataSource];
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView *)view {
+	return _reloading; // should return if data source model is reloading
+}
+
+- (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView *)view {
+	return [NSDate date]; // should return date data source was last change	
+}
+
 
 #pragma mark - TextField Delegates
 -(void)textFieldDidBeginEditing:(UITextField *)textField {

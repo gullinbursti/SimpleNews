@@ -11,10 +11,12 @@
 
 #import "ASIFormDataRequest.h"
 #import "SNArticleVO.h"
+#import "EGORefreshTableHeaderView.h"
 
-@interface SNArticleCommentsViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, UITextFieldDelegate, ASIHTTPRequestDelegate>{
+@interface SNArticleCommentsViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, UITextFieldDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate>{
 	SNArticleVO *_vo;
 	ASIFormDataRequest *_commentSubmitRequest;
+	EGORefreshTableHeaderView *_refreshHeaderView;
 	
 	UIScrollView *_scrollView;
 	UIImageView *_commentsBGImgView;
@@ -27,6 +29,7 @@
 	int _list_id;
 	int _commentOffset;
 	BOOL _isLiked;
+	BOOL _reloading;
 }
 
 -(id)initWithArticleVO:(SNArticleVO *)vo listID:(int)listID;

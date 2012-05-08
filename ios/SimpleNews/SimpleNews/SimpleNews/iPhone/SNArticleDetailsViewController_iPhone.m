@@ -371,6 +371,10 @@
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:_vo.affiliateURL]];
 }
 
+-(void)_goComment {
+	[self.navigationController pushViewController:[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:_vo listID:_vo.list_id] animated:YES];
+}
+
 -(void)_goTextToggle {
 	_isTextView = !_isTextView;
 	

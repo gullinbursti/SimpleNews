@@ -50,8 +50,6 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterTimeline:) name:@"TWITTER_TIMELINE" object:nil];
 		
-		_isFlipped = NO;
-		
 		_articles = [NSMutableArray new];
 		_cardViews = [NSMutableArray new];
 		_timelineTweets = [NSMutableArray new];
@@ -101,7 +99,7 @@
 	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[self.view addSubview:bgImgView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height - 0.0)];
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 49.0, self.view.frame.size.width, self.view.frame.size.height - 49.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	_scrollView.opaque = YES;
 	_scrollView.scrollsToTop = NO;
@@ -128,18 +126,18 @@
 	[[logoBtnView btn] addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:logoBtnView];
 	
-	
-	_doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_doneButton.frame = CGRectMake(250.0, 3.0, 64.0, 48.0);
-	[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_nonActive.png"] forState:UIControlStateNormal];
-	[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_Active.png"] forState:UIControlStateHighlighted];
-	_doneButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
-	_doneButton.titleLabel.textAlignment = UITextAlignmentCenter;
-	[_doneButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-	[_doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-	[_doneButton setTitle:@"Done" forState:UIControlStateNormal];
-	[_doneButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
-	_doneButton.alpha = 0.0;
+	if (!_vo.isSubscribed) {
+		_subscribeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+		_subscribeBtn.frame = CGRectMake(210.0, 50.0, 105.0, 44.0);
+		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followTopicButton_nonActive.png"] forState:UIControlStateNormal];
+		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followTopicButton_Active.png"] forState:UIControlStateHighlighted];
+		[_subscribeBtn setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		_subscribeBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11.0];
+		_subscribeBtn.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, -10.0);
+		[_subscribeBtn setTitle:@"Follow Topic" forState:UIControlStateNormal];
+		[_subscribeBtn addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
+		[self.view addSubview:_subscribeBtn];
+	}
 	
 	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
@@ -192,41 +190,30 @@
 }
 
 -(void)_goFlip {
-	_isFlipped = !_isFlipped;
-	
-	
 	[self.navigationController pushViewController:[[SNArticleSourcesViewController_iPhone alloc] init] animated:YES];
-	
-	/*
-	if (_isFlipped) {
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:0.4];
-		[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight forView:self.view cache:YES];
-		[UIView commitAnimations];
-		[self.view addSubview:_flippedView];
+}
+
+-(void)_goSubscribe {
+	if (![SNAppDelegate twitterHandle]) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		
-		[UIView animateWithDuration:0.25 delay:0.4 options:UIViewAnimationOptionAllowUserInteraction animations:^(void) {
-			[self.view addSubview:_doneButton];
-			_doneButton.alpha = 1.0;
-		} completion:nil];
-		
+		[alert show];
 		
 	} else {
-		[UIView animateWithDuration:0.25 animations:^(void) {
-			_doneButton.alpha = 0.0;
-			
-		} completion:^(BOOL finished) {
-			[_doneButton removeFromSuperview];
-			
-			[UIView beginAnimations:nil context:nil];
-			[UIView setAnimationDuration:0.4];
-			[UIView setAnimationTransition:UIViewAnimationTransitionFlipFromLeft forView:self.view cache:YES];
-			[UIView commitAnimations];
-			[_flippedView removeFromSuperview];
-		}];
+		ASIFormDataRequest *subscribeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
+		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+		[subscribeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+		[subscribeRequest setDelegate:self];
+		[subscribeRequest startAsynchronous];
+		
+		[_subscribeBtn removeFromSuperview];
+		
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackEvent:@"Following Topic" action:_vo.list_name label:nil value:-1 withError:&error])
+			NSLog(@"error in trackEvent");
 	}
-	 */
-}
+} 
 
 #pragma mark - Notification handlers
 -(void)_leaveArticles:(NSNotification *)notification {
@@ -391,7 +378,7 @@
 				_cardViews = [NSMutableArray new];
 				
 				int tot = 0;
-				int offset = 60;
+				int offset = 20;
 				for (NSDictionary *serverArticle in parsedArticles) {
 					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
 					
@@ -546,6 +533,8 @@
 		
 		[self doneLoadingTableViewData];
 	}
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_SUBSCRIBED_LIST" object:nil];
 }
 
 

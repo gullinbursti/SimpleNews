@@ -20,6 +20,7 @@
 	UIButton *_videoButton;
 	UIButton *_likeButton;
 	EGOImageView *_articleImgView;
+	EGOImageView *_videoImgView;
 	UILabel *_likesLabel;
 }
 

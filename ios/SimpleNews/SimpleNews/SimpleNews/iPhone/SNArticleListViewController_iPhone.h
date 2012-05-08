@@ -19,16 +19,15 @@
 	ASIFormDataRequest *_articlesRequest;
 	ASIFormDataRequest *_updateRequest;
 	EGORefreshTableHeaderView *_refreshHeaderView;
+	UIButton *_subscribeBtn;
 	BOOL _reloading;
 	
 	UIScrollView *_scrollView;
 	UIView *_overlayView;
-	UIButton *_doneButton;
 	
 	NSMutableArray *_cardViews;
 	NSMutableArray *_timelineTweets;
 	
-	BOOL _isFlipped;
 	SNListVO *_vo;
 	
 	UIView *_blackMatteView;

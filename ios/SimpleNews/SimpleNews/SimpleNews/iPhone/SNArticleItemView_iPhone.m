@@ -149,11 +149,16 @@
 		//CGSize imgSize = NSLog(@"IMAGE SIZE:(%d, %d)", (int)[UIImage imageNamed:@"overlay.png"].size.width, (int)[UIImage imageNamed:@"overlay.png"].size.height);
 		
 		if (_vo.type_id > 4) {
+			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, 202.0)];
+			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
+			[self addSubview:_videoImgView];
+			
+			
 			_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, 202.0) articleVO:_vo];
-			[self addSubview:_videoPlayerView];
+			//[self addSubview:_videoPlayerView];
 			
 			_videoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			_videoButton.frame = CGRectMake(60.0, offset, 242.0, 160.0);
+			_videoButton.frame = _videoImgView.frame;
 			[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:_videoButton];
 			offset += 202.0;
