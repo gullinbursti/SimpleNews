@@ -9,6 +9,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <Twitter/Twitter.h>
 #import "GANTracker.h"
+#import "ImageFilter.h"
 
 #import "SNArticleListViewController_iPhone.h"
 #import "SNArticleItemView_iPhone.h"
@@ -161,6 +162,16 @@
 	[super viewDidAppear:animated];
 }
 
+
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [touches anyObject];
+	CGPoint touchPoint = [touch locationInView:self.view];
+	
+	if (CGRectContainsPoint(_videoPlayerView.frame, touchPoint))
+		[_videoPlayerView toggleControls];//NSLog(@"TOUCHED:(%f, %f)", touchPoint.x, touchPoint.y);
+}
+
+
 - (void)reloadTableViewDataSource {
 	_reloading = YES;
 	
@@ -228,41 +239,60 @@
 	CGRect frame = [[dict objectForKey:@"frame"] CGRectValue];
 	NSString *type = [dict objectForKey:@"type"];
 	
-	frame.origin.y = frame.origin.y + offset - _scrollView.contentOffset.y;
+	frame.origin.y = 49.0 + frame.origin.y + offset - _scrollView.contentOffset.y;
 	_fullscreenFrame = frame;
 	
 	if ([type isEqualToString:@"photo"]) {
 		_fullscreenImgView = [[EGOImageView alloc] initWithFrame:frame];
+		_fullscreenImgView.delegate = self;
 		_fullscreenImgView.imageURL = [NSURL URLWithString:vo.bgImage_url];
 		_fullscreenImgView.userInteractionEnabled = YES;
 		[self.view addSubview:_fullscreenImgView];
 		
 	} else if ([type isEqualToString:@"video"]) {
-		
+		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, 270.0, 202.0) articleVO:vo];
+		_videoPlayerView.frame = frame;
+		[self.view addSubview:_videoPlayerView];
 	}
-	
 	
 	_blackMatteView.hidden = NO;
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_blackMatteView.alpha = 0.85;
-		_fullscreenImgView.frame = CGRectMake(0.0, (self.view.frame.size.height - (self.view.frame.size.width * vo.imgRatio)) * 0.5, self.view.frame.size.width, self.view.frame.size.width * vo.imgRatio);
+		_blackMatteView.alpha = 0.5;
+		
+		if ([type isEqualToString:@"photo"])
+			_fullscreenImgView.frame = CGRectMake(0.0, (self.view.frame.size.height - (self.view.frame.size.width * vo.imgRatio)) * 0.5, self.view.frame.size.width, self.view.frame.size.width * vo.imgRatio);
+		
+		else
+			_videoPlayerView.frame = CGRectMake(0.0, (self.view.frame.size.height - 240.0) * 0.5, self.view.frame.size.width, 240.0);
+		
 		
 	} completion:^(BOOL finished) {
 		UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_hideFullscreenImage:)];
 		tapRecognizer.numberOfTapsRequired = 1;
-		[_fullscreenImgView addGestureRecognizer:tapRecognizer];
 		
+		if ([type isEqualToString:@"photo"])
+			[_fullscreenImgView addGestureRecognizer:tapRecognizer];
+		
+		else
+			[_blackMatteView addGestureRecognizer:tapRecognizer];
 	}];
 }
 
 -(void)_hideFullscreenImage:(UIGestureRecognizer *)gestureRecognizer {
 	[UIView animateWithDuration:0.25 animations:^(void) {
 		_blackMatteView.alpha = 0.0;
+		
 		_fullscreenImgView.frame = _fullscreenFrame;
+		_videoPlayerView.frame = _fullscreenFrame;
+		[_videoPlayerView stopPlayback];
 		
 	} completion:^(BOOL finished) {
 		_blackMatteView.hidden = YES;
 		[_fullscreenImgView removeFromSuperview];
+		[_videoPlayerView removeFromSuperview];
+		
+		_fullscreenImgView = nil;
+		_videoPlayerView = nil;
 	}];
 }
 
@@ -332,7 +362,7 @@
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
-#pragma mark EGORefreshTableHeaderDelegate Methods
+#pragma mark - EGORefreshTableHeaderDelegate Methods
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
 	[self reloadTableViewDataSource];
 }
@@ -360,6 +390,13 @@
 // called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
 	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+#pragma mark - Image View delegates
+-(void)imageViewLoadedImage:(EGOImageView *)imageView {
+	NSLog(@"LOADED [%@]", imageView.imageURL);
+	UIImage *img = imageView.image;
+	imageView.image = [img saturate:(1 + 1 - 0.5)];
 }
 
 #pragma mark - ASI Delegates

@@ -14,7 +14,9 @@
 #import "EGORefreshTableHeaderView.h"
 #import "EGOImageView.h"
 
-@interface SNArticleListViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate> {
+#import "SNArticleVideoPlayerView_iPhone.h"
+
+@interface SNArticleListViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate, EGOImageViewDelegate> {
 	NSMutableArray *_articles;
 	ASIFormDataRequest *_articlesRequest;
 	ASIFormDataRequest *_updateRequest;
@@ -29,6 +31,7 @@
 	NSMutableArray *_timelineTweets;
 	
 	SNListVO *_vo;
+	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
 	
 	UIView *_blackMatteView;
 	EGOImageView *_fullscreenImgView;

@@ -11,16 +11,18 @@
 #import <MessageUI/MessageUI.h>
 
 #import "ASIFormDataRequest.h"
+#import "SNArticleVideoPlayerView_iPhone.h"
 #import "SNListVO.h"
 #import "EGORefreshTableHeaderView.h"
 #import "EGOImageView.h"
 #import "SNPaginationView.h"
 
-@interface SNDiscoveryArticlesView_iPhone : UIView <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate> {
+@interface SNDiscoveryArticlesView_iPhone : UIView <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate, EGOImageViewDelegate> {
 	NSMutableArray *_articles;
 	ASIFormDataRequest *_articlesRequest;
 	ASIFormDataRequest *_updateRequest;
 	EGORefreshTableHeaderView *_refreshHeaderView;
+	
 	BOOL _reloading;
 	
 	UIScrollView *_scrollView;
@@ -31,7 +33,7 @@
 	NSMutableArray *_timelineTweets;
 	
 	SNListVO *_vo;
-	
+	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
 	SNPaginationView *_paginationView;
 	
 	UIView *_blackMatteView;

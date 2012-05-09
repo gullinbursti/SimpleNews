@@ -361,6 +361,8 @@
 	} else {
 		SNListVO *vo = (SNListVO *)[notification object];
 		
+		//[_subscribedLists removeObjectIdenticalTo:vo];
+		
 		ASIFormDataRequest *subscribeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 		[subscribeRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
 		[subscribeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
@@ -417,14 +419,21 @@
 	return (nil);
 }
 
--(void)tableView:(UITableView*)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-}
-
-
--(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-	if (editingStyle == UITableViewCellEditingStyleDelete)
-		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade]; 
-}
+//-(void)tableView:(UITableView*)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+//}
+//
+//
+//-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+//	if ([tableView isEqual:_subscribedTableView]) {
+//		if (editingStyle == UITableViewCellEditingStyleDelete) {
+//			NSLog(@"indexPath:[%d]", indexPath.row);
+//			[_subscribedLists removeObjectAtIndex:2];
+//			
+//			//[_subscribedLists removeObjectAtIndex:indexPath.row];
+//			//[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade]; 
+//		}
+//	}
+//}
 
 
 #pragma mark - TableView Delegates

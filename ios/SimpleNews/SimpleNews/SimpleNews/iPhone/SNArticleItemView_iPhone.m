@@ -153,10 +153,6 @@
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[self addSubview:_videoImgView];
 			
-			
-			_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, 202.0) articleVO:_vo];
-			//[self addSubview:_videoPlayerView];
-			
 			_videoButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			_videoButton.frame = _videoImgView.frame;
 			[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
@@ -167,31 +163,30 @@
 		
 		int imgOffset = 25;
 		
-		//if (_vo.source_id > 0) {
-			for (NSDictionary *dict in _vo.seenBy) {
-				EGOImageView *readImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(imgOffset, offset, 24.0, 24.0)];
-				readImgView.layer.cornerRadius = 4.0;
-				readImgView.clipsToBounds = YES;
-				readImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1/users/profile_image?screen_name=%@&size=reasonably_small", [dict objectForKey:@"handle"]]];
-				[self addSubview:readImgView];
-				
-				UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
-				avatarButton.frame = readImgView.frame;
-				[avatarButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
-				[self addSubview:avatarButton];
-				
-				imgOffset += 34;
-			}
+		for (NSDictionary *dict in _vo.seenBy) {
+			EGOImageView *readImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(imgOffset, offset, 24.0, 24.0)];
+			readImgView.layer.cornerRadius = 4.0;
+			readImgView.clipsToBounds = YES;
+			readImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1/users/profile_image?screen_name=%@&size=reasonably_small", [dict objectForKey:@"handle"]]];
+			[self addSubview:readImgView];
 			
+			UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
+			avatarButton.frame = readImgView.frame;
+			[avatarButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
+			[self addSubview:avatarButton];
 			
-			UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			commentButton.frame = CGRectMake(imgOffset - 5.0, offset - 5.0, 34.0, 34.0);
-			[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
-			[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
-			[commentButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
-			[self addSubview:commentButton];
-			
-			offset += 46;
+			imgOffset += 34;
+		}
+		
+		
+		UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		commentButton.frame = CGRectMake(imgOffset - 5.0, offset - 5.0, 34.0, 34.0);
+		[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
+		[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
+		[commentButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:commentButton];
+		
+		offset += 46;
 	}
 	
 	return (self);
@@ -199,14 +194,6 @@
 
 -(void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"VIDEO_ENDED" object:nil];
-}
-
--(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-	UITouch *touch = [touches anyObject];
-	CGPoint touchPoint = [touch locationInView:self];
-	
-	if (CGRectContainsPoint(_videoPlayerView.frame, touchPoint))
-		[_videoPlayerView toggleControls];//NSLog(@"TOUCHED:(%f, %f)", touchPoint.x, touchPoint.y);
 }
 
 
@@ -234,9 +221,20 @@
 	[readRequest startAsynchronous];
 	
 	//[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
-	[_videoButton removeTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
-	[_videoButton removeFromSuperview];
-	[_videoPlayerView startPlayback];
+	//[_videoButton removeTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
+	//[_videoButton removeFromSuperview];
+	//[_videoPlayerView startPlayback];
+	
+	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+								 @"video", @"type", 
+								 _vo, @"VO", 
+								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
+								 [NSValue valueWithCGRect:_videoImgView.frame], @"frame", nil];
+	
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_FULLSCREEN_MEDIA" object:dict];
+	
+	
 }
 
 -(void)_photoZoomIn:(UIGestureRecognizer *)gestureRecognizer {

@@ -83,8 +83,12 @@
 		
 		
 		if (_vo.type_id > 4) {
-			_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(25.0, _articleImgView.frame.origin.y + _articleImgView.frame.size.height + 32.0, 270.0, 202.0) articleVO:_vo];
-			[self addSubview:_videoPlayerView];
+			//_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(25.0, _articleImgView.frame.origin.y + _articleImgView.frame.size.height + 32.0, 270.0, 202.0) articleVO:_vo];
+			//[self addSubview:_videoPlayerView];
+			
+			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, _articleImgView.frame.origin.y + _articleImgView.frame.size.height + 32.0, 270.0, 202.0)];
+			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
+			[self addSubview:_videoImgView];
 			
 			_videoButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			_videoButton.frame = _videoPlayerView.frame;
@@ -98,14 +102,6 @@
 
 -(void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"VIDEO_ENDED" object:nil];
-}
-
--(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-	UITouch *touch = [touches anyObject];
-	CGPoint touchPoint = [touch locationInView:self];
-	
-	if (CGRectContainsPoint(_videoPlayerView.frame, touchPoint))
-		[_videoPlayerView toggleControls];//NSLog(@"TOUCHED:(%f, %f)", touchPoint.x, touchPoint.y);
 }
 
 
@@ -135,7 +131,7 @@
 	//[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
 	[_videoButton removeTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
 	[_videoButton removeFromSuperview];
-	[_videoPlayerView startPlayback];
+	//[_videoPlayerView startPlayback];
 }
 
 -(void)_photoZoomIn:(UIGestureRecognizer *)gestureRecognizer {
