@@ -7,14 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ASIFormDataRequest.h"
-#import "EGORefreshTableHeaderView.h"
-#import "SNDiscoveryArticlesView_iPhone.h"
 
-@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate> {
-	ASIFormDataRequest *_userRequest;
+#import "EGORefreshTableHeaderView.h"
+#import "MBLAsyncResource.h"
+
+#import "ASIFormDataRequest.h"
+
+@class SNDiscoveryArticlesView_iPhone;
+
+@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, EGORefreshTableHeaderDelegate>
+{
+	MBLAsyncResource *_userResource;
+	MBLAsyncResource *_subscribedListsResource;
+	MBLAsyncResource *_updateResource;
+	
 	ASIFormDataRequest *_subscribedListsRequest;
-	ASIFormDataRequest *_popularListsRequest;
 	ASIFormDataRequest *_updateRequest;
 	
 	ASIHTTPRequest *_twitterRequest;

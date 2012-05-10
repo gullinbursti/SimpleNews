@@ -27,13 +27,20 @@
 #import "SNArticleSourcesViewController_iPhone.h"
 #import "SNArticleCommentsViewController_iPhone.h"
 
-@interface SNRootViewController_iPhone()
--(void)_goListsToggle;
+#import "MBLResourceLoader.h"
+
+@interface SNRootViewController_iPhone () <MBLResourceObserverProtocol>
+@property(nonatomic, strong) MBLAsyncResource *popularListsResource;
+@property(nonatomic, strong) MBLAsyncResource *subscribedListsResource;
+- (void)_goListsToggle;
 @end
 
 @implementation SNRootViewController_iPhone
 
--(id)init {
+@synthesize popularListsResource = _popularListsResource;
+@synthesize subscribedListsResource = _subscribedListsResource;
+
+- (id)init {
 	if ((self = [super init])) {
 		_subscribedLists = [NSMutableArray new];
 		_popularLists = [NSMutableArray new];
@@ -41,7 +48,7 @@
 		_isIntro = YES;
 		_isFollowingList = YES;
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshSubscribedList:) name:@"REFRESH_SUBSCRIBED_LIST" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshSubscribedLists:) name:@"REFRESH_SUBSCRIBED_LIST" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleSources:) name:@"SHOW_ARTICLE_SOURCES" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showComments:) name:@"SHOW_COMMENTS" object:nil];
@@ -50,29 +57,19 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_listSubscribe:) name:@"LIST_SUBSCRIBE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_listUnsubscribe:) name:@"LIST_UNSUBSCRIBE" object:nil];
-		
-		_popularListsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
-		[_popularListsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
-		
-		if ([[SNAppDelegate profileForUser] objectForKey:@"id"])
-			[_popularListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		
-		else
-			[_popularListsRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"userID"];
-		
-		[_popularListsRequest setDelegate:self];
-		[_popularListsRequest startAsynchronous];	
 	}
 	
-	return (self);
+	return self;
 }
 
--(void)didReceiveMemoryWarning {
-	[super didReceiveMemoryWarning];
+- (void)dealloc
+{
+	self.popularListsResource = nil;
 }
 
 #pragma mark - View lifecycle
--(void)loadView {
+
+- (void)loadView {
 	[super loadView];
 	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
@@ -81,7 +78,6 @@
 	
 	//_holderView = [[UIView alloc] initWithFrame:CGRectMake(-270.0, 0.0, 580.0, self.view.frame.size.height)];
 	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 580.0, self.view.frame.size.height)];
-	_holderView.userInteractionEnabled = YES;
 	[self.view addSubview:_holderView];
 	
 	_profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -179,18 +175,8 @@
 	[self.view addSubview:overlayImgView];
 }
 
--(void)viewDidLoad {
+- (void)viewDidLoad {
 	[super viewDidLoad];
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_cardListsButton.hidden = YES;
-		_holderView.frame = CGRectMake(-270.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-		
-	} completion:^(BOOL finished) {
-		[UIView animateWithDuration:0.33 animations:^(void) {
-		} completion:nil];
-	}];
-	
 	
 	//_profileButton.hidden = YES;
 	//_toggleLtImgView.hidden = YES;
@@ -211,12 +197,27 @@
 //	}];
 }
 
--(void)viewDidUnload {
+- (void)viewDidUnload {
 	[super viewDidUnload];
+	
+	_holderView = nil;
+	_profileButton = nil;
+	_toggleLtImgView = nil;
+	_toggleRtImgView = nil;
+	_subscribedTableView = nil;
+	_popularTableView = nil;
+	_subscribedHeaderView = nil;
+	_popularHeaderView = nil;
+	_cardListsButton = nil;
 }
 
--(void)viewDidAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_cardListsButton.hidden = YES;
+		_holderView.frame = CGRectMake(-270.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+	}];
 	
 	_discoveryArticlesView.hidden = NO;
 	[UIView animateWithDuration:0.33 animations:^(void) {
@@ -224,9 +225,9 @@
 	}];
 }
 
-
 #pragma mark - Navigation
--(void)_goListsToggle {
+
+- (void)_goListsToggle {
 	_isFollowingList = !_isFollowingList;
 	
 	_toggleLtImgView.hidden = !_isFollowingList;
@@ -236,7 +237,7 @@
 	_popularTableView.hidden = _isFollowingList;
 }
 
--(void)_goCardLists {
+- (void)_goCardLists {
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_cardListsButton.hidden = YES;
 		_holderView.frame = CGRectMake(-270.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
@@ -247,7 +248,7 @@
 	}];
 }
 
--(void)_goProfile {
+- (void)_goProfile {
 	[UIView animateWithDuration:0.125 animations:^(void) {
 		_discoveryArticlesView.frame = CGRectMake(320.0, 0.0, self.view.frame.size.width, self.view.frame.size.width);
 		
@@ -280,16 +281,123 @@
 		[_popularHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_popularTableView];
 }
 
+#pragma mark - Network Requests
+
+- (void)setPopularListsResource:(MBLAsyncResource *)popularListsResource
+{
+	if (_popularListsResource != nil) {
+		[_popularListsResource unsubscribe:self];
+		_popularListsResource = nil;
+	}
+	
+	_popularListsResource = popularListsResource;
+	
+	if (_popularListsResource != nil)
+		[_popularListsResource subscribe:self];
+}
+
+- (void)_refreshPopularLists
+{
+	NSString *userId = [[SNAppDelegate profileForUser] objectForKey:@"id"];
+	NSMutableDictionary *popularListFormValues = [NSMutableDictionary dictionary];
+	[popularListFormValues setObject:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
+	[popularListFormValues setObject:(userId != nil ? userId : [NSString stringWithFormat:@"%d", 0]) forKey:@"userID"];
+	
+	NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"];
+	self.popularListsResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:popularListFormValues forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0)]]; // 1 hour expiration for now
+}
+
+- (void)_refreshUserAccount
+{
+	if ((_userResource == nil) && ([SNAppDelegate twitterHandle] != nil)) {
+		NSMutableDictionary *userFormValues = [NSMutableDictionary dictionary];
+		[userFormValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[userFormValues setObject:[SNAppDelegate deviceToken] forKey:@"token"];
+		[userFormValues setObject:[SNAppDelegate twitterHandle] forKey:@"handle"];
+		
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"];
+		_userResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:userFormValues forceFetch:YES expiration:[NSDate date]];
+		[_userResource subscribe:self];
+	}
+}
+
+- (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data
+{
+	if (resource == _popularListsResource) {
+		NSError *error = nil;
+		NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+		if (error != nil) {
+			NSLog(@"Failed to parse popular lists JSON: %@", [error localizedDescription]);
+		}
+		else {
+			NSMutableArray *popularLists = [NSMutableArray array];
+			NSArray *sortedByLikes = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"likes" ascending:NO]];
+			for (NSDictionary *list in [unsortedLists sortedArrayUsingDescriptors:sortedByLikes]) {
+				SNListVO *vo = [SNListVO listWithDictionary:list];
+				if (vo != nil)
+					[popularLists addObject:vo];
+			}
+			
+			_popularLists = popularLists;
+			[_popularTableView reloadData];
+			
+			_discoveryArticlesView = [[SNDiscoveryArticlesView_iPhone alloc] initWithFrame:CGRectMake(270.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_popularLists objectAtIndex:0]];
+			[_holderView addSubview:_discoveryArticlesView];
+		}
+	}
+	else if (resource == _userResource) {
+		NSError *error = nil;
+		NSDictionary *parsedUser = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+		if (error != nil) {
+			NSLog(@"Failed to parse user JSON: %@", [error localizedDescription]);
+		}
+		else {
+			[SNAppDelegate writeUserProfile:parsedUser];
+			[self _refreshSubscribedLists:nil];
+		}
+	}
+}
+
+- (void)resource:(MBLAsyncResource *)resource didFailWithError:(NSError *)error
+{
+	// Show an error overlay?
+	
+	if (resource == _userResource)
+		_userResource = nil;
+}
+
 #pragma mark - Notification handlers
 
-- (void)_refreshSubscribedList:(NSNotification *)notification {
-	if (_subscribedListsRequest == nil) {
+- (void)setSubscribedListsResource:(MBLAsyncResource *)subscribedListsResource
+{
+	if (_subscribedListsResource != nil) {
+		[_subscribedListsResource unsubscribe:self];
+		_subscribedListsResource = nil;
+	}
+	
+	_subscribedListsResource = subscribedListsResource;
+	
+	if (_subscribedListsResource != nil)
+		[_subscribedListsResource subscribe:self];
+}
+
+- (void)_refreshSubscribedLists:(NSNotification *)notification {
+	if ([[SNAppDelegate profileForUser] objectForKey:@"id"] != nil) {
 		NSLog(@"REFRESHING SUBSCRIBED LISTS");
+		
+		NSMutableDictionary *subscribedListsFormValues = [NSMutableDictionary dictionary];
+		[subscribedListsFormValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[subscribedListsFormValues setObject:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[subscribedListsFormValues setObject:[SNAppDelegate twitterHandle] forKey:@"handle"];
+		
 		_subscribedListsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 		[_subscribedListsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		[_subscribedListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[_subscribedListsRequest setDelegate:self];
 		[_subscribedListsRequest startAsynchronous];
+	}
+	else {
+		NSLog(@"Can't refresh subscribed lists without a valid user id");
 	}
 }
 
@@ -374,9 +482,8 @@
 	}
 }
 
-
-
 #pragma mark - TableView DataSource Delegates
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	
 	if ([tableView isEqual:_subscribedTableView]) {
@@ -426,8 +533,6 @@
 		[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade]; 
 }
 
-
-#pragma mark - TableView Delegates
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return (50.0);
 }
@@ -463,8 +568,8 @@
 	}
 }
 
-
 #pragma mark - ScrollView Delegates
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {	
 	
 	if (_isFollowingList)
@@ -484,6 +589,7 @@
 }
 
 #pragma mark EGORefreshTableHeaderDelegate Methods
+
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
 	[self reloadTableViewDataSource];
 	
@@ -500,7 +606,9 @@
 }
 
 
+
 #pragma mark - ASI Delegates
+
 -(void)requestFinished:(ASIHTTPRequest *)request { 
 	//NSLog(@"SNRootViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
@@ -532,81 +640,8 @@
 		}
 		_subscribedListsRequest = nil;
 		
-	} else if ([request isEqual:_popularListsRequest]) {
-		@autoreleasepool {
-			NSError *error = nil;
-			NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"likes" ascending:NO];
-			NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-			NSArray *parsedLists = [unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
-			
-			//NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-			if (error != nil)
-				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
-			
-			else {
-				NSMutableArray *list = [NSMutableArray array];
-				for (NSDictionary *serverList in parsedLists) {
-					SNListVO *vo = [SNListVO listWithDictionary:serverList];
-					//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
-					
-					if (vo != nil)
-						[list addObject:vo];
-				}
-				
-				_popularLists = [list copy];
-				[_popularTableView reloadData];
-			}
-			
-			if ([SNAppDelegate twitterHandle]) {
-				_userRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
-				[_userRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-				[_userRequest setPostValue:[SNAppDelegate deviceToken] forKey:@"token"];
-				[_userRequest setPostValue:[SNAppDelegate twitterHandle] forKey:@"handle"];
-				[_userRequest setDelegate:self];
-				[_userRequest startAsynchronous];			
-			}
-			
-			_discoveryArticlesView = [[SNDiscoveryArticlesView_iPhone alloc] initWithFrame:CGRectMake(270.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_popularLists objectAtIndex:0]];
-			[_holderView addSubview:_discoveryArticlesView];
-		}
-		
-	} else if ([request isEqual:_userRequest]) {
-		@autoreleasepool {
-			NSError *error = nil;
-			NSDictionary *parsedUser = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-			if (error != nil)
-				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
-			
-			else {
-				[SNAppDelegate writeUserProfile:parsedUser];
-			}
-		}
-		
-		if ([[[SNAppDelegate profileForUser] objectForKey:@"name"] isEqualToString:@""]) {		
-			_twitterRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1/users/show.json?screen_name=%@", [SNAppDelegate twitterHandle]]]];
-			[_twitterRequest setDelegate:self];
-			[_twitterRequest startAsynchronous];
-			
-		} else {
-			[self _refreshSubscribedList:nil];
-		}
-		
-	} else if ([request isEqual:_twitterRequest]) {
-		@autoreleasepool {
-			NSError *error = nil;
-			NSDictionary *parsedUser = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-			
-			NSLog(@"NAME:%@", [parsedUser objectForKey:@"name"]);
-			_userRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
-			[_userRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
-			[_userRequest setPostValue:[parsedUser objectForKey:@"name"] forKey:@"userName"];
-			[_userRequest setDelegate:self];
-			[_userRequest startAsynchronous];
-		}
-		
-		[self _refreshSubscribedList:nil];
-		
-	} else if ([request isEqual:_updateRequest]) {
+	}
+	else if ([request isEqual:_updateRequest]) {
 		if (_isFollowingList) {
 			
 		} else {
@@ -641,17 +676,5 @@
 	} else
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_SUBSCRIBED_LIST" object:nil];
 }
-
-
--(void)requestFailed:(ASIHTTPRequest *)request {
-	if (request == _subscribedListsRequest) {
-		//[_delegates perform:@selector(jobList:didFailLoadWithError:) withObject:self withObject:request.error];
-		//MBL_RELEASE_SAFELY(_jobListRequest);
-		_subscribedListsRequest = nil;
-	}
-	
-	//[_loadOverlay remove];
-}
-
 
 @end

@@ -460,6 +460,9 @@
 		4CF39886152D971B00460BD2 /* topOfStoryBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CF39884152D971B00460BD2 /* topOfStoryBackground@2x.png */; };
 		4CF63C32150B207B00055EFD /* overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CF63C30150B207B00055EFD /* overlay.png */; };
 		4CF63C33150B207B00055EFD /* overlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CF63C31150B207B00055EFD /* overlay@2x.png */; };
+		E423F8F41559B9900094042E /* MBLAsyncResource.m in Sources */ = {isa = PBXBuildFile; fileRef = E423F8EF1559B9900094042E /* MBLAsyncResource.m */; };
+		E423F8F51559B9900094042E /* MBLResourceCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E423F8F11559B9900094042E /* MBLResourceCache.m */; };
+		E423F8F61559B9900094042E /* MBLResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = E423F8F31559B9900094042E /* MBLResourceLoader.m */; };
 		E4F729FC154AF80B0073F60C /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4F729FB154AF80B0073F60C /* Entitlements.plist */; };
 		E4F729FF154AF8470073F60C /* UAPushLocalization.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E4F729FE154AF8470073F60C /* UAPushLocalization.bundle */; };
 /* End PBXBuildFile section */
@@ -1102,6 +1105,12 @@
 		4CF39884152D971B00460BD2 /* topOfStoryBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "topOfStoryBackground@2x.png"; sourceTree = "<group>"; };
 		4CF63C30150B207B00055EFD /* overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = overlay.png; sourceTree = "<group>"; };
 		4CF63C31150B207B00055EFD /* overlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "overlay@2x.png"; sourceTree = "<group>"; };
+		E423F8EE1559B9900094042E /* MBLAsyncResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBLAsyncResource.h; sourceTree = "<group>"; };
+		E423F8EF1559B9900094042E /* MBLAsyncResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBLAsyncResource.m; sourceTree = "<group>"; };
+		E423F8F01559B9900094042E /* MBLResourceCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBLResourceCache.h; sourceTree = "<group>"; };
+		E423F8F11559B9900094042E /* MBLResourceCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBLResourceCache.m; sourceTree = "<group>"; };
+		E423F8F21559B9900094042E /* MBLResourceLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBLResourceLoader.h; sourceTree = "<group>"; };
+		E423F8F31559B9900094042E /* MBLResourceLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBLResourceLoader.m; sourceTree = "<group>"; };
 		E4F729FB154AF80B0073F60C /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		E4F729FE154AF8470073F60C /* UAPushLocalization.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = UAPushLocalization.bundle; path = SimpleNews/Airship/UI/Default/Push/Resources/Shared/UAPushLocalization.bundle; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -2208,6 +2217,12 @@
 				4CE58F9B1553615600668B1E /* SNNavListBtnView.m */,
 				4CE58F9D1553658A00668B1E /* SNNavTitleView.h */,
 				4CE58F9E1553658A00668B1E /* SNNavTitleView.m */,
+				E423F8EE1559B9900094042E /* MBLAsyncResource.h */,
+				E423F8EF1559B9900094042E /* MBLAsyncResource.m */,
+				E423F8F01559B9900094042E /* MBLResourceCache.h */,
+				E423F8F11559B9900094042E /* MBLResourceCache.m */,
+				E423F8F21559B9900094042E /* MBLResourceLoader.h */,
+				E423F8F31559B9900094042E /* MBLResourceLoader.m */,
 			);
 			name = Shared;
 			path = SimpleNews/Shared;
@@ -2876,6 +2891,9 @@
 				4C2CFC2A1557B14C00654D98 /* SNAnyListViewCell_iPhone.m in Sources */,
 				4C2CFC2D1557B16100654D98 /* SNBaseRootListViewCell_iPhone.m in Sources */,
 				4C2CFC3115587FC100654D98 /* SNProfileArticlesViewController_iPhone.m in Sources */,
+				E423F8F41559B9900094042E /* MBLAsyncResource.m in Sources */,
+				E423F8F51559B9900094042E /* MBLResourceCache.m in Sources */,
+				E423F8F61559B9900094042E /* MBLResourceLoader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
