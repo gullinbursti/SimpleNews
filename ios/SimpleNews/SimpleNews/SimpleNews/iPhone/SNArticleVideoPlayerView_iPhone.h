@@ -45,9 +45,9 @@
 @property (nonatomic, retain) MPMoviePlayerController *mpc;
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;
--(void)changeVideo:(SNArticleVO *)vo;
 -(void)startPlayback;
 -(void)stopPlayback;
 -(void)toggleControls;
+-(void)reframe:(CGRect)frame;
 
 @end

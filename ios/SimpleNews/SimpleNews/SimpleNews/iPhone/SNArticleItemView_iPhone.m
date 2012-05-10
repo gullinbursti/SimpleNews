@@ -13,6 +13,7 @@
 #import "SNUnderlinedLabel.h"
 #import "SNWebPageViewController_iPhone.h"
 #import "ImageFilter.h"
+#import "SNArticleVideoPlayerView_iPhone.h"
 
 @implementation SNArticleItemView_iPhone
 
@@ -153,6 +154,10 @@
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[self addSubview:_videoImgView];
 			
+			//SNArticleVideoPlayerView_iPhone *videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, 270.0, 202.0) articleVO:vo];
+			//videoPlayerView.frame = _videoImgView.frame;
+			//[self addSubview:videoPlayerView];
+			
 			_videoButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			_videoButton.frame = _videoImgView.frame;
 			[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
@@ -285,7 +290,7 @@
 	
 	_vo.totalLikes++;
 	_likesLabel.text = [NSString stringWithFormat:@"%d", _vo.totalLikes];
-}
+} 
 
 -(void)_goShare {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHARE_SHEET" object:_vo];

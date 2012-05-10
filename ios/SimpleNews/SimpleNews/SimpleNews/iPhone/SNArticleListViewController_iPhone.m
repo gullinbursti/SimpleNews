@@ -184,7 +184,7 @@
 	[_updateRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles objectAtIndex:0]).added] forKey:@"datetime"];
 	[_updateRequest setDelegate:self];
 	[_updateRequest startAsynchronous];
-}
+} 
 
 - (void)doneLoadingTableViewData {
 	_reloading = NO;
@@ -232,6 +232,7 @@
 }
 
 -(void)_showFullscreenMedia:(NSNotification *)notification {
+	NSLog(@"SHOW MEDIA");
 	NSDictionary *dict = [notification object];
 	
 	SNArticleVO *vo = [dict objectForKey:@"VO"];
@@ -250,20 +251,19 @@
 		[self.view addSubview:_fullscreenImgView];
 		
 	} else if ([type isEqualToString:@"video"]) {
-		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, 270.0, 202.0) articleVO:vo];
-		_videoPlayerView.frame = frame;
+		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:frame articleVO:vo];
 		[self.view addSubview:_videoPlayerView];
 	}
 	
 	_blackMatteView.hidden = NO;
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_blackMatteView.alpha = 0.5;
+		_blackMatteView.alpha = 0.95;
 		
 		if ([type isEqualToString:@"photo"])
 			_fullscreenImgView.frame = CGRectMake(0.0, (self.view.frame.size.height - (self.view.frame.size.width * vo.imgRatio)) * 0.5, self.view.frame.size.width, self.view.frame.size.width * vo.imgRatio);
 		
 		else
-			_videoPlayerView.frame = CGRectMake(0.0, (self.view.frame.size.height - 240.0) * 0.5, self.view.frame.size.width, 240.0);
+			[_videoPlayerView reframe:CGRectMake(0.0, (self.view.frame.size.height - 240.0) * 0.5, self.view.frame.size.width, 240.0)];
 		
 		
 	} completion:^(BOOL finished) {
@@ -283,7 +283,7 @@
 		_blackMatteView.alpha = 0.0;
 		
 		_fullscreenImgView.frame = _fullscreenFrame;
-		_videoPlayerView.frame = _fullscreenFrame;
+		[_videoPlayerView reframe:_fullscreenFrame];
 		[_videoPlayerView stopPlayback];
 		
 	} completion:^(BOOL finished) {

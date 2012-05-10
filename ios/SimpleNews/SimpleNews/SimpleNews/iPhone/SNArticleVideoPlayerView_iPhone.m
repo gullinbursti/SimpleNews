@@ -51,6 +51,7 @@
 		
 		_screenshotImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
 		_screenshotImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
+		_screenshotImgView.alpha = 0.5;
 		
 		if (_vo != nil)
 			[_videoHolderView addSubview:_screenshotImgView];
@@ -142,16 +143,20 @@
 	[self _goClose];
 }
 
--(void)changeVideo:(SNArticleVO *)vo {
-	_vo = vo;
+-(void)reframe:(CGRect)frame {
+	self.frame = frame;
 	
-	_videoInfoRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.youtube.com/get_video_info?html5=1&video_id=%@&eurl=http%3A%2F%2Fshelby.tv%2F&ps=native&el=embedded&hl=en_US", _vo.video_url]]];
-	_videoInfoRequest.delegate = self;
-	[_videoInfoRequest startAsynchronous];
+	CGRect adjFrame = CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height);
 	
-	_screenshotImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
-	_screenshotImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
-	[_videoHolderView addSubview:_screenshotImgView];
+	_videoHolderView.frame = adjFrame;
+	_screenshotImgView.frame = adjFrame;
+	
+	_progressBgImgView.frame = CGRectMake(_progressBgImgView.frame.origin.x, _videoHolderView.frame.size.height - 8.0, _videoHolderView.frame.size.width, 8.0);
+	_progressImgView.frame = CGRectMake(_progressImgView.frame.origin.x, _videoHolderView.frame.size.height - 8.0, 0.0, 8.0);
+	_timeLabel.frame = CGRectMake(_timeLabel.frame.origin.x, _videoHolderView.frame.size.height - 18.0, _timeSize.width, _timeSize.height);
+	
+	_playButton.frame = CGRectMake((self.frame.size.width * 0.5) - 22.0, (self.frame.size.height * 0.5) - 22.0, 44.0, 44.0);
+	_pauseButton.frame = CGRectMake((self.frame.size.width * 0.5) - 22.0, (self.frame.size.height * 0.5) - 22.0, 44.0, 44.0);
 }
 
 -(void)_dblTap:(UIGestureRecognizer *)gestureRecognizer {
@@ -171,15 +176,15 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_finishedCallback:) name:MPMoviePlayerPlaybackDidFinishNotification object:nil];
 	
 	self.mpc.controlStyle = MPMovieControlStyleNone;
-	self.mpc.view.frame = CGRectMake(0.0, 0.0, _videoHolderView.frame.size.width, 202.0);
+	self.mpc.view.frame = CGRectMake(0.0, 0.0, _videoHolderView.frame.size.width, 240.0);
 	self.mpc.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	self.mpc.shouldAutoplay = YES;
 	self.mpc.allowsAirPlay = YES;
 	self.mpc.movieSourceType = MPMovieSourceTypeFile;
 	
 	[_videoHolderView addSubview:self.mpc.view];
-	[self.mpc play];
-	
+	//[self.mpc play];
+	 
 	_progressImgView.frame = CGRectMake(_progressImgView.frame.origin.x, _progressImgView.frame.origin.y, 0.0, _progressImgView.frame.size.height);
 	_timeSize = [[NSString stringWithFormat:@"%@", @"0:00"] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
 	_timeLabel.frame = CGRectMake(0.0, _timeLabel.frame.origin.y, _timeSize.width, _timeSize.height);
@@ -512,7 +517,7 @@
 	
 	
 	NSLog(@"%@", videoURLs);
-	[self _initPlayer];
+	//[self _initPlayer];
 	
 	//NSLog(@"%@", [@"http%3A%2F%2Fo-o.preferred.comcast-lax1.v21.lscache4.c.youtube.com%2Fvideoplayback%3Fupn%3DNjE0NjE0NjY0NzY4NDEzNDA5OA%253D%253D%26sparams%3Dcp%252Cid%252Cip%252Cipbits%252Citag%252Cratebypass%252Csource%252Cupn%252Cexpire%26fexp%3D902904%252C904820%252C901601%26itag%3D37%26ip%3D98.0.0.0%26signature%3DAC36EF98C4CFECF8E5BFEA29EE9A009A40D18106.4BE3C83EE174FEC7EEDC72303CD49FCBE4F9F150%26sver%3D3%26ratebypass%3Dyes%26source%3Dyoutube%26expire%3D1332511088%26key%3Dyt1%26ipbits%3D8%26cp%3DU0hSR1VMT19NUkNOMl9NRlNBOjNqczdGMmdmd2pJ%26id%3Dd5783ada74dc476c" stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
 }

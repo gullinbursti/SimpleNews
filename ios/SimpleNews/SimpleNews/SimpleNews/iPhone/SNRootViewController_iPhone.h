@@ -11,7 +11,7 @@
 #import "EGORefreshTableHeaderView.h"
 #import "SNDiscoveryArticlesView_iPhone.h"
 
-@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate> {
+@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate> {
 	ASIFormDataRequest *_userRequest;
 	ASIFormDataRequest *_subscribedListsRequest;
 	ASIFormDataRequest *_popularListsRequest;
@@ -38,6 +38,7 @@
 	BOOL _isFollowingList;
 	BOOL _reloading;
 	BOOL _isIntro;
+	int _swipeIndex;
 }
 
 - (void)reloadTableViewDataSource;

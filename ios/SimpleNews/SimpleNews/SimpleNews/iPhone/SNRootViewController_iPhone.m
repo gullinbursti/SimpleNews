@@ -174,9 +174,16 @@
 	[_cardListsButton addTarget:self action:@selector(_goCardLists) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_cardListsButton];
 	
+	UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_swipeRow:)];
+	swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight | UISwipeGestureRecognizerDirectionLeft;
+	swipeRecognizer.delegate = self;
+	[_subscribedTableView addGestureRecognizer:swipeRecognizer];
+	
 	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
 	[self.view addSubview:overlayImgView];
+	
+	
 }
 
 -(void)viewDidLoad {
@@ -256,6 +263,13 @@
 		SNProfileViewController_iPhone *profileViewController = [[SNProfileViewController_iPhone alloc] init];
 		[self.navigationController pushViewController:profileViewController animated:YES];
 	}];
+}
+
+-(void)_swipeRow:(UIGestureRecognizer *)gestureRecognizer {
+	NSLog(@"SWIPE");
+	
+	[_subscribedLists removeObjectAtIndex:_swipeIndex];
+	[_subscribedTableView reloadData];
 }
 
 - (void)reloadTableViewDataSource {
@@ -376,6 +390,14 @@
 	}
 }
 
+
+#pragma mark - Gesture Recongnizer Deleagtes
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+	CGPoint touchPoint = [touch locationInView:_subscribedTableView];
+	_swipeIndex = MIN((int)(touchPoint.y / 50.0), [_subscribedLists count] - 1);
+
+	return (YES);
+}
 
 
 #pragma mark - TableView DataSource Delegates
