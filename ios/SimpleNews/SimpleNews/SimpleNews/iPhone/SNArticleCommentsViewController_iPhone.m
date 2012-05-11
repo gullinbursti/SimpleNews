@@ -14,8 +14,9 @@
 #import "SNCommentVO.h"
 #import "SNAppDelegate.h"
 #import "SNNavBackBtnView.h"
+#import "SNNavLikeBtnView.h"
 
-#define kItemHeight 56.0
+#define kItemHeight 70.0
 
 @implementation SNArticleCommentsViewController_iPhone
 
@@ -55,12 +56,16 @@
 	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[self.view addSubview:bgImgView];
 	
-	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.title];
+	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Comments"];
 	[self.view addSubview:headerView];
 	
 	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
 	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:backBtnView];
+	
+	SNNavLikeBtnView *likeBtnView = [[SNNavLikeBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+	[[likeBtnView btn] addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	[headerView addSubview:likeBtnView];
 	
 	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 53.0, self.view.frame.size.width, self.view.frame.size.height - 103.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -80,12 +85,12 @@
 	[_scrollView addSubview:_refreshHeaderView];
 	[_refreshHeaderView refreshLastUpdatedDate];
 	
-	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 50.0, self.view.frame.size.width, 50.0)];
+	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 49.0, self.view.frame.size.width, 49.0)];
 	[_bgView setBackgroundColor:[UIColor colorWithWhite:0.914 alpha:1.0]];
 	[self.view addSubview:_bgView];
 	
-	UIImageView *inputBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(8.0, 8.0, 184.0, 34.0)];
-	inputBgImgView.image = [UIImage imageNamed:@"inputFieldBG.png"];
+	UIImageView *inputBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 49.0)];
+	inputBgImgView.image = [UIImage imageNamed:@"commentsInputField_BG.png"];
 	inputBgImgView.userInteractionEnabled = YES;
 	[_bgView addSubview:inputBgImgView];
 	
@@ -106,22 +111,8 @@
 	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 	_commentsLabel.textColor = [UIColor blackColor];
 	_commentsLabel.backgroundColor = [UIColor clearColor];
-	_commentsLabel.text = @"Say something…";
+	_commentsLabel.text = @"Add Comment";
 	[_bgView addSubview:_commentsLabel];
-	
-	UIButton *likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	likeButton.frame = CGRectMake(186.0, 9.0, 34.0, 34.0);
-	[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
-	[likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
-	[likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-	[_bgView addSubview:likeButton];
-	
-	UIButton *favButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	favButton.frame = CGRectMake(230.0, 9.0, 34.0, 34.0);
-	[favButton setBackgroundImage:[UIImage imageNamed:@"favButton_nonActive.png"] forState:UIControlStateNormal];
-	[favButton setBackgroundImage:[UIImage imageNamed:@"favButton_Active.png"] forState:UIControlStateHighlighted];
-	[favButton addTarget:self action:@selector(_goReadLater) forControlEvents:UIControlEventTouchUpInside];
-	[_bgView addSubview:favButton];
 	
 	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];

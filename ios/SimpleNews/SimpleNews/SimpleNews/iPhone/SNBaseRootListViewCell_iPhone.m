@@ -20,7 +20,7 @@
 
 -(id)init {
 	if ((self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[self class] cellReuseIdentifier]])) {
-		_nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 20.0, 256.0, 20.0)];
+		_nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 10.0, 256.0, 28.0)];
 		_nameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 		_nameLabel.textColor = [UIColor blackColor];
 		_nameLabel.backgroundColor = [UIColor clearColor];

@@ -415,7 +415,7 @@
 				_cardViews = [NSMutableArray new];
 				
 				int tot = 0;
-				int offset = 20;
+				int offset = 0;
 				for (NSDictionary *serverArticle in parsedArticles) {
 					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
 					

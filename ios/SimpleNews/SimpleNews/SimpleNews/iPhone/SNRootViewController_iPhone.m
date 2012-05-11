@@ -85,13 +85,13 @@
 	[self.view addSubview:_holderView];
 	
 	_profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_profileButton.frame = CGRectMake(12.0, 8.0, 44.0, 44.0);
+	_profileButton.frame = CGRectMake(11.0, 11.0, 44.0, 44.0);
 	[_profileButton setBackgroundImage:[UIImage imageNamed:@"profileButton_nonActive.png"] forState:UIControlStateNormal];
 	[_profileButton setBackgroundImage:[UIImage imageNamed:@"profileButton_Active.png"] forState:UIControlStateHighlighted];
 	[_profileButton addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
 	[_holderView addSubview:_profileButton];
 	
-	_toggleLtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 8.0, 164.0, 44.0)];
+	_toggleLtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(77.0, 11.0, 164.0, 44.0)];
 	_toggleLtImgView.image = [UIImage imageNamed:@"toggleBGLeft.png"];
 	[_holderView addSubview:_toggleLtImgView];
 	
@@ -111,7 +111,7 @@
 	popularOffLabel.text = @"All Topics";
 	[_toggleLtImgView addSubview:popularOffLabel];
 	
-	_toggleRtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 8.0, 164.0, 44.0)];
+	_toggleRtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 11.0, 164.0, 44.0)];
 	_toggleRtImgView.image = [UIImage imageNamed:@"toggleBGRight.png"];
 	_toggleRtImgView.hidden = YES;
 	[_holderView addSubview:_toggleRtImgView];
@@ -137,7 +137,7 @@
 	[toggleButton addTarget:self action:@selector(_goListsToggle) forControlEvents:UIControlEventTouchUpInside];
 	[_holderView addSubview:toggleButton];
 	
-	_subscribedTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 53.0, 270.0, self.view.frame.size.height - 53.0) style:UITableViewStylePlain];
+	_subscribedTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 53.0, 233.0, self.view.frame.size.height - 53.0) style:UITableViewStylePlain];
 	[_subscribedTableView setBackgroundColor:[UIColor clearColor]];
 	_subscribedTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	_subscribedTableView.rowHeight = 50.0;
@@ -147,7 +147,7 @@
 	_subscribedTableView.showsVerticalScrollIndicator = NO;
 	[_holderView addSubview:_subscribedTableView];
 	
-	_popularTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 53.0, 270.0, self.view.frame.size.height - 53.0) style:UITableViewStylePlain];
+	_popularTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 53.0, 233.0, self.view.frame.size.height - 53.0) style:UITableViewStylePlain];
 	[_popularTableView setBackgroundColor:[UIColor clearColor]];
 	_popularTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	_popularTableView.rowHeight = 50.0;
@@ -191,7 +191,7 @@
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_cardListsButton.hidden = YES;
-		_holderView.frame = CGRectMake(-270.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_holderView.frame = CGRectMake(-248.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
 		[UIView animateWithDuration:0.33 animations:^(void) {
@@ -227,7 +227,7 @@
 	
 	_discoveryArticlesView.hidden = NO;
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_discoveryArticlesView.frame = CGRectMake(270.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
+		_discoveryArticlesView.frame = CGRectMake(248.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
 	}];
 }
 
@@ -246,7 +246,7 @@
 -(void)_goCardLists {
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_cardListsButton.hidden = YES;
-		_holderView.frame = CGRectMake(-270.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_holderView.frame = CGRectMake(-248.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
 		[UIView animateWithDuration:0.33 animations:^(void) {
@@ -268,7 +268,7 @@
 -(void)_swipeRow:(UIGestureRecognizer *)gestureRecognizer {
 	NSLog(@"SWIPE");
 	
-	[_subscribedLists removeObjectAtIndex:_swipeIndex];
+	//[_subscribedLists removeObjectAtIndex:_swipeIndex];
 	[_subscribedTableView reloadData];
 }
 
@@ -597,7 +597,7 @@
 				[_userRequest startAsynchronous];			
 			}
 			
-			_discoveryArticlesView = [[SNDiscoveryArticlesView_iPhone alloc] initWithFrame:CGRectMake(270.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_popularLists objectAtIndex:0]];
+			_discoveryArticlesView = [[SNDiscoveryArticlesView_iPhone alloc] initWithFrame:CGRectMake(248.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_popularLists objectAtIndex:0]];
 			[_holderView addSubview:_discoveryArticlesView];
 		}
 		

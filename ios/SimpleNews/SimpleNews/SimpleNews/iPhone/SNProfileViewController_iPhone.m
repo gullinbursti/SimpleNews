@@ -73,7 +73,7 @@
 	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 100.0, self.view.frame.size.width, self.view.frame.size.height - 100.0) style:UITableViewStylePlain];
 	[_tableView setBackgroundColor:[UIColor clearColor]];
 	_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-	_tableView.rowHeight = 74.0;
+	_tableView.rowHeight = 70.0;
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
 	_tableView.userInteractionEnabled = YES;
@@ -154,7 +154,7 @@
 
 #pragma mark - TableView Delegates
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return (74.0);
+	return (70.0);
 }
 
 

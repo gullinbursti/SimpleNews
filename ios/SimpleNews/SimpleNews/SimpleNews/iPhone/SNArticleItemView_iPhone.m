@@ -26,10 +26,8 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
 		
-		EGOImageView *thumbImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, offset, 24.0, 24.0)];
+		EGOImageView *thumbImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, offset, 25.0, 25.0)];
 		thumbImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
-		thumbImgView.layer.cornerRadius = 4.0;
-		thumbImgView.clipsToBounds = YES;
 		[self addSubview:thumbImgView];
 		
 		UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -37,7 +35,7 @@
 		[avatarButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:avatarButton];
 		
-		offset += 4;
+		offset += 6;
 		
 		NSString *timeSince = @"";
 		int mins = [SNAppDelegate minutesAfterDate:_vo.added];
@@ -55,17 +53,17 @@
 				timeSince = [NSString stringWithFormat:@"%dm via ", mins];
 		}
 		
-		size = [timeSince sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(59.0, offset, size.width, 16.0)];
-		dateLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
+		size = [timeSince sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(59.0, offset, size.width, 12.0)];
+		dateLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10];
 		dateLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 		dateLabel.backgroundColor = [UIColor clearColor];
 		dateLabel.text = timeSince;
 		[self addSubview:dateLabel];
 		
-		CGSize size2 = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *sourceLabel = [[UILabel alloc] initWithFrame:CGRectMake(dateLabel.frame.origin.x + size.width, offset, size2.width, 16.0)];
-		sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+		CGSize size2 = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *sourceLabel = [[UILabel alloc] initWithFrame:CGRectMake(dateLabel.frame.origin.x + size.width, offset, size2.width, 12.0)];
+		sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10];
 		sourceLabel.textColor = [SNAppDelegate snLinkColor];
 		sourceLabel.backgroundColor = [UIColor clearColor];
 		sourceLabel.text = _vo.articleSource;
@@ -78,12 +76,12 @@
 		[sourceButton addTarget:self action:@selector(_goSourcePage) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:sourceButton];
 		
-		offset += 55;
+		offset += 42;
 		
 		if (_vo.source_id > 0) {
-			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, size.height)];
-			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
+			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16];
 			titleLabel.textColor = [UIColor blackColor];
 			titleLabel.backgroundColor = [UIColor clearColor];
 			titleLabel.textAlignment = UITextAlignmentCenter;
@@ -95,13 +93,13 @@
 			detailsButton.frame = titleLabel.frame;
 			[detailsButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:detailsButton];
-			offset += size.height + 35;
+			offset += size.height + 15;
 			
-			UIView *btnBGView = [[UIView alloc] initWithFrame:CGRectMake(68.0, offset, 184.0, 35.0)];
-			//[btnBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.60]];
-			btnBGView.layer.cornerRadius = 17.0;
-			[self addSubview:btnBGView];
-			offset += 72;
+			UIImageView *btnBGImgView = [[UIImageView alloc] initWithFrame:CGRectMake(68.0, offset, 174.0, 44.0)];
+			btnBGImgView.image = [UIImage imageNamed:@"commentLikeButton_BG.png"];
+			btnBGImgView.userInteractionEnabled = YES;
+			[self addSubview:btnBGImgView];
+			offset += 70;
 			
 			
 			UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -113,17 +111,17 @@
 			commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
 			commentButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
 			[commentButton setTitle:@"Comment" forState:UIControlStateNormal];
-			[btnBGView addSubview:commentButton];
+			[btnBGImgView addSubview:commentButton];
 			
 			_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			_likeButton.frame = CGRectMake(115.0, 0.0, 74.0, 44.0);
+			_likeButton.frame = CGRectMake(97.0, 0.0, 74.0, 44.0);
 			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
 			[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 			[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 			_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
 			_likeButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
 			[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
-			[btnBGView addSubview:_likeButton];
+			[btnBGImgView addSubview:_likeButton];
 			
 			if (_vo.hasLiked)
 				[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateNormal];
@@ -277,8 +275,8 @@
 	[readRequest setDelegate:self];
 	[readRequest startAsynchronous];
 	
-	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActiveSelected.png"] forState:UIControlStateNormal];
-	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActiveSelected.png"] forState:UIControlStateHighlighted];
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateNormal];
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateHighlighted];
 	[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	
 	ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
