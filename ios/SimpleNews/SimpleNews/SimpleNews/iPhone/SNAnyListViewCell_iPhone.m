@@ -19,7 +19,7 @@
 -(id)init {
 	if ((self = [super init])) {		
 		_followButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_followButton.frame = CGRectMake(200.0, 10.0, 44.0, 44.0);
+		_followButton.frame = CGRectMake(200.0, 4.0, 44.0, 44.0);
 		[_followButton setBackgroundImage:[UIImage imageNamed:@"followIcon_nonActive.png"] forState:UIControlStateNormal];
 		[_followButton setBackgroundImage:[UIImage imageNamed:@"followIcon_Active.png"] forState:UIControlStateHighlighted];
 		[_followButton addTarget:self action:@selector(_goToggleFollow) forControlEvents:UIControlEventTouchUpInside];

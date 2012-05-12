@@ -95,10 +95,10 @@
 	if (cell == nil)
 		cell = [[SNArticleSourceViewCell_iPhone alloc] init];
 	
-	UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
-	switchView.on = YES;
+	UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectMake(223.0, 21.0, 100.0, 50.0)];
 	[switchView addTarget:self action:@selector(_goSourceToggle:) forControlEvents:UIControlEventValueChanged];
-	cell.accessoryView = switchView;
+	switchView.on = YES;
+	[cell addSubview:switchView];
 		
 	cell.sourceVO = (SNArticleSourceVO *)[_sources objectAtIndex:indexPath.row];
 	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];

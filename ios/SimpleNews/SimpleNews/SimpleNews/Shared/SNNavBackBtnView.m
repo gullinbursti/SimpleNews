@@ -15,7 +15,7 @@
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
 		_btn = [UIButton buttonWithType:UIButtonTypeCustom];
-		_btn.frame = CGRectMake(0.0, 0.0, frame.size.width, frame.size.height);
+		_btn.frame = CGRectMake(-1.0, -1.0, frame.size.width, frame.size.height);
 		[_btn setBackgroundImage:[UIImage imageNamed:@"backArrowButton_nonActive.png"] forState:UIControlStateNormal];
 		[_btn setBackgroundImage:[UIImage imageNamed:@"backArrowButton_Active.png"] forState:UIControlStateHighlighted];		
 		[self addSubview:_btn];

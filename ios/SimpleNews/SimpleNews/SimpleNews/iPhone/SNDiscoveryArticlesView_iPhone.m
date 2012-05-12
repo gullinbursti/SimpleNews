@@ -60,9 +60,9 @@
 	if ((self = [self initWithFrame:frame])) {
 		_vo = vo;
 		
-		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
-		bgImgView.image = [UIImage imageNamed:@"timelineBG.png"];
-		[self addSubview:bgImgView];
+		//[self setBackgroundColor:[UIColor blackColor]];
+		self.layer.cornerRadius = 8.0;
+		self.clipsToBounds = YES;
 		
 		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 8] forKey:@"action"];
@@ -119,10 +119,6 @@
 		[_blackMatteView setBackgroundColor:[UIColor blackColor]];
 		_blackMatteView.alpha = 0.0;
 		[self addSubview:_blackMatteView];
-		
-		UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
-		overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
-		[self addSubview:overlayImgView];
 	}
 	
 	return (self);

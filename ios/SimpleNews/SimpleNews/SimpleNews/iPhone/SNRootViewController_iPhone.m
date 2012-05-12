@@ -75,6 +75,9 @@
 -(void)loadView {
 	[super loadView];
 	
+	self.view.layer.cornerRadius = 8.0;
+	self.view.clipsToBounds = YES;
+	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
 	[self.view addSubview:bgImgView];
@@ -85,50 +88,50 @@
 	[self.view addSubview:_holderView];
 	
 	_profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_profileButton.frame = CGRectMake(11.0, 11.0, 44.0, 44.0);
+	_profileButton.frame = CGRectMake(11.0, 9.0, 44.0, 44.0);
 	[_profileButton setBackgroundImage:[UIImage imageNamed:@"profileButton_nonActive.png"] forState:UIControlStateNormal];
 	[_profileButton setBackgroundImage:[UIImage imageNamed:@"profileButton_Active.png"] forState:UIControlStateHighlighted];
 	[_profileButton addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
 	[_holderView addSubview:_profileButton];
 	
-	_toggleLtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(77.0, 11.0, 164.0, 44.0)];
+	_toggleLtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(77.0, 9.0, 164.0, 44.0)];
 	_toggleLtImgView.image = [UIImage imageNamed:@"toggleBGLeft.png"];
 	[_holderView addSubview:_toggleLtImgView];
 	
-	UILabel *followingOnLabel = [[UILabel alloc] initWithFrame:CGRectMake(17.0, 14.0, 100.0, 16.0)];
-	followingOnLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	UILabel *followingOnLabel = [[UILabel alloc] initWithFrame:CGRectMake(19.0, 15.0, 100.0, 14.0)];
+	followingOnLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	followingOnLabel.textColor = [UIColor colorWithWhite:0.659 alpha:1.0];
 	followingOnLabel.backgroundColor = [UIColor clearColor];
 	followingOnLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
-	followingOnLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+	followingOnLabel.shadowOffset = CGSizeMake(0.0, -1.0);
 	followingOnLabel.text = @"Following";
 	[_toggleLtImgView addSubview:followingOnLabel];
 	
-	UILabel *popularOffLabel = [[UILabel alloc] initWithFrame:CGRectMake(91.0, 14.0, 100.0, 16.0)];
-	popularOffLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	UILabel *popularOffLabel = [[UILabel alloc] initWithFrame:CGRectMake(98.0, 15.0, 100.0, 14.0)];
+	popularOffLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	popularOffLabel.textColor = [UIColor blackColor];
 	popularOffLabel.backgroundColor = [UIColor clearColor];
 	popularOffLabel.text = @"All Topics";
 	[_toggleLtImgView addSubview:popularOffLabel];
 	
-	_toggleRtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 11.0, 164.0, 44.0)];
+	_toggleRtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(78.0, 9.0, 164.0, 44.0)];
 	_toggleRtImgView.image = [UIImage imageNamed:@"toggleBGRight.png"];
 	_toggleRtImgView.hidden = YES;
 	[_holderView addSubview:_toggleRtImgView];
 	
-	UILabel *followingOffLabel = [[UILabel alloc] initWithFrame:CGRectMake(17.0, 14.0, 100.0, 16.0)];
-	followingOffLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	UILabel *followingOffLabel = [[UILabel alloc] initWithFrame:CGRectMake(19.0, 15.0, 100.0, 14.0)];
+	followingOffLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	followingOffLabel.textColor = [UIColor blackColor];
 	followingOffLabel.backgroundColor = [UIColor clearColor];
 	followingOffLabel.text = @"Following";
 	[_toggleRtImgView addSubview:followingOffLabel];
 	
-	UILabel *popularOnLabel = [[UILabel alloc] initWithFrame:CGRectMake(91.0, 14.0, 100.0, 16.0)];
-	popularOnLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	UILabel *popularOnLabel = [[UILabel alloc] initWithFrame:CGRectMake(98.0, 15.0, 100.0, 14.0)];
+	popularOnLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	popularOnLabel.textColor = [UIColor colorWithWhite:0.659 alpha:1.0];
 	popularOnLabel.backgroundColor = [UIColor clearColor];
 	popularOnLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
-	popularOnLabel.shadowOffset = CGSizeMake(1.0, 1.0);
+	popularOnLabel.shadowOffset = CGSizeMake(0.0, -1.0);
 	popularOnLabel.text = @"All Topics";
 	[_toggleRtImgView addSubview:popularOnLabel];
 	
@@ -137,7 +140,7 @@
 	[toggleButton addTarget:self action:@selector(_goListsToggle) forControlEvents:UIControlEventTouchUpInside];
 	[_holderView addSubview:toggleButton];
 	
-	_subscribedTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 53.0, 233.0, self.view.frame.size.height - 53.0) style:UITableViewStylePlain];
+	_subscribedTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 50.0, 248.0, self.view.frame.size.height - 50.0) style:UITableViewStylePlain];
 	[_subscribedTableView setBackgroundColor:[UIColor clearColor]];
 	_subscribedTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	_subscribedTableView.rowHeight = 50.0;
@@ -147,7 +150,7 @@
 	_subscribedTableView.showsVerticalScrollIndicator = NO;
 	[_holderView addSubview:_subscribedTableView];
 	
-	_popularTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 53.0, 233.0, self.view.frame.size.height - 53.0) style:UITableViewStylePlain];
+	_popularTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 50.0, 248.0, self.view.frame.size.height - 50.0) style:UITableViewStylePlain];
 	[_popularTableView setBackgroundColor:[UIColor clearColor]];
 	_popularTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	_popularTableView.rowHeight = 50.0;
@@ -179,11 +182,6 @@
 	swipeRecognizer.delegate = self;
 	[_subscribedTableView addGestureRecognizer:swipeRecognizer];
 	
-	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
-	[self.view addSubview:overlayImgView];
-	
-	
 }
 
 -(void)viewDidLoad {
@@ -191,7 +189,7 @@
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_cardListsButton.hidden = YES;
-		_holderView.frame = CGRectMake(-248.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_holderView.frame = CGRectMake(-276.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
 		[UIView animateWithDuration:0.33 animations:^(void) {
@@ -227,7 +225,7 @@
 	
 	_discoveryArticlesView.hidden = NO;
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_discoveryArticlesView.frame = CGRectMake(248.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
+		_discoveryArticlesView.frame = CGRectMake(276.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
 	}];
 }
 
@@ -246,7 +244,7 @@
 -(void)_goCardLists {
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_cardListsButton.hidden = YES;
-		_holderView.frame = CGRectMake(-248.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_holderView.frame = CGRectMake(-276.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
 		[UIView animateWithDuration:0.33 animations:^(void) {
@@ -255,14 +253,21 @@
 }
 
 -(void)_goProfile {
-	[UIView animateWithDuration:0.125 animations:^(void) {
-		_discoveryArticlesView.frame = CGRectMake(320.0, 0.0, self.view.frame.size.width, self.view.frame.size.width);
+	
+	if (![SNAppDelegate twitterHandle]) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
 		
-	}completion:^(BOOL finished) {
-		_discoveryArticlesView.hidden = YES;
-		SNProfileViewController_iPhone *profileViewController = [[SNProfileViewController_iPhone alloc] init];
-		[self.navigationController pushViewController:profileViewController animated:YES];
-	}];
+	} else {
+		[UIView animateWithDuration:0.125 animations:^(void) {
+			_discoveryArticlesView.frame = CGRectMake(320.0, 0.0, self.view.frame.size.width, self.view.frame.size.width);
+			
+		}completion:^(BOOL finished) {
+			_discoveryArticlesView.hidden = YES;
+			SNProfileViewController_iPhone *profileViewController = [[SNProfileViewController_iPhone alloc] init];
+			[self.navigationController pushViewController:profileViewController animated:YES];
+		}];
+	}
 }
 
 -(void)_swipeRow:(UIGestureRecognizer *)gestureRecognizer {
@@ -597,7 +602,7 @@
 				[_userRequest startAsynchronous];			
 			}
 			
-			_discoveryArticlesView = [[SNDiscoveryArticlesView_iPhone alloc] initWithFrame:CGRectMake(248.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_popularLists objectAtIndex:0]];
+			_discoveryArticlesView = [[SNDiscoveryArticlesView_iPhone alloc] initWithFrame:CGRectMake(276.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_popularLists objectAtIndex:0]];
 			[_holderView addSubview:_discoveryArticlesView];
 		}
 		

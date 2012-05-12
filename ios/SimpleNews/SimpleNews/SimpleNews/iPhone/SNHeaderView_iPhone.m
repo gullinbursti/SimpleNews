@@ -23,8 +23,8 @@
 
 -(id)initWithTitle:(NSString *)title {
 	if ((self = [self init])) {
-		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(64.0, 10.0, 192.0, 24)];
-		titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:18];
+		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(64.0, 12.0, 192.0, 20)];
+		titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
 		titleLabel.textColor = [UIColor whiteColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.textAlignment = UITextAlignmentCenter;

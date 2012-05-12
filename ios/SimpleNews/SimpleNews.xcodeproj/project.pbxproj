@@ -2233,10 +2233,10 @@
 				4CE58F8415535AD800668B1E /* SNNavShareBtnView.m */,
 				4CE58F9A1553615600668B1E /* SNNavListBtnView.h */,
 				4CE58F9B1553615600668B1E /* SNNavListBtnView.m */,
-				4CE58F9D1553658A00668B1E /* SNNavTitleView.h */,
-				4CE58F9E1553658A00668B1E /* SNNavTitleView.m */,
 				4CFCE711155CADDF003175C5 /* SNNavLikeBtnView.h */,
 				4CFCE712155CADDF003175C5 /* SNNavLikeBtnView.m */,
+				4CE58F9D1553658A00668B1E /* SNNavTitleView.h */,
+				4CE58F9E1553658A00668B1E /* SNNavTitleView.m */,
 			);
 			name = Shared;
 			path = SimpleNews/Shared;

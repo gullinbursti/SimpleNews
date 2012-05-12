@@ -24,8 +24,6 @@
 		[self addSubview:bgImgView];
 		
 		EGOImageView *avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(12.0, 6.0, 50.0, 50.0)];
-		avatarImgView.layer.cornerRadius = 8.0;
-		avatarImgView.clipsToBounds = YES;
 		avatarImgView.layer.borderColor = [[UIColor colorWithWhite:0.671 alpha:1.0] CGColor];
 		avatarImgView.layer.borderWidth = 1.0;
 		avatarImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];

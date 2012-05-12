@@ -16,7 +16,7 @@
 #import "SNNavBackBtnView.h"
 #import "SNNavLikeBtnView.h"
 
-#define kItemHeight 70.0
+#define kItemHeight 51.0
 
 @implementation SNArticleCommentsViewController_iPhone
 
@@ -67,7 +67,7 @@
 	[[likeBtnView btn] addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:likeBtnView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 53.0, self.view.frame.size.width, self.view.frame.size.height - 103.0)];
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 49.0, self.view.frame.size.width, self.view.frame.size.height - 98.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[_scrollView setBackgroundColor:[UIColor clearColor]];
 	_scrollView.opaque = YES;
@@ -77,7 +77,6 @@
 	_scrollView.showsHorizontalScrollIndicator = NO;
 	_scrollView.showsVerticalScrollIndicator = YES;
 	_scrollView.alwaysBounceVertical = NO;
-	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
 	[self.view addSubview:_scrollView];
 	
 	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
@@ -94,21 +93,21 @@
 	inputBgImgView.userInteractionEnabled = YES;
 	[_bgView addSubview:inputBgImgView];
 	
-	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(23.0, 17.0, 270.0, 16.0)];
+	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(25.0, 18.0, 270.0, 16.0)];
 	[_commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 	[_commentTxtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 	[_commentTxtField setAutocorrectionType:UITextAutocorrectionTypeNo];
 	[_commentTxtField setBackgroundColor:[UIColor clearColor]];
 	[_commentTxtField setReturnKeyType:UIReturnKeyDone];
 	[_commentTxtField addTarget:self action:@selector(_onTxtDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
-	_commentTxtField.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	_commentTxtField.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	_commentTxtField.keyboardType = UIKeyboardTypeDefault;
 	_commentTxtField.text = @"";
 	_commentTxtField.delegate = self;
 	[_bgView addSubview:_commentTxtField];
 	
 	_commentsLabel = [[UILabel alloc] initWithFrame:_commentTxtField.frame];
-	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	_commentsLabel.textColor = [UIColor blackColor];
 	_commentsLabel.backgroundColor = [UIColor clearColor];
 	_commentsLabel.text = @"Add Comment";
@@ -133,6 +132,8 @@
 		
 		_commentOffset += (kItemHeight + txtSize.height);
 	}
+	
+	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, _commentOffset);
 }
 
 -(void)viewDidLoad {

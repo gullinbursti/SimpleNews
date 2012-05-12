@@ -17,20 +17,20 @@
 		_vo = vo;
 		_listID = list_id;
 		
-		EGOImageView *avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, 20.0, 25.0, 25.0)];
+		EGOImageView *avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, 19.0, 25.0, 25.0)];
 		avatarImgView.imageURL = [NSURL URLWithString:_vo.thumb_url];
 		[self addSubview:avatarImgView];
 		
-		UILabel *twitterNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(60.0, 20.0, 256.0, 14.0)];
+		UILabel *twitterNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 17.0, 256.0, 14.0)];
 		twitterNameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 		twitterNameLabel.textColor = [SNAppDelegate snLinkColor];
 		twitterNameLabel.backgroundColor = [UIColor clearColor];
 		twitterNameLabel.text = [NSString stringWithFormat:@"@%@", _vo.twitterHandle];
 		[self addSubview:twitterNameLabel];
 		
-		CGSize size = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(256.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-		UILabel *twitterBlurbLabel = [[UILabel alloc] initWithFrame:CGRectMake(60.0, 35.0, 256.0, size.height)];
-		twitterBlurbLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
+		CGSize size = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11] constrainedToSize:CGSizeMake(256.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		UILabel *twitterBlurbLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 30.0, 256.0, size.height)];
+		twitterBlurbLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11];
 		twitterBlurbLabel.textColor = [UIColor colorWithWhite:0.482 alpha:1.0];
 		twitterBlurbLabel.numberOfLines = 0;
 		twitterBlurbLabel.backgroundColor = [UIColor clearColor];
@@ -60,7 +60,7 @@
 			}
 		}
 		
-		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(60.0, size.height + 40.0, 100.0, 8.0)];
+		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, size.height + 32.0, 100.0, 8.0)];
 		dateLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:8];
 		dateLabel.textColor = [UIColor colorWithWhite:0.482 alpha:1.0];
 		dateLabel.backgroundColor = [UIColor clearColor];
@@ -77,7 +77,7 @@
 			offset = 30.0;
 		}
 		
-		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, offset + size.height + 65.0, self.frame.size.width - 40.0, 2.0)];
+		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, offset + size.height + 55.0, self.frame.size.width - 40.0, 2.0)];
 		UIImage *img = [UIImage imageNamed:@"line.png"];
 		lineImgView.image = [img stretchableImageWithLeftCapWidth:1.0 topCapHeight:2.0];
 		[self addSubview:lineImgView];

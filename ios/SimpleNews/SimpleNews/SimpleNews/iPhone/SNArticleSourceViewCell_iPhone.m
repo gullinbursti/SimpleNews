@@ -19,17 +19,17 @@
 
 -(id)init {
 	if ((self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[self class] cellReuseIdentifier]])) {
-		_iconImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, 25.0, 25.0, 25.0)];
+		_iconImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, 22.0, 25.0, 25.0)];
 		_iconImgView.backgroundColor = [UIColor greenColor];
 		[self addSubview:_iconImgView];
 		
-		_nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(55.0, 30.0, 256.0, 16.0)];
-		_nameLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
+		_nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 27.0, 256.0, 16.0)];
+		_nameLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11];
 		_nameLabel.textColor = [UIColor colorWithWhite:0.400 alpha:1.0];
 		_nameLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_nameLabel];
 		
-		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15.0, 78.0, self.frame.size.width - 30.0, 2.0)];
+		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, 73.0, self.frame.size.width - 40.0, 2.0)];
 		UIImage *img = [UIImage imageNamed:@"line.png"];
 		lineImgView.image = [img stretchableImageWithLeftCapWidth:1.0 topCapHeight:2.0];
 		[self addSubview:lineImgView];

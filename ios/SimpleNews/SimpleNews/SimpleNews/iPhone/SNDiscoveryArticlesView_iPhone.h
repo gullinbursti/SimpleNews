@@ -26,7 +26,6 @@
 	BOOL _reloading;
 	
 	UIScrollView *_scrollView;
-	UIView *_overlayView;
 	UIButton *_doneButton;
 	
 	NSMutableArray *_cardViews;

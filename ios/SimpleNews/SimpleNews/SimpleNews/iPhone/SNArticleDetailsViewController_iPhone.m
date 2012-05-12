@@ -151,8 +151,6 @@
 	int offset = 70;
 	EGOImageView *thumbImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, offset, 24.0, 24.0)];
 	thumbImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
-	thumbImgView.layer.cornerRadius = 4.0;
-	thumbImgView.clipsToBounds = YES;
 	[_scrollView addSubview:thumbImgView];
 	
 	UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];

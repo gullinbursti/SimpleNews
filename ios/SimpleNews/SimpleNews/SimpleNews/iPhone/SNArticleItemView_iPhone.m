@@ -26,7 +26,7 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
 		
-		EGOImageView *thumbImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, offset, 25.0, 25.0)];
+		EGOImageView *thumbImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 25.0, 25.0)];
 		thumbImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
 		[self addSubview:thumbImgView];
 		
@@ -35,7 +35,7 @@
 		[avatarButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:avatarButton];
 		
-		offset += 6;
+		offset += 7;
 		
 		NSString *timeSince = @"";
 		int mins = [SNAppDelegate minutesAfterDate:_vo.added];
@@ -61,9 +61,9 @@
 		dateLabel.text = timeSince;
 		[self addSubview:dateLabel];
 		
-		CGSize size2 = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		CGSize size2 = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 		UILabel *sourceLabel = [[UILabel alloc] initWithFrame:CGRectMake(dateLabel.frame.origin.x + size.width, offset, size2.width, 12.0)];
-		sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10];
+		sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
 		sourceLabel.textColor = [SNAppDelegate snLinkColor];
 		sourceLabel.backgroundColor = [UIColor clearColor];
 		sourceLabel.text = _vo.articleSource;
@@ -76,12 +76,12 @@
 		[sourceButton addTarget:self action:@selector(_goSourcePage) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:sourceButton];
 		
-		offset += 42;
+		offset += 41;
 		
 		if (_vo.source_id > 0) {
-			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:16] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, size.height)];
-			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16];
+			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:16];
 			titleLabel.textColor = [UIColor blackColor];
 			titleLabel.backgroundColor = [UIColor clearColor];
 			titleLabel.textAlignment = UITextAlignmentCenter;
@@ -95,7 +95,7 @@
 			[self addSubview:detailsButton];
 			offset += size.height + 15;
 			
-			UIImageView *btnBGImgView = [[UIImageView alloc] initWithFrame:CGRectMake(68.0, offset, 174.0, 44.0)];
+			UIImageView *btnBGImgView = [[UIImageView alloc] initWithFrame:CGRectMake(73.0, offset, 174.0, 44.0)];
 			btnBGImgView.image = [UIImage imageNamed:@"commentLikeButton_BG.png"];
 			btnBGImgView.userInteractionEnabled = YES;
 			[self addSubview:btnBGImgView];
@@ -103,18 +103,18 @@
 			
 			
 			UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			commentButton.frame = CGRectMake(5.0, 0.0, 94.0, 44.0);
+			commentButton.frame = CGRectMake(6.0, 0.0, 94.0, 44.0);
 			[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_nonActive.png"] forState:UIControlStateNormal];
 			[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_Active.png"] forState:UIControlStateHighlighted];
 			[commentButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
 			[commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 			commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
-			commentButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
+			commentButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, -10.0);
 			[commentButton setTitle:@"Comment" forState:UIControlStateNormal];
 			[btnBGImgView addSubview:commentButton];
 			
 			_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			_likeButton.frame = CGRectMake(97.0, 0.0, 74.0, 44.0);
+			_likeButton.frame = CGRectMake(98.0, 0.0, 74.0, 44.0);
 			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
 			[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 			[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
@@ -131,7 +131,7 @@
 		}
 		
 		if (_vo.type_id > 1) {
-			_articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, 270.0 * _vo.imgRatio)];
+			_articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 280.0, 280.0 * _vo.imgRatio)];
 			[_articleImgView setDelegate:self];
 			_articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 			_articleImgView.userInteractionEnabled = YES;
@@ -141,14 +141,14 @@
 			dblTapRecognizer.numberOfTapsRequired = 2;
 			[_articleImgView addGestureRecognizer:dblTapRecognizer];
 			
-			offset += (270.0 * _vo.imgRatio);
+			offset += (280.0 * _vo.imgRatio);
 			offset += 20;
 		}
 		
 		//CGSize imgSize = NSLog(@"IMAGE SIZE:(%d, %d)", (int)[UIImage imageNamed:@"overlay.png"].size.width, (int)[UIImage imageNamed:@"overlay.png"].size.height);
 		
 		if (_vo.type_id > 4) {
-			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, 202.0)];
+			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 280.0, 210.0)];
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[self addSubview:_videoImgView];
 			
@@ -160,7 +160,7 @@
 			_videoButton.frame = _videoImgView.frame;
 			[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:_videoButton];
-			offset += 202.0;
+			offset += 210.0;
 			offset += 20;
 		}
 		
@@ -168,8 +168,6 @@
 		
 		for (NSDictionary *dict in _vo.seenBy) {
 			EGOImageView *readImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(imgOffset, offset, 24.0, 24.0)];
-			readImgView.layer.cornerRadius = 4.0;
-			readImgView.clipsToBounds = YES;
 			readImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1/users/profile_image?screen_name=%@&size=reasonably_small", [dict objectForKey:@"handle"]]];
 			[self addSubview:readImgView];
 			
@@ -265,29 +263,30 @@
 	if (![SNAppDelegate twitterHandle]) {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
+	
+	} else {
+		ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
+		[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+		[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+		[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+		[readRequest setDelegate:self];
+		[readRequest startAsynchronous];
+		
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateNormal];
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateHighlighted];
+		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+		
+		ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
+		[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+		[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+		[likeRequest startAsynchronous];
+		
+		_vo.totalLikes++;
+		_likesLabel.text = [NSString stringWithFormat:@"%d", _vo.totalLikes];
 	}
-	
-	ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
-	[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-	[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
-	[readRequest setDelegate:self];
-	[readRequest startAsynchronous];
-	
-	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateNormal];
-	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateHighlighted];
-	[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-	
-	ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
-	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-	[likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
-	[likeRequest startAsynchronous];
-	
-	_vo.totalLikes++;
-	_likesLabel.text = [NSString stringWithFormat:@"%d", _vo.totalLikes];
 } 
 
 -(void)_goShare {

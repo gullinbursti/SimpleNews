@@ -20,12 +20,12 @@
 -(id)init {
 	if ((self = [super init])) {		
 		_followButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_followButton.frame = CGRectMake(159.0, 5.0, 84.0, 44.0);
+		_followButton.frame = CGRectMake(166.0, 4.0, 84.0, 44.0);
 		[_followButton setBackgroundImage:[UIImage imageNamed:@"followButton_nonActive.png"] forState:UIControlStateNormal];
 		[_followButton setBackgroundImage:[UIImage imageNamed:@"followButton_Active.png"] forState:UIControlStateHighlighted];
 		[_followButton addTarget:self action:@selector(_goToggleFollow) forControlEvents:UIControlEventTouchUpInside];
 		[_followButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-		_followButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		_followButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
 		[_followButton setTitle:@"Unfollow" forState:UIControlStateNormal];
 		[self addSubview:_followButton];
 	}

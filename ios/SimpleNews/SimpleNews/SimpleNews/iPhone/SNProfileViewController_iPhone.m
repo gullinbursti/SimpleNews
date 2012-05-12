@@ -42,7 +42,7 @@
 	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:backBtnView];
 	
-	EGOImageView *avatarImg = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, 70.0, 25.0, 25.0)];
+	EGOImageView *avatarImg = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, 68.0, 25.0, 25.0)];
 	avatarImg.imageURL = [NSURL URLWithString:[SNAppDelegate twitterAvatar]];
 	[self.view addSubview:avatarImg];
 	
@@ -51,8 +51,8 @@
 	[avatarButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:avatarButton];
 	
-	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(55.0, 75.0, 200.0, 16.0)];
-	handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 72.0, 200.0, 16.0)];
+	handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	handleLabel.textColor = [SNAppDelegate snLinkColor];
 	handleLabel.backgroundColor = [UIColor clearColor];
 	handleLabel.text = [NSString stringWithFormat:@"@%@", [SNAppDelegate twitterHandle]];
@@ -64,7 +64,7 @@
 	[self.view addSubview:handleButton];
 	
 	UIButton *profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	profileButton.frame = CGRectMake(273.0, 65.0, 34.0, 34.0);
+	profileButton.frame = CGRectMake(272.0, 64.0, 34.0, 34.0);
 	[profileButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
 	[profileButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
 	[profileButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
@@ -72,7 +72,7 @@
 	
 	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 100.0, self.view.frame.size.width, self.view.frame.size.height - 100.0) style:UITableViewStylePlain];
 	[_tableView setBackgroundColor:[UIColor clearColor]];
-	_tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+	_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	_tableView.rowHeight = 70.0;
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
@@ -142,7 +142,7 @@
 		cell.accessoryView = switchView;
 		
 	} else {
-		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(285.0, 23.0, 24, 24)];		
+		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(284.0, 23.0, 24, 24)];		
 		chevronView.image = [UIImage imageNamed:@"chevron_nonActive.png"];
 		[cell addSubview:chevronView];
 	}
