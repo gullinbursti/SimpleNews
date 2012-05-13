@@ -28,13 +28,13 @@
 
 @interface UAPushSettingsTokenViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate> {
     NSString *text;
-    IBOutlet UIButton *copyButton;
+    IBOutlet UIButton *copiButton;
     IBOutlet UIButton *emailButton;
     IBOutlet UILabel *tokenLabel;
 }
 
 @property (nonatomic, retain) UILabel *tokenLabel;
-@property (nonatomic, retain) UIButton *copyButton;
+@property (nonatomic, retain) UIButton *copiButton;
 @property (nonatomic, retain) UIButton *emailButton;
 
 - (IBAction)copyDeviceToken;

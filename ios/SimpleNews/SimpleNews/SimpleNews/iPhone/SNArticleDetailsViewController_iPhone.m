@@ -60,16 +60,8 @@
 	[headerView addSubview:shareBtnView];
 	
 	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 49.0, self.view.frame.size.width, self.view.frame.size.height - 49.0)];
-	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	
-	if ([SNAppDelegate isDarkStyleUI])
-		[_scrollView setBackgroundColor:[UIColor blackColor]];
-	
-	else
-		[_scrollView setBackgroundColor:[UIColor whiteColor]];
-	
+	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;	
 	[_scrollView setBackgroundColor:[UIColor clearColor]];
-	
 	_scrollView.scrollsToTop = NO;
 	_scrollView.pagingEnabled = NO;
 	_scrollView.showsVerticalScrollIndicator = NO;
@@ -170,17 +162,10 @@
 	[_scrollView addSubview:sourceButton];
 	offset += 39;
 	
-	NSArray *fontSizes = [[[NSUserDefaults standardUserDefaults] objectForKey:@"uiFontSizes"] objectAtIndex:[SNAppDelegate fontFactor]];
-	
-	size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:[[fontSizes objectAtIndex:0] intValue]] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+	size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:12] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 	UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, offset, 280.0, size.height)];
-	titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:[[fontSizes objectAtIndex:0] intValue]];
-	
-	if ([SNAppDelegate isDarkStyleUI])
-		titleLabel.textColor = [UIColor whiteColor];
-	
-	else
-		titleLabel.textColor = [UIColor blackColor];
+	titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:12];
+	titleLabel.textColor = [UIColor blackColor];
 	
 	titleLabel.backgroundColor = [UIColor clearColor];
 	titleLabel.textAlignment = UITextAlignmentCenter;

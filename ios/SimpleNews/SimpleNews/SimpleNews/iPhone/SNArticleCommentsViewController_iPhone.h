@@ -19,7 +19,6 @@
 	EGORefreshTableHeaderView *_refreshHeaderView;
 	
 	UIScrollView *_scrollView;
-	UIImageView *_commentsBGImgView;
 	UITextField *_commentTxtField;
 	UILabel *_commentsLabel;
 	UIView *_bgView;

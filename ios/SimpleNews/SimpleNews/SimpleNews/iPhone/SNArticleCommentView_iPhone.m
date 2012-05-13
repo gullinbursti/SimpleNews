@@ -29,13 +29,13 @@
 		[self addSubview:twitterNameLabel];
 		
 		CGSize size = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11] constrainedToSize:CGSizeMake(256.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-		UILabel *twitterBlurbLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 30.0, 256.0, size.height)];
-		twitterBlurbLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11];
-		twitterBlurbLabel.textColor = [UIColor colorWithWhite:0.482 alpha:1.0];
-		twitterBlurbLabel.numberOfLines = 0;
-		twitterBlurbLabel.backgroundColor = [UIColor clearColor];
-		twitterBlurbLabel.text = _vo.content;
-		[self addSubview:twitterBlurbLabel];
+		UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 30.0, 256.0, size.height)];
+		contentLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11];
+		contentLabel.textColor = [UIColor colorWithWhite:0.482 alpha:1.0];
+		contentLabel.numberOfLines = 0;
+		contentLabel.backgroundColor = [UIColor clearColor];
+		contentLabel.text = _vo.content;
+		[self addSubview:contentLabel];
 		
 		
 		NSString *timeSince = @"";
@@ -71,10 +71,10 @@
 		
 		int offset = 0;
 		if (_vo.isLiked) {
-			UIImageView *likeIcoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(60.0, size.height + 48.0, 25.0, 25.0)];
-			likeIcoImgView.image = [UIImage imageNamed:@"smallDoneButton_nonActive.png"];
+			UIImageView *likeIcoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(49.0, size.height + 37.0, 24.0, 24.0)];
+			likeIcoImgView.image = [UIImage imageNamed:@"heartCommentsIcon.png"];
 			[self addSubview:likeIcoImgView];
-			offset = 30.0;
+			offset = 25.0;
 		}
 		
 		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, offset + size.height + 55.0, self.frame.size.width - 40.0, 2.0)];

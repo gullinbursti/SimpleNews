@@ -85,6 +85,10 @@ static SNTwitterCaller *sharedInstance = nil;
 	}
 }
 
+-(void)writeProfile {
+	[self _fetchData];
+}
+
 
 -(void)userTimeline {
 	NSLog(@"TIMELINE");

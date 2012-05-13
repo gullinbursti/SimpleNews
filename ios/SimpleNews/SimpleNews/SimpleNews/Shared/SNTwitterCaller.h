@@ -14,6 +14,7 @@
 
 +(SNTwitterCaller *) sharedInstance;
 -(void)userTimeline;
+-(void)writeProfile;
 
 @property (strong, nonatomic) ACAccountStore *accountStore; 
 @property (strong, nonatomic) NSArray *accounts;

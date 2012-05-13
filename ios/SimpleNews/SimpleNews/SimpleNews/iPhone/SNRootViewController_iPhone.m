@@ -279,7 +279,6 @@
 
 - (void)_refreshSubscribedList:(NSNotification *)notification {
 	if (_subscribedListsRequest == nil) {
-		NSLog(@"REFRESHING SUBSCRIBED LISTS");
 		_subscribedListsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
 		[_subscribedListsRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		[_subscribedListsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
@@ -293,6 +292,7 @@
 		_holderView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
+		_cardListsButton.hidden = NO;
 	}];
 }
 

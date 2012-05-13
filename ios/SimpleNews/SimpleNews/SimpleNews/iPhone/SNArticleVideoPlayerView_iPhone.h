@@ -31,7 +31,6 @@
 	UIImageView *_progressBgImgView;
 	UIImageView *_progressImgView;
 	UILabel *_timeLabel;
-	UIButton *_closeButton;
 	CGSize _timeSize;
 	UIImageView *_bufferingImgView;
 	

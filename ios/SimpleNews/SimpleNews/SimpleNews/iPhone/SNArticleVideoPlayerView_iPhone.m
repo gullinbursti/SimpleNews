@@ -69,13 +69,6 @@
 		[volumeView sizeToFit];
 		//[self addSubview:volumeView];
 		
-		_closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_closeButton.frame = CGRectMake(0.0, 435.0, 47.0, 45.0);
-		[_closeButton setBackgroundImage:[[UIImage imageNamed:@"playerPlayHeadCloseButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-		[_closeButton setBackgroundImage:[[UIImage imageNamed:@"playerPlayHeadCloseButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-		[_closeButton addTarget:self action:@selector(_goClose) forControlEvents:UIControlEventTouchUpInside];
-		//[self addSubview:_closeButton];
-		
 		_timeSize = [[NSString stringWithFormat:@"%@", @"0:00"] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
 		_timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, _videoHolderView.frame.size.height - 18.0, _timeSize.width, _timeSize.height)];
 		_timeLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
@@ -294,7 +287,6 @@
 		_progressBgImgView.alpha = 1.0;
 		_progressImgView.alpha = 1.0;
 		_timeLabel.alpha = 1.0;
-		_closeButton.alpha = 1.0;
 	}];	
 }
 
@@ -310,7 +302,6 @@
 		_progressBgImgView.alpha = 0.0;
 		_progressImgView.alpha = 0.0;
 		_timeLabel.alpha = 0.0;
-		_closeButton.alpha = 0.0;
 	}];
 }
 
@@ -342,10 +333,10 @@
 	[_progressTimer invalidate];
 	_progressTimer = nil;
 	
-	_bufferingImgView = [[UIImageView alloc] initWithFrame:CGRectMake((_videoHolderView.frame.size.width * 0.5) - 32.0, (_videoHolderView.frame.size.height * 0.5) - 32.0, 64.0, 64.0)];
+	_bufferingImgView = [[UIImageView alloc] initWithFrame:CGRectMake((_videoHolderView.frame.size.width * 0.5) - 22.0, (_videoHolderView.frame.size.height * 0.5) - 22.0, 44.0, 44.0)];
 	[_bufferingImgView setBackgroundColor:[UIColor greenColor]];
 	_bufferingImgView.alpha = 0.0;
-	//_bufferingImgView.image = [UIImage imageNamed:@"playerPlayHeadBG.png"];
+	_bufferingImgView.image = [UIImage imageNamed:@"smallPlayButton_loading.png"];
 	[self addSubview:_bufferingImgView];
 	
 	[UIView animateWithDuration:0.25 animations:^(void) {
