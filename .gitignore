@@ -15,3 +15,6 @@ xcuserdata
 .DS_Store
 .svn
 build
+.ec2/**/*
+
+.ec2/assembly_keypair.pem
