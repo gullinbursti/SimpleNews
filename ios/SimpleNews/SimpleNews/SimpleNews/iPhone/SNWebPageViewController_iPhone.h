@@ -8,10 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+#import "MBProgressHUD.h"
+
 @interface SNWebPageViewController_iPhone : UIViewController <UIWebViewDelegate> {
 	NSString *_pageTitle;
 	NSURL *_url;
 	UIWebView *_webView;
+	
+	MBProgressHUD *_progressHUD;
 }
 
 -(id)initWithURL:(NSURL *)url title:(NSString *)title;

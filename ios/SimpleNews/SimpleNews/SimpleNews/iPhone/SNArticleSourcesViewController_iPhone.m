@@ -28,7 +28,7 @@
 	[super loadView];
 	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Popular Filters"];
@@ -48,17 +48,12 @@
 	_tableView.scrollsToTop = NO;
 	_tableView.showsVerticalScrollIndicator = NO;
 	[self.view addSubview:_tableView];
+		
+	NSString *sourcesPath = [[NSBundle mainBundle] pathForResource:@"sources" ofType:@"plist"];
+	NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:sourcesPath] options:NSPropertyListImmutable format:nil error:nil];
 	
-	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
-	[self.view addSubview:overlayImgView];
-	
-	
-	NSString *testOptionsPath = [[NSBundle mainBundle] pathForResource:@"sources" ofType:@"plist"];
-	NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:testOptionsPath] options:NSPropertyListImmutable format:nil error:nil];
-	
-	for (NSDictionary *testOption in plist)
-		[_sources addObject:[SNArticleSourceVO sourceWithDictionary:testOption]];
+	for (NSDictionary *source in plist)
+		[_sources addObject:[SNArticleSourceVO sourceWithDictionary:source]];
 }
 
 -(void)viewDidLoad {

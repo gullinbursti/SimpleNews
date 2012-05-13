@@ -53,7 +53,7 @@
 	[super loadView];
 	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Comments"];
@@ -112,10 +112,6 @@
 	_commentsLabel.backgroundColor = [UIColor clearColor];
 	_commentsLabel.text = @"Add Comment";
 	[_bgView addSubview:_commentsLabel];
-	
-	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
-	[self.view addSubview:overlayImgView];
 	
 	_commentOffset = 0;
 	for (SNCommentVO *vo in _vo.comments) {

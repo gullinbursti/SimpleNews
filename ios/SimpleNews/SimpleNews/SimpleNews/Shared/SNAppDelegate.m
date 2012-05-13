@@ -175,6 +175,73 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 	return ([utcDate timeIntervalSinceDate:date] / 86400);
 }
 
++(UIImage *)imageWithFilters:(UIImage *)srcImg filter:(NSArray *)fxList {
+	UIImage *fxImg = srcImg;
+	UIImage *outImg;
+	
+	for (NSDictionary *filter in fxList) {
+		NSLog(@"%f", [[filter objectForKey:@"amount"] doubleValue]);
+		
+		if ([[filter objectForKey:@"type"] isEqualToString:@"adjust"])
+			outImg = [fxImg adjust:[[filter objectForKey:@"red"] doubleValue] g:[[filter objectForKey:@"green"] doubleValue] b:[[filter objectForKey:@"blue"] doubleValue]];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"bias"])
+			outImg = [fxImg bias:[[filter objectForKey:@"amount"] doubleValue]];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"blur"])
+			outImg = [fxImg gaussianBlur:[[filter objectForKey:@"amount"] intValue]];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"brightness"])
+			outImg = [fxImg brightness:[[filter objectForKey:@"amount"] doubleValue]];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"contrast"])
+			outImg = [fxImg contrast:[[filter objectForKey:@"amount"] doubleValue]];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"darkVignette"])
+			outImg = [fxImg darkVignette];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"gamma"])
+			outImg = [fxImg gamma:[[filter objectForKey:@"amount"] doubleValue]];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"greyscale"])
+			outImg = [fxImg greyscale];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"invert"])
+			outImg = [fxImg invert];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"levels"])
+			outImg = [fxImg levels:[[filter objectForKey:@"shadow"] intValue] mid:[[filter objectForKey:@"mid"] intValue] white:[[filter objectForKey:@"hilight"] intValue]];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"lomo"])
+			outImg = [fxImg lomo];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"noise"])
+			outImg = [fxImg noise:[[filter objectForKey:@"amount"] doubleValue]];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"polaroid"])
+			outImg = [fxImg polaroidish];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"posterize"])
+			outImg = [fxImg posterize:[[filter objectForKey:@"amount"] intValue]];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"saturation"])
+			outImg = [fxImg saturate:[[filter objectForKey:@"amount"] doubleValue]];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"sepia"])
+			outImg = [fxImg sepia];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"sharpen"])
+			outImg = [fxImg sharpen];
+		
+		else if ([[filter objectForKey:@"type"] isEqualToString:@"vignette"])
+			outImg = [fxImg vignette];
+		
+		fxImg = outImg;
+	}
+	
+	return (outImg);
+}
+
 
 +(void)writeDeviceToken:(NSString *)token {
 	[[NSUserDefaults standardUserDefaults] setObject:token forKey:@"device_token"];
@@ -387,20 +454,14 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 		//	rootNavigationController = [[UINavigationController alloc] initWithRootViewController:_rootViewController_iPhone];
 		//}
 		
-		
-		
-		
-		[[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"header.png"] forBarMetrics:UIBarMetricsDefault];
-		[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackButtonBackgroundImage:[[UIImage imageNamed:@"backArrowButton_nonActive.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-		[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackButtonBackgroundImage:[[UIImage imageNamed:@"backArrowButton_Active.png"] stretchableImageWithLeftCapWidth:0 topCapHeight:0] forState:UIControlStateHighlighted barMetrics:UIBarMetricsDefault];
-		
-		//[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setBackgroundImage:[[UIImage imageNamed:@"navigation_button.png"] stretchableImageWithLeftCapWidth:14 topCapHeight:14] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-		[[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[[SNAppDelegate snHelveticaFontBold] fontWithSize:14.0], UITextAttributeFont, [UIColor blackColor], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
-		
-		
 		[rootNavigationController setNavigationBarHidden:YES];
 		[self.window setRootViewController:rootNavigationController];
+		[self.window setBackgroundColor:[UIColor blackColor]];
 		[self.window makeKeyAndVisible];
+		
+		UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.window.frame];
+		overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
+		[self.window addSubview:overlayImgView];
 	
 	} else {
 		//_gridViewController_iPad = [[SNVideoGridViewController_iPad alloc] init];

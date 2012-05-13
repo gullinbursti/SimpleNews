@@ -21,7 +21,6 @@
 #import "SNFollowingListViewCell_iPhone.h"
 #import "SNAppDelegate.h"
 #import "SNArticleListViewController_iPhone.h"
-#import "SNArticleListView_iPhone.h"
 #import "SNDiscoveryArticlesView_iPhone.h"
 #import "SNArticleDetailsViewController_iPhone.h"
 #import "SNArticleSourcesViewController_iPhone.h"
@@ -44,9 +43,9 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshSubscribedList:) name:@"REFRESH_SUBSCRIBED_LIST" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleSources:) name:@"SHOW_ARTICLE_SOURCES" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showComments:) name:@"SHOW_COMMENTS" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleComments:) name:@"SHOW_ARTICLE_COMMENTS" object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_articlesReturn:) name:@"ARTICLES_RETURN" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_discoveryReturn:) name:@"DISCOVERY_RETURN" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_listSubscribe:) name:@"LIST_SUBSCRIBE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_listUnsubscribe:) name:@"LIST_UNSUBSCRIBE" object:nil];
@@ -75,11 +74,8 @@
 -(void)loadView {
 	[super loadView];
 	
-	self.view.layer.cornerRadius = 8.0;
-	self.view.clipsToBounds = YES;
-	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
 	//_holderView = [[UIView alloc] initWithFrame:CGRectMake(-270.0, 0.0, 580.0, self.view.frame.size.height)];
@@ -136,7 +132,7 @@
 	[_toggleRtImgView addSubview:popularOnLabel];
 	
 	UIButton *toggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	toggleButton.frame = CGRectMake(78.0, 4.0, 164.0, 44.0);
+	toggleButton.frame = CGRectMake(78.0, 8.0, 164.0, 44.0);
 	[toggleButton addTarget:self action:@selector(_goListsToggle) forControlEvents:UIControlEventTouchUpInside];
 	[_holderView addSubview:toggleButton];
 	
@@ -172,8 +168,7 @@
 	[_popularHeaderView refreshLastUpdatedDate];
 	
 	_cardListsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	//[_cardListsButton setBackgroundColor:[SNAppDelegate snDebugGreenColor]];
-	_cardListsButton.frame = CGRectMake(280.0, 15.0, 40.0, 423.0);
+	_cardListsButton.frame = CGRectMake(276.0, 0.0, 44.0, self.view.frame.size.height);
 	[_cardListsButton addTarget:self action:@selector(_goCardLists) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_cardListsButton];
 	
@@ -186,34 +181,9 @@
 
 -(void)viewDidLoad {
 	[super viewDidLoad];
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_cardListsButton.hidden = YES;
-		_holderView.frame = CGRectMake(-276.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-		
-	} completion:^(BOOL finished) {
-		[UIView animateWithDuration:0.33 animations:^(void) {
-		} completion:nil];
-	}];
-	
-	
-	//_profileButton.hidden = YES;
-	//_toggleLtImgView.hidden = YES;
-	//_toggleRtImgView.hidden = YES;
-	
+
 //	[UIView animateWithDuration:0.33 animations:^(void) {
-//		_holderView.frame = CGRectMake(-270.0, _holderView.frame.origin.y, _holderView.frame.size.width, _holderView.frame.size.height);
-//	
-//	} completion:^(BOOL finished) {
-//		[UIView animateWithDuration:0.33 animations:^(void) {
-//			_rootListButton.frame = CGRectMake(0.0, 0.0, 64.0, 64.0);
-//		
-//		} completion:^(BOOL finished) {
-//			_profileButton.hidden = NO;
-//			_toggleLtImgView.hidden = NO;
-//			_toggleRtImgView.hidden = NO;
-//		}];
-//	}];
+//	} completion:nil];
 }
 
 -(void)viewDidUnload {
@@ -225,7 +195,11 @@
 	
 	_discoveryArticlesView.hidden = NO;
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_discoveryArticlesView.frame = CGRectMake(276.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
+		//_discoveryArticlesView.frame = CGRectMake(276.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
+		//_shadowView.frame = CGRectMake(256.0, _shadowView.frame.origin.y, _shadowView.frame.size.width, _shadowView.frame.size.height);
+		
+		_discoveryArticlesView.alpha = 1.0;
+		_shadowImgView.alpha = 1.0;
 	}];
 }
 
@@ -247,8 +221,6 @@
 		_holderView.frame = CGRectMake(-276.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
-		[UIView animateWithDuration:0.33 animations:^(void) {
-		} completion:nil];
 	}];
 }
 
@@ -259,8 +231,12 @@
 		[alert show];
 		
 	} else {
-		[UIView animateWithDuration:0.125 animations:^(void) {
-			_discoveryArticlesView.frame = CGRectMake(320.0, 0.0, self.view.frame.size.width, self.view.frame.size.width);
+		[UIView animateWithDuration:0.33 animations:^(void) {
+//			_discoveryArticlesView.frame = CGRectMake(320.0, 0.0, self.view.frame.size.width, self.view.frame.size.width);
+//			_shadowView.frame = CGRectMake(320.0, _shadowView.frame.origin.y, _shadowView.frame.size.width, _shadowView.frame.size.height);
+			
+			_discoveryArticlesView.alpha = 0.0;
+			_shadowImgView.alpha = 0.0;
 			
 		}completion:^(BOOL finished) {
 			_discoveryArticlesView.hidden = YES;
@@ -312,30 +288,26 @@
 	}
 }
 
--(void)_articlesReturn:(NSNotification *)notification {
+-(void)_discoveryReturn:(NSNotification *)notification {
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_holderView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
-		_cardListsButton.hidden = NO;
 	}];
 }
 
--(void)_showComments:(NSNotification *)notification {
+-(void)_showArticleComments:(NSNotification *)notification {
 	SNArticleCommentsViewController_iPhone *articleCommentsViewController = [[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object] listID:0];
-	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:articleCommentsViewController animated:YES];
 }
 
 -(void)_showArticleDetails:(NSNotification *)notification {
 	SNArticleDetailsViewController_iPhone *articleDetailsViewController = [[SNArticleDetailsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]];
-	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:articleDetailsViewController animated:YES];
 }
 
 -(void)_showTwitterProfile:(NSNotification *)notification {
-	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]];
-	[self.navigationController setNavigationBarHidden:YES];
+	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]];
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
@@ -476,24 +448,26 @@
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 	
 	if ([tableView isEqual:_popularTableView]) {
-		[UIView animateWithDuration:0.125 animations:^(void) {
-			_discoveryArticlesView.frame = CGRectMake(320.0, 0.0, self.view.frame.size.width, self.view.frame.size.width);
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_discoveryArticlesView.alpha = 0.0;
+			_shadowImgView.alpha = 0.0;
 			
-		}completion:^(BOOL finished) {
-			_discoveryArticlesView.hidden = YES;
-			NSLog(@"SELECTED %@", ((SNListVO *)[_popularLists objectAtIndex:indexPath.row]).list_name);
-			[self.navigationController setNavigationBarHidden:YES];
+//			_discoveryArticlesView.frame = CGRectMake(320.0, 0.0, self.view.frame.size.width, self.view.frame.size.width);
+//			_shadowView.frame = CGRectMake(320.0, _shadowView.frame.origin.y, _shadowView.frame.size.width, _shadowView.frame.size.height);
+			
+		} completion:^(BOOL finished) {
 			[self.navigationController pushViewController:[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_popularLists objectAtIndex:indexPath.row]] animated:YES];
 		}];
 		
 	} else if ([tableView isEqual:_subscribedTableView]) {
-		[UIView animateWithDuration:0.125 animations:^(void) {
-			_discoveryArticlesView.frame = CGRectMake(320.0, 0.0, self.view.frame.size.width, self.view.frame.size.width);
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_discoveryArticlesView.alpha = 0.0;
+			_shadowImgView.alpha = 0.0;
 			
-		}completion:^(BOOL finished) {
-			_discoveryArticlesView.hidden = YES;
-			NSLog(@"SELECTED %@", ((SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]).list_name);
-			[self.navigationController setNavigationBarHidden:YES];
+//			_discoveryArticlesView.frame = CGRectMake(320.0, 0.0, self.view.frame.size.width, self.view.frame.size.width);
+//			_shadowView.frame = CGRectMake(320.0, _shadowView.frame.origin.y, _shadowView.frame.size.width, _shadowView.frame.size.height);
+			
+		} completion:^(BOOL finished) {
 			[self.navigationController pushViewController:[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]] animated:YES];
 		}];
 	}
@@ -602,7 +576,19 @@
 				[_userRequest startAsynchronous];			
 			}
 			
+			_shadowImgView = [[UIImageView alloc] initWithFrame:CGRectMake(256.0, 0.0, 30.0, _holderView.frame.size.height)];
+			_shadowImgView.image = [UIImage imageNamed:@"shadow.png"];
+			//[_shadowImgView setBackgroundColor:[SNAppDelegate snDebugRedColor]];
+//			_shadowView.layer.shadowColor = [[UIColor blackColor] CGColor];
+//			_shadowView.layer.shadowOffset = CGSizeMake(0.0, 0.0);
+//			_shadowView.layer.shadowOpacity = 0.5;
+//			_shadowView.layer.shouldRasterize = YES;
+//			_shadowView.layer.shadowRadius = 8.0;
+			_shadowImgView.alpha = 0.0;
+			[_holderView addSubview:_shadowImgView];
+			
 			_discoveryArticlesView = [[SNDiscoveryArticlesView_iPhone alloc] initWithFrame:CGRectMake(276.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_popularLists objectAtIndex:0]];
+			_discoveryArticlesView.alpha = 1.0;
 			[_holderView addSubview:_discoveryArticlesView];
 		}
 		
@@ -680,13 +666,7 @@
 
 
 -(void)requestFailed:(ASIHTTPRequest *)request {
-	if (request == _subscribedListsRequest) {
-		//[_delegates perform:@selector(jobList:didFailLoadWithError:) withObject:self withObject:request.error];
-		//MBL_RELEASE_SAFELY(_jobListRequest);
-		_subscribedListsRequest = nil;
-	}
-	
-	//[_loadOverlay remove];
+	NSLog(@"requestFailed:\n[%@]", request.error);
 }
 
 

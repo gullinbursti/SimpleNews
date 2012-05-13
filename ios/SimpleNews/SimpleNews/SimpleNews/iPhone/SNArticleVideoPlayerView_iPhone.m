@@ -523,7 +523,7 @@
 }
 
 -(void)requestFailed:(ASIHTTPRequest *)request {
-	NSLog(@"requestFailed");
+	NSLog(@"requestFailed:\n[%@]", request.error);
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"VIDEO_ENDED" object:nil];
 }
 

@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 
 #import "ASIFormDataRequest.h"
+#import "MBProgressHUD.h"
 
 @interface SNProfileArticlesViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, ASIHTTPRequestDelegate> {
 	ASIFormDataRequest *_articlesRequest;
+	MBProgressHUD *_progressHUD;
 	
 	NSMutableArray *_articles;
 	UITableView *_tableView;

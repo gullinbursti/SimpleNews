@@ -34,7 +34,6 @@
 
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showComments:) name:@"SHOW_COMMENTS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_leaveArticles:) name:@"LEAVE_ARTICLES" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showFullscreenMedia:) name:@"SHOW_FULLSCREEN_MEDIA" object:nil];
@@ -60,9 +59,17 @@
 	if ((self = [self initWithFrame:frame])) {
 		_vo = vo;
 		
-		//[self setBackgroundColor:[UIColor blackColor]];
+		[self setBackgroundColor:[UIColor whiteColor]];
+		
 		self.layer.cornerRadius = 8.0;
 		self.clipsToBounds = YES;
+		
+//		CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+//		gradientLayer.frame = CGRectMake(self.frame.size.width, 0.0, 30.0, self.frame.size.height);
+//		gradientLayer.colors = [NSArray arrayWithObjects: (id)[UIColor blackColor].CGColor, (id)[UIColor clearColor].CGColor, nil];
+//		gradientLayer.startPoint = CGPointMake(-2.0, 0.5);
+//		gradientLayer.endPoint = CGPointMake(1.0, 0.5);   
+//		[self.layer addSublayer:gradientLayer];
 		
 		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 8] forKey:@"action"];
@@ -86,11 +93,6 @@
 		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
 		[self addSubview:_scrollView];
 		
-		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
-		_refreshHeaderView.delegate = self;
-		[_scrollView addSubview:_refreshHeaderView];
-		[_refreshHeaderView refreshLastUpdatedDate];
-		
 		SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.list_name];
 		[self addSubview:headerView];
 		
@@ -101,19 +103,6 @@
 		SNNavLogoBtnView *logoBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
 		[[logoBtnView btn] addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:logoBtnView];
-		
-		
-		_doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_doneButton.frame = CGRectMake(250.0, 3.0, 64.0, 48.0);
-		[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_nonActive.png"] forState:UIControlStateNormal];
-		[_doneButton setBackgroundImage:[UIImage imageNamed:@"doneButton_Active.png"] forState:UIControlStateHighlighted];
-		_doneButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
-		_doneButton.titleLabel.textAlignment = UITextAlignmentCenter;
-		[_doneButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-		[_doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-		[_doneButton setTitle:@"Done" forState:UIControlStateNormal];
-		[_doneButton addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
-		_doneButton.alpha = 0.0;
 		
 		_blackMatteView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
 		[_blackMatteView setBackgroundColor:[UIColor blackColor]];
@@ -141,30 +130,9 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_SOURCE_PAGE" object:nil];
 }
 
-- (void)reloadTableViewDataSource {
-	_reloading = YES;
-	
-	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-	
-	_updateRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
-	[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
-	[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-	[_updateRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles objectAtIndex:0]).added] forKey:@"datetime"];
-	[_updateRequest setDelegate:self];
-	[_updateRequest startAsynchronous];
-}
-
-- (void)doneLoadingTableViewData {
-	_reloading = NO;
-	
-	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_scrollView];
-}
-
-
 #pragma mark - Navigation
 -(void)_goBack {	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"ARTICLES_RETURN" object:nil];	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
 }
 
 -(void)_goFlip {
@@ -241,10 +209,6 @@
 	}];
 }
 
--(void)_showComments:(NSNotification *)notification {
-	//[self.navigationController pushViewController:[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object] listID:_vo.list_id] animated:YES];
-}
-
 -(void)_readLater:(NSNotification *)notification {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CANCEL_SHARE" object:nil];	
 }
@@ -260,7 +224,7 @@
 }
 
 -(void)_showTwitterProfile:(NSNotification *)notification {
-	//SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]];
+	//SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]];
 	//[self.navigationController setNavigationBarHidden:YES];
 	//[self.navigationController pushViewController:webPageViewController animated:YES];
 }
@@ -271,35 +235,11 @@
 	//[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
-#pragma mark - EGORefreshTableHeaderDelegate Methods
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
-	[self reloadTableViewDataSource];
-}
-
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView *)view {
-	return _reloading; // should return if data source model is reloading
-}
-
-- (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView *)view {
-	return [NSDate date]; // should return date data source was last change	
-}
-
-// any offset changes
+#pragma mark - ScrollView delegates
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	[_paginationView updToPage:round(scrollView.contentOffset.x / self.frame.size.width)];
-	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
 }
 
-
-// called on finger up if the user dragged. velocity is in points/second. targetContentOffset may be changed to adjust where the scroll view comes to rest. not called when pagingEnabled is YES
--(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
-	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-}
-
-// called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
--(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
-	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-}
 
 #pragma mark - MailComposeViewController Delegates
 -(void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
@@ -335,9 +275,10 @@
 
 #pragma mark - Image View delegates
 -(void)imageViewLoadedImage:(EGOImageView *)imageView {
-	NSLog(@"LOADED [%@]", imageView.imageURL);
-	UIImage *img = imageView.image;
-	imageView.image = [img saturate:(1 + 1 - 0.5)];
+	imageView.image = [SNAppDelegate imageWithFilters:imageView.image filter:[NSArray arrayWithObjects:
+																									  [NSDictionary dictionaryWithObjectsAndKeys:
+																										@"sepia", @"type", nil, nil], 
+																									  nil]];
 }
 
 
@@ -357,10 +298,8 @@
 				_cardViews = [NSMutableArray new];
 				
 				int tot = 0;
-				//int offset = 60;
 				for (NSDictionary *serverArticle in parsedArticles) {
 					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
-					
 					//NSLog(@"ARTICLE \"%@\"", vo.title);
 					
 					if (vo != nil)
@@ -388,131 +327,21 @@
 				}
 				
 				_articles = [articleList copy];
-				
-				for (SNDiscoveryArticleCardView_iPhone *itemView in _cardViews) {
+				for (SNDiscoveryArticleCardView_iPhone *itemView in _cardViews)
 					[_scrollView addSubview:itemView];
-				}
 				
-				_lastDate = ((SNArticleVO *)[_articles objectAtIndex:0]).added;
 				_scrollView.contentSize = CGSizeMake(tot * 320.0, self.frame.size.height - 49.0);
 				
 				_paginationView = [[SNPaginationView alloc] initWithTotal:[_cardViews count] coords:CGPointMake(160.0, 460.0)];
 				[self addSubview:_paginationView];
 			}
-		}	
-		
-	} else if ([request isEqual:_updateRequest]) {
-		@autoreleasepool {
-			NSError *error = nil;
-			NSArray *parsedArticles = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-			if (error != nil)
-				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
-			
-			else {
-				int tot = 0;
-				int offset = 0;
-				for (NSDictionary *serverArticle in parsedArticles) {
-					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
-					
-					int height;
-					if (vo.source_id > 0) {
-						height = 220;
-						CGSize size;
-						
-						if (vo.type_id > 1) {
-							height += 270.0 * vo.imgRatio;
-							height += 20;
-						}
-						
-						size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-						height += size.height;
-						
-						if ([vo.affiliateURL length] > 0)
-							height += 48;
-						
-						if (vo.type_id > 4) {
-							height += 202;
-							offset += 20;
-						}
-						
-					} else {
-						height = 59;
-					}
-					
-					offset += height;
-					tot++;
-				}
-				
-				for (SNDiscoveryArticleCardView_iPhone *articleItemView in _cardViews) {
-					[UIView animateWithDuration:0.5 animations:^(void) {
-						articleItemView.frame = CGRectMake(0.0, articleItemView.frame.origin.y + offset, articleItemView.frame.size.width, articleItemView.frame.size.height);
-					}];
-				}
-				
-				int cnt = 0;
-				offset = 60;
-				
-				NSMutableArray *articleList = [NSMutableArray array];
-				for (NSDictionary *serverArticle in parsedArticles) {
-					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
-					
-					if (vo != nil)
-						[articleList addObject:vo];
-					
-					int height;
-					if (vo.source_id > 0) {
-						height = 220;
-						CGSize size;
-						
-						if (vo.type_id > 1) {
-							height += 270.0 * vo.imgRatio;
-							height += 20;
-						}
-						
-						size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-						height += size.height;
-						
-						if (vo.type_id > 4) {
-							height += 202;
-						}
-						
-					} else {
-						height = 59;
-					}
-					
-					SNDiscoveryArticleCardView_iPhone *articleItemView = [[SNDiscoveryArticleCardView_iPhone alloc] initWithFrame:CGRectMake(0.0, offset, _scrollView.frame.size.width, height) articleVO:vo];
-					[_cardViews addObject:articleItemView];
-					
-					offset += height;
-					cnt++;
-				}
-				
-				for (SNDiscoveryArticleCardView_iPhone *itemView in _cardViews) {
-					[_scrollView insertSubview:itemView atIndex:0];
-				}
-				
-				
-				NSMutableArray *updatedArticles = [NSMutableArray arrayWithArray:articleList];
-				[updatedArticles addObjectsFromArray:_articles];
-				_articles = [updatedArticles copy];
-				_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
-				
-				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, _scrollView.contentSize.height + offset);
-			}
 		}
-		
-		[self doneLoadingTableViewData];
 	}
 }
 
 
 -(void)requestFailed:(ASIHTTPRequest *)request {
-	if (request == _articlesRequest) {
-		//[_delegates perform:@selector(jobList:didFailLoadWithError:) withObject:self withObject:request.error];
-		//MBL_RELEASE_SAFELY(_jobListRequest);
-	}
-	
-	//[_loadOverlay remove];
+	NSLog(@"requestFailed:\n[%@]", request.error);
 }
 
 @end

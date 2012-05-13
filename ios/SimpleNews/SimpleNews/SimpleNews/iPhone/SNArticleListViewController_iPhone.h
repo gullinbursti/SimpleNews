@@ -10,10 +10,11 @@
 #import <MessageUI/MessageUI.h>
 
 #import "ASIFormDataRequest.h"
-#import "SNListVO.h"
 #import "EGORefreshTableHeaderView.h"
 #import "EGOImageView.h"
+#import "MBProgressHUD.h"
 
+#import "SNListVO.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 
 @interface SNArticleListViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate, EGOImageViewDelegate> {
@@ -21,6 +22,8 @@
 	ASIFormDataRequest *_articlesRequest;
 	ASIFormDataRequest *_updateRequest;
 	EGORefreshTableHeaderView *_refreshHeaderView;
+	MBProgressHUD *_progressHUD;
+	
 	UIButton *_subscribeBtn;
 	BOOL _reloading;
 	

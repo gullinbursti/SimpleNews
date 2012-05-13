@@ -12,6 +12,8 @@
 #import "SNRootViewController_iPhone.h"
 #import "UAPushNotificationHandler.h"
 
+#import "ImageFilter.h"
+
 
 @class SNViewController;
 
@@ -75,6 +77,8 @@
 +(int)minutesAfterDate:(NSDate *)date;
 +(int)hoursAfterDate:(NSDate *)date;
 +(int)daysAfterDate:(NSDate *)date;
+
++(UIImage *)imageWithFilters:(UIImage *)srcImg filter:(NSDictionary *)fx;
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, retain) NSArray *userPermissions;

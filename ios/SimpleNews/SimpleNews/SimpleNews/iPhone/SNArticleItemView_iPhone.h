@@ -14,12 +14,13 @@
 #import "ASIFormDataRequest.h"
 
 @interface SNArticleItemView_iPhone : UIView <ASIHTTPRequestDelegate, EGOImageViewDelegate> {
-	SNArticleVO *_vo;
-	UIButton *_videoButton;
 	UIButton *_likeButton;
+	UIButton *_videoButton;
+	
 	EGOImageView *_articleImgView;
 	EGOImageView *_videoImgView;
-	UILabel *_likesLabel;
+	
+	SNArticleVO *_vo;
 }
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;

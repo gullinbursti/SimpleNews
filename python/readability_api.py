@@ -36,7 +36,7 @@ img_url = m.group(1)
 # --/ open image & get size
 img = Image.open(cStringIO.StringIO(urllib.urlopen(img_url).read()))
 img_w, img_h = img.size
-img_ratio = img_w / float(img_h)
+img_ratio = img_h / float(img_w)
 
 print img.size
 print img_ratio

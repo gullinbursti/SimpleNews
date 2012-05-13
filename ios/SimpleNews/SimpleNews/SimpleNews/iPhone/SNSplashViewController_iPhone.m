@@ -36,29 +36,25 @@
 	[super loadView];
 	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
-	_logoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(93, 130, 134.0, 134.0)];
+	_logoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(127.0, 170.0, 64.0, 64.0)];
 	_logoImgView.image = [UIImage imageNamed:@"logoLoader_001.png"];
 	[self.view addSubview:_logoImgView];
 	
-	UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 285.0, 120.0, 18.0)];
-	titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
+	UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(100.0, 245.0, 120.0, 16.0)];
+	titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 	titleLabel.textColor = [UIColor blackColor];
 	titleLabel.backgroundColor = [UIColor clearColor];
-	titleLabel.shadowColor = [UIColor colorWithWhite:1.0f alpha:1.0f];
-	titleLabel.shadowOffset = CGSizeMake(1.0f, 1.0f);
 	titleLabel.textAlignment = UITextAlignmentCenter;
-	titleLabel.text = @"Assembling news";
+	titleLabel.text = @"Assembling content";
 	[self.view addSubview:titleLabel];
 	
-	UILabel *subtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(50.0, 308.0, 220.0, 18.0)];
-	subtitleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
+	UILabel *subtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(50.0, 263.0, 220.0, 16.0)];
+	subtitleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:12];
 	subtitleLabel.textColor = [UIColor colorWithWhite:0.545 alpha:1.0];
 	subtitleLabel.backgroundColor = [UIColor clearColor];
-	subtitleLabel.shadowColor = [UIColor colorWithWhite:1.0f alpha:1.0f];
-	subtitleLabel.shadowOffset = CGSizeMake(1.0f, 1.0f);
 	subtitleLabel.textAlignment = UITextAlignmentCenter;
 	subtitleLabel.text = @"from the last 24 hours…";
 	[self.view addSubview:subtitleLabel];
@@ -80,16 +76,11 @@
 	
 	_frameIndex++;
 	
-	if (_frameIndex == 7 * 3) {
+	if (_frameIndex == 6 * 3) {
 		[_frameTimer invalidate];
 		_frameTimer = nil;
 		
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"SPLASH_DISMISSED" object:nil];
-		
-		SNRootViewController_iPhone *rootViewController = [[SNRootViewController_iPhone alloc] init];
-		UINavigationController *rootNavigationController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
-		[rootNavigationController setNavigationBarHidden:YES animated:NO];
-		[self.navigationController pushViewController:rootViewController animated:YES];
+		[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
 	}
 	
 	_logoImgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"logoLoader_00%d.png", (_frameIndex % 6) + 1]];

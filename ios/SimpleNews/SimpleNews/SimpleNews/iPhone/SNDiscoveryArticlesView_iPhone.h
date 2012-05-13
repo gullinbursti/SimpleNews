@@ -13,20 +13,14 @@
 #import "ASIFormDataRequest.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 #import "SNListVO.h"
-#import "EGORefreshTableHeaderView.h"
 #import "EGOImageView.h"
 #import "SNPaginationView.h"
 
-@interface SNDiscoveryArticlesView_iPhone : UIView <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate, EGOImageViewDelegate> {
+@interface SNDiscoveryArticlesView_iPhone : UIView <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGOImageViewDelegate> {
 	NSMutableArray *_articles;
 	ASIFormDataRequest *_articlesRequest;
-	ASIFormDataRequest *_updateRequest;
-	EGORefreshTableHeaderView *_refreshHeaderView;
-	
-	BOOL _reloading;
 	
 	UIScrollView *_scrollView;
-	UIButton *_doneButton;
 	
 	NSMutableArray *_cardViews;
 	NSMutableArray *_timelineTweets;
@@ -38,7 +32,6 @@
 	UIView *_blackMatteView;
 	EGOImageView *_fullscreenImgView;
 	CGRect _fullscreenFrame;
-	NSDate *_lastDate;
 }
 
 -(id)initWithFrame:(CGRect)frame listVO:(SNListVO *)vo;

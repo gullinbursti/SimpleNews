@@ -55,7 +55,7 @@
 	[super loadView];
 	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_headerTitle];
@@ -64,7 +64,6 @@
 	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
 	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:backBtnView];
-	
 	
 	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 49.0, self.view.frame.size.width, self.view.frame.size.height - 49.0) style:UITableViewStylePlain];
 	[_tableView setBackgroundColor:[UIColor clearColor]];
@@ -79,9 +78,14 @@
 
 -(void)viewDidLoad {
 	[super viewDidLoad];
+	
+	_progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+	_progressHUD.mode = MBProgressHUDModeIndeterminate;
 }
 
 -(void)viewDidUnload {
+	_progressHUD = nil;
+	
 	[super viewDidUnload];
 }
 
@@ -165,6 +169,12 @@
 			[_tableView reloadData];
 		}
 	}
+	
+	[_progressHUD hide:YES];
+}
+
+-(void)requestFailed:(ASIHTTPRequest *)request {
+	NSLog(@"requestFailed:\n[%@]", request.error);
 }
 
 @end

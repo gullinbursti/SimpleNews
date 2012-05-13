@@ -16,12 +16,9 @@
 
 @interface SNDiscoveryArticleCardView_iPhone : UIView <ASIHTTPRequestDelegate, EGOImageViewDelegate> {
 	SNArticleVO *_vo;
-	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
-	UIButton *_videoButton;
-	UIButton *_likeButton;
 	EGOImageView *_articleImgView;
-	EGOImageView *_videoImgView;
-	UILabel *_likesLabel;
+	
+	UIButton *_likeButton;
 }
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;

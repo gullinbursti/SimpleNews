@@ -45,7 +45,7 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_readLater:) name:@"READ_LATER" object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showDetails:) name:@"SHOW_DETAILS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSourcePage:) name:@"SHOW_SOURCE_PAGE" object:nil];
 		
@@ -97,7 +97,7 @@
 	[super loadView];
 	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-	bgImgView.image = [UIImage imageNamed:@"background_root.png"];
+	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
 	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 49.0, self.view.frame.size.width, self.view.frame.size.height - 49.0)];
@@ -144,17 +144,18 @@
 	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
 	_blackMatteView.alpha = 0.0;
 	[self.view addSubview:_blackMatteView];
-	
-	UIImageView *overlayImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-	overlayImgView.image = [UIImage imageNamed:@"overlay.png"];
-	[self.view addSubview:overlayImgView];
 }
 
 -(void)viewDidLoad {
 	[super viewDidLoad];
+	
+	_progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+	_progressHUD.mode = MBProgressHUDModeIndeterminate;
 }
 
 -(void)viewDidUnload {
+	_progressHUD = nil;
+	
 	[super viewDidUnload];
 }
 
@@ -344,21 +345,18 @@
 	_timelineTweets = (NSMutableArray *)[notification object];
 }
 
--(void)_showArticleDetails:(NSNotification *)notification {
+-(void)_showDetails:(NSNotification *)notification {
 	SNArticleDetailsViewController_iPhone *articleDetailsViewController = [[SNArticleDetailsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]];
-	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:articleDetailsViewController animated:YES];
 }
 
 -(void)_showTwitterProfile:(NSNotification *)notification {
-	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@/", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]];
-	[self.navigationController setNavigationBarHidden:YES];
+	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]];
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
 -(void)_showSourcePage:(NSNotification *)notification {
 	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[[notification object] objectForKey:@"url"]] title:[[notification object] objectForKey:@"title"]];
-	[self.navigationController setNavigationBarHidden:YES];
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
@@ -394,14 +392,15 @@
 
 #pragma mark - Image View delegates
 -(void)imageViewLoadedImage:(EGOImageView *)imageView {
-	NSLog(@"LOADED [%@]", imageView.imageURL);
-	UIImage *img = imageView.image;
-	imageView.image = [img saturate:(1 + 1 - 0.5)];
+	imageView.image = [SNAppDelegate imageWithFilters:imageView.image filter:[NSArray arrayWithObjects:
+																									  [NSDictionary dictionaryWithObjectsAndKeys:
+																										@"sepia", @"type", nil, nil], 
+																									  nil]];
 }
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
-	//NSLog(@"SNArticleListViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	NSLog(@"SNArticleListViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
 	if ([request isEqual:_articlesRequest]) {
 		@autoreleasepool {
@@ -466,7 +465,9 @@
 				_lastDate = ((SNArticleVO *)[_articles objectAtIndex:0]).added;
 				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
 			}
-		}	
+		}
+		
+		[_progressHUD hide:YES];
 		
 	} else if ([request isEqual:_updateRequest]) {
 		@autoreleasepool {
@@ -576,25 +577,7 @@
 
 
 -(void)requestFailed:(ASIHTTPRequest *)request {
-	if (request == _articlesRequest) {
-		//[_delegates perform:@selector(jobList:didFailLoadWithError:) withObject:self withObject:request.error];
-		//MBL_RELEASE_SAFELY(_jobListRequest);
-	}
-	
-	//[_loadOverlay remove];
+	NSLog(@"requestFailed:\n[%@]", request.error);
 }
-
-
-/*
- -(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
- // Return YES for supported orientations
- return (interfaceOrientation == UIInterfaceOrientationPortrait);
- }
- */
-
-
-
-
-
 
 @end

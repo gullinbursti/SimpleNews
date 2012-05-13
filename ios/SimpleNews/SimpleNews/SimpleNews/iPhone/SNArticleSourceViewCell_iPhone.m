@@ -31,7 +31,7 @@
 		
 		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, 73.0, self.frame.size.width - 40.0, 2.0)];
 		UIImage *img = [UIImage imageNamed:@"line.png"];
-		lineImgView.image = [img stretchableImageWithLeftCapWidth:1.0 topCapHeight:2.0];
+		lineImgView.image = [img stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];
 		[self addSubview:lineImgView];
 	}
 	

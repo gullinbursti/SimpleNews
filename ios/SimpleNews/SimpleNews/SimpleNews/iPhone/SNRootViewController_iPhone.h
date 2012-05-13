@@ -30,6 +30,7 @@
 	UITableView *_popularTableView;
 	
 	UIView *_holderView;
+	UIImageView *_shadowImgView;
 	UIButton *_profileButton;
 	UIButton *_cardListsButton;
 	UIImageView *_toggleLtImgView;
