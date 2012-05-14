@@ -48,6 +48,14 @@
 	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.view.frame.size.width, self.view.frame.size.height - 44.0)];
+	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;	
+	[_scrollView setBackgroundColor:[UIColor clearColor]];
+	_scrollView.scrollsToTop = NO;
+	_scrollView.pagingEnabled = NO;
+	_scrollView.showsVerticalScrollIndicator = NO;
+	[self.view addSubview:_scrollView];
+	
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.title];
 	[self.view addSubview:headerView];
 	
@@ -58,14 +66,6 @@
 	SNNavShareBtnView *shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
 	[[shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:shareBtnView];
-	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 49.0, self.view.frame.size.width, self.view.frame.size.height - 49.0)];
-	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;	
-	[_scrollView setBackgroundColor:[UIColor clearColor]];
-	_scrollView.scrollsToTop = NO;
-	_scrollView.pagingEnabled = NO;
-	_scrollView.showsVerticalScrollIndicator = NO;
-	[self.view addSubview:_scrollView];
 	
 	_toggleLtImgView = [[UIImageView alloc] initWithFrame:CGRectMake(77.0, 8.0, 164.0, 44.0)];
 	_toggleLtImgView.image = [UIImage imageNamed:@"toggleBGLeft.png"];

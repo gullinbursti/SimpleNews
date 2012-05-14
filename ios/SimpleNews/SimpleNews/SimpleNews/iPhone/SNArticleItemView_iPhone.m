@@ -32,7 +32,7 @@
 		
 		UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		avatarButton.frame = thumbImgView.frame;
-		[avatarButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+		[avatarButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:avatarButton];
 		
 		offset += 7;
@@ -71,7 +71,7 @@
 		
 		UIButton *sourceLblButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		sourceLblButton.frame = sourceLabel.frame;
-		[sourceLblButton addTarget:self action:@selector(_goSourcePage) forControlEvents:UIControlEventTouchUpInside];
+		[sourceLblButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:sourceLblButton];
 		
 		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -129,7 +129,8 @@
 			if (_vo.hasLiked) {
 				[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateNormal];
 				[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateHighlighted];
-			
+				[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+				
 			} else {
 				[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
 				[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
@@ -275,8 +276,10 @@
 		[readRequest startAsynchronous];
 		
 		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+		
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateNormal];
-		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateHighlighted];
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
 		[_likeButton setTitle:[NSString stringWithFormat:@"%d", ++_vo.totalLikes] forState:UIControlStateNormal];
 		
 		ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
@@ -288,7 +291,26 @@
 		
 		_vo.hasLiked = YES;
 	}
-} 
+}
+
+-(void)_goDislike {
+	
+	[_likeButton removeTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
+	[_likeButton setTitle:[NSString stringWithFormat:@"%d", --_vo.totalLikes] forState:UIControlStateNormal];
+	
+	ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
+	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
+	[likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+	[likeRequest startAsynchronous];
+	
+	_vo.hasLiked = NO;
+}
 
 -(void)_goShare {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHARE_SHEET" object:_vo];

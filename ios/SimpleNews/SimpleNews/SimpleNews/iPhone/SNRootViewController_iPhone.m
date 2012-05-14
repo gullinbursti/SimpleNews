@@ -11,7 +11,6 @@
 
 #import "SNRootViewController_iPhone.h"
 #import "SNListVO.h"
-#import "SNOptionVO.h"
 
 #import "SNProfileViewController_iPhone.h"
 #import "SNWebPageViewController_iPhone.h"
@@ -168,7 +167,7 @@
 	[_popularHeaderView refreshLastUpdatedDate];
 	
 	_cardListsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_cardListsButton.frame = CGRectMake(276.0, 0.0, 44.0, self.view.frame.size.height);
+	_cardListsButton.frame = CGRectMake(276.0, 49.0, 44.0, self.view.frame.size.height - 49.0);
 	[_cardListsButton addTarget:self action:@selector(_goCardLists) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_cardListsButton];
 	
@@ -312,7 +311,7 @@
 }
 
 -(void)_showArticleSources:(NSNotification *)notification {
-	[self.navigationController pushViewController:[[SNArticleSourcesViewController_iPhone alloc] init] animated:YES];
+	[self.navigationController pushViewController:[[SNArticleSourcesViewController_iPhone alloc] initWithListVO:(SNListVO *)[_popularLists objectAtIndex:0]] animated:YES];
 }
 
 

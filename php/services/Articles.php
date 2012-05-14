@@ -293,6 +293,22 @@
 			return (true);
 		}
 				
+		function removeLike($user_id, $list_id, $article_id) {
+			$query = 'SELECT `likes` FROM `tblArticles` WHERE `id` = '. $article_id .';';
+			$row = mysql_fetch_row(mysql_query($query));
+			$likes_tot = $row[0];
+			$likes_tot--;
+				
+			$query = 'UPDATE `tblArticles` SET `likes` = '. $likes_tot .' WHERE `id` ='. $article_id .';';
+			$result = mysql_query($query);
+			
+			$query = 'DELETE FROM `tblUsersLikedArticles` WHERE `user_id` = '. $user_id .' AND `list_id` = '. $list_id .' AND `article_id` = '. $article_id .';';
+			$result = mysql_query($query);
+			
+			$this->sendResponse(200, json_encode(array("success" => true)));
+			return (true);
+		}
+		
 		function addLike($user_id, $list_id, $article_id) {
 			$query = 'SELECT `likes` FROM `tblArticles` WHERE `id` = '. $article_id .';';
 			$row = mysql_fetch_row(mysql_query($query));
@@ -554,6 +570,11 @@
 			case "6":
 				if (isset($_POST['userID']))
 					$articles->getArticlesLikedByUser($_POST['userID']);
+				break;
+				
+			case "7":
+				if (isset($_POST['userID']) && isset($_POST['listID']) && isset($_POST['articleID']))
+					$articles->removeLike($_POST['userID'], $_POST['listID'], $_POST['articleID']);
 				break;
 				
 			case "8":

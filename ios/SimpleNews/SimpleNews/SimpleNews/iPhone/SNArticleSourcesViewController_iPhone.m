@@ -15,9 +15,10 @@
 
 @implementation SNArticleSourcesViewController_iPhone
 
--(id)init {
+-(id)initWithListVO:(SNListVO *)vo {
 	if ((self = [super init])) {
 		_sources = [NSMutableArray new];
+		_vo = vo;
 	}
 	
 	return (self);
@@ -31,23 +32,22 @@
 	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
-	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Popular Filters"];
-	[self.view addSubview:headerView];
-	
-	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
-	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:backBtnView];
-	
-	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 49.0, self.view.frame.size.width, self.view.frame.size.height - 49.0) style:UITableViewStylePlain];
+	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.view.frame.size.width, self.view.frame.size.height - 44.0) style:UITableViewStylePlain];
 	[_tableView setBackgroundColor:[UIColor clearColor]];
 	_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	_tableView.rowHeight = 78.0;
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
-	//_tableView.allowsSelection = NO;
 	_tableView.scrollsToTop = NO;
 	_tableView.showsVerticalScrollIndicator = NO;
 	[self.view addSubview:_tableView];
+	
+	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:[NSString stringWithFormat:@"%@ Filters", _vo.list_name]];
+	[self.view addSubview:headerView];
+	
+	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	[headerView addSubview:backBtnView];
 		
 	NSString *sourcesPath = [[NSBundle mainBundle] pathForResource:@"sources" ofType:@"plist"];
 	NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:sourcesPath] options:NSPropertyListImmutable format:nil error:nil];

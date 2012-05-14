@@ -39,14 +39,7 @@
 	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
-	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Profile"];
-	[self.view addSubview:headerView];
-	
-	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
-	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:backBtnView];
-	
-	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 49.0, self.view.frame.size.width, self.view.frame.size.height - 49.0) style:UITableViewStylePlain];
+	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.view.frame.size.width, self.view.frame.size.height - 44.0) style:UITableViewStylePlain];
 	[_tableView setBackgroundColor:[UIColor clearColor]];
 	_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	_tableView.rowHeight = 70.0;
@@ -58,11 +51,18 @@
 	_tableView.contentInset = UIEdgeInsetsMake(-17.0f, 0.0f, 0.0f, 0.0f);
 	[self.view addSubview:_tableView];
 	
+	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Profile"];
+	[self.view addSubview:headerView];
+	
+	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	[headerView addSubview:backBtnView];
+	
 	NSString *profilePath = [[NSBundle mainBundle] pathForResource:@"profile" ofType:@"plist"];
 	NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:profilePath] options:NSPropertyListImmutable format:nil error:nil];
 	
-	for (NSDictionary *option in plist)
-		[_items addObject:[SNOptionVO optionWithDictionary:option]];
+	for (NSDictionary *item in plist)
+		[_items addObject:[SNProfileVO profileWithDictionary:item]];
 }
 
 -(void)viewDidLoad {
@@ -105,7 +105,9 @@
 		cell = [[SNProfileViewCell_iPhone alloc] initAsHeaderCell:(indexPath.row == 0)];
 	
 	if (indexPath.row > 0) {
-		cell.optionVO = (SNOptionVO *)[_items objectAtIndex:indexPath.row - 1];
+		cell.profileVO = (SNProfileVO *)[_items objectAtIndex:indexPath.row - 1];
+		
+		NSLog(@"PROFILE VO:\n%@", cell.profileVO.title);
 	
 		if (indexPath.row - 1 == [_items count] - 1) {
 			UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectZero];

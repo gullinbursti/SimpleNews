@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SNOptionVO.h"
+#import "SNProfileVO.h"
 
 @interface SNProfileViewCell_iPhone : UITableViewCell {
 	UILabel *_titleLabel;
@@ -17,7 +17,7 @@
 -(id)initAsHeaderCell:(BOOL)isHeaderCell;
 
 +(NSString *)cellReuseIdentifier;
-@property(nonatomic, retain) SNOptionVO *optionVO;
+@property(nonatomic, retain) SNProfileVO *profileVO;
 
 
 @end

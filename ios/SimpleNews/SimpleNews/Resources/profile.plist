@@ -3,42 +3,34 @@
 <plist version="1.0">
 <array>
 	<dict>
-		<key>option_id</key>
+		<key>profile_id</key>
 		<integer>1</integer>
 		<key>title</key>
 		<string>Liked Articles</string>
-		<key>url</key>
-		<string></string>
 		<key>info</key>
 		<string></string>
 	</dict>
 	<dict>
-		<key>option_id</key>
+		<key>profile_id</key>
 		<integer>2</integer>
 		<key>title</key>
 		<string>Read Articles</string>
-		<key>url</key>
-		<string></string>
 		<key>info</key>
 		<string></string>
 	</dict>
 	<dict>
-		<key>option_id</key>
+		<key>profile_id</key>
 		<integer>4</integer>
 		<key>title</key>
 		<string>Topics</string>
-		<key>url</key>
-		<string></string>
 		<key>info</key>
 		<string></string>
 	</dict>
 	<dict>
-		<key>option_id</key>
+		<key>profile_id</key>
 		<integer>5</integer>
 		<key>title</key>
 		<string>Notifications</string>
-		<key>url</key>
-		<string></string>
 		<key>info</key>
 		<string></string>
 	</dict>

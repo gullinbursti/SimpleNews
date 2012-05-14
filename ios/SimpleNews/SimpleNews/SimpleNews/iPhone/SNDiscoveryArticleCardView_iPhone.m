@@ -29,10 +29,6 @@
 			_articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 			_articleImgView.userInteractionEnabled = YES;
 			[self addSubview:_articleImgView];
-			
-			UITapGestureRecognizer *dblTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photoZoomIn:)];
-			dblTapRecognizer.numberOfTapsRequired = 2;
-			[_articleImgView addGestureRecognizer:dblTapRecognizer];
 		}
 		
 		CGSize size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
@@ -48,7 +44,7 @@
 		[self addSubview:titleLabel];
 		
 		UIButton *detailsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		detailsButton.frame = titleLabel.frame;
+		detailsButton.frame = _articleImgView.frame;
 		[detailsButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:detailsButton];
 		

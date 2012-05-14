@@ -34,12 +34,6 @@
 
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_leaveArticles:) name:@"LEAVE_ARTICLES" object:nil];
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showFullscreenMedia:) name:@"SHOW_FULLSCREEN_MEDIA" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideFullscreenMedia:) name:@"HIDE_FULLSCREEN_MEDIA" object:nil];
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_readLater:) name:@"READ_LATER" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSourcePage:) name:@"SHOW_SOURCE_PAGE" object:nil];
@@ -82,7 +76,7 @@
 			NSLog(@"error in trackPageview");
 		
 		
-		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 49.0, self.frame.size.width, self.frame.size.height - 49.0)];
+		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
 		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		_scrollView.opaque = YES;
 		_scrollView.scrollsToTop = NO;
@@ -122,7 +116,6 @@
 }
 
 -(void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LEAVE_ARTICLES" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"START_TIMER" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"STOP_TIMER" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_TWITTER_PROFILE" object:nil];
@@ -142,75 +135,6 @@
 #pragma mark - Notification handlers
 -(void)_leaveArticles:(NSNotification *)notification {
 	[self _goBack];
-}
-
--(void)_showFullscreenMedia:(NSNotification *)notification {
-	NSDictionary *dict = [notification object];
-	
-	SNArticleVO *vo = [dict objectForKey:@"VO"];
-	float offset = [[dict objectForKey:@"offset"] floatValue];
-	CGRect frame = [[dict objectForKey:@"frame"] CGRectValue];
-	NSString *type = [dict objectForKey:@"type"];
-	
-	frame.origin.y = 49.0 + frame.origin.y + offset - _scrollView.contentOffset.y;
-	_fullscreenFrame = frame;
-	
-	if ([type isEqualToString:@"photo"]) {
-		_fullscreenImgView = [[EGOImageView alloc] initWithFrame:frame];
-		_fullscreenImgView.delegate = self;
-		_fullscreenImgView.imageURL = [NSURL URLWithString:vo.bgImage_url];
-		_fullscreenImgView.userInteractionEnabled = YES;
-		[self addSubview:_fullscreenImgView];
-		
-	} else if ([type isEqualToString:@"video"]) {
-		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, 270.0, 202.0) articleVO:vo];
-		_videoPlayerView.frame = frame;
-		[self addSubview:_videoPlayerView];
-	}
-	
-	_blackMatteView.hidden = NO;
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_blackMatteView.alpha = 0.95;
-		
-		if ([type isEqualToString:@"photo"])
-			_fullscreenImgView.frame = CGRectMake(0.0, (self.frame.size.height - (self.frame.size.width * vo.imgRatio)) * 0.5, self.frame.size.width, self.frame.size.width * vo.imgRatio);
-		
-		else
-			_videoPlayerView.frame = CGRectMake(0.0, (self.frame.size.height - 240.0) * 0.5, self.frame.size.width, 240.0);
-		
-		
-	} completion:^(BOOL finished) {
-		UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_hideFullscreenImage:)];
-		tapRecognizer.numberOfTapsRequired = 1;
-		
-		if ([type isEqualToString:@"photo"])
-			[_fullscreenImgView addGestureRecognizer:tapRecognizer];
-		
-		else
-			[_blackMatteView addGestureRecognizer:tapRecognizer];
-	}];
-}
-
--(void)_hideFullscreenImage:(UIGestureRecognizer *)gestureRecognizer {
-	[UIView animateWithDuration:0.25 animations:^(void) {
-		_blackMatteView.alpha = 0.0;
-		
-		_fullscreenImgView.frame = _fullscreenFrame;
-		_videoPlayerView.frame = _fullscreenFrame;
-		[_videoPlayerView stopPlayback];
-		
-	} completion:^(BOOL finished) {
-		_blackMatteView.hidden = YES;
-		[_fullscreenImgView removeFromSuperview];
-		[_videoPlayerView removeFromSuperview];
-		
-		_fullscreenImgView = nil;
-		_videoPlayerView = nil;
-	}];
-}
-
--(void)_readLater:(NSNotification *)notification {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"CANCEL_SHARE" object:nil];	
 }
 
 -(void)_twitterTimeline:(NSNotification *)notification {
@@ -330,7 +254,7 @@
 				for (SNDiscoveryArticleCardView_iPhone *itemView in _cardViews)
 					[_scrollView addSubview:itemView];
 				
-				_scrollView.contentSize = CGSizeMake(tot * 320.0, self.frame.size.height - 49.0);
+				_scrollView.contentSize = CGSizeMake(tot * 320.0, self.frame.size.height - 44.0);
 				
 				_paginationView = [[SNPaginationView alloc] initWithTotal:[_cardViews count] coords:CGPointMake(160.0, 460.0)];
 				[self addSubview:_paginationView];

@@ -56,18 +56,7 @@
 	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
-	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Comments"];
-	[self.view addSubview:headerView];
-	
-	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
-	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:backBtnView];
-	
-	SNNavLikeBtnView *likeBtnView = [[SNNavLikeBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
-	[[likeBtnView btn] addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:likeBtnView];
-	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 49.0, self.view.frame.size.width, self.view.frame.size.height - 98.0)];
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.view.frame.size.width, self.view.frame.size.height - 48.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[_scrollView setBackgroundColor:[UIColor clearColor]];
 	_scrollView.opaque = YES;
@@ -84,7 +73,7 @@
 	[_scrollView addSubview:_refreshHeaderView];
 	[_refreshHeaderView refreshLastUpdatedDate];
 	
-	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 49.0, self.view.frame.size.width, 49.0)];
+	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 44.0, self.view.frame.size.width, 44.0)];
 	[_bgView setBackgroundColor:[UIColor colorWithWhite:0.914 alpha:1.0]];
 	[self.view addSubview:_bgView];
 	
@@ -92,6 +81,17 @@
 	inputBgImgView.image = [UIImage imageNamed:@"commentsInputField_BG.png"];
 	inputBgImgView.userInteractionEnabled = YES;
 	[_bgView addSubview:inputBgImgView];
+	
+	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Comments"];
+	[self.view addSubview:headerView];
+	
+	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	[headerView addSubview:backBtnView];
+	
+	SNNavLikeBtnView *likeBtnView = [[SNNavLikeBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+	[[likeBtnView btn] addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	[headerView addSubview:likeBtnView];
 	
 	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(25.0, 18.0, 270.0, 16.0)];
 	[_commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];

@@ -18,6 +18,9 @@ NSString *const kSNProfileInfoKey = @"ProfileInfo";
 
 static const NSInteger kGANDispatchPeriodSec = 10;
 static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
+static const NSInteger kLaunchesUntilRateRequest = 16;
+static const NSInteger kDaysUntilRateRequest = 5;
+static const BOOL kIsGoogleAnalyticsLive = NO;
 
 @implementation SNAppDelegate
 
@@ -353,6 +356,7 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 	
 	if (![defaults objectForKey:@"boot_total"]) {
 		[defaults setObject:[NSNumber numberWithInt:0] forKey:@"boot_total"];
+		[defaults setObject:[NSDate new] forKey:@"install_date"];
 		[defaults synchronize];
 	
 	} else {
@@ -362,32 +366,35 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 		[defaults setObject:[NSNumber numberWithInt:boot_total] forKey:@"boot_total"];
 		[defaults synchronize];
 		
-		if ([[defaults objectForKey:@"boot_total"] intValue] == 4) {
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Rate Assembly" message:@"Why not rate Assembly in the app store!" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"App Store", nil];
+		int daysSinceInstall = [[NSDate new] timeIntervalSinceDate:[defaults objectForKey:@"install_date"]] / 86400;
+		if ([[defaults objectForKey:@"boot_total"] intValue] == kLaunchesUntilRateRequest || daysSinceInstall >= kDaysUntilRateRequest) {
+			UIAlertView *alert = [[UIAlertView alloc] 
+										 initWithTitle:@"Rate Assembly" 
+										 message:@"Why not rate Assembly in the app store!" 
+										 delegate:self 
+										 cancelButtonTitle:@"Cancel" 
+										 otherButtonTitles:@"App Store", nil];
 			
 			[alert show];
 		}
 		
-		//if ([[defaults objectForKey:@"boot_total"] intValue] > 2) {
-		//if (![[NSUserDefaults standardUserDefaults] objectForKey:@"notifications"] || [SNAppDelegate notificationsEnabled]) {
-				[SNAppDelegate notificationsToggle:YES];
+
+		[SNAppDelegate notificationsToggle:YES];
 				
-				// init Airship launch options
-				NSMutableDictionary *takeOffOptions = [[NSMutableDictionary alloc] init];
-				[takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
+		// init Airship launch options
+		NSMutableDictionary *takeOffOptions = [[NSMutableDictionary alloc] init];
+		[takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
 				
-				// create Airship singleton that's used to talk to Urban Airhship servers, populate AirshipConfig.plist with your info from http://go.urbanairship.com
-				[UAirship takeOff:takeOffOptions];
-				[[UAPush shared] resetBadge];//zero badge on startup
-				[[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-			}	
-		//}
-	//}
+		// create Airship singleton that's used to talk to Urban Airhship servers, populate AirshipConfig.plist with your info from http://go.urbanairship.com
+		[UAirship takeOff:takeOffOptions];
+		[[UAPush shared] resetBadge];//zero badge on startup
+		[[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+	}
 	
 	[[GANTracker sharedTracker] startTrackerWithAccountID:kAnalyticsAccountId
 														dispatchPeriod:kGANDispatchPeriodSec
 																delegate:nil];
-	[[GANTracker sharedTracker] setDryRun:YES];
+	[[GANTracker sharedTracker] setDryRun:!kIsGoogleAnalyticsLive];
 	
 	NSError *error;
 	if (![[GANTracker sharedTracker] trackPageview:@"/bootup" withError:&error])
@@ -397,17 +404,11 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 	UINavigationController *rootNavigationController;
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+		_splashViewController_iPhone = [[SNSplashViewController_iPhone alloc] init];
 		
-		//if (![SNAppDelegate profileForUser]) {
-			_splashViewController_iPhone = [[SNSplashViewController_iPhone alloc] init];
-			rootNavigationController = [[UINavigationController alloc] initWithRootViewController:_splashViewController_iPhone];
-		
-		//} else {
-		//	_rootViewController_iPhone = [[SNRootViewController_iPhone alloc] init];
-		//	rootNavigationController = [[UINavigationController alloc] initWithRootViewController:_rootViewController_iPhone];
-		//}
-		
+		rootNavigationController = [[UINavigationController alloc] initWithRootViewController:_splashViewController_iPhone];
 		[rootNavigationController setNavigationBarHidden:YES];
+		
 		[self.window setRootViewController:rootNavigationController];
 		[self.window setBackgroundColor:[UIColor blackColor]];
 		[self.window makeKeyAndVisible];
@@ -467,21 +468,6 @@ static NSString* const kAnalyticsAccountId = @"UA-00000000-1";
 	deviceID = [deviceID substringToIndex:[deviceID length] - 1];
 	deviceID = [deviceID stringByReplacingOccurrencesOfString:@" " withString:@""];
 	[SNAppDelegate writeDeviceToken:deviceID];
-	
-	//NSString *deviceID = [[deviceToken description] substringFromIndex:1];
-	//deviceID = [deviceID substringToIndex:[deviceID length] - 1];
-	//deviceID = [deviceID stringByReplacingOccurrencesOfString:@" " withString:@""];
-	//[DIAppDelegate setDeviceToken:deviceID];
-	
-	/*
-	 * Some example cases where user notifcation may be warranted
-	 *
-	 * This code will alert users who try to enable notifications
-	 * from the settings screen, but cannot do so because
-	 * notications are disabled in some capacity through the settings
-	 * app.
-	 * 
-	 */
 	
 	/*
     

@@ -8,9 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+#import "SNListVO.h"
+
 @interface SNArticleSourcesViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate> {
 	UITableView *_tableView;
 	NSMutableArray *_sources;
+	
+	SNListVO *_vo;
 }
+
+-(id)initWithListVO:(SNListVO *)vo;
 
 @end

@@ -11,7 +11,7 @@
 
 @implementation SNProfileViewCell_iPhone
 
-@synthesize optionVO = _optionVO;
+@synthesize profileVO = _profileVO;
 
 +(NSString *)cellReuseIdentifier {
 	return (NSStringFromClass(self));
@@ -69,10 +69,10 @@
 
 
 #pragma mark - Accessors
-- (void)setOptionVO:(SNOptionVO *)optionVO {
+- (void)setProfileVO:(SNProfileVO *)profileVO {
 	if (!_isHeaderCellType) {
-		_optionVO = optionVO;
-		_titleLabel.text = _optionVO.option_title;
+		_profileVO = profileVO;
+		_titleLabel.text = _profileVO.title;
 	}
 }
 

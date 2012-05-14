@@ -32,18 +32,18 @@
 	[super loadView];
 	[self.view setBackgroundColor:[UIColor whiteColor]];
 	
+	_webView = [[UIWebView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.view.frame.size.width, self.view.frame.size.height - 44.0)];
+	[_webView setBackgroundColor:[UIColor clearColor]];
+	_webView.delegate = self;
+	[_webView loadRequest:[NSURLRequest requestWithURL:_url]];	
+	[self.view addSubview:_webView];
+	
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_pageTitle];
 	[self.view addSubview:headerView];
 	
 	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
 	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:backBtnView];
-	
-	_webView = [[UIWebView alloc] initWithFrame:CGRectMake(0.0, 53.0, self.view.frame.size.width, self.view.frame.size.height - 53.0)];
-	[_webView setBackgroundColor:[UIColor clearColor]];
-	_webView.delegate = self;
-	[_webView loadRequest:[NSURLRequest requestWithURL:_url]];	
-	[self.view addSubview:_webView];
 }
 
 -(void)viewDidLoad {

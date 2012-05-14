@@ -38,7 +38,6 @@
 -(id)init {
 	if ((self = [super init])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showComments:) name:@"SHOW_COMMENTS" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_leaveArticles:) name:@"LEAVE_ARTICLES" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showFullscreenMedia:) name:@"SHOW_FULLSCREEN_MEDIA" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideFullscreenMedia:) name:@"HIDE_FULLSCREEN_MEDIA" object:nil];
@@ -83,7 +82,6 @@
 }
 
 -(void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"LEAVE_ARTICLES" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"START_TIMER" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"STOP_TIMER" object:nil];
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_TWITTER_PROFILE" object:nil];
@@ -100,7 +98,7 @@
 	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 49.0, self.view.frame.size.width, self.view.frame.size.height - 49.0)];
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.view.frame.size.width, self.view.frame.size.height - 44.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	_scrollView.opaque = YES;
 	_scrollView.scrollsToTop = NO;
@@ -155,6 +153,9 @@
 
 -(void)viewDidUnload {
 	_progressHUD = nil;
+	_fullscreenImgView = nil;
+	_videoPlayerView = nil;
+	_blackMatteView = nil;
 	
 	[super viewDidUnload];
 }
@@ -202,7 +203,7 @@
 }
 
 -(void)_goFlip {
-	[self.navigationController pushViewController:[[SNArticleSourcesViewController_iPhone alloc] init] animated:YES];
+	[self.navigationController pushViewController:[[SNArticleSourcesViewController_iPhone alloc] initWithListVO:_vo] animated:YES];
 }
 
 -(void)_goSubscribe {
@@ -228,10 +229,6 @@
 } 
 
 #pragma mark - Notification handlers
--(void)_leaveArticles:(NSNotification *)notification {
-	[self _goBack];
-}
-
 -(void)_showFullscreenMedia:(NSNotification *)notification {
 	NSLog(@"SHOW MEDIA");
 	NSDictionary *dict = [notification object];
@@ -241,7 +238,7 @@
 	CGRect frame = [[dict objectForKey:@"frame"] CGRectValue];
 	NSString *type = [dict objectForKey:@"type"];
 	
-	frame.origin.y = 49.0 + frame.origin.y + offset - _scrollView.contentOffset.y;
+	frame.origin.y = 44.0 + frame.origin.y + offset - _scrollView.contentOffset.y;
 	_fullscreenFrame = frame;
 	
 	if ([type isEqualToString:@"photo"]) {
