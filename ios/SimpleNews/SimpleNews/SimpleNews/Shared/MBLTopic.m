@@ -1,21 +1,21 @@
 //
-//  MBLResource.m
+//  MBLTopic.m
 //  MBLAssetLoader
 //
 //  Copyright (c) 2012 Jesse Boley. All rights reserved.
 //
 
-#import "MBLResource.h"
+#import "MBLTopic.h"
 #import "MBLObserver.h"
 
-// Set of "in-flight" resources
-static NSMutableSet *s_activeResources = nil;
+// Set of "in-flight" topics
+static NSMutableSet *s_activeTopics = nil;
 
-@interface MBLResource ()
+@interface MBLTopic ()
 @property(assign, getter=isTearingDown) BOOL tearingDown;
 @end
 
-@implementation MBLResource
+@implementation MBLTopic
 
 @synthesize didSubscribe;
 @synthesize observers;
@@ -23,15 +23,15 @@ static NSMutableSet *s_activeResources = nil;
 
 + (void)initialize
 {
-	if (self == [MBLResource class])
-		s_activeResources = [NSMutableSet set];
+	if (self == [MBLTopic class])
+		s_activeTopics = [NSMutableSet set];
 }
 
 - (id)init
 {
 	if ((self = [super init])) {
-		@synchronized(s_activeResources) {
-			[s_activeResources addObject:self];
+		@synchronized(s_activeTopics) {
+			[s_activeTopics addObject:self];
 		}
 		self.observers = [NSMutableArray array];
 		[self _checkForNoObservers];
@@ -52,8 +52,8 @@ static NSMutableSet *s_activeResources = nil;
 	}
 	
 	if (!hasSubscribers) {
-		@synchronized(s_activeResources) {
-			[s_activeResources removeObject:self];
+		@synchronized(s_activeTopics) {
+			[s_activeTopics removeObject:self];
 		}
 	}
 }
@@ -71,16 +71,16 @@ static NSMutableSet *s_activeResources = nil;
 	}
 }
 
-+ (id)createResource:(void (^)(id<MBLObserver> observer))didSubscribe
++ (id)createTopic:(void (^)(id<MBLObserver> observer))didSubscribe
 {
-	MBLResource *resource = [[self alloc] init];
-	resource.didSubscribe = didSubscribe;
-	return resource;
+	MBLTopic *topic = [[self alloc] init];
+	topic.didSubscribe = didSubscribe;
+	return topic;
 }
 
 + (id)return:(id)value
 {
-	return [self createResource:^(id<MBLObserver> observer) {
+	return [self createTopic:^(id<MBLObserver> observer) {
 		[observer sendNext:value];
 		[observer sendCompleted];
 	}];
@@ -88,21 +88,21 @@ static NSMutableSet *s_activeResources = nil;
 
 + (id)error:(NSError *)error
 {
-	return [self createResource:^(id<MBLObserver> observer) {
+	return [self createTopic:^(id<MBLObserver> observer) {
 		[observer sendError:error];
 	}];
 }
 
 + (id)empty
 {
-	return [self createResource:^(id<MBLObserver> observer) {
+	return [self createTopic:^(id<MBLObserver> observer) {
 		[observer sendCompleted];
 	}];
 }
 
 + (id)never
 {
-	return [self createResource:^(id<MBLObserver> observer){}];
+	return [self createTopic:^(id<MBLObserver> observer){}];
 }
 
 + (id)start:(id (^)(BOOL *success, NSError **error))block
@@ -136,8 +136,8 @@ static NSMutableSet *s_activeResources = nil;
 		[self.observers removeAllObjects];
 	}
 	
-	@synchronized(s_activeResources) {
-		[s_activeResources removeObject:self];
+	@synchronized(s_activeTopics) {
+		[s_activeTopics removeObject:self];
 	}
 }
 

@@ -1,5 +1,5 @@
 //
-//  MBLResource.h
+//  MBLTopic.h
 //  MBLAssetLoader
 //
 //  Copyright (c) 2012 Jesse Boley. All rights reserved.
@@ -9,7 +9,7 @@
 
 @protocol MBLObserver;
 
-@protocol MBLResource <NSObject>
+@protocol MBLTopic <NSObject>
 // Subscribes subscriber to changes on the receiver. The receiver defines which
 // events it actually sends and in what situations the events are sent.
 //
@@ -19,10 +19,10 @@
 @end
 
 
-@interface MBLResource : NSObject
+@interface MBLTopic : NSObject <MBLTopic>
 
 // Creates a brand new resource that executes didSubscribe block whenever a new subscriber is added
-+ (id)createResource:(void (^)(id<MBLObserver> observer))didSubscribe;
++ (id)createTopic:(void (^)(id<MBLObserver> observer))didSubscribe;
 
 // Convenience resources
 

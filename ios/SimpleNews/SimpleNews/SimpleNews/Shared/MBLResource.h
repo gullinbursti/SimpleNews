@@ -1,13 +1,18 @@
 //
 //  MBLResource.h
-//  SimpleNews
+//  MBLAssetLoader
 //
-//  Created by Jesse Boley on 5/15/12.
-//  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
+//  Copyright (c) 2012 Jesse Boley. All rights reserved.
 //
 
 #import "MBLTopic.h"
+#import "MBLObserver.h"
 
-@interface MBLResource : MBLTopic
+// Resources make it easy to manually control a topic.
+
+@interface MBLResource : MBLTopic <MBLObserver>
+
+// Returns a new resource.
++ (id)resource;
 
 @end
