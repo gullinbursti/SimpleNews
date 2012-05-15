@@ -25,6 +25,7 @@
 	
 	NSMutableArray *_subscribedLists;
 	NSMutableArray *_popularLists;
+	NSMutableArray *_subscribedCells;
 	
 	UITableView *_subscribedTableView;
 	UITableView *_popularTableView;

@@ -251,6 +251,8 @@
 	} else if ([type isEqualToString:@"video"]) {
 		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:frame articleVO:vo];
 		[self.view addSubview:_videoPlayerView];
+		
+		[self performSelector:@selector(_startVideo) withObject:nil afterDelay:1.0];
 	}
 	
 	_blackMatteView.hidden = NO;
@@ -274,6 +276,10 @@
 		else
 			[_blackMatteView addGestureRecognizer:tapRecognizer];
 	}];
+}
+
+-(void)_startVideo {
+	[_videoPlayerView startPlayback];
 }
 
 -(void)_hideFullscreenImage:(UIGestureRecognizer *)gestureRecognizer {

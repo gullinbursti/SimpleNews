@@ -176,7 +176,6 @@
 	self.mpc.movieSourceType = MPMovieSourceTypeFile;
 	
 	[_videoHolderView addSubview:self.mpc.view];
-	//[self.mpc play];
 	 
 	_progressImgView.frame = CGRectMake(_progressImgView.frame.origin.x, _progressImgView.frame.origin.y, 0.0, _progressImgView.frame.size.height);
 	_timeSize = [[NSString stringWithFormat:@"%@", @"0:00"] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0] constrainedToSize:CGSizeMake(96.0, 10.0) lineBreakMode:UILineBreakModeClip];
@@ -334,7 +333,6 @@
 	_progressTimer = nil;
 	
 	_bufferingImgView = [[UIImageView alloc] initWithFrame:CGRectMake((_videoHolderView.frame.size.width * 0.5) - 22.0, (_videoHolderView.frame.size.height * 0.5) - 22.0, 44.0, 44.0)];
-	[_bufferingImgView setBackgroundColor:[UIColor greenColor]];
 	_bufferingImgView.alpha = 0.0;
 	_bufferingImgView.image = [UIImage imageNamed:@"smallPlayButton_loading.png"];
 	[self addSubview:_bufferingImgView];

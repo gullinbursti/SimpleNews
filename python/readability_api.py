@@ -16,33 +16,49 @@ print url
 b = rdd.add_bookmark(url)
 a = rdd.get_article(b.article.id) 
 
-print a.title
-print a.content
-
 # --/ article content
 t = a.title
 c = a.content
-c = c.replace('<div>', '')
-c = c.replace('</div>', '')
+
+print t
+print c
 
 # --/ extract video
-#--m = re.compile(r'<iframe src="http://www.youtube.com/embed/(.*?)".*?</iframe>').search(c)
-#--vid = m.group(1)
+m = re.compile(r'<iframe src="http://www.youtube.com/embed/(.*?)".*?</iframe>').search(c)
+if m is None:
+	vid = ''
+else:
+	vid = m.group(1)
+	print vid
 
 # --/ extract image
 m = re.compile(r'<img .*?src="(.*?)".*?>').search(c)
-img_url = m.group(1)
+if m is None:
+	img_url = ''
+else:
+	img_url = m.group(1)
 
-# --/ open image & get size
-img = Image.open(cStringIO.StringIO(urllib.urlopen(img_url).read()))
-img_w, img_h = img.size
-img_ratio = img_h / float(img_w)
+	# --/ open image & get size
+	img = Image.open(cStringIO.StringIO(urllib.urlopen(img_url).read()))
+	img_w, img_h = img.size
+	img_ratio = img_h / float(img_w)
+    
+	print img_url
+	print img.size
+	print img_ratio
+	
+c = c.replace('<div>', '')
+c = c.replace('</div>', '')
+c = c.replace('</p><p>'. '\n\n')
+c = c.replace('<em>', '')
+c = c.replace('</em>', '')
+c = c.replace('<p>', '')
+c = c.replace('</p>', '')
 
-print img.size
-print img_ratio
 
-conn = MySQLdb.connect (host="localhost", user="db41232_sn_usr", passwd="dope911t", db="assembly")
-cursor = conn.cursor()
+
+#-- conn = MySQLdb.connect (host="localhost", user="db41232_sn_usr", passwd="dope911t", db="assembly")
+#-- cursor = conn.cursor()
 
 
 

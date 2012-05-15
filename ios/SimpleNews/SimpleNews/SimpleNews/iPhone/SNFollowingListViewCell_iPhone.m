@@ -20,13 +20,10 @@
 -(id)init {
 	if ((self = [super init])) {		
 		_followButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_followButton.frame = CGRectMake(166.0, 4.0, 84.0, 44.0);
-		[_followButton setBackgroundImage:[UIImage imageNamed:@"followButton_nonActive.png"] forState:UIControlStateNormal];
-		[_followButton setBackgroundImage:[UIImage imageNamed:@"followButton_Active.png"] forState:UIControlStateHighlighted];
-		[_followButton addTarget:self action:@selector(_goToggleFollow) forControlEvents:UIControlEventTouchUpInside];
-		[_followButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-		_followButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
-		[_followButton setTitle:@"Unfollow" forState:UIControlStateNormal];
+		_followButton.frame = CGRectMake(200.0, 4.0, 44.0, 44.0);
+		[_followButton setBackgroundImage:[UIImage imageNamed:@"followIcon_Selected.png"] forState:UIControlStateNormal];
+		[_followButton setBackgroundImage:[UIImage imageNamed:@"followIcon_Active.png"] forState:UIControlStateHighlighted];
+		[_followButton addTarget:self action:@selector(_goUnfollow) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_followButton];
 	}
 	
@@ -40,7 +37,8 @@
 }
 
 #pragma mark - Navigation
--(void)_goToggleFollow {
+-(void)_goUnfollow {
+	[_followButton setBackgroundImage:[UIImage imageNamed:@"followIcon_nonActive.png"] forState:UIControlStateNormal];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"LIST_UNSUBSCRIBE" object:_listVO];
 }
 

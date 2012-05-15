@@ -35,6 +35,7 @@
 	if ((self = [super init])) {
 		_subscribedLists = [NSMutableArray new];
 		_popularLists = [NSMutableArray new];
+		_subscribedCells = [NSMutableArray new];
 		
 		_isIntro = YES;
 		_isFollowingList = YES;
@@ -170,12 +171,6 @@
 	_cardListsButton.frame = CGRectMake(276.0, 49.0, 44.0, self.view.frame.size.height - 49.0);
 	[_cardListsButton addTarget:self action:@selector(_goCardLists) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_cardListsButton];
-	
-	UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(_swipeRow:)];
-	swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight | UISwipeGestureRecognizerDirectionLeft;
-	swipeRecognizer.delegate = self;
-	[_subscribedTableView addGestureRecognizer:swipeRecognizer];
-	
 }
 
 -(void)viewDidLoad {
@@ -243,13 +238,6 @@
 			[self.navigationController pushViewController:profileViewController animated:YES];
 		}];
 	}
-}
-
--(void)_swipeRow:(UIGestureRecognizer *)gestureRecognizer {
-	NSLog(@"SWIPE");
-	
-	//[_subscribedLists removeObjectAtIndex:_swipeIndex];
-	[_subscribedTableView reloadData];
 }
 
 - (void)reloadTableViewDataSource {
@@ -401,6 +389,7 @@
 			
 		cell.listVO = (SNListVO *)[_subscribedLists objectAtIndex:indexPath.row];
 		[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+		[_subscribedCells addObject:cell];
 		return cell;	
 	
 	} else if ([tableView isEqual:_popularTableView]) {

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>services/Lists.php</string>
+	<string>services/Articles.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -227,6 +227,20 @@
 				<integer>52</integer>
 			</dict>
 		</dict>
+		<key>services/Articles.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>16</integer>
+				<key>line</key>
+				<integer>299</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>282</integer>
+		</dict>
 		<key>services/Categories.php</key>
 		<dict>
 			<key>caret</key>
@@ -246,14 +260,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>44</integer>
+				<integer>8</integer>
 				<key>line</key>
-				<integer>7</integer>
+				<integer>2</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>79</integer>
 		</dict>
 		<key>services/Followers.php</key>
 		<dict>
@@ -281,16 +295,16 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>148</integer>
 		</dict>
 		<key>services/Lists.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>10</integer>
+				<integer>1</integer>
 				<key>line</key>
-				<integer>336</integer>
+				<integer>326</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -418,11 +432,15 @@
 	<array>
 		<string>cms/tweets.php</string>
 		<string>services/Lists.php</string>
+		<string>services/Articles.php</string>
+		<string>services/Curators.php</string>
+		<string>services/Influencers.php</string>
+		<string>services/Followers.php</string>
 		<string>workers/article_worker.php</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{1107, 53}, {1343, 1263}}</string>
+	<string>{{1143, 26}, {1343, 1263}}</string>
 </dict>
 </plist>
