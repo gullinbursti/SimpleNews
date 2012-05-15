@@ -13,6 +13,7 @@
 
 #import "ASIFormDataRequest.h"
 
+@class MBProgressHUD;
 @class SNDiscoveryArticlesView_iPhone;
 
 @interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, EGORefreshTableHeaderDelegate>
@@ -33,6 +34,7 @@
 	NSMutableArray *_subscribedLists;
 	NSMutableArray *_popularLists;
 	
+	MBProgressHUD *_hud;
 	UITableView *_subscribedTableView;
 	UITableView *_popularTableView;
 	

@@ -27,6 +27,7 @@
 #import "SNArticleSourcesViewController_iPhone.h"
 #import "SNArticleCommentsViewController_iPhone.h"
 
+#import "MBProgressHUD.h"
 #import "MBLResourceLoader.h"
 
 @interface SNRootViewController_iPhone () <MBLResourceObserverProtocol>
@@ -65,6 +66,7 @@
 - (void)dealloc
 {
 	self.popularListsResource = nil;
+	self.subscribedListsResource = nil;
 }
 
 #pragma mark - View lifecycle
@@ -211,18 +213,13 @@
 	_cardListsButton = nil;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-	[super viewDidAppear:animated];
+- (void)viewWillAppear:(BOOL)animated
+{
+	[super viewWillAppear:animated];
 	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_cardListsButton.hidden = YES;
-		_holderView.frame = CGRectMake(-270.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-	}];
-	
-	_discoveryArticlesView.hidden = NO;
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_discoveryArticlesView.frame = CGRectMake(270.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
-	}];
+	// Refresh any network resources that need loading
+	[self _refreshPopularLists];
+	[self _refreshUserAccount];
 }
 
 #pragma mark - Navigation
@@ -298,13 +295,21 @@
 
 - (void)_refreshPopularLists
 {
-	NSString *userId = [[SNAppDelegate profileForUser] objectForKey:@"id"];
-	NSMutableDictionary *popularListFormValues = [NSMutableDictionary dictionary];
-	[popularListFormValues setObject:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
-	[popularListFormValues setObject:(userId != nil ? userId : [NSString stringWithFormat:@"%d", 0]) forKey:@"userID"];
-	
-	NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"];
-	self.popularListsResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:popularListFormValues forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0)]]; // 1 hour expiration for now
+	if (_popularListsResource == nil) {
+		_hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+		_hud.labelText = NSLocalizedString(@"Loading Popular Lists...", @"Status message when loading popular lists");
+		_hud.mode = MBProgressHUDModeIndeterminate;
+		_hud.graceTime = 2.0;
+		_hud.taskInProgress = YES;
+		
+		NSString *userId = [[SNAppDelegate profileForUser] objectForKey:@"id"];
+		NSMutableDictionary *popularListFormValues = [NSMutableDictionary dictionary];
+		[popularListFormValues setObject:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
+		[popularListFormValues setObject:(userId != nil ? userId : [NSString stringWithFormat:@"%d", 0]) forKey:@"userID"];
+		
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"];
+		self.popularListsResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:popularListFormValues forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0)]]; // 1 hour expiration for now
+	}
 }
 
 - (void)_refreshUserAccount
@@ -324,10 +329,19 @@
 - (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data
 {
 	if (resource == _popularListsResource) {
+		_hud.taskInProgress = NO;
+		
 		NSError *error = nil;
 		NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
 		if (error != nil) {
 			NSLog(@"Failed to parse popular lists JSON: %@", [error localizedDescription]);
+			_hud.graceTime = 0.0;
+			_hud.mode = MBProgressHUDModeCustomView;
+			_hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+			_hud.labelText = NSLocalizedString(@"Download Failed", @"Status message when downloading fails");
+			[_hud show:NO];
+			[_hud hide:YES afterDelay:1.5];
+			_hud = nil;
 		}
 		else {
 			NSMutableArray *popularLists = [NSMutableArray array];
@@ -343,6 +357,19 @@
 			
 			_discoveryArticlesView = [[SNDiscoveryArticlesView_iPhone alloc] initWithFrame:CGRectMake(270.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_popularLists objectAtIndex:0]];
 			[_holderView addSubview:_discoveryArticlesView];
+			
+			_discoveryArticlesView.hidden = NO;
+			[UIView animateWithDuration:0.33 animations:^(void) {
+				_discoveryArticlesView.frame = CGRectMake(270.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
+			}];
+			
+			[UIView animateWithDuration:0.33 animations:^(void) {
+				_cardListsButton.hidden = YES;
+				_holderView.frame = CGRectMake(-270.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+			}];
+			
+			[_hud hide:YES];
+			_hud = nil;
 		}
 	}
 	else if (resource == _userResource) {
