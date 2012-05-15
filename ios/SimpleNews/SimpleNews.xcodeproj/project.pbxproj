@@ -288,6 +288,8 @@
 		E423F8F61559B9900094042E /* MBLResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = E423F8F31559B9900094042E /* MBLResourceLoader.m */; };
 		E484E0961562D105004297D0 /* error.png in Resources */ = {isa = PBXBuildFile; fileRef = E484E0941562D105004297D0 /* error.png */; };
 		E484E0971562D105004297D0 /* error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E484E0951562D105004297D0 /* error@2x.png */; };
+		E484E0B31562EE7D004297D0 /* MBLResource.m in Sources */ = {isa = PBXBuildFile; fileRef = E484E0B21562EE7D004297D0 /* MBLResource.m */; };
+		E484E0B61562EF08004297D0 /* MBLObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = E484E0B51562EF08004297D0 /* MBLObserver.m */; };
 		E4F729FC154AF80B0073F60C /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4F729FB154AF80B0073F60C /* Entitlements.plist */; };
 		E4F729FF154AF8470073F60C /* UAPushLocalization.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E4F729FE154AF8470073F60C /* UAPushLocalization.bundle */; };
 /* End PBXBuildFile section */
@@ -761,6 +763,10 @@
 		E423F8F31559B9900094042E /* MBLResourceLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBLResourceLoader.m; sourceTree = "<group>"; };
 		E484E0941562D105004297D0 /* error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error.png; sourceTree = "<group>"; };
 		E484E0951562D105004297D0 /* error@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "error@2x.png"; sourceTree = "<group>"; };
+		E484E0B11562EE7D004297D0 /* MBLResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBLResource.h; sourceTree = "<group>"; };
+		E484E0B21562EE7D004297D0 /* MBLResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBLResource.m; sourceTree = "<group>"; };
+		E484E0B41562EF07004297D0 /* MBLObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBLObserver.h; sourceTree = "<group>"; };
+		E484E0B51562EF08004297D0 /* MBLObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBLObserver.m; sourceTree = "<group>"; };
 		E4F729FB154AF80B0073F60C /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		E4F729FE154AF8470073F60C /* UAPushLocalization.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = UAPushLocalization.bundle; path = SimpleNews/Airship/UI/Default/Push/Resources/Shared/UAPushLocalization.bundle; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -1688,6 +1694,10 @@
 				4CFCE712155CADDF003175C5 /* SNNavLikeBtnView.m */,
 				4CE58F9D1553658A00668B1E /* SNNavTitleView.h */,
 				4CE58F9E1553658A00668B1E /* SNNavTitleView.m */,
+				E484E0B41562EF07004297D0 /* MBLObserver.h */,
+				E484E0B51562EF08004297D0 /* MBLObserver.m */,
+				E484E0B11562EE7D004297D0 /* MBLResource.h */,
+				E484E0B21562EE7D004297D0 /* MBLResource.m */,
 				E423F8EE1559B9900094042E /* MBLAsyncResource.h */,
 				E423F8EF1559B9900094042E /* MBLAsyncResource.m */,
 				E423F8F01559B9900094042E /* MBLResourceCache.h */,
@@ -2206,6 +2216,8 @@
 				E423F8F41559B9900094042E /* MBLAsyncResource.m in Sources */,
 				E423F8F51559B9900094042E /* MBLResourceCache.m in Sources */,
 				E423F8F61559B9900094042E /* MBLResourceLoader.m in Sources */,
+				E484E0B31562EE7D004297D0 /* MBLResource.m in Sources */,
+				E484E0B61562EF08004297D0 /* MBLObserver.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
