@@ -283,6 +283,11 @@
 		4CFCE717155CC895003175C5 /* commentLikeButton_BG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CFCE715155CC895003175C5 /* commentLikeButton_BG@2x.png */; };
 		4CFCE71A155CC934003175C5 /* commentsInputField_BG.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CFCE718155CC934003175C5 /* commentsInputField_BG.png */; };
 		4CFCE71B155CC934003175C5 /* commentsInputField_BG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CFCE719155CC934003175C5 /* commentsInputField_BG@2x.png */; };
+		E423F8F41559B9900094042E /* MBLAsyncResource.m in Sources */ = {isa = PBXBuildFile; fileRef = E423F8EF1559B9900094042E /* MBLAsyncResource.m */; };
+		E423F8F51559B9900094042E /* MBLResourceCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E423F8F11559B9900094042E /* MBLResourceCache.m */; };
+		E423F8F61559B9900094042E /* MBLResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = E423F8F31559B9900094042E /* MBLResourceLoader.m */; };
+		E484E0961562D105004297D0 /* error.png in Resources */ = {isa = PBXBuildFile; fileRef = E484E0941562D105004297D0 /* error.png */; };
+		E484E0971562D105004297D0 /* error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E484E0951562D105004297D0 /* error@2x.png */; };
 		E4F729FC154AF80B0073F60C /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4F729FB154AF80B0073F60C /* Entitlements.plist */; };
 		E4F729FF154AF8470073F60C /* UAPushLocalization.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E4F729FE154AF8470073F60C /* UAPushLocalization.bundle */; };
 /* End PBXBuildFile section */
@@ -748,6 +753,14 @@
 		4CFCE715155CC895003175C5 /* commentLikeButton_BG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "commentLikeButton_BG@2x.png"; sourceTree = "<group>"; };
 		4CFCE718155CC934003175C5 /* commentsInputField_BG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = commentsInputField_BG.png; sourceTree = "<group>"; };
 		4CFCE719155CC934003175C5 /* commentsInputField_BG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "commentsInputField_BG@2x.png"; sourceTree = "<group>"; };
+		E423F8EE1559B9900094042E /* MBLAsyncResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBLAsyncResource.h; sourceTree = "<group>"; };
+		E423F8EF1559B9900094042E /* MBLAsyncResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBLAsyncResource.m; sourceTree = "<group>"; };
+		E423F8F01559B9900094042E /* MBLResourceCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBLResourceCache.h; sourceTree = "<group>"; };
+		E423F8F11559B9900094042E /* MBLResourceCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBLResourceCache.m; sourceTree = "<group>"; };
+		E423F8F21559B9900094042E /* MBLResourceLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBLResourceLoader.h; sourceTree = "<group>"; };
+		E423F8F31559B9900094042E /* MBLResourceLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBLResourceLoader.m; sourceTree = "<group>"; };
+		E484E0941562D105004297D0 /* error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error.png; sourceTree = "<group>"; };
+		E484E0951562D105004297D0 /* error@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "error@2x.png"; sourceTree = "<group>"; };
 		E4F729FB154AF80B0073F60C /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		E4F729FE154AF8470073F60C /* UAPushLocalization.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = UAPushLocalization.bundle; path = SimpleNews/Airship/UI/Default/Push/Resources/Shared/UAPushLocalization.bundle; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -1141,6 +1154,18 @@
 				4C64DB8D153CBFCE005C536F /* toggleBGLeft@2x.png */,
 				4C64DB8E153CBFD0005C536F /* toggleBGRight.png */,
 				4C64DB8F153CBFD0005C536F /* toggleBGRight@2x.png */,
+				4CD01B151513E538005B490C /* background_root.png */,
+				4CD01B161513E538005B490C /* background_root@2x.png */,
+				4CF3984F152D12B800460BD2 /* background_stripes.png */,
+				4CF39850152D12B800460BD2 /* background_stripes@2x.png */,
+				4CB62BDA152A45FB00B15626 /* grip.png */,
+				4CB62BDB152A45FB00B15626 /* grip@2x.png */,
+				4CF63C30150B207B00055EFD /* overlay.png */,
+				4CF63C31150B207B00055EFD /* overlay@2x.png */,
+				4CC95BA415204FF6009233EC /* subheaderBG.png */,
+				4CC95BA515204FF6009233EC /* subheaderBG@2x.png */,
+				E484E0941562D105004297D0 /* error.png */,
+				E484E0951562D105004297D0 /* error@2x.png */,
 			);
 			name = Global;
 			sourceTree = "<group>";
@@ -1679,6 +1704,12 @@
 				4CFCE712155CADDF003175C5 /* SNNavLikeBtnView.m */,
 				4CE58F9D1553658A00668B1E /* SNNavTitleView.h */,
 				4CE58F9E1553658A00668B1E /* SNNavTitleView.m */,
+				E423F8EE1559B9900094042E /* MBLAsyncResource.h */,
+				E423F8EF1559B9900094042E /* MBLAsyncResource.m */,
+				E423F8F01559B9900094042E /* MBLResourceCache.h */,
+				E423F8F11559B9900094042E /* MBLResourceCache.m */,
+				E423F8F21559B9900094042E /* MBLResourceLoader.h */,
+				E423F8F31559B9900094042E /* MBLResourceLoader.m */,
 			);
 			name = Shared;
 			path = SimpleNews/Shared;
@@ -2043,6 +2074,10 @@
 				4C4556C5155FB094004A445A /* shadow.png in Resources */,
 				4C301C511560331F0093D4E3 /* heartCommentsIcon.png in Resources */,
 				4C301C521560331F0093D4E3 /* heartCommentsIcon@2x.png in Resources */,
+				4C2CFC001555970D00654D98 /* timelineBG.png in Resources */,
+				4C2CFC011555970D00654D98 /* timelineBG@2x.png in Resources */,
+				E484E0961562D105004297D0 /* error.png in Resources */,
+				E484E0971562D105004297D0 /* error@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2160,6 +2195,9 @@
 				4CB61CFB155F516200FF151E /* SNProfileFollowingListsViewController_iPhone.m in Sources */,
 				4CB61CFE155F52B500FF151E /* SNProfileFollowingListViewCell_iPhone.m in Sources */,
 				4C693ABD156068480069920B /* SNProfileVO.m in Sources */,
+				E423F8F41559B9900094042E /* MBLAsyncResource.m in Sources */,
+				E423F8F51559B9900094042E /* MBLResourceCache.m in Sources */,
+				E423F8F61559B9900094042E /* MBLResourceLoader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

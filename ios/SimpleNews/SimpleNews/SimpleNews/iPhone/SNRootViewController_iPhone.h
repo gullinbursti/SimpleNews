@@ -7,14 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ASIFormDataRequest.h"
-#import "EGORefreshTableHeaderView.h"
-#import "SNDiscoveryArticlesView_iPhone.h"
 
-@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate> {
-	ASIFormDataRequest *_userRequest;
+#import "EGORefreshTableHeaderView.h"
+#import "MBLAsyncResource.h"
+
+#import "ASIFormDataRequest.h"
+
+@class MBProgressHUD;
+@class SNDiscoveryArticlesView_iPhone;
+
+@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate, EGORefreshTableHeaderDelegate>
+{
+	MBLAsyncResource *_userResource;
+	MBLAsyncResource *_subscribedListsResource;
+	MBLAsyncResource *_updateResource;
+	
 	ASIFormDataRequest *_subscribedListsRequest;
-	ASIFormDataRequest *_popularListsRequest;
 	ASIFormDataRequest *_updateRequest;
 	
 	ASIHTTPRequest *_twitterRequest;
@@ -27,6 +35,7 @@
 	NSMutableArray *_popularLists;
 	NSMutableArray *_subscribedCells;
 	
+	MBProgressHUD *_hud;
 	UITableView *_subscribedTableView;
 	UITableView *_popularTableView;
 	
