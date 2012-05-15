@@ -1082,10 +1082,6 @@
 				4C64DB6F153CA697005C536F /* SNArticleCommentView_iPhone.m */,
 				4C921755153B720800AAD992 /* SNArticleCommentsViewController_iPhone.h */,
 				4C921756153B720D00AAD992 /* SNArticleCommentsViewController_iPhone.m */,
-				4C2CFC221555C3FA00654D98 /* SNDiscoveryArticleCardView_iPhone.h */,
-				4C2CFC231555C3FA00654D98 /* SNDiscoveryArticleCardView_iPhone.m */,
-				4CE58FA315545B1000668B1E /* SNDiscoveryArticlesView_iPhone.h */,
-				4CE58FA415545B1000668B1E /* SNDiscoveryArticlesView_iPhone.m */,
 				4CE58FA915547ED700668B1E /* SNArticleSourceViewCell_iPhone.h */,
 				4CE58FAA15547ED700668B1E /* SNArticleSourceViewCell_iPhone.m */,
 				4CE58FA61554747D00668B1E /* SNArticleSourcesViewController_iPhone.h */,
@@ -1156,14 +1152,8 @@
 				4C64DB8F153CBFD0005C536F /* toggleBGRight@2x.png */,
 				4CD01B151513E538005B490C /* background_root.png */,
 				4CD01B161513E538005B490C /* background_root@2x.png */,
-				4CF3984F152D12B800460BD2 /* background_stripes.png */,
-				4CF39850152D12B800460BD2 /* background_stripes@2x.png */,
-				4CB62BDA152A45FB00B15626 /* grip.png */,
-				4CB62BDB152A45FB00B15626 /* grip@2x.png */,
 				4CF63C30150B207B00055EFD /* overlay.png */,
 				4CF63C31150B207B00055EFD /* overlay@2x.png */,
-				4CC95BA415204FF6009233EC /* subheaderBG.png */,
-				4CC95BA515204FF6009233EC /* subheaderBG@2x.png */,
 				E484E0941562D105004297D0 /* error.png */,
 				E484E0951562D105004297D0 /* error@2x.png */,
 			);
@@ -1590,15 +1580,8 @@
 				4C6B218F1510739A0027AEE4 /* Default@2x.png */,
 				4CE53DE91509EA55004C6810 /* icon_114x114.png */,
 				4CE53DE71509E9FB004C6810 /* icon_57x57.png */,
-				4C9EFFC315194B9B00AEB803 /* Airship */,
-				4CDC8C2414F2D71800D42EA5 /* ASI */,
-				4CDC8C3914F2D71800D42EA5 /* EGOImageLoading */,
-				4C78D1131541DAC1006C4A4E /* EGOTableViews */,
-				4C7954F41547AFCF009E40DC /* Google Analytics */,
-				4C2CFC071555BB6E00654D98 /* ios-image-filters */,
-				4CDC8C4814F2D71800D42EA5 /* MBProgressHUD */,
-				4CDC8C7414F2D80300D42EA5 /* Reachability */,
 				4CDC8BF714F2CDEB00D42EA5 /* SimpleNews */,
+				E484E0A31562E3FF004297D0 /* ThirdParty */,
 				4CDC8C8214F2DAF700D42EA5 /* Resources */,
 				4CDC8BF014F2CDEB00D42EA5 /* Frameworks */,
 				4CDC8BEE14F2CDEB00D42EA5 /* Products */,
@@ -1671,6 +1654,7 @@
 				4CE58F8615535B5100668B1E /* Nav */,
 				4CAF9D501506D22C00AB3735 /* Root */,
 				4C2CFC2E15587F9200654D98 /* Profile */,
+				E484E0A11562E12D004297D0 /* Discovery */,
 				4C6B216E15105C1D0027AEE4 /* Articles */,
 			);
 			name = iPhone;
@@ -1871,6 +1855,32 @@
 				4CE58F8815535B6000668B1E /* SNHeaderView_iPhone.m */,
 			);
 			name = Nav;
+			sourceTree = "<group>";
+		};
+		E484E0A11562E12D004297D0 /* Discovery */ = {
+			isa = PBXGroup;
+			children = (
+				4CE58FA315545B1000668B1E /* SNDiscoveryArticlesView_iPhone.h */,
+				4CE58FA415545B1000668B1E /* SNDiscoveryArticlesView_iPhone.m */,
+				4C2CFC221555C3FA00654D98 /* SNDiscoveryArticleCardView_iPhone.h */,
+				4C2CFC231555C3FA00654D98 /* SNDiscoveryArticleCardView_iPhone.m */,
+			);
+			name = Discovery;
+			sourceTree = "<group>";
+		};
+		E484E0A31562E3FF004297D0 /* ThirdParty */ = {
+			isa = PBXGroup;
+			children = (
+				4C9EFFC315194B9B00AEB803 /* Airship */,
+				4CDC8C2414F2D71800D42EA5 /* ASI */,
+				4CDC8C3914F2D71800D42EA5 /* EGOImageLoading */,
+				4C78D1131541DAC1006C4A4E /* EGOTableViews */,
+				4C7954F41547AFCF009E40DC /* Google Analytics */,
+				4C2CFC071555BB6E00654D98 /* ios-image-filters */,
+				4CDC8C4814F2D71800D42EA5 /* MBProgressHUD */,
+				4CDC8C7414F2D80300D42EA5 /* Reachability */,
+			);
+			name = ThirdParty;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2074,8 +2084,6 @@
 				4C4556C5155FB094004A445A /* shadow.png in Resources */,
 				4C301C511560331F0093D4E3 /* heartCommentsIcon.png in Resources */,
 				4C301C521560331F0093D4E3 /* heartCommentsIcon@2x.png in Resources */,
-				4C2CFC001555970D00654D98 /* timelineBG.png in Resources */,
-				4C2CFC011555970D00654D98 /* timelineBG@2x.png in Resources */,
 				E484E0961562D105004297D0 /* error.png in Resources */,
 				E484E0971562D105004297D0 /* error@2x.png in Resources */,
 			);
