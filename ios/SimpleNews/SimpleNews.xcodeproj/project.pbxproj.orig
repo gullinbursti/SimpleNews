@@ -2199,9 +2199,14 @@
 				4CB61CFB155F516200FF151E /* SNProfileFollowingListsViewController_iPhone.m in Sources */,
 				4CB61CFE155F52B500FF151E /* SNProfileFollowingListViewCell_iPhone.m in Sources */,
 				4C693ABD156068480069920B /* SNProfileVO.m in Sources */,
+<<<<<<< HEAD
+				4C9A07041562F0E0003EB8E7 /* SNArticleTimelineView_iPhone.m in Sources */,
+				4C9A0708156374FC003EB8E7 /* SNArticleListViewController_iPhone.m in Sources */,
+=======
 				E423F8F41559B9900094042E /* MBLAsyncResource.m in Sources */,
 				E423F8F51559B9900094042E /* MBLResourceCache.m in Sources */,
 				E423F8F61559B9900094042E /* MBLResourceLoader.m in Sources */,
+>>>>>>> a578705638ccf5463d3d891508671a854eb320e2
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

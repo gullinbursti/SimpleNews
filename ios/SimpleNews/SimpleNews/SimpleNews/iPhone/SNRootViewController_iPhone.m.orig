@@ -192,14 +192,17 @@
 {
 	[super viewWillAppear:animated];
 	
+<<<<<<< HEAD
 	_discoveryArticlesView.hidden = NO;
 //	[UIView animateWithDuration:0.33 animations:^(void) {
 //		_discoveryArticlesView.alpha = 1.0;
 //		_shadowImgView.alpha = 1.0;
 //	}];
+=======
 	// Refresh any network resources that need loading
 	[self _refreshPopularLists];
 	[self _refreshUserAccount];
+>>>>>>> a578705638ccf5463d3d891508671a854eb320e2
 }
 
 #pragma mark - Navigation
@@ -554,6 +557,7 @@
 	}
 }
 
+<<<<<<< HEAD
 -(void)_twitterShare:(NSNotification *)notification {
 	SNArticleVO *vo = (SNArticleVO *)[notification object];
 	
@@ -593,8 +597,10 @@
 
 
 #pragma mark - Gesture Recongnizer Deleagtes
+=======
 #pragma mark - Gesture Recongnizer Delegates
 		
+>>>>>>> a578705638ccf5463d3d891508671a854eb320e2
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
 	CGPoint touchPoint = [touch locationInView:_subscribedTableView];
 	_swipeIndex = MIN((int)(touchPoint.y / 50.0), [_subscribedLists count] - 1);
@@ -740,8 +746,12 @@
 		[_popularHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
+<<<<<<< HEAD
+#pragma mark - EGORefreshTableHeaderDelegate Methods
+=======
 #pragma mark EGORefreshTableHeaderDelegate Methods
 
+>>>>>>> a578705638ccf5463d3d891508671a854eb320e2
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
 	[self reloadTableViewDataSource];
 	

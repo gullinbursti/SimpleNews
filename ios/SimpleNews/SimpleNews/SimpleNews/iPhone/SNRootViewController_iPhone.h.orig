@@ -9,14 +9,17 @@
 #import <UIKit/UIKit.h>
 
 #import "EGORefreshTableHeaderView.h"
+<<<<<<< HEAD
 #import "SNDiscoveryArticlesView_iPhone.h"
 #import "SNArticleTimelineView_iPhone.h"
+=======
 #import "MBLAsyncResource.h"
 
 #import "ASIFormDataRequest.h"
 
 @class MBProgressHUD;
 @class SNDiscoveryArticlesView_iPhone;
+>>>>>>> a578705638ccf5463d3d891508671a854eb320e2
 
 @interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate, EGORefreshTableHeaderDelegate>
 {
