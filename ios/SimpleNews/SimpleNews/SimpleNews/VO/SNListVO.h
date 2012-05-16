@@ -8,9 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface SNListVO : NSObject
+#import "MBLAsyncResource.h"
 
-+(SNListVO *)listWithDictionary:(NSDictionary *)dictionary;
+@interface SNListVO : MBLAsyncResource
+
++ (SNListVO *)listWithDictionary:(NSDictionary *)dictionary;
 
 @property (nonatomic, retain) NSDictionary *dictionary;
 
@@ -28,6 +30,8 @@
 @property (nonatomic, retain) NSString *thumbURL;
 @property (nonatomic, retain) NSString *list_info;
 
--(NSString *)subscribersFormatted;
+- (NSString *)subscribersFormatted;
+
+- (void)downloadArticles;
 
 @end

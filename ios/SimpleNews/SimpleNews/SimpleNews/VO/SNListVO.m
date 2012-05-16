@@ -14,7 +14,7 @@
 @synthesize dictionary;
 @synthesize list_id, totalInfluencers, totalSubscribers, isSubscribed, isApproved, totalLikes, list_name, list_info, curatorNames, curatorHandles, curators, imageURL, thumbURL;
 
-+(SNListVO *)listWithDictionary:(NSDictionary *)dictionary {
++ (SNListVO *)listWithDictionary:(NSDictionary *)dictionary {
 	SNListVO *vo = [[SNListVO alloc] init];
 	
 	vo.dictionary = dictionary;
@@ -47,7 +47,7 @@
 	return (vo);
 }
 
--(NSString *)subscribersFormatted {
+- (NSString *)subscribersFormatted {
 	NSNumber *subscribers = [NSNumber numberWithInt:self.totalSubscribers];
 	NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
 	[formatter setNumberStyle:kCFNumberFormatterDecimalStyle];
@@ -56,14 +56,9 @@
 	return ([formatter stringForObjectValue:subscribers]);
 }
 
--(void)dealloc {
-	self.dictionary = nil;
-	self.list_name = nil;
-	self.list_info = nil;
-	self.curatorNames = nil;
-	self.imageURL = nil;
-	self.thumbURL = nil;
-	self.curators = nil;
+- (void)downloadArticles
+{
+	
 }
 
 @end

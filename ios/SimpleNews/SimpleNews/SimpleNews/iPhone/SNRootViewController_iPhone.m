@@ -28,7 +28,7 @@
 #import "MBProgressHUD.h"
 #import "MBLResourceLoader.h"
 
-@interface SNRootViewController_iPhone () <MBLResourceObserverProtocol>
+@interface SNRootViewController_iPhone ()
 @property(nonatomic, strong) MBLAsyncResource *popularListsResource;
 @property(nonatomic, strong) MBLAsyncResource *subscribedListsResource;
 - (void)_goListsToggle;
@@ -262,14 +262,14 @@
 - (void)setPopularListsResource:(MBLAsyncResource *)popularListsResource
 {
 	if (_popularListsResource != nil) {
-		[_popularListsResource unsubscribe:self];
+		//[_popularListsResource unsubscribe:self];
 		_popularListsResource = nil;
 	}
 	
 	_popularListsResource = popularListsResource;
 	
-	if (_popularListsResource != nil)
-		[_popularListsResource subscribe:self];
+	//if (_popularListsResource != nil)
+		//[_popularListsResource subscribe:self];
 }
 
 - (void)_refreshPopularLists
@@ -301,21 +301,21 @@
 		
 		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"];
 		_userResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:userFormValues forceFetch:YES expiration:[NSDate date]];
-		[_userResource subscribe:self];
+		//[_userResource subscribe:self];
 	}
 }
 
 - (void)setSubscribedListsResource:(MBLAsyncResource *)subscribedListsResource
 {
 	if (_subscribedListsResource != nil) {
-		[_subscribedListsResource unsubscribe:self];
+		//[_subscribedListsResource unsubscribe:self];
 		_subscribedListsResource = nil;
 	}
 	
 	_subscribedListsResource = subscribedListsResource;
 	
-	if (_subscribedListsResource != nil)
-		[_subscribedListsResource subscribe:self];
+	//if (_subscribedListsResource != nil)
+		//[_subscribedListsResource subscribe:self];
 }
 
 - (void)_refreshSubscribedLists:(NSNotification *)notification {
