@@ -25,6 +25,9 @@ extern const NSInteger MBLResourceCacheError_KeyNotFound;
 /** Inserts a new resource into the cache with the specified key and expiration date. */
 - (void)insertResource:(NSData *)data forKey:(NSString *)key withExpiration:(NSDate *)expiration;
 
+/** Inserts a JSON object into the cache with the specified key and expiration date. */
+- (void)insertObject:(id)object forKey:(NSString *)key withExpiration:(NSDate *)expiration;
+
 /** Retrieves a resource from the cache. Always returns immediately (see MBLAsyncResource). */
 - (MBLAsyncResource *)fetchResourceForKey:(NSString *)key;
 

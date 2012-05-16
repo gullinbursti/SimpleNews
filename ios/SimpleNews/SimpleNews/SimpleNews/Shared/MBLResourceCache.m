@@ -123,6 +123,18 @@ NSString * const _MBLCacheEntryExpiresKey = @"expires";
 	});
 }
 
+- (void)insertObject:(id)object forKey:(NSString *)key withExpiration:(NSDate *)expiration
+{
+	NSError *error = nil;
+	NSData *data = [NSJSONSerialization dataWithJSONObject:object options:0 error:&error];
+	if (error != nil) {
+		
+	}
+	else {
+		
+	}
+}
+
 - (BOOL)_isKeyStale:(NSString *)key
 {
 	NSDictionary *entry = [_index objectForKey:key];
@@ -149,6 +161,11 @@ NSString * const _MBLCacheEntryExpiresKey = @"expires";
 	});
 	
 	return resource;
+}
+
+- (MBLAsyncResource *)fetchObjectForKey:(NSString *)key
+{
+	
 }
 
 - (NSDate *)fetchCreationDateForKey:(NSString *)key
