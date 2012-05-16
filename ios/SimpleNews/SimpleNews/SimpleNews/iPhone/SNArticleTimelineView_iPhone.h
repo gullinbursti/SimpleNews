@@ -1,8 +1,8 @@
 //
-//  SNArticleListViewController_iPhone.h
+//  SNArticleTimelineView_iPhone.h
 //  SimpleNews
 //
-//  Created by Matthew Holcombe on 03.13.12.
+//  Created by Matthew Holcombe on 05.15.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
@@ -17,7 +17,7 @@
 #import "SNListVO.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 
-@interface SNArticleListViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate, EGOImageViewDelegate> {
+@interface SNArticleTimelineView_iPhone : UIView <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate, EGOImageViewDelegate> {
 	NSMutableArray *_articles;
 	ASIFormDataRequest *_articlesRequest;
 	ASIFormDataRequest *_updateRequest;
@@ -39,9 +39,9 @@
 	UIView *_blackMatteView;
 	EGOImageView *_fullscreenImgView;
 	CGRect _fullscreenFrame;
-	NSDate *_lastDate;
 }
 
--(id)initWithListVO:(SNListVO *)vo;
+-(id)initWithFrame:(CGRect)frame listVO:(SNListVO *)vo;
+
 
 @end

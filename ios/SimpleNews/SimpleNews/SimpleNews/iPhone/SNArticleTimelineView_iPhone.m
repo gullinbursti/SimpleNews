@@ -1,20 +1,16 @@
 //
-//  SNArticleListViewController_iPhone.m
+//  SNArticleTimelineView_iPhone.m
 //  SimpleNews
 //
-//  Created by Matthew Holcombe on 03.13.12.
+//  Created by Matthew Holcombe on 05.15.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
 #import <QuartzCore/QuartzCore.h>
-#import <Twitter/Twitter.h>
 #import "GANTracker.h"
 #import "ImageFilter.h"
 
-#import "SNArticleListViewController_iPhone.h"
 #import "SNArticleItemView_iPhone.h"
-#import "SNArticleCommentsViewController_iPhone.h"
-#import "SNArticleDetailsViewController_iPhone.h"
 #import "SNHeaderView_iPhone.h"
 
 #import "SNHeaderView_iPhone.h"
@@ -24,28 +20,14 @@
 #import "SNAppDelegate.h"
 #import "SNTweetVO.h"
 
-#import "SNArticleSourcesViewController_iPhone.h"
-#import "SNWebPageViewController_iPhone.h"
+#import "SNArticleTimelineView_iPhone.h"
 
-@interface SNArticleListViewController_iPhone()
--(void)_goBack;
-@end
+@implementation SNArticleTimelineView_iPhone
 
-@implementation SNArticleListViewController_iPhone
-
-#define kImageScale 0.9
-
--(id)init {
-	if ((self = [super init])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showComments:) name:@"SHOW_COMMENTS" object:nil];
-		
+-(id)initWithFrame:(CGRect)frame listVO:(SNListVO *)vo {
+	if ((self = [super initWithFrame:frame])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showFullscreenMedia:) name:@"SHOW_FULLSCREEN_MEDIA" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideFullscreenMedia:) name:@"HIDE_FULLSCREEN_MEDIA" object:nil];
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_readLater:) name:@"READ_LATER" object:nil];
-		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showDetails:) name:@"SHOW_DETAILS" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSourcePage:) name:@"SHOW_SOURCE_PAGE" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterTimeline:) name:@"TWITTER_TIMELINE" object:nil];
@@ -53,14 +35,7 @@
 		_articles = [NSMutableArray new];
 		_cardViews = [NSMutableArray new];
 		_timelineTweets = [NSMutableArray new];
-	}
-	
-	return (self);
-}
-
-
--(id)initWithListVO:(SNListVO *)vo {
-	if ((self = [self init])) {
+		
 		_vo = vo;
 		
 		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
@@ -72,102 +47,68 @@
 		NSError *error;
 		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/lists/%d", _vo.list_id] withError:&error])
 			NSLog(@"error in trackPageview");
+		
+		
+		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.frame];
+		bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
+		[self addSubview:bgImgView];
+		
+		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
+		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		_scrollView.opaque = YES;
+		_scrollView.scrollsToTop = NO;
+		_scrollView.pagingEnabled = NO;
+		_scrollView.delegate = self;
+		_scrollView.showsVerticalScrollIndicator = NO;
+		_scrollView.alwaysBounceVertical = NO;
+		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
+		[self addSubview:_scrollView];
+		
+		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
+		_refreshHeaderView.delegate = self;
+		[_scrollView addSubview:_refreshHeaderView];
+		[_refreshHeaderView refreshLastUpdatedDate];
+		
+		SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.list_name];
+		[self addSubview:headerView];
+		
+		SNNavListBtnView *listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:listBtnView];
+		
+		SNNavLogoBtnView *logoBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+		[[logoBtnView btn] addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:logoBtnView];
+		
+		if (!_vo.isSubscribed) {
+			_subscribeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+			_subscribeBtn.frame = CGRectMake(210.0, 50.0, 105.0, 44.0);
+			[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followTopicButton_nonActive.png"] forState:UIControlStateNormal];
+			[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followTopicButton_Active.png"] forState:UIControlStateHighlighted];
+			[_subscribeBtn setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+			_subscribeBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11.0];
+			_subscribeBtn.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, -10.0);
+			[_subscribeBtn setTitle:@"Follow Topic" forState:UIControlStateNormal];
+			[_subscribeBtn addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
+			[self addSubview:_subscribeBtn];
+		}
+		
+		_blackMatteView = [[UIView alloc] initWithFrame:self.frame];
+		[_blackMatteView setBackgroundColor:[UIColor blackColor]];
+		_blackMatteView.alpha = 0.0;
+		[self addSubview:_blackMatteView];
+		
+		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 	}
 	
 	return (self);
 }
 
--(void)didReceiveMemoryWarning {
-	
-}
-
--(void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"START_TIMER" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"STOP_TIMER" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_TWITTER_PROFILE" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_TWEET_PAGE" object:nil];
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"SHOW_SOURCE_PAGE" object:nil];
-}
-
-
-#pragma mark - View lifecycle
--(void)loadView {
-	[super loadView];
-	
-	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
-	[self.view addSubview:bgImgView];
-	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.view.frame.size.width, self.view.frame.size.height - 44.0)];
-	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	_scrollView.opaque = YES;
-	_scrollView.scrollsToTop = NO;
-	_scrollView.pagingEnabled = NO;
-	_scrollView.delegate = self;
-	_scrollView.showsVerticalScrollIndicator = NO;
-	_scrollView.alwaysBounceVertical = NO;
-	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height);
-	[self.view addSubview:_scrollView];
-	
-	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
-	_refreshHeaderView.delegate = self;
-	[_scrollView addSubview:_refreshHeaderView];
-	[_refreshHeaderView refreshLastUpdatedDate];
-	
-	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.list_name];
-	[self.view addSubview:headerView];
-	
-	SNNavListBtnView *listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
-	[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:listBtnView];
-	
-	SNNavLogoBtnView *logoBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
-	[[logoBtnView btn] addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:logoBtnView];
-	
-	if (!_vo.isSubscribed) {
-		_subscribeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-		_subscribeBtn.frame = CGRectMake(210.0, 50.0, 105.0, 44.0);
-		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followTopicButton_nonActive.png"] forState:UIControlStateNormal];
-		[_subscribeBtn setBackgroundImage:[UIImage imageNamed:@"followTopicButton_Active.png"] forState:UIControlStateHighlighted];
-		[_subscribeBtn setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		_subscribeBtn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11.0];
-		_subscribeBtn.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, -10.0);
-		[_subscribeBtn setTitle:@"Follow Topic" forState:UIControlStateNormal];
-		[_subscribeBtn addTarget:self action:@selector(_goSubscribe) forControlEvents:UIControlEventTouchUpInside];
-		[self.view addSubview:_subscribeBtn];
-	}
-	
-	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
-	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
-	_blackMatteView.alpha = 0.0;
-	[self.view addSubview:_blackMatteView];
-}
-
--(void)viewDidLoad {
-	[super viewDidLoad];
-	
-	_progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-	_progressHUD.mode = MBProgressHUDModeIndeterminate;
-}
-
--(void)viewDidUnload {
-	_progressHUD = nil;
-	_fullscreenImgView = nil;
-	_videoPlayerView = nil;
-	_blackMatteView = nil;
-	
-	[super viewDidUnload];
-}
-
--(void)viewDidAppear:(BOOL)animated {
-	[super viewDidAppear:animated];
-}
-
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
 	UITouch *touch = [touches anyObject];
-	CGPoint touchPoint = [touch locationInView:self.view];
+	CGPoint touchPoint = [touch locationInView:self];
 	
 	if (CGRectContainsPoint(_videoPlayerView.frame, touchPoint))
 		[_videoPlayerView toggleControls];//NSLog(@"TOUCHED:(%f, %f)", touchPoint.x, touchPoint.y);
@@ -196,14 +137,13 @@
 
 
 #pragma mark - Navigation
--(void)_goBack {	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"ARTICLES_RETURN" object:nil];	
+-(void)_goBack {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
-	[self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)_goFlip {
-	[self.navigationController pushViewController:[[SNArticleSourcesViewController_iPhone alloc] initWithListVO:_vo] animated:YES];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_SOURCES" object:_vo];	
 }
 
 -(void)_goSubscribe {
@@ -246,11 +186,11 @@
 		_fullscreenImgView.delegate = self;
 		_fullscreenImgView.imageURL = [NSURL URLWithString:vo.bgImage_url];
 		_fullscreenImgView.userInteractionEnabled = YES;
-		[self.view addSubview:_fullscreenImgView];
+		[self addSubview:_fullscreenImgView];
 		
 	} else if ([type isEqualToString:@"video"]) {
 		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:frame articleVO:vo];
-		[self.view addSubview:_videoPlayerView];
+		[self addSubview:_videoPlayerView];
 		
 		[self performSelector:@selector(_startVideo) withObject:nil afterDelay:1.0];
 	}
@@ -260,10 +200,10 @@
 		_blackMatteView.alpha = 0.95;
 		
 		if ([type isEqualToString:@"photo"])
-			_fullscreenImgView.frame = CGRectMake(0.0, (self.view.frame.size.height - (self.view.frame.size.width * vo.imgRatio)) * 0.5, self.view.frame.size.width, self.view.frame.size.width * vo.imgRatio);
+			_fullscreenImgView.frame = CGRectMake(0.0, (self.frame.size.height - (self.frame.size.width * vo.imgRatio)) * 0.5, self.frame.size.width, self.frame.size.width * vo.imgRatio);
 		
 		else
-			[_videoPlayerView reframe:CGRectMake(0.0, (self.view.frame.size.height - 240.0) * 0.5, self.view.frame.size.width, 240.0)];
+			[_videoPlayerView reframe:CGRectMake(0.0, (self.frame.size.height - 240.0) * 0.5, self.frame.size.width, 240.0)];
 		
 		
 	} completion:^(BOOL finished) {
@@ -281,6 +221,20 @@
 -(void)_startVideo {
 	[_videoPlayerView startPlayback];
 }
+
+-(void)_twitterTimeline:(NSNotification *)notification {
+	_timelineTweets = (NSMutableArray *)[notification object];
+}
+
+-(void)_showSourcePage:(NSNotification *)notification {
+	SNArticleVO *vo = (SNArticleVO *)[notification object];
+	//NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+	//							 vo.article_url, @"url", 
+	//							 vo.title, @"title", nil];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_PAGE" object:vo];
+}
+
 
 -(void)_hideFullscreenImage:(UIGestureRecognizer *)gestureRecognizer {
 	[UIView animateWithDuration:0.25 animations:^(void) {
@@ -300,69 +254,6 @@
 	}];
 }
 
--(void)_showComments:(NSNotification *)notification {
-	[self.navigationController pushViewController:[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object] listID:_vo.list_id] animated:YES];
-}
-
-
--(void)_readLater:(NSNotification *)notification {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"CANCEL_SHARE" object:nil];	
-}
--(void)_twitterShare:(NSNotification *)notification {
-	SNArticleVO *vo = (SNArticleVO *)[notification object];
-	
-	TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
-	
-	//[twitter addImage:[UIImage imageNamed:@"iOSDevTips.png"]];
-	[twitter addURL:[NSURL URLWithString:[NSString stringWithString:[NSString stringWithFormat:@"http://assemb.ly/tweets?id=%@", vo.tweet_id]]]];
-	[twitter setInitialText:[NSString stringWithFormat:@"via Assembly - %@", vo.title]];
-	
-	[self presentModalViewController:twitter animated:YES];
-	
-	twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
-		
-		ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
-		[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-		[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-		[readRequest setPostValue:[NSString stringWithFormat:@"%d", vo.article_id] forKey:@"articleID"];
-		[readRequest setDelegate:self];
-		[readRequest startAsynchronous];
-		//NSString *msg; 
-		
-		//if (result == TWTweetComposeViewControllerResultDone)
-		//	msg = @"Tweet compostion completed.";
-		
-		//else if (result == TWTweetComposeViewControllerResultCancelled)
-		//	msg = @"Tweet composition canceled.";
-		
-		
-		//UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Tweet Status" message:msg delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
-		//[alertView show];
-		
-		[self dismissModalViewControllerAnimated:YES];
-	};
-}
-
--(void)_twitterTimeline:(NSNotification *)notification {
-	_timelineTweets = (NSMutableArray *)[notification object];
-}
-
--(void)_showDetails:(NSNotification *)notification {
-	SNArticleDetailsViewController_iPhone *articleDetailsViewController = [[SNArticleDetailsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]];
-	[self.navigationController pushViewController:articleDetailsViewController animated:YES];
-}
-
--(void)_showTwitterProfile:(NSNotification *)notification {
-	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]];
-	[self.navigationController pushViewController:webPageViewController animated:YES];
-}
-
--(void)_showSourcePage:(NSNotification *)notification {
-	SNArticleVO *vo = (SNArticleVO *)[notification object];
-	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:vo.article_url] title:vo.title];
-	[self.navigationController pushViewController:webPageViewController animated:YES];
-}
 
 #pragma mark - EGORefreshTableHeaderDelegate Methods
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
@@ -466,7 +357,6 @@
 					[_scrollView addSubview:itemView];
 				}
 				
-				_lastDate = ((SNArticleVO *)[_articles objectAtIndex:0]).added;
 				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
 			}
 		}
@@ -567,7 +457,6 @@
 				NSMutableArray *updatedArticles = [NSMutableArray arrayWithArray:articleList];
 				[updatedArticles addObjectsFromArray:_articles];
 				_articles = [updatedArticles copy];
-				_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
 				
 				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, _scrollView.contentSize.height + offset);
 			}
@@ -583,5 +472,6 @@
 -(void)requestFailed:(ASIHTTPRequest *)request {
 	NSLog(@"requestFailed:\n[%@]", request.error);
 }
+
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
+#import <Twitter/Twitter.h>
 #import "GANTracker.h"
 
 #import "SNRootViewController_iPhone.h"
@@ -19,7 +20,6 @@
 #import "SNAnyListViewCell_iPhone.h"
 #import "SNFollowingListViewCell_iPhone.h"
 #import "SNAppDelegate.h"
-#import "SNArticleListViewController_iPhone.h"
 #import "SNDiscoveryArticlesView_iPhone.h"
 #import "SNArticleDetailsViewController_iPhone.h"
 #import "SNArticleSourcesViewController_iPhone.h"
@@ -44,8 +44,11 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleSources:) name:@"SHOW_ARTICLE_SOURCES" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleComments:) name:@"SHOW_ARTICLE_COMMENTS" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticlePage:) name:@"SHOW_ARTICLE_PAGE" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_discoveryReturn:) name:@"DISCOVERY_RETURN" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_timelineReturn:) name:@"TIMELINE_RETURN" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_listSubscribe:) name:@"LIST_SUBSCRIBE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_listUnsubscribe:) name:@"LIST_UNSUBSCRIBE" object:nil];
@@ -188,13 +191,10 @@
 	[super viewDidAppear:animated];
 	
 	_discoveryArticlesView.hidden = NO;
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		//_discoveryArticlesView.frame = CGRectMake(276.0, 0.0, self.view.frame.size.width, self.view.frame.size.height);
-		//_shadowView.frame = CGRectMake(256.0, _shadowView.frame.origin.y, _shadowView.frame.size.width, _shadowView.frame.size.height);
-		
-		_discoveryArticlesView.alpha = 1.0;
-		_shadowImgView.alpha = 1.0;
-	}];
+//	[UIView animateWithDuration:0.33 animations:^(void) {
+//		_discoveryArticlesView.alpha = 1.0;
+//		_shadowImgView.alpha = 1.0;
+//	}];
 }
 
 
@@ -283,6 +283,15 @@
 	}];
 }
 
+-(void)_timelineReturn:(NSNotification *)notification {
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_holderView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+		_cardListsButton.hidden = NO;
+	}];
+}
+
 -(void)_showArticleComments:(NSNotification *)notification {
 	SNArticleCommentsViewController_iPhone *articleCommentsViewController = [[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object] listID:0];
 	[self.navigationController pushViewController:articleCommentsViewController animated:YES];
@@ -291,6 +300,12 @@
 -(void)_showArticleDetails:(NSNotification *)notification {
 	SNArticleDetailsViewController_iPhone *articleDetailsViewController = [[SNArticleDetailsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]];
 	[self.navigationController pushViewController:articleDetailsViewController animated:YES];
+}
+
+-(void)_showArticlePage:(NSNotification *)notification {
+	SNArticleVO *vo = (SNArticleVO *)[notification object];
+	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:vo.article_url] title:vo.title];
+	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
 -(void)_showTwitterProfile:(NSNotification *)notification {
@@ -353,6 +368,43 @@
 			NSLog(@"error in trackEvent");
 	}
 }
+
+-(void)_twitterShare:(NSNotification *)notification {
+	SNArticleVO *vo = (SNArticleVO *)[notification object];
+	
+	TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
+	
+	//[twitter addImage:[UIImage imageNamed:@"iOSDevTips.png"]];
+	[twitter addURL:[NSURL URLWithString:[NSString stringWithString:[NSString stringWithFormat:@"http://assemb.ly/tweets?id=%@", vo.tweet_id]]]];
+	[twitter setInitialText:[NSString stringWithFormat:@"via Assembly - %@", vo.title]];
+	
+	[self presentModalViewController:twitter animated:YES];
+	
+	twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+		
+		ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
+		[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+		[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[readRequest setPostValue:[NSString stringWithFormat:@"%d", vo.list_id] forKey:@"listID"];
+		[readRequest setPostValue:[NSString stringWithFormat:@"%d", vo.article_id] forKey:@"articleID"];
+		[readRequest setDelegate:self];
+		[readRequest startAsynchronous];
+		//NSString *msg; 
+		
+		//if (result == TWTweetComposeViewControllerResultDone)
+		//	msg = @"Tweet compostion completed.";
+		
+		//else if (result == TWTweetComposeViewControllerResultCancelled)
+		//	msg = @"Tweet composition canceled.";
+		
+		
+		//UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Tweet Status" message:msg delegate:self cancelButtonTitle:@"Okay" otherButtonTitles:nil];
+		//[alertView show];
+		
+		[self dismissModalViewControllerAnimated:YES];
+	};
+}
+
 
 
 #pragma mark - Gesture Recongnizer Deleagtes
@@ -444,7 +496,18 @@
 //			_shadowView.frame = CGRectMake(320.0, _shadowView.frame.origin.y, _shadowView.frame.size.width, _shadowView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
-			[self.navigationController pushViewController:[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_popularLists objectAtIndex:indexPath.row]] animated:YES];
+			[_articleTimelineView removeFromSuperview];
+			_articleTimelineView = nil;
+			
+			_articleTimelineView = [[SNArticleTimelineView_iPhone alloc] initWithFrame:CGRectMake(276.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_popularLists objectAtIndex:indexPath.row]];
+			[_holderView addSubview:_articleTimelineView];
+			
+			[UIView animateWithDuration:0.33 animations:^(void) {
+				_cardListsButton.hidden = YES;
+				_holderView.frame = CGRectMake(-276.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+				
+			} completion:^(BOOL finished) {
+			}];
 		}];
 		
 	} else if ([tableView isEqual:_subscribedTableView]) {
@@ -456,7 +519,18 @@
 //			_shadowView.frame = CGRectMake(320.0, _shadowView.frame.origin.y, _shadowView.frame.size.width, _shadowView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
-			[self.navigationController pushViewController:[[SNArticleListViewController_iPhone alloc] initWithListVO:(SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]] animated:YES];
+			[_articleTimelineView removeFromSuperview];
+			_articleTimelineView = nil;
+			
+			_articleTimelineView = [[SNArticleTimelineView_iPhone alloc] initWithFrame:CGRectMake(276.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]];
+			[_holderView addSubview:_articleTimelineView];
+			
+			[UIView animateWithDuration:0.33 animations:^(void) {
+				_cardListsButton.hidden = YES;
+				_holderView.frame = CGRectMake(-276.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+				
+			} completion:^(BOOL finished) {
+			}];
 		}];
 	}
 }
@@ -481,7 +555,7 @@
 		[_popularHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
-#pragma mark EGORefreshTableHeaderDelegate Methods
+#pragma mark - EGORefreshTableHeaderDelegate Methods
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
 	[self reloadTableViewDataSource];
 	

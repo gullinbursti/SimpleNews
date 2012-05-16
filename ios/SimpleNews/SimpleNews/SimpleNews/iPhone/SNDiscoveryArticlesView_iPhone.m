@@ -12,8 +12,6 @@
 #import "ImageFilter.h"
 
 #import "SNDiscoveryArticlesView_iPhone.h"
-
-#import "SNArticleListViewController_iPhone.h"
 #import "SNDiscoveryArticleCardView_iPhone.h"
 #import "SNArticleCommentsViewController_iPhone.h"
 #import "SNArticleDetailsViewController_iPhone.h"
@@ -34,10 +32,6 @@
 
 -(id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame:frame])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSourcePage:) name:@"SHOW_SOURCE_PAGE" object:nil];
-		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterTimeline:) name:@"TWITTER_TIMELINE" object:nil];
 		
 		_articles = [NSMutableArray new];
@@ -139,24 +133,6 @@
 
 -(void)_twitterTimeline:(NSNotification *)notification {
 	_timelineTweets = (NSMutableArray *)[notification object];
-}
-
--(void)_showArticleDetails:(NSNotification *)notification {
-	//SNArticleDetailsViewController_iPhone *articleDetailsViewController = [[SNArticleDetailsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]];
-	//[self.navigationController setNavigationBarHidden:YES];
-	//[self.navigationController pushViewController:articleDetailsViewController animated:YES];
-}
-
--(void)_showTwitterProfile:(NSNotification *)notification {
-	//SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]];
-	//[self.navigationController setNavigationBarHidden:YES];
-	//[self.navigationController pushViewController:webPageViewController animated:YES];
-}
-
--(void)_showSourcePage:(NSNotification *)notification {
-	//SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[notification object]] title:@""];
-	//[self.navigationController setNavigationBarHidden:YES];
-	//[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
 #pragma mark - ScrollView delegates

@@ -210,7 +210,7 @@
 	[readRequest startAsynchronous];
 	
 	NSLog(@"USER_ID:[%d] LIST_ID:[%d] ARTICLE_ID:[%d]", [[[SNAppDelegate profileForUser] objectForKey:@"id"] intValue], _vo.list_id, _vo.article_id);	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_DETAILS" object:_vo];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_DETAILS" object:_vo];
 }
 
 -(void)_goVideo {
@@ -252,11 +252,7 @@
 
 
 -(void)_goSourcePage {
-	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-								 _vo.article_url, @"url", 
-								 _vo.title, @"title", nil];
-								 
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SOURCE_PAGE" object:dict];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SOURCE_PAGE" object:_vo];
 }
 
 -(void)_goLike {
@@ -325,7 +321,7 @@
 	[readRequest setDelegate:self];
 	[readRequest startAsynchronous];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_COMMENTS" object:_vo];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_COMMENTS" object:_vo];
 }
 
 
