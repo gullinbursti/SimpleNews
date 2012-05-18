@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "EGORefreshTableHeaderView.h"
 #import "SNDiscoveryArticlesView_iPhone.h"
 #import "SNArticleTimelineView_iPhone.h"
 #import "MBLAsyncResource.h"
@@ -18,28 +17,23 @@
 @class MBProgressHUD;
 @class SNDiscoveryArticlesView_iPhone;
 
-@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate, EGORefreshTableHeaderDelegate>
+@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate>
 {
 	MBLAsyncResource *_userResource;
-	MBLAsyncResource *_subscribedListsResource;
 	MBLAsyncResource *_updateResource;
-	
-	ASIFormDataRequest *_subscribedListsRequest;
-	ASIFormDataRequest *_updateRequest;
+	MBLAsyncResource *_topicsResource;
 	
 	ASIHTTPRequest *_twitterRequest;
-	
-	EGORefreshTableHeaderView *_subscribedHeaderView;
-	EGORefreshTableHeaderView *_popularHeaderView;
+
 	SNDiscoveryArticlesView_iPhone *_discoveryArticlesView;
 	SNArticleTimelineView_iPhone *_articleTimelineView;
 	
-	NSMutableArray *_subscribedLists;
+	NSMutableArray *_topicsList;
 	NSMutableArray *_popularLists;
 	NSMutableArray *_subscribedCells;
 	
 	MBProgressHUD *_hud;
-	UITableView *_subscribedTableView;
+	UITableView *_topicsTableView;
 	UITableView *_popularTableView;
 	
 	UIView *_holderView;
@@ -54,8 +48,5 @@
 	BOOL _isIntro;
 	int _swipeIndex;
 }
-
-- (void)reloadTableViewDataSource;
-- (void)doneLoadingTableViewData;
 
 @end

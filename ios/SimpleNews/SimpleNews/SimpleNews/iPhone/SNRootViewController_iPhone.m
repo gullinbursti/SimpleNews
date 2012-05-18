@@ -12,13 +12,14 @@
 
 #import "SNRootViewController_iPhone.h"
 #import "SNListVO.h"
+#import "SNTopicVO.h"
 
 #import "SNProfileViewController_iPhone.h"
 #import "SNWebPageViewController_iPhone.h"
 #import "SNHeaderView_iPhone.h"
 #import "SNBaseRootListViewCell_iPhone.h"
 #import "SNAnyListViewCell_iPhone.h"
-#import "SNFollowingListViewCell_iPhone.h"
+#import "SNRootTopicViewCell_iPhone.h"
 #import "SNAppDelegate.h"
 #import "SNDiscoveryArticlesView_iPhone.h"
 #import "SNArticleDetailsViewController_iPhone.h"
@@ -31,19 +32,24 @@
 @interface SNRootViewController_iPhone () <MBLResourceObserverProtocol>
 @property(nonatomic, strong) MBLAsyncResource *popularListsResource;
 @property(nonatomic, strong) MBLAsyncResource *subscribedListsResource;
+@property(nonatomic, strong) MBLAsyncResource *topicsListResource;
 - (void)_goListsToggle;
+- (void)_refreshPopularLists;
+- (void)_refreshUserAccount;
+- (void)_refreshTopicsList;
 @end
 
 @implementation SNRootViewController_iPhone
 
 @synthesize popularListsResource = _popularListsResource;
 @synthesize subscribedListsResource = _subscribedListsResource;
+@synthesize topicsListResource = _topicsListResource;
 
 - (id)init {
 	if ((self = [super init])) {
-		_subscribedLists = [NSMutableArray new];
 		_popularLists = [NSMutableArray new];
 		_subscribedCells = [NSMutableArray new];
+		_topicsList = [NSMutableArray new];
 		
 		_isIntro = YES;
 		_isFollowingList = YES;
@@ -137,15 +143,15 @@
 	[toggleButton addTarget:self action:@selector(_goListsToggle) forControlEvents:UIControlEventTouchUpInside];
 	[_holderView addSubview:toggleButton];
 	
-	_subscribedTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 50.0, 248.0, self.view.frame.size.height - 50.0) style:UITableViewStylePlain];
-	[_subscribedTableView setBackgroundColor:[UIColor clearColor]];
-	_subscribedTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-	_subscribedTableView.rowHeight = 50.0;
-	_subscribedTableView.delegate = self;
-	_subscribedTableView.dataSource = self;
-	_subscribedTableView.scrollsToTop = NO;
-	_subscribedTableView.showsVerticalScrollIndicator = NO;
-	[_holderView addSubview:_subscribedTableView];
+	_topicsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 50.0, 248.0, self.view.frame.size.height - 50.0) style:UITableViewStylePlain];
+	[_topicsTableView setBackgroundColor:[UIColor clearColor]];
+	_topicsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+	_topicsTableView.rowHeight = 50.0;
+	_topicsTableView.delegate = self;
+	_topicsTableView.dataSource = self;
+	_topicsTableView.scrollsToTop = NO;
+	_topicsTableView.showsVerticalScrollIndicator = NO;
+	[_holderView addSubview:_topicsTableView];
 	
 	_popularTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 50.0, 248.0, self.view.frame.size.height - 50.0) style:UITableViewStylePlain];
 	[_popularTableView setBackgroundColor:[UIColor clearColor]];
@@ -157,16 +163,6 @@
 	_popularTableView.showsVerticalScrollIndicator = NO;
 	_popularTableView.hidden = YES;
 	[_holderView addSubview:_popularTableView];
-	
-	_subscribedHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
-	_subscribedHeaderView.delegate = self;
-	[_subscribedTableView addSubview:_subscribedHeaderView];
-	[_subscribedHeaderView refreshLastUpdatedDate];
-	
-	_popularHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
-	_popularHeaderView.delegate = self;
-	[_popularTableView addSubview:_popularHeaderView];
-	[_popularHeaderView refreshLastUpdatedDate];
 	
 	_cardListsButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_cardListsButton.frame = CGRectMake(276.0, 49.0, 44.0, self.view.frame.size.height - 49.0);
@@ -181,10 +177,8 @@
 	_profileButton = nil;
 	_toggleLtImgView = nil;
 	_toggleRtImgView = nil;
-	_subscribedTableView = nil;
+	_topicsTableView = nil;
 	_popularTableView = nil;
-	_subscribedHeaderView = nil;
-	_popularHeaderView = nil;
 	_cardListsButton = nil;
 }
 
@@ -198,7 +192,7 @@
 //		_shadowImgView.alpha = 1.0;
 //	}];
 	// Refresh any network resources that need loading
-	[self _refreshPopularLists];
+	[self _refreshTopicsList];
 	[self _refreshUserAccount];
 }
 
@@ -210,7 +204,7 @@
 	_toggleLtImgView.hidden = !_isFollowingList;
 	_toggleRtImgView.hidden = _isFollowingList;
 	
-	_subscribedTableView.hidden = !_isFollowingList;
+	_topicsTableView.hidden = !_isFollowingList;
 	_popularTableView.hidden = _isFollowingList;
 }
 
@@ -241,28 +235,6 @@
 							 [self.navigationController pushViewController:profileViewController animated:YES];
 						 }];
 	}
-}
-
-- (void)reloadTableViewDataSource {
-	_reloading = YES;
-	
-	if (!_isFollowingList) {
-		_updateRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"]]];
-		[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", 5] forKey:@"action"];
-		[_updateRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		[_updateRequest setDelegate:self];
-		[_updateRequest startAsynchronous];
-	}
-}
-
-- (void)doneLoadingTableViewData {
-	_reloading = NO;
-	
-	if (_isFollowingList)
-		[_subscribedHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_subscribedTableView];
-	
-	else
-		[_popularHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_popularTableView];
 }
 
 #pragma mark - Network Requests
@@ -299,6 +271,36 @@
 	}
 }
 
+- (void)setTopicsListResource:(MBLAsyncResource *)topicsListResource
+{
+	if (_topicsListResource != nil) {
+		[_topicsListResource unsubscribe:self];
+		_topicsListResource = nil;
+	}
+	
+	_topicsListResource = topicsListResource;
+	
+	if (_topicsListResource != nil)
+		[_topicsListResource subscribe:self];
+}
+
+- (void)_refreshTopicsList
+{
+	if (_topicsListResource == nil) {
+		_hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+		_hud.labelText = NSLocalizedString(@"Loading Topics…", @"Status message when loading topics list");
+		_hud.mode = MBProgressHUDModeIndeterminate;
+		_hud.graceTime = 2.0;
+		_hud.taskInProgress = YES;
+		
+		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
+		[formValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Topics.php"];
+		self.topicsListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate date]]; // 1 hour expiration for now
+	}
+}
+
 - (void)_refreshUserAccount
 {
 	if ((_userResource == nil) && ([SNAppDelegate twitterHandle] != nil)) {
@@ -313,37 +315,9 @@
 	}
 }
 
-- (void)setSubscribedListsResource:(MBLAsyncResource *)subscribedListsResource
-{
-	if (_subscribedListsResource != nil) {
-		[_subscribedListsResource unsubscribe:self];
-		_subscribedListsResource = nil;
-	}
-	
-	_subscribedListsResource = subscribedListsResource;
-	
-	if (_subscribedListsResource != nil)
-		[_subscribedListsResource subscribe:self];
-}
-
-- (void)_refreshSubscribedLists:(NSNotification *)notification {
-	if ([[SNAppDelegate profileForUser] objectForKey:@"id"] != nil) {
-		NSLog(@"REFRESHING SUBSCRIBED LISTS");
-		
-		NSMutableDictionary *subscribedListsFormValues = [NSMutableDictionary dictionary];
-		[subscribedListsFormValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-		[subscribedListsFormValues setObject:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Lists.php"];
-		self.subscribedListsResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:subscribedListsFormValues forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 8.0)]];
-	}
-	else {
-		NSLog(@"Can't refresh subscribed lists without a valid user id");
-	}
-}
-
 - (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data
 {
+	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
 	if (resource == _popularListsResource) {
 		_hud.taskInProgress = NO;
 		
@@ -391,20 +365,29 @@
 				_shadowImgView.alpha = 1.0;
 			}];
 			
-			[UIView animateWithDuration:0.33 animations:^(void) {
-				_cardListsButton.hidden = YES;
-				_holderView.frame = CGRectMake(-270.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-			}];
+			//[UIView animateWithDuration:0.33 animations:^(void) {
+			//	_cardListsButton.hidden = YES;
+			//	_holderView.frame = CGRectMake(-270.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+			//}];
 			
 			[_hud hide:YES];
 			_hud = nil;
 		}
 	}
 	else if (resource == _userResource) {
+		_hud.taskInProgress = NO;
+		
 		NSError *error = nil;
 		NSDictionary *parsedUser = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
 		if (error != nil) {
 			NSLog(@"Failed to parse user JSON: %@", [error localizedDescription]);
+			_hud.graceTime = 0.0;
+			_hud.mode = MBProgressHUDModeCustomView;
+			_hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+			_hud.labelText = NSLocalizedString(@"Download Failed", @"Status message when downloading fails");
+			[_hud show:NO];
+			[_hud hide:YES afterDelay:1.5];
+			_hud = nil;
 		}
 		else {
 			//_twitterRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1/users/show.json?screen_name=%@", [SNAppDelegate twitterHandle]]]];
@@ -412,29 +395,44 @@
 			//[_twitterRequest startAsynchronous];
 			
 			[SNAppDelegate writeUserProfile:parsedUser];
-			[self _refreshSubscribedLists:nil];
+			
+			[_hud hide:YES];
+			_hud = nil;
 		}
 	}
-	else if (resource == _subscribedListsResource) {
+	
+	else if (resource == _topicsListResource) {
+		_hud.taskInProgress = NO;
+		
 		NSError *error = nil;
-		NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
-		NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-		NSArray *parsedLists = [unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+		//NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+		//NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+		NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];//[unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
 		
 		if (error != nil) {
 			NSLog(@"Failed to parse job list JSON: %@", [error localizedDescription]);
+			_hud.graceTime = 0.0;
+			_hud.mode = MBProgressHUDModeCustomView;
+			_hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+			_hud.labelText = NSLocalizedString(@"Download Failed", @"Status message when downloading fails");
+			[_hud show:NO];
+			[_hud hide:YES afterDelay:1.5];
+			_hud = nil;
 		}
 		else {
 			NSMutableArray *list = [NSMutableArray array];
 			for (NSDictionary *serverList in parsedLists) {
-				SNListVO *vo = [SNListVO listWithDictionary:serverList];
+				SNTopicVO *vo = [SNTopicVO topicWithDictionary:serverList];
 				//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
 				if (vo != nil)
 					[list addObject:vo];
 			}
 			
-			_subscribedLists = list;
-			[_subscribedTableView reloadData];
+			[_hud hide:YES];
+			_hud = nil;
+			
+			_topicsList = list;
+			[_topicsTableView reloadData];
 		}
 	}
 }
@@ -592,22 +590,12 @@
 
 
 
-#pragma mark - Gesture Recongnizer Deleagtes
-#pragma mark - Gesture Recongnizer Delegates
-		
--(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-	CGPoint touchPoint = [touch locationInView:_subscribedTableView];
-	_swipeIndex = MIN((int)(touchPoint.y / 50.0), [_subscribedLists count] - 1);
-
-	return (YES);
-}
-
 #pragma mark - TableView DataSource Delegates
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	
-	if ([tableView isEqual:_subscribedTableView]) {
-		return ([_subscribedLists count]);
+	if ([tableView isEqual:_topicsTableView]) {
+		return ([_topicsList count]);
 		
 	} else {
 		return ([_popularLists count]);
@@ -620,13 +608,13 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-	if ([tableView isEqual:_subscribedTableView]) {
-		SNFollowingListViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNFollowingListViewCell_iPhone cellReuseIdentifier]];
+	if ([tableView isEqual:_topicsTableView]) {
+		SNRootTopicViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNRootTopicViewCell_iPhone cellReuseIdentifier]];
 		
 		if (cell == nil)
-			cell = [[SNFollowingListViewCell_iPhone alloc] init];
+			cell = [[SNRootTopicViewCell_iPhone alloc] init];
 			
-		cell.listVO = (SNListVO *)[_subscribedLists objectAtIndex:indexPath.row];
+		cell.topicVO = (SNTopicVO *)[_topicsList objectAtIndex:indexPath.row];
 		[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
 		[_subscribedCells addObject:cell];
 		return cell;	
@@ -645,21 +633,6 @@
 	return (nil);
 }
 
-//-(void)tableView:(UITableView*)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-//}
-//
-//
-//-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-//	if ([tableView isEqual:_subscribedTableView]) {
-//		if (editingStyle == UITableViewCellEditingStyleDelete) {
-//			NSLog(@"indexPath:[%d]", indexPath.row);
-//			[_subscribedLists removeObjectAtIndex:2];
-//			
-//			//[_subscribedLists removeObjectAtIndex:indexPath.row];
-//			//[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade]; 
-//		}
-//	}
-//}
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return (50.0);
@@ -695,7 +668,7 @@
 			}];
 		}];
 		
-	} else if ([tableView isEqual:_subscribedTableView]) {
+	} else if ([tableView isEqual:_topicsTableView]) {
 		[UIView animateWithDuration:0.33 animations:^(void) {
 			_discoveryArticlesView.alpha = 0.0;
 			_shadowImgView.alpha = 0.0;
@@ -707,7 +680,7 @@
 			[_articleTimelineView removeFromSuperview];
 			_articleTimelineView = nil;
 			
-			_articleTimelineView = [[SNArticleTimelineView_iPhone alloc] initWithFrame:CGRectMake(276.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_subscribedLists objectAtIndex:indexPath.row]];
+			_articleTimelineView = [[SNArticleTimelineView_iPhone alloc] initWithFrame:CGRectMake(276.0, 0.0, 320.0, 480.0) listVO:(SNListVO *)[_topicsList objectAtIndex:indexPath.row]];
 			[_holderView addSubview:_articleTimelineView];
 			
 			[UIView animateWithDuration:0.33 animations:^(void) {
@@ -723,99 +696,11 @@
 #pragma mark - ScrollView Delegates
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {	
-	
-	if (_isFollowingList)
-		[_subscribedHeaderView egoRefreshScrollViewDidScroll:scrollView];
-	
-	else
-		[_popularHeaderView egoRefreshScrollViewDidScroll:scrollView];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-	
-	if (_isFollowingList)
-		[_subscribedHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-	
-	else
-		[_popularHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
-#pragma mark EGORefreshTableHeaderDelegate Methods
 
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView *)view {
-	[self reloadTableViewDataSource];
-	
-	if (_isFollowingList)
-		[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:0.5];
-}
-
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView *)view {
-	return _reloading; // should return if data source model is reloading
-}
-
-- (NSDate *)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView *)view {
-	return [NSDate date]; // should return date data source was last change	
-}
-
-#pragma mark - ASI Delegates
-
-- (void)requestFinished:(ASIHTTPRequest *)request { 
-	//NSLog(@"SNRootViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
-	
-	if ([request isEqual:_twitterRequest]) {
-		NSError *error = nil;
-		NSDictionary *parsedUser = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-		if (error == nil) {
-			NSLog(@"NAME:%@", [parsedUser objectForKey:@"name"]);
-			ASIFormDataRequest *updateNameRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
-			[updateNameRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
-			[updateNameRequest setPostValue:[parsedUser objectForKey:@"name"] forKey:@"userName"];
-			[updateNameRequest startAsynchronous];
-			
-			[self _refreshSubscribedLists:nil];
-		}
-	}
-	else if ([request isEqual:_updateRequest]) {
-		if (_isFollowingList) {
-			
-		} else {
-			@autoreleasepool {
-				NSError *error = nil;
-				NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"likes" ascending:NO];
-				NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-				NSArray *parsedLists = [unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
-				
-				//NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-				if (error != nil)
-					NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
-				
-				else {
-					NSMutableArray *list = [NSMutableArray array];
-					for (NSDictionary *serverList in parsedLists) {
-						SNListVO *vo = [SNListVO listWithDictionary:serverList];
-						//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
-						
-						if (vo != nil)
-							[list addObject:vo];
-					}
-					
-					_popularLists = list;
-					[_popularTableView reloadData];
-				}
-			}
-			
-			[self doneLoadingTableViewData];
-		}
-	
-	}
-	else {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_SUBSCRIBED_LIST" object:nil];
-	}
-}
-
-- (void)requestFailed:(ASIHTTPRequest *)request
-{
-	NSLog(@"requestFailed:\n[%@]", request.error);
-}
 
 @end
