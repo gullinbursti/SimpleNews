@@ -86,6 +86,12 @@
 		function getAllTopics() {
 			$topic_arr = array();
 			
+			array_push($topic_arr, array(
+				"topic_id" => 0,
+				"title" => "Popular",
+				"hashtags" => array()
+			));
+			
 			$query = 'SELECT * FROM `tblTopics` WHERE `active` = "Y" ORDER BY `added` DESC;';
 			$topic_result = mysql_query($query);
 			

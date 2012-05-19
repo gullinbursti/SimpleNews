@@ -26,6 +26,18 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
 		
+		[self setBackgroundColor:[UIColor whiteColor]];
+		self.layer.borderColor = [[SNAppDelegate snLineColor] CGColor];
+		self.layer.borderWidth = 1.0;
+		self.layer.cornerRadius = 4.0;
+		//self.clipsToBounds = YES;
+		
+		self.layer.shadowColor = [[UIColor blackColor] CGColor];
+		self.layer.shadowOffset = CGSizeMake(1.0, 1.0);
+		self.layer.shadowOpacity = 0.5;
+		self.layer.shouldRasterize = YES;
+		self.layer.shadowRadius = 2.0;
+		
 		EGOImageView *thumbImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 25.0, 25.0)];
 		thumbImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
 		[self addSubview:thumbImgView];
@@ -106,7 +118,6 @@
 			[self addSubview:btnBGImgView];
 			offset += 70;
 			
-			
 			UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			commentButton.frame = CGRectMake(6.0, 0.0, 94.0, 44.0);
 			[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_nonActive.png"] forState:UIControlStateNormal];
@@ -138,7 +149,7 @@
 		}
 		
 		if (_vo.type_id > 1) {
-			_articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 280.0, 280.0 * _vo.imgRatio)];
+			_articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 260.0, 260.0 * _vo.imgRatio)];
 			[_articleImgView setDelegate:self];
 			[_articleImgView setBackgroundColor:[UIColor lightGrayColor]];
 			_articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
@@ -149,12 +160,12 @@
 			dblTapRecognizer.numberOfTapsRequired = 2;
 			[_articleImgView addGestureRecognizer:dblTapRecognizer];
 			
-			offset += (280.0 * _vo.imgRatio);
+			offset += (260.0 * _vo.imgRatio);
 			offset += 20;
 		}
 		
 		if (_vo.type_id > 4) {
-			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 280.0, 210.0)];
+			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 260.0, 195.0)];
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[self addSubview:_videoImgView];
 			
@@ -162,31 +173,31 @@
 			_videoButton.frame = _videoImgView.frame;
 			[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:_videoButton];
-			offset += 210.0;
+			offset += 195.0;
 			offset += 20;
 		}
 		
-		int imgOffset = 25;
-		for (NSDictionary *dict in _vo.seenBy) {
-			EGOImageView *readImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(imgOffset, offset, 24.0, 24.0)];
-			readImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1/users/profile_image?screen_name=%@&size=reasonably_small", [dict objectForKey:@"handle"]]];
-			[self addSubview:readImgView];
-			
-			UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			avatarButton.frame = readImgView.frame;
-			[avatarButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
-			[self addSubview:avatarButton];
-			
-			imgOffset += 34;
-		}
+//		int imgOffset = 25;
+//		for (NSDictionary *dict in _vo.seenBy) {
+//			EGOImageView *readImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(imgOffset, offset, 24.0, 24.0)];
+//			readImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1/users/profile_image?screen_name=%@&size=reasonably_small", [dict objectForKey:@"handle"]]];
+//			[self addSubview:readImgView];
+//			
+//			UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//			avatarButton.frame = readImgView.frame;
+//			[avatarButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
+//			[self addSubview:avatarButton];
+//			
+//			imgOffset += 34;
+//		}
 		
 		
-		UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		commentButton.frame = CGRectMake(imgOffset - 5.0, offset - 5.0, 34.0, 34.0);
-		[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
-		[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
-		[commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:commentButton];
+//		UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//		commentButton.frame = CGRectMake(imgOffset - 5.0, offset - 5.0, 34.0, 34.0);
+//		[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
+//		[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
+//		[commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
+//		[self addSubview:commentButton];
 		
 		offset += 46;
 	}

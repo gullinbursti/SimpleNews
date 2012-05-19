@@ -113,6 +113,7 @@
 		4C8B444A14FEA89600F89F7C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C8B444814FEA88700F89F7C /* AVFoundation.framework */; };
 		4C9049EE1565CCCB0066A129 /* SNTopicVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C9049ED1565CCCB0066A129 /* SNTopicVO.m */; };
 		4C9049F515660D840066A129 /* SNRootTopicViewCell_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C9049F415660D840066A129 /* SNRootTopicViewCell_iPhone.m */; };
+		4C9049F81566F19A0066A129 /* SNTopicTimelineView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C9049F71566F19A0066A129 /* SNTopicTimelineView_iPhone.m */; };
 		4C91180214FD61D5001F8FD0 /* SNLogoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C91180114FD61D5001F8FD0 /* SNLogoView.m */; };
 		4C9216E415360B0D00AAD992 /* followButton_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9216E015360B0D00AAD992 /* followButton_Active.png */; };
 		4C9216E515360B0D00AAD992 /* followButton_Active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9216E115360B0D00AAD992 /* followButton_Active@2x.png */; };
@@ -467,6 +468,8 @@
 		4C9049ED1565CCCB0066A129 /* SNTopicVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNTopicVO.m; sourceTree = "<group>"; };
 		4C9049F315660D840066A129 /* SNRootTopicViewCell_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNRootTopicViewCell_iPhone.h; sourceTree = "<group>"; };
 		4C9049F415660D840066A129 /* SNRootTopicViewCell_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNRootTopicViewCell_iPhone.m; sourceTree = "<group>"; };
+		4C9049F61566F19A0066A129 /* SNTopicTimelineView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNTopicTimelineView_iPhone.h; sourceTree = "<group>"; };
+		4C9049F71566F19A0066A129 /* SNTopicTimelineView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNTopicTimelineView_iPhone.m; sourceTree = "<group>"; };
 		4C91180014FD61D5001F8FD0 /* SNLogoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNLogoView.h; sourceTree = "<group>"; };
 		4C91180114FD61D5001F8FD0 /* SNLogoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNLogoView.m; sourceTree = "<group>"; };
 		4C9216E015360B0D00AAD992 /* followButton_Active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = followButton_Active.png; sourceTree = "<group>"; };
@@ -1098,6 +1101,8 @@
 				4CE58FA71554747E00668B1E /* SNArticleSourcesViewController_iPhone.m */,
 				4C1A0AB81563A35300E08ADC /* SNArticleTimelineView_iPhone.h */,
 				4C1A0AB91563A35300E08ADC /* SNArticleTimelineView_iPhone.m */,
+				4C9049F61566F19A0066A129 /* SNTopicTimelineView_iPhone.h */,
+				4C9049F71566F19A0066A129 /* SNTopicTimelineView_iPhone.m */,
 			);
 			name = Articles;
 			sourceTree = "<group>";
@@ -2202,6 +2207,7 @@
 				4C1A0ABD1563A37100E08ADC /* SNArticleListViewController_iPhone.m in Sources */,
 				4C9049EE1565CCCB0066A129 /* SNTopicVO.m in Sources */,
 				4C9049F515660D840066A129 /* SNRootTopicViewCell_iPhone.m in Sources */,
+				4C9049F81566F19A0066A129 /* SNTopicTimelineView_iPhone.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
