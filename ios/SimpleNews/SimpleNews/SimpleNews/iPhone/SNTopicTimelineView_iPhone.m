@@ -318,10 +318,7 @@
 
 #pragma mark - Image View delegates
 -(void)imageViewLoadedImage:(EGOImageView *)imageView {
-	imageView.image = [SNAppDelegate imageWithFilters:imageView.image filter:[NSArray arrayWithObjects:
-																									  [NSDictionary dictionaryWithObjectsAndKeys:
-																										@"sepia", @"type", nil, nil], 
-																									  nil]];
+	imageView.image = [SNAppDelegate imageWithFilters:imageView.image filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"sharpen", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
 }
 
 #pragma mark - ASI Delegates
