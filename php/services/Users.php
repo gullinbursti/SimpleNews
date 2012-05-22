@@ -6,7 +6,7 @@
 	  	function __construct() {
 		
 			$this->db_conn = mysql_connect('localhost', 'db41232_sn_usr', 'dope911t') or die("Could not connect to database.");
-			mysql_select_db('assembly') or die("Could not select database.");
+			mysql_select_db('assembly2') or die("Could not select database.");
 		}
 	
 		function __destruct() {	
@@ -110,10 +110,10 @@
 				$result = mysql_query($query);
 				$user_id = mysql_insert_id();
 				
-				for ($i=4; $i<=7; $i++) {
-					$query = 'INSERT INTO `tblUsersLists` (`user_id`, `list_id`) VALUES ('. $user_id .', '. $i .');';
-					$result = mysql_query($query);
-				}
+				//for ($i=4; $i<=7; $i++) {
+				//	$query = 'INSERT INTO `tblUsersLists` (`user_id`, `list_id`) VALUES ('. $user_id .', '. $i .');';
+				//	$result = mysql_query($query);
+				//}
 				
 				$query = 'SELECT * FROM `tblUsers` WHERE `id` ='. $user_id .';';
 				$row = mysql_fetch_row(mysql_query($query));

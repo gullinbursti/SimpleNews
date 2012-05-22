@@ -7,9 +7,9 @@ require_once('twitteroauth.php');
 require_once('_oauth_cfg.php');
 require_once('TwitterSearch.php');
 
-$access_token = $_SESSION['access_token'];
-$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $access_token['oauth_token'], $access_token['oauth_token_secret']);
-$tweetProfile_obj = $connection->get('account/verify_credentials');
+//$access_token = $_SESSION['access_token'];
+//$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $access_token['oauth_token'], $access_token['oauth_token_secret']);
+//$tweetProfile_obj = $connection->get('account/verify_credentials');
 
 /*
 $curator_arr = array();   
@@ -147,8 +147,10 @@ while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {
 		
 		$query = 'SELECT `id` FROM `tblArticles` WHERE `tweet_id` = "'. $tweet_arr[$key]['tweet_id'] .'";';		
 		if (mysql_num_rows(mysql_query($query)) == 0) {
-			echo($tweet_arr[$key]['created'] ."<br />");
+			preg_match_all('!https?://[\S]+!', $tweet_arr[$key]['message'], $matches);
+			$short_url = $matches[0];
 			
+			echo(strlen($short_url[0]) ."<br />");
 			
 			$timestamp_arr = explode(' ', $tweet_arr[$key]['created']);
 			$month = strtolower($timestamp_arr[2]);
@@ -158,17 +160,20 @@ while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {
 		
 			$created = $year ."-". $month_arr[$month] ."-". $day ." ". $time;
 			
-			$query = 'INSERT INTO `tblArticles` (';
-			$query .= '`id`, `type_id`, `tweet_id`, `contributor_id`, `tweet_msg`, `title`, `content_txt`, `content_url`, `image_url`, `image_ratio`, `youtube_id`, `active`, `created`, `added`) ';
-			$query .= 'VALUES (NULL, "0", "'. $tweet_arr[$key]['tweet_id'] .'", "'. $contributor_id .'", "'. $tweet_arr[$key]['message'] .'", "", "", "", "", "1.0", "", "N", "'. $created .'", NOW());';	 
-			echo ($query ."<br />");
-		    $result = mysql_query($query);
-			$article_id = mysql_insert_id();			
 			
-			$query = 'INSERT INTO `tblTopicsArticles` ('; 
-			$query .= '`topic_id`, `article_id`) ';
-			$query .= 'VALUES ("'. $topic_row['id'] .'", "'. $article_id .'");';
-			$result = mysql_query($query);
+			if (strlen($short_url[0]) > 0) {
+				$query = 'INSERT INTO `tblArticles` (';
+				$query .= '`id`, `type_id`, `tweet_id`, `contributor_id`, `tweet_msg`, `short_url`, `title`, `content_txt`, `content_url`, `image_url`, `image_ratio`, `youtube_id`, `likes`, `active`, `created`, `added`) ';
+				$query .= 'VALUES (NULL, "0", "'. $tweet_arr[$key]['tweet_id'] .'", "'. $contributor_id .'", "'. $tweet_arr[$key]['message'] .'", "'. $short_url[0] .'", "", "", "", "", "1.0", "", "0", "N", "'. $created .'", NOW());';	 
+				echo ($query ."<br />");
+			    $result = mysql_query($query);
+				$article_id = mysql_insert_id();			
+			
+				$query = 'INSERT INTO `tblTopicsArticles` ('; 
+				$query .= '`topic_id`, `article_id`) ';
+				$query .= 'VALUES ("'. $topic_row['id'] .'", "'. $article_id .'");';
+				$result = mysql_query($query);
+			}
 		
 		} else {
 			$article_row = mysql_fetch_row(mysql_query($query));

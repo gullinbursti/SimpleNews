@@ -41,6 +41,9 @@
 	vo.imgRatio = [[dictionary objectForKey:@"img_ratio"] floatValue];
 	vo.seenBy = [dictionary objectForKey:@"reads"];
 	
+	if ([dictionary objectForKey:@"title"] == nil)
+		vo.title = @"Untitled";
+	
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
 	//[dateFormat setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
 	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];

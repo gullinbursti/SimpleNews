@@ -95,7 +95,7 @@
 		
 		offset += 41;
 		
-		if (_vo.source_id > 0) {
+		//if (_vo.source_id > 0) {
 			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:16] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, size.height)];
 			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:16];
@@ -146,7 +146,7 @@
 				[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
 				[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 			}
-		}
+		//}
 		
 		if (_vo.type_id > 1) {
 			_articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 260.0, 260.0 * _vo.imgRatio)];

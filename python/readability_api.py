@@ -13,7 +13,11 @@ url = sys.argv[1]
 print url
 
 # --/ add to readability
-b = rdd.add_bookmark(url)
+try:
+	b = rdd.add_bookmark(url)
+except ResponseError:
+	print "Article already exists"
+
 a = rdd.get_article(b.article.id) 
 
 # --/ article content
