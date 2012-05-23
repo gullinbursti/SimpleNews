@@ -145,7 +145,7 @@
 				array_push($article_arr, array(
 					"article_id" => $article_row['article_id'], 
 					"list_id" => 0, 
-					"type_id" => $article_row['type_id'], 
+					"type_id" => $article_row[1], 
 					"source_id" => 0, 
 					"title" => $article_row['title'], 
 					"article_url" => $article_row['short_url'], 
@@ -680,7 +680,7 @@
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
 					"list_id" => 0, 
-					"type_id" => $article_row['type_id'], 
+					"type_id" => $article_row[1], 
 					"source_id" => 0, 
 					"title" => $article_row['title'], 
 					"article_url" => $article_row['short_url'], 

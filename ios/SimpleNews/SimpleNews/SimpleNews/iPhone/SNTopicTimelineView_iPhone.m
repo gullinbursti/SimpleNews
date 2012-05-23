@@ -249,6 +249,25 @@
 	}];
 }
 
+-(void)_hideFullscreenMedia:(NSNotification *)notification {
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		_blackMatteView.alpha = 0.0;
+		
+		_fullscreenImgView.frame = _fullscreenFrame;
+		[_videoPlayerView reframe:_fullscreenFrame];
+		[_videoPlayerView stopPlayback];
+		
+	} completion:^(BOOL finished) {
+		_blackMatteView.hidden = YES;
+		[_fullscreenImgView removeFromSuperview];
+		[_videoPlayerView removeFromSuperview];
+		
+		_fullscreenImgView = nil;
+		_videoPlayerView = nil;
+	}];
+
+}
+
 -(void)_startVideo {
 	[_videoPlayerView startPlayback];
 }

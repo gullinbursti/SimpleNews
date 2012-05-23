@@ -469,45 +469,54 @@
 	//NSString *videoStreamMap = @"url_encoded_fmt_stream_map= ... &tmi=1";
 	
 	NSString *videoInfo = [[[NSString alloc] initWithData:[request responseData] encoding:NSUTF8StringEncoding] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-	//NSLog(@"%@", videoInfo);
+	NSLog(@"%@", videoInfo);
 	
-	NSRange prefixRange = [videoInfo rangeOfString:@"url_encoded_fmt_stream_map=url="];
-	NSRange suffixRange = [videoInfo rangeOfString:@"&tmi=1"];
-	//NSLog(@"(%d) -- [%@][%@]", [videoInfo length], NSStringFromRange(prefixRange), NSStringFromRange(suffixRange));
+	NSRange errorRange = [videoInfo rangeOfString:@"status=fail"];
+	NSLog(@"errorRange.location[%d] .length[%d]", errorRange.location, errorRange.length);
 	
-	if (suffixRange.location < prefixRange.location)
-		suffixRange = [videoInfo rangeOfString:@"&no_get_video_log=1"];
-	
-	//NSString *streamMap = [videoInfo substringWithRange:NSMakeRange(prefixRange.location + prefixRange.length, suffixRange.location - (prefixRange.location + prefixRange.length))];
-	//NSLog(@"%@", streamMap);
-	
-	NSArray *mp4Videos = [[videoInfo substringWithRange:NSMakeRange(prefixRange.location + prefixRange.length, suffixRange.location - (prefixRange.location + prefixRange.length))] componentsSeparatedByString:@"url="];
-	NSMutableDictionary *videoURLs = [NSMutableDictionary new];
-	
-	for (NSString *url in mp4Videos) {
-		if ([url rangeOfString:@"type=video%2Fmp4%3B"].length > 0) {
-			
-			if ([url rangeOfString:@"quality=hd720"].length > 0)
-				[videoURLs setObject:[[url substringWithRange:NSMakeRange(0, [url rangeOfString:@"quality=hd720"].location - 1)] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] forKey:@"hd"];
-			
-			if ([url rangeOfString:@"quality=medium"].length > 0)
-				[videoURLs setObject:[[url substringWithRange:NSMakeRange(0, [url rangeOfString:@"quality=medium"].location - 1)] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] forKey:@"sd"];
-			
-			//NSLog(@"VIDEOS:\n\n[======================================================]\n%@\n[======================================================]\n", url);
+	if (errorRange.length == 0) {
+		NSRange prefixRange = [videoInfo rangeOfString:@"url_encoded_fmt_stream_map=url="];
+		NSRange suffixRange = [videoInfo rangeOfString:@"&tmi=1"];
+		//NSLog(@"(%d) -- [%@][%@]", [videoInfo length], NSStringFromRange(prefixRange), NSStringFromRange(suffixRange));
+		
+		if (suffixRange.location < prefixRange.location)
+			suffixRange = [videoInfo rangeOfString:@"&no_get_video_log=1"];
+		
+		//NSString *streamMap = [videoInfo substringWithRange:NSMakeRange(prefixRange.location + prefixRange.length, suffixRange.location - (prefixRange.location + prefixRange.length))];
+		//NSLog(@"%@", streamMap);
+		
+		NSArray *mp4Videos = [[videoInfo substringWithRange:NSMakeRange(prefixRange.location + prefixRange.length, suffixRange.location - (prefixRange.location + prefixRange.length))] componentsSeparatedByString:@"url="];
+		NSMutableDictionary *videoURLs = [NSMutableDictionary new];
+		
+		for (NSString *url in mp4Videos) {
+			if ([url rangeOfString:@"type=video%2Fmp4%3B"].length > 0) {
+				
+				if ([url rangeOfString:@"quality=hd720"].length > 0)
+					[videoURLs setObject:[[url substringWithRange:NSMakeRange(0, [url rangeOfString:@"quality=hd720"].location - 1)] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] forKey:@"hd"];
+				
+				if ([url rangeOfString:@"quality=medium"].length > 0)
+					[videoURLs setObject:[[url substringWithRange:NSMakeRange(0, [url rangeOfString:@"quality=medium"].location - 1)] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] forKey:@"sd"];
+				
+				//NSLog(@"VIDEOS:\n\n[======================================================]\n%@\n[======================================================]\n", url);
+			}
 		}
+		
+		NSString *videoURL = [videoURLs objectForKey:@"sd"];
+		_videoURL = videoURL;
+		
+		//if ([videoURLs objectForKey:@"hd"])
+		//	videoURL = [videoURLs objectForKey:@"hd"];
+		
+		
+		
+		NSLog(@"%@", videoURLs);
+		//[self _initPlayer];
+	
+	} else {
+		[self _goClose];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"HIDE_FULLSCREEN_MEDIA" object:nil];//HIDE_FULLSCREEN_MEDIA
 	}
-	
-	NSString *videoURL = [videoURLs objectForKey:@"sd"];
-	_videoURL = videoURL;
-	
-	//if ([videoURLs objectForKey:@"hd"])
-	//	videoURL = [videoURLs objectForKey:@"hd"];
-	
-	
-	
-	NSLog(@"%@", videoURLs);
-	//[self _initPlayer];
-	
+		
 	//NSLog(@"%@", [@"http%3A%2F%2Fo-o.preferred.comcast-lax1.v21.lscache4.c.youtube.com%2Fvideoplayback%3Fupn%3DNjE0NjE0NjY0NzY4NDEzNDA5OA%253D%253D%26sparams%3Dcp%252Cid%252Cip%252Cipbits%252Citag%252Cratebypass%252Csource%252Cupn%252Cexpire%26fexp%3D902904%252C904820%252C901601%26itag%3D37%26ip%3D98.0.0.0%26signature%3DAC36EF98C4CFECF8E5BFEA29EE9A009A40D18106.4BE3C83EE174FEC7EEDC72303CD49FCBE4F9F150%26sver%3D3%26ratebypass%3Dyes%26source%3Dyoutube%26expire%3D1332511088%26key%3Dyt1%26ipbits%3D8%26cp%3DU0hSR1VMT19NUkNOMl9NRlNBOjNqczdGMmdmd2pJ%26id%3Dd5783ada74dc476c" stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);
 }
 

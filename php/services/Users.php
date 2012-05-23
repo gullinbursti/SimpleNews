@@ -84,10 +84,10 @@
 		}
 	    
 		
-		function submitUser($device_token, $twitter_handle) {
+		function submitUser($device_token, $twitter_handle, $twitter_id) {
 			$user_arr = array();
 			
-			$query = 'SELECT * FROM `tblUsers` WHERE `handle` = "'. $twitter_handle .'";';
+			$query = 'SELECT * FROM `tblUsers` WHERE `twitter_id` = "'. $twitter_id .'";';
 			$result = mysql_query($query);
 			
 			if (mysql_num_rows($result) > 0) {
@@ -95,9 +95,10 @@
 				
 				$user_arr = array(
 					"id" => $row[0], 
-					"handle" => $row[1], 
-					"name" => $row[2], 
-					"token" => $row[3]					
+					"twitter_id" => $row[1], 
+					"handle" => $row[2], 
+					"name" => $row[3], 
+					"token" => $row[4]					
 				);
 				
 				$query = 'UPDATE `tblUsers` SET `modified` = CURRENT_TIMESTAMP WHERE `id` ='. $row[0] .';';
@@ -105,8 +106,8 @@
 				
 			} else {
 				$query = 'INSERT INTO `tblUsers` (';
-				$query .= '`id`, `handle`, `name`, `device_token`, `added`, `modified`) ';
-				$query .= 'VALUES (NULL, "'. $twitter_handle .'", "", "'. $device_token .'", NOW(), CURRENT_TIMESTAMP);';
+				$query .= '`id`, `twitter_id`, `handle`, `name`, `device_token`, `added`, `modified`) ';
+				$query .= 'VALUES (NULL, "'. $twitter_id .'", "'. $twitter_handle .'", "", "'. $device_token .'", NOW(), CURRENT_TIMESTAMP);';
 				$result = mysql_query($query);
 				$user_id = mysql_insert_id();
 				
@@ -120,9 +121,10 @@
 				
 				$user_arr = array(
 					"id" => $row[0], 
-					"handle" => $row[1], 
-					"name" => $row[2], 
-					"token" => $row[3]					
+					"twitter_id" => $row[1], 
+					"handle" => $row[2], 
+					"name" => $row[3], 
+					"token" => $row[4]					
 				);
 			}
 			
@@ -139,15 +141,26 @@
 			$row = mysql_fetch_row(mysql_query($query));
 			$user_arr = array(
 				"id" => $row[0], 
-				"handle" => $row[1], 
-				"name" => $row[2], 
-				"token" => $row[3]					
+				"twitter_id" => $row[1], 
+				"handle" => $row[2], 
+				"name" => $row[3], 
+				"token" => $row[4]					
 			);
 			
 			$this->sendResponse(200, json_encode($user_arr));
 			return (true);
 		}
-	
+	    
+		function findFriends($twitter_id) {
+			
+			$query = 'SELECT `id` FROM `tblUsers` WHERE `twitter_id` = "'. $twitter_id .'";';
+			$result = (mysql_query($query);
+			
+			$this->sendResponse(200, json_encode(array(
+				"result" => (mysql_num_rows($result) > 0);
+			)));
+			return (true);
+		}
 	
 		function test() {
 			$this->sendResponse(200, json_encode(array(
@@ -168,13 +181,18 @@
 				break;
 				
 			case "1":
-				if (isset($_POST['token']) && isset($_POST['handle']))
-					$users->submitUser($_POST['token'], $_POST['handle']);
+				if (isset($_POST['token']) && isset($_POST['handle']) && isset($_POST['twitterID']))
+					$users->submitUser($_POST['token'], $_POST['handle'], $_POST['twitterID']);
 				break;
 				
 			case "2":
 				if (isset($_POST['userID']) && isset($_POST['userName']))
 					$users->updateName($_POST['userID'], $_POST['userName']);
+				break;
+				
+			case "3":
+				if (isset($_POST['twitterID']))
+					$users->findFriends($_POST['twitterID']);
 				break;
 			
     	}

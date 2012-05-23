@@ -17,6 +17,7 @@
 #import "SNWebPageViewController_iPhone.h"
 #import "SNProfileArticlesViewController_iPhone.h"
 #import "SNProfileFollowingListsViewController_iPhone.h"
+#import "SNFindFriendsViewController_iPhone.h"
 
 @implementation SNProfileViewController_iPhone
 -(id)init {
@@ -165,6 +166,10 @@
 			
 		case 3: // following
 			[self.navigationController pushViewController:[[SNProfileFollowingListsViewController_iPhone alloc] init] animated:YES];
+			break;
+			
+		case 4: // friends
+			[self.navigationController pushViewController:[[SNFindFriendsViewController_iPhone alloc] init] animated:YES];
 			break;
 			
 		default:

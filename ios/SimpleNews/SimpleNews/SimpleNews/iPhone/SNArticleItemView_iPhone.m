@@ -95,7 +95,7 @@
 		
 		offset += 41;
 		
-		//if (_vo.source_id > 0) {
+		if (_vo.type_id != 2) {
 			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:16] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, size.height)];
 			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:16];
@@ -111,7 +111,7 @@
 			[detailsButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:detailsButton];
 			offset += size.height + 15;
-			
+		}	
 			UIImageView *btnBGImgView = [[UIImageView alloc] initWithFrame:CGRectMake(73.0, offset, 174.0, 44.0)];
 			btnBGImgView.image = [UIImage imageNamed:@"commentLikeButton_BG.png"];
 			btnBGImgView.userInteractionEnabled = YES;
@@ -148,7 +148,7 @@
 			}
 		//}
 		
-		if (_vo.type_id > 1) {
+		if (_vo.type_id == 2 || _vo.type_id == 3) {
 			_articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 260.0, 260.0 * _vo.imgRatio)];
 			[_articleImgView setDelegate:self];
 			[_articleImgView setBackgroundColor:[UIColor lightGrayColor]];
@@ -164,7 +164,7 @@
 			offset += 20;
 		}
 		
-		if (_vo.type_id > 4) {
+		if (_vo.type_id > 3) {
 			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 260.0, 195.0)];
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[self addSubview:_videoImgView];

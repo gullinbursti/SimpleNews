@@ -7,6 +7,7 @@
 //
 
 #import "SNTwitterCaller.h"
+#import "SNAppDelegate.h"
 
 #import <Twitter/Twitter.h>
 #import <Accounts/Accounts.h>
@@ -63,9 +64,12 @@ static SNTwitterCaller *sharedInstance = nil;
 					self.accounts = [self.accountStore accountsWithAccountType:accountTypeTwitter];
 					self.account = [self.accounts objectAtIndex:0];
 					
-					//NSLog(@"ACCOUNT:%@", self.account);
+					NSString *twitterID = [[[[NSMutableDictionary alloc] initWithDictionary:[self.account dictionaryWithValuesForKeys:[NSArray arrayWithObject:@"properties"]]] objectForKey:@"properties"] objectForKey:@"user_id"];
+					NSLog(@"ACCOUNT:%@ [%@]", self.account, twitterID);
+					
 					
 					//if (self.account) {
+					[[NSUserDefaults standardUserDefaults] setObject:twitterID forKey:@"twitterID"];
 						[[NSUserDefaults standardUserDefaults] setObject:self.account.username forKey:@"twitterHandle"];
 						[[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"https://api.twitter.com/1/users/profile_image?screen_name=%@&size=reasonably_small", self.account.username] forKey:@"twitterAvatar"];
 						[[NSUserDefaults standardUserDefaults] synchronize];
@@ -146,5 +150,6 @@ static SNTwitterCaller *sharedInstance = nil;
 		}
 	}
 }
+
 
 @end

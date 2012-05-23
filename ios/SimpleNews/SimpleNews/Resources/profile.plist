@@ -30,6 +30,14 @@
 		<key>profile_id</key>
 		<integer>5</integer>
 		<key>title</key>
+		<string>Find Friends</string>
+		<key>info</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>profile_id</key>
+		<integer>6</integer>
+		<key>title</key>
 		<string>Notifications</string>
 		<key>info</key>
 		<string></string>

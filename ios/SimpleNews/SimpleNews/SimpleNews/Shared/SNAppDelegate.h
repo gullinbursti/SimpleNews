@@ -35,8 +35,10 @@
 +(void)writeDeviceToken:(NSString *)token;
 +(NSString *)deviceToken;
 
+
 +(void)twitterToggle:(BOOL)isSignedIn;
 +(BOOL)twitterEnabled;
++(NSString *)twitterID;
 +(NSString *)twitterHandle;
 +(NSString *)twitterAvatar;
 

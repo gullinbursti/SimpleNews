@@ -186,7 +186,8 @@
 		NSMutableDictionary *userFormValues = [NSMutableDictionary dictionary];
 		[userFormValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		[userFormValues setObject:[SNAppDelegate deviceToken] forKey:@"token"];
-		[userFormValues setObject:[SNAppDelegate twitterHandle] forKey:@"handle"];
+		[userFormValues setObject:[SNAppDelegate twitterHandle] forKey:@"handle"]; 
+		[userFormValues setObject:[SNAppDelegate twitterID] forKey:@"twitterID"]; 
 		
 		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"];
 		_userResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:userFormValues forceFetch:YES expiration:[NSDate date]];
