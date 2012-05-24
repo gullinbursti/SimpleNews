@@ -17,6 +17,7 @@
 	
 	ASIHTTPRequest *_idsRequest;
 	ASIHTTPRequest *_followingBlockRequest;
+	ASIFormDataRequest *_friendLookupRequest;
 }
 
 @end

@@ -110,6 +110,14 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSLog(@"SELECTED");
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
+	
+	SNTwitterUserVO *vo = (SNTwitterUserVO *)[_friends objectAtIndex:indexPath.row];
+	
+	_friendLookupRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
+	[_friendLookupRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+	[_friendLookupRequest setPostValue:vo.twitterID forKey:@"twitterID"];
+	[_friendLookupRequest setDelegate:self];
+	[_friendLookupRequest startAsynchronous];
 }
 
 
@@ -170,10 +178,12 @@
 				[friends addObject:vo];
 			}
 			
-			
 			_friends = [friends copy];
 			[_tableView reloadData];
 		}
+	
+	} else if ([request isEqual:_friendLookupRequest]) {
+		
 	}
 }
 

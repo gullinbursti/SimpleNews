@@ -297,7 +297,7 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 
 
 +(NSString *)twitterID {
-	return ([[NSUserDefaults standardUserDefaults] objectForKey:@"twitter_id"]);
+	return ([[NSUserDefaults standardUserDefaults] objectForKey:@"twitterID"]);
 }
 
 +(NSString *)twitterHandle {
