@@ -169,7 +169,11 @@
 			break;
 			
 		case 4: // friends
-			[self.navigationController pushViewController:[[SNFindFriendsViewController_iPhone alloc] init] animated:YES];
+			[self.navigationController pushViewController:[[SNFindFriendsViewController_iPhone alloc] initAsFinder] animated:YES];
+			break;
+			
+		case 5: // friends
+			[self.navigationController pushViewController:[[SNFindFriendsViewController_iPhone alloc] initAsList] animated:YES];
 			break;
 			
 		default:

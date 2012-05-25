@@ -14,6 +14,7 @@
 
 @property (nonatomic, retain) NSDictionary *dictionary;
 
+@property (nonatomic) int userID;
 @property (nonatomic, retain) NSString *twitterID;
 @property (nonatomic, retain) NSString *handle;
 @property (nonatomic, retain) NSString *avatarURL;

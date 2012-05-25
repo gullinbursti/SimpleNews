@@ -92,7 +92,7 @@
 				"hashtags" => array()
 			));
 			
-			$query = 'SELECT * FROM `tblTopics` WHERE `active` = "Y" ORDER BY `added` DESC;';
+			$query = 'SELECT * FROM `tblTopics` WHERE `active` = "Y" ORDER BY `order` ASC;';
 			$topic_result = mysql_query($query);
 			
 			while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {  		

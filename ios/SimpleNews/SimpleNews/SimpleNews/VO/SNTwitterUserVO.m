@@ -11,12 +11,13 @@
 @implementation SNTwitterUserVO
 
 @synthesize dictionary;
-@synthesize twitterID, handle, avatarURL, name;
+@synthesize userID, twitterID, handle, avatarURL, name;
 
 +(SNTwitterUserVO *)twitterUserWithDictionary:(NSDictionary *)dictionary {
 	SNTwitterUserVO *vo = [[SNTwitterUserVO alloc] init];
 	
 	vo.dictionary = dictionary;
+	vo.userID = [[dictionary objectForKey:@"id"] intValue];
 	vo.twitterID = [dictionary objectForKey:@"id_str"];
 	vo.name = [dictionary objectForKey:@"name"];
 	vo.handle = [dictionary objectForKey:@"screen_name"];

@@ -14,10 +14,15 @@
 	UITableView *_tableView;
 	NSMutableArray *_friendIDs;
 	NSMutableArray *_friends;
+	BOOL _isFinder;
 	
 	ASIHTTPRequest *_idsRequest;
 	ASIHTTPRequest *_followingBlockRequest;
 	ASIFormDataRequest *_friendLookupRequest;
+	ASIFormDataRequest *_myFriendsRequest;
 }
+
+-(id)initAsFinder;
+-(id)initAsList;
 
 @end

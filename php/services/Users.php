@@ -152,13 +152,36 @@
 		}
 	    
 		function findFriends($twitter_id) {
+			$isFound = false;
 			
 			$query = 'SELECT `id` FROM `tblUsers` WHERE `twitter_id` = "'. $twitter_id .'";';
-			$result = (mysql_query($query);
+			$result = mysql_query($query);
+			$isFound = (mysql_num_rows($result) > 0);
 			
 			$this->sendResponse(200, json_encode(array(
-				"result" => (mysql_num_rows($result) > 0);
+				"result" => $isFound
 			)));
+			return (true);
+		}
+		
+		function getFriends($user_id) {
+			$friend_arr = array();
+			
+			$query = 'SELECT * FROM `tblUsers` INNER JOIN `tblUserFriends` ON `tblUsers`.`id` = `tblUserFriends`.`friend_id` WHERE `tblUserFriends`.`user_id` = '. $user_id .';';
+			$result = mysql_query($query);
+			
+			while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
+				array_push($friend_arr, array(
+					"id" => $row['id'], 
+					"id_str" => $row['twitter_id'], 
+					"screen_name" => $row['handle'], 
+					"name" => $row['name'], 
+					"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $row['handle'] ."&size=reasonably_small"
+				));
+			}
+			
+			$this->sendResponse(200, json_encode($friend_arr));
+			
 			return (true);
 		}
 	
@@ -194,7 +217,11 @@
 				if (isset($_POST['twitterID']))
 					$users->findFriends($_POST['twitterID']);
 				break;
-			
+				
+			 case "4":
+				if (isset($_POST['userID']))
+					$users->getFriends($_POST['userID']);
+				break;			
     	}
 	}
 ?>

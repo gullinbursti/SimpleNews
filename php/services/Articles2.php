@@ -358,6 +358,29 @@
 			return (true);
 		}
 		
+		function getComments($article_id) {
+			$comment_arr = array();
+			
+			$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_id .' ORDER BY `tblComments`.`added` DESC;';
+			$comment_result = mysql_query($query);
+			
+			while ($comment_row = mysql_fetch_array($comment_result, MYSQL_BOTH)) {
+				$query = 'SELECT `tblArticles`.`isLiked` INNER JOIN `tblUsersLikedArticles` ON `tblArticles`.`id` = `tblUsersLikedArticles`.`article_id` WHERE `tblUsersLikedArticles`.`user_id` = '. $comment_row['user_id']. ';';
+				$article_result = mysql_query($query);
+				
+				array_push($comment_arr, array(
+					"id" => $comment_row['id'], 
+					"handle" => $comment_row['handle'], 
+					"content" => $comment_row['content'], 
+					"isLiked" => (mysql_num_rows($article_result) > 0)
+				));				
+			}
+			
+			
+			$this->sendResponse(200, json_encode($comment_arr));
+			return (true);
+		}
+		
 		function submitComment($handle, $list_id, $article_id, $content, $isLiked) {
 			$query = 'SELECT `id` FROM `tblUsers` WHERE `handle` = "'. $handle .'";';
 			$result = mysql_query($query);
@@ -533,7 +556,37 @@
 			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblUsersLikedArticles` ON `tblArticles`.`id` = `tblUsersLikedArticles`.`article_id` WHERE `tblUsersLikedArticles`.`user_id` = '. $user_id .';';
 			$article_result = mysql_query($query);
 			
-			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 				
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
+				
+				array_push($article_arr, array(
+					"article_id" => $article_row['article_id'], 
+					"list_id" => 0, 
+					"type_id" => $article_row[1], 
+					"source_id" => 0, 
+					"title" => $article_row['title'], 
+					"article_url" => $article_row['short_url'], 
+					"short_url" => $article_row['short_url'], 
+					"affiliate_url" => "", 
+					"tweet_id" => $article_row['tweet_id'], 
+					"tweet_msg" => $article_row['tweet_msg'], 
+					"twitter_name" => $article_row['name'], 
+					"twitter_handle" => $article_row['handle'],
+					"twitter_info" => "", 
+					"bg_url" => $article_row['image_url'], 
+					"source" => "", 
+					"content" => $article_row['content_txt'], 
+					"avatar_url" => $article_row['avatar_url'], 
+					"video_url" => $article_row['youtube_id'], 
+					"likes" => $article_row['likes'], 
+					"liked" => false, 
+					"img_ratio" => $article_row['image_ratio'], 
+					"added" => $article_row['created'], 
+					"tags" => array(), 
+					"reads" => array(), 
+					"reactions" => array()
+				));
+				
+				/* 				
 				$query = 'SELECT `tblComments`.`id`, `tblComments`.`content`, `tblComments`.`liked`, `tblComments`.`added`, `tblUsers`.`name`, `tblUsers`.`handle` FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row['id'] .' AND `tblComments`.`list_id` = '. $list_id .' ORDER BY `tblComments`.`added` DESC;';
 				$comments_result = mysql_query($query);
 				
@@ -609,7 +662,8 @@
 					"tags" => array(), 
 					"reads" => $user_arr, 
 					"reactions" => $comment_arr
-				)); 
+				));
+				*/ 
 			}
 			
 			

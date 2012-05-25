@@ -14,28 +14,40 @@
 #import "SNNavBackBtnView.h"
 #import "SNTwitterFriendViewCell_iPhone.h"
 #import "SNTwitterUserVO.h"
+#import "SNTwitterFriendArticlesViewController_iPhone.h"
 
 @implementation SNFindFriendsViewController_iPhone
 
-- (id)init
-{
-	if ((self = [super init])) {
-		_idsRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://api.twitter.com/1/followers/ids.json?id=%@", [SNAppDelegate twitterID]]]];
-		_idsRequest.delegate = self;
-		[_idsRequest startAsynchronous];
+- (id)initAsFinder {
+	if ((self = [self init])) {
+		_isFinder = YES;
 	}
 	
 	return (self);
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (id)initAsList {
+	if ((self = [self init])) {
+		_isFinder = NO;
+	}
+	
+	return (self);
+}
+
+- (id)init {
+	if ((self = [super init])) {
+		_friends = [NSMutableArray new];
+	}
+	
+	return (self);
+}
+
+- (void)didReceiveMemoryWarning {
 	[super didReceiveMemoryWarning];
 }
 
 #pragma mark - View lifecycle
-- (void)loadView
-{
+- (void)loadView {
 	[super loadView];
 	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
@@ -50,31 +62,54 @@
 	_tableView.dataSource = self;
 	_tableView.userInteractionEnabled = YES;
 	_tableView.scrollsToTop = NO;
-	_tableView.showsVerticalScrollIndicator = NO;
+	//_tableView.showsVerticalScrollIndicator = NO;
 	[self.view addSubview:_tableView];
 	
-	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Find Friends"];
-	[self.view addSubview:headerView];
+	SNHeaderView_iPhone *headerView;
+	
+	if (_isFinder) {
+		headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Find Friends"];
+		[self.view addSubview:headerView];	
+		
+		_idsRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://api.twitter.com/1/followers/ids.json?id=%@", [SNAppDelegate twitterID]]]];
+		_idsRequest.delegate = self;
+		[_idsRequest startAsynchronous];
+	
+	} else {
+		headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"My Friends"];
+		[self.view addSubview:headerView];	
+		
+		_myFriendsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
+		[_myFriendsRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
+		[_myFriendsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[_myFriendsRequest setDelegate:self];
+		[_myFriendsRequest startAsynchronous];
+	}
 	
 	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
 	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:backBtnView];
+	
+	
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
 	[super viewDidUnload];
+}
+
+#pragma mark Naviagation
+-(void)_goBack {
+	[self.navigationController popViewControllerAnimated:YES];
 }
 
 
 #pragma mark - TableView DataSource Delegates
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return ([_friendIDs count]);
+	return ([_friends count]);
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -108,16 +143,21 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSLog(@"SELECTED");
+	SNTwitterUserVO *vo = (SNTwitterUserVO *)[_friends objectAtIndex:indexPath.row];
+	NSLog(@"SELECTED:[%@]", vo.twitterID);
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
 	
-	SNTwitterUserVO *vo = (SNTwitterUserVO *)[_friends objectAtIndex:indexPath.row];
 	
-	_friendLookupRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
-	[_friendLookupRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-	[_friendLookupRequest setPostValue:vo.twitterID forKey:@"twitterID"];
-	[_friendLookupRequest setDelegate:self];
-	[_friendLookupRequest startAsynchronous];
+	if (_isFinder) {
+		_friendLookupRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
+		[_friendLookupRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+		[_friendLookupRequest setPostValue:vo.twitterID forKey:@"twitterID"];
+		[_friendLookupRequest setDelegate:self];
+		[_friendLookupRequest startAsynchronous];
+		
+	} else {
+		[self.navigationController pushViewController:[[SNTwitterFriendArticlesViewController_iPhone alloc] initAsArticlesLiked:vo] animated:YES];
+	}
 }
 
 
@@ -184,6 +224,25 @@
 	
 	} else if ([request isEqual:_friendLookupRequest]) {
 		
+	} else if ([request isEqual:_myFriendsRequest]) {
+		NSArray *parsedFriends = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+		
+		if (error != nil)
+			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+		
+		else {
+			NSMutableArray *friends = [NSMutableArray array];
+			
+			for (NSDictionary *dict in parsedFriends) {
+				SNTwitterUserVO *vo = [SNTwitterUserVO twitterUserWithDictionary:dict];
+				[friends addObject:vo];
+				
+				NSLog(@"FRIEND:[%@]", vo.handle);
+			}
+			
+			_friends = [friends copy];
+			[_tableView reloadData];
+		}
 	}
 }
 
