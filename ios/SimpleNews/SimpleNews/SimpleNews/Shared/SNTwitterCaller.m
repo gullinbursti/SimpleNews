@@ -151,5 +151,41 @@ static SNTwitterCaller *sharedInstance = nil;
 	}
 }
 
+-(void)sendImageTweet:(UIImage *)img message:(NSString *)msg {
+	
+	TWRequest *request = [[TWRequest alloc] initWithURL:[NSURL URLWithString:@"https://upload.twitter.com/1/statuses/update_with_media.json"] parameters:nil requestMethod:TWRequestMethodPOST];
+	[request setAccount:[self.accounts objectAtIndex:0]];
+	
+	[request addMultiPartData:[msg dataUsingEncoding:NSUTF8StringEncoding] withName:@"status" type:@"multipart/form-data"];
+	[request addMultiPartData:UIImagePNGRepresentation(img) withName:@"media[]" type:@"multipart/form-data"];
+	
+	[request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+		NSDictionary *dict = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:responseData options:0 error:nil];
+		NSLog(@"%@", dict);
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			// perform an action that updates the UI...
+		});
+	}];
+}
+
+-(void)sendTextTweet:(NSString *)msg {
+	NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:msg, @"status", nil];
+	
+	TWRequest *tweet = [[TWRequest alloc] initWithURL:[NSURL URLWithString:@"http://api.twitter.com/1/statuses/update.json"] parameters:parameters requestMethod:TWRequestMethodPOST];
+	tweet.account = [self.accounts objectAtIndex:0];
+	
+	[tweet performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+		NSDictionary *dict = (NSDictionary *)[NSJSONSerialization JSONObjectWithData:responseData options:0 error:nil];
+		NSLog(@"%@", dict);
+		
+		dispatch_async(dispatch_get_main_queue(), ^{
+			// perform an action that updates the UI...
+		});
+	}];
+}
+
+
+
 
 @end

@@ -15,6 +15,8 @@
 #import "SNTwitterFriendViewCell_iPhone.h"
 #import "SNTwitterUserVO.h"
 #import "SNTwitterFriendArticlesViewController_iPhone.h"
+#import "SNFriendProfileViewController_iPhone.h"
+#import "SNTwitterCaller.h"
 
 @implementation SNFindFriendsViewController_iPhone
 
@@ -149,6 +151,8 @@
 	
 	
 	if (_isFinder) {
+		_selectedIndex = indexPath.row;
+		
 		_friendLookupRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
 		[_friendLookupRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 		[_friendLookupRequest setPostValue:vo.twitterID forKey:@"twitterID"];
@@ -192,7 +196,6 @@
 			
 			NSString *idList = @"";
 			for (NSString *twitterID in [parsedUser objectForKey:@"ids"]) {
-				NSLog(@"TWITTER ID:[%@]", twitterID);
 				idList = [idList stringByAppendingFormat:@",%@", twitterID];
 				[friendIDs addObject:twitterID];
 			}
@@ -223,6 +226,22 @@
 		}
 	
 	} else if ([request isEqual:_friendLookupRequest]) {
+		NSDictionary *parsedResult = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+		
+		if (error != nil)
+			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+		
+		else {
+			if([[parsedResult objectForKey:@"result"] isEqualToString:@"true"])
+				[self.navigationController pushViewController:[[SNFriendProfileViewController_iPhone alloc] initWithTwitterUser:(SNTwitterUserVO *)[_friends objectAtIndex:_selectedIndex]] animated:YES];
+			
+			else {
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invite Sent" message:[NSString stringWithFormat:@"Sent a tweet mentioning @%@", ((SNTwitterUserVO *)[_friends objectAtIndex:_selectedIndex]).handle] delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+				[alert show];
+				
+				//[[SNTwitterCaller sharedInstance] sendTextTweet:[NSString stringWithFormat:kTweetInvite, ((SNTwitterUserVO *)[_friends objectAtIndex:_selectedIndex]).handle]];
+			}
+		}
 		
 	} else if ([request isEqual:_myFriendsRequest]) {
 		NSArray *parsedFriends = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
@@ -236,8 +255,6 @@
 			for (NSDictionary *dict in parsedFriends) {
 				SNTwitterUserVO *vo = [SNTwitterUserVO twitterUserWithDictionary:dict];
 				[friends addObject:vo];
-				
-				NSLog(@"FRIEND:[%@]", vo.handle);
 			}
 			
 			_friends = [friends copy];

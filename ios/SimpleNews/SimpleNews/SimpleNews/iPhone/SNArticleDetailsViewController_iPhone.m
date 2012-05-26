@@ -276,7 +276,7 @@
 																				delegate:self 
 																	cancelButtonTitle:@"Cancel" 
 															 destructiveButtonTitle:nil 
-																	otherButtonTitles:@"Twitter", @"Email", nil];
+																	otherButtonTitles:@"Twitter", @"SMS", @"Copy URL", @"Email", nil];
 	[actionSheet showInView:self.view];
 
 }
@@ -347,17 +347,24 @@
 #pragma mark - ActionSheet Delegates
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if (buttonIndex == 0) {
-			TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
+		TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
 			
-			[twitter addURL:[NSURL URLWithString:_vo.article_url]];
-			[twitter setInitialText:[NSString stringWithFormat:@"via Assembly - %@", _vo.title]];
-			[self presentModalViewController:twitter animated:YES];
+		[twitter addURL:[NSURL URLWithString:_vo.article_url]];
+		[twitter setInitialText:[NSString stringWithFormat:@"via Assembly - %@", _vo.title]];
+		[self presentModalViewController:twitter animated:YES];
 			
-			twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
-				[self dismissModalViewControllerAnimated:YES];
-			};
-			
+		twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+			[self dismissModalViewControllerAnimated:YES];
+		};
+		
 	} else if (buttonIndex == 1) {
+		
+	} else if (buttonIndex == 2) {
+		UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+		[pasteboard setValue:_vo.article_url forPasteboardType:@"public.utf8-plain-text"];
+		//pasteboard.string = _vo.article_url;
+		
+	} else if (buttonIndex == 3) {
 		if ([MFMailComposeViewController canSendMail]) {
 			MFMailComposeViewController *mfViewController = [[MFMailComposeViewController alloc] init];
 			mfViewController.mailComposeDelegate = self;
@@ -374,6 +381,7 @@
 															  otherButtonTitles:nil];
 			[alert show];
 		}
+	
 	}
 }
 

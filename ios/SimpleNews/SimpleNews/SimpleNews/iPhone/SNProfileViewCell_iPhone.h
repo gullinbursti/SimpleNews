@@ -14,7 +14,7 @@
 	BOOL _isHeaderCellType;
 }
 
--(id)initAsHeaderCell:(BOOL)isHeaderCell;
+-(id)init;
 
 +(NSString *)cellReuseIdentifier;
 @property(nonatomic, retain) SNProfileVO *profileVO;

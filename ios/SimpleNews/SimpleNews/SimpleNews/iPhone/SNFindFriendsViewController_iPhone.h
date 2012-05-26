@@ -15,6 +15,7 @@
 	NSMutableArray *_friendIDs;
 	NSMutableArray *_friends;
 	BOOL _isFinder;
+	int _selectedIndex;
 	
 	ASIHTTPRequest *_idsRequest;
 	ASIHTTPRequest *_followingBlockRequest;

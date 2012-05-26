@@ -8,14 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-#import "SNDiscoveryArticlesView_iPhone.h"
 #import "SNTopicTimelineView_iPhone.h"
 #import "MBLAsyncResource.h"
 
 #import "ASIFormDataRequest.h"
 
 @class MBProgressHUD;
-@class SNDiscoveryArticlesView_iPhone;
 
 @interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>
 {

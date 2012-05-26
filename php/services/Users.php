@@ -152,11 +152,13 @@
 		}
 	    
 		function findFriends($twitter_id) {
-			$isFound = false;
+			$isFound = "false";
 			
 			$query = 'SELECT `id` FROM `tblUsers` WHERE `twitter_id` = "'. $twitter_id .'";';
 			$result = mysql_query($query);
-			$isFound = (mysql_num_rows($result) > 0);
+			
+			if (mysql_num_rows($result) > 0)
+				$isFound = "true";
 			
 			$this->sendResponse(200, json_encode(array(
 				"result" => $isFound
@@ -183,6 +185,28 @@
 			$this->sendResponse(200, json_encode($friend_arr));
 			
 			return (true);
+		}
+		
+		function getProfileStats($user_id) {
+			$stat_arr = array();
+			
+			$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `user_id` = '. $user_id .';';
+			$liked_tot = mysql_num_rows(mysql_query($query));
+			
+			$query = 'SELECT * FROM `tblComments` WHERE `user_id` = '. $user_id .';';
+			$comment_tot = mysql_num_rows(mysql_query($query));
+			
+			$query = 'SELECT * FROM `tblUsersSharedArticles` WHERE `user_id` = '. $user_id .';';
+			$share_tot = mysql_num_rows(mysql_query($query));
+			
+			
+			$this->sendResponse(200, json_encode(array(
+				"likes" => $liked_tot, 
+				"comments" => $comment_tot, 
+				"shares" => $share_tot
+			)));			
+			
+			return (true);	
 		}
 	
 		function test() {
@@ -221,7 +245,12 @@
 			 case "4":
 				if (isset($_POST['userID']))
 					$users->getFriends($_POST['userID']);
-				break;			
+				break;
+				
+			 case "5":
+				if (isset($_POST['userID']))
+					$users->getProfileStats($_POST['userID']);
+				break;
     	}
 	}
 ?>

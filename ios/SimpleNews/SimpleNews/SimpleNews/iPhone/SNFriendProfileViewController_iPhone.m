@@ -1,12 +1,12 @@
 //
-//  SNProfileViewController_iPhone.m
+//  SNFriendProfileViewController_iPhone.m
 //  SimpleNews
 //
-//  Created by Matthew Holcombe on 05.04.12.
+//  Created by Matthew Holcombe on 05.25.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import "SNProfileViewController_iPhone.h"
+#import "SNFriendProfileViewController_iPhone.h"
 
 #import "SNHeaderView_iPhone.h"
 #import "SNNavBackBtnView.h"
@@ -16,11 +16,13 @@
 #import "SNWebPageViewController_iPhone.h"
 #import "SNProfileArticlesViewController_iPhone.h"
 #import "SNFindFriendsViewController_iPhone.h"
+#import "ASIFormDataRequest.h"
 
-@implementation SNProfileViewController_iPhone
--(id)init {
+@implementation SNFriendProfileViewController_iPhone
+
+- (id)initWithTwitterUser:(SNTwitterUserVO *)vo {
 	if ((self = [super init])) {
-		_items = [NSMutableArray new];
+		_vo = vo;
 	}
 	
 	return (self);
@@ -37,7 +39,7 @@
 	[self.view addSubview:bgImgView];
 	
 	EGOImageView *avatarImg = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, 66.0, 25.0, 25.0)];
-	avatarImg.imageURL = [NSURL URLWithString:[SNAppDelegate twitterAvatar]];
+	avatarImg.imageURL = [NSURL URLWithString:_vo.avatarURL];
 	[self.view addSubview:avatarImg];
 	
 	UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -49,7 +51,7 @@
 	handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	handleLabel.textColor = [SNAppDelegate snLinkColor];
 	handleLabel.backgroundColor = [UIColor clearColor];
-	handleLabel.text = [NSString stringWithFormat:@"@%@", [SNAppDelegate twitterHandle]];
+	handleLabel.text = [NSString stringWithFormat:@"@%@", _vo.handle];
 	[self.view addSubview:handleLabel];
 	
 	UIButton *handleButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -114,33 +116,23 @@
 	sharesLabel.text = @"Shares";
 	[statsBgView addSubview:sharesLabel];
 	
+	/*
 	UIButton *likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	likeButton.frame = CGRectMake(12.0, 115.0, 96.0, 70.0);
 	[likeButton addTarget:self action:@selector(_goLikedArticles) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:likeButton];
-	 
+	
 	UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	commentButton.frame = CGRectMake(108.0, 115.0, 96.0, 70.0);
 	[commentButton addTarget:self action:@selector(_goCommentedArticles) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:commentButton];
-	 
+	
 	UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	shareButton.frame = CGRectMake(204.0, 115.0, 96.0, 70.0);
 	[shareButton addTarget:self action:@selector(_goSharedArticles) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:shareButton];
-	
-	
-	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(12.0, 200.0, self.view.frame.size.width - 24.0, self.view.frame.size.height - 270.0) style:UITableViewStylePlain];
-	[_tableView setBackgroundColor:[UIColor whiteColor]];
-	_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-	_tableView.rowHeight = 70.0;
-	_tableView.delegate = self;
-	_tableView.dataSource = self;
-	_tableView.userInteractionEnabled = YES;
-	_tableView.scrollsToTop = NO;
-	_tableView.showsVerticalScrollIndicator = NO;
-	[self.view addSubview:_tableView];
-	
+	*/
+	 
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Profile"];
 	[self.view addSubview:headerView];
 	
@@ -148,15 +140,9 @@
 	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:backBtnView];
 	
-	NSString *profilePath = [[NSBundle mainBundle] pathForResource:@"profile" ofType:@"plist"];
-	NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:profilePath] options:NSPropertyListImmutable format:nil error:nil];
-	
-	for (NSDictionary *item in plist)
-		[_items addObject:[SNProfileVO profileWithDictionary:item]];
-	
 	ASIFormDataRequest *statsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
 	[statsRequest setPostValue:[NSString stringWithFormat:@"%d", 5] forKey:@"action"];
-	[statsRequest setPostValue:[NSString stringWithFormat:@"%d", [[SNAppDelegate profileForUser] objectForKey:@"id"]] forKey:@"userID"];
+	[statsRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.userID] forKey:@"userID"];
 	[statsRequest setDelegate:self];
 	[statsRequest startAsynchronous];
 }
@@ -176,7 +162,7 @@
 }
 
 -(void)_goTwitterProfile {
-	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@", [SNAppDelegate twitterHandle]]] title:[NSString stringWithFormat:@"@%@", [SNAppDelegate twitterHandle]]];
+	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@", _vo.handle]] title:[NSString stringWithFormat:@"@%@", _vo.handle]];
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
@@ -195,81 +181,6 @@
 -(void)_goSharedArticles {
 	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initAsArticlesLiked] animated:YES];
 }
-
-
-#pragma mark - TableView DataSource Delegates
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return ([_items count]);
-}
-
--(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return (1);
-}
-
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	SNProfileViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNProfileViewCell_iPhone cellReuseIdentifier]];
-	
-	if (cell == nil)
-		cell = [[SNProfileViewCell_iPhone alloc] init];
-	
-	cell.profileVO = (SNProfileVO *)[_items objectAtIndex:indexPath.row];
-	NSLog(@"PROFILE VO:\n%@", cell.profileVO.title);
-	
-	if (indexPath.row == 1) {
-		UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
-			
-		if ([SNAppDelegate notificationsEnabled])
-			switchView.on = YES;
-			
-		[switchView addTarget:self action:@selector(_goNotificationsToggle:) forControlEvents:UIControlEventValueChanged];
-		cell.accessoryView = switchView;
-			
-	} else {
-		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(260.0, 23.0, 24, 24)];		
-		chevronView.image = [UIImage imageNamed:@"chevron_nonActive.png"];
-		[cell addSubview:chevronView];
-	}
-	
-	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-	return (cell);
-}
-
-
-#pragma mark - TableView Delegates
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return (70.0);
-}
-
-//-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-//	return (53.0);
-//}
-
-
--(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if (indexPath.row == 1)
-		return (nil);
-	
-	return (indexPath);
-}
-
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSLog(@"SELECTED");
-	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
-	
-	switch (indexPath.row) {
-		case 0: // friends
-			[self.navigationController pushViewController:[[SNFindFriendsViewController_iPhone alloc] initAsFinder] animated:YES];
-			break;
-			
-		case 2: // about
-			[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initAsArticlesRead] animated:YES];
-			break;
-			
-		default:
-			break;
-	}
-}
-
 
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
@@ -293,5 +204,6 @@
 -(void)requestFailed:(ASIHTTPRequest *)request {
 	NSLog(@"requestFailed:\n[%@]", request.error);
 }
+
 
 @end

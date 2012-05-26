@@ -8,9 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SNProfileViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate> {
+#import "ASIFormDataRequest.h"
+
+@interface SNProfileViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, ASIHTTPRequestDelegate> {
 	UITableView *_tableView;
 	NSMutableArray *_items;
+	
+	UILabel *_likesLabel;
+	UILabel *_commentsLabel;
+	UILabel *_sharesLabel;
 }
 
 @end

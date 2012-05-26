@@ -15,6 +15,8 @@
 +(SNTwitterCaller *) sharedInstance;
 -(void)userTimeline;
 -(void)writeProfile;
+-(void)sendImageTweet:(UIImage *)img message:(NSString *)msg;
+-(void)sendTextTweet:(NSString *)msg;
 
 @property (strong, nonatomic) ACAccountStore *accountStore; 
 @property (strong, nonatomic) NSArray *accounts;

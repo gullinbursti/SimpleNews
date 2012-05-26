@@ -6,7 +6,7 @@
 		<key>profile_id</key>
 		<integer>1</integer>
 		<key>title</key>
-		<string>Liked Articles</string>
+		<string>Find Friends</string>
 		<key>info</key>
 		<string></string>
 	</dict>
@@ -14,39 +14,15 @@
 		<key>profile_id</key>
 		<integer>2</integer>
 		<key>title</key>
-		<string>Read Articles</string>
-		<key>info</key>
-		<string></string>
-	</dict>
-	<dict>
-		<key>profile_id</key>
-		<integer>4</integer>
-		<key>title</key>
-		<string>Topics</string>
-		<key>info</key>
-		<string></string>
-	</dict>
-	<dict>
-		<key>profile_id</key>
-		<integer>5</integer>
-		<key>title</key>
-		<string>Find Friends</string>
-		<key>info</key>
-		<string></string>
-	</dict>
-	<dict>
-		<key>profile_id</key>
-		<integer>6</integer>
-		<key>title</key>
-		<string>My Friends</string>
-		<key>info</key>
-		<string></string>
-	</dict>
-	<dict>
-		<key>profile_id</key>
-		<integer>7</integer>
-		<key>title</key>
 		<string>Notifications</string>
+		<key>info</key>
+		<string></string>
+	</dict>
+	<dict>
+		<key>profile_id</key>
+		<integer>3</integer>
+		<key>title</key>
+		<string>About Assembly</string>
 		<key>info</key>
 		<string></string>
 	</dict>
