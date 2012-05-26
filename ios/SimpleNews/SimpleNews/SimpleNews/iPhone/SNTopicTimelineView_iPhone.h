@@ -28,10 +28,12 @@
 	
 	UIScrollView *_scrollView;
 	UIView *_overlayView;
+	UIButton *_fullscreenShareButton;
 	
 	NSMutableArray *_cardViews;
 	NSMutableArray *_timelineTweets;
 	
+	SNArticleVO *_articleVO;
 	SNTopicVO *_vo;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
 	

@@ -146,9 +146,9 @@
 		[[logoBtnView btn] addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:logoBtnView];
 		
-		_blackMatteView = [[UIView alloc] initWithFrame:self.frame];
+		_blackMatteView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
 		[_blackMatteView setBackgroundColor:[UIColor blackColor]];
-		_blackMatteView.alpha = 0.0;
+		//_blackMatteView.alpha = 0.0;
 		[self addSubview:_blackMatteView];
 		
 		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
@@ -195,6 +195,10 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
 }
 
+-(void)_goShare {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SHARE_SHEET" object:_articleVO];
+}
+
 -(void)_goFlip {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_SOURCES" object:_vo];	
 }
@@ -204,7 +208,7 @@
 	NSLog(@"SHOW MEDIA");
 	NSDictionary *dict = [notification object];
 	
-	SNArticleVO *vo = [dict objectForKey:@"VO"];
+	_articleVO = [dict objectForKey:@"VO"];
 	float offset = [[dict objectForKey:@"offset"] floatValue];
 	CGRect frame = [[dict objectForKey:@"frame"] CGRectValue];
 	NSString *type = [dict objectForKey:@"type"];
@@ -215,12 +219,12 @@
 	if ([type isEqualToString:@"photo"]) {
 		_fullscreenImgView = [[EGOImageView alloc] initWithFrame:frame];
 		_fullscreenImgView.delegate = self;
-		_fullscreenImgView.imageURL = [NSURL URLWithString:vo.bgImage_url];
+		_fullscreenImgView.imageURL = [NSURL URLWithString:_articleVO.bgImage_url];
 		_fullscreenImgView.userInteractionEnabled = YES;
 		[self addSubview:_fullscreenImgView];
 		
 	} else if ([type isEqualToString:@"video"]) {
-		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:frame articleVO:vo];
+		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:frame articleVO:_articleVO];
 		[self addSubview:_videoPlayerView];
 		
 		[self performSelector:@selector(_startVideo) withObject:nil afterDelay:1.0];
@@ -231,10 +235,10 @@
 		_blackMatteView.alpha = 0.95;
 		
 		if ([type isEqualToString:@"photo"])
-			_fullscreenImgView.frame = CGRectMake(0.0, (self.frame.size.height - (self.frame.size.width * vo.imgRatio)) * 0.5, self.frame.size.width, self.frame.size.width * vo.imgRatio);
+			_fullscreenImgView.frame = CGRectMake(0.0, (self.frame.size.height - (320.0 * _articleVO.imgRatio)) * 0.5, 320.0, 320.0 * _articleVO.imgRatio);
 		
 		else
-			[_videoPlayerView reframe:CGRectMake(0.0, (self.frame.size.height - 240.0) * 0.5, self.frame.size.width, 240.0)];
+			[_videoPlayerView reframe:CGRectMake(0.0, (self.frame.size.height - 240.0) * 0.5, 320.0, 240.0)];
 		
 		
 	} completion:^(BOOL finished) {
@@ -246,6 +250,14 @@
 		
 		else
 			[_blackMatteView addGestureRecognizer:tapRecognizer];
+		
+		
+		_fullscreenShareButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		_fullscreenShareButton.frame = CGRectMake(286.0, 10.0, 20.0, 20.0);
+		[_fullscreenShareButton setBackgroundColor:[SNAppDelegate snDebugGreenColor]];
+		[_fullscreenShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+		//[_fullscreenShareButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
+		[self addSubview:_fullscreenShareButton];
 	}];
 }
 
@@ -257,13 +269,18 @@
 		[_videoPlayerView reframe:_fullscreenFrame];
 		[_videoPlayerView stopPlayback];
 		
+		[_fullscreenShareButton removeFromSuperview];
+		_fullscreenShareButton = nil;
+		
 	} completion:^(BOOL finished) {
 		_blackMatteView.hidden = YES;
 		[_fullscreenImgView removeFromSuperview];
 		[_videoPlayerView removeFromSuperview];
+		[_fullscreenShareButton removeFromSuperview];
 		
 		_fullscreenImgView = nil;
 		_videoPlayerView = nil;
+		_fullscreenShareButton = nil;
 	}];
 
 }
@@ -298,9 +315,11 @@
 		_blackMatteView.hidden = YES;
 		[_fullscreenImgView removeFromSuperview];
 		[_videoPlayerView removeFromSuperview];
+		[_fullscreenShareButton removeFromSuperview];
 		
 		_fullscreenImgView = nil;
 		_videoPlayerView = nil;
+		_fullscreenShareButton = nil;
 	}];
 }
 
@@ -334,6 +353,11 @@
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
 	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
+
+
+
+
+
 
 #pragma mark - Image View delegates
 -(void)imageViewLoadedImage:(EGOImageView *)imageView {

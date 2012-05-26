@@ -90,7 +90,7 @@
 		sourceButton.frame = CGRectMake(273.0, 16.0, 34.0, 34.0);
 		[sourceButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
 		[sourceButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
-		[sourceButton addTarget:self action:@selector(_goSourcePage) forControlEvents:UIControlEventTouchUpInside];
+		[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:sourceButton];
 		
 		offset += 41;
@@ -105,8 +105,8 @@
 			titleLabel.text = _vo.title;
 			titleLabel.numberOfLines = 0;
 			[self addSubview:titleLabel];
-		}	
-
+		}
+		
 		UIImageView *btnBGImgView = [[UIImageView alloc] initWithFrame:CGRectMake(73.0, offset, 174.0, 44.0)];
 		btnBGImgView.image = [UIImage imageNamed:@"commentLikeButton_BG.png"];
 		btnBGImgView.userInteractionEnabled = YES;
@@ -239,7 +239,7 @@
 								 @"photo", @"type", 
 								 _vo, @"VO", 
 								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
-								 [NSValue valueWithCGRect:_articleImgView.frame], @"frame", nil];
+								 [NSValue valueWithCGRect:CGRectMake(_articleImgView.frame.origin.x + self.frame.origin.x, _articleImgView.frame.origin.y, _articleImgView.frame.size.width, _articleImgView.frame.size.height)], @"frame", nil];
 	
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_FULLSCREEN_MEDIA" object:dict];
@@ -303,7 +303,7 @@
 }
 
 -(void)_goShare {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHARE_SHEET" object:_vo];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SHARE_SHEET" object:_vo];
 }
 
 

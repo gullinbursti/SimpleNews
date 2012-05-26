@@ -294,9 +294,14 @@
 }
 
 -(void)_showShareSheet:(NSNotification *)notification {
-	SNArticleVO *vo = (SNArticleVO *)[notification object];
-	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:vo.article_url] title:vo.title];
-	[self.navigationController pushViewController:webPageViewController animated:YES];
+	_articleVO = (SNArticleVO *)[notification object];
+	
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil 
+																				delegate:self 
+																	cancelButtonTitle:@"Cancel" 
+																 destructiveButtonTitle:nil 
+																	otherButtonTitles:@"Twitter", @"SMS", @"Copy URL", @"Email", @"Tweet Page", nil];
+	[actionSheet showInView:self.view];
 }
 
 -(void)_showTwitterProfile:(NSNotification *)notification {
@@ -337,6 +342,51 @@
 				
 		[self dismissModalViewControllerAnimated:YES];
 	};
+}
+
+
+#pragma mark - ActionSheet Delegates
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if (buttonIndex == 0) {
+		TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
+		
+		[twitter addURL:[NSURL URLWithString:_articleVO.article_url]];
+		[twitter setInitialText:[NSString stringWithFormat:@"via Assembly - %@", _articleVO.title]];
+		[self presentModalViewController:twitter animated:YES];
+		
+		twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+			[self dismissModalViewControllerAnimated:YES];
+		};
+		
+	} else if (buttonIndex == 1) {
+		
+	} else if (buttonIndex == 2) {
+		UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+		[pasteboard setValue:_articleVO.article_url forPasteboardType:@"public.utf8-plain-text"];
+		//pasteboard.string = _vo.article_url;
+		
+	} else if (buttonIndex == 3) {
+		if ([MFMailComposeViewController canSendMail]) {
+			MFMailComposeViewController *mfViewController = [[MFMailComposeViewController alloc] init];
+			mfViewController.mailComposeDelegate = self;
+			[mfViewController setSubject:[NSString stringWithFormat:@"Assembly - %@", _articleVO.title]];
+			[mfViewController setMessageBody:_articleVO.content isHTML:NO];
+			
+			[self presentViewController:mfViewController animated:YES completion:nil];
+			
+		} else {
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" 
+																			message:@"Your phone is not currently configured to send mail." 
+																		  delegate:nil 
+															  cancelButtonTitle:@"ok" 
+															  otherButtonTitles:nil];
+			[alert show];
+		}
+	
+	} else if (buttonIndex == 4) {
+		SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/%@/status/%@", _articleVO.twitterHandle, _articleVO.tweet_id]] title:[NSString stringWithFormat:@"@%@", _articleVO.twitterHandle]];
+		[self.navigationController pushViewController:webPageViewController animated:YES];
+	}
 }
 
 
@@ -398,6 +448,39 @@
 		} completion:^(BOOL finished) {
 		}];
 	}];
+}
+
+
+#pragma mark - MailComposeViewController Delegates
+-(void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"" delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+	
+	switch (result) {
+		case MFMailComposeResultCancelled:
+			alert.message = @"Message Canceled";
+			break;
+			
+		case MFMailComposeResultSaved:
+			alert.message = @"Message Saved";
+			[alert show];
+			break;
+			
+		case MFMailComposeResultSent:
+			alert.message = @"Message Sent";
+			break;
+			
+		case MFMailComposeResultFailed:
+			alert.message = @"Message Failed";
+			[alert show];
+			break;
+			
+		default:
+			alert.message = @"Message Not Sent";
+			[alert show];
+			break;
+	}
+	
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - ScrollView Delegates

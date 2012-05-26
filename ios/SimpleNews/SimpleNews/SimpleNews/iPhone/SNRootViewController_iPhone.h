@@ -7,20 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 
 #import "SNTopicTimelineView_iPhone.h"
 #import "MBLAsyncResource.h"
 
 #import "ASIFormDataRequest.h"
+#import "SNArticleVO.h"
 
 @class MBProgressHUD;
 
-@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>
+@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate, UIActionSheetDelegate>
 {
 	MBLAsyncResource *_userResource;
 	
 	ASIHTTPRequest *_twitterRequest;
 	SNTopicTimelineView_iPhone *_topicTimelineView;
+	SNArticleVO *_articleVO;
 	
 	NSMutableArray *_topicsList;
 	NSMutableArray *_topicCells;
