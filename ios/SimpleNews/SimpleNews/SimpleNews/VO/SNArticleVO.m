@@ -41,7 +41,7 @@
 	vo.imgRatio = [[dictionary objectForKey:@"img_ratio"] floatValue];
 	vo.seenBy = [dictionary objectForKey:@"reads"];
 	
-	if ([dictionary objectForKey:@"title"] == nil)
+	if (vo.title == (id)[NSNull null]) 
 		vo.title = @"Untitled";
 	
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];

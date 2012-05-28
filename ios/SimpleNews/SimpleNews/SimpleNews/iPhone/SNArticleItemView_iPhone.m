@@ -95,7 +95,7 @@
 		
 		offset += 41;
 		
-		if (_vo.type_id != 2) {
+		if (_vo.type_id >= 2) {
 			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:16] constrainedToSize:CGSizeMake(270.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, size.height)];
 			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:16];
@@ -105,6 +105,7 @@
 			titleLabel.text = _vo.title;
 			titleLabel.numberOfLines = 0;
 			[self addSubview:titleLabel];
+			offset += size.height + 30.0;
 		}
 		
 		UIImageView *btnBGImgView = [[UIImageView alloc] initWithFrame:CGRectMake(73.0, offset, 174.0, 44.0)];
@@ -235,14 +236,14 @@
 }
 
 -(void)_photoZoomIn:(UIGestureRecognizer *)gestureRecognizer {
-	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 								 @"photo", @"type", 
 								 _vo, @"VO", 
 								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
 								 [NSValue valueWithCGRect:CGRectMake(_articleImgView.frame.origin.x + self.frame.origin.x, _articleImgView.frame.origin.y, _articleImgView.frame.size.width, _articleImgView.frame.size.height)], @"frame", nil];
 	
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_FULLSCREEN_MEDIA" object:dict];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
 }
 
 

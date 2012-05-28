@@ -377,7 +377,7 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 										 message:@"Why not rate Assembly in the app store!" 
 										 delegate:self 
 										 cancelButtonTitle:@"Cancel" 
-										 otherButtonTitles:@"App Store", nil];
+										 otherButtonTitles:@"No Thanks", @"Ask Me Later", nil];
 			
 			[alert show];
 		}
@@ -597,10 +597,13 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 
 #pragma mark - AlertView delegates
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	NSLog(@"buttonIndex:[%d]", buttonIndex);
 	switch(buttonIndex) {
-		case 1:
+		case 2:
+			[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:0] forKey:@"boot_total"];
+			[[NSUserDefaults standardUserDefaults] synchronize];
 			//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms://itunes.apple.com/us/app/id284417350?mt=8"]];
-			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms://itunes.com/apps/getassembly"]];
+			//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms://itunes.com/apps/getassembly"]];
 			break;
 	}
 }

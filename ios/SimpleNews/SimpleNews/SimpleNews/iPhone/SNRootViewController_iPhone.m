@@ -50,6 +50,9 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_timelineReturn:) name:@"TIMELINE_RETURN" object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showFullscreenMedia:) name:@"SHOW_FULLSCREEN_MEDIA" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideFullscreenMedia:) name:@"HIDE_FULLSCREEN_MEDIA" object:nil];
 	}
 	
 	return self;
@@ -58,6 +61,14 @@
 - (void)dealloc
 {
 	self.topicsListResource = nil;
+}
+
+-(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [touches anyObject];
+	CGPoint touchPoint = [touch locationInView:self.view];
+	
+	if (CGRectContainsPoint(_videoPlayerView.frame, touchPoint))
+		[_videoPlayerView toggleControls];//NSLog(@"TOUCHED:(%f, %f)", touchPoint.x, touchPoint.y);
 }
 
 #pragma mark - View lifecycle
@@ -94,6 +105,11 @@
 	_cardListsButton.frame = CGRectMake(276.0, 49.0, 44.0, self.view.frame.size.height - 49.0);
 	[_cardListsButton addTarget:self action:@selector(_goCardLists) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_cardListsButton];
+	
+	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
+	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
+	_blackMatteView.alpha = 0.0;
+	[self.view addSubview:_blackMatteView];
 }
 
 - (void)viewDidUnload {
@@ -116,6 +132,17 @@
 	// Refresh any network resources that need loading
 	[self _refreshTopicsList];
 	[self _refreshUserAccount];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_cardListsButton.hidden = YES;
+		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+	}];
 }
 
 #pragma mark - Navigation
@@ -145,6 +172,10 @@
 							 [self.navigationController pushViewController:profileViewController animated:YES];
 						 }];
 	}
+}
+
+-(void)_goShare {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SHARE_SHEET" object:_articleVO];
 }
 
 #pragma mark - Network Requests
@@ -300,7 +331,7 @@
 																				delegate:self 
 																	cancelButtonTitle:@"Cancel" 
 																 destructiveButtonTitle:nil 
-																	otherButtonTitles:@"Twitter", @"SMS", @"Copy URL", @"Email", @"Tweet Page", nil];
+																	otherButtonTitles:@"Twitter", @"SMS", @"Copy URL", @"Email", @"Open Web View", nil];
 	[actionSheet showInView:self.view];
 }
 
@@ -345,6 +376,119 @@
 }
 
 
+#pragma mark - Notification handlers
+-(void)_showFullscreenMedia:(NSNotification *)notification {
+	NSLog(@"SHOW MEDIA");
+	NSMutableDictionary *dict = [notification object];
+	
+	_articleVO = [dict objectForKey:@"VO"];
+	float offset = [[dict objectForKey:@"offset"] floatValue];
+	CGRect frame = [[dict objectForKey:@"frame"] CGRectValue];
+	NSString *type = [dict objectForKey:@"type"];
+	
+	frame.origin.y = 44.0 + frame.origin.y + offset;
+	_fullscreenFrame = frame;
+	
+	NSLog(@"FRAME:(%f, %f)[%f, %f]", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
+	
+	if ([type isEqualToString:@"photo"]) {
+		_fullscreenImgView = [[EGOImageView alloc] initWithFrame:frame];
+		_fullscreenImgView.delegate = self;
+		_fullscreenImgView.imageURL = [NSURL URLWithString:_articleVO.bgImage_url];
+		_fullscreenImgView.userInteractionEnabled = YES;
+		[self.view addSubview:_fullscreenImgView];
+		
+	} else if ([type isEqualToString:@"video"]) {
+		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:frame articleVO:_articleVO];
+		[self.view addSubview:_videoPlayerView];
+		
+		[self performSelector:@selector(_startVideo) withObject:nil afterDelay:1.0];
+	}
+	
+	_blackMatteView.hidden = NO;
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_blackMatteView.alpha = 0.95;
+		
+		if ([type isEqualToString:@"photo"])
+			_fullscreenImgView.frame = CGRectMake(0.0, (self.view.frame.size.height - (320.0 * _articleVO.imgRatio)) * 0.5, 320.0, 320.0 * _articleVO.imgRatio);
+		
+		else
+			[_videoPlayerView reframe:CGRectMake(0.0, (self.view.frame.size.height - 240.0) * 0.5, 320.0, 240.0)];
+		
+		
+	} completion:^(BOOL finished) {
+		UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_hideFullscreenImage:)];
+		tapRecognizer.numberOfTapsRequired = 1;
+		
+		if ([type isEqualToString:@"photo"])
+			[_fullscreenImgView addGestureRecognizer:tapRecognizer];
+		
+		else
+			[_blackMatteView addGestureRecognizer:tapRecognizer];
+		
+		
+		_fullscreenShareButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		_fullscreenShareButton.frame = CGRectMake(286.0, 10.0, 20.0, 20.0);
+		[_fullscreenShareButton setBackgroundColor:[SNAppDelegate snDebugGreenColor]];
+		[_fullscreenShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+		//[_fullscreenShareButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
+		[self.view addSubview:_fullscreenShareButton];
+	}];
+}
+
+-(void)_hideFullscreenMedia:(NSNotification *)notification {
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		_blackMatteView.alpha = 0.0;
+		
+		_fullscreenImgView.frame = _fullscreenFrame;
+		[_videoPlayerView reframe:_fullscreenFrame];
+		[_videoPlayerView stopPlayback];
+		
+		[_fullscreenShareButton removeFromSuperview];
+		_fullscreenShareButton = nil;
+		
+	} completion:^(BOOL finished) {
+		_blackMatteView.hidden = YES;
+		[_fullscreenImgView removeFromSuperview];
+		[_videoPlayerView removeFromSuperview];
+		[_fullscreenShareButton removeFromSuperview];
+		
+		_fullscreenImgView = nil;
+		_videoPlayerView = nil;
+		_fullscreenShareButton = nil;
+	}];
+	
+}
+
+-(void)_hideFullscreenImage:(UIGestureRecognizer *)gestureRecognizer {
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		_blackMatteView.alpha = 0.0;
+		
+		_fullscreenImgView.frame = _fullscreenFrame;
+		[_videoPlayerView reframe:_fullscreenFrame];
+		[_videoPlayerView stopPlayback];
+		
+	} completion:^(BOOL finished) {
+		_blackMatteView.hidden = YES;
+		[_fullscreenImgView removeFromSuperview];
+		[_videoPlayerView removeFromSuperview];
+		[_fullscreenShareButton removeFromSuperview];
+		
+		_fullscreenImgView = nil;
+		_videoPlayerView = nil;
+		_fullscreenShareButton = nil;
+	}];
+}
+
+
+
+#pragma mark - Image View delegates
+-(void)imageViewLoadedImage:(EGOImageView *)imageView {
+	imageView.image = [SNAppDelegate imageWithFilters:imageView.image filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"sharpen", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
+}
+
+
+
 #pragma mark - ActionSheet Delegates
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if (buttonIndex == 0) {
@@ -384,7 +528,7 @@
 		}
 	
 	} else if (buttonIndex == 4) {
-		SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/%@/status/%@", _articleVO.twitterHandle, _articleVO.tweet_id]] title:[NSString stringWithFormat:@"@%@", _articleVO.twitterHandle]];
+		SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:_articleVO.article_url] title:_articleVO.title];
 		[self.navigationController pushViewController:webPageViewController animated:YES];
 	}
 }

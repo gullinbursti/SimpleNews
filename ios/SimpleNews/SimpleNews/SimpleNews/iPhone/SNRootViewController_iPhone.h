@@ -12,18 +12,21 @@
 #import "SNTopicTimelineView_iPhone.h"
 #import "MBLAsyncResource.h"
 
+#import "EGOImageView.h"
 #import "ASIFormDataRequest.h"
 #import "SNArticleVO.h"
+#import "SNArticleVideoPlayerView_iPhone.h"
 
 @class MBProgressHUD;
 
-@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate, UIActionSheetDelegate>
+@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate, UIActionSheetDelegate, EGOImageViewDelegate>
 {
 	MBLAsyncResource *_userResource;
 	
 	ASIHTTPRequest *_twitterRequest;
 	SNTopicTimelineView_iPhone *_topicTimelineView;
 	SNArticleVO *_articleVO;
+	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
 	
 	NSMutableArray *_topicsList;
 	NSMutableArray *_topicCells;
@@ -31,10 +34,15 @@
 	MBProgressHUD *_hud;
 	UITableView *_topicsTableView;
 	
+	UIButton *_fullscreenShareButton;
 	UIView *_holderView;
 	UIImageView *_shadowImgView;
 	UIButton *_profileButton;
 	UIButton *_cardListsButton;
+	
+	UIView *_blackMatteView;
+	EGOImageView *_fullscreenImgView;
+	CGRect _fullscreenFrame;
 	
 	BOOL _reloading;
 	BOOL _isIntro;

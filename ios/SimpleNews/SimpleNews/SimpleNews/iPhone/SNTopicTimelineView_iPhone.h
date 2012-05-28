@@ -27,7 +27,6 @@
 	BOOL _reloading;
 	
 	UIScrollView *_scrollView;
-	UIView *_overlayView;
 	UIButton *_fullscreenShareButton;
 	
 	NSMutableArray *_cardViews;
@@ -36,10 +35,6 @@
 	SNArticleVO *_articleVO;
 	SNTopicVO *_vo;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
-	
-	UIView *_blackMatteView;
-	EGOImageView *_fullscreenImgView;
-	CGRect _fullscreenFrame;
 }
 
 -(id)initWithPopularArticles;

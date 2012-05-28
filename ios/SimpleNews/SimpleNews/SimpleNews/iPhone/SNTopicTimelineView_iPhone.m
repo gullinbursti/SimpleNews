@@ -26,8 +26,7 @@
 
 -(id)init {
 	if ((self = [super initWithFrame:CGRectMake(276.0, 0.0, 320.0, 480.0)])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showFullscreenMedia:) name:@"SHOW_FULLSCREEN_MEDIA" object:nil];
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideFullscreenMedia:) name:@"HIDE_FULLSCREEN_MEDIA" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_fullscreenMedia:) name:@"FULLSCREEN_MEDIA" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSourcePage:) name:@"SHOW_SOURCE_PAGE" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterTimeline:) name:@"TWITTER_TIMELINE" object:nil];
@@ -87,11 +86,6 @@
 		[[logoBtnView btn] addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:logoBtnView];
 		
-		_blackMatteView = [[UIView alloc] initWithFrame:self.frame];
-		[_blackMatteView setBackgroundColor:[UIColor blackColor]];
-		_blackMatteView.alpha = 0.0;
-		[self addSubview:_blackMatteView];
-		
 		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 
@@ -125,7 +119,7 @@
 		_scrollView.scrollsToTop = NO;
 		_scrollView.pagingEnabled = NO;
 		_scrollView.delegate = self;
-		_scrollView.showsVerticalScrollIndicator = NO;
+		_scrollView.showsVerticalScrollIndicator = YES;
 		_scrollView.alwaysBounceVertical = NO;
 		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
 		[self addSubview:_scrollView];
@@ -145,28 +139,13 @@
 		SNNavLogoBtnView *logoBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
 		[[logoBtnView btn] addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:logoBtnView];
-		
-		_blackMatteView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
-		[_blackMatteView setBackgroundColor:[UIColor blackColor]];
-		//_blackMatteView.alpha = 0.0;
-		[self addSubview:_blackMatteView];
-		
+				
 		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 	}
 	
 	return (self);
 }
-
-
--(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-	UITouch *touch = [touches anyObject];
-	CGPoint touchPoint = [touch locationInView:self];
-	
-	if (CGRectContainsPoint(_videoPlayerView.frame, touchPoint))
-		[_videoPlayerView toggleControls];//NSLog(@"TOUCHED:(%f, %f)", touchPoint.x, touchPoint.y);
-}
-
 
 - (void)reloadTableViewDataSource {
 	_reloading = YES;
@@ -195,95 +174,19 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
 }
 
--(void)_goShare {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SHARE_SHEET" object:_articleVO];
-}
-
 -(void)_goFlip {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_SOURCES" object:_vo];	
 }
 
 #pragma mark - Notification handlers
--(void)_showFullscreenMedia:(NSNotification *)notification {
-	NSLog(@"SHOW MEDIA");
-	NSDictionary *dict = [notification object];
+-(void)_fullscreenMedia:(NSNotification *)notification {
+	NSMutableDictionary *dict = [notification object];
 	
 	_articleVO = [dict objectForKey:@"VO"];
-	float offset = [[dict objectForKey:@"offset"] floatValue];
-	CGRect frame = [[dict objectForKey:@"frame"] CGRectValue];
-	NSString *type = [dict objectForKey:@"type"];
-	
-	frame.origin.y = 44.0 + frame.origin.y + offset - _scrollView.contentOffset.y;
-	_fullscreenFrame = frame;
-	
-	if ([type isEqualToString:@"photo"]) {
-		_fullscreenImgView = [[EGOImageView alloc] initWithFrame:frame];
-		_fullscreenImgView.delegate = self;
-		_fullscreenImgView.imageURL = [NSURL URLWithString:_articleVO.bgImage_url];
-		_fullscreenImgView.userInteractionEnabled = YES;
-		[self addSubview:_fullscreenImgView];
-		
-	} else if ([type isEqualToString:@"video"]) {
-		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:frame articleVO:_articleVO];
-		[self addSubview:_videoPlayerView];
-		
-		[self performSelector:@selector(_startVideo) withObject:nil afterDelay:1.0];
-	}
-	
-	_blackMatteView.hidden = NO;
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_blackMatteView.alpha = 0.95;
-		
-		if ([type isEqualToString:@"photo"])
-			_fullscreenImgView.frame = CGRectMake(0.0, (self.frame.size.height - (320.0 * _articleVO.imgRatio)) * 0.5, 320.0, 320.0 * _articleVO.imgRatio);
-		
-		else
-			[_videoPlayerView reframe:CGRectMake(0.0, (self.frame.size.height - 240.0) * 0.5, 320.0, 240.0)];
-		
-		
-	} completion:^(BOOL finished) {
-		UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_hideFullscreenImage:)];
-		tapRecognizer.numberOfTapsRequired = 1;
-		
-		if ([type isEqualToString:@"photo"])
-			[_fullscreenImgView addGestureRecognizer:tapRecognizer];
-		
-		else
-			[_blackMatteView addGestureRecognizer:tapRecognizer];
-		
-		
-		_fullscreenShareButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_fullscreenShareButton.frame = CGRectMake(286.0, 10.0, 20.0, 20.0);
-		[_fullscreenShareButton setBackgroundColor:[SNAppDelegate snDebugGreenColor]];
-		[_fullscreenShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-		//[_fullscreenShareButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
-		[self addSubview:_fullscreenShareButton];
-	}];
+	[dict setValue:[NSNumber numberWithFloat:[[dict objectForKey:@"offset"] floatValue] - _scrollView.contentOffset.y] forKey:@"offset"];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_FULLSCREEN_MEDIA" object:dict];
 }
 
--(void)_hideFullscreenMedia:(NSNotification *)notification {
-	[UIView animateWithDuration:0.25 animations:^(void) {
-		_blackMatteView.alpha = 0.0;
-		
-		_fullscreenImgView.frame = _fullscreenFrame;
-		[_videoPlayerView reframe:_fullscreenFrame];
-		[_videoPlayerView stopPlayback];
-		
-		[_fullscreenShareButton removeFromSuperview];
-		_fullscreenShareButton = nil;
-		
-	} completion:^(BOOL finished) {
-		_blackMatteView.hidden = YES;
-		[_fullscreenImgView removeFromSuperview];
-		[_videoPlayerView removeFromSuperview];
-		[_fullscreenShareButton removeFromSuperview];
-		
-		_fullscreenImgView = nil;
-		_videoPlayerView = nil;
-		_fullscreenShareButton = nil;
-	}];
-
-}
 
 -(void)_startVideo {
 	[_videoPlayerView startPlayback];
@@ -300,27 +203,6 @@
 	//							 vo.title, @"title", nil];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_PAGE" object:vo];
-}
-
-
--(void)_hideFullscreenImage:(UIGestureRecognizer *)gestureRecognizer {
-	[UIView animateWithDuration:0.25 animations:^(void) {
-		_blackMatteView.alpha = 0.0;
-		
-		_fullscreenImgView.frame = _fullscreenFrame;
-		[_videoPlayerView reframe:_fullscreenFrame];
-		[_videoPlayerView stopPlayback];
-		
-	} completion:^(BOOL finished) {
-		_blackMatteView.hidden = YES;
-		[_fullscreenImgView removeFromSuperview];
-		[_videoPlayerView removeFromSuperview];
-		[_fullscreenShareButton removeFromSuperview];
-		
-		_fullscreenImgView = nil;
-		_videoPlayerView = nil;
-		_fullscreenShareButton = nil;
-	}];
 }
 
 
@@ -398,7 +280,9 @@
 						height += 20;
 					}
 					
+					NSLog(@"TITLE:[%@]", vo.title);
 					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+						
 					height += size.height;
 					
 					if (vo.type_id > 4) {
