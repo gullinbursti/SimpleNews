@@ -7,11 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ASIFormDataRequest.h"
 
-@interface SNSplashViewController_iPhone : UIViewController {
+@interface SNSplashViewController_iPhone : UIViewController <ASIHTTPRequestDelegate> {
 	NSTimer *_frameTimer;
+	NSTimer *_topicTimer;
+	
 	int _frameIndex;
+	int _topicIndex;
 	UIImageView *_logoImgView;
+	NSMutableArray *_topics;
+	
+	UILabel *_topicLabel;
 }
 
 @end

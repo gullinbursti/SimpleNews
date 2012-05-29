@@ -60,7 +60,7 @@
 	[self.view addSubview:handleButton];
 	
 	UIButton *profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	profileButton.frame = CGRectMake(272.0, 62.0, 34.0, 34.0);
+	profileButton.frame = CGRectMake(267.0, 57.0, 44.0, 44.0);
 	[profileButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
 	[profileButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
 	[profileButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];

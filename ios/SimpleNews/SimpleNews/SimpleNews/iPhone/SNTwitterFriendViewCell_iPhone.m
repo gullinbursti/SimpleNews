@@ -38,7 +38,7 @@
 		//[self addSubview:_nameLabel];
 		
 		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(284.0, 23.0, 24.0, 24.0)];		
-		chevronView.image = [UIImage imageNamed:@"chevron_nonActive.png"];
+		chevronView.image = [UIImage imageNamed:@"chevron.png"];
 		[self addSubview:chevronView];
 			
 		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, 70.0, self.frame.size.width - 40.0, 2.0)];

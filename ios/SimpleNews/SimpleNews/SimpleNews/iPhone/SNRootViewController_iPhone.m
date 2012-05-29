@@ -102,7 +102,7 @@
 	[_holderView addSubview:_topicsTableView];
 	
 	_cardListsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_cardListsButton.frame = CGRectMake(276.0, 49.0, 44.0, self.view.frame.size.height - 49.0);
+	_cardListsButton.frame = CGRectMake(276.0, 45.0, 44.0, self.view.frame.size.height - 45.0);
 	[_cardListsButton addTarget:self action:@selector(_goCardLists) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_cardListsButton];
 	
@@ -137,12 +137,15 @@
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_cardListsButton.hidden = YES;
-		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-		
-	} completion:^(BOOL finished) {
-	}];
+	if (_isIntro) {
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_cardListsButton.hidden = YES;
+			_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+			
+		} completion:^(BOOL finished) {
+			_isIntro = NO;
+		}];
+	}
 }
 
 #pragma mark - Navigation
@@ -215,7 +218,7 @@
 		NSMutableDictionary *userFormValues = [NSMutableDictionary dictionary];
 		[userFormValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		[userFormValues setObject:[SNAppDelegate deviceToken] forKey:@"token"];
-		[userFormValues setObject:[SNAppDelegate twitterHandle] forKey:@"handle"]; 
+		[userFormValues setObject:[SNAppDelegate twitterHandle] forKey:@"handle"];
 		[userFormValues setObject:[SNAppDelegate twitterID] forKey:@"twitterID"]; 
 		
 		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"];

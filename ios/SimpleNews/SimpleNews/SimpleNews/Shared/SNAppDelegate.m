@@ -183,7 +183,7 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	UIImage *outImg;
 	
 	for (NSDictionary *filter in fxList) {
-		NSLog(@"%f", [[filter objectForKey:@"amount"] doubleValue]);
+		//NSLog(@"%f", [[filter objectForKey:@"amount"] doubleValue]);
 		
 		if ([[filter objectForKey:@"type"] isEqualToString:@"adjust"])
 			outImg = [fxImg adjust:[[filter objectForKey:@"red"] doubleValue] g:[[filter objectForKey:@"green"] doubleValue] b:[[filter objectForKey:@"blue"] doubleValue]];

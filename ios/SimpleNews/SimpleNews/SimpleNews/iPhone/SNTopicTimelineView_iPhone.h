@@ -35,6 +35,9 @@
 	SNArticleVO *_articleVO;
 	SNTopicVO *_vo;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
+	
+	NSDate *_lastDate;
+	int _lastID;
 }
 
 -(id)initWithPopularArticles;

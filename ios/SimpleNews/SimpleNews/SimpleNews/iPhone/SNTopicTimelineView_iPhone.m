@@ -47,7 +47,6 @@
 		
 		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 10] forKey:@"action"];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.topic_id] forKey:@"topicID"];
 		[_articlesRequest setDelegate:self];
 		[_articlesRequest startAsynchronous];
 		
@@ -55,8 +54,8 @@
 		if (![[GANTracker sharedTracker] trackPageview:@"/topics/0" withError:&error])
 			NSLog(@"error in trackPageview");
 		
-		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.frame];
-		bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
+		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
+		bgImgView.image = [UIImage imageNamed:@"background_timeline.png"];
 		[self addSubview:bgImgView];
 		
 		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
@@ -81,10 +80,6 @@
 		SNNavListBtnView *listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
 		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:listBtnView];
-		
-		SNNavLogoBtnView *logoBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
-		[[logoBtnView btn] addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
-		[headerView addSubview:logoBtnView];
 		
 		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
@@ -153,12 +148,24 @@
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
 	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 	
-	_updateRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-	[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
-	[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.topic_id] forKey:@"topicID"];
-	[_updateRequest setPostValue:[dateFormat stringFromDate:((SNArticleVO *)[_articles objectAtIndex:0]).added] forKey:@"datetime"];
-	[_updateRequest setDelegate:self];
-	[_updateRequest startAsynchronous];
+	if (_vo.topic_id == 0) {
+		_updateRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+		[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", 11] forKey:@"action"];
+		//[_updateRequest setPostValue:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
+		[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", _lastID] forKey:@"articleID"];
+		[_updateRequest setDelegate:self];
+		[_updateRequest startAsynchronous];
+	
+	} else {
+		NSLog(@"\n\n\n\n%d\n\n\n\n", _lastID);
+		_updateRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+		[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
+		[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.topic_id] forKey:@"topicID"];
+		//[_updateRequest setPostValue:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
+		[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", _lastID] forKey:@"articleID"];
+		[_updateRequest setDelegate:self];
+		[_updateRequest startAsynchronous];
+	}
 } 
 
 - (void)doneLoadingTableViewData {
@@ -172,10 +179,6 @@
 -(void)_goBack {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
-}
-
--(void)_goFlip {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_SOURCES" object:_vo];	
 }
 
 #pragma mark - Notification handlers
@@ -280,9 +283,7 @@
 						height += 20;
 					}
 					
-					NSLog(@"TITLE:[%@]", vo.title);
 					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-						
 					height += size.height;
 					
 					if (vo.type_id > 4) {
@@ -308,6 +309,8 @@
 			}
 		}
 		
+		_lastID = ((SNArticleVO *)[_articles objectAtIndex:0]).article_id;
+		_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
 		[_progressHUD hide:YES];
 		
 	} else if ([request isEqual:_updateRequest]) {
@@ -324,30 +327,26 @@
 					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
 					
 					int height;
-					if (vo.source_id > 0) {
-						height = 220;
-						CGSize size;
-						
-						if (vo.type_id > 1) {
-							height += 270.0 * vo.imgRatio;
-							height += 20;
-						}
-						
-						size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-						height += size.height;
-						
-						if ([vo.affiliateURL length] > 0)
-							height += 48;
-						
-						if (vo.type_id > 4) {
-							height += 202;
-							offset += 20;
-						}
-						
-					} else {
-						height = 59;
+					height = 210;
+					CGSize size;
+					
+					if (vo.type_id > 1) {
+						height += 270.0 * vo.imgRatio;
+						height += 20;
 					}
 					
+					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+					height += size.height;
+					
+					if (vo.type_id > 4) {
+						height += 202;
+						offset += 20;
+					}
+					
+					SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo];
+					[_cardViews addObject:articleItemView];
+					
+					offset += 20;
 					offset += height;
 					tot++;
 				}
@@ -357,9 +356,8 @@
 						articleItemView.frame = CGRectMake(0.0, articleItemView.frame.origin.y + offset, articleItemView.frame.size.width, articleItemView.frame.size.height);
 					}];
 				}
-				
-				int cnt = 0;
-				offset = 60;
+			
+				offset = 10;
 				
 				NSMutableArray *articleList = [NSMutableArray array];
 				for (NSDictionary *serverArticle in parsedArticles) {
@@ -369,31 +367,28 @@
 						[articleList addObject:vo];
 					
 					int height;
-					if (vo.source_id > 0) {
-						height = 220;
-						CGSize size;
-						
-						if (vo.type_id > 1) {
-							height += 270.0 * vo.imgRatio;
-							height += 20;
-						}
-						
-						size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-						height += size.height;
-						
-						if (vo.type_id > 4) {
-							height += 202;
-						}
-						
-					} else {
-						height = 59;
+					height = 210;
+					CGSize size;
+					
+					if (vo.type_id > 1) {
+						height += 270.0 * vo.imgRatio;
+						height += 20;
+					}
+					
+					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+					height += size.height;
+					
+					if (vo.type_id > 4) {
+						height += 202;
+						offset += 20;
 					}
 					
 					SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, offset, _scrollView.frame.size.width, height) articleVO:vo];
 					[_cardViews addObject:articleItemView];
 					
+					offset += 20;
 					offset += height;
-					cnt++;
+					tot++;
 				}
 				
 				for (SNArticleItemView_iPhone *itemView in _cardViews) {
@@ -403,12 +398,14 @@
 				
 				NSMutableArray *updatedArticles = [NSMutableArray arrayWithArray:articleList];
 				[updatedArticles addObjectsFromArray:_articles];
+				_lastID = ((SNArticleVO *)[updatedArticles lastObject]).article_id;
 				_articles = [updatedArticles copy];
 				
 				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, _scrollView.contentSize.height + offset);
 			}
 		}
 		
+		_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
 		[self doneLoadingTableViewData];
 	}
 	

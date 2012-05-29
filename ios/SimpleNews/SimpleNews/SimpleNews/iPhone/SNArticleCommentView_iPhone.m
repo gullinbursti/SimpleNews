@@ -71,7 +71,7 @@
 		
 		int offset = 0;
 		if (_vo.isLiked) {
-			UIImageView *likeIcoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(49.0, size.height + 37.0, 24.0, 24.0)];
+			UIImageView *likeIcoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(45.0, size.height + 37.0, 24.0, 24.0)];
 			likeIcoImgView.image = [UIImage imageNamed:@"heartCommentsIcon.png"];
 			[self addSubview:likeIcoImgView];
 			offset = 25.0;

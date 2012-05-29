@@ -86,7 +86,7 @@
 		function getArticlesForTopic($topic_id) {
 			$article_arr = array();
 			
-			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC;';
+			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC LIMIT 25;';
 			$article_result = mysql_query($query);
 			
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 				
@@ -268,91 +268,42 @@
 	    
 		
 		
-		function getListArticlesAfterDate($list_id, $datetime) {
+		function getTopicArticlesAfterID($topic_id, $article_id) {
 			$article_arr = array();
 			
-			$query = 'SELECT * FROM `tblArticles` WHERE `list_id` = '. $list_id .' AND `active` = "Y" AND `added` > "'. $datetime .'" ORDER BY `added` DESC;';
+			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`id` > '. $article_id .' ORDER BY `tblArticles`.`created` DESC LIMIT 25;';
 			$article_result = mysql_query($query);
 			
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 				
-				$query = 'SELECT `tblComments`.`id`, `tblComments`.`content`, `tblComments`.`liked`, `tblComments`.`added`, `tblUsers`.`name`, `tblUsers`.`handle` FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row['id'] .' AND `tblComments`.`list_id` = '. $list_id .' ORDER BY `tblComments`.`added` DESC;';
-				$comments_result = mysql_query($query);
-				
-				$comment_arr = array();
-				while ($comment_row = mysql_fetch_array($comments_result, MYSQL_BOTH)) {
-					array_push($comment_arr, array(
-						"reaction_id" => $comment_row['id'], 
-						"thumb_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
-						"name" => $comment_row['name'], 
-						"handle" => $comment_row['handle'], 
-						"comment_url" => "http://shelby.tv", 
-						"content" => htmlentities($comment_row['content'], ENT_QUOTES), 
-						"liked" => $comment_row['liked'], 
-						"added" => $comment_row['added']
-					 ));
-				}
-				
-				$query = 'SELECT * FROM `tblRetweets` WHERE `tweet_id` = "'. $article_row['tweet_id'] .'" ORDER BY `created` DESC;';
-				$retweet_result = mysql_query($query);
-				
-				while ($retweet_row = mysql_fetch_array($retweet_result, MYSQL_BOTH)) {
-					array_push($comment_arr, array(
-						"reaction_id" => $retweet_row['id'], 
-						"thumb_url" => $retweet_row['avatar_url'], 
-						"name" => $retweet_row['name'], 
-						"handle" => $retweet_row['handle'], 
-						"comment_url" => "", 
-						"content" => htmlentities("RT", ENT_QUOTES), 
-						"liked" => "N", 
-						"added" => $retweet_row['created']
-					 ));
-				}
-				
-				$query = 'SELECT `tblUsers`.`handle`, `tblUsers`.`name` FROM `tblUsers` INNER JOIN `tblUsersReadArticles` ON `tblUsers`.`id` = `tblUsersReadArticles`.`user_id` WHERE `tblUsersReadArticles`.`list_id` = '. $list_id .' AND `tblUsersReadArticles`.`article_id` = '. $article_row['id'] .' ORDER BY `tblUsersReadArticles`.`added` DESC LIMIT 16;';
-				$users_result = mysql_query($query);
-				$user_arr = array();
-				while ($user_row = mysql_fetch_array($users_result, MYSQL_BOTH)) {
-					array_push($user_arr, array(
-						"handle" => $user_row['handle'], 
-						"name" => $user_row['name']
-					));
-				}
-				
-				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `user_id` = 1 AND `list_id` = '. $list_id .' AND `article_id` = '. $article_row['id'] .';';
-				$isLiked = (mysql_num_rows(mysql_query($query)) > 0);
-				
-				$query = 'SELECT * FROM `tblInfluencers` WHERE `id` = '. $article_row['influencer_id'] .';';
-				$influencer_row = mysql_fetch_row(mysql_query($query));
 				
 				array_push($article_arr, array(
-					"article_id" => $article_row['id'], 
-					"list_id" => $list_id, 
-					"type_id" => $article_row['type_id'], 
-					"source_id" => $article_row['source_id'], 
+					"article_id" => $article_row['article_id'], 
+					"list_id" => 0, 
+					"type_id" => $article_row[1], 
+					"source_id" => 0, 
 					"title" => $article_row['title'], 
-					"article_url" => $article_row['article_url'], 
-					"short_url" => "",
-					"affiliate" => $article_row['affiliate_url'], 
+					"article_url" => $article_row['short_url'], 
+					"short_url" => $article_row['short_url'], 
+					"affiliate_url" => "", 
 					"tweet_id" => $article_row['tweet_id'], 
 					"tweet_msg" => $article_row['tweet_msg'], 
-					"twitter_name" => $influencer_row[2], 
-					"twitter_handle" => $influencer_row[1],
-					"twitter_info" => $influencer_row[4], 
+					"twitter_name" => $article_row['name'], 
+					"twitter_handle" => $article_row['handle'],
+					"twitter_info" => "", 
 					"bg_url" => $article_row['image_url'], 
-					"source" => $article_row['source'], 
-					"content" => $article_row['content'], 
-					"avatar_url" => $influencer_row[3], 
-					"video_url" => $article_row['video_url'], 
+					"source" => "", 
+					"content" => $article_row['content_txt'], 
+					"avatar_url" => $article_row['avatar_url'], 
+					"video_url" => $article_row['youtube_id'], 
 					"likes" => $article_row['likes'], 
-					"liked" => $isLiked, 
-					"img_ratio" => $article_row['img_ratio'], 
-					"added" => $article_row['added'], 
+					"liked" => false, 
+					"img_ratio" => $article_row['image_ratio'], 
+					"added" => $article_row['created'], 
 					"tags" => array(), 
-					"reads" => $user_arr, 
-					"reactions" => $comment_arr
+					"reads" => array(), 
+					"reactions" => array()
 				)); 
 			}
-			
 			
 			$this->sendResponse(200, json_encode($article_arr));
 			return (true);
@@ -585,85 +536,6 @@
 					"reads" => array(), 
 					"reactions" => array()
 				));
-				
-				/* 				
-				$query = 'SELECT `tblComments`.`id`, `tblComments`.`content`, `tblComments`.`liked`, `tblComments`.`added`, `tblUsers`.`name`, `tblUsers`.`handle` FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row['id'] .' AND `tblComments`.`list_id` = '. $list_id .' ORDER BY `tblComments`.`added` DESC;';
-				$comments_result = mysql_query($query);
-				
-				$comment_arr = array();
-				while ($comment_row = mysql_fetch_array($comments_result, MYSQL_BOTH)) {
-					array_push($comment_arr, array(
-						"reaction_id" => $comment_row['id'], 
-						"thumb_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
-						"name" => $comment_row['name'], 
-						"handle" => $comment_row['handle'], 
-						"comment_url" => "http://shelby.tv", 
-						"content" => htmlentities($comment_row['content'], ENT_QUOTES), 
-						"liked" => $comment_row['liked'], 
-						"added" => $comment_row['added']
-					 ));
-				}
-				
-				$query = 'SELECT * FROM `tblRetweets` WHERE `tweet_id` = "'. $article_row['tweet_id'] .'" ORDER BY `created` DESC;';
-				$retweet_result = mysql_query($query);
-				
-				while ($retweet_row = mysql_fetch_array($retweet_result, MYSQL_BOTH)) {
-					array_push($comment_arr, array(
-						"reaction_id" => $retweet_row['id'], 
-						"thumb_url" => $retweet_row['avatar_url'], 
-						"name" => $retweet_row['name'], 
-						"handle" => $retweet_row['handle'], 
-						"comment_url" => "", 
-						"content" => htmlentities("RT", ENT_QUOTES), 
-						"liked" => "N", 
-						"added" => $retweet_row['created']
-					 ));
-				}
-				
-				$query = 'SELECT `tblUsers`.`handle`, `tblUsers`.`name` FROM `tblUsers` INNER JOIN `tblUsersReadArticles` ON `tblUsers`.`id` = `tblUsersReadArticles`.`user_id` WHERE `tblUsersReadArticles`.`list_id` = '. $list_id .' AND `tblUsersReadArticles`.`article_id` = '. $article_row['id'] .' ORDER BY `tblUsersReadArticles`.`added` DESC LIMIT 16;';
-				$users_result = mysql_query($query);
-				$user_arr = array();
-				while ($user_row = mysql_fetch_array($users_result, MYSQL_BOTH)) {
-					array_push($user_arr, array(
-						"handle" => $user_row['handle'], 
-						"name" => $user_row['name']
-					));
-				}
-				
-				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `user_id` = 1 AND `list_id` = '. $list_id .' AND `article_id` = '. $article_row['id'] .';';
-				$isLiked = (mysql_num_rows(mysql_query($query)) > 0);
-				
-				$query = 'SELECT * FROM `tblInfluencers` WHERE `id` = '. $article_row['influencer_id'] .';';
-				$influencer_row = mysql_fetch_row(mysql_query($query));
-				
-				array_push($article_arr, array(
-					"article_id" => $article_row['id'], 
-					"list_id" => $article_row['list_id'], 
-					"type_id" => $article_row['type_id'], 
-					"source_id" => $article_row['source_id'], 
-					"title" => $article_row['title'], 
-					"article_url" => $article_row['article_url'], 
-					"short_url" => "",
-					"affiliate" => $article_row['affiliate_url'], 
-					"tweet_id" => $article_row['tweet_id'], 
-					"tweet_msg" => $article_row['tweet_msg'], 
-					"twitter_name" => $influencer_row[2], 
-					"twitter_handle" => $influencer_row[1],
-					"twitter_info" => $influencer_row[4], 
-					"bg_url" => $article_row['image_url'], 
-					"source" => $article_row['source'], 
-					"content" => $article_row['content'], 
-					"avatar_url" => $influencer_row[3], 
-					"video_url" => $article_row['video_url'], 
-					"likes" => $article_row['likes'], 
-					"liked" => $isLiked, 
-					"img_ratio" => $article_row['img_ratio'], 
-					"added" => $article_row['added'], 
-					"tags" => array(), 
-					"reads" => $user_arr, 
-					"reactions" => $comment_arr
-				));
-				*/ 
 			}
 			
 			
@@ -762,7 +634,48 @@
 			
 			$this->sendResponse(200, json_encode($article_arr));
 			return (true);	
-		}
+		} 
+		
+		
+		function getPopularArticlesAfterID($article_id) {
+			$article_arr = array();
+			
+			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`id` > '. $article_id .' ORDER BY `tblArticles`.`created` DESC LIMIT 25;';
+			$article_result = mysql_query($query);
+			
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 				
+				array_push($article_arr, array(
+					"article_id" => $article_row[0], 
+					"list_id" => 0, 
+					"type_id" => $article_row[1], 
+					"source_id" => 0, 
+					"title" => $article_row['title'], 
+					"article_url" => $article_row['short_url'], 
+					"short_url" => $article_row['short_url'], 
+					"affiliate_url" => "", 
+					"tweet_id" => $article_row['tweet_id'], 
+					"tweet_msg" => $article_row['tweet_msg'], 
+					"twitter_name" => $article_row['name'], 
+					"twitter_handle" => $article_row['handle'],
+					"twitter_info" => "", 
+					"bg_url" => $article_row['image_url'], 
+					"source" => "", 
+					"content" => $article_row['content_txt'], 
+					"avatar_url" => $article_row['avatar_url'], 
+					"video_url" => $article_row['youtube_id'], 
+					"likes" => $article_row['likes'], 
+					"liked" => false, 
+					"img_ratio" => $article_row['image_ratio'], 
+					"added" => $article_row['created'], 
+					"tags" => array(), 
+					"reads" => array(), 
+					"reactions" => array()
+				)); 
+			}
+			
+			$this->sendResponse(200, json_encode($article_arr));
+			return (true);	
+		} 
 		
 		
 		
@@ -800,8 +713,8 @@
 				break;
 				
 			case "4":
-				if (isset($_POST['listID']) && isset($_POST['datetime']))
-					$articles->getListArticlesAfterDate($_POST['listID'], $_POST['datetime']);
+				if (isset($_POST['topicID']) && isset($_POST['articleID']))
+					$articles->getTopicArticlesAfterID($_POST['topicID'], $_POST['articleID']);
 				break;
 				
 			case "5":
@@ -831,6 +744,11 @@
 				
 			case "10":
 				$articles->getPopularArticles();
+				break;
+				
+			case "11":
+				if (isset($_POST['articleID']))
+					$articles->getPopularArticlesAfterID($_POST['articleID']);
 				break;
     	}
 	}

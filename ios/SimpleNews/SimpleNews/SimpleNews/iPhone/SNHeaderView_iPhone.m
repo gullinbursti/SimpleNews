@@ -13,7 +13,7 @@
 
 -(id)init {
 	if ((self = [super initWithFrame:CGRectMake(0.0, 0.0, 320.0, 53.0)])) {
-		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 49.0)];
+		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 45.0)];
 		bgImgView.image = [UIImage imageNamed:@"header.png"];
 		[self addSubview:bgImgView];
 	}

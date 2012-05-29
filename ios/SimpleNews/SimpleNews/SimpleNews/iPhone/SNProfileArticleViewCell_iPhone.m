@@ -31,8 +31,8 @@
 		_sourceLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_sourceLabel];
 		
-		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(284.0, 18.0, 24, 24)];		
-		chevronView.image = [UIImage imageNamed:@"chevron_nonActive.png"];
+		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(284.0, 18.0, 24.0, 24.0)];
+		chevronView.image = [UIImage imageNamed:@"chevron.png"];
 		[self addSubview:chevronView];
 		
 		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, 64.0, self.frame.size.width - 40.0, 2.0)];
