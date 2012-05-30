@@ -47,7 +47,7 @@
 		offset += 5;
 		
 		size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(60.0, offset, size.width, size.height)];
+		UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(55.0, offset, size.width, size.height)];
 		viaLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
 		viaLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 		viaLabel.backgroundColor = [UIColor clearColor];

@@ -23,6 +23,7 @@
 	UILabel *_commentsLabel;
 	UIView *_bgView;
 	UIButton *_likeButton;
+	UIButton *_sendButton;
 	
 	NSMutableArray *_commentViews;
 	

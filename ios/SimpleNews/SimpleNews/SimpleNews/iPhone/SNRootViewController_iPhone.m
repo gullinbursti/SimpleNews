@@ -81,7 +81,7 @@
 	[self.view addSubview:bgImgView];
 	
 	//_holderView = [[UIView alloc] initWithFrame:CGRectMake(-270.0, 0.0, 580.0, self.view.frame.size.height)];
-	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 580.0, self.view.frame.size.height)];
+	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
 	[self.view addSubview:_holderView];
 	
 	_profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -378,8 +378,6 @@
 	};
 }
 
-
-#pragma mark - Notification handlers
 -(void)_showFullscreenMedia:(NSNotification *)notification {
 	NSLog(@"SHOW MEDIA");
 	NSMutableDictionary *dict = [notification object];
@@ -429,13 +427,10 @@
 		else
 			[_blackMatteView addGestureRecognizer:tapRecognizer];
 		
-		
-		_fullscreenShareButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_fullscreenShareButton.frame = CGRectMake(286.0, 10.0, 20.0, 20.0);
-		[_fullscreenShareButton setBackgroundColor:[SNAppDelegate snDebugGreenColor]];
-		[_fullscreenShareButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-		//[_fullscreenShareButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
-		[self.view addSubview:_fullscreenShareButton];
+		_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+        [[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:_shareBtnView];
+		[self.view addSubview:_shareBtnView];
 	}];
 }
 
@@ -447,18 +442,18 @@
 		[_videoPlayerView reframe:_fullscreenFrame];
 		[_videoPlayerView stopPlayback];
 		
-		[_fullscreenShareButton removeFromSuperview];
-		_fullscreenShareButton = nil;
+		[_shareBtnView removeFromSuperview];
+		_shareBtnView = nil;
 		
 	} completion:^(BOOL finished) {
 		_blackMatteView.hidden = YES;
 		[_fullscreenImgView removeFromSuperview];
 		[_videoPlayerView removeFromSuperview];
-		[_fullscreenShareButton removeFromSuperview];
+		[_shareBtnView removeFromSuperview];
 		
 		_fullscreenImgView = nil;
 		_videoPlayerView = nil;
-		_fullscreenShareButton = nil;
+		_shareBtnView = nil;
 	}];
 	
 }
@@ -475,11 +470,11 @@
 		_blackMatteView.hidden = YES;
 		[_fullscreenImgView removeFromSuperview];
 		[_videoPlayerView removeFromSuperview];
-		[_fullscreenShareButton removeFromSuperview];
+		[_shareBtnView removeFromSuperview];
 		
 		_fullscreenImgView = nil;
 		_videoPlayerView = nil;
-		_fullscreenShareButton = nil;
+		_shareBtnView = nil;
 	}];
 }
 

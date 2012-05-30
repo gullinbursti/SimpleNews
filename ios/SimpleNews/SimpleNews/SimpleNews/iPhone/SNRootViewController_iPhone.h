@@ -16,6 +16,7 @@
 #import "ASIFormDataRequest.h"
 #import "SNArticleVO.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
+#import "SNNavShareBtnView.h"
 
 @class MBProgressHUD;
 
@@ -27,6 +28,7 @@
 	SNTopicTimelineView_iPhone *_topicTimelineView;
 	SNArticleVO *_articleVO;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
+    SNNavShareBtnView *_shareBtnView;
 	
 	NSMutableArray *_topicsList;
 	NSMutableArray *_topicCells;
@@ -34,7 +36,6 @@
 	MBProgressHUD *_hud;
 	UITableView *_topicsTableView;
 	
-	UIButton *_fullscreenShareButton;
 	UIView *_holderView;
 	UIImageView *_shadowImgView;
 	UIButton *_profileButton;

@@ -31,11 +31,13 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterTimeline:) name:@"TWITTER_TIMELINE" object:nil];
 		
-		[self setBackgroundColor:[UIColor whiteColor]];
-		
 		_articles = [NSMutableArray new];
 		_cardViews = [NSMutableArray new];
 		_timelineTweets = [NSMutableArray new];
+        
+		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
+		bgImgView.image = [UIImage imageNamed:@"background_timeline.png"];
+		[self addSubview:bgImgView];
 	}
 	
 	return (self);
@@ -53,10 +55,6 @@
 		NSError *error;
 		if (![[GANTracker sharedTracker] trackPageview:@"/topics/0" withError:&error])
 			NSLog(@"error in trackPageview");
-		
-		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
-		bgImgView.image = [UIImage imageNamed:@"background_timeline.png"];
-		[self addSubview:bgImgView];
 		
 		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
 		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -102,11 +100,6 @@
 		NSError *error;
 		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/topics/%d", _vo.topic_id] withError:&error])
 			NSLog(@"error in trackPageview");
-		
-		
-		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.frame];
-		bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
-		[self addSubview:bgImgView];
 		
 		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
 		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -170,6 +163,9 @@
 	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:_scrollView];
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];
+}
 
 #pragma mark - Navigation
 -(void)_goBack {

@@ -195,9 +195,14 @@
 			NSMutableArray *friendIDs = [NSMutableArray array];
 			
 			NSString *idList = @"";
+            int cnt = 0;
 			for (NSString *twitterID in [parsedUser objectForKey:@"ids"]) {
+                if (cnt == 100)
+                    break;
+                
 				idList = [idList stringByAppendingFormat:@",%@", twitterID];
 				[friendIDs addObject:twitterID];
+                cnt++;
 			}
 			
 			_friendIDs = [friendIDs copy];

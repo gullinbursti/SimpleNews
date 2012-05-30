@@ -120,6 +120,16 @@
 	_commentsLabel.text = @"Write a comment…";
 	[_bgView addSubview:_commentsLabel];
 	
+	_sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	_sendButton.frame = CGRectMake(255.0, 3.0, 64.0, 44.0);
+	[_sendButton setBackgroundImage:[[UIImage imageNamed:@"genericButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+	[_sendButton setBackgroundImage:[[UIImage imageNamed:@"genericButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+	[_sendButton addTarget:self action:@selector(_goSend) forControlEvents:UIControlEventTouchUpInside];
+	_sendButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+	[_sendButton setTitleColor:[UIColor colorWithWhite:0.5 alpha:1.0] forState:UIControlStateNormal];
+	[_sendButton setTitle:@"Send" forState:UIControlStateNormal];
+	[_bgView addSubview:_sendButton];
+	
 	_commentOffset = 0;
 	for (SNCommentVO *vo in _vo.comments) {
 		//NSLog(@"OFFSET:%d", offset);
@@ -198,6 +208,11 @@
 
 -(void)_goLike {
 	_isLiked = !_isLiked;
+}
+
+- (void)_goSend {
+	if ([_commentTxtField.text length] > 0)
+		[self textFieldDidEndEditing:_commentTxtField];
 }
 
 -(void)_onTxtDoneEditing:(id)sender {
