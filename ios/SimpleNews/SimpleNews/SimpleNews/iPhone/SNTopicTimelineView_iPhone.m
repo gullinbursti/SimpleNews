@@ -131,10 +131,6 @@
 		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:listBtnView];
 		
-		SNNavLogoBtnView *logoBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
-		[[logoBtnView btn] addTarget:self action:@selector(_goFlip) forControlEvents:UIControlEventTouchUpInside];
-		[headerView addSubview:logoBtnView];
-				
 		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 	}
@@ -275,7 +271,7 @@
 						[articleList addObject:vo];
 					
 					int height;
-					height = 210;
+					height = 150;
 					CGSize size;
 					
 					if (vo.type_id > 1) {
@@ -309,8 +305,11 @@
 			}
 		}
 		
-		_lastID = ((SNArticleVO *)[_articles objectAtIndex:0]).article_id;
-		_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
+		if ([_articles count] > 0) {
+			_lastID = ((SNArticleVO *)[_articles objectAtIndex:0]).article_id;
+			_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
+		}
+		
 		[_progressHUD hide:YES];
 		
 	} else if ([request isEqual:_updateRequest]) {
@@ -398,8 +397,11 @@
 				
 				NSMutableArray *updatedArticles = [NSMutableArray arrayWithArray:articleList];
 				[updatedArticles addObjectsFromArray:_articles];
-				_lastID = ((SNArticleVO *)[updatedArticles lastObject]).article_id;
-				_articles = [updatedArticles copy];
+				
+				if ([updatedArticles count] > 0) {
+					_lastID = ((SNArticleVO *)[updatedArticles lastObject]).article_id;
+					_articles = [updatedArticles copy];
+				}
 				
 				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, _scrollView.contentSize.height + offset);
 			}

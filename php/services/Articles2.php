@@ -90,6 +90,9 @@
 			$article_result = mysql_query($query);
 			
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 				
+				$query = 'SELECT `title` FROM `tblTopics` WHERE `id` = '. $topic_id .";";
+				$topic_row = mysql_fetch_row(mysql_query($query));
+				
 				/*
 				$query = 'SELECT `tblUsers`.`handle`, `tblUsers`.`name` FROM `tblUsers` INNER JOIN `tblUsersReadArticles` ON `tblUsers`.`id` = `tblUsersReadArticles`.`user_id` WHERE `tblUsersReadArticles`.`article_id` = '. $article_row['id'] .' ORDER BY `tblUsersReadArticles`.`added` DESC LIMIT 16;';
 				$users_result = mysql_query($query);
@@ -144,7 +147,8 @@
 				
 				array_push($article_arr, array(
 					"article_id" => $article_row['article_id'], 
-					"list_id" => 0, 
+					"list_id" => $topic_id, 
+					"topic_name" => $topic_row[0], 
 					"type_id" => $article_row[1], 
 					"source_id" => 0, 
 					"title" => $article_row['title'], 
@@ -274,11 +278,14 @@
 			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`id` > '. $article_id .' ORDER BY `tblArticles`.`created` DESC LIMIT 25;';
 			$article_result = mysql_query($query);
 			
-			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 				
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {				
+				$query = 'SELECT `title` FROM `tblTopics` WHERE `id` = '. $topic_id .";";
+				$topic_row = mysql_fetch_row(mysql_query($query));
 				
 				array_push($article_arr, array(
 					"article_id" => $article_row['article_id'], 
-					"list_id" => 0, 
+					"list_id" => $topic_id, 
+					"topic_name" => $topic_row[0], 
 					"type_id" => $article_row[1], 
 					"source_id" => 0, 
 					"title" => $article_row['title'], 
@@ -550,7 +557,10 @@
 			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC LIMIT 50;';
 			$article_result = mysql_query($query);
 			
-			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 				
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
+				$query = 'SELECT `tblTopics`.`id`, `tblTopics`.`title` FROM `tblTopics` INNER JOIN `tblTopicsArticles` ON `tblTopics`.`id` = `tblTopicsArticles`.`topic_id` WHERE  `tblTopicsArticles`.`article_id` = '. $article_row[0] .";";
+				$topic_row = mysql_fetch_row(mysql_query($query));
+				 				
 				/*
 				$query = 'SELECT `tblUsers`.`handle`, `tblUsers`.`name` FROM `tblUsers` INNER JOIN `tblUsersReadArticles` ON `tblUsers`.`id` = `tblUsersReadArticles`.`user_id` WHERE `tblUsersReadArticles`.`article_id` = '. $article_row['id'] .' ORDER BY `tblUsersReadArticles`.`added` DESC LIMIT 16;';
 				$users_result = mysql_query($query);
@@ -605,7 +615,8 @@
 				
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
-					"list_id" => 0, 
+					"list_id" => $topic_row[0],
+					"topic_name" => $topic_row[1],  
 					"type_id" => $article_row[1], 
 					"source_id" => 0, 
 					"title" => $article_row['title'], 

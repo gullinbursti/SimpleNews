@@ -14,7 +14,7 @@
 #import "SNCommentVO.h"
 #import "SNAppDelegate.h"
 #import "SNNavBackBtnView.h"
-#import "SNNavLikeBtnView.h"
+#import "SNNavShareBtnView.h"
 
 #define kItemHeight 51.0
 
@@ -73,7 +73,7 @@
 	[_scrollView addSubview:_refreshHeaderView];
 	[_refreshHeaderView refreshLastUpdatedDate];
 	
-	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 44.0, self.view.frame.size.width, 44.0)];
+	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 49.0, self.view.frame.size.width, 49.0)];
 	[_bgView setBackgroundColor:[UIColor colorWithWhite:0.914 alpha:1.0]];
 	[self.view addSubview:_bgView];
 	
@@ -85,32 +85,39 @@
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Comments"];
 	[self.view addSubview:headerView];
 	
-	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 64.0, 44.0)];
 	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:backBtnView];
 	
-	SNNavLikeBtnView *likeBtnView = [[SNNavLikeBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
-	[[likeBtnView btn] addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:likeBtnView];
+	SNNavShareBtnView *shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+	[[shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+	[headerView addSubview:shareBtnView];
 	
-	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(25.0, 18.0, 270.0, 16.0)];
+	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	_likeButton.frame = CGRectMake(2.0, 2.0, 44.0, 44.0);
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@"commentHeart_nonActive.png"] forState:UIControlStateNormal];
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@"commentHeart_Active.png"] forState:UIControlStateHighlighted];
+	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	[_bgView addSubview:_likeButton];
+	
+	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(60.0, 18.0, 270.0, 16.0)];
 	[_commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 	[_commentTxtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 	[_commentTxtField setAutocorrectionType:UITextAutocorrectionTypeNo];
 	[_commentTxtField setBackgroundColor:[UIColor clearColor]];
 	[_commentTxtField setReturnKeyType:UIReturnKeyDone];
 	[_commentTxtField addTarget:self action:@selector(_onTxtDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
-	_commentTxtField.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
+	_commentTxtField.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 	_commentTxtField.keyboardType = UIKeyboardTypeDefault;
 	_commentTxtField.text = @"";
 	_commentTxtField.delegate = self;
 	[_bgView addSubview:_commentTxtField];
 	
 	_commentsLabel = [[UILabel alloc] initWithFrame:_commentTxtField.frame];
-	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
+	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
 	_commentsLabel.textColor = [UIColor blackColor];
 	_commentsLabel.backgroundColor = [UIColor clearColor];
-	_commentsLabel.text = @"Add Comment";
+	_commentsLabel.text = @"Write a comment…";
 	[_bgView addSubview:_commentsLabel];
 	
 	_commentOffset = 0;
@@ -185,16 +192,12 @@
 //	}
 //}
 
--(void)_goLike {
-	_isLiked = YES;
-}
-
--(void)_goReadLater {
-	
-}
-
 -(void)_goShare {
-	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SHARE_SHEET" object:_vo];
+}
+
+-(void)_goLike {
+	_isLiked = !_isLiked;
 }
 
 -(void)_onTxtDoneEditing:(id)sender {
@@ -283,7 +286,7 @@
 		if (_isLiked)
 			isLiked = @"Y";
 		
-		_commentSubmitRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
+		_commentSubmitRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
 		[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", 9] forKey:@"action"];
 		[_commentSubmitRequest setPostValue:[SNAppDelegate twitterHandle] forKey:@"handle"];
 		[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];

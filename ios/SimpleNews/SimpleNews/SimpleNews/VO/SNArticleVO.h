@@ -21,6 +21,7 @@
 @property (nonatomic) int totalLikes;
 @property (nonatomic) BOOL hasLiked;
 @property (nonatomic) float imgRatio;
+@property (nonatomic, retain) NSString *topicTitle;
 @property (nonatomic, retain) NSString *title;
 @property (nonatomic, retain) NSString *tweet_id;
 @property (nonatomic, retain) NSString *twitterName;

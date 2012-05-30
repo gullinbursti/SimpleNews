@@ -17,6 +17,11 @@
 		_vo = vo;
 		_listID = list_id;
 		
+		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, frame.size.height)];
+		UIImage *img = [UIImage imageNamed:@"profileBackground.png"];
+		bgImgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:10.0];
+		[self addSubview:bgImgView];
+		
 		EGOImageView *avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, 19.0, 25.0, 25.0)];
 		avatarImgView.imageURL = [NSURL URLWithString:_vo.thumb_url];
 		[self addSubview:avatarImgView];
@@ -77,10 +82,10 @@
 			offset = 25.0;
 		}
 		
-		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, offset + size.height + 55.0, self.frame.size.width - 40.0, 2.0)];
-		UIImage *img = [UIImage imageNamed:@"line.png"];
-		lineImgView.image = [img stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];
-		[self addSubview:lineImgView];
+//		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, offset + size.height + 55.0, self.frame.size.width - 40.0, 2.0)];
+//		img = [UIImage imageNamed:@"line.png"];
+//		lineImgView.image = [img stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];
+//		[self addSubview:lineImgView];
 	}
 	
 	return (self);

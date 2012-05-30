@@ -12,7 +12,7 @@
 @implementation SNArticleVO
 
 @synthesize dictionary;
-@synthesize article_id, list_id, type_id, source_id, title, article_url, affiliateURL, hasLiked, twitterName, twitterInfo, twitterHandle, tweet_id, tweetMessage, content, bgImage_url, articleSource, video_url, avatarImage_url, imgRatio, seenBy, totalLikes, added, comments;
+@synthesize article_id, list_id, type_id, source_id, topicTitle, title, article_url, affiliateURL, hasLiked, twitterName, twitterInfo, twitterHandle, tweet_id, tweetMessage, content, bgImage_url, articleSource, video_url, avatarImage_url, imgRatio, seenBy, totalLikes, added, comments;
 
 +(SNArticleVO *)articleWithDictionary:(NSDictionary *)dictionary {
 	
@@ -21,6 +21,7 @@
 	
 	vo.article_id = [[dictionary objectForKey:@"article_id"] intValue];
 	vo.list_id = [[dictionary objectForKey:@"list_id"] intValue];
+	vo.topicTitle = [dictionary objectForKey:@"topic_name"];
 	vo.type_id = [[dictionary objectForKey:@"type_id"] intValue];
 	vo.source_id = [[dictionary objectForKey:@"source_id"] intValue];
 	vo.title = [dictionary objectForKey:@"title"];

@@ -22,6 +22,7 @@
 	UITextField *_commentTxtField;
 	UILabel *_commentsLabel;
 	UIView *_bgView;
+	UIButton *_likeButton;
 	
 	NSMutableArray *_commentViews;
 	

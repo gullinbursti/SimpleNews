@@ -64,11 +64,11 @@
 	[profileButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:profileButton];
 	
-	UIView *statsBgView = [[UIView alloc] initWithFrame:CGRectMake(12.0, 115.0, 296.0, 70.0)];
-	[statsBgView setBackgroundColor:[UIColor whiteColor]];
+	UIImageView *statsBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 115.0, 320.0, 84.0)];
+	statsBgView.image = [UIImage imageNamed:@"profileBackgroundStats.png"];
 	[self.view addSubview:statsBgView];
 	
-	_likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 17.0, 96.0, 18.0)];
+	_likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 17.0, 96.0, 18.0)];
 	_likesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
 	_likesLabel.textAlignment = UITextAlignmentCenter;
 	_likesLabel.textColor = [UIColor blackColor];
@@ -76,7 +76,7 @@
 	
 	[statsBgView addSubview:_likesLabel];
 	
-	UILabel *likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 40.0, 96.0, 16.0)];
+	UILabel *likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 40.0, 96.0, 16.0)];
 	likesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 	likesLabel.textAlignment = UITextAlignmentCenter;
 	likesLabel.textColor = [SNAppDelegate snLinkColor];
@@ -84,14 +84,14 @@
 	likesLabel.text = @"Likes";
 	[statsBgView addSubview:likesLabel];
 	
-	_commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(96.0, 17.0, 96.0, 18.0)];
+	_commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(106.0, 17.0, 96.0, 18.0)];
 	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
 	_commentsLabel.textAlignment = UITextAlignmentCenter;
 	_commentsLabel.textColor = [UIColor blackColor];
 	_commentsLabel.backgroundColor = [UIColor clearColor];
 	[statsBgView addSubview:_commentsLabel];
 	
-	UILabel *commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(96.0, 40.0, 96.0, 16.0)];
+	UILabel *commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(106.0, 40.0, 96.0, 16.0)];
 	commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 	commentsLabel.textAlignment = UITextAlignmentCenter;
 	commentsLabel.textColor = [SNAppDelegate snLinkColor];
@@ -99,14 +99,14 @@
 	commentsLabel.text = @"Comments";
 	[statsBgView addSubview:commentsLabel];
 	
-	_sharesLabel = [[UILabel alloc] initWithFrame:CGRectMake(192.0, 17.0, 96.0, 18.0)];
+	_sharesLabel = [[UILabel alloc] initWithFrame:CGRectMake(202.0, 17.0, 96.0, 18.0)];
 	_sharesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
 	_sharesLabel.textAlignment = UITextAlignmentCenter;
 	_sharesLabel.textColor = [UIColor blackColor];
 	_sharesLabel.backgroundColor = [UIColor clearColor];
 	[statsBgView addSubview:_sharesLabel];
 	
-	UILabel *sharesLabel = [[UILabel alloc] initWithFrame:CGRectMake(192.0, 40.0, 96.0, 16.0)];
+	UILabel *sharesLabel = [[UILabel alloc] initWithFrame:CGRectMake(202.0, 40.0, 96.0, 16.0)];
 	sharesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 	sharesLabel.textAlignment = UITextAlignmentCenter;
 	sharesLabel.textColor = [SNAppDelegate snLinkColor];
@@ -129,9 +129,13 @@
 	[shareButton addTarget:self action:@selector(_goSharedArticles) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:shareButton];
 	
+	UIImageView *tableBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 200.0, 320.0, self.view.frame.size.height - 270.0)];
+	UIImage *img = [UIImage imageNamed:@"profileBackground.png"];
+	tableBgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:10.0];
+	[self.view addSubview:tableBgView];
 	
 	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(12.0, 200.0, self.view.frame.size.width - 24.0, self.view.frame.size.height - 270.0) style:UITableViewStylePlain];
-	[_tableView setBackgroundColor:[UIColor whiteColor]];
+	[_tableView setBackgroundColor:[UIColor clearColor]];
 	_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	_tableView.rowHeight = 70.0;
 	_tableView.delegate = self;
@@ -144,7 +148,7 @@
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Profile"];
 	[self.view addSubview:headerView];
 	
-	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 64.0, 44.0)];
 	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:backBtnView];
 	
