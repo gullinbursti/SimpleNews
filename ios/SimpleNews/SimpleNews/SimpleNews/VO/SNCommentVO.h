@@ -16,10 +16,8 @@
 
 @property (nonatomic) int comment_id;
 @property (nonatomic) BOOL isLiked;
-@property (nonatomic, retain) NSString *thumb_url;
-@property (nonatomic, retain) NSString *twitterName;
-@property (nonatomic, retain) NSString *twitterHandle;
-@property (nonatomic, retain) NSString *comment_url;
+@property (nonatomic, retain) NSString *avatarURL;
+@property (nonatomic, retain) NSString *handle;
 @property (nonatomic, retain) NSString *content;
 @property (nonatomic, retain) NSDate *added;
 

@@ -11,18 +11,16 @@
 @implementation SNCommentVO
 
 @synthesize dictionary;
-@synthesize comment_id, thumb_url, twitterName, twitterHandle, comment_url, content, isLiked, added;
+@synthesize comment_id, avatarURL, handle, content, isLiked, added;
 
 +(SNCommentVO *)commentWithDictionary:(NSDictionary *)dictionary {
 	SNCommentVO *vo = [[SNCommentVO alloc] init];
 	
 	vo.dictionary = dictionary;
-	vo.thumb_url = [dictionary objectForKey:@"thumb_url"];
-	vo.twitterName = [dictionary objectForKey:@"name"];
-	vo.twitterHandle = [dictionary objectForKey:@"handle"];
-	vo.comment_url = [dictionary objectForKey:@"comment_url"];
+	vo.avatarURL = [dictionary objectForKey:@"avatar"];
+	vo.handle = [dictionary objectForKey:@"handle"];
 	vo.content = [dictionary objectForKey:@"content"];
-	vo.isLiked = [[dictionary objectForKey:@"liked"] isEqualToString:@"Y"];
+	vo.isLiked = (BOOL)[[dictionary objectForKey:@"liked"] intValue];
 	
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
 	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
@@ -33,10 +31,8 @@
 
 -(void)dealloc {
 	self.dictionary = nil;
-	self.thumb_url = nil;
-	self.twitterName = nil;
-	self.twitterHandle = nil;
-	self.comment_url = nil;
+	self.avatarURL = nil;
+	self.handle = nil;
 	self.content = nil;
 }
 

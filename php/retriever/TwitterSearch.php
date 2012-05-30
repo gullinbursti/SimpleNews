@@ -19,7 +19,7 @@ class TwitterSearch {
 	 * More discussion at http://tinyurl.com/3xtx66
 	 * @var array
 	 */
-	var $headers=array('X-Twitter-Client: PHPTwitterSearch','X-Twitter-Client-Version: 0.1','X-Twitter-Client-URL: http://ryanfaerman.com/twittersearch');
+	var $headers=array('X-Twitter-Client: PHPTwitterSearch','X-Twitter-Client-Version: 0.1','X-Twitter-Client-URL: http://getassembly.com/');
 
 	/**
 	 * Recommend setting a user-agent so Twitter knows how to contact you inc case of abuse. Include your email

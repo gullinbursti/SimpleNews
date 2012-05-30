@@ -21,7 +21,7 @@
 	UILabel *_twitterBlurbLabel;
 }
 
--(id)initWithFrame:(CGRect)frame commentVO:(SNCommentVO *)vo listID:(int)list_id;
+-(id)initWithFrame:(CGRect)frame commentVO:(SNCommentVO *)vo;
 
 
 @end

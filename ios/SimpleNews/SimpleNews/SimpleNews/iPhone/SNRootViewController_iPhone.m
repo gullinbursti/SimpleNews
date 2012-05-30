@@ -181,6 +181,10 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SHARE_SHEET" object:_articleVO];
 }
 
+-(void)_startVideo {
+	[_videoPlayerView startPlayback];
+}
+
 #pragma mark - Network Requests
 - (void)setTopicsListResource:(MBLAsyncResource *)topicsListResource
 {
@@ -317,7 +321,7 @@
 #pragma mark - Notification handlers
 
 -(void)_showArticleComments:(NSNotification *)notification {
-	SNArticleCommentsViewController_iPhone *articleCommentsViewController = [[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object] listID:0];
+	SNArticleCommentsViewController_iPhone *articleCommentsViewController = [[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]];
 	[self.navigationController pushViewController:articleCommentsViewController animated:YES];
 }
 
@@ -465,6 +469,9 @@
 		_fullscreenImgView.frame = _fullscreenFrame;
 		[_videoPlayerView reframe:_fullscreenFrame];
 		[_videoPlayerView stopPlayback];
+		
+		[_shareBtnView removeFromSuperview];
+		_shareBtnView = nil;
 		
 	} completion:^(BOOL finished) {
 		_blackMatteView.hidden = YES;

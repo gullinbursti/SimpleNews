@@ -182,11 +182,6 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_FULLSCREEN_MEDIA" object:dict];
 }
 
-
--(void)_startVideo {
-	[_videoPlayerView startPlayback];
-}
-
 -(void)_twitterTimeline:(NSNotification *)notification {
 	_timelineTweets = (NSMutableArray *)[notification object];
 }
@@ -338,9 +333,6 @@
 						offset += 20;
 					}
 					
-					SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo];
-					[_cardViews addObject:articleItemView];
-					
 					offset += 20;
 					offset += height;
 					tot++;
@@ -378,7 +370,7 @@
 						offset += 20;
 					}
 					
-					SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(0.0, offset, _scrollView.frame.size.width, height) articleVO:vo];
+					SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width, height) articleVO:vo];
 					[_cardViews addObject:articleItemView];
 					
 					offset += 20;

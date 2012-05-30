@@ -37,6 +37,5 @@
 @property (nonatomic, retain) NSString *avatarImage_url;
 @property (nonatomic, retain) NSDate *added;
 @property (nonatomic, retain) NSMutableArray *comments;
-@property (nonatomic, retain) NSDictionary *seenBy;
 
 @end

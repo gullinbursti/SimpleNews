@@ -268,7 +268,7 @@
 }
 
 -(void)_goComment {
-	[self.navigationController pushViewController:[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:_vo listID:_vo.list_id] animated:YES];
+	[self.navigationController pushViewController:[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:_vo] animated:YES];
 }
 
 -(void)_goShare {

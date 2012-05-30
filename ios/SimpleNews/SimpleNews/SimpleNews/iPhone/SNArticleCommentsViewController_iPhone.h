@@ -7,13 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MessageUI/MessageUI.h>
 
 #import "ASIFormDataRequest.h"
 #import "SNArticleVO.h"
 #import "EGORefreshTableHeaderView.h"
 
-@interface SNArticleCommentsViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, UITextFieldDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate>{
+@interface SNArticleCommentsViewController_iPhone : UIViewController <UIScrollViewDelegate, UITextFieldDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate>{
 	SNArticleVO *_vo;
 	ASIFormDataRequest *_commentSubmitRequest;
 	EGORefreshTableHeaderView *_refreshHeaderView;
@@ -27,12 +26,11 @@
 	
 	NSMutableArray *_commentViews;
 	
-	int _list_id;
 	int _commentOffset;
 	BOOL _isLiked;
 	BOOL _reloading;
 }
 
--(id)initWithArticleVO:(SNArticleVO *)vo listID:(int)listID;
+-(id)initWithArticleVO:(SNArticleVO *)vo;
 
 @end

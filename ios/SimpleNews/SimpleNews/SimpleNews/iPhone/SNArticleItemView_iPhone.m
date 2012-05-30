@@ -171,7 +171,7 @@
 		[commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 		commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
 		commentButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
-		[commentButton setTitle:[NSString stringWithFormat:@"%d", 0] forState:UIControlStateNormal];
+		[commentButton setTitle:[NSString stringWithFormat:@"%d", [_vo.comments count]] forState:UIControlStateNormal];
 		[btnBGView addSubview:commentButton];
 		
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -237,19 +237,6 @@
 }
 
 -(void)_goVideo {
-	ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
-	[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-	[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
-	[readRequest setDelegate:self];
-	[readRequest startAsynchronous];
-	
-	//[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
-	//[_videoButton removeTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
-	//[_videoButton removeFromSuperview];
-	//[_videoPlayerView startPlayback];
-	
 	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
 								 @"video", @"type", 
 								 _vo, @"VO", 
@@ -258,8 +245,6 @@
 	
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_FULLSCREEN_MEDIA" object:dict];
-	
-	
 }
 
 -(void)_photoZoomIn:(UIGestureRecognizer *)gestureRecognizer {
@@ -284,15 +269,7 @@
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 	
-	} else {
-		ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
-		[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-		[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-		[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
-		[readRequest setDelegate:self];
-		[readRequest startAsynchronous];
-		
+	} else {		
 		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 		
@@ -300,11 +277,11 @@
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
 		[_likeButton setTitle:[NSString stringWithFormat:@"%d", ++_vo.totalLikes] forState:UIControlStateNormal];
 		
-		ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
+		ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
 		[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		[likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
 		[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+		likeRequest.delegate = self;
 		[likeRequest startAsynchronous];
 		
 		_vo.hasLiked = YES;
@@ -320,11 +297,11 @@
 	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
 	[_likeButton setTitle:[NSString stringWithFormat:@"%d", --_vo.totalLikes] forState:UIControlStateNormal];
 	
-	ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
+	ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
 	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
 	[likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
 	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+	likeRequest.delegate = self;
 	[likeRequest startAsynchronous];
 	
 	_vo.hasLiked = NO;
@@ -336,14 +313,6 @@
 
 
 -(void)_goComments {
-	ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
-	[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-	[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
-	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
-	[readRequest setDelegate:self];
-	[readRequest startAsynchronous];
-	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_COMMENTS" object:_vo];
 }
 

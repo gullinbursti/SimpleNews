@@ -338,6 +338,7 @@
 	[self addSubview:_bufferingImgView];
 	
 	[UIView animateWithDuration:0.25 animations:^(void) {
+		_bufferingImgView.hidden = NO;
 		_bufferingImgView.alpha = 1.0;
 	}];
 		
@@ -410,6 +411,9 @@
 			[UIView animateWithDuration:0.33 animations:^(void) {
 				_screenshotImgView.alpha = 0.0;
 				_bufferingImgView.alpha = 0.0;
+				
+			} completion:^(BOOL finished) {
+				_bufferingImgView.hidden = YES;
 			}];
 			break;
 	}
@@ -469,7 +473,7 @@
 	//NSString *videoStreamMap = @"url_encoded_fmt_stream_map= ... &tmi=1";
 	
 	NSString *videoInfo = [[[NSString alloc] initWithData:[request responseData] encoding:NSUTF8StringEncoding] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-	NSLog(@"%@", videoInfo);
+	//NSLog(@"%@", videoInfo);
 	
 	NSRange errorRange = [videoInfo rangeOfString:@"status=fail"];
 	NSLog(@"errorRange.location[%d] .length[%d]", errorRange.location, errorRange.length);
@@ -507,10 +511,7 @@
 		//if ([videoURLs objectForKey:@"hd"])
 		//	videoURL = [videoURLs objectForKey:@"hd"];
 		
-		
-		
 		NSLog(@"%@", videoURLs);
-		//[self _initPlayer];
 	
 	} else {
 		[self _goClose];

@@ -12,7 +12,7 @@
 @implementation SNArticleVO
 
 @synthesize dictionary;
-@synthesize article_id, list_id, type_id, source_id, topicTitle, title, article_url, affiliateURL, hasLiked, twitterName, twitterInfo, twitterHandle, tweet_id, tweetMessage, content, bgImage_url, articleSource, video_url, avatarImage_url, imgRatio, seenBy, totalLikes, added, comments;
+@synthesize article_id, list_id, type_id, source_id, topicTitle, title, article_url, affiliateURL, hasLiked, twitterName, twitterInfo, twitterHandle, tweet_id, tweetMessage, content, bgImage_url, articleSource, video_url, avatarImage_url, imgRatio, totalLikes, added, comments;
 
 +(SNArticleVO *)articleWithDictionary:(NSDictionary *)dictionary {
 	
@@ -40,7 +40,6 @@
 	vo.hasLiked = (BOOL)[[dictionary objectForKey:@"liked"] intValue];
 	vo.totalLikes = [[dictionary objectForKey:@"likes"] intValue];
 	vo.imgRatio = [[dictionary objectForKey:@"img_ratio"] floatValue];
-	vo.seenBy = [dictionary objectForKey:@"reads"];
 	
 	if (vo.title == (id)[NSNull null]) 
 		vo.title = @"Untitled";
@@ -51,7 +50,7 @@
 	vo.added = [dateFormat dateFromString:[dictionary objectForKey:@"added"]];
 	
 	NSMutableArray *unsortedComments = [NSMutableArray new];
-	for (NSDictionary *comment in [dictionary objectForKey:@"reactions"])
+	for (NSDictionary *comment in [dictionary objectForKey:@"comments"])
 		[unsortedComments addObject:[SNCommentVO commentWithDictionary:comment]];
 	
 	vo.comments = [NSMutableArray arrayWithArray:[unsortedComments sortedArrayUsingDescriptors:[NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"added" ascending:NO]]]];
