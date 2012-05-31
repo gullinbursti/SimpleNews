@@ -143,6 +143,8 @@
 	_tableView.userInteractionEnabled = YES;
 	_tableView.scrollsToTop = NO;
 	_tableView.showsVerticalScrollIndicator = NO;
+	_tableView.alwaysBounceVertical = NO;
+	_tableView.bounces = NO;
 	[self.view addSubview:_tableView];
 	
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Profile"];
@@ -157,6 +159,8 @@
 	
 	for (NSDictionary *item in plist)
 		[_items addObject:[SNProfileVO profileWithDictionary:item]];
+	
+	NSLog(@"USERID:[%@]", [[SNAppDelegate profileForUser] objectForKey:@"id"]);
 	
 	ASIFormDataRequest *statsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
 	[statsRequest setPostValue:[NSString stringWithFormat:@"%d", 5] forKey:@"action"];
@@ -217,9 +221,8 @@
 		cell = [[SNProfileViewCell_iPhone alloc] init];
 	
 	cell.profileVO = (SNProfileVO *)[_items objectAtIndex:indexPath.row];
-	NSLog(@"PROFILE VO:\n%@", cell.profileVO.title);
 	
-	if (indexPath.row == 1) {
+	if (indexPath.row == 2) {
 		UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
 			
 		if ([SNAppDelegate notificationsEnabled])
@@ -250,7 +253,7 @@
 
 
 -(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if (indexPath.row == 1)
+	if (indexPath.row == 2)
 		return (nil);
 	
 	return (indexPath);
@@ -261,12 +264,12 @@
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
 	
 	switch (indexPath.row) {
-		case 0: // friends
+		case 0: // find friends
 			[self.navigationController pushViewController:[[SNFindFriendsViewController_iPhone alloc] initAsFinder] animated:YES];
 			break;
 			
-		case 2: // about
-			[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initAsArticlesRead] animated:YES];
+		case 1: // my friends
+			[self.navigationController pushViewController:[[SNFindFriendsViewController_iPhone alloc] initAsList] animated:YES];
 			break;
 			
 		default:

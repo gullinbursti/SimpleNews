@@ -29,6 +29,7 @@
 
 @interface SNRootViewController_iPhone () <MBLResourceObserverProtocol>
 @property(nonatomic, strong) MBLAsyncResource *topicsListResource;
+@property(nonatomic, strong) MBLAsyncResource *fullscreenImgResource;
 - (void)_refreshUserAccount;
 - (void)_refreshTopicsList;
 @end
@@ -36,6 +37,7 @@
 @implementation SNRootViewController_iPhone
 
 @synthesize topicsListResource = _topicsListResource;
+@synthesize fullscreenImgResource = _fullscreenImgResource;
 
 - (id)init {
 	if ((self = [super init])) {
@@ -61,6 +63,7 @@
 - (void)dealloc
 {
 	self.topicsListResource = nil;
+	self.fullscreenImgResource = nil;
 }
 
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -69,6 +72,9 @@
 	
 	if (CGRectContainsPoint(_videoPlayerView.frame, touchPoint))
 		[_videoPlayerView toggleControls];//NSLog(@"TOUCHED:(%f, %f)", touchPoint.x, touchPoint.y);
+	
+	if (CGRectContainsPoint(_fullscreenImgView.frame, touchPoint))
+		[self _hideFullscreenMedia:nil];
 }
 
 #pragma mark - View lifecycle
@@ -186,6 +192,19 @@
 }
 
 #pragma mark - Network Requests
+- (void)setFullscreenImgResource:(MBLAsyncResource *)fullscreenImgResource 
+{
+	if (_fullscreenImgResource != nil) {
+		[_fullscreenImgResource unsubscribe:self];
+		_fullscreenImgResource = nil;
+	}
+	
+	_fullscreenImgResource = fullscreenImgResource;
+	
+	if (_fullscreenImgResource != nil)
+		[_fullscreenImgResource subscribe:self];
+}
+
 - (void)setTopicsListResource:(MBLAsyncResource *)topicsListResource
 {
 	if (_topicsListResource != nil) {
@@ -212,7 +231,7 @@
 		[formValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		
 		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Topics.php"];
-		self.topicsListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate date]]; // 1 hour expiration for now
+		self.topicsListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration for now
 	}
 }
 
@@ -231,6 +250,8 @@
 	}
 }
 
+
+#pragma mark - AsyncResource Observers
 - (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data
 {
 	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
@@ -297,6 +318,26 @@
 			_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithPopularArticles];
 			[_holderView addSubview:_topicTimelineView];
 		}
+	
+	} else if (resource == _fullscreenImgResource) {
+		_fullscreenImgView.image = [UIImage imageWithData:data];
+		//_fullscreenImgView.image = [SNAppDelegate imageWithFilters:[UIImage imageWithData:data] filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"sharpen", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
+		
+		_blackMatteView.hidden = NO;
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_blackMatteView.alpha = 0.95;
+			_fullscreenImgView.frame = CGRectMake(0.0, (self.view.frame.size.height - (320.0 * _articleVO.imgRatio)) * 0.5, 320.0, 320.0 * _articleVO.imgRatio);
+			
+		} completion:^(BOOL finished) {
+			UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_hideFullscreenMedia:)];
+			tapRecognizer.numberOfTapsRequired = 1;
+			[_blackMatteView addGestureRecognizer:tapRecognizer];
+			
+			_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+			[[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+			[self.view addSubview:_shareBtnView];
+			[self.view addSubview:_shareBtnView];
+		}];
 	}
 }
 
@@ -363,7 +404,7 @@
 	TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
 	
 	//[twitter addImage:[UIImage imageNamed:@"iOSDevTips.png"]];
-	[twitter addURL:[NSURL URLWithString:[NSString stringWithString:[NSString stringWithFormat:@"http://assemb.ly/tweets?id=%@", vo.tweet_id]]]];
+	[twitter addURL:[NSURL URLWithString:[NSString stringWithString:[NSString stringWithFormat:@"http://assemb.ly/tweets?id=%@", vo.tweetID]]]];
 	[twitter setInitialText:[NSString stringWithFormat:@"via Assembly - %@", vo.title]];
 	
 	[self presentModalViewController:twitter animated:YES];
@@ -373,7 +414,7 @@
 		ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 		[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 		[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		[readRequest setPostValue:[NSString stringWithFormat:@"%d", vo.list_id] forKey:@"listID"];
+		[readRequest setPostValue:[NSString stringWithFormat:@"%d", vo.topicID] forKey:@"listID"];
 		[readRequest setPostValue:[NSString stringWithFormat:@"%d", vo.article_id] forKey:@"articleID"];
 		[readRequest setDelegate:self];
 		[readRequest startAsynchronous];
@@ -383,7 +424,7 @@
 }
 
 -(void)_showFullscreenMedia:(NSNotification *)notification {
-	NSLog(@"SHOW MEDIA");
+	NSLog(@"\n--SHOW FULLSCREEN MEDIA--");
 	NSMutableDictionary *dict = [notification object];
 	
 	_articleVO = [dict objectForKey:@"VO"];
@@ -394,48 +435,35 @@
 	frame.origin.y = 44.0 + frame.origin.y + offset;
 	_fullscreenFrame = frame;
 	
-	NSLog(@"FRAME:(%f, %f)[%f, %f]", frame.origin.x, frame.origin.y, frame.size.width, frame.size.height);
-	
 	if ([type isEqualToString:@"photo"]) {
-		_fullscreenImgView = [[EGOImageView alloc] initWithFrame:frame];
-		_fullscreenImgView.delegate = self;
-		_fullscreenImgView.imageURL = [NSURL URLWithString:_articleVO.bgImage_url];
+		_fullscreenImgView = [[UIImageView alloc] initWithFrame:frame];
 		_fullscreenImgView.userInteractionEnabled = YES;
 		[self.view addSubview:_fullscreenImgView];
+		
+		_fullscreenImgResource = nil;
+		self.fullscreenImgResource = [[MBLResourceLoader sharedInstance] downloadURL:_articleVO.imageURL forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration for now
 		
 	} else if ([type isEqualToString:@"video"]) {
 		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:frame articleVO:_articleVO];
 		[self.view addSubview:_videoPlayerView];
-		
 		[self performSelector:@selector(_startVideo) withObject:nil afterDelay:1.0];
-	}
 	
-	_blackMatteView.hidden = NO;
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_blackMatteView.alpha = 0.95;
-		
-		if ([type isEqualToString:@"photo"])
-			_fullscreenImgView.frame = CGRectMake(0.0, (self.view.frame.size.height - (320.0 * _articleVO.imgRatio)) * 0.5, 320.0, 320.0 * _articleVO.imgRatio);
-		
-		else
+		_blackMatteView.hidden = NO;
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_blackMatteView.alpha = 0.95;
 			[_videoPlayerView reframe:CGRectMake(0.0, (self.view.frame.size.height - 240.0) * 0.5, 320.0, 240.0)];
-		
-		
-	} completion:^(BOOL finished) {
-		UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_hideFullscreenImage:)];
-		tapRecognizer.numberOfTapsRequired = 1;
-		
-		if ([type isEqualToString:@"photo"])
-			[_fullscreenImgView addGestureRecognizer:tapRecognizer];
-		
-		else
+			
+		} completion:^(BOOL finished) {
+			UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_hideFullscreenMedia:)];
+			tapRecognizer.numberOfTapsRequired = 1;
 			[_blackMatteView addGestureRecognizer:tapRecognizer];
-		
-		_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
-        [[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:_shareBtnView];
-		[self.view addSubview:_shareBtnView];
-	}];
+			
+			_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+			[[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+			[self.view addSubview:_shareBtnView];
+			[self.view addSubview:_shareBtnView];
+		}];
+	}
 }
 
 -(void)_hideFullscreenMedia:(NSNotification *)notification {
@@ -462,33 +490,9 @@
 	
 }
 
--(void)_hideFullscreenImage:(UIGestureRecognizer *)gestureRecognizer {
-	[UIView animateWithDuration:0.25 animations:^(void) {
-		_blackMatteView.alpha = 0.0;
-		
-		_fullscreenImgView.frame = _fullscreenFrame;
-		[_videoPlayerView reframe:_fullscreenFrame];
-		[_videoPlayerView stopPlayback];
-		
-		[_shareBtnView removeFromSuperview];
-		_shareBtnView = nil;
-		
-	} completion:^(BOOL finished) {
-		_blackMatteView.hidden = YES;
-		[_fullscreenImgView removeFromSuperview];
-		[_videoPlayerView removeFromSuperview];
-		[_shareBtnView removeFromSuperview];
-		
-		_fullscreenImgView = nil;
-		_videoPlayerView = nil;
-		_shareBtnView = nil;
-	}];
-}
-
-
-
 #pragma mark - Image View delegates
 -(void)imageViewLoadedImage:(EGOImageView *)imageView {
+	NSLog(@"IMAGE LOADED");
 	imageView.image = [SNAppDelegate imageWithFilters:imageView.image filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"sharpen", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
 }
 
@@ -631,8 +635,6 @@
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
 }
-
-#pragma mark - ScrollView Delegates
 
 
 @end

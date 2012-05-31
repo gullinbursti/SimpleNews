@@ -28,7 +28,7 @@
 		_vo = vo;
 		
 		NSError *error;
-		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/lists/%d/%@/comments", _vo.list_id, _vo.title] withError:&error])
+		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/lists/%d/%@/comments", _vo.topicID, _vo.title] withError:&error])
 			NSLog(@"error in trackPageview");
 	}
 	
@@ -211,7 +211,7 @@
 	
 	EGOImageView *articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 280.0, 280.0 * _vo.imgRatio)];
 	articleImgView.delegate = self;
-	articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
+	articleImgView.imageURL = [NSURL URLWithString:_vo.imageURL];
 	[_scrollView addSubview:articleImgView];
 	offset += (280.0 * _vo.imgRatio);
 	
@@ -285,7 +285,7 @@
 	ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 	[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 	[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.topicID] forKey:@"listID"];
 	[readRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
 	[readRequest setDelegate:self];
 	[readRequest startAsynchronous];
@@ -298,7 +298,7 @@
 	ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
 	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 	[likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.list_id] forKey:@"listID"];
+	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.topicID] forKey:@"listID"];
 	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
 	[likeRequest startAsynchronous];
 	

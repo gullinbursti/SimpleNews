@@ -188,8 +188,6 @@
 		}
 		
 		function getProfileStats($user_id) {
-			$stat_arr = array();
-			
 			$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `user_id` = '. $user_id .';';
 			$liked_tot = mysql_num_rows(mysql_query($query));
 			

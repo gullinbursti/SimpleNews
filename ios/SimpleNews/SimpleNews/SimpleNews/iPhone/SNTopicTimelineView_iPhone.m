@@ -21,19 +21,29 @@
 #import "SNTweetVO.h"
 
 #import "SNTopicTimelineView_iPhone.h"
+#import "MBLResourceLoader.h"
+
+@interface SNTopicTimelineView_iPhone () <MBLResourceObserverProtocol>
+@property(nonatomic, strong) MBLAsyncResource *articleListResource;
+@property(nonatomic, strong) MBLAsyncResource *updateListResource;
+- (void)_refreshArticleList;
+- (void)_refreshPopularList;
+- (void)_updateArticleList;
+- (void)_updatePopularList;
+@end
 
 @implementation SNTopicTimelineView_iPhone
+
+@synthesize articleListResource = _articleListResource;
+@synthesize updateListResource = _updateListResource;
 
 -(id)init {
 	if ((self = [super initWithFrame:CGRectMake(276.0, 0.0, 320.0, 480.0)])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_fullscreenMedia:) name:@"FULLSCREEN_MEDIA" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSourcePage:) name:@"SHOW_SOURCE_PAGE" object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_twitterTimeline:) name:@"TWITTER_TIMELINE" object:nil];
-		
 		_articles = [NSMutableArray new];
-		_cardViews = [NSMutableArray new];
-		_timelineTweets = [NSMutableArray new];
+		_articleViews = [NSMutableArray new];
         
 		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
 		bgImgView.image = [UIImage imageNamed:@"background_timeline.png"];
@@ -46,12 +56,7 @@
 -(id)initWithPopularArticles {
 	if ((self = [self init])) {
 		_vo = [SNTopicVO topicWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"0", @"topic_id", @"Popular", @"title", nil, @"hashtags", nil]];
-		
-		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 10] forKey:@"action"];
-		[_articlesRequest setDelegate:self];
-		[_articlesRequest startAsynchronous];
-		
+				
 		NSError *error;
 		if (![[GANTracker sharedTracker] trackPageview:@"/topics/0" withError:&error])
 			NSLog(@"error in trackPageview");
@@ -79,9 +84,7 @@
 		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:listBtnView];
 		
-		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
-		_progressHUD.mode = MBProgressHUDModeIndeterminate;
-
+		[self _refreshPopularList];
 	}
 	
 	return (self);
@@ -90,12 +93,6 @@
 -(id)initWithTopicVO:(SNTopicVO *)vo {
 	if ((self = [self init])) {
 		_vo = vo;
-		
-		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 8] forKey:@"action"];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.topic_id] forKey:@"topicID"];
-		[_articlesRequest setDelegate:self];
-		[_articlesRequest startAsynchronous];
 		
 		NSError *error;
 		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/topics/%d", _vo.topic_id] withError:&error])
@@ -124,8 +121,7 @@
 		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:listBtnView];
 		
-		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
-		_progressHUD.mode = MBProgressHUDModeIndeterminate;
+		[self _refreshArticleList];
 	}
 	
 	return (self);
@@ -137,24 +133,15 @@
 	NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
 	[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 	
-	if (_vo.topic_id == 0) {
-		_updateRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-		[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", 11] forKey:@"action"];
-		//[_updateRequest setPostValue:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
-		[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", _lastID] forKey:@"articleID"];
-		[_updateRequest setDelegate:self];
-		[_updateRequest startAsynchronous];
+//	if (_vo.topic_id == 0) {
+//		[self _updatePopularList];
+//	
+//	} else {
+//		NSLog(@"\n\n\n\n%d\n\n\n\n", _lastID);
+//		[self _updateArticleList];
+//	}
 	
-	} else {
-		NSLog(@"\n\n\n\n%d\n\n\n\n", _lastID);
-		_updateRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-		[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
-		[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.topic_id] forKey:@"topicID"];
-		//[_updateRequest setPostValue:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
-		[_updateRequest setPostValue:[NSString stringWithFormat:@"%d", _lastID] forKey:@"articleID"];
-		[_updateRequest setDelegate:self];
-		[_updateRequest startAsynchronous];
-	}
+	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:1.33];
 } 
 
 - (void)doneLoadingTableViewData {
@@ -165,10 +152,123 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];
+	
+	if (_articleListResource != nil) {
+		[_articleListResource unsubscribe:self];
+		_articleListResource = nil;
+	}
+	
+	if (_updateListResource != nil) {
+		[_updateListResource unsubscribe:self];
+		_updateListResource = nil;
+	}
 }
+
+- (void)setArticleListResource:(MBLAsyncResource *)articleListResource {
+	if (_articleListResource != nil) {
+		[_articleListResource unsubscribe:self];
+		_articleListResource = nil;
+	}
+	
+	_articleListResource = articleListResource;
+	
+	if (_articleListResource != nil)
+		[_articleListResource subscribe:self];
+}
+
+
+- (void)_refreshPopularList {
+	if (_articleListResource == nil) {
+		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+		//_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
+		_progressHUD.labelText = [NSString stringWithFormat:@"Loading %@…", _vo.title];
+		_progressHUD.mode = MBProgressHUDModeIndeterminate;
+		_progressHUD.graceTime = 2.0;
+		_progressHUD.taskInProgress = YES;
+		
+		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
+		[formValues setObject:[NSString stringWithFormat:@"%d", 10] forKey:@"action"];
+		
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"];
+		self.articleListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0]]; // 1 minute for now
+	}
+}
+
+- (void)_refreshArticleList {
+	if (_articleListResource == nil) {
+		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+		_progressHUD.labelText = [NSString stringWithFormat:@"Loading %@…", _vo.title];
+		//_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
+		_progressHUD.mode = MBProgressHUDModeIndeterminate;
+		_progressHUD.graceTime = 2.0;
+		_progressHUD.taskInProgress = YES;
+		
+		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
+		[formValues setObject:[NSString stringWithFormat:@"%d", 8] forKey:@"action"];
+		[formValues setObject:[NSString stringWithFormat:@"%d", _vo.topic_id] forKey:@"topicID"];
+		
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"];
+		self.articleListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0]]; // 1 minute expiration for now
+	}
+}
+
+- (void)_updatePopularList {
+	if (_updateListResource == nil) {
+		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+		_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
+		_progressHUD.mode = MBProgressHUDModeIndeterminate;
+		_progressHUD.graceTime = 2.0;
+		_progressHUD.taskInProgress = YES;
+		
+		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
+		[formValues setObject:[NSString stringWithFormat:@"%d", 11] forKey:@"action"];
+		[formValues setObject:[NSString stringWithFormat:@"%d", _lastID] forKey:@"articleID"];
+		
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"];
+		self.updateListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate date]]; // 1 hour expiration for now
+	}
+}
+
+- (void)_updateArticleList {
+	if (_updateListResource == nil) {
+		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+		_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
+		_progressHUD.mode = MBProgressHUDModeIndeterminate;
+		_progressHUD.graceTime = 2.0;
+		_progressHUD.taskInProgress = YES;
+		
+		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
+		[formValues setObject:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
+		[formValues setObject:[NSString stringWithFormat:@"%d", _vo.topic_id] forKey:@"topicID"];
+		[formValues setObject:[NSString stringWithFormat:@"%d", _lastID] forKey:@"articleID"];
+		
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"];
+		self.updateListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate date]]; // 1 hour expiration for now
+	}
+}
+
+
+- (void)setUpdateListResource:(MBLAsyncResource *)updateListResource {
+	if (_updateListResource != nil) {
+		[_updateListResource unsubscribe:self];
+		_updateListResource = nil;
+	}
+	
+	_updateListResource = updateListResource;
+	
+	if (_updateListResource != nil)
+		[_updateListResource subscribe:self];
+}
+
 
 #pragma mark - Navigation
 -(void)_goBack {
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_scrollView.contentOffset = CGPointZero;
+	}];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];
+	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
 }
@@ -180,10 +280,6 @@
 	_articleVO = [dict objectForKey:@"VO"];
 	[dict setValue:[NSNumber numberWithFloat:[[dict objectForKey:@"offset"] floatValue] - _scrollView.contentOffset.y] forKey:@"offset"];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_FULLSCREEN_MEDIA" object:dict];
-}
-
--(void)_twitterTimeline:(NSNotification *)notification {
-	_timelineTweets = (NSMutableArray *)[notification object];
 }
 
 -(void)_showSourcePage:(NSNotification *)notification {
@@ -236,175 +332,195 @@
 	imageView.image = [SNAppDelegate imageWithFilters:imageView.image filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"sharpen", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
 }
 
-#pragma mark - ASI Delegates
--(void)requestFinished:(ASIHTTPRequest *)request { 
-	NSLog(@"SNTopicTimelineView_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+
+#pragma mark - Async Resource Observers
+- (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data {
+	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+
+	_progressHUD.taskInProgress = NO;
 	
-	if ([request isEqual:_articlesRequest]) {
-		@autoreleasepool {
-			NSError *error = nil;
-			NSArray *parsedArticles = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-			if (error != nil)
-				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
-			
-			else {
-				NSMutableArray *articleList = [NSMutableArray array];
-				_cardViews = [NSMutableArray new];
-				
-				int tot = 0;
-				int offset = 10;
-				for (NSDictionary *serverArticle in parsedArticles) {
-					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
-					
-					//NSLog(@"ARTICLE \"%@\"", vo.title);
-					
-					if (vo != nil)
-						[articleList addObject:vo];
-					
-					int height;
-					height = 150;
-					CGSize size;
-					
-					if (vo.type_id > 1) {
-						height += 270.0 * vo.imgRatio;
-						height += 20;
-					}
-					
-					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-					height += size.height;
-					
-					if (vo.type_id > 4) {
-						height += 202;
-						offset += 20;
-					}
-											
-					SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo];
-					[_cardViews addObject:articleItemView];
-					
-					offset += 20;
-					offset += height;
-					tot++;
-				}
-				
-				_articles = [articleList copy];
-				
-				for (SNArticleItemView_iPhone *itemView in _cardViews) {
-					[_scrollView addSubview:itemView];
-				}
-				
-				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
-			}
-		}
+	if (resource == _articleListResource) {
+		NSError *error = nil;
+		//NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+		//NSArray *unsortedLists = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+		NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];//[unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
 		
-		if ([_articles count] > 0) {
-			_lastID = ((SNArticleVO *)[_articles objectAtIndex:0]).article_id;
+		if (error != nil) {
+			NSLog(@"Failed to parse job list JSON: %@", [error localizedDescription]);
+			_progressHUD.graceTime = 0.0;
+			_progressHUD.mode = MBProgressHUDModeCustomView;
+			_progressHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+			_progressHUD.labelText = NSLocalizedString(@"Download Failed", @"Status message when downloading fails");
+			[_progressHUD show:NO];
+			[_progressHUD hide:YES afterDelay:1.5];
+			_progressHUD = nil;
+		
+		} else {
+			NSMutableArray *list = [NSMutableArray array];
+			
+			int tot = 0;
+			int offset = 10;
+			for (NSDictionary *serverList in parsedLists) {
+				SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverList];
+				//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
+				if (vo != nil)
+					[list addObject:vo];
+				
+				int height;
+				height = 150;
+				CGSize size;
+				
+				if (vo.type_id > 1) {
+					height += 270.0 * vo.imgRatio;
+					height += 20;
+				}
+				
+				size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+				height += size.height;
+				
+				if (vo.type_id > 4) {
+					height += 202;
+					offset += 20;
+				}
+				
+				SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo];
+				[_articleViews addObject:articleItemView];
+				
+				offset += 20;
+				offset += height;
+				tot++;
+			}
+			
+			[_progressHUD hide:YES];
+			_progressHUD = nil;
+			
+			_articles = list;
+			
+			for (SNArticleItemView_iPhone *itemView in _articleViews) {
+				[_scrollView addSubview:itemView];
+			}
+			
+			_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
+		}
+	
+	} else if (resource == _updateListResource) {
+		NSError *error = nil;
+		NSArray *parsedArticles = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];//[unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+		
+		if (error != nil) {
+			NSLog(@"Failed to parse job list JSON: %@", [error localizedDescription]);
+			_progressHUD.graceTime = 0.0;
+			_progressHUD.mode = MBProgressHUDModeCustomView;
+			_progressHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+			_progressHUD.labelText = NSLocalizedString(@"Download Failed", @"Status message when downloading fails");
+			[_progressHUD show:NO];
+			[_progressHUD hide:YES afterDelay:1.5];
+			_progressHUD = nil;
+			
+		} else {
+			int tot = 0;
+			int offset = 0;
+			for (NSDictionary *serverArticle in parsedArticles) {
+				SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
+				
+				int height;
+				height = 210;
+				CGSize size;
+				
+				if (vo.type_id > 1) {
+					height += 270.0 * vo.imgRatio;
+					height += 20;
+				}
+				
+				size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+				height += size.height;
+				
+				if (vo.type_id > 4) {
+					height += 202;
+					offset += 20;
+				}
+				
+				offset += 20;
+				offset += height;
+				tot++;
+			}
+			
+			for (SNArticleItemView_iPhone *articleItemView in _articleViews) {
+				[UIView animateWithDuration:0.5 animations:^(void) {
+					articleItemView.frame = CGRectMake(0.0, articleItemView.frame.origin.y + offset, articleItemView.frame.size.width, articleItemView.frame.size.height);
+				}];
+			}
+			
+			offset = 10;
+			
+			NSMutableArray *articleList = [NSMutableArray array];
+			for (NSDictionary *serverArticle in parsedArticles) {
+				SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
+				
+				if (vo != nil)
+					[articleList addObject:vo];
+				
+				int height;
+				height = 210;
+				CGSize size;
+				
+				if (vo.type_id > 1) {
+					height += 270.0 * vo.imgRatio;
+					height += 20;
+				}
+				
+				size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+				height += size.height;
+				
+				if (vo.type_id > 4) {
+					height += 202;
+					offset += 20;
+				}
+				
+				SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width, height) articleVO:vo];
+				[_articleViews addObject:articleItemView];
+				
+				offset += 20;
+				offset += height;
+				tot++;
+			}
+			
+			for (SNArticleItemView_iPhone *itemView in _articleViews) {
+				[_scrollView insertSubview:itemView atIndex:0];
+			}
+			
+			
+			NSMutableArray *updatedArticles = [NSMutableArray arrayWithArray:articleList];
+			[updatedArticles addObjectsFromArray:_articles];
+			
+			if ([updatedArticles count] > 0) {
+				_lastID = ((SNArticleVO *)[updatedArticles lastObject]).article_id;
+				_articles = [updatedArticles copy];
+			}
+			
+			_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, _scrollView.contentSize.height + offset);
+			
+			[_progressHUD hide:YES];
+			_progressHUD = nil;
+			
 			_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
+			[self doneLoadingTableViewData];
 		}
-		
-		[_progressHUD hide:YES];
-		
-	} else if ([request isEqual:_updateRequest]) {
-		@autoreleasepool {
-			NSError *error = nil;
-			NSArray *parsedArticles = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-			if (error != nil)
-				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
-			
-			else {
-				int tot = 0;
-				int offset = 0;
-				for (NSDictionary *serverArticle in parsedArticles) {
-					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
-					
-					int height;
-					height = 210;
-					CGSize size;
-					
-					if (vo.type_id > 1) {
-						height += 270.0 * vo.imgRatio;
-						height += 20;
-					}
-					
-					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-					height += size.height;
-					
-					if (vo.type_id > 4) {
-						height += 202;
-						offset += 20;
-					}
-					
-					offset += 20;
-					offset += height;
-					tot++;
-				}
-				
-				for (SNArticleItemView_iPhone *articleItemView in _cardViews) {
-					[UIView animateWithDuration:0.5 animations:^(void) {
-						articleItemView.frame = CGRectMake(0.0, articleItemView.frame.origin.y + offset, articleItemView.frame.size.width, articleItemView.frame.size.height);
-					}];
-				}
-			
-				offset = 10;
-				
-				NSMutableArray *articleList = [NSMutableArray array];
-				for (NSDictionary *serverArticle in parsedArticles) {
-					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
-					
-					if (vo != nil)
-						[articleList addObject:vo];
-					
-					int height;
-					height = 210;
-					CGSize size;
-					
-					if (vo.type_id > 1) {
-						height += 270.0 * vo.imgRatio;
-						height += 20;
-					}
-					
-					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-					height += size.height;
-					
-					if (vo.type_id > 4) {
-						height += 202;
-						offset += 20;
-					}
-					
-					SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width, height) articleVO:vo];
-					[_cardViews addObject:articleItemView];
-					
-					offset += 20;
-					offset += height;
-					tot++;
-				}
-				
-				for (SNArticleItemView_iPhone *itemView in _cardViews) {
-					[_scrollView insertSubview:itemView atIndex:0];
-				}
-				
-				
-				NSMutableArray *updatedArticles = [NSMutableArray arrayWithArray:articleList];
-				[updatedArticles addObjectsFromArray:_articles];
-				
-				if ([updatedArticles count] > 0) {
-					_lastID = ((SNArticleVO *)[updatedArticles lastObject]).article_id;
-					_articles = [updatedArticles copy];
-				}
-				
-				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, _scrollView.contentSize.height + offset);
-			}
-		}
-		
-		_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
-		[self doneLoadingTableViewData];
 	}
-	
-	//[[NSNotificationCenter defaultCenter] postNotificationName:@"REFRESH_SUBSCRIBED_LIST" object:nil];
 }
 
 
--(void)requestFailed:(ASIHTTPRequest *)request {
-	NSLog(@"requestFailed:\n[%@]", request.error);
+- (void)resource:(MBLAsyncResource *)resource didFailWithError:(NSError *)error
+{
+	if (_progressHUD != nil) {
+		_progressHUD.graceTime = 0.0;
+		_progressHUD.mode = MBProgressHUDModeCustomView;
+		_progressHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+		_progressHUD.labelText = NSLocalizedString(@"Error", @"Error");
+		[_progressHUD show:NO];
+		[_progressHUD hide:YES afterDelay:1.5];
+		_progressHUD = nil;
+	}	
 }
 
 @end

@@ -15,7 +15,13 @@
 #import "ImageFilter.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 
+@interface SNArticleItemView_iPhone () <MBLResourceObserverProtocol>
+@property(nonatomic, strong) MBLAsyncResource *imageResource;
+@end
+
 @implementation SNArticleItemView_iPhone
+
+@synthesize imageResource = _imageResource;
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo {
 	if ((self = [super initWithFrame:frame])) {
@@ -131,11 +137,13 @@
 		}
 		
 		if (_vo.type_id == 2 || _vo.type_id == 3) {
-			_articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 260.0, 260.0 * _vo.imgRatio)];
-			[_articleImgView setDelegate:self];
+			//_articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 260.0, 260.0 * _vo.imgRatio)];
+			_articleImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, offset, 260.0, 260.0 * _vo.imgRatio)];
 			[_articleImgView setBackgroundColor:[UIColor lightGrayColor]];
-			_articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
 			_articleImgView.userInteractionEnabled = YES;
+			//[_articleImgView setDelegate:self];			
+			//_articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
+			
 			[self addSubview:_articleImgView];
 			
 			UITapGestureRecognizer *dblTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photoZoomIn:)];
@@ -144,6 +152,10 @@
 			
 			offset += (260.0 * _vo.imgRatio);
 			offset += 20;
+			
+			if (_imageResource == nil) {			
+				self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:_vo.imageURL forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
+			}
 		}
 		
 		if (_vo.type_id > 3) {
@@ -177,20 +189,22 @@
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_likeButton.frame = CGRectMake(70.0, 0.0, 64.0, 44.0);
 		[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
+		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
 		_likeButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 6.0, 0.0, -6.0);
 		[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
 		[btnBGView addSubview:_likeButton];
 		
-		if (_vo.hasLiked) {
-			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateNormal];
-			[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
-			
-		} else {
-			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
-			[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-		}
+//		if (_vo.hasLiked) {
+//			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateNormal];
+//			[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+//			
+//		} else {
+//			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
+//			[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+//		}
 		
 		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		sourceButton.frame = CGRectMake(248.0, offset, 44.0, 44.0);
@@ -220,8 +234,6 @@
 //		[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
 //		[commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
 //		[self addSubview:commentButton];
-		
-		
 	}
 	
 	return (self);
@@ -231,20 +243,31 @@
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"VIDEO_ENDED" object:nil];
 }
 
+-(void)setImageResource:(MBLAsyncResource *)imageResource {
+	if (_imageResource != nil) {
+		[_imageResource unsubscribe:self];
+		_imageResource = nil;
+	}
+	
+	_imageResource = imageResource;
+	
+	if (_imageResource != nil)
+		[_imageResource subscribe:self];
+}
+
 
 #pragma mark - Navigation
 -(void)_goDetails {
 }
 
 -(void)_goVideo {
-	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 								 @"video", @"type", 
 								 _vo, @"VO", 
 								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
-								 [NSValue valueWithCGRect:_videoImgView.frame], @"frame", nil];
+								 [NSValue valueWithCGRect:CGRectMake(_videoImgView.frame.origin.x + self.frame.origin.x, _videoImgView.frame.origin.y, _videoImgView.frame.size.width, _videoImgView.frame.size.height)], @"frame", nil];
 	
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_FULLSCREEN_MEDIA" object:dict];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
 }
 
 -(void)_photoZoomIn:(UIGestureRecognizer *)gestureRecognizer {
@@ -253,7 +276,6 @@
 								 _vo, @"VO", 
 								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
 								 [NSValue valueWithCGRect:CGRectMake(_articleImgView.frame.origin.x + self.frame.origin.x, _articleImgView.frame.origin.y, _articleImgView.frame.size.width, _articleImgView.frame.size.height)], @"frame", nil];
-	
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
 }
@@ -270,11 +292,11 @@
 		[alert show];
 	
 	} else {		
-		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
-		
-		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Selected.png"] forState:UIControlStateNormal];
-		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
+//		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+//		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+//		
+//		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
+//		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
 		[_likeButton setTitle:[NSString stringWithFormat:@"%d", ++_vo.totalLikes] forState:UIControlStateNormal];
 		
 		ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
@@ -326,6 +348,17 @@
 -(void)_videoEnded:(NSNotification *)notification {
 	[self addSubview:_videoButton];
 	[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
+}
+
+
+#pragma mark - Async Resource Observers
+- (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data {
+	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+	_articleImgView.image = [UIImage imageWithData:data];
+	//_articleImgView.image = [SNAppDelegate imageWithFilters:[UIImage imageWithData:data] filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"saturation", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
+}
+
+- (void)resource:(MBLAsyncResource *)resource didFailWithError:(NSError *)error {
 }
 
 

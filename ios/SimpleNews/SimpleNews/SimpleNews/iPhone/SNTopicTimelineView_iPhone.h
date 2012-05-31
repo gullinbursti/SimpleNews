@@ -9,18 +9,16 @@
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
 
-#import "ASIFormDataRequest.h"
 #import "EGORefreshTableHeaderView.h"
 #import "EGOImageView.h"
 #import "MBProgressHUD.h"
+#import "MBLAsyncResource.h"
 
 #import "SNTopicVO.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 
-@interface SNTopicTimelineView_iPhone : UIView <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, ASIHTTPRequestDelegate, EGORefreshTableHeaderDelegate, EGOImageViewDelegate> {
+@interface SNTopicTimelineView_iPhone : UIView <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, EGORefreshTableHeaderDelegate, EGOImageViewDelegate> {
 	NSMutableArray *_articles;
-	ASIFormDataRequest *_articlesRequest;
-	ASIFormDataRequest *_updateRequest;
 	EGORefreshTableHeaderView *_refreshHeaderView;
 	MBProgressHUD *_progressHUD;
 	
@@ -29,8 +27,7 @@
 	UIScrollView *_scrollView;
 	UIButton *_fullscreenShareButton;
 	
-	NSMutableArray *_cardViews;
-	NSMutableArray *_timelineTweets;
+	NSMutableArray *_articleViews;
 	
 	SNArticleVO *_articleVO;
 	SNTopicVO *_vo;
