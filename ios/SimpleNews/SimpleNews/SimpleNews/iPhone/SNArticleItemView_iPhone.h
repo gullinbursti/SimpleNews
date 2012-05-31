@@ -10,14 +10,14 @@
 
 #import "SNArticleVO.h"
 #import "EGOImageView.h"
-
+#import "MBLResourceLoader.h"
 #import "ASIFormDataRequest.h"
 
 @interface SNArticleItemView_iPhone : UIView <ASIHTTPRequestDelegate, EGOImageViewDelegate> {
 	UIButton *_likeButton;
 	UIButton *_videoButton;
 	
-	EGOImageView *_articleImgView;
+	UIImageView *_articleImgView;
 	EGOImageView *_videoImgView;
 	
 	SNArticleVO *_vo;

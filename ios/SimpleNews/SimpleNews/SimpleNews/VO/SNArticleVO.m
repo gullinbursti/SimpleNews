@@ -12,7 +12,7 @@
 @implementation SNArticleVO
 
 @synthesize dictionary;
-@synthesize article_id, list_id, type_id, source_id, topicTitle, title, article_url, affiliateURL, hasLiked, twitterName, twitterInfo, twitterHandle, tweet_id, tweetMessage, content, bgImage_url, articleSource, video_url, avatarImage_url, imgRatio, totalLikes, added, comments;
+@synthesize article_id, topicID, type_id, topicTitle, title, article_url, affiliateURL, hasLiked, twitterName, twitterHandle, tweetID, tweetMessage, content, imageURL, articleSource, video_url, avatarImage_url, imgRatio, totalLikes, added, comments;
 
 +(SNArticleVO *)articleWithDictionary:(NSDictionary *)dictionary {
 	
@@ -20,20 +20,18 @@
 	vo.dictionary = dictionary;
 	
 	vo.article_id = [[dictionary objectForKey:@"article_id"] intValue];
-	vo.list_id = [[dictionary objectForKey:@"list_id"] intValue];
+	vo.topicID = [[dictionary objectForKey:@"list_id"] intValue];
 	vo.topicTitle = [dictionary objectForKey:@"topic_name"];
 	vo.type_id = [[dictionary objectForKey:@"type_id"] intValue];
-	vo.source_id = [[dictionary objectForKey:@"source_id"] intValue];
 	vo.title = [dictionary objectForKey:@"title"];
-	vo.tweet_id = [dictionary objectForKey:@"tweet_id"];
+	vo.tweetID = [dictionary objectForKey:@"tweet_id"];
 	vo.article_url = [dictionary objectForKey:@"article_url"];
 	vo.affiliateURL = [dictionary objectForKey:@"affiliate_url"];
 	vo.twitterName = [dictionary objectForKey:@"twitter_name"];
-	vo.twitterInfo = [dictionary objectForKey:@"twitter_info"];
 	vo.twitterHandle = [dictionary objectForKey:@"twitter_handle"];
 	vo.tweetMessage = [dictionary objectForKey:@"tweet_msg"]; 
 	vo.content = [dictionary objectForKey:@"content"];
-	vo.bgImage_url = [dictionary objectForKey:@"bg_url"];
+	vo.imageURL = [dictionary objectForKey:@"bg_url"];
 	vo.articleSource = [dictionary objectForKey:@"source"];
 	vo.video_url = [dictionary objectForKey:@"video_url"];
 	vo.avatarImage_url = [dictionary objectForKey:@"avatar_url"];
@@ -61,13 +59,11 @@
 -(void)dealloc {
 	self.dictionary = nil;
 	self.title = nil;
-	self.tweet_id = nil;
 	self.twitterName = nil;
 	self.twitterHandle = nil;
-	self.twitterInfo = nil;
 	self.tweetMessage = nil;
 	self.content = nil;
-	self.bgImage_url = nil;
+	self.imageURL = nil;
 	self.affiliateURL = nil;
 	self.articleSource = nil;
 	self.avatarImage_url = nil;

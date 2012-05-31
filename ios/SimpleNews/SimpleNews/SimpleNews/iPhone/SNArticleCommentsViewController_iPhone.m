@@ -33,7 +33,7 @@
 		}
 		
 		NSError *error;
-		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/lists/%d/%@/comments", _vo.list_id, _vo.title] withError:&error])
+		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/lists/%d/%@/comments", _vo.topicID, _vo.title] withError:&error])
 			NSLog(@"error in trackPageview");
 	}
 	

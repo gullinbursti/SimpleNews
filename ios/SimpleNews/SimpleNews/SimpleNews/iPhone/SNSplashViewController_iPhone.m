@@ -12,16 +12,27 @@
 #import "SNAppDelegate.h"
 #import "SNTopicVO.h"
 
-@interface SNSplashViewController_iPhone()
+#import "MBLResourceLoader.h"
+
+@interface SNSplashViewController_iPhone() <MBLResourceObserverProtocol>
+@property(nonatomic, strong) MBLAsyncResource *topicsListResource;
+@property(nonatomic, strong) MBLAsyncResource *popularArticlesResource;
+@property(nonatomic, strong) MBLAsyncResource *popularImagesResource;
 @end
 
 @implementation SNSplashViewController_iPhone
+
+@synthesize topicsListResource = _topicsListResource;
+@synthesize popularArticlesResource = _popularArticlesResource;
+@synthesize popularImagesResource = _popularImagesResource;
 
 -(id)init {
 	if ((self = [super init])) {
 		_frameIndex = 1;
 		_topicIndex = 0;
-		_topics = [NSMutableArray new];
+		_imgIndex = 0;
+		_topicNames = [NSMutableArray new];
+		_imageURLs = [NSMutableArray new];
 	}
 	
 	return (self);
@@ -32,6 +43,59 @@
 }
 		  
 -(void)dealloc {
+	if (_topicsListResource != nil) {
+		[_topicsListResource unsubscribe:self];
+		_topicsListResource = nil;
+	}
+	
+	if (_popularArticlesResource != nil) {
+		[_popularArticlesResource unsubscribe:self];
+		_popularArticlesResource = nil;
+	}
+	
+	if (_popularImagesResource != nil) {
+		[_popularImagesResource unsubscribe:self];
+		_popularImagesResource = nil;
+	}
+	
+	_topicNames = nil;
+	_imageURLs = nil;
+}
+
+-(void)setTopicsListResource:(MBLAsyncResource *)topicsListResource {
+	if (_topicsListResource != nil) {
+		[_topicsListResource unsubscribe:self];
+		_topicsListResource = nil;
+	}
+	
+	_topicsListResource = topicsListResource;
+	
+	if (_topicsListResource != nil)
+		[_topicsListResource subscribe:self];
+}
+
+-(void)setPopularArticlesResource:(MBLAsyncResource *)popularArticlesResource {
+	if (_popularArticlesResource != nil) {
+		[_popularArticlesResource unsubscribe:self];
+		_popularArticlesResource = nil;
+	}
+	
+	_popularArticlesResource = popularArticlesResource;
+	
+	if (_popularArticlesResource != nil)
+		[_popularArticlesResource subscribe:self];
+}
+
+-(void)setPopularImagesResource:(MBLAsyncResource *)popularImagesResource {
+	if (_popularImagesResource != nil) {
+		[_popularImagesResource unsubscribe:self];
+		_popularImagesResource = nil;
+	}
+	
+	_popularImagesResource = popularImagesResource;
+	
+	if (_popularImagesResource != nil)
+		[_popularImagesResource subscribe:self];
 }
 
 #pragma mark - View lifecycle
@@ -59,10 +123,18 @@
 		_logoImgView.alpha = 1.0;
 	}];
 	
-	ASIFormDataRequest *topicRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Topics.php"]]];
-	[topicRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-	[topicRequest setDelegate:self];
-	[topicRequest startAsynchronous];
+//	ASIFormDataRequest *topicRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Topics.php"]]];
+//	[topicRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+//	[topicRequest setDelegate:self];
+//	[topicRequest startAsynchronous];
+	
+	if (_topicsListResource == nil) {
+		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
+		[formValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+	
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Topics.php"];
+		self.topicsListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 60.0]]; // 1 hour for now
+	}
 }
 
 -(void)viewDidLoad {
@@ -77,7 +149,7 @@
 -(void)_nextFrame {
 	//NSLog(@"TIMER TICK");
 	
-	_logoImgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"logoLoader_00%d.png", _frameIndex]];
+	_logoImgView.image = [UIImage imageNamed:[NSString stringWithFormat:@"logoLoader_00%d.png", (_frameIndex % 6) + 1]];
 	
 	_frameIndex++;
 	if (_frameIndex == 7) {
@@ -106,51 +178,88 @@
 }
 
 -(void)_nextTopic {
-	NSLog(@"TIMER TICK");
-	
 	_topicIndex++;
 	
-	if (_topicIndex == [_topics count] - 1) {
+	if (_topicIndex == [_topicNames count] - 1) {
 		[_topicTimer invalidate];
 		_topicTimer = nil;
 		
 		[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
 	}
 	
-	_topicLabel.text = [NSString stringWithFormat:@"Assembling %@", [_topics objectAtIndex:_topicIndex]];
+	_topicLabel.text = [NSString stringWithFormat:@"Assembling %@", [_topicNames objectAtIndex:_topicIndex]];
 }
 
-
-#pragma mark - ASI Delegates
--(void)requestFinished:(ASIHTTPRequest *)request { 
-	NSLog(@"SNSplashView_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+#pragma mark - Async Resource Observers
+- (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data {
+	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
 	
-	@autoreleasepool {
+	if (resource == _topicsListResource) {
 		NSError *error = nil;
-		NSArray *parsedTopics = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-		if (error != nil)
-			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+		NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];//[unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
 		
-		else {
-			NSMutableArray *topicList = [NSMutableArray array];
-			_topics = [NSMutableArray new];
-			
-			for (NSDictionary *serverTopic in parsedTopics) {
-				SNTopicVO *vo = [SNTopicVO topicWithDictionary:serverTopic];
-				
-				//NSLog(@"ARTICLE \"%@\"", vo.title);
-				
+		if (error != nil) {
+			NSLog(@"Failed to parse job list JSON: %@", [error localizedDescription]);
+		
+		} else {
+			NSMutableArray *list = [NSMutableArray array];
+			for (NSDictionary *serverList in parsedLists) {
+				SNTopicVO *vo = [SNTopicVO topicWithDictionary:serverList];
 				if (vo != nil)
-					[topicList addObject:vo.title];
-				
-				
-				NSLog(@"TITLE:[%@]", vo.title);
+					[list addObject:vo.title];
 			}
 			
-			_topics = [topicList copy];
+			_topicNames = list;
 			_frameTimer = [NSTimer scheduledTimerWithTimeInterval:0.15 target:self selector:@selector(_nextFrame) userInfo:nil repeats:YES];
+			
+			if (_popularArticlesResource == nil) {
+				NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
+				[formValues setObject:[NSString stringWithFormat:@"%d", 10] forKey:@"action"];
+				
+				NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"];
+				self.popularArticlesResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 5.0]]; // 5 minutes for now
+			}
+		}
+	
+	} else if (resource == _popularArticlesResource) {
+		NSError *error = nil;
+		NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];//[unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+		
+		if (error != nil) {
+			NSLog(@"Failed to parse job list JSON: %@", [error localizedDescription]);			
+		
+		} else {
+			NSMutableArray *list = [NSMutableArray array];
+			for (NSDictionary *serverList in parsedLists) {
+				SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverList];
+				[list addObject:vo.imageURL];
+			}
+			
+			_imageURLs = list;
+			
+			_imgIndex = 0;
+			if (_popularImagesResource == nil) {
+				self.popularImagesResource = [[MBLResourceLoader sharedInstance] downloadURL:[_imageURLs objectAtIndex:_imgIndex] forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 60.0 * 24.0]]; // 1 day from now
+			}
+		}
+	
+	} else if (resource == _popularImagesResource) {
+		NSError *error = nil;
+		
+		if (error != nil) {
+			NSLog(@"Failed to parse job list JSON: %@", [error localizedDescription]);			
+		
+		} else {
+			_imgIndex++;
+			
+			if (_imgIndex < [_imageURLs count]) {
+				self.popularImagesResource = [[MBLResourceLoader sharedInstance] downloadURL:[_imageURLs objectAtIndex:_imgIndex] forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 60.0]];
+			}
 		}
 	}
+}
+
+- (void)resource:(MBLAsyncResource *)resource didFailWithError:(NSError *)error {
 }
 
 

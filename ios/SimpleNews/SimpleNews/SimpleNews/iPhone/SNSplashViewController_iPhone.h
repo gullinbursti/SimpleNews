@@ -7,16 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ASIFormDataRequest.h"
+#import "MBLAsyncResource.h"
 
-@interface SNSplashViewController_iPhone : UIViewController <ASIHTTPRequestDelegate> {
+@interface SNSplashViewController_iPhone : UIViewController {
 	NSTimer *_frameTimer;
 	NSTimer *_topicTimer;
 	
 	int _frameIndex;
 	int _topicIndex;
+	int _imgIndex;
+	
 	UIImageView *_logoImgView;
-	NSMutableArray *_topics;
+	NSMutableArray *_topicNames;
+	NSMutableArray *_imageURLs;
 	
 	UILabel *_topicLabel;
 }

@@ -42,7 +42,7 @@
 	UIButton *_cardListsButton;
 	
 	UIView *_blackMatteView;
-	EGOImageView *_fullscreenImgView;
+	UIImageView *_fullscreenImgView;
 	CGRect _fullscreenFrame;
 	
 	BOOL _reloading;
