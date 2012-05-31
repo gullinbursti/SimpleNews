@@ -263,10 +263,6 @@
 
 #pragma mark - Navigation
 -(void)_goBack {
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_scrollView.contentOffset = CGPointZero;
-	}];
-	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
@@ -320,16 +316,6 @@
 // called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
 	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-}
-
-
-
-
-
-
-#pragma mark - Image View delegates
--(void)imageViewLoadedImage:(EGOImageView *)imageView {
-	imageView.image = [SNAppDelegate imageWithFilters:imageView.image filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"sharpen", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
 }
 
 

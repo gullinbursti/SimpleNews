@@ -298,6 +298,9 @@
 		B3288E381575DE1100FCD7E3 /* genericButton_Active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3288E341575DE1100FCD7E3 /* genericButton_Active@2x.png */; };
 		B3288E391575DE1100FCD7E3 /* genericButton_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = B3288E351575DE1100FCD7E3 /* genericButton_nonActive.png */; };
 		B3288E3A1575DE1100FCD7E3 /* genericButton_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3288E361575DE1100FCD7E3 /* genericButton_nonActive@2x.png */; };
+		B3F3403415774C63007537A0 /* avatarCorners.png in Resources */ = {isa = PBXBuildFile; fileRef = B3F3403215774C63007537A0 /* avatarCorners.png */; };
+		B3F3403515774C63007537A0 /* avatarCorners@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3F3403315774C63007537A0 /* avatarCorners@2x.png */; };
+		B3F3403915774CCC007537A0 /* SNTwitterAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = B3F3403815774CCC007537A0 /* SNTwitterAvatarView.m */; };
 		E423F8F41559B9900094042E /* MBLAsyncResource.m in Sources */ = {isa = PBXBuildFile; fileRef = E423F8EF1559B9900094042E /* MBLAsyncResource.m */; };
 		E423F8F51559B9900094042E /* MBLResourceCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E423F8F11559B9900094042E /* MBLResourceCache.m */; };
 		E423F8F61559B9900094042E /* MBLResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = E423F8F31559B9900094042E /* MBLResourceLoader.m */; };
@@ -780,6 +783,10 @@
 		B3288E341575DE1100FCD7E3 /* genericButton_Active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "genericButton_Active@2x.png"; sourceTree = "<group>"; };
 		B3288E351575DE1100FCD7E3 /* genericButton_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = genericButton_nonActive.png; sourceTree = "<group>"; };
 		B3288E361575DE1100FCD7E3 /* genericButton_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "genericButton_nonActive@2x.png"; sourceTree = "<group>"; };
+		B3F3403215774C63007537A0 /* avatarCorners.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = avatarCorners.png; sourceTree = "<group>"; };
+		B3F3403315774C63007537A0 /* avatarCorners@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatarCorners@2x.png"; sourceTree = "<group>"; };
+		B3F3403715774CCC007537A0 /* SNTwitterAvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNTwitterAvatarView.h; sourceTree = "<group>"; };
+		B3F3403815774CCC007537A0 /* SNTwitterAvatarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNTwitterAvatarView.m; sourceTree = "<group>"; };
 		E423F8EE1559B9900094042E /* MBLAsyncResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBLAsyncResource.h; sourceTree = "<group>"; };
 		E423F8EF1559B9900094042E /* MBLAsyncResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBLAsyncResource.m; sourceTree = "<group>"; };
 		E423F8F01559B9900094042E /* MBLResourceCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBLResourceCache.h; sourceTree = "<group>"; };
@@ -1172,6 +1179,8 @@
 		4C9216F91537E2EE00AAD992 /* Global */ = {
 			isa = PBXGroup;
 			children = (
+				B3F3403215774C63007537A0 /* avatarCorners.png */,
+				B3F3403315774C63007537A0 /* avatarCorners@2x.png */,
 				4CB61CFF155F580A00FF151E /* background_plain.png */,
 				4CB61D00155F580A00FF151E /* background_plain@2x.png */,
 				4C119B6D1574C64300E663CD /* chevron.png */,
@@ -1751,6 +1760,8 @@
 				4CFCE712155CADDF003175C5 /* SNNavLikeBtnView.m */,
 				4CE58F9D1553658A00668B1E /* SNNavTitleView.h */,
 				4CE58F9E1553658A00668B1E /* SNNavTitleView.m */,
+				B3F3403715774CCC007537A0 /* SNTwitterAvatarView.h */,
+				B3F3403815774CCC007537A0 /* SNTwitterAvatarView.m */,
 				E423F8EE1559B9900094042E /* MBLAsyncResource.h */,
 				E423F8EF1559B9900094042E /* MBLAsyncResource.m */,
 				E423F8F01559B9900094042E /* MBLResourceCache.h */,
@@ -2141,6 +2152,8 @@
 				B3288E381575DE1100FCD7E3 /* genericButton_Active@2x.png in Resources */,
 				B3288E391575DE1100FCD7E3 /* genericButton_nonActive.png in Resources */,
 				B3288E3A1575DE1100FCD7E3 /* genericButton_nonActive@2x.png in Resources */,
+				B3F3403415774C63007537A0 /* avatarCorners.png in Resources */,
+				B3F3403515774C63007537A0 /* avatarCorners@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2258,6 +2271,7 @@
 				4C613132156F375600D99C9F /* SNTwitterFriendArticlesViewController_iPhone.m in Sources */,
 				4C445609157058390010CB8D /* SNFriendProfileViewController_iPhone.m in Sources */,
 				4C4456141570B8130010CB8D /* SNProfileViewController_iPhone.m in Sources */,
+				B3F3403915774CCC007537A0 /* SNTwitterAvatarView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

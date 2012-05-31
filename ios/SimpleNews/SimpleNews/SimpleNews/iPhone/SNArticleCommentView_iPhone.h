@@ -9,13 +9,11 @@
 #import <UIKit/UIKit.h>
 
 #import "SNCommentVO.h"
-#import "EGOImageView.h"
 
 @interface SNArticleCommentView_iPhone : UIView {
 	SNCommentVO *_vo;
 	int _listID;
 	
-	EGOImageView *_avatarImgView;
 	UILabel *_twitterNameLabel;
 	UILabel *_timeLabel;
 	UILabel *_twitterBlurbLabel;

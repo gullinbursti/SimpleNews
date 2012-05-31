@@ -20,7 +20,8 @@
 	NSString *_headerTitle;
 }
 
--(id)initAsArticlesRead;
 -(id)initAsArticlesLiked;
+-(id)initAsArticlesCommented;
+-(id)initAsArticlesShared;
 
 @end

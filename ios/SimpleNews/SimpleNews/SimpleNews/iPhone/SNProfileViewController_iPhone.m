@@ -12,7 +12,7 @@
 #import "SNNavBackBtnView.h"
 #import "SNProfileViewCell_iPhone.h"
 #import "SNAppDelegate.h"
-#import "EGOImageView.h"
+#import "SNTwitterAvatarView.h"
 #import "SNWebPageViewController_iPhone.h"
 #import "SNProfileArticlesViewController_iPhone.h"
 #import "SNFindFriendsViewController_iPhone.h"
@@ -36,14 +36,9 @@
 	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
-	EGOImageView *avatarImg = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, 66.0, 25.0, 25.0)];
-	avatarImg.imageURL = [NSURL URLWithString:[SNAppDelegate twitterAvatar]];
-	[self.view addSubview:avatarImg];
-	
-	UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	avatarButton.frame = avatarImg.frame;
-	[avatarButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:avatarButton];
+	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(20.0, 66.0) imageURL:[SNAppDelegate twitterAvatar]];
+	[[avatarImgView btn] addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:avatarImgView];
 	
 	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 71.0, 200.0, 16.0)];
 	handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
@@ -73,7 +68,6 @@
 	_likesLabel.textAlignment = UITextAlignmentCenter;
 	_likesLabel.textColor = [UIColor blackColor];
 	_likesLabel.backgroundColor = [UIColor clearColor];
-	
 	[statsBgView addSubview:_likesLabel];
 	
 	UILabel *likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 40.0, 96.0, 16.0)];
@@ -164,7 +158,7 @@
 	
 	ASIFormDataRequest *statsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
 	[statsRequest setPostValue:[NSString stringWithFormat:@"%d", 5] forKey:@"action"];
-	[statsRequest setPostValue:[NSString stringWithFormat:@"%d", [[SNAppDelegate profileForUser] objectForKey:@"id"]] forKey:@"userID"];
+	[statsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 	[statsRequest setDelegate:self];
 	[statsRequest startAsynchronous];
 }
@@ -197,11 +191,11 @@
 }
 
 -(void)_goCommentedArticles {
-	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initAsArticlesLiked] animated:YES];
+	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initAsArticlesCommented] animated:YES];
 }
 
 -(void)_goSharedArticles {
-	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initAsArticlesLiked] animated:YES];
+	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initAsArticlesShared] animated:YES];
 }
 
 

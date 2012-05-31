@@ -10,14 +10,13 @@
 #import <MessageUI/MessageUI.h>
 
 #import "EGORefreshTableHeaderView.h"
-#import "EGOImageView.h"
 #import "MBProgressHUD.h"
 #import "MBLAsyncResource.h"
 
 #import "SNTopicVO.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 
-@interface SNTopicTimelineView_iPhone : UIView <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, EGORefreshTableHeaderDelegate, EGOImageViewDelegate> {
+@interface SNTopicTimelineView_iPhone : UIView <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, EGORefreshTableHeaderDelegate> {
 	NSMutableArray *_articles;
 	EGORefreshTableHeaderView *_refreshHeaderView;
 	MBProgressHUD *_progressHUD;

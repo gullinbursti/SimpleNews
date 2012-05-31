@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "SNTopicVO.h"
-#import "EGOImageView.h"
 
 @interface SNRootTopicViewCell_iPhone : UITableViewCell {
 	UILabel *_nameLabel;

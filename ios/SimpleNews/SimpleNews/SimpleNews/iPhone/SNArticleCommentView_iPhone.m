@@ -8,7 +8,7 @@
 
 #import "SNArticleCommentView_iPhone.h"
 #import "SNAppDelegate.h"
-#import "EGOImageView.h"
+#import "SNTwitterAvatarView.h"
 
 @implementation SNArticleCommentView_iPhone
 
@@ -21,8 +21,7 @@
 		bgImgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:10.0];
 		[self addSubview:bgImgView];
 		
-		EGOImageView *avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, 19.0, 25.0, 25.0)];
-		avatarImgView.imageURL = [NSURL URLWithString:_vo.avatarURL];
+		SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(20.0, 19.0) imageURL:_vo.avatarURL];
 		[self addSubview:avatarImgView];
 		
 		UILabel *twitterNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 17.0, 256.0, 14.0)];

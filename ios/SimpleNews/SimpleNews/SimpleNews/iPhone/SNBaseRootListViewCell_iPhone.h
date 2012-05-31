@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "SNListVO.h"
-#import "EGOImageView.h"
 
 
 @interface SNBaseRootListViewCell_iPhone : UITableViewCell {

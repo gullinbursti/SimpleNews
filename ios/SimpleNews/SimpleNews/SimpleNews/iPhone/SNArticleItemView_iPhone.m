@@ -13,6 +13,7 @@
 #import "SNUnderlinedLabel.h"
 #import "SNWebPageViewController_iPhone.h"
 #import "ImageFilter.h"
+#import "SNTwitterAvatarView.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 
 @interface SNArticleItemView_iPhone () <MBLResourceObserverProtocol>
@@ -41,15 +42,10 @@
 		bgImgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:50.0];
 		[self addSubview:bgImgView];
 		
-		EGOImageView *thumbImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 25.0, 25.0)];
-		thumbImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
-		[self addSubview:thumbImgView];
-		
-		UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		avatarButton.frame = thumbImgView.frame;
-		[avatarButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:avatarButton];
-		
+		SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(20.0, 19.0) imageURL:_vo.avatarImage_url];
+		[[avatarImgView btn] addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:avatarImgView];
+				
 		offset += 5;
 		
 		size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
