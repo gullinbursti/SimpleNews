@@ -27,13 +27,8 @@
 		
 		_commentViews = [NSMutableArray new];
 		
-		if (![SNAppDelegate twitterHandle]) {
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-			[alert show];
-		}
-		
 		NSError *error;
-		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/lists/%d/%@/comments", _vo.topicID, _vo.title] withError:&error])
+		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/%@/%@/comments", _vo.topicTitle, _vo.title] withError:&error])
 			NSLog(@"error in trackPageview");
 	}
 	

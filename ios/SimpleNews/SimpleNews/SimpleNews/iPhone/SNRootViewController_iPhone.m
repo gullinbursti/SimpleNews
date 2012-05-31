@@ -172,6 +172,7 @@
 	if (![SNAppDelegate twitterHandle]) {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
+	
 	} else {
 		[UIView animateWithDuration:0.33
 						 animations:^(void) {
@@ -496,23 +497,29 @@
 #pragma mark - ActionSheet Delegates
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if (buttonIndex == 0) {
-		TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
-		
-		[twitter addURL:[NSURL URLWithString:_articleVO.article_url]];
-		[twitter setInitialText:[NSString stringWithFormat:@"via Assembly - %@", _articleVO.title]];
-		[self presentModalViewController:twitter animated:YES];
-		
-		twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
-			[self dismissModalViewControllerAnimated:YES];
+		if (![SNAppDelegate twitterHandle]) {
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+			[alert show];
 			
-			ASIFormDataRequest *shareRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-			[shareRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-			[shareRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-			[shareRequest setPostValue:[NSString stringWithFormat:@"%d", _articleVO.article_id] forKey:@"articleID"];
-			[shareRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"typeID"];
-			[shareRequest setDelegate:self];
-			[shareRequest startAsynchronous];
-		};
+		} else {
+			TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
+			
+			[twitter addURL:[NSURL URLWithString:_articleVO.article_url]];
+			[twitter setInitialText:[NSString stringWithFormat:@"via Assembly - %@", _articleVO.title]];
+			[self presentModalViewController:twitter animated:YES];
+			
+			twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+				[self dismissModalViewControllerAnimated:YES];
+				
+				ASIFormDataRequest *shareRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+				[shareRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+				[shareRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+				[shareRequest setPostValue:[NSString stringWithFormat:@"%d", _articleVO.article_id] forKey:@"articleID"];
+				[shareRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"typeID"];
+				[shareRequest setDelegate:self];
+				[shareRequest startAsynchronous];
+			};
+		}
 		
 	} else if (buttonIndex == 1) {
 		
