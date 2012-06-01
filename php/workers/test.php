@@ -77,10 +77,10 @@ echo ($query);
 */
 
 // make the connection
-$db_conn = mysql_connect('internal-db.s41232.gridserver.com', 'db41232_sn_usr', 'dope911t') or die("Could not connect to database.");
+$db_conn = mysql_connect('127.0.0.1', 'db41232_sn_usr', 'dope911t') or die("Could not connect to database.");
 
 // select the proper db
-mysql_select_db('db41232_simplenews') or die("Could not select database.");
+mysql_select_db('assembly2') or die("Could not select database.");
 
 // get the current date / time from mysql
 $ts_result = mysql_query("SELECT NOW();") or die("Couldn't get the date from MySQL");
@@ -88,6 +88,7 @@ $row = mysql_fetch_row($ts_result);
 $sql_time = $row[0];
 
 
+/*
 $query = 'SELECT * FROM `tblListsInfluencers`;';
 $result = mysql_query($query);
 
@@ -95,6 +96,22 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 	$query = 'UPDATE `tblArticles` SET `list_id` = '. $row['list_id'] .' WHERE `influencer_id` ='. $row['influencer_id'] .';';
 	$res = mysql_query($query);
 }
+*/
+
+$user_id = "2";
+
+$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `user_id` = '. $user_id .';';
+$liked_tot = mysql_num_rows(mysql_query($query));
+
+$query = 'SELECT * FROM `tblComments` WHERE `user_id` = '. $user_id .';';
+$comment_tot = mysql_num_rows(mysql_query($query));
+
+$query = 'SELECT * FROM `tblUsersSharedArticles` WHERE `user_id` = '. $user_id .';';
+$shared_tot = mysql_num_rows(mysql_query($query));
+
+echo ($liked_tot);
+echo ($comment_tot);
+echo ($shared_tot);
 
 //$query = 'UPDATE `tblArticles` SET `source_id` =1 WHERE `source_id` =0;';
 //$res = mysql_query($query);
