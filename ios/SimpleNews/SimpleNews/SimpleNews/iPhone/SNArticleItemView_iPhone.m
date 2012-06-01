@@ -13,6 +13,7 @@
 #import "SNUnderlinedLabel.h"
 #import "SNWebPageViewController_iPhone.h"
 #import "ImageFilter.h"
+#import "SNTwitterAvatarView.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 
 @interface SNArticleItemView_iPhone () <MBLResourceObserverProtocol>
@@ -41,15 +42,10 @@
 		bgImgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:50.0];
 		[self addSubview:bgImgView];
 		
-		EGOImageView *thumbImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 25.0, 25.0)];
-		thumbImgView.imageURL = [NSURL URLWithString:_vo.avatarImage_url];
-		[self addSubview:thumbImgView];
-		
-		UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		avatarButton.frame = thumbImgView.frame;
-		[avatarButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:avatarButton];
-		
+		SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(20.0, 19.0) imageURL:_vo.avatarImage_url];
+		[[avatarImgView btn] addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:avatarImgView];
+				
 		offset += 5;
 		
 		size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
@@ -124,7 +120,7 @@
 		
 		offset += 41;
 		
-		if (_vo.type_id >= 2) {
+		if (!(_vo.topicID == 8 || _vo.topicID == 9 || _vo.topicID == 10)) {
 			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25.0, offset, 260.0, size.height)];
 			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
@@ -136,30 +132,35 @@
 			offset += size.height + 30.0;
 		}
 		
-		if (_vo.type_id == 2 || _vo.type_id == 3) {
-			//_articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 260.0, 260.0 * _vo.imgRatio)];
-			_articleImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, offset, 260.0, 260.0 * _vo.imgRatio)];
-			[_articleImgView setBackgroundColor:[UIColor lightGrayColor]];
-			_articleImgView.userInteractionEnabled = YES;
-			//[_articleImgView setDelegate:self];			
-			//_articleImgView.imageURL = [NSURL URLWithString:_vo.bgImage_url];
+		
+		CGRect imgFrame = CGRectMake(-3.0, offset, 305.0, 305.0 * _vo.imgRatio);
+		if (_vo.topicID == 1 || _vo.topicID == 2) {
+			imgFrame.origin.x = 2.0;
+			imgFrame.size.width = 295.0;
+			imgFrame.size.height = 295.0 * _vo.imgRatio;
+		}
 			
+		
+		if (_vo.type_id == 2 || _vo.type_id == 3) {
+			_articleImgView = [[UIImageView alloc] initWithFrame:imgFrame];
+			[_articleImgView setBackgroundColor:[UIColor whiteColor]];
+			_articleImgView.userInteractionEnabled = YES;
 			[self addSubview:_articleImgView];
 			
 			UITapGestureRecognizer *dblTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photoZoomIn:)];
 			dblTapRecognizer.numberOfTapsRequired = 2;
 			[_articleImgView addGestureRecognizer:dblTapRecognizer];
 			
-			offset += (260.0 * _vo.imgRatio);
-			offset += 20;
-			
 			if (_imageResource == nil) {			
 				self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:_vo.imageURL forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
 			}
+			
+			offset += (imgFrame.size.width * _vo.imgRatio);
+			offset += 11;
 		}
 		
 		if (_vo.type_id > 3) {
-			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 260.0, 195.0)];
+			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(-3.0, offset, 305.0, 229.0)];
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[self addSubview:_videoImgView];
 			
@@ -167,8 +168,24 @@
 			_videoButton.frame = _videoImgView.frame;
 			[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:_videoButton];
-			offset += 195;
-			offset += 20;
+			
+			UIImageView *playImgView = [[UIImageView alloc] initWithFrame:CGRectMake(130.0, 92.0, 44.0, 44.0)];
+			playImgView.image = [UIImage imageNamed:@"smallPlayButton_nonActive.png"];
+			[_videoImgView addSubview:playImgView];
+			
+			offset += 229;
+			offset += 11;
+		}
+		
+		if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
+			UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
+			itunesButton.frame = CGRectMake(3.0, offset, 74.0, 29.0);
+			[itunesButton setBackgroundImage:[UIImage imageNamed:@"iTunesAppStore_nonActive.png"] forState:UIControlStateNormal];
+			[itunesButton setBackgroundImage:[UIImage imageNamed:@"iTunesAppStore_Active.png"] forState:UIControlStateHighlighted];
+			[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
+			[self addSubview:itunesButton];
+			
+			offset += 40;
 		}
 		
 		UIView *btnBGView = [[UIView alloc] initWithFrame:CGRectMake(10.0, offset, 174.0, 44.0)];
@@ -335,7 +352,13 @@
 
 
 -(void)_goComments {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_COMMENTS" object:_vo];
+	if (![SNAppDelegate twitterHandle]) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+		
+	} else {		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_COMMENTS" object:_vo];
+	}
 }
 
 
@@ -343,6 +366,9 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TWITTER_PROFILE" object:_vo.twitterHandle];
 }
 
+- (void)_goAppStore {
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:_vo.article_url]];
+}
 
 #pragma mark - Notification handlers
 -(void)_videoEnded:(NSNotification *)notification {

@@ -9,8 +9,6 @@
 #import "SNProfileViewCell_iPhone.h"
 #import "SNAppDelegate.h"
 
-#import "EGOImageView.h"
-
 @implementation SNProfileViewCell_iPhone
 
 @synthesize profileVO = _profileVO;

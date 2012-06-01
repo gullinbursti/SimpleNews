@@ -12,29 +12,21 @@
 @implementation SNTopicVO
 
 @synthesize dictionary;
-@synthesize topic_id, title, hashtags;
+@synthesize topic_id, title;
 
-+(SNTopicVO *)topicWithDictionary:(NSDictionary *)dictionary {
-	
++ (SNTopicVO *)topicWithDictionary:(NSDictionary *)dictionary {
 	SNTopicVO *vo = [[SNTopicVO alloc] init];
 	vo.dictionary = dictionary;
 	
 	vo.topic_id = [[dictionary objectForKey:@"topic_id"] intValue];
 	vo.title = [dictionary objectForKey:@"title"];
 	
-	NSMutableArray *unsortedComments = [NSMutableArray new];
-	for (NSDictionary *comment in [dictionary objectForKey:@"reactions"])
-		[unsortedComments addObject:[SNCommentVO commentWithDictionary:comment]];
-	
-	vo.hashtags = [NSMutableArray arrayWithArray:unsortedComments];
-	
 	return (vo);
 }
 
--(void)dealloc {
+- (void)dealloc {
 	self.dictionary = nil;
 	self.title = nil;
-	self.hashtags = nil;
 }
 
 @end

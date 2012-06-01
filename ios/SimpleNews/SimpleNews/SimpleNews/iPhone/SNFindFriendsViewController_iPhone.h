@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "ASIHTTPRequest.h"
+#import "MBProgressHUD.h"
 
 @interface SNFindFriendsViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, ASIHTTPRequestDelegate> {
 	UITableView *_tableView;
@@ -21,6 +22,8 @@
 	ASIHTTPRequest *_followingBlockRequest;
 	ASIFormDataRequest *_friendLookupRequest;
 	ASIFormDataRequest *_myFriendsRequest;
+	
+	MBProgressHUD *_progressHUD;
 }
 
 -(id)initAsFinder;

@@ -16,21 +16,6 @@
 
 @implementation SNProfileArticlesViewController_iPhone
 
-
--(id)initAsArticlesRead {
-	if ((self = [super init])) {
-		_headerTitle = @"Read Articles";
-		
-		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 5] forKey:@"action"];
-		[_articlesRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		[_articlesRequest setDelegate:self];
-		[_articlesRequest startAsynchronous];
-	}
-	
-	return (self);
-}
-
 -(id)initAsArticlesLiked {
 	if ((self = [super init])) {
 		_headerTitle = @"Liked Articles";
@@ -44,6 +29,37 @@
 	
 	return (self);
 }
+
+
+- (id)initAsArticlesCommented {
+	if ((self = [super init])) {
+		_headerTitle = @"Commented Articles";
+		
+		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
+		[_articlesRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[_articlesRequest setDelegate:self];
+		[_articlesRequest startAsynchronous];
+	}
+	
+	return (self);
+}
+
+
+- (id)initAsArticlesShared {
+	if ((self = [super init])) {
+		_headerTitle = @"Shared Articles";
+		
+		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 5] forKey:@"action"];
+		[_articlesRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[_articlesRequest setDelegate:self];
+		[_articlesRequest startAsynchronous];
+	}
+	
+	return (self);
+}
+
 
 
 -(void)didReceiveMemoryWarning {

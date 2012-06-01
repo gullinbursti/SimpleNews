@@ -263,10 +263,6 @@
 
 #pragma mark - Navigation
 -(void)_goBack {
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_scrollView.contentOffset = CGPointZero;
-	}];
-	
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
@@ -323,16 +319,6 @@
 }
 
 
-
-
-
-
-#pragma mark - Image View delegates
--(void)imageViewLoadedImage:(EGOImageView *)imageView {
-	imageView.image = [SNAppDelegate imageWithFilters:imageView.image filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"sharpen", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
-}
-
-
 #pragma mark - Async Resource Observers
 - (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data {
 	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
@@ -367,20 +353,30 @@
 					[list addObject:vo];
 				
 				int height;
-				height = 150;
+				height = 120;
 				CGSize size;
 				
-				if (vo.type_id > 1) {
-					height += 270.0 * vo.imgRatio;
+				int imgWidth = 305;
+				if (vo.topicID == 1 || vo.topicID == 2)
+					imgWidth = 295;				
+				
+				if (vo.type_id > 1 && vo.type_id - 4 < 0) {
+					height += imgWidth * vo.imgRatio;
 					height += 20;
 				}
 				
-				size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-				height += size.height;
+				if (!(vo.topicID == 8 || vo.topicID == 9 || vo.topicID == 10)) {
+					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+					height += size.height + 30;
+				}
 				
-				if (vo.type_id > 4) {
-					height += 202;
-					offset += 20;
+				if (vo.type_id > 3) {
+					height += 229;
+					height += 20;
+				}
+				
+				if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
+					height += 40;
 				}
 				
 				SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo];

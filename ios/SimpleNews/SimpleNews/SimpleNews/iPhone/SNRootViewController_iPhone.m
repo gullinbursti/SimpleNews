@@ -162,6 +162,8 @@
 		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
+		//[UIView animateWithDuration:0.33 animations:^(void) {
+		_topicsTableView.contentOffset = CGPointZero;
 	}];
 }
 
@@ -170,6 +172,7 @@
 	if (![SNAppDelegate twitterHandle]) {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
+	
 	} else {
 		[UIView animateWithDuration:0.33
 						 animations:^(void) {
@@ -411,13 +414,13 @@
 	
 	twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
 		
-		ASIFormDataRequest *readRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles.php"]]];
-		[readRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-		[readRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		[readRequest setPostValue:[NSString stringWithFormat:@"%d", vo.topicID] forKey:@"listID"];
-		[readRequest setPostValue:[NSString stringWithFormat:@"%d", vo.article_id] forKey:@"articleID"];
-		[readRequest setDelegate:self];
-		[readRequest startAsynchronous];
+		ASIFormDataRequest *shareRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+		[shareRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+		[shareRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[shareRequest setPostValue:[NSString stringWithFormat:@"%d", _articleVO.article_id] forKey:@"articleID"];
+		[shareRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"typeID"];
+		[shareRequest setDelegate:self];
+		[shareRequest startAsynchronous];
 				
 		[self dismissModalViewControllerAnimated:YES];
 	};
@@ -490,26 +493,33 @@
 	
 }
 
-#pragma mark - Image View delegates
--(void)imageViewLoadedImage:(EGOImageView *)imageView {
-	NSLog(@"IMAGE LOADED");
-	imageView.image = [SNAppDelegate imageWithFilters:imageView.image filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"sharpen", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
-}
-
-
 
 #pragma mark - ActionSheet Delegates
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
 	if (buttonIndex == 0) {
-		TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
-		
-		[twitter addURL:[NSURL URLWithString:_articleVO.article_url]];
-		[twitter setInitialText:[NSString stringWithFormat:@"via Assembly - %@", _articleVO.title]];
-		[self presentModalViewController:twitter animated:YES];
-		
-		twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
-			[self dismissModalViewControllerAnimated:YES];
-		};
+		if (![SNAppDelegate twitterHandle]) {
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+			[alert show];
+			
+		} else {
+			TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
+			
+			[twitter addURL:[NSURL URLWithString:_articleVO.article_url]];
+			[twitter setInitialText:[NSString stringWithFormat:@"via Assembly - %@", _articleVO.title]];
+			[self presentModalViewController:twitter animated:YES];
+			
+			twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+				[self dismissModalViewControllerAnimated:YES];
+				
+				ASIFormDataRequest *shareRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+				[shareRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+				[shareRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+				[shareRequest setPostValue:[NSString stringWithFormat:@"%d", _articleVO.article_id] forKey:@"articleID"];
+				[shareRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"typeID"];
+				[shareRequest setDelegate:self];
+				[shareRequest startAsynchronous];
+			};
+		}
 		
 	} else if (buttonIndex == 1) {
 		
@@ -599,6 +609,7 @@
 			_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
+			_topicsTableView.contentOffset = CGPointZero;
 		}];
 	}];
 }
@@ -606,34 +617,56 @@
 
 #pragma mark - MailComposeViewController Delegates
 -(void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" message:@"" delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+	ASIFormDataRequest *shareRequest;
 	
 	switch (result) {
 		case MFMailComposeResultCancelled:
-			alert.message = @"Message Canceled";
 			break;
 			
 		case MFMailComposeResultSaved:
-			alert.message = @"Message Saved";
-			[alert show];
+			//[alert show];
 			break;
 			
-		case MFMailComposeResultSent:
-			alert.message = @"Message Sent";
+		case MFMailComposeResultSent:			
+			shareRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+			[shareRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+			[shareRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+			[shareRequest setPostValue:[NSString stringWithFormat:@"%d", _articleVO.article_id] forKey:@"articleID"];
+			[shareRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"typeID"];
+			[shareRequest setDelegate:self];
+			[shareRequest startAsynchronous];
 			break;
 			
 		case MFMailComposeResultFailed:
-			alert.message = @"Message Failed";
-			[alert show];
 			break;
 			
 		default:
-			alert.message = @"Message Not Sent";
-			[alert show];
 			break;
 	}
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+#pragma mark - ASI Delegates
+-(void)requestFinished:(ASIHTTPRequest *)request { 
+	NSLog(@"SNProfileArticlesViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	
+	@autoreleasepool {
+		NSError *error = nil;
+		NSDictionary *sharedResult = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+		
+		if (error != nil)
+			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+		
+		else {
+			NSLog(@"RESULT:%@", [sharedResult objectForKey:@"result"]);
+		}
+	}
+}
+
+-(void)requestFailed:(ASIHTTPRequest *)request {
+	NSLog(@"requestFailed:\n[%@]", request.error);
 }
 
 

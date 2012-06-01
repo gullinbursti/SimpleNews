@@ -76,16 +76,28 @@
 		_idsRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://api.twitter.com/1/followers/ids.json?id=%@", [SNAppDelegate twitterID]]]];
 		_idsRequest.delegate = self;
 		[_idsRequest startAsynchronous];
+		
+		_progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+		_progressHUD.labelText = NSLocalizedString(@"Loading Following…", @"Status message when loading following list");
+		_progressHUD.mode = MBProgressHUDModeIndeterminate;
+		_progressHUD.graceTime = 2.0;
+		_progressHUD.taskInProgress = YES;
 	
 	} else {
 		headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"My Friends"];
-		[self.view addSubview:headerView];	
+		[self.view addSubview:headerView];
 		
 		_myFriendsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
 		[_myFriendsRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
 		[_myFriendsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[_myFriendsRequest setDelegate:self];
 		[_myFriendsRequest startAsynchronous];
+		
+		_progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+		_progressHUD.labelText = NSLocalizedString(@"Loading Friends…", @"Status message when loading friend list");
+		_progressHUD.mode = MBProgressHUDModeIndeterminate;
+		_progressHUD.graceTime = 2.0;
+		_progressHUD.taskInProgress = YES;
 	}
 	
 	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 64.0, 44.0)];
@@ -160,7 +172,7 @@
 		[_friendLookupRequest startAsynchronous];
 		
 	} else {
-		[self.navigationController pushViewController:[[SNTwitterFriendArticlesViewController_iPhone alloc] initAsArticlesLiked:vo] animated:YES];
+		[self.navigationController pushViewController:[[SNFriendProfileViewController_iPhone alloc] initWithTwitterUser:vo] animated:YES];
 	}
 }
 
@@ -228,6 +240,10 @@
 			
 			_friends = [friends copy];
 			[_tableView reloadData];
+			
+			_progressHUD.taskInProgress = NO;
+			[_progressHUD hide:YES];
+			_progressHUD = nil;
 		}
 	
 	} else if ([request isEqual:_friendLookupRequest]) {
@@ -264,12 +280,24 @@
 			
 			_friends = [friends copy];
 			[_tableView reloadData];
+			
+			_progressHUD.taskInProgress = NO;
+			[_progressHUD hide:YES];
+			_progressHUD = nil;
 		}
 	}
 }
 
 -(void)requestFailed:(ASIHTTPRequest *)request {
 	NSLog(@"requestFailed:\n[%@]", request.error);
+	
+	_progressHUD.graceTime = 0.0;
+	_progressHUD.mode = MBProgressHUDModeCustomView;
+	_progressHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+	_progressHUD.labelText = NSLocalizedString(@"Error", @"Error");
+	[_progressHUD show:NO];
+	[_progressHUD hide:YES afterDelay:1.5];
+	_progressHUD = nil;
 }
 
 -(void)requestRedirected:(ASIHTTPRequest *)request {

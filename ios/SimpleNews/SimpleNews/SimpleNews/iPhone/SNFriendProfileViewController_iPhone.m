@@ -12,10 +12,10 @@
 #import "SNNavBackBtnView.h"
 #import "SNProfileViewCell_iPhone.h"
 #import "SNAppDelegate.h"
-#import "EGOImageView.h"
 #import "SNWebPageViewController_iPhone.h"
 #import "SNProfileArticlesViewController_iPhone.h"
 #import "SNFindFriendsViewController_iPhone.h"
+#import "SNTwitterAvatarView.h"
 #import "ASIFormDataRequest.h"
 
 @implementation SNFriendProfileViewController_iPhone
@@ -38,14 +38,9 @@
 	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
-	EGOImageView *avatarImg = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, 66.0, 25.0, 25.0)];
-	avatarImg.imageURL = [NSURL URLWithString:_vo.avatarURL];
-	[self.view addSubview:avatarImg];
-	
-	UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	avatarButton.frame = avatarImg.frame;
-	[avatarButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:avatarButton];
+	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(20.0, 66.0) imageURL:_vo.avatarURL];
+	[[avatarImgView btn] addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:avatarImgView];
 	
 	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 71.0, 200.0, 16.0)];
 	handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
@@ -66,19 +61,18 @@
 	[profileButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:profileButton];
 	
-	UIView *statsBgView = [[UIView alloc] initWithFrame:CGRectMake(12.0, 115.0, 296.0, 70.0)];
-	[statsBgView setBackgroundColor:[UIColor whiteColor]];
+	UIImageView *statsBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 115.0, 320.0, 84.0)];
+	statsBgView.image = [UIImage imageNamed:@"profileBackgroundStats.png"];
 	[self.view addSubview:statsBgView];
 	
-	_likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 17.0, 96.0, 18.0)];
+	_likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 17.0, 96.0, 18.0)];
 	_likesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
 	_likesLabel.textAlignment = UITextAlignmentCenter;
 	_likesLabel.textColor = [UIColor blackColor];
 	_likesLabel.backgroundColor = [UIColor clearColor];
-	
 	[statsBgView addSubview:_likesLabel];
 	
-	UILabel *likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 40.0, 96.0, 16.0)];
+	UILabel *likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, 40.0, 96.0, 16.0)];
 	likesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 	likesLabel.textAlignment = UITextAlignmentCenter;
 	likesLabel.textColor = [SNAppDelegate snLinkColor];
@@ -86,14 +80,14 @@
 	likesLabel.text = @"Likes";
 	[statsBgView addSubview:likesLabel];
 	
-	_commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(96.0, 17.0, 96.0, 18.0)];
+	_commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(106.0, 17.0, 96.0, 18.0)];
 	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
 	_commentsLabel.textAlignment = UITextAlignmentCenter;
 	_commentsLabel.textColor = [UIColor blackColor];
 	_commentsLabel.backgroundColor = [UIColor clearColor];
 	[statsBgView addSubview:_commentsLabel];
 	
-	UILabel *commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(96.0, 40.0, 96.0, 16.0)];
+	UILabel *commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(106.0, 40.0, 96.0, 16.0)];
 	commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 	commentsLabel.textAlignment = UITextAlignmentCenter;
 	commentsLabel.textColor = [SNAppDelegate snLinkColor];
@@ -101,37 +95,20 @@
 	commentsLabel.text = @"Comments";
 	[statsBgView addSubview:commentsLabel];
 	
-	_sharesLabel = [[UILabel alloc] initWithFrame:CGRectMake(192.0, 17.0, 96.0, 18.0)];
+	_sharesLabel = [[UILabel alloc] initWithFrame:CGRectMake(202.0, 17.0, 96.0, 18.0)];
 	_sharesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
 	_sharesLabel.textAlignment = UITextAlignmentCenter;
 	_sharesLabel.textColor = [UIColor blackColor];
 	_sharesLabel.backgroundColor = [UIColor clearColor];
 	[statsBgView addSubview:_sharesLabel];
 	
-	UILabel *sharesLabel = [[UILabel alloc] initWithFrame:CGRectMake(192.0, 40.0, 96.0, 16.0)];
+	UILabel *sharesLabel = [[UILabel alloc] initWithFrame:CGRectMake(202.0, 40.0, 96.0, 16.0)];
 	sharesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 	sharesLabel.textAlignment = UITextAlignmentCenter;
 	sharesLabel.textColor = [SNAppDelegate snLinkColor];
 	sharesLabel.backgroundColor = [UIColor clearColor];
 	sharesLabel.text = @"Shares";
 	[statsBgView addSubview:sharesLabel];
-	
-	/*
-	UIButton *likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	likeButton.frame = CGRectMake(12.0, 115.0, 96.0, 70.0);
-	[likeButton addTarget:self action:@selector(_goLikedArticles) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:likeButton];
-	
-	UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	commentButton.frame = CGRectMake(108.0, 115.0, 96.0, 70.0);
-	[commentButton addTarget:self action:@selector(_goCommentedArticles) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:commentButton];
-	
-	UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	shareButton.frame = CGRectMake(204.0, 115.0, 96.0, 70.0);
-	[shareButton addTarget:self action:@selector(_goSharedArticles) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:shareButton];
-	*/
 	 
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Profile"];
 	[self.view addSubview:headerView];

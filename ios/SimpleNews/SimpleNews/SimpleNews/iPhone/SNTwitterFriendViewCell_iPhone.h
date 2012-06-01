@@ -7,11 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "EGOImageView.h"
 #import "SNTwitterUserVO.h"
 
 @interface SNTwitterFriendViewCell_iPhone : UITableViewCell {
-	EGOImageView *_avatarImgView;
 	UILabel *_handleLabel;
 	UILabel *_nameLabel;
 }

@@ -8,6 +8,7 @@
 
 #import "SNTwitterFriendViewCell_iPhone.h"
 #import "SNAppDelegate.h"
+#import "SNTwitterAvatarView.h"
 
 @implementation SNTwitterFriendViewCell_iPhone
 
@@ -20,16 +21,11 @@
 -(id)init {
 	if ((self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[self class] cellReuseIdentifier]])) {
 		
-		_avatarImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, 22.0, 25.0, 25.0)];
-		_avatarImgView.imageURL = [NSURL URLWithString:[SNAppDelegate twitterAvatar]];
-		[self addSubview:_avatarImgView];
-			
 		_handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 27.0, 200.0, 16.0)];
 		_handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 		_handleLabel.textColor = [SNAppDelegate snLinkColor];
 		_handleLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_handleLabel];
-		
 		
 		_nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 32.0, 200.0, 16.0)];
 		_nameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
@@ -54,7 +50,10 @@
 #pragma mark - Accessors
 - (void)setTwitterUserVO:(SNTwitterUserVO *)twitterUserVO {
 	_twitterUserVO = twitterUserVO;
-	_avatarImgView.imageURL = [NSURL URLWithString:_twitterUserVO.avatarURL];
+	
+	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(20.0, 19.0) imageURL:twitterUserVO.avatarURL];
+	[self addSubview:avatarImgView];
+	
 	_handleLabel.text = [NSString stringWithFormat:@"@%@", _twitterUserVO.handle];
 }
 
