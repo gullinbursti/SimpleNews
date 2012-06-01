@@ -50,7 +50,7 @@
 	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.view.frame.size.width, self.view.frame.size.height - 93.0)];
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 54.0, self.view.frame.size.width, self.view.frame.size.height - 93.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[_scrollView setBackgroundColor:[UIColor clearColor]];
 	_scrollView.opaque = YES;
@@ -134,10 +134,7 @@
 		[_commentViews addObject:commentView];
 		[_scrollView addSubview:commentView];
 		
-		if (vo.isLiked)
-			_commentOffset += 30;
-		
-		_commentOffset += (kItemHeight + txtSize.height);
+		_commentOffset += ((kItemHeight + txtSize.height) - 10.0);
 	}
 	
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, _commentOffset);

@@ -16,6 +16,5 @@
 
 @property (nonatomic) int topic_id;
 @property (nonatomic, retain) NSString *title;
-@property (nonatomic, retain) NSMutableArray *hashtags;
 
 @end
