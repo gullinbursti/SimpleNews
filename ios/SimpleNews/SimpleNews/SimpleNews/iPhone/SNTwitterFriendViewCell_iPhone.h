@@ -12,10 +12,16 @@
 @interface SNTwitterFriendViewCell_iPhone : UITableViewCell {
 	UILabel *_handleLabel;
 	UILabel *_nameLabel;
+	
+	UIImageView *_bgImgView;
 }
 
 +(NSString *)cellReuseIdentifier;
 
 @property (nonatomic, retain) SNTwitterUserVO *twitterUserVO;
+
+- (id)initAsHeader;
+- (id)initAsMiddle;
+- (id)initAsFooter;
 
 @end

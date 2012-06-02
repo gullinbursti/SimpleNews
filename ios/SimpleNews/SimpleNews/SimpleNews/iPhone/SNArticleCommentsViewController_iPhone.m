@@ -50,7 +50,13 @@
 	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 54.0, self.view.frame.size.width, self.view.frame.size.height - 93.0)];
+	_commentOffset = 0;
+	for (SNCommentVO *vo in _vo.comments) {
+		CGSize txtSize = [vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(230.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		_commentOffset += ((kItemHeight + txtSize.height) - 10.0);
+	}
+	
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 55.0, self.view.frame.size.width, MIN(370.0, _commentOffset))];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[_scrollView setBackgroundColor:[UIColor clearColor]];
 	_scrollView.opaque = YES;
@@ -62,13 +68,18 @@
 	_scrollView.alwaysBounceVertical = NO;
 	[self.view addSubview:_scrollView];
 	
+	_scrollBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, _scrollView.frame.size.width, _commentOffset)];
+	UIImage *img = [UIImage imageNamed:@"profileBackground.png"];
+	_scrollBgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:10.0];
+	[_scrollView addSubview:_scrollBgView];
+	
+	
 	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
 	_refreshHeaderView.delegate = self;
 	[_scrollView addSubview:_refreshHeaderView];
 	[_refreshHeaderView refreshLastUpdatedDate];
 	
 	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 49.0, self.view.frame.size.width, 49.0)];
-	[_bgView setBackgroundColor:[UIColor colorWithWhite:0.914 alpha:1.0]];
 	[self.view addSubview:_bgView];
 	
 	UIImageView *inputBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 49.0)];
@@ -87,12 +98,12 @@
 	[[shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:shareBtnView];
 	
-	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_likeButton.frame = CGRectMake(2.0, 2.0, 44.0, 44.0);
-	[_likeButton setBackgroundImage:[UIImage imageNamed:@"commentHeart_nonActive.png"] forState:UIControlStateNormal];
-	[_likeButton setBackgroundImage:[UIImage imageNamed:@"commentHeart_Active.png"] forState:UIControlStateHighlighted];
-	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-	[_bgView addSubview:_likeButton];
+//	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//	_likeButton.frame = CGRectMake(2.0, 2.0, 44.0, 44.0);
+//	[_likeButton setBackgroundImage:[UIImage imageNamed:@"commentHeart_nonActive.png"] forState:UIControlStateNormal];
+//	[_likeButton setBackgroundImage:[UIImage imageNamed:@"commentHeart_Active.png"] forState:UIControlStateHighlighted];
+//	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+//	[_bgView addSubview:_likeButton];
 	
 	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(60.0, 18.0, 270.0, 16.0)];
 	[_commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
@@ -113,16 +124,6 @@
 	_commentsLabel.backgroundColor = [UIColor clearColor];
 	_commentsLabel.text = @"Write a comment…";
 	[_bgView addSubview:_commentsLabel];
-	
-	_sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_sendButton.frame = CGRectMake(255.0, 3.0, 64.0, 44.0);
-	[_sendButton setBackgroundImage:[[UIImage imageNamed:@"genericButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-	[_sendButton setBackgroundImage:[[UIImage imageNamed:@"genericButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-	[_sendButton addTarget:self action:@selector(_goSend) forControlEvents:UIControlEventTouchUpInside];
-	_sendButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
-	[_sendButton setTitleColor:[UIColor colorWithWhite:0.5 alpha:1.0] forState:UIControlStateNormal];
-	[_sendButton setTitle:@"Send" forState:UIControlStateNormal];
-	[_bgView addSubview:_sendButton];
 	
 	_commentOffset = 0;
 	for (SNCommentVO *vo in _vo.comments) {
@@ -146,6 +147,12 @@
 
 -(void)viewDidUnload {
 	[super viewDidUnload];
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+	
+	[_commentTxtField becomeFirstResponder];
 }
 
 
@@ -270,6 +277,7 @@
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
 	[textField resignFirstResponder];
+	NSLog(@"%d", [textField.text length]);
 	
 	if ([textField.text length] > 0) {
 		NSString *isLiked = @"N";
@@ -289,13 +297,15 @@
 				
 		textField.text = @"";
 		_isLiked = NO;
-	}
 	
-	_commentsLabel.hidden = NO;
+		_commentsLabel.hidden = NO;
+	}
 	
 	[UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void){
 		_bgView.frame = CGRectMake(_bgView.frame.origin.x, _bgView.frame.origin.y + 215.0, _bgView.frame.size.width, _bgView.frame.size.height);
 	} completion:nil];
+	
+	_commentsLabel.hidden = NO;
 }
 
 
@@ -314,6 +324,15 @@
 	CGSize commentSize = [vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(256.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 	for (SNArticleCommentView_iPhone *commentView in _commentViews) {
 		[UIView animateWithDuration:0.25 animations:^(void) {
+			CGSize size = _scrollView.contentSize;
+			size.height += (kItemHeight + commentSize.height);
+			_scrollView.contentSize = size;
+			
+			CGRect frame = _scrollView.frame;
+			frame.size.height = size.height;
+			
+			_scrollBgView.frame = frame;
+			_scrollView.frame = CGRectMake(_scrollView.frame.origin.x, _scrollView.frame.origin.y, _scrollView.frame.size.width, MIN(370.0, frame.size.height));
 			commentView.frame = CGRectMake(commentView.frame.origin.x, commentView.frame.origin.y + kItemHeight + commentSize.height, commentView.frame.size.width, commentView.frame.size.height);
 		}];
 	}
@@ -323,10 +342,6 @@
 	[_scrollView addSubview:commentView];		
 	
 	_commentOffset += (kItemHeight + commentSize.height);
-	
-	CGSize size = _scrollView.contentSize;
-	size.height += (kItemHeight + commentSize.height);
-	_scrollView.contentSize = size;
 }
 
 -(void)requestFailed:(ASIHTTPRequest *)request {

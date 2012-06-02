@@ -345,7 +345,7 @@
 			NSMutableArray *list = [NSMutableArray array];
 			
 			int tot = 0;
-			int offset = 10;
+			int offset = 6;
 			for (NSDictionary *serverList in parsedLists) {
 				SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverList];
 				//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
@@ -353,12 +353,12 @@
 					[list addObject:vo];
 				
 				int height;
-				height = 120;
+				height = 94;
 				CGSize size;
 				
 				int imgWidth = 305;
 				if (vo.topicID == 1 || vo.topicID == 2)
-					imgWidth = 295;				
+					imgWidth = 296;			
 				
 				if (vo.type_id > 1 && vo.type_id - 4 < 0) {
 					height += imgWidth * vo.imgRatio;
@@ -367,12 +367,12 @@
 				
 				if (!(vo.topicID == 8 || vo.topicID == 9 || vo.topicID == 10)) {
 					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-					height += size.height + 30;
+					height += size.height + 9;
 				}
 				
 				if (vo.type_id > 3) {
 					height += 229;
-					height += 20;
+					height += 9;
 				}
 				
 				if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
@@ -382,7 +382,6 @@
 				SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo];
 				[_articleViews addObject:articleItemView];
 				
-				offset += 20;
 				offset += height;
 				tot++;
 			}

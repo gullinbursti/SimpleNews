@@ -88,29 +88,16 @@
 			
 			array_push($topic_arr, array(
 				"topic_id" => 0,
-				"title" => "Popular",
-				"hashtags" => array()
+				"title" => "Popular"
 			));
 			
 			$query = 'SELECT * FROM `tblTopics` WHERE `active` = "Y" ORDER BY `order` ASC;';
 			$topic_result = mysql_query($query);
 			
 			while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {  		
-				$query = 'SELECT * FROM `tblHashtags` INNER JOIN `tblTopicsHashtags` ON `tblHashtags`.`id` = `tblTopicsHashtags`.`hashtag_id` WHERE `tblTopicsHashtags`.`topic_id` = '. $topic_row['id'] .';'; 				
-				$hashtag_result = mysql_query($query);
-				
-				$hashtag_arr = array();
-				while ($hashtag_row = mysql_fetch_array($hashtag_result, MYSQL_BOTH)) {
-					array_push($hashtag_arr, array(
-						"hashtag_id" => $hashtag_row['id'], 
-						"title" => $hashtag_row['title']						
-					));
-				}
-				
 				array_push($topic_arr, array(
 					"topic_id" => $topic_row['id'], 
-					"title" => $topic_row['title'], 
-					"hashtags" => $hashtag_arr
+					"title" => $topic_row['title']
 				)); 
 			}
 			

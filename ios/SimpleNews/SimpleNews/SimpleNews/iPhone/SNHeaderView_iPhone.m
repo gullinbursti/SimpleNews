@@ -28,6 +28,8 @@
 		titleLabel.textColor = [UIColor whiteColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.textAlignment = UITextAlignmentCenter;
+		titleLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.67];
+		titleLabel.shadowOffset = CGSizeMake(-1.0, -1.0);
 		titleLabel.text = title;
 		[self addSubview:titleLabel];
 	}

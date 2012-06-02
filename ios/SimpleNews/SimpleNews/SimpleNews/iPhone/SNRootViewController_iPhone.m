@@ -32,6 +32,7 @@
 @property(nonatomic, strong) MBLAsyncResource *fullscreenImgResource;
 - (void)_refreshUserAccount;
 - (void)_refreshTopicsList;
+- (void)_hideFullscreenMedia:(NSNotification *)notification;
 @end
 
 @implementation SNRootViewController_iPhone

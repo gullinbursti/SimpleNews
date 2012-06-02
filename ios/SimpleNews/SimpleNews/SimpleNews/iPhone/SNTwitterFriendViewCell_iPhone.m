@@ -18,8 +18,41 @@
 	return (NSStringFromClass(self));
 }
 
+
+- (id)initAsHeader {
+	if ((self = [self init])) {
+		[_bgImgView setBackgroundColor:[SNAppDelegate snDebugBlueColor]];
+		_bgImgView.image = [UIImage imageNamed:@"profileBackground.png"];
+	}
+	
+	return (self);
+}
+
+- (id)initAsMiddle {
+	if ((self = [self init])) {
+		[_bgImgView setBackgroundColor:[SNAppDelegate snDebugGreenColor]];
+		_bgImgView.image = [UIImage imageNamed:@"profileBackground.png"];
+	}
+	
+	return (self);
+}
+
+- (id)initAsFooter {
+	if ((self = [self init])) {
+		[_bgImgView setBackgroundColor:[SNAppDelegate snDebugRedColor]];
+		_bgImgView.image = [UIImage imageNamed:@"profileBackground.png"];
+	}
+	
+	return (self);
+}
+
+
+
 -(id)init {
 	if ((self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[self class] cellReuseIdentifier]])) {
+		
+		_bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width - 40.0, 70.0)];
+		[self addSubview:_bgImgView];
 		
 		_handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 27.0, 200.0, 16.0)];
 		_handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
@@ -31,12 +64,7 @@
 		_nameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 		_nameLabel.textColor = [SNAppDelegate snLinkColor];
 		_nameLabel.backgroundColor = [UIColor clearColor];
-		//[self addSubview:_nameLabel];
 		
-		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(284.0, 23.0, 24.0, 24.0)];		
-		chevronView.image = [UIImage imageNamed:@"chevron.png"];
-		[self addSubview:chevronView];
-			
 		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, 70.0, self.frame.size.width - 40.0, 2.0)];
 		UIImage *img = [UIImage imageNamed:@"line.png"];
 		lineImgView.image = [img stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];

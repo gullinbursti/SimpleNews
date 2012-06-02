@@ -39,6 +39,7 @@
 - (id)init {
 	if ((self = [super init])) {
 		_friends = [NSMutableArray new];
+		_sectionTitles = [NSArray arrayWithObjects:@"a", @"e", @"i", @"m", @"p", nil];
 	}
 	
 	return (self);
@@ -57,14 +58,14 @@
 	[self.view addSubview:bgImgView];
 	
 	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 45.0, self.view.frame.size.width, self.view.frame.size.height - 45.0) style:UITableViewStylePlain];
-	[_tableView setBackgroundColor:[UIColor clearColor]];
+	[_tableView setBackgroundColor:[UIColor clearColor]];// colorWithPatternImage:[img stretchableImageWithLeftCapWidth:0.0 topCapHeight:10.0]]];
 	_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	_tableView.rowHeight = 70.0;
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
 	_tableView.userInteractionEnabled = YES;
 	_tableView.scrollsToTop = NO;
-	//_tableView.showsVerticalScrollIndicator = NO;
+	_tableView.showsVerticalScrollIndicator = YES;
 	[self.view addSubview:_tableView];
 	
 	SNHeaderView_iPhone *headerView;
@@ -133,12 +134,30 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	SNTwitterFriendViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNTwitterFriendViewCell_iPhone cellReuseIdentifier]];
 	
-	if (cell == nil)
-		cell = [[SNTwitterFriendViewCell_iPhone alloc] init];
+	if (cell == nil) {
+		if (indexPath.row == 0)
+			cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsHeader];
+		
+		else if (indexPath.row == [_friends count] - 1)
+			cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsFooter];
+		
+		else
+			cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsMiddle];
+	}
+	
 	cell.twitterUserVO = (SNTwitterUserVO *)[_friends objectAtIndex:indexPath.row];
 	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
 	
 	return (cell);
+}
+
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+	return ([NSArray arrayWithObjects:@"#", @"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z", nil]);
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+	return (index);
 }
 
 
@@ -225,7 +244,8 @@
 		}
 		
 	} else if ([request isEqual:_followingBlockRequest]) {
-		NSArray *parsedFriends = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+		NSArray *unsortedFriends = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+		NSArray *parsedFriends = [NSMutableArray arrayWithArray:[unsortedFriends sortedArrayUsingDescriptors:[NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"screen_name" ascending:YES]]]];
 		
 		if (error != nil)
 			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);

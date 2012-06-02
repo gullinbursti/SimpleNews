@@ -15,6 +15,7 @@
 	UITableView *_tableView;
 	NSMutableArray *_friendIDs;
 	NSMutableArray *_friends;
+	NSArray *_sectionTitles;
 	BOOL _isFinder;
 	int _selectedIndex;
 	

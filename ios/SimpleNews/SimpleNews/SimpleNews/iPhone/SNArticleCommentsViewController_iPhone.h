@@ -18,11 +18,11 @@
 	EGORefreshTableHeaderView *_refreshHeaderView;
 	
 	UIScrollView *_scrollView;
+	UIImageView *_scrollBgView;
 	UITextField *_commentTxtField;
 	UILabel *_commentsLabel;
 	UIView *_bgView;
 	UIButton *_likeButton;
-	UIButton *_sendButton;
 	
 	NSMutableArray *_commentViews;
 	

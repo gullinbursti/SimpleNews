@@ -28,7 +28,7 @@
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
 		
-		int offset = 25;
+		int offset = 22;
 		CGSize size;
 		CGSize size2;
 		
@@ -42,39 +42,37 @@
 		bgImgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:50.0];
 		[self addSubview:bgImgView];
 		
-		SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(20.0, 19.0) imageURL:_vo.avatarImage_url];
+		SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(10.0, 17.0) imageURL:_vo.avatarImage_url];
 		[[avatarImgView btn] addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:avatarImgView];
-				
-		offset += 5;
 		
-		size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(55.0, offset, size.width, size.height)];
-		viaLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
+		size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(46.0, offset, size.width, size.height)];
+		viaLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10];
 		viaLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 		viaLabel.backgroundColor = [UIColor clearColor];
 		viaLabel.text = @"via ";
 		[self addSubview:viaLabel];
 		
-		size2 = [[NSString stringWithFormat:@"@%@ ", _vo.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(60.0 + size.width, offset, size2.width, size2.height)];
-		handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+		size2 = [[NSString stringWithFormat:@"@%@ ", _vo.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(46.0 + size.width, offset, size2.width, size2.height)];
+		handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
 		handleLabel.textColor = [SNAppDelegate snLinkColor];
 		handleLabel.backgroundColor = [UIColor clearColor];
 		handleLabel.text = [NSString stringWithFormat:@"@%@ ", _vo.twitterHandle];
 		[self addSubview:handleLabel];
 		
-		size = [@"in " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 		UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, offset, size.width, size.height)];
-		inLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
+		inLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10];
 		inLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 		inLabel.backgroundColor = [UIColor clearColor];
-		inLabel.text = @"in ";
+		inLabel.text = @"into ";
 		[self addSubview:inLabel];
 		
-		size2 = [[NSString stringWithFormat:@"%@", _vo.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		size2 = [[NSString stringWithFormat:@"%@", _vo.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 		UILabel *topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(inLabel.frame.origin.x + size.width, offset, size2.width, size2.height)];
-		topicLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+		topicLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
 		topicLabel.textColor = [SNAppDelegate snLinkColor];
 		topicLabel.backgroundColor = [UIColor clearColor];
 		topicLabel.text = [NSString stringWithFormat:@"%@", _vo.topicTitle];
@@ -96,48 +94,35 @@
 				timeSince = [NSString stringWithFormat:@"%dm", mins];
 		}
 		
-		size = [timeSince sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(285.0 - size.width, offset, size.width, size.height)];
-		dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+		size = [timeSince sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(281.0 - size.width, offset, size.width, size.height)];
+		dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
 		dateLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 		dateLabel.backgroundColor = [UIColor clearColor];
 		dateLabel.textAlignment = UITextAlignmentRight;
 		dateLabel.text = timeSince;
 		[self addSubview:dateLabel];
 		
-		size2 = [_vo.articleSource sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *sourceLabel = [[UILabel alloc] initWithFrame:CGRectMake(dateLabel.frame.origin.x + size.width, offset, size2.width, 12.0)];
-		sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
-		sourceLabel.textColor = [SNAppDelegate snLinkColor];
-		sourceLabel.backgroundColor = [UIColor clearColor];
-		sourceLabel.text = _vo.articleSource;
-		[self addSubview:sourceLabel];
-		
-		UIButton *sourceLblButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		sourceLblButton.frame = sourceLabel.frame;
-		[sourceLblButton addTarget:self action:@selector(_goSourcePage) forControlEvents:UIControlEventTouchUpInside];
-		[self addSubview:sourceLblButton];
-		
-		offset += 41;
+		offset += 32;
 		
 		if (!(_vo.topicID == 8 || _vo.topicID == 9 || _vo.topicID == 10)) {
-			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(25.0, offset, 260.0, size.height)];
-			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
+			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, offset, 260.0, size.height)];
+			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 			titleLabel.textColor = [SNAppDelegate snLinkColor];
 			titleLabel.backgroundColor = [UIColor clearColor];
 			titleLabel.text = _vo.title;
 			titleLabel.numberOfLines = 0;
 			[self addSubview:titleLabel];
-			offset += size.height + 30.0;
+			offset += size.height + 9.0;
 		}
 		
 		
 		CGRect imgFrame = CGRectMake(-3.0, offset, 305.0, 305.0 * _vo.imgRatio);
 		if (_vo.topicID == 1 || _vo.topicID == 2) {
 			imgFrame.origin.x = 2.0;
-			imgFrame.size.width = 295.0;
-			imgFrame.size.height = 295.0 * _vo.imgRatio;
+			imgFrame.size.width = 296.0;
+			imgFrame.size.height = 296.0 * _vo.imgRatio;
 		}
 			
 		
@@ -156,7 +141,7 @@
 			}
 			
 			offset += (imgFrame.size.width * _vo.imgRatio);
-			offset += 11;
+			offset += 9;
 		}
 		
 		if (_vo.type_id > 3) {
@@ -174,37 +159,27 @@
 			[_videoImgView addSubview:playImgView];
 			
 			offset += 229;
-			offset += 11;
+			offset += 9;
 		}
 		
 		if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
+			offset -= 2;
 			UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			itunesButton.frame = CGRectMake(3.0, offset, 74.0, 29.0);
+			itunesButton.frame = CGRectMake(7.0, offset, 74.0, 29.0);
 			[itunesButton setBackgroundImage:[UIImage imageNamed:@"iTunesAppStore_nonActive.png"] forState:UIControlStateNormal];
 			[itunesButton setBackgroundImage:[UIImage imageNamed:@"iTunesAppStore_Active.png"] forState:UIControlStateHighlighted];
 			[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:itunesButton];
 			
-			offset += 40;
+			offset += 38;
 		}
 		
-		UIView *btnBGView = [[UIView alloc] initWithFrame:CGRectMake(10.0, offset, 174.0, 44.0)];
+		UIView *btnBGView = [[UIView alloc] initWithFrame:CGRectMake(3.0, offset, 174.0, 44.0)];
 		btnBGView.userInteractionEnabled = YES;
 		[self addSubview:btnBGView];
 		
-		UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		commentButton.frame = CGRectMake(0.0, 0.0, 64.0, 44.0);
-		[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_nonActive.png"] forState:UIControlStateNormal];
-		[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_Active.png"] forState:UIControlStateHighlighted];
-		[commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
-		[commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
-		commentButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
-		[commentButton setTitle:[NSString stringWithFormat:@"%d", [_vo.comments count]] forState:UIControlStateNormal];
-		[btnBGView addSubview:commentButton];
-		
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_likeButton.frame = CGRectMake(70.0, 0.0, 64.0, 44.0);
+		_likeButton.frame = CGRectMake(0.0, 0.0, 64.0, 44.0);
 		[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
@@ -213,6 +188,17 @@
 		_likeButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 6.0, 0.0, -6.0);
 		[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
 		[btnBGView addSubview:_likeButton];
+		
+		UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		commentButton.frame = CGRectMake(64.0, 0.0, 64.0, 44.0);
+		[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_nonActive.png"] forState:UIControlStateNormal];
+		[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_Active.png"] forState:UIControlStateHighlighted];
+		[commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
+		[commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+		commentButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
+		[commentButton setTitle:[NSString stringWithFormat:@"%d", [_vo.comments count]] forState:UIControlStateNormal];
+		[btnBGView addSubview:commentButton];
 		
 //		if (_vo.hasLiked) {
 //			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateNormal];
@@ -224,7 +210,7 @@
 //		}
 		
 		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		sourceButton.frame = CGRectMake(248.0, offset, 44.0, 44.0);
+		sourceButton.frame = CGRectMake(249.0, offset, 44.0, 44.0);
 		[sourceButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
 		[sourceButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
 		[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
