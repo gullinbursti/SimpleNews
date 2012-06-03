@@ -19,7 +19,7 @@
 
 -(id)init {
 	if ((self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[self class] cellReuseIdentifier]])) {
-		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 13.0, 256.0, 18.0)];
+		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 20.0, 256.0, 18.0)];
 		_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 		_titleLabel.textColor = [UIColor blackColor];
 		_titleLabel.backgroundColor = [UIColor clearColor];
@@ -42,12 +42,6 @@
 	}
 	
 	return (self);
-}
-
--(void)setSelected:(BOOL)selected animated:(BOOL)animated {
-	[super setSelected:selected animated:animated];
-	
-	// Configure the view for the selected state
 }
 
 

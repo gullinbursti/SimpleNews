@@ -40,6 +40,7 @@
 @synthesize topicsListResource = _topicsListResource;
 @synthesize fullscreenImgResource = _fullscreenImgResource;
 
+
 - (id)init {
 	if ((self = [super init])) {
 		_topicCells = [NSMutableArray new];
@@ -92,13 +93,13 @@
 	[self.view addSubview:_holderView];
 	
 	_profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_profileButton.frame = CGRectMake(11.0, 9.0, 44.0, 44.0);
+	_profileButton.frame = CGRectMake(10.0, 8.0, 44.0, 44.0);
 	[_profileButton setBackgroundImage:[UIImage imageNamed:@"profileButton_nonActive.png"] forState:UIControlStateNormal];
 	[_profileButton setBackgroundImage:[UIImage imageNamed:@"profileButton_Active.png"] forState:UIControlStateHighlighted];
 	[_profileButton addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
 	[_holderView addSubview:_profileButton];
 	
-	_topicsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 50.0, 248.0, self.view.frame.size.height - 50.0) style:UITableViewStylePlain];
+	_topicsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 57.0, kTopicOffset, self.view.frame.size.height - 57.0) style:UITableViewStylePlain];
 	[_topicsTableView setBackgroundColor:[UIColor clearColor]];
 	_topicsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	_topicsTableView.rowHeight = 50.0;
@@ -109,7 +110,7 @@
 	[_holderView addSubview:_topicsTableView];
 	
 	_cardListsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_cardListsButton.frame = CGRectMake(276.0, 45.0, 44.0, self.view.frame.size.height - 45.0);
+	_cardListsButton.frame = CGRectMake(kTopicOffset, 45.0, 44.0, self.view.frame.size.height - 45.0);
 	[_cardListsButton addTarget:self action:@selector(_goCardLists) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:_cardListsButton];
 	
@@ -337,7 +338,7 @@
 			tapRecognizer.numberOfTapsRequired = 1;
 			[_blackMatteView addGestureRecognizer:tapRecognizer];
 			
-			_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+			_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(kTopicOffset, 0.0, 44.0, 44.0)];
 			[[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 			[self.view addSubview:_shareBtnView];
 			[self.view addSubview:_shareBtnView];
@@ -395,7 +396,7 @@
 
 -(void)_timelineReturn:(NSNotification *)notification {
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_topicTimelineView.frame = CGRectMake(276.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_topicTimelineView.frame = CGRectMake(kTopicOffset, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
 		_cardListsButton.hidden = NO;
@@ -462,7 +463,7 @@
 			tapRecognizer.numberOfTapsRequired = 1;
 			[_blackMatteView addGestureRecognizer:tapRecognizer];
 			
-			_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+			_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(kTopicOffset, 0.0, 44.0, 44.0)];
 			[[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 			[self.view addSubview:_shareBtnView];
 			[self.view addSubview:_shareBtnView];

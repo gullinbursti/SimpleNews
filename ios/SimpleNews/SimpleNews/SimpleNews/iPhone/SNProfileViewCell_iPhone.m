@@ -19,18 +19,13 @@
 
 -(id)init {
 	if ((self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[self class] cellReuseIdentifier]])) {
-		[self setBackgroundColor:[UIColor whiteColor]];
+		[self setBackgroundColor:[UIColor clearColor]];
 		 
-		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 26.0, 256.0, 18.0)];
+		_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(18.0, 23.0, 256.0, 18.0)];
 		_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 		_titleLabel.textColor = [UIColor blackColor];
 		_titleLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_titleLabel];
-			
-		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, 70.0, self.frame.size.width - 40.0, 2.0)];
-		UIImage *img = [UIImage imageNamed:@"line.png"];
-		lineImgView.image = [img stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];
-		[self addSubview:lineImgView];
 	}
 	
 	return (self);

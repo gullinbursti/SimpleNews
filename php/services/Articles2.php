@@ -116,6 +116,9 @@
 					));
 				}
 				
+				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_row[0] .';';
+				$likes_result = mysql_query($query);
+								
 				array_push($article_arr, array(
 					"article_id" => $article_row['article_id'], 
 					"list_id" => $topic_id, 
@@ -136,7 +139,7 @@
 					"content" => $article_row['content_txt'], 
 					"avatar_url" => $article_row['avatar_url'], 
 					"video_url" => $article_row['youtube_id'], 
-					"likes" => $article_row['likes'], 
+					"likes" => mysql_num_rows($likes_result), 
 					"liked" => false, 
 					"img_ratio" => $article_row['image_ratio'], 
 					"added" => $article_row['created'], 
@@ -181,6 +184,9 @@
 					));
 				}
 				
+				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_row[0] .';';
+				$likes_result = mysql_query($query);
+				
 				array_push($article_arr, array(
 					"article_id" => $article_row['article_id'], 
 					"list_id" => $topic_id, 
@@ -201,7 +207,7 @@
 					"content" => $article_row['content_txt'], 
 					"avatar_url" => $article_row['avatar_url'], 
 					"video_url" => $article_row['youtube_id'], 
-					"likes" => $article_row['likes'], 
+					"likes" => mysql_num_rows($likes_result), 
 					"liked" => false, 
 					"img_ratio" => $article_row['image_ratio'], 
 					"added" => $article_row['created'], 
@@ -251,6 +257,7 @@
 				$query .= 'VALUES ("'. $user_id .'", "'. $article_id .'", NOW());';
 				$result = mysql_query($query);				
 				
+				/*
 				$query = 'SELECT `likes` FROM `tblArticles` WHERE `id` ='. $article_id .';';
 				$row = mysql_fetch_row(mysql_query($query));
 				$likes_tot = $row[0];
@@ -258,6 +265,7 @@
 				
 				$query = 'UPDATE `tblArticles` SET `likes` = '. $likes_tot .' WHERE `id` = '. $article_id .';';
 				$result = mysql_query($query);
+				*/
 			}
 			
 			$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`id` = '. $comment_id .';';
@@ -276,34 +284,52 @@
 		}
 				
 		function removeLike($user_id, $article_id) {
+			/*
 			$query = 'SELECT `likes` FROM `tblArticles` WHERE `id` = '. $article_id .';';
 			$row = mysql_fetch_row(mysql_query($query));
 			$likes_tot = $row[0];
 			$likes_tot--;
-				
-			$query = 'UPDATE `tblArticles` SET `likes` = '. $likes_tot .' WHERE `id` ='. $article_id .';';
+			
+			$query = 'UPDATE `tblArticles` SET `likes` = '. $likes_tot .' WHERE `id` = '. $article_id .';';
 			$result = mysql_query($query);
+			*/
 			
 			$query = 'DELETE FROM `tblUsersLikedArticles` WHERE `user_id` = '. $user_id .' AND `article_id` = '. $article_id .';';
 			$result = mysql_query($query);
+		   			
+			$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_id .';';
+			$tot_result = mysql_query($query);
 			
-			$this->sendResponse(200, json_encode(array("success" => true)));
+			$this->sendResponse(200, json_encode(array(
+				"article_id" => $article_id, 
+				"likes" => mysql_num_rows($tot_result), 
+				"success" => true
+			)));
 			return (true);
 		}
 		
 		function addLike($user_id, $article_id) {
+			/*
 			$query = 'SELECT `likes` FROM `tblArticles` WHERE `id` = '. $article_id .';';
 			$row = mysql_fetch_row(mysql_query($query));
 			$likes_tot = $row[0];
 			$likes_tot++;
 				
-			$query = 'UPDATE `tblArticles` SET `likes` = '. $likes_tot .' WHERE `id` ='. $article_id .';';
+			$query = 'UPDATE `tblArticles` SET `likes` = '. $likes_tot .' WHERE `id` = '. $article_id .';';
 			$result = mysql_query($query);
+			*/
 			
 			$query = 'INSERT INTO `tblUsersLikedArticles` (`user_id`, `article_id`, `added`) VALUES ('. $user_id .', '. $article_id .', NOW());';
 			$result = mysql_query($query);
 			
-			$this->sendResponse(200, json_encode(array("success" => true)));
+			$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_id .';';
+			$tot_result = mysql_query($query);
+			
+			$this->sendResponse(200, json_encode(array(
+				"article_id" => $article_id, 
+				"likes" => mysql_num_rows($tot_result), 
+				"success" => true
+			)));
 			return (true);
 		}
 		
@@ -341,6 +367,9 @@
 					));
 				}
 				
+				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $commented_row['article_id'] .';';
+				$likes_result = mysql_query($query);
+				
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
 					"list_id" => $topic_row[0], 
@@ -358,7 +387,7 @@
 					"content" => $article_row[7], 
 					"avatar_url" => $article_row[20], 
 					"video_url" => $article_row[11], 
-					"likes" => $article_row[13], 
+					"likes" => mysql_num_rows($likes_result), 
 					"img_ratio" => $article_row[10], 
 					"added" => $article_row[16], 
 					"comments" => $comment_arr
@@ -411,6 +440,9 @@
 					));
 				}
 				
+				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $shared_row['id'] .';';
+				$likes_result = mysql_query($query);
+				
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
 					"list_id" => $topic_row[0], 
@@ -428,7 +460,7 @@
 					"content" => $article_row[7], 
 					"avatar_url" => $article_row[20], 
 					"video_url" => $article_row[11], 
-					"likes" => $article_row[13], 
+					"likes" => mysql_num_rows($likes_result), 
 					"img_ratio" => $article_row[10], 
 					"added" => $article_row[16], 
 					"comments" => $comment_arr
@@ -471,6 +503,9 @@
 					));
 				}
 				
+				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $liked_row['id'] .';';
+				$likes_result = mysql_query($query);
+				
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
 					"list_id" => $topic_row[0], 
@@ -488,7 +523,7 @@
 					"content" => $article_row[7], 
 					"avatar_url" => $article_row[20], 
 					"video_url" => $article_row[11], 
-					"likes" => $article_row[13], 
+					"likes" => mysql_num_rows($likes_result), 
 					"img_ratio" => $article_row[10], 
 					"added" => $article_row[16], 
 					"comments" => $comment_arr
@@ -528,6 +563,9 @@
 					));
 				}
 				
+				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_row[0] .';';
+				$likes_result = mysql_query($query);
+				
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
 					"list_id" => $topic_row[0],
@@ -548,7 +586,7 @@
 					"content" => $article_row['content_txt'], 
 					"avatar_url" => $article_row['avatar_url'], 
 					"video_url" => $article_row['youtube_id'], 
-					"likes" => $article_row['likes'], 
+					"likes" => mysql_num_rows($likes_result), 
 					"liked" => false, 
 					"img_ratio" => $article_row['image_ratio'], 
 					"added" => $article_row['created'], 
@@ -588,6 +626,9 @@
 						"added" => $comment_row[5]
 					));
 				}
+				
+				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_row[0] .';';
+				$likes_result = mysql_query($query);
 								
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
@@ -609,7 +650,7 @@
 					"content" => $article_row['content_txt'], 
 					"avatar_url" => $article_row['avatar_url'], 
 					"video_url" => $article_row['youtube_id'], 
-					"likes" => $article_row['likes'], 
+					"likes" => mysql_num_rows($likes_result), 
 					"liked" => false, 
 					"img_ratio" => $article_row['image_ratio'], 
 					"added" => $article_row['created'], 
@@ -672,8 +713,8 @@
 				break;
 				
 			case "7":
-				if (isset($_POST['userID']) && isset($_POST['listID']) && isset($_POST['articleID']))
-					$articles->removeLike($_POST['userID'], $_POST['listID'], $_POST['articleID']);
+				if (isset($_POST['userID']) && isset($_POST['articleID']))
+					$articles->removeLike($_POST['userID'], $_POST['articleID']);
 				break;
 				
 			case "8":

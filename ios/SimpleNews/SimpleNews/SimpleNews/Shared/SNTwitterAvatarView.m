@@ -52,7 +52,7 @@
 
 #pragma mark - AsyncResource Observers
 - (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data {
-	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+	//NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
 	_imgView.image = [UIImage imageWithData:data];
 }
 

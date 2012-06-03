@@ -14,7 +14,6 @@
 #import "SNNavBackBtnView.h"
 #import "SNTwitterFriendViewCell_iPhone.h"
 #import "SNTwitterUserVO.h"
-#import "SNTwitterFriendArticlesViewController_iPhone.h"
 #import "SNFriendProfileViewController_iPhone.h"
 #import "SNTwitterCaller.h"
 
@@ -39,7 +38,8 @@
 - (id)init {
 	if ((self = [super init])) {
 		_friends = [NSMutableArray new];
-		_sectionTitles = [NSArray arrayWithObjects:@"a", @"e", @"i", @"m", @"p", nil];
+		_sectionTitles = [NSArray arrayWithObjects:@"#", @"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z", nil];
+		_friendsDictionary = [NSMutableDictionary dictionary];
 	}
 	
 	return (self);
@@ -60,12 +60,13 @@
 	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 45.0, self.view.frame.size.width, self.view.frame.size.height - 45.0) style:UITableViewStylePlain];
 	[_tableView setBackgroundColor:[UIColor clearColor]];// colorWithPatternImage:[img stretchableImageWithLeftCapWidth:0.0 topCapHeight:10.0]]];
 	_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-	_tableView.rowHeight = 70.0;
+	_tableView.rowHeight = 56.0;
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
 	_tableView.userInteractionEnabled = YES;
 	_tableView.scrollsToTop = NO;
 	_tableView.showsVerticalScrollIndicator = YES;
+	_tableView.contentInset = UIEdgeInsetsMake(10.0, 0.0f, 10.0f, 0.0f);
 	[self.view addSubview:_tableView];
 	
 	SNHeaderView_iPhone *headerView;
@@ -123,37 +124,85 @@
 
 
 #pragma mark - TableView DataSource Delegates
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return ([_friends count]);
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	
+	if (_isFinder) {
+		NSMutableArray *letterArray = [_friendsDictionary objectForKey:[_sectionTitles objectAtIndex:section]];
+		return ([letterArray count]);
+	
+	} else
+		return ([_friends count]);
 }
 
+
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return (1);
+	
+	int tot = 0;
+	if (_isFinder) {
+		for (NSArray *tmpArray in _friendsDictionary) {
+			tot++;
+		}
+		
+		return ([_sectionTitles count]);
+	
+	}else
+		return (1);
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	SNTwitterFriendViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNTwitterFriendViewCell_iPhone cellReuseIdentifier]];
+	//static NSString * MyIdentifier = @"SNTwitterFriendViewCell_iPhone";
 	
-	if (cell == nil) {
-		if (indexPath.row == 0)
-			cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsHeader];
+	//SNTwitterFriendViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNTwitterFriendViewCell_iPhone cellReuseIdentifier]];
+	SNTwitterFriendViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:nil];
+	
+	NSMutableArray *letterArray = [_friendsDictionary objectForKey:[_sectionTitles objectAtIndex:indexPath.section]];
+	
+	if (_isFinder) {
+		if (cell == nil) {
+			
+			if (indexPath.section == 0 && indexPath.row == 0) {
+				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsHeader];
+			
+			} else if (indexPath.section == [tableView numberOfSections] - 1 && indexPath.row == [tableView numberOfRowsInSection:indexPath.section] - 1) {
+				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsFooter];
+			
+			} else {
+				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsMiddle];
+			}
+		}
 		
-		else if (indexPath.row == [_friends count] - 1)
-			cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsFooter];
+		cell.twitterUserVO = [letterArray objectAtIndex:indexPath.row];
+		[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
 		
-		else
-			cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsMiddle];
+	} else {
+		if (cell == nil) {
+			if (indexPath.row == 0) {
+				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsHeader];
+				
+			} else if (indexPath.row == [_friends count] - 1) {
+				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsFooter];
+				
+			} else {
+				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsMiddle];
+			}
+		}
+		
+		cell.twitterUserVO = [_friends objectAtIndex:indexPath.row];
+		[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+		
+//		UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(12.0, 56.0, self.view.frame.size.width - 43.0, 1.0)];
+//		[lineView setBackgroundColor:[SNAppDelegate snLineColor]];
+//		[cell addSubview:lineView];
 	}
 	
-	cell.twitterUserVO = (SNTwitterUserVO *)[_friends objectAtIndex:indexPath.row];
-	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+	//NSLog(@"\nCELL FOR ROW:[(%d / %d) : (%d / %d]", indexPath.section, [tableView numberOfSections] - 1, indexPath.row, [tableView numberOfRowsInSection:indexPath.section] - 1);
 	
 	return (cell);
 }
 
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-	return ([NSArray arrayWithObjects:@"#", @"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z", nil]);
+	return (_sectionTitles);
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
@@ -161,37 +210,45 @@
 }
 
 
+
+
 #pragma mark - TableView Delegates
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return (70.0);
+	return (56.0);
 }
 
 //-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
 //	return (53.0);
 //}
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+	//NSLog(@"WILL DISPLAY CELL:(%d, %d)", indexPath.section, indexPath.row);
+	
+	UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(12.0, 56.0, self.view.frame.size.width - 43.0, 1.0)];
+	[lineView setBackgroundColor:[SNAppDelegate snLineColor]];
+	//[cell addSubview:lineView];
+}
 
 -(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	return (indexPath);
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	SNTwitterUserVO *vo = (SNTwitterUserVO *)[_friends objectAtIndex:indexPath.row];
-	NSLog(@"SELECTED:[%@]", vo.twitterID);
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
 	
 	
 	if (_isFinder) {
-		_selectedIndex = indexPath.row;
+		NSMutableArray *letterArray = [_friendsDictionary objectForKey:[_sectionTitles objectAtIndex:indexPath.section]];
+		_vo = [letterArray objectAtIndex:indexPath.row];
 		
 		_friendLookupRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
 		[_friendLookupRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-		[_friendLookupRequest setPostValue:vo.twitterID forKey:@"twitterID"];
+		[_friendLookupRequest setPostValue:_vo.twitterID forKey:@"twitterID"];
 		[_friendLookupRequest setDelegate:self];
 		[_friendLookupRequest startAsynchronous];
 		
 	} else {
-		[self.navigationController pushViewController:[[SNFriendProfileViewController_iPhone alloc] initWithTwitterUser:vo] animated:YES];
+		[self.navigationController pushViewController:[[SNFriendProfileViewController_iPhone alloc] initWithTwitterUser:(SNTwitterUserVO *)[_friends objectAtIndex:indexPath.row]] animated:YES];
 	}
 }
 
@@ -226,14 +283,15 @@
 			NSMutableArray *friendIDs = [NSMutableArray array];
 			
 			NSString *idList = @"";
-            int cnt = 0;
+			int cnt = 0;
+			
 			for (NSString *twitterID in [parsedUser objectForKey:@"ids"]) {
-                if (cnt == 100)
-                    break;
+				if (cnt == 100)
+					break;
                 
 				idList = [idList stringByAppendingFormat:@",%@", twitterID];
 				[friendIDs addObject:twitterID];
-                cnt++;
+				cnt++;
 			}
 			
 			_friendIDs = [friendIDs copy];
@@ -258,6 +316,24 @@
 				[friends addObject:vo];
 			}
 			
+			for (SNTwitterUserVO *vo in friends) {
+				NSString *firstLetter = [[vo.handle substringToIndex:1] uppercaseString];
+				
+				if ([firstLetter isEqualToString:@"0"] || [firstLetter isEqualToString:@"1"] || [firstLetter isEqualToString:@"2"] || [firstLetter isEqualToString:@"3"] || [firstLetter isEqualToString:@"4"] || [firstLetter isEqualToString:@"5"] || [firstLetter isEqualToString:@"6"] || [firstLetter isEqualToString:@"7"] || [firstLetter isEqualToString:@"8"] || [firstLetter isEqualToString:@"9"])
+					firstLetter = @"#";
+				
+				if ([_friendsDictionary objectForKey:firstLetter] == nil) {
+					NSMutableArray * tmpArray = [NSMutableArray array];
+					[tmpArray addObject:vo];
+					[_friendsDictionary setObject:tmpArray forKey:firstLetter];
+				
+				} else {
+					NSMutableArray *letterArray = [_friendsDictionary objectForKey:firstLetter];
+					[letterArray addObject:vo];
+					[_friendsDictionary setObject:letterArray forKey:firstLetter];
+				}
+			}
+			
 			_friends = [friends copy];
 			[_tableView reloadData];
 			
@@ -274,10 +350,10 @@
 		
 		else {
 			if([[parsedResult objectForKey:@"result"] isEqualToString:@"true"])
-				[self.navigationController pushViewController:[[SNFriendProfileViewController_iPhone alloc] initWithTwitterUser:(SNTwitterUserVO *)[_friends objectAtIndex:_selectedIndex]] animated:YES];
+				[self.navigationController pushViewController:[[SNFriendProfileViewController_iPhone alloc] initWithTwitterUser:_vo] animated:YES];
 			
 			else {
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invite Sent" message:[NSString stringWithFormat:@"Sent a tweet mentioning @%@", ((SNTwitterUserVO *)[_friends objectAtIndex:_selectedIndex]).handle] delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invite Sent" message:[NSString stringWithFormat:@"Sent a tweet mentioning @%@", _vo.handle] delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
 				[alert show];
 				
 				//[[SNTwitterCaller sharedInstance] sendTextTweet:[NSString stringWithFormat:kTweetInvite, ((SNTwitterUserVO *)[_friends objectAtIndex:_selectedIndex]).handle]];

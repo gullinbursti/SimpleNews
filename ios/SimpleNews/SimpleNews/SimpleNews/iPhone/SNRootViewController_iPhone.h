@@ -49,4 +49,7 @@
 	int _swipeIndex;
 }
 
+
+#define kTopicOffset 176.0f
+
 @end

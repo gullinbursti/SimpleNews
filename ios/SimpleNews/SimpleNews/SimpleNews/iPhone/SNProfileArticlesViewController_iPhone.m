@@ -13,54 +13,37 @@
 #import "SNNavBackBtnView.h"
 #import "SNProfileArticleViewCell_iPhone.h"
 #import "SNArticleDetailsViewController_iPhone.h"
+#import "SNWebPageViewController_iPhone.h"
 
 @implementation SNProfileArticlesViewController_iPhone
 
--(id)initAsArticlesLiked {
+- (id)initWithUserID:(int)userID asType:(int)type {
 	if ((self = [super init])) {
-		_headerTitle = @"Liked Articles";
+
+		switch (type) {
+			case 6:
+				_headerTitle = @"Liked Articles";
+				break;
+				
+			case 2:
+				_headerTitle = @"Commented Articles";
+				break;
+				
+			case 5:
+				_headerTitle = @"Shared Articles";
+				break;
+		}
+		
 		
 		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 6] forKey:@"action"];
-		[_articlesRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", type] forKey:@"action"];
+		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", userID] forKey:@"userID"];
 		[_articlesRequest setDelegate:self];
 		[_articlesRequest startAsynchronous];
 	}
 	
 	return (self);
 }
-
-
-- (id)initAsArticlesCommented {
-	if ((self = [super init])) {
-		_headerTitle = @"Commented Articles";
-		
-		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"action"];
-		[_articlesRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		[_articlesRequest setDelegate:self];
-		[_articlesRequest startAsynchronous];
-	}
-	
-	return (self);
-}
-
-
-- (id)initAsArticlesShared {
-	if ((self = [super init])) {
-		_headerTitle = @"Shared Articles";
-		
-		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", 5] forKey:@"action"];
-		[_articlesRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		[_articlesRequest setDelegate:self];
-		[_articlesRequest startAsynchronous];
-	}
-	
-	return (self);
-}
-
-
 
 -(void)didReceiveMemoryWarning {
 	[super didReceiveMemoryWarning];
@@ -154,7 +137,9 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
-	[self.navigationController pushViewController:[[SNArticleDetailsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[_articles objectAtIndex:indexPath.row]] animated:YES];
+	
+	SNArticleVO *vo = (SNArticleVO *)[_articles objectAtIndex:indexPath.row];	
+	[self.navigationController pushViewController:[[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:vo.article_url] title:vo.title] animated:YES];
 }
 
 

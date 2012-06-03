@@ -13,6 +13,7 @@
 	UILabel *_handleLabel;
 	UILabel *_nameLabel;
 	
+	UIView *_lineView;
 	UIImageView *_bgImgView;
 }
 

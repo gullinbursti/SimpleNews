@@ -21,8 +21,8 @@
 
 - (id)initAsHeader {
 	if ((self = [self init])) {
-		[_bgImgView setBackgroundColor:[SNAppDelegate snDebugBlueColor]];
-		_bgImgView.image = [UIImage imageNamed:@"profileBackground.png"];
+		UIImage *img = [UIImage imageNamed:@"topBackground.png"];
+		_bgImgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:7.0];
 	}
 	
 	return (self);
@@ -30,8 +30,8 @@
 
 - (id)initAsMiddle {
 	if ((self = [self init])) {
-		[_bgImgView setBackgroundColor:[SNAppDelegate snDebugGreenColor]];
-		_bgImgView.image = [UIImage imageNamed:@"profileBackground.png"];
+		UIImage *img = [UIImage imageNamed:@"midBackground.png"];
+		_bgImgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:7.0];
 	}
 	
 	return (self);
@@ -39,8 +39,9 @@
 
 - (id)initAsFooter {
 	if ((self = [self init])) {
-		[_bgImgView setBackgroundColor:[SNAppDelegate snDebugRedColor]];
-		_bgImgView.image = [UIImage imageNamed:@"profileBackground.png"];
+		UIImage *img = [UIImage imageNamed:@"botBackground.png"];
+		_bgImgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:7.0];		
+		[_lineView removeFromSuperview];
 	}
 	
 	return (self);
@@ -49,12 +50,12 @@
 
 
 -(id)init {
-	if ((self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[self class] cellReuseIdentifier]])) {
-		
-		_bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width - 40.0, 70.0)];
+	//if ((self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:[[self class] cellReuseIdentifier]])) {
+	if ((self = [super init])) { //WithStyle:UITableViewCellStyleDefault reuseIdentifier:nil])) {
+		_bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width - 20.0, 56.0)];
 		[self addSubview:_bgImgView];
 		
-		_handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 27.0, 200.0, 16.0)];
+		_handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(59.0, 23.0, 200.0, 16.0)];
 		_handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 		_handleLabel.textColor = [SNAppDelegate snLinkColor];
 		_handleLabel.backgroundColor = [UIColor clearColor];
@@ -65,10 +66,9 @@
 		_nameLabel.textColor = [SNAppDelegate snLinkColor];
 		_nameLabel.backgroundColor = [UIColor clearColor];
 		
-		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, 70.0, self.frame.size.width - 40.0, 2.0)];
-		UIImage *img = [UIImage imageNamed:@"line.png"];
-		lineImgView.image = [img stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];
-		[self addSubview:lineImgView];
+		_lineView = [[UIView alloc] initWithFrame:CGRectMake(12.0, 56.0, self.frame.size.width - 43.0, 1.0)];
+		[_lineView setBackgroundColor:[SNAppDelegate snLineColor]];
+		[self addSubview:_lineView];
 	}
 	
 	return (self);
@@ -79,7 +79,7 @@
 - (void)setTwitterUserVO:(SNTwitterUserVO *)twitterUserVO {
 	_twitterUserVO = twitterUserVO;
 	
-	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(20.0, 19.0) imageURL:twitterUserVO.avatarURL];
+	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(25.0, 18.0) imageURL:twitterUserVO.avatarURL];
 	[self addSubview:avatarImgView];
 	
 	_handleLabel.text = [NSString stringWithFormat:@"@%@", _twitterUserVO.handle];

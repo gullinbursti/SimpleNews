@@ -109,12 +109,12 @@
 	[statsBgView addSubview:sharesLabel];
 	
 	UIButton *likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	likeButton.frame = CGRectMake(12.0, 115.0, 96.0, 70.0);
+	likeButton.frame = CGRectMake(108.0, 115.0, 96.0, 70.0);
 	[likeButton addTarget:self action:@selector(_goLikedArticles) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:likeButton];
 	 
 	UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	commentButton.frame = CGRectMake(108.0, 115.0, 96.0, 70.0);
+	commentButton.frame = CGRectMake(12.0, 115.0, 96.0, 70.0);
 	[commentButton addTarget:self action:@selector(_goCommentedArticles) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:commentButton];
 	 
@@ -128,10 +128,10 @@
 	tableBgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:10.0];
 	[self.view addSubview:tableBgView];
 	
-	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(12.0, 186.0, self.view.frame.size.width - 24.0, self.view.frame.size.height - 267.0) style:UITableViewStylePlain];
+	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(12.0, 195.0, self.view.frame.size.width - 24.0, self.view.frame.size.height - 277.0) style:UITableViewStylePlain];
 	[_tableView setBackgroundColor:[UIColor clearColor]];
 	_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-	_tableView.rowHeight = 70.0;
+	_tableView.rowHeight = 64.0;
 	_tableView.delegate = self;
 	_tableView.dataSource = self;
 	_tableView.userInteractionEnabled = YES;
@@ -140,6 +140,14 @@
 	_tableView.alwaysBounceVertical = NO;
 	_tableView.bounces = NO;
 	[self.view addSubview:_tableView];
+	
+	UIView *line1View = [[UIView alloc] initWithFrame:CGRectMake(12.0, 259.0, 296.0, 1.0)];
+	[line1View setBackgroundColor:[SNAppDelegate snLineColor]];
+	[self.view addSubview:line1View];
+	
+	UIView *line2View = [[UIView alloc] initWithFrame:CGRectMake(12.0, 319.0, 296.0, 1.0)];
+	[line2View setBackgroundColor:[SNAppDelegate snLineColor]];
+	[self.view addSubview:line2View];
 	
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Profile"];
 	[self.view addSubview:headerView];
@@ -187,15 +195,15 @@
 }
 
 -(void)_goLikedArticles {
-	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initAsArticlesLiked] animated:YES];
+	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initWithUserID:[[[SNAppDelegate profileForUser] objectForKey:@"id"] intValue] asType:6] animated:YES];
 }
 
 -(void)_goCommentedArticles {
-	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initAsArticlesCommented] animated:YES];
+	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initWithUserID:[[[SNAppDelegate profileForUser] objectForKey:@"id"] intValue] asType:2] animated:YES];
 }
 
 -(void)_goSharedArticles {
-	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initAsArticlesShared] animated:YES];
+	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initWithUserID:[[[SNAppDelegate profileForUser] objectForKey:@"id"] intValue] asType:5] animated:YES];
 }
 
 
@@ -226,7 +234,7 @@
 		cell.accessoryView = switchView;
 			
 	} else {
-		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(260.0, 23.0, 24.0, 24.0)];
+		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(265.0, 23.0, 24.0, 24.0)];
 		chevronView.image = [UIImage imageNamed:@"chevron.png"];
 		[cell addSubview:chevronView];
 	}
@@ -238,7 +246,7 @@
 
 #pragma mark - TableView Delegates
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return (70.0);
+	return (64.0);
 }
 
 //-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

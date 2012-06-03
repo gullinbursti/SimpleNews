@@ -163,7 +163,7 @@
 		}
 		
 		if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
-			offset -= 2;
+			//offset -= 2;
 			UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			itunesButton.frame = CGRectMake(7.0, offset, 74.0, 29.0);
 			[itunesButton setBackgroundImage:[UIImage imageNamed:@"iTunesAppStore_nonActive.png"] forState:UIControlStateNormal];
@@ -200,14 +200,14 @@
 		[commentButton setTitle:[NSString stringWithFormat:@"%d", [_vo.comments count]] forState:UIControlStateNormal];
 		[btnBGView addSubview:commentButton];
 		
-//		if (_vo.hasLiked) {
-//			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateNormal];
-//			[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
-//			
-//		} else {
-//			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
-//			[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-//		}
+		if (_vo.hasLiked) {
+			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateNormal];
+			[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+			
+		} else {
+			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
+			[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+		}
 		
 		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		sourceButton.frame = CGRectMake(249.0, offset, 44.0, 44.0);
@@ -295,19 +295,18 @@
 		[alert show];
 	
 	} else {		
-//		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-//		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
-//		
-//		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
-//		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
-		[_likeButton setTitle:[NSString stringWithFormat:@"%d", ++_vo.totalLikes] forState:UIControlStateNormal];
+		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 		
-		ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-		[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-		[likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
-		likeRequest.delegate = self;
-		[likeRequest startAsynchronous];
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
+		
+		_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+		[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[_likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+		_likeRequest.delegate = self;
+		[_likeRequest startAsynchronous];
 		
 		_vo.hasLiked = YES;
 	}
@@ -320,14 +319,13 @@
 	
 	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
 	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
-	[_likeButton setTitle:[NSString stringWithFormat:@"%d", --_vo.totalLikes] forState:UIControlStateNormal];
 	
-	ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
-	[likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
-	likeRequest.delegate = self;
-	[likeRequest startAsynchronous];
+	_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+	[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
+	[_likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+	[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+	_likeRequest.delegate = self;
+	[_likeRequest startAsynchronous];
 	
 	_vo.hasLiked = NO;
 }
@@ -377,6 +375,20 @@
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
 	NSLog(@"SNArticleItem_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	
+	if ([request isEqual:_likeRequest]) {
+		NSError *error = nil;
+		NSDictionary *parsedLike = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+		
+		if (error != nil)
+			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+		
+		else {
+			_vo.totalLikes = [[parsedLike objectForKey:@"likes"] intValue];
+			[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
+		}
+		
+	}
 }
 
 -(void)requestFailed:(ASIHTTPRequest *)request {

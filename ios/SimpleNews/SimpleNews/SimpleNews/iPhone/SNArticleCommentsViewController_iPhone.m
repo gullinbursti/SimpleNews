@@ -56,7 +56,7 @@
 		_commentOffset += ((kItemHeight + txtSize.height) - 10.0);
 	}
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 55.0, self.view.frame.size.width, MIN(370.0, _commentOffset))];
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.view.frame.size.width, MIN(370.0, _commentOffset))];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[_scrollView setBackgroundColor:[UIColor clearColor]];
 	_scrollView.opaque = YES;
@@ -66,6 +66,7 @@
 	_scrollView.showsHorizontalScrollIndicator = NO;
 	_scrollView.showsVerticalScrollIndicator = NO;
 	_scrollView.alwaysBounceVertical = NO;
+	_scrollView.contentInset = UIEdgeInsetsMake(10.0, 0.0, -10.0, 0.0);	
 	[self.view addSubview:_scrollView];
 	
 	_scrollBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, _scrollView.frame.size.width, _commentOffset)];

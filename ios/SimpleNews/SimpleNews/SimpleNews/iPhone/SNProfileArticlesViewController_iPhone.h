@@ -10,6 +10,7 @@
 
 #import "ASIFormDataRequest.h"
 #import "MBProgressHUD.h"
+#import "SNTwitterUserVO.h"
 
 @interface SNProfileArticlesViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, ASIHTTPRequestDelegate> {
 	ASIFormDataRequest *_articlesRequest;
@@ -18,10 +19,9 @@
 	NSMutableArray *_articles;
 	UITableView *_tableView;
 	NSString *_headerTitle;
+	SNTwitterUserVO *_vo;
 }
 
--(id)initAsArticlesLiked;
--(id)initAsArticlesCommented;
--(id)initAsArticlesShared;
+-(id)initWithUserID:(int)userID asType:(int)type;
 
 @end

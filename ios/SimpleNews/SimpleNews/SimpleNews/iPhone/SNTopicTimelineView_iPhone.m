@@ -362,21 +362,21 @@
 				
 				if (vo.type_id > 1 && vo.type_id - 4 < 0) {
 					height += imgWidth * vo.imgRatio;
-					height += 20;
+					height += 26; //20
 				}
 				
 				if (!(vo.topicID == 8 || vo.topicID == 9 || vo.topicID == 10)) {
-					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 					height += size.height + 9;
 				}
 				
 				if (vo.type_id > 3) {
 					height += 229;
-					height += 9;
+					height += 26; //9
 				}
 				
 				if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
-					height += 40;
+					height += 37;
 				}
 				
 				SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo];

@@ -10,14 +10,15 @@
 
 #import "ASIHTTPRequest.h"
 #import "MBProgressHUD.h"
+#import "SNTwitterUserVO.h"
 
 @interface SNFindFriendsViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, ASIHTTPRequestDelegate> {
 	UITableView *_tableView;
 	NSMutableArray *_friendIDs;
 	NSMutableArray *_friends;
 	NSArray *_sectionTitles;
+	NSMutableDictionary *_friendsDictionary;
 	BOOL _isFinder;
-	int _selectedIndex;
 	
 	ASIHTTPRequest *_idsRequest;
 	ASIHTTPRequest *_followingBlockRequest;
@@ -25,6 +26,7 @@
 	ASIFormDataRequest *_myFriendsRequest;
 	
 	MBProgressHUD *_progressHUD;
+	SNTwitterUserVO *_vo;
 }
 
 -(id)initAsFinder;

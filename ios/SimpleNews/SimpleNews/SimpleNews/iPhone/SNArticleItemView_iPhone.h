@@ -21,6 +21,7 @@
 	EGOImageView *_videoImgView;
 	
 	SNArticleVO *_vo;
+	ASIFormDataRequest *_likeRequest;
 }
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;
