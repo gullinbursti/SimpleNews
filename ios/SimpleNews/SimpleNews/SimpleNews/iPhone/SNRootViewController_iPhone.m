@@ -68,14 +68,28 @@
 	self.fullscreenImgResource = nil;
 }
 
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [touches anyObject];
+	
+	if ([touch view] == [_topicTimelineView overlayView]) {
+		CGPoint location = [touch locationInView:self.view];
+		_touchPt = CGPointMake(_topicTimelineView.center.x - location.x, _topicTimelineView.center.y - location.y);
+	}
+}
+
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {	
 	UITouch *touch = [touches anyObject];
 	
-	NSLog(@"TOUCHED:[%@]", [touch view]);
+	
 	// If the touch was in the placardView, move the placardView to its location
-	if ([touch view] == _topicTimelineView) {
-		CGPoint location = [touch locationInView:self.view];
-		_topicTimelineView.center = location;		
+	if ([touch view] == [_topicTimelineView overlayView]) {
+		CGPoint touchLocation = [touch locationInView:self.view];
+		CGPoint location = CGPointMake(MIN(MAX(_touchPt.x + touchLocation.x, 160.0), 336.0), _topicTimelineView.center.y);
+		
+		_topicTimelineView.center = location;
+		
+		NSLog(@"TOUCHED:[%f, %f]", _topicTimelineView.center.x, _topicTimelineView.center.y);
 		return;
 	}
 }

@@ -36,6 +36,8 @@
 	int _lastID;
 }
 
+@property (nonatomic, retain)UIView *overlayView;
+
 -(id)initWithPopularArticles;
 -(id)initWithTopicVO:(SNTopicVO *)vo;
 

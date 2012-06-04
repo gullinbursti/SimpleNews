@@ -47,6 +47,8 @@
 	BOOL _reloading;
 	BOOL _isIntro;
 	int _swipeIndex;
+	
+	CGPoint _touchPt;
 }
 
 

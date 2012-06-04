@@ -37,6 +37,8 @@
 @synthesize articleListResource = _articleListResource;
 @synthesize updateListResource = _updateListResource;
 
+@synthesize overlayView = _overlayView;
+
 -(id)init {
 	if ((self = [super initWithFrame:CGRectMake(276.0, 0.0, 320.0, 480.0)])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_fullscreenMedia:) name:@"FULLSCREEN_MEDIA" object:nil];
@@ -84,6 +86,10 @@
 		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:listBtnView];
 		
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
+		[_overlayView setBackgroundColor:[SNAppDelegate snDebugGreenColor]];
+		[self addSubview:_overlayView];
+		
 		[self _refreshPopularList];
 	}
 	
@@ -120,6 +126,10 @@
 		SNNavListBtnView *listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
 		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:listBtnView];
+		
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
+		[_overlayView setBackgroundColor:[SNAppDelegate snDebugGreenColor]];
+		[self addSubview:_overlayView];
 		
 		[self _refreshArticleList];
 	}
