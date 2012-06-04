@@ -42,6 +42,7 @@
 -(void)dealloc {
 }
 
+
 #pragma mark - View lifecycle
 -(void)loadView {
 	[super loadView];
@@ -56,7 +57,7 @@
 		_commentOffset += ((kItemHeight + txtSize.height) - 10.0);
 	}
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.view.frame.size.width, MIN(370.0, _commentOffset))];
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.view.frame.size.width, 387.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[_scrollView setBackgroundColor:[UIColor clearColor]];
 	_scrollView.opaque = YES;
@@ -77,8 +78,8 @@
 	
 	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
 	_refreshHeaderView.delegate = self;
-	[_scrollView addSubview:_refreshHeaderView];
-	[_refreshHeaderView refreshLastUpdatedDate];
+	//[_scrollView addSubview:_refreshHeaderView];
+	//[_refreshHeaderView refreshLastUpdatedDate];
 	
 	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 49.0, self.view.frame.size.width, 49.0)];
 	[self.view addSubview:_bgView];
@@ -322,9 +323,10 @@
 	SNCommentVO *vo = [SNCommentVO commentWithDictionary:parsedComment];
 	[_vo.comments insertObject:vo atIndex:0];
 	
+	
 	CGSize commentSize = [vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(256.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 	for (SNArticleCommentView_iPhone *commentView in _commentViews) {
-		[UIView animateWithDuration:0.25 animations:^(void) {
+		//		[UIView animateWithDuration:0.25 animations:^(void) {
 			CGSize size = _scrollView.contentSize;
 			size.height += (kItemHeight + commentSize.height);
 			_scrollView.contentSize = size;
@@ -333,9 +335,9 @@
 			frame.size.height = size.height;
 			
 			_scrollBgView.frame = frame;
-			_scrollView.frame = CGRectMake(_scrollView.frame.origin.x, _scrollView.frame.origin.y, _scrollView.frame.size.width, MIN(370.0, frame.size.height));
-			commentView.frame = CGRectMake(commentView.frame.origin.x, commentView.frame.origin.y + kItemHeight + commentSize.height, commentView.frame.size.width, commentView.frame.size.height);
-		}];
+			_scrollView.frame = CGRectMake(_scrollView.frame.origin.x, _scrollView.frame.origin.y, _scrollView.frame.size.width, 387.0);
+			commentView.frame = CGRectMake(commentView.frame.origin.x, commentView.frame.origin.y, commentView.frame.size.width, commentView.frame.size.height);
+		//		}];
 	}
 	
 	SNArticleCommentView_iPhone *commentView = [[SNArticleCommentView_iPhone alloc] initWithFrame:CGRectMake(0.0, 0.0, _scrollView.frame.size.width, kItemHeight + commentSize.height) commentVO:vo];

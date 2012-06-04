@@ -30,8 +30,7 @@
 
 - (id)initAsMiddle {
 	if ((self = [self init])) {
-		UIImage *img = [UIImage imageNamed:@"midBackground.png"];
-		_bgImgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:7.0];
+		_bgImgView.image = [UIImage imageNamed:@"midBackground.png"];
 	}
 	
 	return (self);
@@ -68,7 +67,7 @@
 		
 		_lineView = [[UIView alloc] initWithFrame:CGRectMake(12.0, 56.0, self.frame.size.width - 43.0, 1.0)];
 		[_lineView setBackgroundColor:[SNAppDelegate snLineColor]];
-		[self addSubview:_lineView];
+		//[self addSubview:_lineView];
 	}
 	
 	return (self);

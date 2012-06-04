@@ -68,6 +68,19 @@
 	self.fullscreenImgResource = nil;
 }
 
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {	
+	UITouch *touch = [touches anyObject];
+	
+	NSLog(@"TOUCHED:[%@]", [touch view]);
+	// If the touch was in the placardView, move the placardView to its location
+	if ([touch view] == _topicTimelineView) {
+		CGPoint location = [touch locationInView:self.view];
+		_topicTimelineView.center = location;		
+		return;
+	}
+}
+
+
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
 	UITouch *touch = [touches anyObject];
 	CGPoint touchPoint = [touch locationInView:self.view];

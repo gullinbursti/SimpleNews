@@ -23,6 +23,8 @@
 - (id)initWithTwitterUser:(SNTwitterUserVO *)vo {
 	if ((self = [super init])) {
 		_vo = vo;
+		_items = [NSMutableArray new];
+		_switches = [NSMutableArray new];
 	}
 	
 	return (self);
@@ -124,7 +126,33 @@
 	shareButton.frame = CGRectMake(204.0, 115.0, 96.0, 70.0);
 	[shareButton addTarget:self action:@selector(_goSharedArticles) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:shareButton];
-	 
+	
+	UIImageView *tableBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 186.0, 320.0, self.view.frame.size.height - 267.0)];
+	UIImage *img = [UIImage imageNamed:@"profileBackground.png"];
+	tableBgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:10.0];
+	[self.view addSubview:tableBgView];
+	
+	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(12.0, 195.0, self.view.frame.size.width - 24.0, self.view.frame.size.height - 277.0) style:UITableViewStylePlain];
+	[_tableView setBackgroundColor:[UIColor clearColor]];
+	_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+	_tableView.rowHeight = 64.0;
+	_tableView.delegate = self;
+	_tableView.dataSource = self;
+	_tableView.userInteractionEnabled = YES;
+	_tableView.scrollsToTop = NO;
+	_tableView.showsVerticalScrollIndicator = NO;
+	_tableView.alwaysBounceVertical = NO;
+	_tableView.bounces = NO;
+	[self.view addSubview:_tableView];
+	
+	UIView *line1View = [[UIView alloc] initWithFrame:CGRectMake(12.0, 259.0, 296.0, 1.0)];
+	[line1View setBackgroundColor:[SNAppDelegate snLineColor]];
+	[self.view addSubview:line1View];
+	
+	UIView *line2View = [[UIView alloc] initWithFrame:CGRectMake(12.0, 319.0, 296.0, 1.0)];
+	[line2View setBackgroundColor:[SNAppDelegate snLineColor]];
+	[self.view addSubview:line2View];
+	
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Profile"];
 	[self.view addSubview:headerView];
 	
@@ -132,11 +160,33 @@
 	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:backBtnView];
 	
+	NSString *profilePath = [[NSBundle mainBundle] pathForResource:@"friend_profile" ofType:@"plist"];
+	NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:profilePath] options:NSPropertyListImmutable format:nil error:nil];
+	
+	for (NSDictionary *item in plist)
+		[_items addObject:[SNProfileVO profileWithDictionary:item]];
+	
+	_commentSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+	[_commentSwitch addTarget:self action:@selector(_goCommentSwitch:) forControlEvents:UIControlEventValueChanged];
+	
+	_likeSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+	[_likeSwitch addTarget:self action:@selector(_goLikeSwitch:) forControlEvents:UIControlEventValueChanged];
+	
+	_shareSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
+	[_shareSwitch addTarget:self action:@selector(_goShareSwitch:) forControlEvents:UIControlEventValueChanged];
+	
 	ASIFormDataRequest *statsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
 	[statsRequest setPostValue:[NSString stringWithFormat:@"%d", 5] forKey:@"action"];
 	[statsRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.userID] forKey:@"userID"];
 	[statsRequest setDelegate:self];
 	[statsRequest startAsynchronous];
+	
+	_notificationsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", 6] forKey:@"action"];
+	[_notificationsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.userID] forKey:@"friendID"];
+	[_notificationsRequest setDelegate:self];
+	[_notificationsRequest startAsynchronous];
 }
 
 -(void)viewDidLoad {
@@ -158,8 +208,40 @@
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
--(void)_goNotificationsToggle:(UISwitch *)switchView {
-	[SNAppDelegate notificationsToggle:switchView.on];
+-(void)_goCommentSwitch:(UISwitch *)switchView {
+	_notificationsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
+	[_notificationsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.userID] forKey:@"friendID"];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _commentSwitch.on] forKey:@"isComment"];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _likeSwitch.on] forKey:@"isLike"];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _shareSwitch.on] forKey:@"isShare"];
+	[_notificationsRequest setDelegate:self];
+	[_notificationsRequest startAsynchronous];
+}
+
+-(void)_goLikeSwitch:(UISwitch *)switchView {
+	_notificationsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
+	[_notificationsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.userID] forKey:@"friendID"];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _commentSwitch.on] forKey:@"isComment"];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _likeSwitch.on] forKey:@"isLike"];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _shareSwitch.on] forKey:@"isShare"];
+	[_notificationsRequest setDelegate:self];
+	[_notificationsRequest startAsynchronous];
+}
+
+-(void)_goShareSwitch:(UISwitch *)switchView {
+	_notificationsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
+	[_notificationsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.userID] forKey:@"friendID"];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _commentSwitch.on] forKey:@"isComment"];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _likeSwitch.on] forKey:@"isLike"];
+	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _shareSwitch.on] forKey:@"isShare"];
+	[_notificationsRequest setDelegate:self];
+	[_notificationsRequest startAsynchronous];
 }
 
 -(void)_goLikedArticles {
@@ -174,21 +256,84 @@
 	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initWithUserID:_vo.userID asType:5] animated:YES];
 }
 
+#pragma mark - TableView DataSource Delegates
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+	return ([_items count]);
+}
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return (1);
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	SNProfileViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNProfileViewCell_iPhone cellReuseIdentifier]];
+	
+	if (cell == nil)
+		cell = [[SNProfileViewCell_iPhone alloc] init];
+	
+	cell.profileVO = (SNProfileVO *)[_items objectAtIndex:indexPath.row];
+	
+	switch (indexPath.row) {
+		case 0:
+			cell.accessoryView = _commentSwitch;
+			break;
+			
+		case 1:
+			cell.accessoryView = _likeSwitch;
+			break;
+			
+		case 2:
+			cell.accessoryView = _shareSwitch;
+			break;
+	}
+	
+	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+	return (cell);
+}
+
+
+#pragma mark - TableView Delegates
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return (64.0);
+}
+
+-(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+	return (nil);
+}
+
+
 #pragma mark - ASI Delegates
 -(void)requestFinished:(ASIHTTPRequest *)request { 
 	NSLog(@"SNFriendProfileViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
-	@autoreleasepool {
-		NSError *error = nil;
-		NSDictionary *parsedStats = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-		
-		if (error != nil)
-			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
-		
-		else {
-			_likesLabel.text = [NSString stringWithFormat:@"%d", [[parsedStats objectForKey:@"likes"] intValue]];
-			_commentsLabel.text = [NSString stringWithFormat:@"%d", [[parsedStats objectForKey:@"comments"] intValue]];
-			_sharesLabel.text = [NSString stringWithFormat:@"%d", [[parsedStats objectForKey:@"shares"] intValue]];
+	if ([request isEqual:_notificationsRequest]) {
+		@autoreleasepool {
+			NSError *error = nil;
+			NSDictionary *parsedNotifications = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+			
+			else {
+				_commentSwitch.on = (BOOL)[[parsedNotifications objectForKey:@"comment"] intValue];
+				_likeSwitch.on = (BOOL)[[parsedNotifications objectForKey:@"like"] intValue];
+				_shareSwitch.on = (BOOL)[[parsedNotifications objectForKey:@"share"] intValue];
+			}
+		}
+	
+	} else {
+		@autoreleasepool {
+			NSError *error = nil;
+			NSDictionary *parsedStats = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+			
+			else {
+				_likesLabel.text = [NSString stringWithFormat:@"%d", [[parsedStats objectForKey:@"likes"] intValue]];
+				_commentsLabel.text = [NSString stringWithFormat:@"%d", [[parsedStats objectForKey:@"comments"] intValue]];
+				_sharesLabel.text = [NSString stringWithFormat:@"%d", [[parsedStats objectForKey:@"shares"] intValue]];
+			}
 		}
 	}
 }

@@ -206,6 +206,54 @@
 			
 			return (true);	
 		}
+		
+		function getFriendNotifications($user_id, $friend_id) {
+			$query = 'SELECT `isComment`, `isLike`, `isShare` FROM `tblUserFriends` WHERE `user_id` = '. $user_id .' AND `friend_id` = '. $friend_id .';';
+			$row = mysql_fetch_row(mysql_query($query));
+			
+			$this->sendResponse(200, json_encode(array(
+				"comment" => $row[0] == "Y", 
+				"like" => $row[1] == "Y", 
+				"share" => $row[2] == "Y"
+			)));			
+			
+			return (true);	
+		}
+		
+		function setFriendNotifications($user_id, $friend_id, $isComment, $isLike, $isShare) {
+			
+			if ($isComment == "1")
+				$isComment = "Y";
+			else
+				$isComment = "N";
+				
+			if ($isLike == "1")
+				$isLike = "Y";			
+			else
+				$isLike = "N";
+				
+			if ($isShare == "1")
+				$isShare = "Y";
+			else
+				$isShare = "N";
+			
+			
+			$query = 'UPDATE `tblUserFriends` SET `isComment` = "'. $isComment .'", `isLike` = "'. $isLike .'", `isShare` = "'. $isShare .'" WHERE `user_id` = '. $user_id .' AND `friend_id` = '. $friend_id .';';
+			$result = mysql_query($query);
+			
+			$query = 'SELECT `isComment`, `isLike`, `isShare` FROM `tblUserFriends` WHERE `user_id` = '. $user_id .' AND `friend_id` = '. $friend_id .';';
+			$row = mysql_fetch_row(mysql_query($query));
+			
+			$this->sendResponse(200, json_encode(array(
+				"comment" => $row[0] == "Y", 
+				"like" => $row[1] == "Y", 
+				"share" => $row[2] == "Y"
+			)));			
+			
+			return (true);
+		}
+		
+		
 	
 		function test() {
 			$this->sendResponse(200, json_encode(array(
@@ -248,6 +296,16 @@
 			 case "5":
 				if (isset($_POST['userID']))
 					$users->getProfileStats($_POST['userID']);
+				break;
+			 
+			 case "6":
+				if (isset($_POST['userID']) && isset($_POST['friendID']))
+					$users->getFriendNotifications($_POST['userID'], $_POST['friendID']);
+				break;
+			
+			 case "7":
+				if (isset($_POST['userID']) && isset($_POST['friendID']) && isset($_POST['isComment']) && isset($_POST['isLike']) && isset($_POST['isShare']))
+					$users->setFriendNotifications($_POST['userID'], $_POST['friendID'], $_POST['isComment'], $_POST['isLike'], $_POST['isShare']);
 				break;
     	}
 	}
