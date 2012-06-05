@@ -18,6 +18,7 @@
 
 +(NSString *)cellReuseIdentifier;
 @property(nonatomic, retain) SNProfileVO *profileVO;
+@property(nonatomic, retain) UIView *overlayView;
 
 
 @end

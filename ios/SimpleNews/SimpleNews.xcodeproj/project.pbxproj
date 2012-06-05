@@ -75,8 +75,6 @@
 		4C2CFC1F1555BB6F00654D98 /* QuadraticBezierCurve.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2CFC151555BB6E00654D98 /* QuadraticBezierCurve.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4C2CFC201555BB6F00654D98 /* Spline.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2CFC171555BB6E00654D98 /* Spline.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4C2CFC211555BB6F00654D98 /* ImageFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2CFC191555BB6E00654D98 /* ImageFilter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		4C2CFC2A1557B14C00654D98 /* SNAnyListViewCell_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2CFC291557B14B00654D98 /* SNAnyListViewCell_iPhone.m */; };
-		4C2CFC2D1557B16100654D98 /* SNBaseRootListViewCell_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2CFC2C1557B16000654D98 /* SNBaseRootListViewCell_iPhone.m */; };
 		4C2CFC3115587FC100654D98 /* SNProfileArticlesViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2CFC3015587FC100654D98 /* SNProfileArticlesViewController_iPhone.m */; };
 		4C2CFC341558803E00654D98 /* SNProfileArticleViewCell_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2CFC331558803D00654D98 /* SNProfileArticleViewCell_iPhone.m */; };
 		4C301C511560331F0093D4E3 /* heartCommentsIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C301C4F1560331F0093D4E3 /* heartCommentsIcon.png */; };
@@ -433,10 +431,6 @@
 		4C2CFC171555BB6E00654D98 /* Spline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Spline.m; sourceTree = "<group>"; };
 		4C2CFC181555BB6E00654D98 /* ImageFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageFilter.h; sourceTree = "<group>"; };
 		4C2CFC191555BB6E00654D98 /* ImageFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageFilter.m; sourceTree = "<group>"; };
-		4C2CFC281557B14B00654D98 /* SNAnyListViewCell_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNAnyListViewCell_iPhone.h; sourceTree = "<group>"; };
-		4C2CFC291557B14B00654D98 /* SNAnyListViewCell_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNAnyListViewCell_iPhone.m; sourceTree = "<group>"; };
-		4C2CFC2B1557B16000654D98 /* SNBaseRootListViewCell_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNBaseRootListViewCell_iPhone.h; sourceTree = "<group>"; };
-		4C2CFC2C1557B16000654D98 /* SNBaseRootListViewCell_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNBaseRootListViewCell_iPhone.m; sourceTree = "<group>"; };
 		4C2CFC2F15587FC100654D98 /* SNProfileArticlesViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNProfileArticlesViewController_iPhone.h; sourceTree = "<group>"; };
 		4C2CFC3015587FC100654D98 /* SNProfileArticlesViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNProfileArticlesViewController_iPhone.m; sourceTree = "<group>"; };
 		4C2CFC321558803D00654D98 /* SNProfileArticleViewCell_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNProfileArticleViewCell_iPhone.h; sourceTree = "<group>"; };
@@ -1496,10 +1490,6 @@
 				4C9049F415660D840066A129 /* SNRootTopicViewCell_iPhone.m */,
 				4C45B7A4150BD8520039F45B /* SNSplashViewController_iPhone.h */,
 				4C45B7A5150BD8520039F45B /* SNSplashViewController_iPhone.m */,
-				4C2CFC2B1557B16000654D98 /* SNBaseRootListViewCell_iPhone.h */,
-				4C2CFC2C1557B16000654D98 /* SNBaseRootListViewCell_iPhone.m */,
-				4C2CFC281557B14B00654D98 /* SNAnyListViewCell_iPhone.h */,
-				4C2CFC291557B14B00654D98 /* SNAnyListViewCell_iPhone.m */,
 				4CB62BBA1528D66D00B15626 /* SNRootViewController_iPhone.h */,
 				4CB62BBB1528D66D00B15626 /* SNRootViewController_iPhone.m */,
 				4CB39173153DF1FF00C1324D /* SNWebPageViewController_iPhone.h */,
@@ -2280,8 +2270,6 @@
 				4C2CFC1F1555BB6F00654D98 /* QuadraticBezierCurve.m in Sources */,
 				4C2CFC201555BB6F00654D98 /* Spline.m in Sources */,
 				4C2CFC211555BB6F00654D98 /* ImageFilter.m in Sources */,
-				4C2CFC2A1557B14C00654D98 /* SNAnyListViewCell_iPhone.m in Sources */,
-				4C2CFC2D1557B16100654D98 /* SNBaseRootListViewCell_iPhone.m in Sources */,
 				4C2CFC3115587FC100654D98 /* SNProfileArticlesViewController_iPhone.m in Sources */,
 				4CFCE713155CADDF003175C5 /* SNNavLikeBtnView.m in Sources */,
 				4CB61CF0155F333300FF151E /* SNProfileViewCell_iPhone.m in Sources */,

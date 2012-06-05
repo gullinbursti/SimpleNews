@@ -45,9 +45,11 @@
 		
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		
-		UIImageView *loaderImgView = [[UIImageView alloc] initWithFrame:CGRectMake(16.0, frame.size.height - 24.0f, 24.0, 24.0)];
-		loaderImgView.image = [UIImage imageNamed:@"logoLoader_001.png"];
-		[self addSubview:loaderImgView];
+		_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+		_activityIndicatorView.frame = CGRectMake(16.0, frame.size.height - 24.0, 24.0, 24.0);
+		[_activityIndicatorView startAnimating];
+		[self addSubview:_activityIndicatorView];
+		
 		
 		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(45.0f, frame.size.height - 19.0f, self.frame.size.width - 45.0, 16.0f)];
 		label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -73,13 +75,31 @@
 #pragma mark Setters
 
 - (void)refreshLastUpdatedDate {
+	if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDataSourceLastUpdated:)]) {
+		
+		NSDate *date = [_delegate egoRefreshTableHeaderDataSourceLastUpdated:self];
+		
+		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+		[formatter setAMSymbol:@"am"];
+		[formatter setPMSymbol:@"pm"];
+		[formatter setDateFormat:@"MM/dd/yyyy @ hh:mma"];
+		_statusLabel.text = [NSString stringWithFormat:@"Last loaded %@", [formatter stringFromDate:date]];
+		[[NSUserDefaults standardUserDefaults] setObject:_statusLabel.text forKey:@"EGORefreshTableView_LastRefresh"];
+		[[NSUserDefaults standardUserDefaults] synchronize];
+		[formatter release];
+		
+	} else {
+		
+		_statusLabel.text = nil;
+		
+	}
 }
 
 - (void)setState:(EGOPullRefreshState)aState{
 	
 	switch (aState) {
 		case EGOOPullRefreshPulling:
-			_statusLabel.text = NSLocalizedString(@"Release to refresh…", @"Release to refresh status");
+			//_statusLabel.text = NSLocalizedString(@"Release to refresh…", @"Release to refresh status");
 			break;
 			
 		case EGOOPullRefreshNormal:
@@ -91,7 +111,7 @@
 			break;
 			
 		case EGOOPullRefreshLoading:
-			_statusLabel.text = NSLocalizedString(@"Loading…", @"Loading Status");
+			_statusLabel.text = NSLocalizedString(@"Assembling…", @"Loading Status");
 			break;
 			
 		default:

@@ -62,6 +62,11 @@
 		handleLabel.text = [NSString stringWithFormat:@"@%@ ", _vo.twitterHandle];
 		[self addSubview:handleLabel];
 		
+		UIButton *handleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[handleButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+		handleButton.frame = handleLabel.frame;
+		[self addSubview:handleButton];
+		
 		size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 		UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, offset, size.width, size.height)];
 		inLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10];
@@ -105,7 +110,7 @@
 		
 		offset += 32;
 		
-		if (!(_vo.topicID == 8 || _vo.topicID == 9 || _vo.topicID == 10)) {
+		if (!(_vo.topicID == 8)) {
 			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, offset, 260.0, size.height)];
 			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
@@ -114,6 +119,12 @@
 			titleLabel.text = _vo.title;
 			titleLabel.numberOfLines = 0;
 			[self addSubview:titleLabel];
+			
+			UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+			[titleButton addTarget:self action:@selector(_goSourcePage) forControlEvents:UIControlEventTouchUpInside];
+			titleButton.frame = titleLabel.frame;
+			[self addSubview:titleButton];
+			
 			offset += size.height + 9.0;
 		}
 		
@@ -133,7 +144,7 @@
 			[self addSubview:_articleImgView];
 			
 			UITapGestureRecognizer *dblTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photoZoomIn:)];
-			dblTapRecognizer.numberOfTapsRequired = 2;
+			dblTapRecognizer.numberOfTapsRequired = 1;
 			[_articleImgView addGestureRecognizer:dblTapRecognizer];
 			
 			if (_imageResource == nil) {			

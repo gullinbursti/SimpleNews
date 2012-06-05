@@ -39,7 +39,10 @@ typedef enum {
 	id _delegate;
 	EGOPullRefreshState _state;
 	UILabel *_statusLabel;
+	UIActivityIndicatorView *_activityIndicatorView;
 }
+
+//- (id)initWithFrame:(CGRect)frame topicName:(NSS
 
 @property(nonatomic,assign) id <EGORefreshTableHeaderDelegate> delegate;
 

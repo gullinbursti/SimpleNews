@@ -39,6 +39,7 @@
 	UIImageView *_shadowImgView;
 	UIButton *_profileButton;
 	UIButton *_cardListsButton;
+	UILabel *_fullscreenTitleLabel;
 	
 	UIView *_blackMatteView;
 	UIImageView *_fullscreenImgView;
@@ -46,12 +47,14 @@
 	
 	BOOL _reloading;
 	BOOL _isIntro;
+	BOOL _isTimeline;
+	
 	int _swipeIndex;
 	
 	CGPoint _touchPt;
 }
 
 
-#define kTopicOffset 176.0f
+#define kTopicOffset 226.0f
 
 @end

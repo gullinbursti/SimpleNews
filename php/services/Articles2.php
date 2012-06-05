@@ -503,7 +503,7 @@
 					));
 				}
 				
-				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $liked_row['id'] .';';
+				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $liked_row[0] .';';
 				$likes_result = mysql_query($query);
 				
 				array_push($article_arr, array(

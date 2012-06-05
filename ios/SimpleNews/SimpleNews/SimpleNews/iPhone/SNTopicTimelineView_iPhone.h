@@ -25,6 +25,8 @@
 	
 	UIScrollView *_scrollView;
 	UIButton *_fullscreenShareButton;
+	UIActivityIndicatorView *_activityIndicatorView;
+	UILabel *_loaderLabel;
 	
 	NSMutableArray *_articleViews;
 	
@@ -40,6 +42,6 @@
 
 -(id)initWithPopularArticles;
 -(id)initWithTopicVO:(SNTopicVO *)vo;
-
+- (void)fullscreenMediaEnabled:(BOOL)isEnabled;
 
 @end

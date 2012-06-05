@@ -41,7 +41,6 @@
 
 -(id)init {
 	if ((self = [super initWithFrame:CGRectMake(276.0, 0.0, 320.0, 480.0)])) {
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_fullscreenMedia:) name:@"FULLSCREEN_MEDIA" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSourcePage:) name:@"SHOW_SOURCE_PAGE" object:nil];
 		
 		_articles = [NSMutableArray new];
@@ -63,9 +62,25 @@
 		if (![[GANTracker sharedTracker] trackPageview:@"/topics/0" withError:&error])
 			NSLog(@"error in trackPageview");
 		
+		
+		_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+		_activityIndicatorView.frame = CGRectMake(15.0, 60.0, 20.0, 20.0);
+		[_activityIndicatorView startAnimating];
+		[self addSubview:_activityIndicatorView];
+		
+		_loaderLabel = [[UILabel alloc] initWithFrame:CGRectMake(45.0, 63.0, 145.0, 16.0)];
+		_loaderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_loaderLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		_loaderLabel.textColor = [UIColor blackColor];
+		_loaderLabel.backgroundColor = [UIColor clearColor];
+		_loaderLabel.text = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
+		[self addSubview:_loaderLabel];
+		
+
+		
 		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
 		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_scrollView.opaque = YES;
+		_scrollView.opaque = NO;
 		_scrollView.scrollsToTop = NO;
 		_scrollView.pagingEnabled = NO;
 		_scrollView.delegate = self;
@@ -86,8 +101,7 @@
 		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:listBtnView];
 		
-		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
-		[_overlayView setBackgroundColor:[SNAppDelegate snDebugGreenColor]];
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 44.0, 40.0, self.frame.size.height - 44)];
 		[self addSubview:_overlayView];
 		
 		[self _refreshPopularList];
@@ -104,9 +118,22 @@
 		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/topics/%d", _vo.topic_id] withError:&error])
 			NSLog(@"error in trackPageview");
 		
+		_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+		_activityIndicatorView.frame = CGRectMake(15.0, 60.0, 20.0, 20.0);
+		[_activityIndicatorView startAnimating];
+		[self addSubview:_activityIndicatorView];
+		
+		_loaderLabel = [[UILabel alloc] initWithFrame:CGRectMake(45.0, 63.0, 250.0, 16.0)];
+		_loaderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_loaderLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		_loaderLabel.textColor = [UIColor blackColor];
+		_loaderLabel.backgroundColor = [UIColor clearColor];
+		_loaderLabel.text = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
+		[self addSubview:_loaderLabel];
+		
 		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
 		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_scrollView.opaque = YES;
+		_scrollView.opaque = NO;
 		_scrollView.scrollsToTop = NO;
 		_scrollView.pagingEnabled = NO;
 		_scrollView.delegate = self;
@@ -127,8 +154,7 @@
 		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:listBtnView];
 		
-		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
-		[_overlayView setBackgroundColor:[SNAppDelegate snDebugGreenColor]];
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 44.0, 40.0, self.frame.size.height - 44.0)];
 		[self addSubview:_overlayView];
 		
 		[self _refreshArticleList];
@@ -189,7 +215,7 @@
 
 - (void)_refreshPopularList {
 	if (_articleListResource == nil) {
-		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+		//_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
 		//_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
 		_progressHUD.labelText = [NSString stringWithFormat:@"Loading %@…", _vo.title];
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
@@ -206,7 +232,7 @@
 
 - (void)_refreshArticleList {
 	if (_articleListResource == nil) {
-		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+		//_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
 		_progressHUD.labelText = [NSString stringWithFormat:@"Loading %@…", _vo.title];
 		//_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
@@ -224,7 +250,7 @@
 
 - (void)_updatePopularList {
 	if (_updateListResource == nil) {
-		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+		//_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
 		_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 		_progressHUD.graceTime = 2.0;
@@ -241,7 +267,7 @@
 
 - (void)_updateArticleList {
 	if (_updateListResource == nil) {
-		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+		//_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
 		_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 		_progressHUD.graceTime = 2.0;
@@ -270,17 +296,24 @@
 		[_updateListResource subscribe:self];
 }
 
+- (void)fullscreenMediaEnabled:(BOOL)isEnabled {
+	if (isEnabled)
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_fullscreenMedia:) name:@"FULLSCREEN_MEDIA" object:nil];
+	
+	else
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];	
+}
+
 
 #pragma mark - Navigation
 -(void)_goBack {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];
-	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
 }
 
 #pragma mark - Notification handlers
 -(void)_fullscreenMedia:(NSNotification *)notification {
+	NSLog(@"_fullscreenMedia");
 	NSMutableDictionary *dict = [notification object];
 	
 	_articleVO = [dict objectForKey:@"VO"];
@@ -375,7 +408,7 @@
 					height += 26; //20
 				}
 				
-				if (!(vo.topicID == 8 || vo.topicID == 9 || vo.topicID == 10)) {
+				if (!(vo.topicID == 8)) {
 					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 					height += size.height + 9;
 				}
@@ -404,6 +437,9 @@
 			for (SNArticleItemView_iPhone *itemView in _articleViews) {
 				[_scrollView addSubview:itemView];
 			}
+			
+			[_activityIndicatorView removeFromSuperview];
+			[_loaderLabel removeFromSuperview];
 			
 			_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
 		}

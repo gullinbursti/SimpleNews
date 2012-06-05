@@ -10,13 +10,14 @@
 
 #import "ASIFormDataRequest.h"
 
-@interface SNProfileViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, ASIHTTPRequestDelegate> {
+@interface SNProfileViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate> {
 	UITableView *_tableView;
 	NSMutableArray *_items;
 	
 	UILabel *_likesLabel;
 	UILabel *_commentsLabel;
 	UILabel *_sharesLabel;
+	UISwitch *_switch;
 }
 
 @end

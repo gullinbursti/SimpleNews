@@ -17,8 +17,6 @@
 #import "SNProfileViewController_iPhone.h"
 #import "SNWebPageViewController_iPhone.h"
 #import "SNHeaderView_iPhone.h"
-#import "SNBaseRootListViewCell_iPhone.h"
-#import "SNAnyListViewCell_iPhone.h"
 #import "SNRootTopicViewCell_iPhone.h"
 #import "SNAppDelegate.h"
 #import "SNArticleDetailsViewController_iPhone.h"
@@ -85,11 +83,11 @@
 	// If the touch was in the placardView, move the placardView to its location
 	if ([touch view] == [_topicTimelineView overlayView]) {
 		CGPoint touchLocation = [touch locationInView:self.view];
-		CGPoint location = CGPointMake(MIN(MAX(_touchPt.x + touchLocation.x, 160.0), 336.0), _topicTimelineView.center.y);
+		CGPoint location = CGPointMake(MIN(MAX(_touchPt.x + touchLocation.x, 160.0), 386.0), _topicTimelineView.center.y);
 		
 		_topicTimelineView.center = location;
 		
-		NSLog(@"TOUCHED:[%f, %f]", _topicTimelineView.center.x, _topicTimelineView.center.y);
+		//NSLog(@"TOUCHED:[%f, %f]", _topicTimelineView.center.x, _topicTimelineView.center.y);
 		return;
 	}
 }
@@ -104,6 +102,33 @@
 	
 	if (CGRectContainsPoint(_fullscreenImgView.frame, touchPoint))
 		[self _hideFullscreenMedia:nil];
+	
+	NSLog(@"TOUCHED:[%f, %f] (%d)", touchPoint.x, touchPoint.y, _isTimeline);
+	
+	//if (!_isTimeline) {
+		if (touchPoint.x < 140.0 && !CGPointEqualToPoint(_touchPt, touchPoint) && !_isTimeline) {
+			[UIView animateWithDuration:0.25 animations:^(void) {
+				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _topicTimelineView.frame.size.width, _topicTimelineView.frame.size.height);
+			
+			} completion:^(BOOL finished) {
+				_isTimeline = YES;
+				[_topicTimelineView fullscreenMediaEnabled:_isTimeline];
+				
+			}];
+			
+		} 
+		
+		if (touchPoint.x > 140.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
+			[UIView animateWithDuration:0.25 animations:^(void) {
+				_topicTimelineView.frame = CGRectMake(kTopicOffset, 0.0, _topicTimelineView.frame.size.width, _topicTimelineView.frame.size.height);
+			
+			} completion:^(BOOL finished) {
+				_isTimeline = NO;
+				[_topicTimelineView fullscreenMediaEnabled:_isTimeline];
+				
+			}];
+		}
+	//}
 }
 
 #pragma mark - View lifecycle
@@ -126,7 +151,7 @@
 	[_profileButton addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
 	[_holderView addSubview:_profileButton];
 	
-	_topicsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 57.0, kTopicOffset, self.view.frame.size.height - 57.0) style:UITableViewStylePlain];
+	_topicsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 56.0, kTopicOffset, self.view.frame.size.height - 56.0) style:UITableViewStylePlain];
 	[_topicsTableView setBackgroundColor:[UIColor clearColor]];
 	_topicsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	_topicsTableView.rowHeight = 50.0;
@@ -139,12 +164,25 @@
 	_cardListsButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_cardListsButton.frame = CGRectMake(kTopicOffset, 45.0, 44.0, self.view.frame.size.height - 45.0);
 	[_cardListsButton addTarget:self action:@selector(_goCardLists) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:_cardListsButton];
+	//[self.view addSubview:_cardListsButton];
 	
 	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
 	_blackMatteView.alpha = 0.0;
 	[self.view addSubview:_blackMatteView];
+	
+	
+	_fullscreenTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, 6.0, 256.0, 28.0)];
+	_fullscreenTitleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
+	_fullscreenTitleLabel.textColor = [UIColor whiteColor];
+	_fullscreenTitleLabel.backgroundColor = [UIColor clearColor];
+	[_blackMatteView addSubview:_fullscreenTitleLabel];
+	
+	UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(19.0, 12.0, 256.0, 28.0)];
+	infoLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
+	infoLabel.textColor = [UIColor blackColor];
+	infoLabel.backgroundColor = [UIColor clearColor];
+	[_blackMatteView addSubview:infoLabel];
 }
 
 - (void)viewDidUnload {
@@ -173,12 +211,14 @@
 	[super viewDidAppear:animated];
 	
 	if (_isIntro) {
-		[UIView animateWithDuration:0.33 animations:^(void) {
+		[UIView animateWithDuration:0.33 delay:1.33 options:UIViewAnimationCurveEaseIn animations:^(void) {
 			_cardListsButton.hidden = YES;
 			_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
 			_isIntro = NO;
+			_isTimeline = YES;
+			[_topicTimelineView fullscreenMediaEnabled:_isTimeline];
 		}];
 	}
 }
@@ -193,6 +233,8 @@
 	} completion:^(BOOL finished) {
 		//[UIView animateWithDuration:0.33 animations:^(void) {
 		_topicsTableView.contentOffset = CGPointZero;
+		_isTimeline = YES;
+		[_topicTimelineView fullscreenMediaEnabled:_isTimeline];
 	}];
 }
 
@@ -365,9 +407,8 @@
 			tapRecognizer.numberOfTapsRequired = 1;
 			[_blackMatteView addGestureRecognizer:tapRecognizer];
 			
-			_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(kTopicOffset, 0.0, 44.0, 44.0)];
+			_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(272.0, 0.0, 44.0, 44.0)];
 			[[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-			[self.view addSubview:_shareBtnView];
 			[self.view addSubview:_shareBtnView];
 		}];
 	}
@@ -412,6 +453,7 @@
 																	cancelButtonTitle:@"Cancel" 
 																 destructiveButtonTitle:nil 
 																	otherButtonTitles:@"Twitter", @"SMS", @"Copy URL", @"Email", @"Open Web View", nil];
+	actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
 	[actionSheet showInView:self.view];
 }
 
@@ -422,6 +464,9 @@
 
 
 -(void)_timelineReturn:(NSNotification *)notification {
+	_isTimeline = NO;
+	[_topicTimelineView fullscreenMediaEnabled:_isTimeline];
+	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_topicTimelineView.frame = CGRectMake(kTopicOffset, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		
@@ -467,6 +512,49 @@
 	frame.origin.y = 44.0 + frame.origin.y + offset;
 	_fullscreenFrame = frame;
 	
+	for (UIView *view in [_blackMatteView subviews])
+		[view removeFromSuperview];
+	
+	_fullscreenTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, 6.0, 256.0, 28.0)];
+	_fullscreenTitleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
+	_fullscreenTitleLabel.textColor = [UIColor whiteColor];
+	_fullscreenTitleLabel.backgroundColor = [UIColor clearColor];
+	_fullscreenTitleLabel.text = _articleVO.title;
+	[_blackMatteView addSubview:_fullscreenTitleLabel];
+	
+	CGSize size = [@"via " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, 30.0, size.width, size.height)];
+	viaLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10];
+	viaLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
+	viaLabel.backgroundColor = [UIColor clearColor];
+	viaLabel.text = @"via ";
+	[_blackMatteView addSubview:viaLabel];
+	
+	CGSize size2 = [[NSString stringWithFormat:@"@%@ ", _articleVO.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0 + size.width, 30.0, size2.width, size2.height)];
+	handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
+	handleLabel.textColor = [UIColor whiteColor];
+	handleLabel.backgroundColor = [UIColor clearColor];
+	handleLabel.text = [NSString stringWithFormat:@"@%@ ", _articleVO.twitterHandle];
+	[_blackMatteView addSubview:handleLabel];
+	 
+	size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, 30.0, size.width, size.height)];
+	inLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10];
+	inLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
+	inLabel.backgroundColor = [UIColor clearColor];
+	inLabel.text = @"into ";
+	[_blackMatteView addSubview:inLabel];
+	 
+	size2 = [[NSString stringWithFormat:@"%@", _articleVO.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(inLabel.frame.origin.x + size.width, 30.0, size2.width, size2.height)];
+	topicLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
+	topicLabel.textColor = [UIColor whiteColor];
+	topicLabel.backgroundColor = [UIColor clearColor];
+	topicLabel.text = [NSString stringWithFormat:@"%@", _articleVO.topicTitle];
+	[_blackMatteView addSubview:topicLabel];
+	
+	
 	if ([type isEqualToString:@"photo"]) {
 		_fullscreenImgView = [[UIImageView alloc] initWithFrame:frame];
 		_fullscreenImgView.userInteractionEnabled = YES;
@@ -490,7 +578,7 @@
 			tapRecognizer.numberOfTapsRequired = 1;
 			[_blackMatteView addGestureRecognizer:tapRecognizer];
 			
-			_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(kTopicOffset, 0.0, 44.0, 44.0)];
+			_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(272.0, 0.0, 44.0, 44.0)];
 			[[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 			[self.view addSubview:_shareBtnView];
 			[self.view addSubview:_shareBtnView];
@@ -534,7 +622,7 @@
 			TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
 			
 			[twitter addURL:[NSURL URLWithString:_articleVO.article_url]];
-			[twitter setInitialText:[NSString stringWithFormat:@"via Assembly - %@", _articleVO.title]];
+			[twitter setInitialText:[NSString stringWithFormat:@"Check out… %@ via @getassembly %@", _articleVO.title, _articleVO.article_url]];
 			[self presentModalViewController:twitter animated:YES];
 			
 			twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
@@ -557,12 +645,19 @@
 		[pasteboard setValue:_articleVO.article_url forPasteboardType:@"public.utf8-plain-text"];
 		//pasteboard.string = _vo.article_url;
 		
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Pasteboard" 
+																		message:@"URL copied to clipboard" 
+																	  delegate:self 
+														  cancelButtonTitle:@"OK" 
+														  otherButtonTitles:nil];
+		[alert show];
+		
 	} else if (buttonIndex == 3) {
 		if ([MFMailComposeViewController canSendMail]) {
 			MFMailComposeViewController *mfViewController = [[MFMailComposeViewController alloc] init];
 			mfViewController.mailComposeDelegate = self;
-			[mfViewController setSubject:[NSString stringWithFormat:@"Assembly - %@", _articleVO.title]];
-			[mfViewController setMessageBody:_articleVO.content isHTML:NO];
+			[mfViewController setSubject:[NSString stringWithFormat:@"Check out… %@ via @getassembly %@", _articleVO.title, _articleVO.article_url]];
+			[mfViewController setMessageBody:[NSString stringWithFormat:@"Check out… %@ via @getassembly %@", _articleVO.title, _articleVO.article_url] isHTML:NO];
 			
 			[self presentViewController:mfViewController animated:YES completion:nil];
 			
@@ -620,11 +715,18 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 	
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		((SNRootTopicViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).overlayView.alpha = 1.0;
+		
+	} completion:^(BOOL finished) {
+		((SNRootTopicViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).overlayView.alpha = 0.0;
+	}];
+	
+	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_shadowImgView.alpha = 0.0;
 		
 	} completion:^(BOOL finished) {
-		
 		if (indexPath.row == 0)
 			_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithPopularArticles];	
 		
@@ -639,6 +741,8 @@
 			
 		} completion:^(BOOL finished) {
 			_topicsTableView.contentOffset = CGPointZero;
+			_isTimeline = YES;
+			[_topicTimelineView fullscreenMediaEnabled:_isTimeline];
 		}];
 	}];
 }

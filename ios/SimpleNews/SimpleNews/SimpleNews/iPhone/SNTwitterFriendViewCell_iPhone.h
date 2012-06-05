@@ -12,6 +12,7 @@
 @interface SNTwitterFriendViewCell_iPhone : UITableViewCell {
 	UILabel *_handleLabel;
 	UILabel *_nameLabel;
+	UIButton *_inviteButton;
 	
 	UIView *_lineView;
 	UIImageView *_bgImgView;

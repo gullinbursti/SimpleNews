@@ -73,7 +73,7 @@
 	_scrollBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, _scrollView.frame.size.width, _commentOffset)];
 	UIImage *img = [UIImage imageNamed:@"profileBackground.png"];
 	_scrollBgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:10.0];
-	[_scrollView addSubview:_scrollBgView];
+	//[_scrollView addSubview:_scrollBgView];
 	
 	
 	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
@@ -107,12 +107,13 @@
 //	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 //	[_bgView addSubview:_likeButton];
 	
-	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(60.0, 18.0, 270.0, 16.0)];
+	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(20.0, 18.0, 270.0, 16.0)];
 	[_commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 	[_commentTxtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 	[_commentTxtField setAutocorrectionType:UITextAutocorrectionTypeNo];
 	[_commentTxtField setBackgroundColor:[UIColor clearColor]];
 	[_commentTxtField setReturnKeyType:UIReturnKeyDone];
+	[_commentTxtField setTextColor:[UIColor whiteColor]];
 	[_commentTxtField addTarget:self action:@selector(_onTxtDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
 	_commentTxtField.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 	_commentTxtField.keyboardType = UIKeyboardTypeDefault;
@@ -121,8 +122,8 @@
 	[_bgView addSubview:_commentTxtField];
 	
 	_commentsLabel = [[UILabel alloc] initWithFrame:_commentTxtField.frame];
-	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
-	_commentsLabel.textColor = [UIColor blackColor];
+	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	_commentsLabel.textColor = [UIColor whiteColor];
 	_commentsLabel.backgroundColor = [UIColor clearColor];
 	_commentsLabel.text = @"Write a comment…";
 	[_bgView addSubview:_commentsLabel];
@@ -329,14 +330,9 @@
 		//		[UIView animateWithDuration:0.25 animations:^(void) {
 			CGSize size = _scrollView.contentSize;
 			size.height += (kItemHeight + commentSize.height);
-			_scrollView.contentSize = size;
 			
-			CGRect frame = _scrollView.frame;
-			frame.size.height = size.height;
-			
-			_scrollBgView.frame = frame;
 			_scrollView.frame = CGRectMake(_scrollView.frame.origin.x, _scrollView.frame.origin.y, _scrollView.frame.size.width, 387.0);
-			commentView.frame = CGRectMake(commentView.frame.origin.x, commentView.frame.origin.y, commentView.frame.size.width, commentView.frame.size.height);
+			commentView.frame = CGRectMake(commentView.frame.origin.x, commentView.frame.origin.y + (kItemHeight + commentSize.height), commentView.frame.size.width, commentView.frame.size.height);
 		//		}];
 	}
 	
@@ -345,6 +341,7 @@
 	[_scrollView addSubview:commentView];		
 	
 	_commentOffset += (kItemHeight + commentSize.height);
+	_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, _commentOffset);
 }
 
 -(void)requestFailed:(ASIHTTPRequest *)request {

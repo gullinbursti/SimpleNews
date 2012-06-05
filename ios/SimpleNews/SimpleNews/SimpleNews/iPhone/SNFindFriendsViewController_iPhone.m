@@ -40,6 +40,8 @@
 		_friends = [NSMutableArray new];
 		_sectionTitles = [NSArray arrayWithObjects:@"#", @"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J", @"K", @"L", @"M", @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X", @"Y", @"Z", nil];
 		_friendsDictionary = [NSMutableDictionary dictionary];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_inviteFollower:) name:@"INVITE_FOLLOWER" object:nil];
 	}
 	
 	return (self);
@@ -120,6 +122,17 @@
 #pragma mark Naviagation
 -(void)_goBack {
 	[self.navigationController popViewControllerAnimated:YES];
+}
+
+#pragma mark - Notification handlers
+-(void)_inviteFollower:(NSNotification *)notification {
+	_vo = (SNTwitterUserVO *)[notification object];
+	
+	_friendLookupRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
+	[_friendLookupRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+	[_friendLookupRequest setPostValue:_vo.twitterID forKey:@"twitterID"];
+	[_friendLookupRequest setDelegate:self];
+	[_friendLookupRequest startAsynchronous];
 }
 
 

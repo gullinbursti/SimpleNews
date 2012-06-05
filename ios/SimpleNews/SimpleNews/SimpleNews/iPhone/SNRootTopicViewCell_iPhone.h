@@ -16,6 +16,7 @@
 
 +(NSString *)cellReuseIdentifier;
 
+@property(nonatomic, retain) UIView *overlayView;
 @property(nonatomic, retain) SNTopicVO *topicVO;
 
 @end

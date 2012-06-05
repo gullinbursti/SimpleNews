@@ -22,15 +22,15 @@
 
 		switch (type) {
 			case 6:
-				_headerTitle = @"Liked Articles";
+				_headerTitle = @"Likes";
 				break;
 				
 			case 2:
-				_headerTitle = @"Commented Articles";
+				_headerTitle = @"Comments";
 				break;
 				
 			case 5:
-				_headerTitle = @"Shared Articles";
+				_headerTitle = @"Shares";
 				break;
 		}
 		

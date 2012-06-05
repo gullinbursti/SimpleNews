@@ -76,9 +76,14 @@
 //			offset = 15;
 //		}
 		
-		UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(15.0, size.height + 46.0, self.frame.size.width - 30.0, 1.0)];
-		[lineView setBackgroundColor:[SNAppDelegate snLineColor]];
-		[self addSubview:lineView];
+		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15.0, size.height + 46.0, self.frame.size.width - 30.0, 2.0)];
+		UIImage *img = [UIImage imageNamed:@"line.png"];
+		lineImgView.image = [img stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];
+		[self addSubview:lineImgView];
+
+//		UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(15.0, size.height + 46.0, self.frame.size.width - 30.0, 1.0)];
+//		[lineView setBackgroundColor:[SNAppDelegate snLineColor]];
+//		[self addSubview:lineView];
 	}
 	
 	return (self);

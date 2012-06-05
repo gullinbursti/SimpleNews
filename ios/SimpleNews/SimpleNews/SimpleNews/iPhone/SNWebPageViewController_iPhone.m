@@ -51,6 +51,8 @@
 }
 
 -(void)viewDidUnload {
+	_progressHUD.taskInProgress = NO;
+	[_progressHUD hide:YES];
 	_progressHUD = nil;
 	
 	[super viewDidUnload];
@@ -62,6 +64,12 @@
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
+- (void)_removeHUD {
+	_progressHUD.taskInProgress = NO;
+	[_progressHUD hide:YES];
+	_progressHUD = nil;
+}
+
 
 #pragma mark - WebView Delegates
 -(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
@@ -69,19 +77,24 @@
 }
 
 -(void)webViewDidStartLoad:(UIWebView *)webView {
-	_progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-	_progressHUD.mode = MBProgressHUDModeIndeterminate;
+	
+	if (!_progressHUD) {
+		_progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+		_progressHUD.mode = MBProgressHUDModeIndeterminate;
+		_progressHUD.taskInProgress = YES;
+		
+		[self performSelector:@selector(_removeHUD) withObject:nil afterDelay:3.33];
+	}
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {
-	[_progressHUD hide:YES];
-	_progressHUD = nil;
+	[self _removeHUD];
 }
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {	
 	NSLog(@"didFailLoadWithError:[%@]", error);
-	[_progressHUD hide:YES];
-	_progressHUD = nil;
+	
+	[self _removeHUD];
 	
 	if ([error code] == NSURLErrorCancelled)
 		return;

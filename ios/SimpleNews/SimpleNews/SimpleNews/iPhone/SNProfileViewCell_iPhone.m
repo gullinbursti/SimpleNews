@@ -12,6 +12,7 @@
 @implementation SNProfileViewCell_iPhone
 
 @synthesize profileVO = _profileVO;
+@synthesize overlayView = _overlayView;
 
 +(NSString *)cellReuseIdentifier {
 	return (NSStringFromClass(self));
@@ -26,6 +27,11 @@
 		_titleLabel.textColor = [UIColor blackColor];
 		_titleLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_titleLabel];
+		
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 64.0)];
+		[_overlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.33]];
+		_overlayView.alpha = 0.0;
+		[self addSubview:_overlayView];
 	}
 	
 	return (self);

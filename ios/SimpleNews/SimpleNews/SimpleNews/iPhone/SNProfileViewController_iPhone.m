@@ -145,7 +145,7 @@
 	[line1View setBackgroundColor:[SNAppDelegate snLineColor]];
 	[self.view addSubview:line1View];
 	
-	UIView *line2View = [[UIView alloc] initWithFrame:CGRectMake(12.0, 319.0, 296.0, 1.0)];
+	UIView *line2View = [[UIView alloc] initWithFrame:CGRectMake(12.0, 323.0, 296.0, 1.0)];
 	[line2View setBackgroundColor:[SNAppDelegate snLineColor]];
 	[self.view addSubview:line2View];
 	
@@ -191,7 +191,21 @@
 }
 
 -(void)_goNotificationsToggle:(UISwitch *)switchView {
-	[SNAppDelegate notificationsToggle:switchView.on];
+	
+	NSString *msg;
+	
+	if (switchView.on)
+		msg = @"Turn on notifications?";
+	
+	else
+		msg = @"Turn off notifications?";
+	
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications" 
+																	message:msg 
+																  delegate:self 
+													  cancelButtonTitle:@"Yes" 
+													  otherButtonTitles:@"No", nil];
+	[alert show];
 }
 
 -(void)_goLikedArticles {
@@ -204,6 +218,18 @@
 
 -(void)_goSharedArticles {
 	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initWithUserID:[[[SNAppDelegate profileForUser] objectForKey:@"id"] intValue] asType:5] animated:YES];
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	switch(buttonIndex) {
+		case 0:
+			[SNAppDelegate notificationsToggle:_switch.on];
+			break;
+			
+		case 1:
+			_switch.on = !_switch.on;
+			break;
+	}
 }
 
 
@@ -225,13 +251,13 @@
 	cell.profileVO = (SNProfileVO *)[_items objectAtIndex:indexPath.row];
 	
 	if (indexPath.row == 2) {
-		UISwitch *switchView = [[UISwitch alloc] initWithFrame:CGRectZero];
+		_switch = [[UISwitch alloc] initWithFrame:CGRectZero];
 			
 		if ([SNAppDelegate notificationsEnabled])
-			switchView.on = YES;
+			_switch.on = YES;
 			
-		[switchView addTarget:self action:@selector(_goNotificationsToggle:) forControlEvents:UIControlEventValueChanged];
-		cell.accessoryView = switchView;
+		[_switch addTarget:self action:@selector(_goNotificationsToggle:) forControlEvents:UIControlEventValueChanged];
+		cell.accessoryView = _switch;
 			
 	} else {
 		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(265.0, 23.0, 24.0, 24.0)];
@@ -264,6 +290,14 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	NSLog(@"SELECTED");
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
+	
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		((SNProfileViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).overlayView.alpha = 1.0;
+	
+	} completion:^(BOOL finished) {
+		((SNProfileViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).overlayView.alpha = 0.0;
+	}];
+	
 	
 	switch (indexPath.row) {
 		case 0: // find friends

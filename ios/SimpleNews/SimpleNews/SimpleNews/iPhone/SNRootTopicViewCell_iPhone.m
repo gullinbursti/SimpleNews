@@ -12,6 +12,7 @@
 @implementation SNRootTopicViewCell_iPhone
 
 @synthesize topicVO = _topicVO;
+@synthesize overlayView = _overlayView;
 
 +(NSString *)cellReuseIdentifier {
 	return (NSStringFromClass(self));
@@ -25,7 +26,7 @@
 		_nameLabel.backgroundColor = [UIColor clearColor];
 		[self addSubview:_nameLabel];
 		
-		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(140.0, 14.0, 24.0, 24.0)];
+		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(186.0, 14.0, 24.0, 24.0)];
 		chevronView.image = [UIImage imageNamed:@"chevron.png"];
 		[self addSubview:chevronView];
 		
@@ -36,7 +37,7 @@
 //		[_followButton addTarget:self action:@selector(_goUnfollow) forControlEvents:UIControlEventTouchUpInside];
 //		[self addSubview:_followButton];
 		
-		UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 51.0, self.frame.size.width, 1.0)];
+		UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 50.0, self.frame.size.width, 1.0)];
 		[lineView setBackgroundColor:[SNAppDelegate snLineColor]];
 		[self addSubview:lineView];
 		
@@ -44,6 +45,11 @@
 //		UIImage *img = [UIImage imageNamed:@"line.png"];
 //		lineImgView.image = [img stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];
 //		[self addSubview:lineImgView];
+		
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 50.0)];
+		[_overlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.33]];
+		_overlayView.alpha = 0.0;
+		[self addSubview:_overlayView];
 	}
 	
 	return (self);
