@@ -19,7 +19,7 @@
 
 @class MBProgressHUD;
 
-@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate, UIActionSheetDelegate, ASIHTTPRequestDelegate>
+@interface SNRootViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate, ASIHTTPRequestDelegate>
 {
 	MBLAsyncResource *_userResource;
 	ASIHTTPRequest *_twitterRequest;

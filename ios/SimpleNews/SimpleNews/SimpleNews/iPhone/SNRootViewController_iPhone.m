@@ -639,6 +639,14 @@
 		}
 		
 	} else if (buttonIndex == 1) {
+		MFMessageComposeViewController *mfViewController = [[MFMessageComposeViewController alloc] init];
+		if([MFMessageComposeViewController canSendText]) {
+			mfViewController.body = [NSString stringWithFormat:@"Check out… %@ via @getassembly %@", _articleVO.title, _articleVO.article_url];
+			mfViewController.recipients = [NSArray arrayWithObjects:@"239370911", nil];
+			mfViewController.messageComposeDelegate = self;
+			[self presentViewController:mfViewController animated:YES completion:nil];
+		}
+		
 		
 	} else if (buttonIndex == 2) {
 		UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
@@ -778,6 +786,12 @@
 	}
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+#pragma mark - MessageCompose Deleagtes
+- (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
+	NSLog(@"didFinishWithResult:[%@]", result);
 }
 
 
