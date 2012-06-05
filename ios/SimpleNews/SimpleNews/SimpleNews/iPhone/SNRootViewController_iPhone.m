@@ -642,7 +642,7 @@
 		MFMessageComposeViewController *mfViewController = [[MFMessageComposeViewController alloc] init];
 		if([MFMessageComposeViewController canSendText]) {
 			mfViewController.body = [NSString stringWithFormat:@"Check out… %@ via @getassembly %@", _articleVO.title, _articleVO.article_url];
-			mfViewController.recipients = [NSArray arrayWithObjects:@"239370911", nil];
+			mfViewController.recipients = [NSArray arrayWithObjects:nil];
 			mfViewController.messageComposeDelegate = self;
 			[self presentViewController:mfViewController animated:YES completion:nil];
 		}
@@ -791,7 +791,22 @@
 
 #pragma mark - MessageCompose Deleagtes
 - (void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result {
-	NSLog(@"didFinishWithResult:[%@]", result);
+	//NSLog(@"didFinishWithResult:[%@]", result);
+	
+	if (result == MessageComposeResultCancelled) {
+		//UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Assembly" message:@"Message Cancelled" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		//[alertView show];
+	
+	} else if (result == MessageComposeResultFailed) {
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Assembly" message:@"Send Error" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alertView show];
+		
+	} else if (result == MessageComposeResultSent) {
+		//UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Assembly" message:@"Message Sent" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		//[alertView show];
+	}
+	
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 
