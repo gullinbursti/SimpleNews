@@ -58,6 +58,26 @@
 	[super viewDidUnload];
 }
 
+- (void)didReceiveMemoryWarning {
+	if ([_webView isLoading])
+		[_webView stopLoading];
+	
+	[_webView setDelegate:nil];
+	[_webView removeFromSuperview];
+	_webView = nil;
+	
+	if (_progressHUD != nil) {
+		_progressHUD.graceTime = 0.0;
+		_progressHUD.mode = MBProgressHUDModeCustomView;
+		_progressHUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"error.png"]];
+		_progressHUD.labelText = NSLocalizedString(@"Error", @"Error");
+		[_progressHUD show:NO];
+		[_progressHUD hide:YES afterDelay:1.5];
+		_progressHUD = nil;
+	}
+	
+	[self performSelector:@selector(_removeHUD) withObject:nil afterDelay:1.5];
+}
 
 #pragma mark - Navigation
 -(void)_goBack {
@@ -65,9 +85,11 @@
 }
 
 - (void)_removeHUD {
-	_progressHUD.taskInProgress = NO;
-	[_progressHUD hide:YES];
-	_progressHUD = nil;
+	if (_progressHUD != nil) {
+		_progressHUD.taskInProgress = NO;
+		[_progressHUD hide:YES];
+		_progressHUD = nil;
+	}
 }
 
 
@@ -82,6 +104,7 @@
 		_progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 		_progressHUD.taskInProgress = YES;
+		_progressHUD.graceTime = 3.0;
 		
 		[self performSelector:@selector(_removeHUD) withObject:nil afterDelay:3.33];
 	}

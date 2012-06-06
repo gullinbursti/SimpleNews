@@ -73,7 +73,7 @@ static SNTwitterCaller *sharedInstance = nil;
 					self.account = [self.accounts objectAtIndex:0];
 					
 					NSString *twitterID = [[[[NSMutableDictionary alloc] initWithDictionary:[self.account dictionaryWithValuesForKeys:[NSArray arrayWithObject:@"properties"]]] objectForKey:@"properties"] objectForKey:@"user_id"];
-					NSLog(@"ACCOUNT(%d):%@ [%@]", [self.accounts count], self.account, twitterID);
+					//NSLog(@"ACCOUNT(%d):%@ [%@]", [self.accounts count], self.account, twitterID);
 					
 					
 					//if ([self.accounts count] > 0) {
