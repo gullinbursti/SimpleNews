@@ -196,38 +196,48 @@
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_likeButton.frame = CGRectMake(0.0, 0.0, 64.0, 44.0);
 		[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
-		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_nonActive.png"] forState:UIControlStateNormal];
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_Active.png"] forState:UIControlStateHighlighted];
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
-		_likeButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 6.0, 0.0, -6.0);
-		[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
+		[_likeButton setImage:[UIImage imageNamed:@"heartIcon.png"] forState:UIControlStateNormal];
+		[_likeButton setImage:[UIImage imageNamed:@"heartIcon_Active.png"] forState:UIControlStateHighlighted];
 		[btnBGImgView addSubview:_likeButton];
+		
+		if (_vo.hasLiked)
+			[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+			
+		else
+			[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+		
+		if (_vo.totalLikes > 0) {
+			_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
+			[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
+		}
 		
 		_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_commentButton.frame = CGRectMake(64.0, 0.0, 64.0, 44.0);
-		[_commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_nonActive.png"] forState:UIControlStateNormal];
-		[_commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_Active.png"] forState:UIControlStateHighlighted];
+		[_commentButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_nonActive.png"] forState:UIControlStateNormal];
+		[_commentButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_Active.png"] forState:UIControlStateHighlighted];
 		[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
 		[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 		_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
-		_commentButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
-		[_commentButton setTitle:[NSString stringWithFormat:@"%d", [_vo.comments count]] forState:UIControlStateNormal];
+		[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
+		[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
 		[btnBGImgView addSubview:_commentButton];
 		
-		if (_vo.hasLiked) {
-			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateNormal];
-			[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
-			
-		} else {
-			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
-			[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+		if ([_vo.comments count] > 0) {
+			_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
+			[_commentButton setTitle:[NSString stringWithFormat:@"%d", [_vo.comments count]] forState:UIControlStateNormal];
 		}
+		
 		
 		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		sourceButton.frame = CGRectMake(231.0, offset, 64.0, 44.0);
 		[sourceButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[sourceButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
+		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
 		[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:sourceButton];
 		
@@ -313,9 +323,6 @@
 		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 		
-		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
-		[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
-		
 		_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
 		[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		[_likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
@@ -331,9 +338,6 @@
 	
 	[_likeButton removeTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-	
-	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_nonActive.png"] forState:UIControlStateNormal];
-	[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateHighlighted];
 	
 	_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
 	[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
@@ -366,7 +370,7 @@
 }
 
 - (void)_goAppStore {
-	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[_vo.article_url stringByReplacingOccurrencesOfString:@"http:" withString:@"itms-apps:"]]];
+	[SNAppDelegate openWithAppStore:_vo.article_url];
 }
 
 #pragma mark - Notification handlers
@@ -381,7 +385,8 @@
 	
 	if (vo.article_id == _vo.article_id) {
 		NSLog(@"COMMENT ADDED FOR “%@”", _vo.title);
-		[_commentButton setTitle:[NSString stringWithFormat:@"%d", [vo.comments count]] forState:UIControlStateNormal];
+		_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
+		[_commentButton setTitle:[NSString stringWithFormat:@"%d", [_vo.comments count]] forState:UIControlStateNormal];
 	}
 }
 
@@ -411,6 +416,15 @@
 		else {
 			_vo.totalLikes = [[parsedLike objectForKey:@"likes"] intValue];
 			[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
+			
+			if (_vo.totalLikes > 0) {
+				_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
+				[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
+			
+			} else {
+				_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
+				[_likeButton setTitle:@"" forState:UIControlStateNormal];
+			}
 		}
 		
 	}

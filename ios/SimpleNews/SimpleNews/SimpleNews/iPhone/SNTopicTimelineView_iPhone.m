@@ -491,8 +491,8 @@
 			offset += 16.0;
 			_loadMoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			_loadMoreButton.frame = CGRectMake(112.0, offset, 96.0, 44.0);
-			[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"genericButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
-			[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"genericButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];		
+			[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
+			[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];		
 			[_loadMoreButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 			[_loadMoreButton addTarget:self action:@selector(_goLoadMore) forControlEvents:UIControlEventTouchUpInside];
 			_loadMoreButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];

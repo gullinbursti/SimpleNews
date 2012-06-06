@@ -107,7 +107,7 @@
 //	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 //	[_bgView addSubview:_likeButton];
 	
-	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(20.0, 18.0, 270.0, 16.0)];
+	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(20.0, 19.0, 270.0, 16.0)];
 	[_commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 	[_commentTxtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 	[_commentTxtField setAutocorrectionType:UITextAutocorrectionTypeNo];

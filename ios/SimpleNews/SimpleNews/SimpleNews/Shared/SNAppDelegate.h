@@ -74,6 +74,8 @@
 +(int)hoursAfterDate:(NSDate *)date;
 +(int)daysAfterDate:(NSDate *)date;
 
+
++ (void)openWithAppStore:(NSString *)url;
 +(UIImage *)imageWithFilters:(UIImage *)srcImg filter:(NSDictionary *)fx;
 
 @property (strong, nonatomic) UIWindow *window;

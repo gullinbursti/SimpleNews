@@ -178,6 +178,12 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	return ([utcDate timeIntervalSinceDate:date] / 86400);
 }
 
+
++ (void)openWithAppStore:(NSString *)url {
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[url stringByReplacingOccurrencesOfString:@"http:" withString:@"itms-apps:"]]];
+}
+
+
 +(UIImage *)imageWithFilters:(UIImage *)srcImg filter:(NSArray *)fxList {
 	UIImage *fxImg = srcImg;
 	UIImage *outImg;

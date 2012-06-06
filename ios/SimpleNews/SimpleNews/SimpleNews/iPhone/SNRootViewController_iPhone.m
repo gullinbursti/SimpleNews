@@ -110,7 +110,7 @@
 	
 	//if (!_isTimeline) {
 		if (touchPoint.x < 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
-			[UIView animateWithDuration:0.25 animations:^(void) {
+			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void) {
 				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _topicTimelineView.frame.size.width, _topicTimelineView.frame.size.height);
 				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
@@ -123,7 +123,7 @@
 		} 
 		
 		if (touchPoint.x > 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
-			[UIView animateWithDuration:0.25 animations:^(void) {
+			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void) {
 				_topicTimelineView.frame = CGRectMake(kTopicOffset, 0.0, _topicTimelineView.frame.size.width, _topicTimelineView.frame.size.height);
 				_shadowImgView.frame = CGRectMake(kTopicOffset - 19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 				
@@ -461,11 +461,18 @@
 -(void)_showShareSheet:(NSNotification *)notification {
 	_articleVO = (SNArticleVO *)[notification object];
 	
+	NSString *openSource;
+	if ([_articleVO.article_url rangeOfString:@"itunes.apple.com"].length > 0)
+		openSource = @"View in App Store";
+	
+	else
+		openSource = @"Open Web View";
+	
 	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil 
 																				delegate:self 
 																	cancelButtonTitle:@"Cancel" 
 																 destructiveButtonTitle:nil 
-																	otherButtonTitles:@"Twitter", @"SMS", @"Copy URL", @"Email", @"Open Web View", nil];
+																	otherButtonTitles:@"Twitter", @"SMS", @"Copy URL", @"Email", openSource, nil];
 	actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[actionSheet showInView:self.view];
 }
@@ -658,7 +665,10 @@
 			mfViewController.body = [NSString stringWithFormat:@"Check out… %@ via @getassembly %@", _articleVO.title, _articleVO.article_url];
 			mfViewController.recipients = [NSArray arrayWithObjects:nil];
 			mfViewController.messageComposeDelegate = self;
+			mfViewController.wantsFullScreenLayout = NO;
 			[self presentViewController:mfViewController animated:YES completion:nil];
+			
+			[[UIApplication sharedApplication] setStatusBarHidden:YES];
 		}
 		
 		
@@ -693,8 +703,14 @@
 		}
 	
 	} else if (buttonIndex == 4) {
-		SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:_articleVO.article_url] title:_articleVO.title];
-		[self.navigationController pushViewController:webPageViewController animated:YES];
+		
+		if ([_articleVO.article_url rangeOfString:@"itunes.apple.com"].length > 0)
+			[SNAppDelegate openWithAppStore:_articleVO.article_url];
+		
+		else {
+			SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:_articleVO.article_url] title:_articleVO.title];
+			[self.navigationController pushViewController:webPageViewController animated:YES];
+		}
 	}
 }
 
