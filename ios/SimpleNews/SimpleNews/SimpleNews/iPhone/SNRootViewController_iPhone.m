@@ -55,6 +55,8 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showFullscreenMedia:) name:@"SHOW_FULLSCREEN_MEDIA" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideFullscreenMedia:) name:@"HIDE_FULLSCREEN_MEDIA" object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_changeTopic:) name:@"CHANGE_TOPIC" object:nil];
 	}
 	
 	return self;
@@ -623,6 +625,32 @@
 	
 }
 
+-(void)_changeTopic:(NSNotification *)notification {
+	int topicID = [[notification object] intValue];
+	
+	for (SNTopicVO *vo in _topicsList) {
+		if (topicID == vo.topic_id) {
+			
+			[_topicTimelineView removeFromSuperview];
+			_topicTimelineView = nil;
+			_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithTopicVO:vo];
+			_topicTimelineView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
+			[_holderView addSubview:_topicTimelineView];
+			
+			[UIView animateWithDuration:0.33 animations:^(void) {
+				_cardListsButton.hidden = YES;
+				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+				
+			} completion:^(BOOL finished) {
+				_topicsTableView.contentOffset = CGPointZero;
+				[_topicTimelineView fullscreenMediaEnabled:YES];
+			}];
+			break;
+		}
+	}
+}
+
 
 #pragma mark - ActionSheet Delegates
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -752,6 +780,8 @@
 		((SNRootTopicViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).overlayView.alpha = 0.0;
 	}];
 	
+	[_topicTimelineView removeFromSuperview];
+	_topicTimelineView = nil;
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		//_shadowImgView.alpha = 0.0;
