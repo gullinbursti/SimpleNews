@@ -209,39 +209,57 @@
 }
 
 -(void)_goCommentSwitch:(UISwitch *)switchView {
-	_notificationsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
-	[_notificationsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.userID] forKey:@"friendID"];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _commentSwitch.on] forKey:@"isComment"];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _likeSwitch.on] forKey:@"isLike"];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _shareSwitch.on] forKey:@"isShare"];
-	[_notificationsRequest setDelegate:self];
-	[_notificationsRequest startAsynchronous];
+	NSString *msg;
+	
+	if (switchView.on)
+		msg = @"Turn on notifications from @%@?";
+	
+	else
+		msg = @"Turn off notifications from @%@?";
+	
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Friend Comments" 
+													message:[NSString stringWithFormat:msg, _vo.handle]
+												   delegate:self 
+										  cancelButtonTitle:@"Yes" 
+										  otherButtonTitles:@"No", nil];
+	[alert show];	
+	_switch = switchView;
 }
 
 -(void)_goLikeSwitch:(UISwitch *)switchView {
-	_notificationsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
-	[_notificationsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.userID] forKey:@"friendID"];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _commentSwitch.on] forKey:@"isComment"];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _likeSwitch.on] forKey:@"isLike"];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _shareSwitch.on] forKey:@"isShare"];
-	[_notificationsRequest setDelegate:self];
-	[_notificationsRequest startAsynchronous];
+	NSString *msg;
+	
+	if (switchView.on)
+		msg = @"Turn on notifications from @%@?";
+	
+	else
+		msg = @"Turn off notifications from @%@?";
+	
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Friend Likes" 
+													message:[NSString stringWithFormat:msg, _vo.handle] 
+												   delegate:self 
+										  cancelButtonTitle:@"Yes" 
+										  otherButtonTitles:@"No", nil];
+	[alert show];
+	_switch = switchView;
 }
 
 -(void)_goShareSwitch:(UISwitch *)switchView {
-	_notificationsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
-	[_notificationsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.userID] forKey:@"friendID"];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _commentSwitch.on] forKey:@"isComment"];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _likeSwitch.on] forKey:@"isLike"];
-	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _shareSwitch.on] forKey:@"isShare"];
-	[_notificationsRequest setDelegate:self];
-	[_notificationsRequest startAsynchronous];
+	NSString *msg;
+	
+	if (switchView.on)
+		msg = @"Turn on notifications from @%@?";
+	
+	else
+		msg = @"Turn off notifications from @%@?";
+	
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Friend Shares" 
+													message:[NSString stringWithFormat:msg, _vo.handle] 
+												   delegate:self 
+										  cancelButtonTitle:@"Yes" 
+										  otherButtonTitles:@"No", nil];
+	[alert show];
+	_switch = switchView;
 }
 
 -(void)_goLikedArticles {
@@ -255,6 +273,29 @@
 -(void)_goSharedArticles {
 	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initWithUserID:_vo.userID asType:5] animated:YES];
 }
+
+
+#pragma mark - AlerView Delegates
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	switch(buttonIndex) {
+		case 0:
+			_notificationsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
+			[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
+			[_notificationsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+			[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.userID] forKey:@"friendID"];
+			[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _commentSwitch.on] forKey:@"isComment"];
+			[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _likeSwitch.on] forKey:@"isLike"];
+			[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _shareSwitch.on] forKey:@"isShare"];
+			[_notificationsRequest setDelegate:self];
+			[_notificationsRequest startAsynchronous];
+			break;
+			
+		case 1:
+			_switch.on = !_switch.on;
+			break;
+	}
+}
+
 
 #pragma mark - TableView DataSource Delegates
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {

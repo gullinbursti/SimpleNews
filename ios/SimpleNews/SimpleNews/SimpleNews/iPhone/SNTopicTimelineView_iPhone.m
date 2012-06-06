@@ -43,6 +43,8 @@
 
 -(id)init {
 	if ((self = [super initWithFrame:CGRectMake(226.0, 0.0, 320.0, 480.0)])) {
+		
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSourcePage:) name:@"SHOW_SOURCE_PAGE" object:nil];
 		
 		_articles = [NSMutableArray new];
@@ -307,11 +309,10 @@
 
 
 - (void)fullscreenMediaEnabled:(BOOL)isEnabled {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];
+	
 	if (isEnabled)
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_fullscreenMedia:) name:@"FULLSCREEN_MEDIA" object:nil];
-	
-	else
-		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];	
 }
 
 

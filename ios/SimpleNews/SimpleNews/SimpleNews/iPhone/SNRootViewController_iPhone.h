@@ -47,7 +47,6 @@
 	
 	BOOL _reloading;
 	BOOL _isIntro;
-	BOOL _isTimeline;
 	
 	int _swipeIndex;
 	

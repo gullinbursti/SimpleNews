@@ -60,9 +60,12 @@ static SNTwitterCaller *sharedInstance = nil;
 	[[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"twitterAvatar"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
-	//if (_accountStore == nil) {    
+	_accountStore = nil;
+	if (_accountStore == nil) {    
 		self.accountStore = [[ACAccountStore alloc] init];
-	//	if (_accounts == nil) {
+		_accounts = nil;
+		
+		if (_accounts == nil) {
 			ACAccountType *accountTypeTwitter = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
 			[self.accountStore requestAccessToAccountsWithType:accountTypeTwitter withCompletionHandler:^(BOOL granted, NSError *error) {
 				if(granted) {
@@ -70,15 +73,15 @@ static SNTwitterCaller *sharedInstance = nil;
 					self.account = [self.accounts objectAtIndex:0];
 					
 					NSString *twitterID = [[[[NSMutableDictionary alloc] initWithDictionary:[self.account dictionaryWithValuesForKeys:[NSArray arrayWithObject:@"properties"]]] objectForKey:@"properties"] objectForKey:@"user_id"];
-					NSLog(@"ACCOUNT:%@ [%@]", self.account, twitterID);
+					NSLog(@"ACCOUNT(%d):%@ [%@]", [self.accounts count], self.account, twitterID);
 					
 					
-					if ([self.accounts count] > 0) {
+					//if ([self.accounts count] > 0) {
 						[[NSUserDefaults standardUserDefaults] setObject:twitterID forKey:@"twitterID"];
 						[[NSUserDefaults standardUserDefaults] setObject:self.account.username forKey:@"twitterHandle"];
 						[[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"https://api.twitter.com/1/users/profile_image?screen_name=%@&size=reasonably_small", self.account.username] forKey:@"twitterAvatar"];
 						[[NSUserDefaults standardUserDefaults] synchronize];
-					}
+					//}
 					
 					
 					for (ACAccount *account in self.accounts) {
@@ -91,8 +94,7 @@ static SNTwitterCaller *sharedInstance = nil;
 //					});
 				}
 			}];
-	//}
-//}
+	}}
 }
 
 -(void)writeProfile {

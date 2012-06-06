@@ -11,7 +11,7 @@
 #import "SNTwitterUserVO.h"
 #import "ASIFormDataRequest.h"
 
-@interface SNFriendProfileViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, ASIHTTPRequestDelegate> {
+@interface SNFriendProfileViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate> {
 	SNTwitterUserVO *_vo;
 	UILabel *_likesLabel;
 	UILabel *_commentsLabel;
@@ -19,6 +19,7 @@
 	NSMutableArray *_items;
 	UITableView *_tableView;
 	ASIFormDataRequest *_notificationsRequest;
+	UISwitch *_switch;
 	
 	NSMutableArray *_switches;
 	UISwitch *_commentSwitch;

@@ -61,6 +61,7 @@
 	
 	UIImageView *statsBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 108.0, 320.0, 84.0)];
 	statsBgView.image = [UIImage imageNamed:@"profileBackgroundStats.png"];
+	statsBgView.clipsToBounds = YES;
 	[self.view addSubview:statsBgView];
 	
 	_commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, 23.0, 96.0, 18.0)];
@@ -108,19 +109,19 @@
 	sharesLabel.text = @"Shares";
 	[statsBgView addSubview:sharesLabel];
 	
-	UIButton *likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	likeButton.frame = CGRectMake(108.0, 115.0, 96.0, 70.0);
-	[likeButton addTarget:self action:@selector(_goLikedArticles) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:likeButton];
-	 
 	UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	commentButton.frame = CGRectMake(12.0, 115.0, 96.0, 70.0);
-	[commentButton addTarget:self action:@selector(_goCommentedArticles) forControlEvents:UIControlEventTouchUpInside];
+	commentButton.frame = CGRectMake(12.0, 115.0, 97.0, 68.0);
+	[commentButton addTarget:self action:@selector(_goCommentedArticles:) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:commentButton];
 	 
+	UIButton *likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	likeButton.frame = CGRectMake(110.0, 115.0, 100.0, 68.0);
+	[likeButton addTarget:self action:@selector(_goLikedArticles:) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:likeButton];
+	
 	UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	shareButton.frame = CGRectMake(204.0, 115.0, 96.0, 70.0);
-	[shareButton addTarget:self action:@selector(_goSharedArticles) forControlEvents:UIControlEventTouchUpInside];
+	shareButton.frame = CGRectMake(210.0, 115.0, 97.0, 68.0);
+	[shareButton addTarget:self action:@selector(_goSharedArticles:) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:shareButton];
 	
 	UIImageView *tableBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 186.0, 320.0, self.view.frame.size.height - 267.0)];
@@ -208,18 +209,35 @@
 	[alert show];
 }
 
--(void)_goLikedArticles {
-	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initWithUserID:[[[SNAppDelegate profileForUser] objectForKey:@"id"] intValue] asType:6] animated:YES];
-}
-
--(void)_goCommentedArticles {
+-(void)_goCommentedArticles:(UIButton *)button {
+	[button setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.25]];
+	[UIView animateWithDuration:0.15 animations:^(void) {
+		[button setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
+	}];
+	
 	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initWithUserID:[[[SNAppDelegate profileForUser] objectForKey:@"id"] intValue] asType:2] animated:YES];
 }
 
--(void)_goSharedArticles {
+-(void)_goLikedArticles:(UIButton *)button {
+	[button setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.25]];
+	[UIView animateWithDuration:0.15 animations:^(void) {
+		[button setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
+	}];
+
+	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initWithUserID:[[[SNAppDelegate profileForUser] objectForKey:@"id"] intValue] asType:6] animated:YES];
+}
+
+-(void)_goSharedArticles:(UIButton *)button {
+	[button setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.25]];
+	[UIView animateWithDuration:0.15 animations:^(void) {
+		[button setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
+	}];
+
 	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initWithUserID:[[[SNAppDelegate profileForUser] objectForKey:@"id"] intValue] asType:5] animated:YES];
 }
 
+
+#pragma mark - AlerView Delegates
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 	switch(buttonIndex) {
 		case 0:

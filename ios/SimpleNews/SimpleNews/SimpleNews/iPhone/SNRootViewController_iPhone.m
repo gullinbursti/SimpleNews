@@ -95,45 +95,44 @@
 	}
 }
 
-
 -(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
 	UITouch *touch = [touches anyObject];
 	CGPoint touchPoint = [touch locationInView:self.view];
 	
-	if (CGRectContainsPoint(_videoPlayerView.frame, touchPoint))
-		[_videoPlayerView toggleControls];//NSLog(@"TOUCHED:(%f, %f)", touchPoint.x, touchPoint.y);
+	if (!_blackMatteView.hidden) {
+		if (CGRectContainsPoint(_videoPlayerView.frame, touchPoint))
+			[_videoPlayerView toggleControls];//NSLog(@"TOUCHED:(%f, %f)", touchPoint.x, touchPoint.y);
+		
+		if (CGRectContainsPoint(_fullscreenImgView.frame, touchPoint))
+			[self _hideFullscreenMedia:nil];
+		
+		//NSLog(@"TOUCHED:[%f, %f] BLACK MATTE(%d)", touchPoint.x, touchPoint.y, !_blackMatteView.hidden);
 	
-	if (CGRectContainsPoint(_fullscreenImgView.frame, touchPoint))
-		[self _hideFullscreenMedia:nil];
+	}
 	
-	NSLog(@"TOUCHED:[%f, %f] (%d)", touchPoint.x, touchPoint.y, _isTimeline);
-	
-	//if (!_isTimeline) {
+	if (_blackMatteView.hidden) {
 		if (touchPoint.x < 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
 			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void) {
 				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _topicTimelineView.frame.size.width, _topicTimelineView.frame.size.height);
 				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
 			} completion:^(BOOL finished) {
-				_isTimeline = YES;
-				[_topicTimelineView fullscreenMediaEnabled:_isTimeline];
+				[_topicTimelineView fullscreenMediaEnabled:YES];
+				_topicsTableView.contentOffset = CGPointZero;
 				
 			}];
-			
 		} 
 		
-		if (touchPoint.x > 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
+		if (touchPoint.x >= 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
 			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void) {
 				_topicTimelineView.frame = CGRectMake(kTopicOffset, 0.0, _topicTimelineView.frame.size.width, _topicTimelineView.frame.size.height);
 				_shadowImgView.frame = CGRectMake(kTopicOffset - 19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 				
 			} completion:^(BOOL finished) {
-				_isTimeline = NO;
-				[_topicTimelineView fullscreenMediaEnabled:_isTimeline];
-				
+				[_topicTimelineView fullscreenMediaEnabled:NO];
 			}];
 		}
-	//}
+	}
 }
 
 #pragma mark - View lifecycle
@@ -179,6 +178,7 @@
 	
 	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
+	_blackMatteView.hidden = YES;
 	_blackMatteView.alpha = 0.0;
 	[self.view addSubview:_blackMatteView];
 	
@@ -229,8 +229,7 @@
 			
 		} completion:^(BOOL finished) {
 			_isIntro = NO;
-			_isTimeline = YES;
-			[_topicTimelineView fullscreenMediaEnabled:_isTimeline];
+			[_topicTimelineView fullscreenMediaEnabled:YES];
 		}];
 	}
 }
@@ -244,10 +243,8 @@
 		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
-		//[UIView animateWithDuration:0.33 animations:^(void) {
 		_topicsTableView.contentOffset = CGPointZero;
-		_isTimeline = YES;
-		[_topicTimelineView fullscreenMediaEnabled:_isTimeline];
+		[_topicTimelineView fullscreenMediaEnabled:YES];
 	}];
 }
 
@@ -484,8 +481,7 @@
 
 
 -(void)_timelineReturn:(NSNotification *)notification {
-	_isTimeline = NO;
-	[_topicTimelineView fullscreenMediaEnabled:_isTimeline];
+	[_topicTimelineView fullscreenMediaEnabled:NO];
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_topicTimelineView.frame = CGRectMake(kTopicOffset, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
@@ -536,7 +532,7 @@
 	for (UIView *view in [_blackMatteView subviews])
 		[view removeFromSuperview];
 	
-	_fullscreenTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, 6.0, 256.0, 28.0)];
+	_fullscreenTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, self.view.frame.size.height - 70.0, 256.0, 28.0)];
 	_fullscreenTitleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 	_fullscreenTitleLabel.textColor = [UIColor whiteColor];
 	_fullscreenTitleLabel.backgroundColor = [UIColor clearColor];
@@ -544,7 +540,7 @@
 	[_blackMatteView addSubview:_fullscreenTitleLabel];
 	
 	CGSize size = [@"via " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, 30.0, size.width, size.height)];
+	UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, self.view.frame.size.height - 40.0, size.width, size.height)];
 	viaLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10];
 	viaLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 	viaLabel.backgroundColor = [UIColor clearColor];
@@ -552,7 +548,7 @@
 	[_blackMatteView addSubview:viaLabel];
 	
 	CGSize size2 = [[NSString stringWithFormat:@"@%@ ", _articleVO.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0 + size.width, 30.0, size2.width, size2.height)];
+	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0 + size.width, self.view.frame.size.height - 40.0, size2.width, size2.height)];
 	handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
 	handleLabel.textColor = [UIColor whiteColor];
 	handleLabel.backgroundColor = [UIColor clearColor];
@@ -560,7 +556,7 @@
 	[_blackMatteView addSubview:handleLabel];
 	 
 	size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, 30.0, size.width, size.height)];
+	UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, self.view.frame.size.height - 40.0, size.width, size.height)];
 	inLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10];
 	inLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 	inLabel.backgroundColor = [UIColor clearColor];
@@ -568,7 +564,7 @@
 	[_blackMatteView addSubview:inLabel];
 	 
 	size2 = [[NSString stringWithFormat:@"%@", _articleVO.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(inLabel.frame.origin.x + size.width, 30.0, size2.width, size2.height)];
+	UILabel *topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(inLabel.frame.origin.x + size.width, self.view.frame.size.height - 40.0, size2.width, size2.height)];
 	topicLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
 	topicLabel.textColor = [UIColor whiteColor];
 	topicLabel.backgroundColor = [UIColor clearColor];
@@ -780,8 +776,7 @@
 			
 		} completion:^(BOOL finished) {
 			_topicsTableView.contentOffset = CGPointZero;
-			_isTimeline = YES;
-			[_topicTimelineView fullscreenMediaEnabled:_isTimeline];
+			[_topicTimelineView fullscreenMediaEnabled:YES];
 		}];
 	}];
 }
