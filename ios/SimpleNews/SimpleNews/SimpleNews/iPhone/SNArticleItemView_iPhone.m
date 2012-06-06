@@ -86,6 +86,12 @@
 		topicLabel.text = [NSString stringWithFormat:@"%@", _vo.topicTitle];
 		[self addSubview:topicLabel];
 		
+		
+		UIButton *topicButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[topicButton addTarget:self action:@selector(_goTopic) forControlEvents:UIControlEventTouchUpInside];
+		topicButton.frame = topicLabel.frame;
+		[self addSubview:topicButton];
+		
 		NSString *timeSince = @"";
 		int mins = [SNAppDelegate minutesAfterDate:_vo.added];
 		int hours = [SNAppDelegate hoursAfterDate:_vo.added];
@@ -286,6 +292,10 @@
 
 #pragma mark - Navigation
 -(void)_goDetails {
+}
+
+- (void)_goTopic {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_TOPIC" object:[NSNumber numberWithInt:_vo.topicID]];
 }
 
 -(void)_goVideo {
