@@ -80,18 +80,18 @@
 		[self addSubview:_timeLabel];
 		
 		_playButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_playButton.frame = CGRectMake((self.frame.size.width * 0.5) - 22.0, (self.frame.size.height * 0.5) - 22.0, 44.0, 44.0);
+		_playButton.frame = CGRectMake((self.frame.size.width * 0.5) - 32.0, (self.frame.size.height * 0.5) - 32.0, 64.0, 64.0);
 		_playButton.alpha = 1.0;
-		[_playButton setBackgroundImage:[[UIImage imageNamed:@"smallPlayButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-		[_playButton setBackgroundImage:[[UIImage imageNamed:@"smallPlayButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+		[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+		[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[_playButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_playButton];
 		
 		_pauseButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_pauseButton.frame = CGRectMake((self.frame.size.width * 0.5) - 22.0, (self.frame.size.height * 0.5) - 22.0, 44.0, 44.0);
+		_pauseButton.frame = CGRectMake((self.frame.size.width * 0.5) - 32.0, (self.frame.size.height * 0.5) - 32.0, 64.0, 64.0);
 		_pauseButton.alpha = 0.0;
-		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"smallPauseButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"smallPauseButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"pauseButton_nonActiv.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"pauseButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[_pauseButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_pauseButton];
 		
@@ -148,8 +148,8 @@
 	_progressImgView.frame = CGRectMake(_progressImgView.frame.origin.x, _videoHolderView.frame.size.height - 8.0, 0.0, 8.0);
 	_timeLabel.frame = CGRectMake(_timeLabel.frame.origin.x, _videoHolderView.frame.size.height - 18.0, _timeSize.width, _timeSize.height);
 	
-	_playButton.frame = CGRectMake((self.frame.size.width * 0.5) - 22.0, (self.frame.size.height * 0.5) - 22.0, 44.0, 44.0);
-	_pauseButton.frame = CGRectMake((self.frame.size.width * 0.5) - 22.0, (self.frame.size.height * 0.5) - 22.0, 44.0, 44.0);
+	_playButton.frame = CGRectMake((self.frame.size.width * 0.5) - 32.0, (self.frame.size.height * 0.5) - 32.0, 64.0, 64.0);
+	_pauseButton.frame = CGRectMake((self.frame.size.width * 0.5) - 32.0, (self.frame.size.height * 0.5) - 32.0, 64.0, 64.0);
 }
 
 -(void)_dblTap:(UIGestureRecognizer *)gestureRecognizer {
@@ -334,10 +334,15 @@
 	[_progressTimer invalidate];
 	_progressTimer = nil;
 	
-	_bufferingImgView = [[UIImageView alloc] initWithFrame:CGRectMake((_videoHolderView.frame.size.width * 0.5) - 22.0, (_videoHolderView.frame.size.height * 0.5) - 22.0, 44.0, 44.0)];
+	_bufferingImgView = [[UIImageView alloc] initWithFrame:CGRectMake((_videoHolderView.frame.size.width * 0.5) - 32.0, (_videoHolderView.frame.size.height * 0.5) - 32.0, 64.0, 64.0)];
 	_bufferingImgView.alpha = 0.0;
-	_bufferingImgView.image = [UIImage imageNamed:@"smallPlayButton_loading.png"];
+	_bufferingImgView.image = [UIImage imageNamed:@"videoBufferingBackground.png"];
 	[self addSubview:_bufferingImgView];
+	
+	_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+	_activityIndicatorView.frame = CGRectMake(16.0, 16.0, 32.0, 32.0);
+	[_activityIndicatorView startAnimating];
+	[_bufferingImgView addSubview:_activityIndicatorView];
 	
 	[UIView animateWithDuration:0.25 animations:^(void) {
 		_bufferingImgView.hidden = NO;

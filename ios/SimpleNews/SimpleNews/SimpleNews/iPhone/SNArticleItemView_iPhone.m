@@ -23,16 +23,19 @@
 @implementation SNArticleItemView_iPhone
 
 @synthesize imageResource = _imageResource;
+@synthesize isFirstAppearance = _isFirstAppearance;
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo {
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
+		_isFirstAppearance = YES;
 		
 		int offset = 22;
 		CGSize size;
 		CGSize size2;
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_commentAdded:) name:@"COMMENT_ADDED" object:nil];
 		
 		UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 300.0, frame.size.height)];
 		[self addSubview:bgView];
@@ -130,11 +133,11 @@
 		
 		
 		CGRect imgFrame = CGRectMake(-3.0, offset, 305.0, 305.0 * _vo.imgRatio);
-		if (_vo.topicID == 1 || _vo.topicID == 2) {
-			imgFrame.origin.x = 2.0;
-			imgFrame.size.width = 296.0;
-			imgFrame.size.height = 296.0 * _vo.imgRatio;
-		}
+//		if (_vo.topicID == 1 || _vo.topicID == 2) {
+//			imgFrame.origin.x = 2.0;
+//			imgFrame.size.width = 296.0;
+//			imgFrame.size.height = 296.0 * _vo.imgRatio;
+//		}
 			
 		
 		if (_vo.type_id == 2 || _vo.type_id == 3) {
@@ -165,8 +168,8 @@
 			[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:_videoButton];
 			
-			UIImageView *playImgView = [[UIImageView alloc] initWithFrame:CGRectMake(130.0, 92.0, 44.0, 44.0)];
-			playImgView.image = [UIImage imageNamed:@"smallPlayButton_nonActive.png"];
+			UIImageView *playImgView = [[UIImageView alloc] initWithFrame:CGRectMake(120.0, 82.0, 64.0, 64.0)];
+			playImgView.image = [UIImage imageNamed:@"playButton_nonActive.png"];
 			[_videoImgView addSubview:playImgView];
 			
 			offset += 229;
@@ -185,9 +188,10 @@
 			offset += 38;
 		}
 		
-		UIView *btnBGView = [[UIView alloc] initWithFrame:CGRectMake(3.0, offset, 174.0, 44.0)];
-		btnBGView.userInteractionEnabled = YES;
-		[self addSubview:btnBGView];
+		UIImageView *btnBGImgView = [[UIImageView alloc] initWithFrame:CGRectMake(2.0, offset, 295.0, 45.0)];
+		btnBGImgView.image = [UIImage imageNamed:@"articleFooterBackground"];
+		btnBGImgView.userInteractionEnabled = YES;
+		[self addSubview:btnBGImgView];
 		
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_likeButton.frame = CGRectMake(0.0, 0.0, 64.0, 44.0);
@@ -198,18 +202,18 @@
 		_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
 		_likeButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 6.0, 0.0, -6.0);
 		[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
-		[btnBGView addSubview:_likeButton];
+		[btnBGImgView addSubview:_likeButton];
 		
-		UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		commentButton.frame = CGRectMake(64.0, 0.0, 64.0, 44.0);
-		[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_nonActive.png"] forState:UIControlStateNormal];
-		[commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_Active.png"] forState:UIControlStateHighlighted];
-		[commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
-		[commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
-		commentButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
-		[commentButton setTitle:[NSString stringWithFormat:@"%d", [_vo.comments count]] forState:UIControlStateNormal];
-		[btnBGView addSubview:commentButton];
+		_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		_commentButton.frame = CGRectMake(64.0, 0.0, 64.0, 44.0);
+		[_commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_nonActive.png"] forState:UIControlStateNormal];
+		[_commentButton setBackgroundImage:[UIImage imageNamed:@"commentButton_Active.png"] forState:UIControlStateHighlighted];
+		[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
+		[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+		_commentButton.titleEdgeInsets = UIEdgeInsetsMake(0.0, 8.0, 0.0, -8.0);
+		[_commentButton setTitle:[NSString stringWithFormat:@"%d", [_vo.comments count]] forState:UIControlStateNormal];
+		[btnBGImgView addSubview:_commentButton];
 		
 		if (_vo.hasLiked) {
 			[_likeButton setBackgroundImage:[UIImage imageNamed:@"likeButton_Active.png"] forState:UIControlStateNormal];
@@ -221,9 +225,9 @@
 		}
 		
 		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		sourceButton.frame = CGRectMake(249.0, offset, 44.0, 44.0);
-		[sourceButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
-		[sourceButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
+		sourceButton.frame = CGRectMake(231.0, offset, 64.0, 44.0);
+		[sourceButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
+		[sourceButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:sourceButton];
 		
@@ -362,13 +366,23 @@
 }
 
 - (void)_goAppStore {
-	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:_vo.article_url]];
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[_vo.article_url stringByReplacingOccurrencesOfString:@"http:" withString:@"itms-apps:"]]];
 }
 
 #pragma mark - Notification handlers
 -(void)_videoEnded:(NSNotification *)notification {
 	[self addSubview:_videoButton];
 	[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
+}
+
+#pragma mark - Notification handlers
+-(void)_commentAdded:(NSNotification *)notification {
+	SNArticleVO *vo = (SNArticleVO *)[notification object];
+	
+	if (vo.article_id == _vo.article_id) {
+		NSLog(@"COMMENT ADDED FOR “%@”", _vo.title);
+		[_commentButton setTitle:[NSString stringWithFormat:@"%d", [vo.comments count]] forState:UIControlStateNormal];
+	}
 }
 
 

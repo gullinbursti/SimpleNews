@@ -26,9 +26,11 @@
 @interface SNTopicTimelineView_iPhone () <MBLResourceObserverProtocol>
 @property(nonatomic, strong) MBLAsyncResource *articleListResource;
 @property(nonatomic, strong) MBLAsyncResource *updateListResource;
-- (void)_refreshArticleList;
-- (void)_refreshPopularList;
-- (void)_updateArticleList;
+
+- (void)_retrieveTopicList;
+- (void)_updateTopicList;
+
+- (void)_retrievePopularList;
 - (void)_updatePopularList;
 @end
 
@@ -40,7 +42,7 @@
 @synthesize overlayView = _overlayView;
 
 -(id)init {
-	if ((self = [super initWithFrame:CGRectMake(276.0, 0.0, 320.0, 480.0)])) {
+	if ((self = [super initWithFrame:CGRectMake(226.0, 0.0, 320.0, 480.0)])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSourcePage:) name:@"SHOW_SOURCE_PAGE" object:nil];
 		
 		_articles = [NSMutableArray new];
@@ -104,7 +106,7 @@
 		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 44.0, 40.0, self.frame.size.height - 44)];
 		[self addSubview:_overlayView];
 		
-		[self _refreshPopularList];
+		[self _retrievePopularList];
 	}
 	
 	return (self);
@@ -157,7 +159,7 @@
 		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 44.0, 40.0, self.frame.size.height - 44.0)];
 		[self addSubview:_overlayView];
 		
-		[self _refreshArticleList];
+		[self _retrieveTopicList];
 	}
 	
 	return (self);
@@ -174,7 +176,7 @@
 //	
 //	} else {
 //		NSLog(@"\n\n\n\n%d\n\n\n\n", _lastID);
-//		[self _updateArticleList];
+//		[self _updateTopicList];
 //	}
 	
 	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:1.33];
@@ -212,12 +214,24 @@
 		[_articleListResource subscribe:self];
 }
 
+- (void)setUpdateListResource:(MBLAsyncResource *)updateListResource {
+	if (_updateListResource != nil) {
+		[_updateListResource unsubscribe:self];
+		_updateListResource = nil;
+	}
+	
+	_updateListResource = updateListResource;
+	
+	if (_updateListResource != nil)
+		[_updateListResource subscribe:self];
+}
 
-- (void)_refreshPopularList {
+
+- (void)_retrievePopularList {
 	if (_articleListResource == nil) {
 		//_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
 		//_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
-		_progressHUD.labelText = [NSString stringWithFormat:@"Loading %@…", _vo.title];
+		_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 		_progressHUD.graceTime = 2.0;
 		_progressHUD.taskInProgress = YES;
@@ -230,10 +244,32 @@
 	}
 }
 
-- (void)_refreshArticleList {
+- (void)_updatePopularList {
+	_updateListResource = nil;
+	
+	if (_updateListResource == nil) {
+		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+		_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
+		_progressHUD.mode = MBProgressHUDModeIndeterminate;
+		_progressHUD.graceTime = 2.0;
+		_progressHUD.taskInProgress = YES;
+		
+		NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+		[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+		
+		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
+		[formValues setObject:[NSString stringWithFormat:@"%d", 12] forKey:@"action"];
+		[formValues setObject:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
+		
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"];
+		self.updateListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate date]]; // 1 hour expiration for now
+	}
+}
+
+- (void)_retrieveTopicList {
 	if (_articleListResource == nil) {
 		//_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
-		_progressHUD.labelText = [NSString stringWithFormat:@"Loading %@…", _vo.title];
+		_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
 		//_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 		_progressHUD.graceTime = 2.0;
@@ -248,53 +284,27 @@
 	}
 }
 
-- (void)_updatePopularList {
+- (void)_updateTopicList {
 	if (_updateListResource == nil) {
-		//_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
-		_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
+		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+		_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 		_progressHUD.graceTime = 2.0;
 		_progressHUD.taskInProgress = YES;
 		
-		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
-		[formValues setObject:[NSString stringWithFormat:@"%d", 11] forKey:@"action"];
-		[formValues setObject:[NSString stringWithFormat:@"%d", _lastID] forKey:@"articleID"];
-		
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"];
-		self.updateListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate date]]; // 1 hour expiration for now
-	}
-}
-
-- (void)_updateArticleList {
-	if (_updateListResource == nil) {
-		//_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
-		_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
-		_progressHUD.mode = MBProgressHUDModeIndeterminate;
-		_progressHUD.graceTime = 2.0;
-		_progressHUD.taskInProgress = YES;
+		NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+		[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 		
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
-		[formValues setObject:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
+		[formValues setObject:[NSString stringWithFormat:@"%d", 13] forKey:@"action"];
 		[formValues setObject:[NSString stringWithFormat:@"%d", _vo.topic_id] forKey:@"topicID"];
-		[formValues setObject:[NSString stringWithFormat:@"%d", _lastID] forKey:@"articleID"];
+		[formValues setObject:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
 		
 		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"];
 		self.updateListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate date]]; // 1 hour expiration for now
 	}
 }
 
-
-- (void)setUpdateListResource:(MBLAsyncResource *)updateListResource {
-	if (_updateListResource != nil) {
-		[_updateListResource unsubscribe:self];
-		_updateListResource = nil;
-	}
-	
-	_updateListResource = updateListResource;
-	
-	if (_updateListResource != nil)
-		[_updateListResource subscribe:self];
-}
 
 - (void)fullscreenMediaEnabled:(BOOL)isEnabled {
 	if (isEnabled)
@@ -309,6 +319,17 @@
 -(void)_goBack {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
+}
+
+- (void)_goLoadMore {
+	
+	if (_vo.topic_id == 0)
+		[self _updatePopularList];
+	
+	else
+		[self _updateTopicList];
+	
+	_loadMoreButton.alpha = 0.5;
 }
 
 #pragma mark - Notification handlers
@@ -348,6 +369,24 @@
 // any offset changes
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+	
+	for (SNArticleItemView_iPhone *itemView in _articleViews) {
+		if (scrollView.contentOffset.y + 340.0 > itemView.frame.origin.y && itemView.isFirstAppearance) {
+			[itemView setIsFirstAppearance:NO];
+			
+			[UIView animateWithDuration:0.25 animations:^(void) {
+				itemView.alpha = 1.0;
+			}];
+			
+			[UIView beginAnimations:nil context:NULL];
+			[UIView setAnimationDuration:0.25];
+			[UIView setAnimationDelegate:self];
+			[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
+			CGAffineTransform transform = CGAffineTransformMakeScale(1.0, 1.0);
+			itemView.transform = transform;
+			[UIView commitAnimations];
+		}
+	}
 }
 
 
@@ -400,8 +439,8 @@
 				CGSize size;
 				
 				int imgWidth = 305;
-				if (vo.topicID == 1 || vo.topicID == 2)
-					imgWidth = 296;			
+//				if (vo.topicID == 1 || vo.topicID == 2)
+//					imgWidth = 296;			
 				
 				if (vo.type_id > 1 && vo.type_id - 4 < 0) {
 					height += imgWidth * vo.imgRatio;
@@ -436,18 +475,50 @@
 			
 			for (SNArticleItemView_iPhone *itemView in _articleViews) {
 				[_scrollView addSubview:itemView];
+				
+				if (itemView.frame.origin.y > 480.0) {
+					itemView.alpha = 0.0;
+					[UIView beginAnimations:nil context:NULL];
+					[UIView setAnimationDuration:0.1];
+					[UIView setAnimationDelegate:self];
+					[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
+					CGAffineTransform transform = CGAffineTransformMakeScale(1.1, 1.1);
+					itemView.transform = transform;
+					[UIView commitAnimations];
+				}
 			}
+			
+			offset += 16.0;
+			_loadMoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
+			_loadMoreButton.frame = CGRectMake(112.0, offset, 96.0, 44.0);
+			[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"genericButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
+			[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"genericButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];		
+			[_loadMoreButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+			[_loadMoreButton addTarget:self action:@selector(_goLoadMore) forControlEvents:UIControlEventTouchUpInside];
+			_loadMoreButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+			[_loadMoreButton setTitle:@"Load More" forState:UIControlStateNormal];
+			[_scrollView addSubview:_loadMoreButton];
+			
 			
 			[_activityIndicatorView removeFromSuperview];
 			[_loaderLabel removeFromSuperview];
 			
+			offset += 50.0;
 			_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
+			
+			if ([_articles count] > 0) {
+				_lastID = ((SNArticleVO *)[_articles lastObject]).article_id;
+				_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
+				
+				NSLog(@"FIST DATE:[%@]", ((SNArticleVO *)[_articles objectAtIndex:0]).added);
+				NSLog(@"LAST DATE:[%@]", _lastDate);
+			}
 		}
 	
 	} else if (resource == _updateListResource) {
 		NSError *error = nil;
-		NSArray *parsedArticles = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];//[unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
 		
+		NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];//[unsortedLists sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
 		if (error != nil) {
 			NSLog(@"Failed to parse job list JSON: %@", [error localizedDescription]);
 			_progressHUD.graceTime = 0.0;
@@ -459,93 +530,103 @@
 			_progressHUD = nil;
 			
 		} else {
+			NSMutableArray *list = [NSMutableArray array];
+			
 			int tot = 0;
-			int offset = 0;
-			for (NSDictionary *serverArticle in parsedArticles) {
-				SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
-				
-				int height;
-				height = 210;
-				CGSize size;
-				
-				if (vo.type_id > 1) {
-					height += 270.0 * vo.imgRatio;
-					height += 20;
-				}
-				
-				size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-				height += size.height;
-				
-				if (vo.type_id > 4) {
-					height += 202;
-					offset += 20;
-				}
-				
-				offset += 20;
-				offset += height;
-				tot++;
-			}
-			
-			for (SNArticleItemView_iPhone *articleItemView in _articleViews) {
-				[UIView animateWithDuration:0.5 animations:^(void) {
-					articleItemView.frame = CGRectMake(0.0, articleItemView.frame.origin.y + offset, articleItemView.frame.size.width, articleItemView.frame.size.height);
-				}];
-			}
-			
-			offset = 10;
-			
-			NSMutableArray *articleList = [NSMutableArray array];
-			for (NSDictionary *serverArticle in parsedArticles) {
-				SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverArticle];
-				
+			int offset = _scrollView.contentSize.height - 50;
+			for (NSDictionary *serverList in parsedLists) {
+				SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverList];
+				//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
 				if (vo != nil)
-					[articleList addObject:vo];
+					[list addObject:vo];
 				
 				int height;
-				height = 210;
+				height = 94;
 				CGSize size;
 				
-				if (vo.type_id > 1) {
-					height += 270.0 * vo.imgRatio;
-					height += 20;
+				int imgWidth = 305;
+				//				if (vo.topicID == 1 || vo.topicID == 2)
+				//					imgWidth = 296;			
+				
+				if (vo.type_id > 1 && vo.type_id - 4 < 0) {
+					height += imgWidth * vo.imgRatio;
+					height += 26; //20
 				}
 				
-				size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:16] constrainedToSize:CGSizeMake(227.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-				height += size.height;
-				
-				if (vo.type_id > 4) {
-					height += 202;
-					offset += 20;
+				if (!(vo.topicID == 8)) {
+					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+					height += size.height + 9;
 				}
 				
-				SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width, height) articleVO:vo];
+				if (vo.type_id > 3) {
+					height += 229;
+					height += 26; //9
+				}
+				
+				if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
+					height += 37;
+				}
+				
+				SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo];
 				[_articleViews addObject:articleItemView];
 				
-				offset += 20;
+				[_scrollView addSubview:articleItemView];
+				
+				if (articleItemView.frame.origin.y > 480.0) {
+					articleItemView.alpha = 0.0;
+					[UIView beginAnimations:nil context:NULL];
+					[UIView setAnimationDuration:0.1];
+					[UIView setAnimationDelegate:self];
+					[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
+					CGAffineTransform transform = CGAffineTransformMakeScale(1.1, 1.1);
+					articleItemView.transform = transform;
+					[UIView commitAnimations];
+				}
+				
+				if (tot == 0) {
+					[articleItemView setIsFirstAppearance:NO];
+					
+					[UIView animateWithDuration:0.25 animations:^(void) {
+						articleItemView.alpha = 1.0;
+					}];
+					
+					[UIView beginAnimations:nil context:NULL];
+					[UIView setAnimationDuration:0.25];
+					[UIView setAnimationDelegate:self];
+					[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
+					CGAffineTransform transform = CGAffineTransformMakeScale(1.0, 1.0);
+					articleItemView.transform = transform;
+					[UIView commitAnimations];
+				}
+				
+				
 				offset += height;
 				tot++;
 			}
-			
-			for (SNArticleItemView_iPhone *itemView in _articleViews) {
-				[_scrollView insertSubview:itemView atIndex:0];
-			}
-			
-			
-			NSMutableArray *updatedArticles = [NSMutableArray arrayWithArray:articleList];
-			[updatedArticles addObjectsFromArray:_articles];
-			
-			if ([updatedArticles count] > 0) {
-				_lastID = ((SNArticleVO *)[updatedArticles lastObject]).article_id;
-				_articles = [updatedArticles copy];
-			}
-			
-			_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, _scrollView.contentSize.height + offset);
 			
 			[_progressHUD hide:YES];
 			_progressHUD = nil;
 			
-			_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
-			[self doneLoadingTableViewData];
+			[_articles addObjectsFromArray:list];
+			
+			offset += 16.0;
+			_loadMoreButton.alpha = 1.0;
+			_loadMoreButton.frame = CGRectMake(112.0, offset, 96.0, 44.0);
+			
+			[_activityIndicatorView removeFromSuperview];
+			[_loaderLabel removeFromSuperview];
+			
+			offset += 50.0;
+			_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
+			
+			if ([_articles count] > 0) {
+				_lastID = ((SNArticleVO *)[_articles lastObject]).article_id;
+				_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
+				
+				NSLog(@"FIST DATE:[%@]", ((SNArticleVO *)[_articles objectAtIndex:0]).added);
+				NSLog(@"LAST DATE:[%@]", _lastDate);
+			}
+			
 		}
 	}
 }

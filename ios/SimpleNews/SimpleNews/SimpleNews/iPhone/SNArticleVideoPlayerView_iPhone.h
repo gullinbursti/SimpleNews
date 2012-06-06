@@ -24,6 +24,7 @@
 	ASIHTTPRequest *_videoInfoRequest;
 	NSTimer *_progressTimer;
 	NSTimer *_hudTimer;
+	UIActivityIndicatorView *_activityIndicatorView;
 	
 	SNArticleVO *_vo;
 	

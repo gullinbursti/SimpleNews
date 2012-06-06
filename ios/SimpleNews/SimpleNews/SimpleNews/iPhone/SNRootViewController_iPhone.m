@@ -70,10 +70,12 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	UITouch *touch = [touches anyObject];
 	
+	CGPoint location = [touch locationInView:self.view];
 	if ([touch view] == [_topicTimelineView overlayView]) {
-		CGPoint location = [touch locationInView:self.view];
 		_touchPt = CGPointMake(_topicTimelineView.center.x - location.x, _topicTimelineView.center.y - location.y);
-	}
+	
+	} else
+		_touchPt = location;
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {	
@@ -86,6 +88,7 @@
 		CGPoint location = CGPointMake(MIN(MAX(_touchPt.x + touchLocation.x, 160.0), 386.0), _topicTimelineView.center.y);
 		
 		_topicTimelineView.center = location;
+		_shadowImgView.center = CGPointMake(_topicTimelineView.center.x - 123.0, _shadowImgView.center.y);
 		
 		//NSLog(@"TOUCHED:[%f, %f]", _topicTimelineView.center.x, _topicTimelineView.center.y);
 		return;
@@ -106,9 +109,10 @@
 	NSLog(@"TOUCHED:[%f, %f] (%d)", touchPoint.x, touchPoint.y, _isTimeline);
 	
 	//if (!_isTimeline) {
-		if (touchPoint.x < 140.0 && !CGPointEqualToPoint(_touchPt, touchPoint) && !_isTimeline) {
+		if (touchPoint.x < 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
 			[UIView animateWithDuration:0.25 animations:^(void) {
 				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _topicTimelineView.frame.size.width, _topicTimelineView.frame.size.height);
+				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
 			} completion:^(BOOL finished) {
 				_isTimeline = YES;
@@ -118,10 +122,11 @@
 			
 		} 
 		
-		if (touchPoint.x > 140.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
+		if (touchPoint.x > 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
 			[UIView animateWithDuration:0.25 animations:^(void) {
 				_topicTimelineView.frame = CGRectMake(kTopicOffset, 0.0, _topicTimelineView.frame.size.width, _topicTimelineView.frame.size.height);
-			
+				_shadowImgView.frame = CGRectMake(kTopicOffset - 19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+				
 			} completion:^(BOOL finished) {
 				_isTimeline = NO;
 				[_topicTimelineView fullscreenMediaEnabled:_isTimeline];
@@ -136,6 +141,8 @@
 - (void)loadView {
 	[super loadView];
 	
+	self.view.clipsToBounds = YES;
+	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
 	[self.view addSubview:bgImgView];
@@ -143,6 +150,10 @@
 	//_holderView = [[UIView alloc] initWithFrame:CGRectMake(-270.0, 0.0, 580.0, self.view.frame.size.height)];
 	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
 	[self.view addSubview:_holderView];
+	
+	_shadowImgView = [[UIImageView alloc] initWithFrame:CGRectMake(207.0, 0.0, 113.0, 480.0)];
+	_shadowImgView.image = [UIImage imageNamed:@"dropShadow.png"];
+	[_holderView addSubview:_shadowImgView];
 	
 	_profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_profileButton.frame = CGRectMake(10.0, 8.0, 44.0, 44.0);
@@ -199,7 +210,7 @@
 	[super viewWillAppear:animated];
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_shadowImgView.alpha = 1.0;
+		//_shadowImgView.alpha = 1.0;
 	}];
 	
 	// Refresh any network resources that need loading
@@ -214,6 +225,7 @@
 		[UIView animateWithDuration:0.33 delay:1.33 options:UIViewAnimationCurveEaseIn animations:^(void) {
 			_cardListsButton.hidden = YES;
 			_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+			_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
 			_isIntro = NO;
@@ -229,6 +241,7 @@
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_cardListsButton.hidden = YES;
 		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
 		//[UIView animateWithDuration:0.33 animations:^(void) {
@@ -247,7 +260,7 @@
 	} else {
 		[UIView animateWithDuration:0.33
 						 animations:^(void) {
-							 _shadowImgView.alpha = 0.0;
+							 //_shadowImgView.alpha = 0.0;
 			
 						 }
 						 completion:^(BOOL finished) {
@@ -453,7 +466,7 @@
 																	cancelButtonTitle:@"Cancel" 
 																 destructiveButtonTitle:nil 
 																	otherButtonTitles:@"Twitter", @"SMS", @"Copy URL", @"Email", @"Open Web View", nil];
-	actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+	actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[actionSheet showInView:self.view];
 }
 
@@ -469,6 +482,7 @@
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_topicTimelineView.frame = CGRectMake(kTopicOffset, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_shadowImgView.frame = CGRectMake(kTopicOffset - 19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
 		_cardListsButton.hidden = NO;
@@ -653,8 +667,8 @@
 		[pasteboard setValue:_articleVO.article_url forPasteboardType:@"public.utf8-plain-text"];
 		//pasteboard.string = _vo.article_url;
 		
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Pasteboard" 
-																		message:@"URL copied to clipboard" 
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" 
+																		message:@"URL has been copied to your clipboard" 
 																	  delegate:self 
 														  cancelButtonTitle:@"OK" 
 														  otherButtonTitles:nil];
@@ -723,7 +737,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 	
-	[UIView animateWithDuration:0.25 animations:^(void) {
+	[UIView animateWithDuration:0.15 animations:^(void) {
 		((SNRootTopicViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).overlayView.alpha = 1.0;
 		
 	} completion:^(BOOL finished) {
@@ -732,7 +746,7 @@
 	
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_shadowImgView.alpha = 0.0;
+		//_shadowImgView.alpha = 0.0;
 		
 	} completion:^(BOOL finished) {
 		if (indexPath.row == 0)
@@ -746,6 +760,7 @@
 		[UIView animateWithDuration:0.33 animations:^(void) {
 			_cardListsButton.hidden = YES;
 			_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+			_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
 			_topicsTableView.contentOffset = CGPointZero;

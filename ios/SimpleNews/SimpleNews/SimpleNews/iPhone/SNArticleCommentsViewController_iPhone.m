@@ -81,10 +81,10 @@
 	//[_scrollView addSubview:_refreshHeaderView];
 	//[_refreshHeaderView refreshLastUpdatedDate];
 	
-	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 49.0, self.view.frame.size.width, 49.0)];
+	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 51.0, self.view.frame.size.width, 51.0)];
 	[self.view addSubview:_bgView];
 	
-	UIImageView *inputBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 49.0)];
+	UIImageView *inputBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 51.0)];
 	inputBgImgView.image = [UIImage imageNamed:@"commentsInputField_BG.png"];
 	inputBgImgView.userInteractionEnabled = YES;
 	[_bgView addSubview:inputBgImgView];
@@ -146,6 +146,8 @@
 
 -(void)viewDidLoad {
 	[super viewDidLoad];
+	
+	[_commentTxtField becomeFirstResponder];
 }
 
 -(void)viewDidUnload {
@@ -154,8 +156,6 @@
 
 -(void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	
-	[_commentTxtField becomeFirstResponder];
 }
 
 
@@ -342,6 +342,8 @@
 	
 	_commentOffset += (kItemHeight + commentSize.height);
 	_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, _commentOffset);
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"COMMENT_ADDED" object:_vo];
 }
 
 -(void)requestFailed:(ASIHTTPRequest *)request {

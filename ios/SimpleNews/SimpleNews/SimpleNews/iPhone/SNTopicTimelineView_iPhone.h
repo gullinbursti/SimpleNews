@@ -27,6 +27,7 @@
 	UIButton *_fullscreenShareButton;
 	UIActivityIndicatorView *_activityIndicatorView;
 	UILabel *_loaderLabel;
+	UIButton *_loadMoreButton;
 	
 	NSMutableArray *_articleViews;
 	

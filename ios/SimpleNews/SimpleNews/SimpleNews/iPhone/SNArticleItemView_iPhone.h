@@ -16,6 +16,7 @@
 @interface SNArticleItemView_iPhone : UIView <ASIHTTPRequestDelegate, EGOImageViewDelegate> {
 	UIButton *_likeButton;
 	UIButton *_videoButton;
+	UIButton *_commentButton;
 	
 	UIImageView *_articleImgView;
 	EGOImageView *_videoImgView;
@@ -23,6 +24,8 @@
 	SNArticleVO *_vo;
 	ASIFormDataRequest *_likeRequest;
 }
+
+@property (nonatomic)BOOL isFirstAppearance;
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;
 
