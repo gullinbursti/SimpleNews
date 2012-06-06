@@ -24,4 +24,6 @@
 	UILabel *_topicLabel;
 }
 
+- (void)restart;
+
 @end

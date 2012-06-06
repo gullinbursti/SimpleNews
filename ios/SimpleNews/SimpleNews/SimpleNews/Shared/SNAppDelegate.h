@@ -64,7 +64,7 @@
 
 +(void)playMP3:(NSString *)filename;
 
-+(BOOL)hasWiFi;
++(BOOL)hasNetwork;
 +(BOOL)hasAirplay;
 
 +(void)notificationsToggle:(BOOL)isOn;

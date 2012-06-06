@@ -109,7 +109,7 @@
 		}
 		
 		size = [timeSince sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(281.0 - size.width, offset, size.width, size.height)];
+		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(281.0 - size.width, offset + 1.0, size.width, size.height)];
 		dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
 		dateLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 		dateLabel.backgroundColor = [UIColor clearColor];
@@ -120,9 +120,9 @@
 		offset += 32;
 		
 		if (!(_vo.topicID == 8)) {
-			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:15] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, offset, 260.0, size.height)];
-			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
+			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:15];
 			titleLabel.textColor = [SNAppDelegate snLinkColor];
 			titleLabel.backgroundColor = [UIColor clearColor];
 			titleLabel.text = _vo.title;
@@ -134,7 +134,7 @@
 			titleButton.frame = titleLabel.frame;
 			[self addSubview:titleButton];
 			
-			offset += size.height + 9.0;
+			offset += size.height + 13.0;
 		}
 		
 		
@@ -147,6 +147,10 @@
 			
 		
 		if (_vo.type_id == 2 || _vo.type_id == 3) {
+			UIImageView *shadowImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-10.0, (imgFrame.origin.y + imgFrame.size.height) - 53.0, 319.0, 64.0)];
+			shadowImgView.image = [UIImage imageNamed:@"imageDropShadow.png"];
+			[self addSubview:shadowImgView];
+			
 			_articleImgView = [[UIImageView alloc] initWithFrame:imgFrame];
 			[_articleImgView setBackgroundColor:[UIColor whiteColor]];
 			_articleImgView.userInteractionEnabled = YES;
@@ -160,11 +164,25 @@
 				self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:_vo.imageURL forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
 			}
 			
+			if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
+				UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
+				itunesButton.frame = CGRectMake(123.0, imgFrame.origin.y + ((imgFrame.size.height * 0.5) - 17.0), 74.0, 34.0);
+				[itunesButton setBackgroundImage:[UIImage imageNamed:@"availableOnAppStoreBadge_nonActive.png"] forState:UIControlStateNormal];
+				[itunesButton setBackgroundImage:[UIImage imageNamed:@"availableOnAppStoreBadge_Active.png"] forState:UIControlStateHighlighted];
+				[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
+				[self addSubview:itunesButton];
+			}
+			
 			offset += (imgFrame.size.width * _vo.imgRatio);
 			offset += 9;
 		}
 		
 		if (_vo.type_id > 3) {
+			
+			UIImageView *shadowImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-10.0, (offset + 229.0) - 53.0, 319.0, 64.0)];
+			shadowImgView.image = [UIImage imageNamed:@"imageDropShadow.png"];
+			[self addSubview:shadowImgView];
+			
 			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(-3.0, offset, 305.0, 229.0)];
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[self addSubview:_videoImgView];
@@ -180,18 +198,6 @@
 			
 			offset += 229;
 			offset += 9;
-		}
-		
-		if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
-			//offset -= 2;
-			UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			itunesButton.frame = CGRectMake(7.0, offset, 74.0, 29.0);
-			[itunesButton setBackgroundImage:[UIImage imageNamed:@"iTunesAppStore_nonActive.png"] forState:UIControlStateNormal];
-			[itunesButton setBackgroundImage:[UIImage imageNamed:@"iTunesAppStore_Active.png"] forState:UIControlStateHighlighted];
-			[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
-			[self addSubview:itunesButton];
-			
-			offset += 38;
 		}
 		
 		UIImageView *btnBGImgView = [[UIImageView alloc] initWithFrame:CGRectMake(2.0, offset, 295.0, 45.0)];
@@ -246,28 +252,6 @@
 		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
 		[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:sourceButton];
-		
-//		int imgOffset = 25;
-//		for (NSDictionary *dict in _vo.seenBy) {
-//			EGOImageView *readImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(imgOffset, offset, 24.0, 24.0)];
-//			readImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.twitter.com/1/users/profile_image?screen_name=%@&size=reasonably_small", [dict objectForKey:@"handle"]]];
-//			[self addSubview:readImgView];
-//			
-//			UIButton *avatarButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//			avatarButton.frame = readImgView.frame;
-//			[avatarButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
-//			[self addSubview:avatarButton];
-//			
-//			imgOffset += 34;
-//		}
-		
-		
-//		UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//		commentButton.frame = CGRectMake(imgOffset - 5.0, offset - 5.0, 34.0, 34.0);
-//		[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_nonActive.png"] forState:UIControlStateNormal];
-//		[commentButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
-//		[commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
-//		[self addSubview:commentButton];
 	}
 	
 	return (self);
@@ -299,12 +283,12 @@
 }
 
 -(void)_goVideo {
-	_videoImgView.frame = CGRectMake(_videoImgView.frame.origin.x, _videoImgView.frame.origin.y + 5.0, _videoImgView.frame.size.width, _videoImgView.frame.size.height);
+	_videoImgView.frame = CGRectMake(_videoImgView.frame.origin.x, _videoImgView.frame.origin.y + 2.0, _videoImgView.frame.size.width, _videoImgView.frame.size.height);
 	[self performSelector:@selector(_showFSVideo) withObject:nil afterDelay:0.1];
 }
 
 -(void)_photoZoomIn:(UIGestureRecognizer *)gestureRecognizer {
-	_articleImgView.frame = CGRectMake(_articleImgView.frame.origin.x, _articleImgView.frame.origin.y + 5.0, _articleImgView.frame.size.width, _articleImgView.frame.size.height);
+	_articleImgView.frame = CGRectMake(_articleImgView.frame.origin.x, _articleImgView.frame.origin.y + 2.0, _articleImgView.frame.size.width, _articleImgView.frame.size.height);
 	[self performSelector:@selector(_showFSImage) withObject:nil afterDelay:0.1];
 }
 
@@ -374,25 +358,25 @@
 
 #pragma mark - Animations
 - (void)_showFSVideo {
-	_videoImgView.frame = CGRectMake(_videoImgView.frame.origin.x, _videoImgView.frame.origin.y, _videoImgView.frame.size.width, _videoImgView.frame.size.height);
+	_videoImgView.frame = CGRectMake(_videoImgView.frame.origin.x, _videoImgView.frame.origin.y - 2.0, _videoImgView.frame.size.width, _videoImgView.frame.size.height);
 	
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 								 @"video", @"type", 
 								 _vo, @"VO", 
 								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
-								 [NSValue valueWithCGRect:CGRectMake(_videoImgView.frame.origin.x + self.frame.origin.x, _videoImgView.frame.origin.y - 5.0, _videoImgView.frame.size.width, _videoImgView.frame.size.height)], @"frame", nil];
+								 [NSValue valueWithCGRect:CGRectMake(_videoImgView.frame.origin.x + self.frame.origin.x, _videoImgView.frame.origin.y, _videoImgView.frame.size.width, _videoImgView.frame.size.height)], @"frame", nil];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
 }
 
 - (void)_showFSImage {
-	_articleImgView.frame = CGRectMake(_articleImgView.frame.origin.x, _articleImgView.frame.origin.y, _articleImgView.frame.size.width, _articleImgView.frame.size.height);
+	_articleImgView.frame = CGRectMake(_articleImgView.frame.origin.x, _articleImgView.frame.origin.y - 2.0, _articleImgView.frame.size.width, _articleImgView.frame.size.height);
 	
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 								 @"photo", @"type", 
 								 _vo, @"VO", 
 								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
-								 [NSValue valueWithCGRect:CGRectMake(_articleImgView.frame.origin.x + self.frame.origin.x, _articleImgView.frame.origin.y - 5.0, _articleImgView.frame.size.width, _articleImgView.frame.size.height)], @"frame", nil];
+								 [NSValue valueWithCGRect:CGRectMake(_articleImgView.frame.origin.x + self.frame.origin.x, _articleImgView.frame.origin.y, _articleImgView.frame.size.width, _articleImgView.frame.size.height)], @"frame", nil];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
 }

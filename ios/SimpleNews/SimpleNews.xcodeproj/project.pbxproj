@@ -156,6 +156,12 @@
 		4C9217511538E85300AAD992 /* commentButton_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C92174D1538E85300AAD992 /* commentButton_nonActive@2x.png */; };
 		4C92175415392C4600AAD992 /* SNArticleItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C92175315392C4500AAD992 /* SNArticleItemView_iPhone.m */; };
 		4C921757153B722400AAD992 /* SNArticleCommentsViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C921756153B720D00AAD992 /* SNArticleCommentsViewController_iPhone.m */; };
+		4C929DC4157FACF4003FD673 /* imageDropShadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DC2157FACF4003FD673 /* imageDropShadow.png */; };
+		4C929DC5157FACF4003FD673 /* imageDropShadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DC3157FACF4003FD673 /* imageDropShadow@2x.png */; };
+		4C929DCB157FBA66003FD673 /* availableOnAppStoreBadge_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DC7157FBA66003FD673 /* availableOnAppStoreBadge_Active.png */; };
+		4C929DCC157FBA66003FD673 /* availableOnAppStoreBadge_Active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DC8157FBA66003FD673 /* availableOnAppStoreBadge_Active@2x.png */; };
+		4C929DCD157FBA66003FD673 /* availableOnAppStoreBadge_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DC9157FBA66003FD673 /* availableOnAppStoreBadge_nonActive.png */; };
+		4C929DCE157FBA66003FD673 /* availableOnAppStoreBadge_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DCA157FBA66003FD673 /* availableOnAppStoreBadge_nonActive@2x.png */; };
 		4C9E00BA15194B9B00AEB803 /* AirshipConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C9EFFC415194B9B00AEB803 /* AirshipConfig.plist */; };
 		4C9E00BB15194B9B00AEB803 /* CHANGELOG in Resources */ = {isa = PBXBuildFile; fileRef = 4C9EFFC515194B9B00AEB803 /* CHANGELOG */; };
 		4C9E00BC15194B9B00AEB803 /* libUAirship-1.1.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C9E001815194B9B00AEB803 /* libUAirship-1.1.1.a */; };
@@ -553,6 +559,12 @@
 		4C92175315392C4500AAD992 /* SNArticleItemView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNArticleItemView_iPhone.m; sourceTree = "<group>"; };
 		4C921755153B720800AAD992 /* SNArticleCommentsViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNArticleCommentsViewController_iPhone.h; sourceTree = "<group>"; };
 		4C921756153B720D00AAD992 /* SNArticleCommentsViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNArticleCommentsViewController_iPhone.m; sourceTree = "<group>"; };
+		4C929DC2157FACF4003FD673 /* imageDropShadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = imageDropShadow.png; sourceTree = "<group>"; };
+		4C929DC3157FACF4003FD673 /* imageDropShadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "imageDropShadow@2x.png"; sourceTree = "<group>"; };
+		4C929DC7157FBA66003FD673 /* availableOnAppStoreBadge_Active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = availableOnAppStoreBadge_Active.png; sourceTree = "<group>"; };
+		4C929DC8157FBA66003FD673 /* availableOnAppStoreBadge_Active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "availableOnAppStoreBadge_Active@2x.png"; sourceTree = "<group>"; };
+		4C929DC9157FBA66003FD673 /* availableOnAppStoreBadge_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = availableOnAppStoreBadge_nonActive.png; sourceTree = "<group>"; };
+		4C929DCA157FBA66003FD673 /* availableOnAppStoreBadge_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "availableOnAppStoreBadge_nonActive@2x.png"; sourceTree = "<group>"; };
 		4C9E000015194B9B00AEB803 /* UAInboxMessageListObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAInboxMessageListObserver.h; sourceTree = "<group>"; };
 		4C9E000115194B9B00AEB803 /* UAInboxPushHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAInboxPushHandler.h; sourceTree = "<group>"; };
 		4C9E000215194B9B00AEB803 /* UAInboxURLCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAInboxURLCache.h; sourceTree = "<group>"; };
@@ -1631,6 +1643,10 @@
 		4CD01B5515140452005B490C /* Articles */ = {
 			isa = PBXGroup;
 			children = (
+				4C929DC7157FBA66003FD673 /* availableOnAppStoreBadge_Active.png */,
+				4C929DC8157FBA66003FD673 /* availableOnAppStoreBadge_Active@2x.png */,
+				4C929DC9157FBA66003FD673 /* availableOnAppStoreBadge_nonActive.png */,
+				4C929DCA157FBA66003FD673 /* availableOnAppStoreBadge_nonActive@2x.png */,
 				4CB8D95F157F1F6B006DD8E3 /* commentIcon_Active.png */,
 				4CB8D960157F1F6B006DD8E3 /* commentIcon_Active@2x.png */,
 				4CB8D961157F1F6C006DD8E3 /* commentIcon.png */,
@@ -1672,6 +1688,8 @@
 		4CD01B571514049B005B490C /* Articles */ = {
 			isa = PBXGroup;
 			children = (
+				4C929DC2157FACF4003FD673 /* imageDropShadow.png */,
+				4C929DC3157FACF4003FD673 /* imageDropShadow@2x.png */,
 				4CB8D94D157EFD73006DD8E3 /* articleFooterBackground.png */,
 				4CB8D94E157EFD73006DD8E3 /* articleFooterBackground@2x.png */,
 				4CB8D949157EEDE2006DD8E3 /* commentDivider.png */,
@@ -2251,6 +2269,12 @@
 				4CB8D96C157F2045006DD8E3 /* moreIcon_Active@2x.png in Resources */,
 				4CB8D96D157F2045006DD8E3 /* moreIcon_nonActive.png in Resources */,
 				4CB8D96E157F2045006DD8E3 /* moreIcon_nonActive@2x.png in Resources */,
+				4C929DC4157FACF4003FD673 /* imageDropShadow.png in Resources */,
+				4C929DC5157FACF4003FD673 /* imageDropShadow@2x.png in Resources */,
+				4C929DCB157FBA66003FD673 /* availableOnAppStoreBadge_Active.png in Resources */,
+				4C929DCC157FBA66003FD673 /* availableOnAppStoreBadge_Active@2x.png in Resources */,
+				4C929DCD157FBA66003FD673 /* availableOnAppStoreBadge_nonActive.png in Resources */,
+				4C929DCE157FBA66003FD673 /* availableOnAppStoreBadge_nonActive@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

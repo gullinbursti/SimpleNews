@@ -150,15 +150,29 @@
 	[line2View setBackgroundColor:[SNAppDelegate snLineColor]];
 	[self.view addSubview:line2View];
 	
+	
+	UIImageView *tosBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 394.0, 320.0, 68.0)];
+	img = [UIImage imageNamed:@"profileBackground.png"];
+	tosBgView.image = [img stretchableImageWithLeftCapWidth:30.0 topCapHeight:30.0];
+	tosBgView.userInteractionEnabled = YES;
+	tosBgView.clipsToBounds = YES;
+	[self.view addSubview:tosBgView];
+	
+	UILabel *tosLabel = [[UILabel alloc] initWithFrame:CGRectMake(29.0, 26.0, 256.0, 18.0)];
+	tosLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
+	tosLabel.textColor = [UIColor blackColor];
+	tosLabel.backgroundColor = [UIColor clearColor];
+	tosLabel.text = @"Terms of Service";
+	[tosBgView addSubview:tosLabel];
+	
 	UIButton *tosButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	tosButton.frame = CGRectMake(96.0, 420.0, 128.0, 44.0);
-	[tosButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
-	[tosButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-	[tosButton addTarget:self action:@selector(_goTOS) forControlEvents:UIControlEventTouchUpInside];
-	[tosButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-	tosButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
-	[tosButton setTitle:@"Term of Service" forState:UIControlStateNormal];
+	tosButton.frame = CGRectMake(12.0, 398.0, 296.0, 61.0);
+	[tosButton addTarget:self action:@selector(_goTOS:) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:tosButton];
+	
+	UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(277.0, 22.0, 24.0, 24.0)];
+	chevronView.image = [UIImage imageNamed:@"chevron.png"];
+	[tosBgView addSubview:chevronView];
 	
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Profile"];
 	[self.view addSubview:headerView];
@@ -246,7 +260,12 @@
 	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initWithUserID:[[[SNAppDelegate profileForUser] objectForKey:@"id"] intValue] asType:5] animated:YES];
 }
 
-- (void)_goTOS {
+- (void)_goTOS:(UIButton *)button {
+	[button setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.25]];
+	[UIView animateWithDuration:0.15 animations:^(void) {
+		[button setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
+	}];
+	
 	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:kTOSPage] title:@"Terms of Service"];
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }

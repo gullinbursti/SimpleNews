@@ -33,6 +33,11 @@
 		_imgIndex = 0;
 		_topicNames = [NSMutableArray new];
 		_imageURLs = [NSMutableArray new];
+		
+		
+		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+		[defaults setObject:[NSNumber numberWithInt:1] forKey:@"splash_state"];
+		[defaults synchronize];
 	}
 	
 	return (self);
@@ -98,6 +103,15 @@
 		[_popularImagesResource subscribe:self];
 }
 
+- (void)restart {
+	_topicsListResource = nil;
+	NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
+	[formValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		
+	NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Topics.php"];
+	self.topicsListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 60.0]]; // 1 hour for now
+}
+
 #pragma mark - View lifecycle
 -(void)loadView {
 	[super loadView];
@@ -122,11 +136,6 @@
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_logoImgView.alpha = 1.0;
 	}];
-	
-//	ASIFormDataRequest *topicRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Topics.php"]]];
-//	[topicRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-//	[topicRequest setDelegate:self];
-//	[topicRequest startAsynchronous];
 	
 	if (_topicsListResource == nil) {
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
@@ -184,6 +193,9 @@
 		[_topicTimer invalidate];
 		_topicTimer = nil;
 		
+		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+		[defaults setObject:[NSNumber numberWithInt:2] forKey:@"splash_state"];
+		[defaults synchronize];
 		[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
 	}
 	
