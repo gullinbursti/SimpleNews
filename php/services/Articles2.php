@@ -440,8 +440,8 @@
 					));
 				}
 				
-				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $shared_row['id'] .';';
-				$likes_result = mysql_query($query);
+				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $shared_row[0] .';';
+				$shares_result = mysql_query($query);
 				
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
@@ -460,7 +460,7 @@
 					"content" => $article_row[7], 
 					"avatar_url" => $article_row[20], 
 					"video_url" => $article_row[11], 
-					"likes" => mysql_num_rows($likes_result), 
+					"likes" => mysql_num_rows($shares_result), 
 					"img_ratio" => $article_row[10], 
 					"added" => $article_row[16], 
 					"comments" => $comment_arr

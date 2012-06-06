@@ -209,11 +209,7 @@
 {
 	[super viewWillAppear:animated];
 	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		//_shadowImgView.alpha = 1.0;
-	}];
-	
-	// Refresh any network resources that need loading
+		// Refresh any network resources that need loading
 	[self _refreshTopicsList];
 	[self _refreshUserAccount];
 }

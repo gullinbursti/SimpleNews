@@ -106,12 +106,12 @@
 	bgImgView.image = [UIImage imageNamed:@"background_boot.png"];
 	[self.view addSubview:bgImgView];
 	
-	_logoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(20.0, 173.0, 64.0, 64.0)];
+	_logoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(29.0, 175.0, 64.0, 64.0)];
 	_logoImgView.alpha = 0.0;
 	_logoImgView.image = [UIImage imageNamed:@"logoLoader_001.png"];
 	[self.view addSubview:_logoImgView];
 	
-	_topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(32.0, 245.0, 290.0, 18.0)];
+	_topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(35.0, 253.0, 290.0, 18.0)];
 	_topicLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:15];
 	_topicLabel.textColor = [UIColor whiteColor];
 	_topicLabel.backgroundColor = [UIColor clearColor];
@@ -156,7 +156,7 @@
 		[_frameTimer invalidate];
 		_frameTimer = nil;
 		
-		UILabel *subtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(32.0, 268.0, 290.0, 18.0)];
+		UILabel *subtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(35.0, 277.0, 290.0, 18.0)];
 		subtitleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:15];
 		subtitleLabel.textColor = [UIColor colorWithWhite:0.545 alpha:1.0];
 		subtitleLabel.backgroundColor = [UIColor clearColor];

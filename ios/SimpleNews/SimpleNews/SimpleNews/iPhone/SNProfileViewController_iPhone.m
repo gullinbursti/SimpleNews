@@ -150,6 +150,16 @@
 	[line2View setBackgroundColor:[SNAppDelegate snLineColor]];
 	[self.view addSubview:line2View];
 	
+	UIButton *tosButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	tosButton.frame = CGRectMake(96.0, 420.0, 128.0, 44.0);
+	[tosButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
+	[tosButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+	[tosButton addTarget:self action:@selector(_goTOS) forControlEvents:UIControlEventTouchUpInside];
+	[tosButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+	tosButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+	[tosButton setTitle:@"Term of Service" forState:UIControlStateNormal];
+	[self.view addSubview:tosButton];
+	
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Profile"];
 	[self.view addSubview:headerView];
 	
@@ -234,6 +244,11 @@
 	}];
 
 	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initWithUserID:[[[SNAppDelegate profileForUser] objectForKey:@"id"] intValue] asType:5] animated:YES];
+}
+
+- (void)_goTOS {
+	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:kTOSPage] title:@"Terms of Service"];
+	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
 
