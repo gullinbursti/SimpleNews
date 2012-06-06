@@ -299,23 +299,13 @@
 }
 
 -(void)_goVideo {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-								 @"video", @"type", 
-								 _vo, @"VO", 
-								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
-								 [NSValue valueWithCGRect:CGRectMake(_videoImgView.frame.origin.x + self.frame.origin.x, _videoImgView.frame.origin.y, _videoImgView.frame.size.width, _videoImgView.frame.size.height)], @"frame", nil];
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
+	_videoImgView.frame = CGRectMake(_videoImgView.frame.origin.x, _videoImgView.frame.origin.y + 5.0, _videoImgView.frame.size.width, _videoImgView.frame.size.height);
+	[self performSelector:@selector(_showFSVideo) withObject:nil afterDelay:0.1];
 }
 
 -(void)_photoZoomIn:(UIGestureRecognizer *)gestureRecognizer {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-								 @"photo", @"type", 
-								 _vo, @"VO", 
-								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
-								 [NSValue valueWithCGRect:CGRectMake(_articleImgView.frame.origin.x + self.frame.origin.x, _articleImgView.frame.origin.y, _articleImgView.frame.size.width, _articleImgView.frame.size.height)], @"frame", nil];
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
+	_articleImgView.frame = CGRectMake(_articleImgView.frame.origin.x, _articleImgView.frame.origin.y + 5.0, _articleImgView.frame.size.width, _articleImgView.frame.size.height);
+	[self performSelector:@selector(_showFSImage) withObject:nil afterDelay:0.1];
 }
 
 
@@ -324,7 +314,6 @@
 }
 
 -(void)_goLike {
-	
 	if (![SNAppDelegate twitterHandle]) {
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
@@ -381,6 +370,31 @@
 
 - (void)_goAppStore {
 	[SNAppDelegate openWithAppStore:_vo.article_url];
+}
+
+#pragma mark - Animations
+- (void)_showFSVideo {
+	_videoImgView.frame = CGRectMake(_videoImgView.frame.origin.x, _videoImgView.frame.origin.y, _videoImgView.frame.size.width, _videoImgView.frame.size.height);
+	
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+								 @"video", @"type", 
+								 _vo, @"VO", 
+								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
+								 [NSValue valueWithCGRect:CGRectMake(_videoImgView.frame.origin.x + self.frame.origin.x, _videoImgView.frame.origin.y - 5.0, _videoImgView.frame.size.width, _videoImgView.frame.size.height)], @"frame", nil];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
+}
+
+- (void)_showFSImage {
+	_articleImgView.frame = CGRectMake(_articleImgView.frame.origin.x, _articleImgView.frame.origin.y, _articleImgView.frame.size.width, _articleImgView.frame.size.height);
+	
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+								 @"photo", @"type", 
+								 _vo, @"VO", 
+								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
+								 [NSValue valueWithCGRect:CGRectMake(_articleImgView.frame.origin.x + self.frame.origin.x, _articleImgView.frame.origin.y - 5.0, _articleImgView.frame.size.width, _articleImgView.frame.size.height)], @"frame", nil];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
 }
 
 #pragma mark - Notification handlers

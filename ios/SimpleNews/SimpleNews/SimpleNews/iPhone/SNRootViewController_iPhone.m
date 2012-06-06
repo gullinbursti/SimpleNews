@@ -630,9 +630,10 @@
 	
 	for (SNTopicVO *vo in _topicsList) {
 		if (topicID == vo.topic_id) {
-			
+			[_topicTimelineView fullscreenMediaEnabled:NO];
 			[_topicTimelineView removeFromSuperview];
 			_topicTimelineView = nil;
+			
 			_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithTopicVO:vo];
 			_topicTimelineView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
 			[_holderView addSubview:_topicTimelineView];
