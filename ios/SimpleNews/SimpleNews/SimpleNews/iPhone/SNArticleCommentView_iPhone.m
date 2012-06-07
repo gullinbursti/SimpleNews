@@ -49,8 +49,8 @@
 			}
 		}
 
-		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0 + size.width, 22.0, 100.0, 8.0)];
-		dateLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:8];
+		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0 + size.width, 21.0, 100.0, 8.0)];
+		dateLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:8];
 		dateLabel.textColor = [UIColor colorWithWhite:0.482 alpha:1.0];
 		dateLabel.backgroundColor = [UIColor clearColor];
 		dateLabel.textAlignment = UITextAlignmentLeft;
@@ -76,7 +76,7 @@
 //			offset = 15;
 //		}
 		
-		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15.0, size.height + 46.0, self.frame.size.width - 30.0, 2.0)];
+		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15.0, size.height + 52.0, self.frame.size.width - 30.0, 2.0)];
 		UIImage *img = [UIImage imageNamed:@"commentDivider.png"];
 		lineImgView.image = [img stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];
 		[self addSubview:lineImgView];

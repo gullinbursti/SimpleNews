@@ -37,14 +37,14 @@
 //		[_followButton addTarget:self action:@selector(_goUnfollow) forControlEvents:UIControlEventTouchUpInside];
 //		[self addSubview:_followButton];
 		
-		UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 50.0, self.frame.size.width, 1.0)];
-		[lineView setBackgroundColor:[SNAppDelegate snLineColor]];
-		[self addSubview:lineView];
+//		UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 50.0, self.frame.size.width, 1.0)];
+//		[lineView setBackgroundColor:[SNAppDelegate snLineColor]];
+//		[self addSubview:lineView];
 		
-//		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15.0, 50.0, self.frame.size.width - 30.0, 2.0)];
-//		UIImage *img = [UIImage imageNamed:@"line.png"];
-//		lineImgView.image = [img stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];
-//		[self addSubview:lineImgView];
+		UIImageView *lineImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 50.0, self.frame.size.width, 2.0)];
+		UIImage *img = [UIImage imageNamed:@"line.png"];
+		lineImgView.image = [img stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];
+		[self addSubview:lineImgView];
 		
 		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 50.0)];
 		[_overlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.33]];

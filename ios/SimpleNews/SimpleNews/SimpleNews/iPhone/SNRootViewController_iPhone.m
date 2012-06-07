@@ -114,7 +114,7 @@
 	
 	if (_blackMatteView.hidden) {
 		if (touchPoint.x < 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
-			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void) {
+			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
 				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _topicTimelineView.frame.size.width, _topicTimelineView.frame.size.height);
 				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
@@ -126,7 +126,7 @@
 		} 
 		
 		if (touchPoint.x >= 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
-			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void) {
+			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
 				_topicTimelineView.frame = CGRectMake(kTopicOffset, 0.0, _topicTimelineView.frame.size.width, _topicTimelineView.frame.size.height);
 				_shadowImgView.frame = CGRectMake(kTopicOffset - 19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 				
@@ -152,10 +152,6 @@
 	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
 	[self.view addSubview:_holderView];
 	
-	_shadowImgView = [[UIImageView alloc] initWithFrame:CGRectMake(207.0, 0.0, 113.0, 480.0)];
-	_shadowImgView.image = [UIImage imageNamed:@"dropShadow.png"];
-	[_holderView addSubview:_shadowImgView];
-	
 	_profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_profileButton.frame = CGRectMake(10.0, 8.0, 44.0, 44.0);
 	[_profileButton setBackgroundImage:[UIImage imageNamed:@"profileButton_nonActive.png"] forState:UIControlStateNormal];
@@ -172,6 +168,10 @@
 	_topicsTableView.scrollsToTop = NO;
 	_topicsTableView.showsVerticalScrollIndicator = NO;
 	[_holderView addSubview:_topicsTableView];
+	
+	_shadowImgView = [[UIImageView alloc] initWithFrame:CGRectMake(207.0, 0.0, 113.0, 480.0)];
+	_shadowImgView.image = [UIImage imageNamed:@"dropShadow.png"];
+	[_holderView addSubview:_shadowImgView];
 	
 	_cardListsButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_cardListsButton.frame = CGRectMake(kTopicOffset, 45.0, 44.0, self.view.frame.size.height - 45.0);
@@ -220,7 +220,7 @@
 	[super viewDidAppear:animated];
 	
 	if (_isIntro) {
-		[UIView animateWithDuration:0.33 delay:1.33 options:UIViewAnimationCurveEaseIn animations:^(void) {
+		[UIView animateWithDuration:0.33 delay:1.33 options:UIViewAnimationCurveEaseInOut animations:^(void) {
 			_cardListsButton.hidden = YES;
 			_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 			_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);

@@ -18,6 +18,8 @@
 
 @interface SNArticleItemView_iPhone () <MBLResourceObserverProtocol>
 @property(nonatomic, strong) MBLAsyncResource *imageResource;
+- (void)_showFSImage;
+- (void)_showFSVideo;
 @end
 
 @implementation SNArticleItemView_iPhone
@@ -37,12 +39,9 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_commentAdded:) name:@"COMMENT_ADDED" object:nil];
 		
-		UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 300.0, frame.size.height)];
-		[self addSubview:bgView];
-		
 		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-10.0, 0.0, 320.0, frame.size.height)];
 		UIImage *img = [UIImage imageNamed:@"cardBackground.png"];
-		bgImgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:50.0];
+		bgImgView.image = [img stretchableImageWithLeftCapWidth:10.0 topCapHeight:20.0];
 		[self addSubview:bgImgView];
 		
 		SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(10.0, 17.0) imageURL:_vo.avatarImage_url];
@@ -156,9 +155,13 @@
 			_articleImgView.userInteractionEnabled = YES;
 			[self addSubview:_articleImgView];
 			
-			UITapGestureRecognizer *dblTapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photoZoomIn:)];
-			dblTapRecognizer.numberOfTapsRequired = 1;
-			[_articleImgView addGestureRecognizer:dblTapRecognizer];
+			_imgOverlayView = [[UIView alloc] initWithFrame:imgFrame];
+			[_imgOverlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
+			[self addSubview:_imgOverlayView];
+			
+			UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photoZoomIn:)];
+			tapRecognizer.numberOfTapsRequired = 1;
+			[_imgOverlayView addGestureRecognizer:tapRecognizer];
 			
 			if (_imageResource == nil) {			
 				self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:_vo.imageURL forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
@@ -197,16 +200,11 @@
 			[_videoImgView addSubview:playImgView];
 			
 			offset += 229;
-			offset += 9;
+			offset += 8;
 		}
 		
-		UIImageView *btnBGImgView = [[UIImageView alloc] initWithFrame:CGRectMake(2.0, offset, 295.0, 45.0)];
-		btnBGImgView.image = [UIImage imageNamed:@"articleFooterBackground"];
-		btnBGImgView.userInteractionEnabled = YES;
-		[self addSubview:btnBGImgView];
-		
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_likeButton.frame = CGRectMake(0.0, 0.0, 64.0, 44.0);
+		_likeButton.frame = CGRectMake(6.0, offset, 64.0, 44.0);
 		[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_nonActive.png"] forState:UIControlStateNormal];
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_Active.png"] forState:UIControlStateHighlighted];
@@ -214,7 +212,7 @@
 		_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
 		[_likeButton setImage:[UIImage imageNamed:@"heartIcon.png"] forState:UIControlStateNormal];
 		[_likeButton setImage:[UIImage imageNamed:@"heartIcon_Active.png"] forState:UIControlStateHighlighted];
-		[btnBGImgView addSubview:_likeButton];
+		[self addSubview:_likeButton];
 		
 		if (_vo.hasLiked)
 			[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
@@ -228,7 +226,7 @@
 		}
 		
 		_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_commentButton.frame = CGRectMake(64.0, 0.0, 64.0, 44.0);
+		_commentButton.frame = CGRectMake(70.0, offset, 64.0, 44.0);
 		[_commentButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_nonActive.png"] forState:UIControlStateNormal];
 		[_commentButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_Active.png"] forState:UIControlStateHighlighted];
 		[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
@@ -236,7 +234,7 @@
 		_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
 		[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
 		[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
-		[btnBGImgView addSubview:_commentButton];
+		[self addSubview:_commentButton];
 		
 		if ([_vo.comments count] > 0) {
 			_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
@@ -283,13 +281,23 @@
 }
 
 -(void)_goVideo {
-	_videoImgView.frame = CGRectMake(_videoImgView.frame.origin.x, _videoImgView.frame.origin.y + 2.0, _videoImgView.frame.size.width, _videoImgView.frame.size.height);
-	[self performSelector:@selector(_showFSVideo) withObject:nil afterDelay:0.1];
+	[_videoButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:5]];
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		[_videoButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
+		
+	} completion:^(BOOL finished) {
+		[self _showFSVideo];	
+	}];
 }
 
 -(void)_photoZoomIn:(UIGestureRecognizer *)gestureRecognizer {
-	_articleImgView.frame = CGRectMake(_articleImgView.frame.origin.x, _articleImgView.frame.origin.y + 2.0, _articleImgView.frame.size.width, _articleImgView.frame.size.height);
-	[self performSelector:@selector(_showFSImage) withObject:nil afterDelay:0.1];
+	[_imgOverlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:5]];
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		[_imgOverlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
+		
+	} completion:^(BOOL finished) {
+		[self _showFSImage];	
+	}];
 }
 
 
@@ -358,8 +366,6 @@
 
 #pragma mark - Animations
 - (void)_showFSVideo {
-	_videoImgView.frame = CGRectMake(_videoImgView.frame.origin.x, _videoImgView.frame.origin.y - 2.0, _videoImgView.frame.size.width, _videoImgView.frame.size.height);
-	
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 								 @"video", @"type", 
 								 _vo, @"VO", 
@@ -370,8 +376,6 @@
 }
 
 - (void)_showFSImage {
-	_articleImgView.frame = CGRectMake(_articleImgView.frame.origin.x, _articleImgView.frame.origin.y - 2.0, _articleImgView.frame.size.width, _articleImgView.frame.size.height);
-	
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 								 @"photo", @"type", 
 								 _vo, @"VO", 

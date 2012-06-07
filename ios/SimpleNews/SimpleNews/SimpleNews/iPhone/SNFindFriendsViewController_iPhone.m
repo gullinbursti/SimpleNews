@@ -68,13 +68,13 @@
 	_tableView.userInteractionEnabled = YES;
 	_tableView.scrollsToTop = NO;
 	_tableView.showsVerticalScrollIndicator = YES;
-	_tableView.contentInset = UIEdgeInsetsMake(10.0, 0.0f, 10.0f, 0.0f);
+	_tableView.contentInset = UIEdgeInsetsMake(12.0, 0.0f, 12.0f, 0.0f);
 	[self.view addSubview:_tableView];
 	
 	SNHeaderView_iPhone *headerView;
 	
 	if (_isFinder) {
-		headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Find Friends"];
+		headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Invite Friends"];
 		[self.view addSubview:headerView];	
 		
 		_idsRequest = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://api.twitter.com/1/followers/ids.json?id=%@", [SNAppDelegate twitterID]]]];
@@ -168,45 +168,52 @@
 	//SNTwitterFriendViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNTwitterFriendViewCell_iPhone cellReuseIdentifier]];
 	SNTwitterFriendViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:nil];
 	
-	NSMutableArray *letterArray = [_friendsDictionary objectForKey:[_sectionTitles objectAtIndex:indexPath.section]];
+	//NSMutableArray *letterArray = [_friendsDictionary objectForKey:[_sectionTitles objectAtIndex:indexPath.section]];
 	
 	if (_isFinder) {
 		if (cell == nil) {
 			
-			if (indexPath.section == 0 && indexPath.row == 0) {
-				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsHeader];
+			if ([_friends count] > 1) {
+				if (indexPath.section == 0 && indexPath.row == 0) {
+					cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsHeader];
+				
+				} else if (indexPath.section == [tableView numberOfSections] - 1 && indexPath.row == [tableView numberOfRowsInSection:indexPath.section] - 1) {
+					cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsFooter];
+				
+				} else {
+					cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsMiddle];
+				}
 			
-			} else if (indexPath.section == [tableView numberOfSections] - 1 && indexPath.row == [tableView numberOfRowsInSection:indexPath.section] - 1) {
-				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsFooter];
-			
-			} else {
-				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsMiddle];
-			}
+			} else
+				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsSolo];
 		}
-		
-		cell.twitterUserVO = [letterArray objectAtIndex:indexPath.row];
-		[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
 		
 	} else {
 		if (cell == nil) {
-			if (indexPath.row == 0) {
-				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsHeader];
+			if ([_friends count] > 1) {
+				if (indexPath.row == 0) {
+					cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsHeader];
+					
+				} else if (indexPath.row == [_friends count] - 1) {
+					cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsFooter];
+					
+				} else {
+					cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsMiddle];
+				}
 				
-			} else if (indexPath.row == [_friends count] - 1) {
-				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsFooter];
-				
-			} else {
-				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsMiddle];
-			}
+			} else
+				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsSolo];
 		}
 		
-		cell.twitterUserVO = [_friends objectAtIndex:indexPath.row];
-		[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
 		
 //		UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(12.0, 56.0, self.view.frame.size.width - 43.0, 1.0)];
 //		[lineView setBackgroundColor:[SNAppDelegate snLineColor]];
 //		[cell addSubview:lineView];
 	}
+	
+	cell.isFinderCell = _isFinder;
+	cell.twitterUserVO = [_friends objectAtIndex:indexPath.row];
+	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
 	
 	//NSLog(@"\nCELL FOR ROW:[(%d / %d) : (%d / %d]", indexPath.section, [tableView numberOfSections] - 1, indexPath.row, [tableView numberOfRowsInSection:indexPath.section] - 1);
 	
@@ -243,16 +250,27 @@
 }
 
 -(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	return (indexPath);
+	
+	if (_isFinder)
+		return (nil);
+	
+	else
+		return (indexPath);
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
 	
-	
 	if (_isFinder) {
 		NSMutableArray *letterArray = [_friendsDictionary objectForKey:[_sectionTitles objectAtIndex:indexPath.section]];
 		_vo = [letterArray objectAtIndex:indexPath.row];
+		
+//		[UIView animateWithDuration:0.25 animations:^(void) {
+//			((SNTwitterFriendViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).overlayView.alpha = 1.0;
+//			
+//		} completion:^(BOOL finished) {
+//			((SNTwitterFriendViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).overlayView.alpha = 0.0;
+//		}];
 		
 		_friendLookupRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
 		[_friendLookupRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
@@ -261,6 +279,13 @@
 		[_friendLookupRequest startAsynchronous];
 		
 	} else {
+		[UIView animateWithDuration:0.25 animations:^(void) {
+			((SNTwitterFriendViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).overlayView.alpha = 1.0;
+			
+		} completion:^(BOOL finished) {
+			((SNTwitterFriendViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).overlayView.alpha = 0.0;
+		}];
+		
 		[self.navigationController pushViewController:[[SNFriendProfileViewController_iPhone alloc] initWithTwitterUser:(SNTwitterUserVO *)[_friends objectAtIndex:indexPath.row]] animated:YES];
 	}
 }
@@ -366,10 +391,18 @@
 				[self.navigationController pushViewController:[[SNFriendProfileViewController_iPhone alloc] initWithTwitterUser:_vo] animated:YES];
 			
 			else {
-				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Invite Sent" message:[NSString stringWithFormat:@"Sent a tweet mentioning @%@", _vo.handle] delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+				UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" 
+																				message:@"A tweet has been sent to your friend about Assembly." 
+																			  delegate:nil 
+																  cancelButtonTitle:@"OK" 
+																  otherButtonTitles:nil];
 				[alert show];
 				
-				//[[SNTwitterCaller sharedInstance] sendTextTweet:[NSString stringWithFormat:kTweetInvite, ((SNTwitterUserVO *)[_friends objectAtIndex:_selectedIndex]).handle]];
+				if (kLiveTweet)
+					[[SNTwitterCaller sharedInstance] sendTextTweet:[NSString stringWithFormat:kTweetInvite, _vo.handle]];
+				
+				else
+					NSLog(@"TWEET MENTIONING TURNED OFF!");
 			}
 		}
 		

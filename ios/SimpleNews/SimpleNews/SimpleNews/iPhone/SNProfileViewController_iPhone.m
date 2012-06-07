@@ -151,28 +151,27 @@
 	[self.view addSubview:line2View];
 	
 	
-	UIImageView *tosBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 394.0, 320.0, 68.0)];
-	img = [UIImage imageNamed:@"profileBackground.png"];
-	tosBgView.image = [img stretchableImageWithLeftCapWidth:30.0 topCapHeight:30.0];
-	tosBgView.userInteractionEnabled = YES;
-	tosBgView.clipsToBounds = YES;
-	[self.view addSubview:tosBgView];
+	UIImageView *privacyBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 392.0, 320.0, 84.0)];
+	privacyBgView.image = [UIImage imageNamed:@"privacyPolicy_nonActive.png"];
+	privacyBgView.userInteractionEnabled = YES;
+	privacyBgView.clipsToBounds = YES;
+	[self.view addSubview:privacyBgView];
 	
-	UILabel *tosLabel = [[UILabel alloc] initWithFrame:CGRectMake(29.0, 26.0, 256.0, 18.0)];
-	tosLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
-	tosLabel.textColor = [UIColor blackColor];
-	tosLabel.backgroundColor = [UIColor clearColor];
-	tosLabel.text = @"Terms of Service";
-	[tosBgView addSubview:tosLabel];
+	UILabel *privacyLabel = [[UILabel alloc] initWithFrame:CGRectMake(29.0, 32.0, 256.0, 18.0)];
+	privacyLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
+	privacyLabel.textColor = [UIColor blackColor];
+	privacyLabel.backgroundColor = [UIColor clearColor];
+	privacyLabel.text = @"Privacy Policy";
+	[privacyBgView addSubview:privacyLabel];
 	
-	UIButton *tosButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	tosButton.frame = CGRectMake(12.0, 398.0, 296.0, 61.0);
-	[tosButton addTarget:self action:@selector(_goTOS:) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:tosButton];
+	UIButton *privacyButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	privacyButton.frame = CGRectMake(12.0, 399.0, 296.0, 67.0);
+	[privacyButton addTarget:self action:@selector(_goPrivacy:) forControlEvents:UIControlEventTouchUpInside];
+	[self.view addSubview:privacyButton];
 	
-	UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(277.0, 22.0, 24.0, 24.0)];
+	UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(277.0, 28.0, 24.0, 24.0)];
 	chevronView.image = [UIImage imageNamed:@"chevron.png"];
-	[tosBgView addSubview:chevronView];
+	[privacyBgView addSubview:chevronView];
 	
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Profile"];
 	[self.view addSubview:headerView];
@@ -260,13 +259,13 @@
 	[self.navigationController pushViewController:[[SNProfileArticlesViewController_iPhone alloc] initWithUserID:[[[SNAppDelegate profileForUser] objectForKey:@"id"] intValue] asType:5] animated:YES];
 }
 
-- (void)_goTOS:(UIButton *)button {
+- (void)_goPrivacy:(UIButton *)button {
 	[button setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.25]];
 	[UIView animateWithDuration:0.15 animations:^(void) {
 		[button setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
 	}];
 	
-	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:kTOSPage] title:@"Terms of Service"];
+	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:kPrivacyPage] title:@"Privacy Policy"];
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 

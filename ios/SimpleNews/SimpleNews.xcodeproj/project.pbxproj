@@ -162,6 +162,10 @@
 		4C929DCC157FBA66003FD673 /* availableOnAppStoreBadge_Active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DC8157FBA66003FD673 /* availableOnAppStoreBadge_Active@2x.png */; };
 		4C929DCD157FBA66003FD673 /* availableOnAppStoreBadge_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DC9157FBA66003FD673 /* availableOnAppStoreBadge_nonActive.png */; };
 		4C929DCE157FBA66003FD673 /* availableOnAppStoreBadge_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DCA157FBA66003FD673 /* availableOnAppStoreBadge_nonActive@2x.png */; };
+		4C929DD1158001B9003FD673 /* privacyPolicy_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DCF158001B9003FD673 /* privacyPolicy_nonActive.png */; };
+		4C929DD2158001B9003FD673 /* privacyPolicy_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DD0158001B9003FD673 /* privacyPolicy_nonActive@2x.png */; };
+		4C929DD515802FD3003FD673 /* soloBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DD315802FD3003FD673 /* soloBackground.png */; };
+		4C929DD615802FD3003FD673 /* soloBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DD415802FD3003FD673 /* soloBackground@2x.png */; };
 		4C9E00BA15194B9B00AEB803 /* AirshipConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C9EFFC415194B9B00AEB803 /* AirshipConfig.plist */; };
 		4C9E00BB15194B9B00AEB803 /* CHANGELOG in Resources */ = {isa = PBXBuildFile; fileRef = 4C9EFFC515194B9B00AEB803 /* CHANGELOG */; };
 		4C9E00BC15194B9B00AEB803 /* libUAirship-1.1.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C9E001815194B9B00AEB803 /* libUAirship-1.1.1.a */; };
@@ -565,6 +569,10 @@
 		4C929DC8157FBA66003FD673 /* availableOnAppStoreBadge_Active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "availableOnAppStoreBadge_Active@2x.png"; sourceTree = "<group>"; };
 		4C929DC9157FBA66003FD673 /* availableOnAppStoreBadge_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = availableOnAppStoreBadge_nonActive.png; sourceTree = "<group>"; };
 		4C929DCA157FBA66003FD673 /* availableOnAppStoreBadge_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "availableOnAppStoreBadge_nonActive@2x.png"; sourceTree = "<group>"; };
+		4C929DCF158001B9003FD673 /* privacyPolicy_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = privacyPolicy_nonActive.png; sourceTree = "<group>"; };
+		4C929DD0158001B9003FD673 /* privacyPolicy_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "privacyPolicy_nonActive@2x.png"; sourceTree = "<group>"; };
+		4C929DD315802FD3003FD673 /* soloBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = soloBackground.png; sourceTree = "<group>"; };
+		4C929DD415802FD3003FD673 /* soloBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "soloBackground@2x.png"; sourceTree = "<group>"; };
 		4C9E000015194B9B00AEB803 /* UAInboxMessageListObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAInboxMessageListObserver.h; sourceTree = "<group>"; };
 		4C9E000115194B9B00AEB803 /* UAInboxPushHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAInboxPushHandler.h; sourceTree = "<group>"; };
 		4C9E000215194B9B00AEB803 /* UAInboxURLCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAInboxURLCache.h; sourceTree = "<group>"; };
@@ -893,6 +901,8 @@
 		4C119B8215753FA400E663CD /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				4C929DCF158001B9003FD673 /* privacyPolicy_nonActive.png */,
+				4C929DD0158001B9003FD673 /* privacyPolicy_nonActive@2x.png */,
 				4C119B93157573C100E663CD /* profileBackground.png */,
 				4C119B94157573C100E663CD /* profileBackground@2x.png */,
 				4C119B8315753FC100E663CD /* profileBackgroundStats.png */,
@@ -1236,6 +1246,8 @@
 		4C9216F91537E2EE00AAD992 /* Global */ = {
 			isa = PBXGroup;
 			children = (
+				4C929DD315802FD3003FD673 /* soloBackground.png */,
+				4C929DD415802FD3003FD673 /* soloBackground@2x.png */,
 				4CB32A02157AF1F4001A36EE /* botBackground.png */,
 				4CB32A03157AF1F4001A36EE /* botBackground@2x.png */,
 				4CB32A04157AF1F4001A36EE /* midBackground.png */,
@@ -2275,6 +2287,10 @@
 				4C929DCC157FBA66003FD673 /* availableOnAppStoreBadge_Active@2x.png in Resources */,
 				4C929DCD157FBA66003FD673 /* availableOnAppStoreBadge_nonActive.png in Resources */,
 				4C929DCE157FBA66003FD673 /* availableOnAppStoreBadge_nonActive@2x.png in Resources */,
+				4C929DD1158001B9003FD673 /* privacyPolicy_nonActive.png in Resources */,
+				4C929DD2158001B9003FD673 /* privacyPolicy_nonActive@2x.png in Resources */,
+				4C929DD515802FD3003FD673 /* soloBackground.png in Resources */,
+				4C929DD615802FD3003FD673 /* soloBackground@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

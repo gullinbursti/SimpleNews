@@ -16,14 +16,19 @@
 	
 	UIView *_lineView;
 	UIImageView *_bgImgView;
+	
+	BOOL _isSoloCell;
 }
 
 +(NSString *)cellReuseIdentifier;
 
 @property (nonatomic, retain) SNTwitterUserVO *twitterUserVO;
+@property(nonatomic, retain) UIView *overlayView;
+@property(nonatomic) BOOL isFinderCell;
 
 - (id)initAsHeader;
 - (id)initAsMiddle;
 - (id)initAsFooter;
+- (id)initAsSolo;
 
 @end

@@ -67,7 +67,7 @@
 	_scrollView.showsHorizontalScrollIndicator = NO;
 	_scrollView.showsVerticalScrollIndicator = NO;
 	_scrollView.alwaysBounceVertical = NO;
-	_scrollView.contentInset = UIEdgeInsetsMake(10.0, 0.0, -10.0, 0.0);	
+	_scrollView.contentInset = UIEdgeInsetsMake(5.0, 0.0, -5.0, 0.0);	
 	[self.view addSubview:_scrollView];
 	
 	_scrollBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, _scrollView.frame.size.width, _commentOffset)];
@@ -96,7 +96,7 @@
 	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:backBtnView];
 	
-	SNNavShareBtnView *shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+	SNNavShareBtnView *shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(273.0, 0.0, 44.0, 44.0)];
 	[[shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:shareBtnView];
 	
@@ -138,7 +138,7 @@
 		[_commentViews addObject:commentView];
 		[_scrollView addSubview:commentView];
 		
-		_commentOffset += ((kItemHeight + txtSize.height) - 10.0);
+		_commentOffset += ((kItemHeight + txtSize.height) - 6.0);
 	}
 	
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, _commentOffset);

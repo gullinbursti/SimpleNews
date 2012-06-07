@@ -449,7 +449,7 @@
 				}
 				
 				if (!(vo.topicID == 8)) {
-					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:15] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 					height += size.height + 9;
 				}
 				
@@ -464,7 +464,7 @@
 				offset += height;
 				tot++;
 				
-				offset -= 4;
+				offset += 3;
 			}
 			
 			[_progressHUD hide:YES];
@@ -488,21 +488,23 @@
 			}
 			
 			offset += 16.0;
-			_loadMoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			_loadMoreButton.frame = CGRectMake(112.0, offset, 96.0, 44.0);
-			[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
-			[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];		
-			[_loadMoreButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-			[_loadMoreButton addTarget:self action:@selector(_goLoadMore) forControlEvents:UIControlEventTouchUpInside];
-			_loadMoreButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
-			[_loadMoreButton setTitle:@"Load More" forState:UIControlStateNormal];
-			[_scrollView addSubview:_loadMoreButton];
 			
+			if ([_articles count] == 30) {
+				_loadMoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
+				_loadMoreButton.frame = CGRectMake(112.0, offset, 96.0, 44.0);
+				[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
+				[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];		
+				[_loadMoreButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+				[_loadMoreButton addTarget:self action:@selector(_goLoadMore) forControlEvents:UIControlEventTouchUpInside];
+				_loadMoreButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10.0];
+				[_loadMoreButton setTitle:@"Load More" forState:UIControlStateNormal];
+				[_scrollView addSubview:_loadMoreButton];
+				offset += 50.0;
+			}
 			
 			[_activityIndicatorView removeFromSuperview];
 			[_loaderLabel removeFromSuperview];
 			
-			offset += 50.0;
 			_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
 			
 			if ([_articles count] > 0) {
@@ -553,7 +555,7 @@
 				}
 				
 				if (!(vo.topicID == 8)) {
-					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:15] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 					height += size.height + 9;
 				}
 				
@@ -597,6 +599,8 @@
 				
 				offset += height;
 				tot++;
+				
+				offset += 3;
 			}
 			
 			[_progressHUD hide:YES];

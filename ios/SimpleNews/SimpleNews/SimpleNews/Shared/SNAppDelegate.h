@@ -26,8 +26,9 @@
 //#define kServerPath @"http://dev.gullinbursti-creations.com/simplenews/services"
 //#define kServerPath @"http://ec2-23-20-197-174.compute-1.amazonaws.com/services"
 #define kServerPath @"http://107.20.161.159/services"
-#define kTweetInvite @"@%@, check out Assembly for iOS #assembly"
-#define kTOSPage @"http://107.20.161.159/tos.htm"
+#define kTweetInvite @"@%@ would like you to check out @getAssembly Get it now! http://bit.ly/KPSkKm"
+#define kPrivacyPage @"http://107.20.161.159/privacy_policy.htm"
+#define kLiveTweet NO
 
 +(SNAppDelegate *)sharedInstance;
 
