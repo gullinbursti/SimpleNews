@@ -81,7 +81,7 @@
 		
 		_playButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_playButton.frame = CGRectMake((self.frame.size.width * 0.5) - 32.0, (self.frame.size.height * 0.5) - 32.0, 64.0, 64.0);
-		_playButton.alpha = 1.0;
+		_playButton.alpha = 0.0;
 		[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[_playButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
@@ -94,6 +94,16 @@
 		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"pauseButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[_pauseButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_pauseButton];
+		
+		_bufferingImgView = [[UIImageView alloc] initWithFrame:CGRectMake((_videoHolderView.frame.size.width * 0.5) - 32.0, (_videoHolderView.frame.size.height * 0.5) - 32.0, 64.0, 64.0)];
+		_bufferingImgView.alpha = 0.0;
+		_bufferingImgView.image = [UIImage imageNamed:@"videoBufferingBackground.png"];
+		[self addSubview:_bufferingImgView];
+		
+		_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+		_activityIndicatorView.frame = CGRectMake(16.0, 16.0, 32.0, 32.0);
+		[_activityIndicatorView startAnimating];
+		[_bufferingImgView addSubview:_activityIndicatorView];
 		
 		//NSLog(@"YOUTUBE ID:[%@]", _vo.video_url);
 		
@@ -333,16 +343,6 @@
 	
 	[_progressTimer invalidate];
 	_progressTimer = nil;
-	
-	_bufferingImgView = [[UIImageView alloc] initWithFrame:CGRectMake((_videoHolderView.frame.size.width * 0.5) - 32.0, (_videoHolderView.frame.size.height * 0.5) - 32.0, 64.0, 64.0)];
-	_bufferingImgView.alpha = 0.0;
-	_bufferingImgView.image = [UIImage imageNamed:@"videoBufferingBackground.png"];
-	[self addSubview:_bufferingImgView];
-	
-	_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-	_activityIndicatorView.frame = CGRectMake(16.0, 16.0, 32.0, 32.0);
-	[_activityIndicatorView startAnimating];
-	[_bufferingImgView addSubview:_activityIndicatorView];
 	
 	[UIView animateWithDuration:0.25 animations:^(void) {
 		_bufferingImgView.hidden = NO;

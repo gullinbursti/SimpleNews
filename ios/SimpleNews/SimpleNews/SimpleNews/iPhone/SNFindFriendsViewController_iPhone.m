@@ -82,7 +82,7 @@
 		[_idsRequest startAsynchronous];
 		
 		_progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-		_progressHUD.labelText = NSLocalizedString(@"Loading Following…", @"Status message when loading following list");
+		//_progressHUD.labelText = NSLocalizedString(@"Loading Following…", @"Status message when loading following list");
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 		_progressHUD.graceTime = 2.0;
 		_progressHUD.taskInProgress = YES;
@@ -98,7 +98,7 @@
 		[_myFriendsRequest startAsynchronous];
 		
 		_progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-		_progressHUD.labelText = NSLocalizedString(@"Loading Friends…", @"Status message when loading friend list");
+		//_progressHUD.labelText = NSLocalizedString(@"Loading Friends…", @"Status message when loading friend list");
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 		_progressHUD.graceTime = 2.0;
 		_progressHUD.taskInProgress = YES;

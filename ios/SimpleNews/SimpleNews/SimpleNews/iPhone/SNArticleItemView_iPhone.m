@@ -169,7 +169,7 @@
 			
 			if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 				UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
-				itunesButton.frame = CGRectMake(123.0, imgFrame.origin.y + ((imgFrame.size.height * 0.5) - 17.0), 74.0, 34.0);
+				itunesButton.frame = CGRectMake(103.0, imgFrame.origin.y + ((imgFrame.size.height * 0.5) - 22.0), 114.0, 44.0);
 				[itunesButton setBackgroundImage:[UIImage imageNamed:@"availableOnAppStoreBadge_nonActive.png"] forState:UIControlStateNormal];
 				[itunesButton setBackgroundImage:[UIImage imageNamed:@"availableOnAppStoreBadge_Active.png"] forState:UIControlStateHighlighted];
 				[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];

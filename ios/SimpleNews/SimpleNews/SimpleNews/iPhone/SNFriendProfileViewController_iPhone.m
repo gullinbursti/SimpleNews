@@ -68,7 +68,7 @@
 	[self.view addSubview:statsBgView];
 	
 	_commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, 23.0, 96.0, 18.0)];
-	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:18];
+	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18];
 	_commentsLabel.textAlignment = UITextAlignmentCenter;
 	_commentsLabel.textColor = [UIColor blackColor];
 	_commentsLabel.backgroundColor = [UIColor clearColor];
@@ -83,7 +83,7 @@
 	[statsBgView addSubview:commentsLabel];
 	
 	_likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(111.0, 23.0, 96.0, 18.0)];
-	_likesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:18];
+	_likesLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18];
 	_likesLabel.textAlignment = UITextAlignmentCenter;
 	_likesLabel.textColor = [UIColor blackColor];
 	_likesLabel.backgroundColor = [UIColor clearColor];
@@ -98,7 +98,7 @@
 	[statsBgView addSubview:likesLabel];
 	
 	_sharesLabel = [[UILabel alloc] initWithFrame:CGRectMake(211.0, 23.0, 96.0, 18.0)];
-	_sharesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:18];
+	_sharesLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18];
 	_sharesLabel.textAlignment = UITextAlignmentCenter;
 	_sharesLabel.textColor = [UIColor blackColor];
 	_sharesLabel.backgroundColor = [UIColor clearColor];

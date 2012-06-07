@@ -47,7 +47,7 @@
 		[self addSubview:lineImgView];
 		
 		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width, 50.0)];
-		[_overlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.33]];
+		[_overlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.125]];
 		_overlayView.alpha = 0.0;
 		[self addSubview:_overlayView];
 	}

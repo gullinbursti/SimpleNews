@@ -64,14 +64,14 @@
 	statsBgView.clipsToBounds = YES;
 	[self.view addSubview:statsBgView];
 	
-	_commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, 23.0, 96.0, 18.0)];
-	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:18];
+	_commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 23.0, 97.0, 18.0)];
+	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18];
 	_commentsLabel.textAlignment = UITextAlignmentCenter;
 	_commentsLabel.textColor = [UIColor blackColor];
 	_commentsLabel.backgroundColor = [UIColor clearColor];
 	[statsBgView addSubview:_commentsLabel];
 	
-	UILabel *commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, 43.0, 96.0, 18.0)];
+	UILabel *commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 43.0, 97.0, 18.0)];
 	commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	commentsLabel.textAlignment = UITextAlignmentCenter;
 	commentsLabel.textColor = [SNAppDelegate snLinkColor];
@@ -79,14 +79,14 @@
 	commentsLabel.text = @"Comments";
 	[statsBgView addSubview:commentsLabel];
 	
-	_likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(111.0, 23.0, 96.0, 18.0)];
-	_likesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:18];
+	_likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(110.0, 23.0, 100.0, 18.0)];
+	_likesLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18];
 	_likesLabel.textAlignment = UITextAlignmentCenter;
 	_likesLabel.textColor = [UIColor blackColor];
 	_likesLabel.backgroundColor = [UIColor clearColor];
 	[statsBgView addSubview:_likesLabel];
 	
-	UILabel *likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(111.0, 43.0, 96.0, 18.0)];
+	UILabel *likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(110.0, 43.0, 100.0, 18.0)];
 	likesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	likesLabel.textAlignment = UITextAlignmentCenter;
 	likesLabel.textColor = [SNAppDelegate snLinkColor];
@@ -94,14 +94,14 @@
 	likesLabel.text = @"Likes";
 	[statsBgView addSubview:likesLabel];
 	
-	_sharesLabel = [[UILabel alloc] initWithFrame:CGRectMake(211.0, 23.0, 96.0, 18.0)];
-	_sharesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:18];
+	_sharesLabel = [[UILabel alloc] initWithFrame:CGRectMake(210.0, 23.0, 97.0, 18.0)];
+	_sharesLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18];
 	_sharesLabel.textAlignment = UITextAlignmentCenter;
 	_sharesLabel.textColor = [UIColor blackColor];
 	_sharesLabel.backgroundColor = [UIColor clearColor];
 	[statsBgView addSubview:_sharesLabel];
 	
-	UILabel *sharesLabel = [[UILabel alloc] initWithFrame:CGRectMake(211.0, 43.0, 96.0, 18.0)];
+	UILabel *sharesLabel = [[UILabel alloc] initWithFrame:CGRectMake(210.0, 43.0, 97.0, 18.0)];
 	sharesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	sharesLabel.textAlignment = UITextAlignmentCenter;
 	sharesLabel.textColor = [SNAppDelegate snLinkColor];
@@ -151,13 +151,13 @@
 	[self.view addSubview:line2View];
 	
 	
-	UIImageView *privacyBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 392.0, 320.0, 84.0)];
+	UIImageView *privacyBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 393.0, 320.0, 74.0)];
 	privacyBgView.image = [UIImage imageNamed:@"privacyPolicy_nonActive.png"];
 	privacyBgView.userInteractionEnabled = YES;
 	privacyBgView.clipsToBounds = YES;
 	[self.view addSubview:privacyBgView];
 	
-	UILabel *privacyLabel = [[UILabel alloc] initWithFrame:CGRectMake(29.0, 32.0, 256.0, 18.0)];
+	UILabel *privacyLabel = [[UILabel alloc] initWithFrame:CGRectMake(29.0, 27.0, 256.0, 18.0)];
 	privacyLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 	privacyLabel.textColor = [UIColor blackColor];
 	privacyLabel.backgroundColor = [UIColor clearColor];
@@ -165,11 +165,11 @@
 	[privacyBgView addSubview:privacyLabel];
 	
 	UIButton *privacyButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	privacyButton.frame = CGRectMake(12.0, 399.0, 296.0, 67.0);
+	privacyButton.frame = CGRectMake(12.0, 395.0, 296.0, 67.0);
 	[privacyButton addTarget:self action:@selector(_goPrivacy:) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:privacyButton];
 	
-	UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(277.0, 28.0, 24.0, 24.0)];
+	UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(277.0, 23.0, 24.0, 24.0)];
 	chevronView.image = [UIImage imageNamed:@"chevron.png"];
 	[privacyBgView addSubview:chevronView];
 	

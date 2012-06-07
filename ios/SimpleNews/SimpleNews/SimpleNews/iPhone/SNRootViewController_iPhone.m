@@ -530,40 +530,40 @@
 	for (UIView *view in [_blackMatteView subviews])
 		[view removeFromSuperview];
 	
-	_fullscreenTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, self.view.frame.size.height - 70.0, 256.0, 28.0)];
+	_fullscreenTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(19.0, self.view.frame.size.height - 60.0, 256.0, 28.0)];
 	_fullscreenTitleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 	_fullscreenTitleLabel.textColor = [UIColor whiteColor];
 	_fullscreenTitleLabel.backgroundColor = [UIColor clearColor];
 	_fullscreenTitleLabel.text = _articleVO.title;
 	[_blackMatteView addSubview:_fullscreenTitleLabel];
 	
-	CGSize size = [@"via " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, self.view.frame.size.height - 40.0, size.width, size.height)];
-	viaLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10];
+	CGSize size = [@"via " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(19.0, self.view.frame.size.height - 33.0, size.width, size.height)];
+	viaLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11];
 	viaLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 	viaLabel.backgroundColor = [UIColor clearColor];
 	viaLabel.text = @"via ";
 	[_blackMatteView addSubview:viaLabel];
 	
-	CGSize size2 = [[NSString stringWithFormat:@"@%@ ", _articleVO.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0 + size.width, self.view.frame.size.height - 40.0, size2.width, size2.height)];
-	handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
+	CGSize size2 = [[NSString stringWithFormat:@"@%@ ", _articleVO.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(viaLabel.frame.origin.x + size.width, self.view.frame.size.height - 33.0, size2.width, size2.height)];
+	handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	handleLabel.textColor = [UIColor whiteColor];
 	handleLabel.backgroundColor = [UIColor clearColor];
 	handleLabel.text = [NSString stringWithFormat:@"@%@ ", _articleVO.twitterHandle];
 	[_blackMatteView addSubview:handleLabel];
 	 
-	size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, self.view.frame.size.height - 40.0, size.width, size.height)];
-	inLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10];
+	size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, self.view.frame.size.height - 33.0, size.width, size.height)];
+	inLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11];
 	inLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 	inLabel.backgroundColor = [UIColor clearColor];
 	inLabel.text = @"into ";
 	[_blackMatteView addSubview:inLabel];
 	 
-	size2 = [[NSString stringWithFormat:@"%@", _articleVO.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(inLabel.frame.origin.x + size.width, self.view.frame.size.height - 40.0, size2.width, size2.height)];
-	topicLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
+	size2 = [[NSString stringWithFormat:@"%@", _articleVO.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(inLabel.frame.origin.x + size.width, self.view.frame.size.height - 33.0, size2.width, size2.height)];
+	topicLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	topicLabel.textColor = [UIColor whiteColor];
 	topicLabel.backgroundColor = [UIColor clearColor];
 	topicLabel.text = [NSString stringWithFormat:@"%@", _articleVO.topicTitle];
