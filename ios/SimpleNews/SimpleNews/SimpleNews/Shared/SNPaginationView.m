@@ -34,7 +34,7 @@
 	return (self);
 }
 
--(void)updToPage:(int)page {
+-(void)changeToPage:(int)page {
 	_currPage = page;
 	_onImgView.frame = CGRectMake(_currPage * (kLEDSize + kSpacingSize), -(kLEDSize * 0.5), kLEDSize, kLEDSize);
 }

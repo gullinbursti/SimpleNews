@@ -17,6 +17,6 @@
 }
 
 -(id)initWithTotal:(int)total coords:(CGPoint)pos;
--(void)updToPage:(int)page;
+-(void)changeToPage:(int)page;
 
 @end

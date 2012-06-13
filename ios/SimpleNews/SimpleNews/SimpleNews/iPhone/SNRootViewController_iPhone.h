@@ -10,6 +10,7 @@
 #import <MessageUI/MessageUI.h>
 
 #import "SNTopicTimelineView_iPhone.h"
+#import "SNDiscoveryListView_iPhone.h"
 #import "MBLAsyncResource.h"
 
 #import "ASIFormDataRequest.h"
@@ -25,6 +26,8 @@
 	ASIHTTPRequest *_twitterRequest;
 	
 	SNTopicTimelineView_iPhone *_topicTimelineView;
+	SNDiscoveryListView_iPhone *_discoveryListView;
+	
 	SNArticleVO *_articleVO;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
     SNNavShareBtnView *_shareBtnView;

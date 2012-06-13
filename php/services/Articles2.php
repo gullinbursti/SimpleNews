@@ -792,6 +792,69 @@
 			return (true);
 		} 
 		
+		function getDiscoveryArticles() {
+			$article_arr = array();
+			
+			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+			$article_result = mysql_query($query);
+			
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
+				$query = 'SELECT `tblTopics`.`id`, `tblTopics`.`title` FROM `tblTopics` INNER JOIN `tblTopicsArticles` ON `tblTopics`.`id` = `tblTopicsArticles`.`topic_id` WHERE  `tblTopicsArticles`.`article_id` = '. $article_row[0] .";";
+				$topic_row = mysql_fetch_row(mysql_query($query));
+							
+				$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row[0] .' ORDER BY `tblComments`.`added` DESC;';
+				$comment_result = mysql_query($query);
+				
+				$comment_arr = array();
+				while ($comment_row = mysql_fetch_array($comment_result, MYSQL_BOTH)) {
+					$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `user_id` = '. $comment_row['user_id'] .' AND `article_id` = '. $article_row[0] .';';
+					$liked_result = mysql_query($query);
+				
+					array_push($comment_arr, array(
+						"comment_id" => $comment_row[0], 
+						"handle" => $comment_row['handle'], 
+						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"content" => $comment_row['content'], 
+						"liked" => (mysql_num_rows($liked_result) > 0), 
+						"added" => $comment_row[5]
+					));
+				}
+				
+				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_row[0] .';';
+				$likes_result = mysql_query($query);
+				
+				array_push($article_arr, array(
+					"article_id" => $article_row[0], 
+					"list_id" => $topic_row[0],
+					"topic_name" => $topic_row[1],  
+					"type_id" => $article_row[1], 
+					"source_id" => 0, 
+					"title" => $article_row['title'], 
+					"article_url" => $article_row['content_url'], 
+					"short_url" => $article_row['short_url'], 
+					"affiliate_url" => "", 
+					"tweet_id" => $article_row['tweet_id'], 
+					"tweet_msg" => $article_row['tweet_msg'], 
+					"twitter_name" => $article_row['name'], 
+					"twitter_handle" => $article_row['handle'],
+					"twitter_info" => "", 
+					"bg_url" => $article_row['image_url'], 
+					"source" => "", 
+					"content" => $article_row['content_txt'], 
+					"avatar_url" => $article_row['avatar_url'], 
+					"video_url" => $article_row['youtube_id'], 
+					"likes" => mysql_num_rows($likes_result), 
+					"liked" => false, 
+					"img_ratio" => $article_row['image_ratio'], 
+					"added" => $article_row['created'], 
+					"comments" => $comment_arr
+				)); 
+			}
+			
+			$this->sendResponse(200, json_encode($article_arr));
+			return (true);
+		}
+		
 		
 		function test() {
 			$this->sendResponse(200, json_encode(array(
@@ -873,6 +936,10 @@
 			case "13":
 				if (isset($_POST['topicID']) && isset($_POST['datetime']))
 					$articles->getTopicArticlesBeforeDate($_POST['topicID'], $_POST['datetime']);
+				break;
+				
+			case "14":
+				$articles->getDiscoveryArticles();
 				break;
     	}
 	}
