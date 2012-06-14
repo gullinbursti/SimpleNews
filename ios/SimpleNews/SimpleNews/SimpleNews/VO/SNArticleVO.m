@@ -8,11 +8,12 @@
 
 #import "SNArticleVO.h"
 #import "SNCommentVO.h"
+#import "SNImageVO.h"
 
 @implementation SNArticleVO
 
 @synthesize dictionary;
-@synthesize article_id, topicID, type_id, topicTitle, title, article_url, affiliateURL, hasLiked, twitterName, twitterHandle, tweetID, tweetMessage, content, imageURL, articleSource, video_url, avatarImage_url, imgRatio, totalLikes, added, comments;
+@synthesize article_id, topicID, type_id, topicTitle, title, article_url, hasLiked, twitterName, twitterHandle, tweetID, tweetMessage, content, video_url, avatarImage_url, totalLikes, added, comments, images;
 
 +(SNArticleVO *)articleWithDictionary:(NSDictionary *)dictionary {
 	
@@ -26,18 +27,14 @@
 	vo.title = [dictionary objectForKey:@"title"];
 	vo.tweetID = [dictionary objectForKey:@"tweet_id"];
 	vo.article_url = [dictionary objectForKey:@"article_url"];
-	vo.affiliateURL = [dictionary objectForKey:@"affiliate_url"];
 	vo.twitterName = [dictionary objectForKey:@"twitter_name"];
 	vo.twitterHandle = [dictionary objectForKey:@"twitter_handle"];
 	vo.tweetMessage = [dictionary objectForKey:@"tweet_msg"]; 
 	vo.content = [dictionary objectForKey:@"content"];
-	vo.imageURL = [dictionary objectForKey:@"bg_url"];
-	vo.articleSource = [dictionary objectForKey:@"source"];
 	vo.video_url = [dictionary objectForKey:@"video_url"];
 	vo.avatarImage_url = [dictionary objectForKey:@"avatar_url"];
 	vo.hasLiked = (BOOL)[[dictionary objectForKey:@"liked"] intValue];
 	vo.totalLikes = [[dictionary objectForKey:@"likes"] intValue];
-	vo.imgRatio = [[dictionary objectForKey:@"img_ratio"] floatValue];
 	
 	if (vo.title == (id)[NSNull null]) 
 		vo.title = @"Untitled";
@@ -53,6 +50,10 @@
 	
 	vo.comments = [NSMutableArray arrayWithArray:[unsortedComments sortedArrayUsingDescriptors:[NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"added" ascending:NO]]]];
 	
+	vo.images = [NSMutableArray new];
+	for (NSDictionary *image in [dictionary objectForKey:@"images"])
+		[vo.images addObject:[SNImageVO imageWithDictionary:image]];
+	
 	return (vo);
 }
 
@@ -63,13 +64,11 @@
 	self.twitterHandle = nil;
 	self.tweetMessage = nil;
 	self.content = nil;
-	self.imageURL = nil;
-	self.affiliateURL = nil;
-	self.articleSource = nil;
 	self.avatarImage_url = nil;
 	self.video_url = nil;
 	self.added = nil;
 	self.comments = nil;
+	self.images = nil;
 }
 
 @end

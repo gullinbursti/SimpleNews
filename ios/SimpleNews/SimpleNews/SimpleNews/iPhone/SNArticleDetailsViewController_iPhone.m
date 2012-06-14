@@ -18,6 +18,7 @@
 #import "SNArticleCommentsViewController_iPhone.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 #import "SNWebPageViewController_iPhone.h"
+#import "SNImageVO.h"
 
 #import "ImageFilter.h"
 
@@ -148,12 +149,12 @@
 	dateLabel.text = timeSince;
 	[_scrollView addSubview:dateLabel];
 	
-	CGSize size2 = [[NSString stringWithFormat:@"@%@ ", _vo.articleSource] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	CGSize size2 = [[NSString stringWithFormat:@"@%@ ", _vo.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 	UILabel *sourceLabel = [[UILabel alloc] initWithFrame:CGRectMake(dateLabel.frame.origin.x + size.width, offset, size2.width, size.height)];
 	sourceLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
 	sourceLabel.textColor = [SNAppDelegate snLinkColor];
 	sourceLabel.backgroundColor = [UIColor clearColor];
-	sourceLabel.text = _vo.articleSource;
+	sourceLabel.text = _vo.topicTitle;
 	[_scrollView addSubview:sourceLabel];
 	
 	UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -209,11 +210,11 @@
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	}
 	
-	EGOImageView *articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 280.0, 280.0 * _vo.imgRatio)];
+	EGOImageView *articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 280.0, 280.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
 	articleImgView.delegate = self;
-	articleImgView.imageURL = [NSURL URLWithString:_vo.imageURL];
+	articleImgView.imageURL = [NSURL URLWithString:((SNImageVO *)[_vo.images objectAtIndex:0]).url];
 	[_scrollView addSubview:articleImgView];
-	offset += (280.0 * _vo.imgRatio);
+	offset += (280.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
 	
 	offset += 38;
 	if (_vo.type_id > 4) {
@@ -258,7 +259,7 @@
 	
 	[self performSelector:@selector(_resetToggle) withObject:nil afterDelay:0.25];
 	
-	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:_vo.article_url] title:_vo.articleSource];
+	SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:_vo.article_url] title:_vo.topicTitle];
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 

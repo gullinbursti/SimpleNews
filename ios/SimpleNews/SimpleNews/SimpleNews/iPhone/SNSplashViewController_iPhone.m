@@ -11,6 +11,7 @@
 
 #import "SNAppDelegate.h"
 #import "SNTopicVO.h"
+#import "SNImageVO.h"
 
 #import "MBLResourceLoader.h"
 
@@ -244,7 +245,7 @@
 			NSMutableArray *list = [NSMutableArray array];
 			for (NSDictionary *serverList in parsedLists) {
 				SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverList];
-				[list addObject:vo.imageURL];
+				[list addObject:((SNImageVO *)[vo.images objectAtIndex:0]).url];
 			}
 			
 			_imageURLs = list;

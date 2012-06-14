@@ -20,6 +20,7 @@
 
 -(id)init {
 	if ((self = [super init])) {
+		
 		_nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(19.0, 12.0, 256.0, 28.0)];
 		_nameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 		_nameLabel.textColor = [UIColor blackColor];

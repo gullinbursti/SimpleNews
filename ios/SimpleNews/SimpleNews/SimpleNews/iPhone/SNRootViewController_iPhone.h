@@ -34,6 +34,7 @@
 	
 	NSMutableArray *_topicsList;
 	NSMutableArray *_topicCells;
+	NSMutableArray *_profileItems;
 	
 	MBProgressHUD *_hud;
 	UITableView *_topicsTableView;

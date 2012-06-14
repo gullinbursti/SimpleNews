@@ -11,13 +11,14 @@
 #import "GANTracker.h"
 
 #import "SNRootViewController_iPhone.h"
-#import "SNListVO.h"
 #import "SNTopicVO.h"
+#import "SNImageVO.h"
 
 #import "SNProfileViewController_iPhone.h"
 #import "SNWebPageViewController_iPhone.h"
 #import "SNHeaderView_iPhone.h"
 #import "SNRootTopicViewCell_iPhone.h"
+#import "SNRootOtherViewCell_iPhone.h"
 #import "SNAppDelegate.h"
 #import "SNArticleDetailsViewController_iPhone.h"
 #import "SNArticleCommentsViewController_iPhone.h"
@@ -44,6 +45,7 @@
 	if ((self = [super init])) {
 		_topicCells = [NSMutableArray new];
 		_topicsList = [NSMutableArray new];
+		_profileItems = [NSMutableArray new];
 		
 		_isIntro = YES;
 		
@@ -423,7 +425,7 @@
 		_blackMatteView.hidden = NO;
 		[UIView animateWithDuration:0.33 animations:^(void) {
 			_blackMatteView.alpha = 0.95;
-			_fullscreenImgView.frame = CGRectMake(0.0, (self.view.frame.size.height - (320.0 * _articleVO.imgRatio)) * 0.5, 320.0, 320.0 * _articleVO.imgRatio);
+			_fullscreenImgView.frame = CGRectMake(0.0, (self.view.frame.size.height - (320.0 * ((SNImageVO *)[_articleVO.images objectAtIndex:0]).ratio)) * 0.5, 320.0, 320.0 * ((SNImageVO *)[_articleVO.images objectAtIndex:0]).ratio);
 			
 		} completion:^(BOOL finished) {
 			UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_hideFullscreenMedia:)];
@@ -600,7 +602,7 @@
 		[self.view addSubview:_fullscreenImgView];
 		
 		_fullscreenImgResource = nil;
-		self.fullscreenImgResource = [[MBLResourceLoader sharedInstance] downloadURL:_articleVO.imageURL forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration for now
+		self.fullscreenImgResource = [[MBLResourceLoader sharedInstance] downloadURL:((SNImageVO *)[_articleVO.images objectAtIndex:0]).url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration for now
 		
 	} else if ([type isEqualToString:@"video"]) {
 		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:frame articleVO:_articleVO];
@@ -762,25 +764,86 @@
 
 
 #pragma mark - TableView DataSource Delegates
-
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return ([_topicsList count]);
+	switch (section) {
+		default:
+			return (2);
+			break;
+			
+		case 1:
+			return ([_topicsList count]);
+			break;
+			
+		case 2:
+			return (6);
+			break;
+	}
 }
 
+
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return (1);
+	return (3);
+}
+
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+	switch (section) {
+		default:
+			return (@"Discovery");
+			break;
+			
+		case 1:
+			return (@"All Topics");
+			break;
+			
+		case 2:
+			return (@"Profile");
+			break;
+	}
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+	return (30.0);
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	SNRootTopicViewCell_iPhone *cell = [tableView dequeueReusableCellWithIdentifier:[SNRootTopicViewCell_iPhone cellReuseIdentifier]];
+	SNRootTopicViewCell_iPhone *topicCell;
+	SNRootOtherViewCell_iPhone *otherCell;
+	NSArray *titles;
 	
-	if (cell == nil)
-		cell = [[SNRootTopicViewCell_iPhone alloc] init];
-		
-	cell.topicVO = (SNTopicVO *)[_topicsList objectAtIndex:indexPath.row];
-	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-	[_topicCells addObject:cell];
-	return cell;
+	switch (indexPath.section) {
+		default:
+			titles = [NSArray arrayWithObjects:@"Top 10", @"Trending", nil];
+			otherCell = [tableView dequeueReusableCellWithIdentifier:[SNRootOtherViewCell_iPhone cellReuseIdentifier]];
+			
+			if (otherCell == nil)
+				otherCell = [[SNRootOtherViewCell_iPhone alloc] initWithTitle:[titles objectAtIndex:indexPath.row]];
+			
+			return (otherCell);
+			break;
+			
+		case 1:
+			topicCell = [tableView dequeueReusableCellWithIdentifier:[SNRootTopicViewCell_iPhone cellReuseIdentifier]];
+			
+			if (topicCell == nil)
+				topicCell = [[SNRootTopicViewCell_iPhone alloc] init];
+			
+			topicCell.topicVO = (SNTopicVO *)[_topicsList objectAtIndex:indexPath.row];
+			[topicCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+			[_topicCells addObject:topicCell];
+			
+			return (topicCell);
+			break;
+			
+		case 2:
+			titles = [NSArray arrayWithObjects:@"Friends", @"Invite Friends", @"Likes", @"Comments", @"Seen", @"Logout", nil];
+			otherCell = [tableView dequeueReusableCellWithIdentifier:[SNRootOtherViewCell_iPhone cellReuseIdentifier]];
+			
+			if (otherCell == nil)
+				otherCell = [[SNRootOtherViewCell_iPhone alloc] initWithTitle:[titles objectAtIndex:indexPath.row]];
+			
+			return (otherCell);
+			break;
+	}
 }
 
 
@@ -805,31 +868,46 @@
 		((SNRootTopicViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).overlayView.alpha = 0.0;
 	}];
 	
-	[_topicTimelineView removeFromSuperview];
-	_topicTimelineView = nil;
 	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		//_shadowImgView.alpha = 0.0;
-		
-	} completion:^(BOOL finished) {
-		if (indexPath.row == 0)
-			_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithPopularArticles];	
-		
-		else
-			_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithTopicVO:(SNTopicVO *)[_topicsList objectAtIndex:indexPath.row]];
-		
-		[_holderView addSubview:_topicTimelineView];
-		
-		[UIView animateWithDuration:0.33 animations:^(void) {
+	if (indexPath.section == 0) {
+		[UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
 			_cardListsButton.hidden = YES;
-			_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+			_discoveryListView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 			_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
-			_topicsTableView.contentOffset = CGPointZero;
-			[_topicTimelineView fullscreenMediaEnabled:YES];
 		}];
-	}];
+		
+	} else if (indexPath.section == 1) {
+		[_topicTimelineView removeFromSuperview];
+		_topicTimelineView = nil;
+			
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			//_shadowImgView.alpha = 0.0;
+				
+		} completion:^(BOOL finished) {
+			if (indexPath.row == 0)
+				_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithPopularArticles];	
+				
+			else
+				_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithTopicVO:(SNTopicVO *)[_topicsList objectAtIndex:indexPath.row]];
+				
+			[_holderView addSubview:_topicTimelineView];
+				
+			[UIView animateWithDuration:0.33 animations:^(void) {
+				_cardListsButton.hidden = YES;
+				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+					
+			} completion:^(BOOL finished) {
+				_topicsTableView.contentOffset = CGPointZero;
+				[_topicTimelineView fullscreenMediaEnabled:YES];
+			}];
+		}];
+		
+	} else {
+		
+	}
 }
 
 

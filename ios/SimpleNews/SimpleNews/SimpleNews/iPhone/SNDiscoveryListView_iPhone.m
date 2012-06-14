@@ -149,7 +149,6 @@
 				SNDiscoveryItemView_iPhone *discoveryItemView = [[SNDiscoveryItemView_iPhone alloc] initWithFrame:CGRectMake(tot * 320.0, 0.0, _scrollView.frame.size.width, _scrollView.frame.size.height) articleVO:vo];
 				[_cardViews addObject:discoveryItemView];
 				
-				
 				tot++;
 			}
 			
@@ -160,7 +159,7 @@
 			
 			_scrollView.contentSize = CGSizeMake(tot * self.frame.size.width, _scrollView.frame.size.height);
 			
-			_paginationView = [[SNPaginationView alloc] initWithTotal:tot coords:CGPointMake(160.0, 460.0)];
+			_paginationView = [[SNPaginationView alloc] initWithTotal:tot coords:CGPointMake(160.0, 465.0)];
 			[self addSubview:_paginationView];
 		}
 	}

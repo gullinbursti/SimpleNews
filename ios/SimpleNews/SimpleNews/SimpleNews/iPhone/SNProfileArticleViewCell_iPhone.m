@@ -49,7 +49,7 @@
 - (void)setArticleVO:(SNArticleVO *)articleVO {
 	_articleVO = articleVO;
 	_titleLabel.text = _articleVO.title;
-	_sourceLabel.text = _articleVO.articleSource;
+	_sourceLabel.text = _articleVO.topicTitle;
 }
 
 @end

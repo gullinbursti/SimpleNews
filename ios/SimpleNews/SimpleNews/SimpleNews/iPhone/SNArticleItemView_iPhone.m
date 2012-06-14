@@ -15,6 +15,7 @@
 #import "ImageFilter.h"
 #import "SNTwitterAvatarView.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
+#import "SNImageVO.h"
 
 @interface SNArticleItemView_iPhone () <MBLResourceObserverProtocol>
 @property(nonatomic, strong) MBLAsyncResource *imageResource;
@@ -137,7 +138,7 @@
 		}
 		
 		
-		CGRect imgFrame = CGRectMake(-3.0, offset, 305.0, 305.0 * _vo.imgRatio);
+		CGRect imgFrame = CGRectMake(-3.0, offset, 305.0, 305.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
 //		if (_vo.topicID == 1 || _vo.topicID == 2) {
 //			imgFrame.origin.x = 2.0;
 //			imgFrame.size.width = 296.0;
@@ -164,7 +165,7 @@
 			[_imgOverlayView addGestureRecognizer:tapRecognizer];
 			
 			if (_imageResource == nil) {			
-				self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:_vo.imageURL forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
+				self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:((SNImageVO *)[_vo.images objectAtIndex:0]).url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
 			}
 			
 			if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
@@ -176,7 +177,7 @@
 				[self addSubview:itunesButton];
 			}
 			
-			offset += (imgFrame.size.width * _vo.imgRatio);
+			offset += (imgFrame.size.width * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
 			offset += 9;
 		}
 		

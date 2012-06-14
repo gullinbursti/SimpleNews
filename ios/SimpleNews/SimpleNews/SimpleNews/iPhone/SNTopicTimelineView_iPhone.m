@@ -19,6 +19,7 @@
 #import "SNNavLogoBtnView.h"
 #import "SNAppDelegate.h"
 #import "SNTweetVO.h"
+#import "SNImageVO.h"
 
 #import "SNTopicTimelineView_iPhone.h"
 #import "MBLResourceLoader.h"
@@ -444,7 +445,7 @@
 //					imgWidth = 296;			
 				
 				if (vo.type_id > 1 && vo.type_id - 4 < 0) {
-					height += imgWidth * vo.imgRatio;
+					height += imgWidth * ((SNImageVO *)[vo.images objectAtIndex:0]).ratio;
 					height += 26; //20
 				}
 				
@@ -550,7 +551,7 @@
 				//					imgWidth = 296;			
 				
 				if (vo.type_id > 1 && vo.type_id - 4 < 0) {
-					height += imgWidth * vo.imgRatio;
+					height += imgWidth * ((SNImageVO *)[vo.images objectAtIndex:0]).ratio;
 					height += 26; //20
 				}
 				

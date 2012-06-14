@@ -14,7 +14,7 @@
 @implementation SNPaginationView
 
 -(id)initWithTotal:(int)total coords:(CGPoint)pos {
-	if ((self = [super initWithFrame:CGRectMake(pos.x - ((total * kLEDSize) * 0.5), pos.y, total * kLEDSize, kLEDSize)])) {
+	if ((self = [super initWithFrame:CGRectMake(pos.x - ((total * (kLEDSize + kSpacingSize)) * 0.5), pos.y, total * kLEDSize, kLEDSize)])) {
 		_totPages = total;
 		_currPage = 0;
 		

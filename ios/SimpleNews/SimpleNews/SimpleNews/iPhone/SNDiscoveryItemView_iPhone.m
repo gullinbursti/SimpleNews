@@ -9,6 +9,7 @@
 #import "SNDiscoveryItemView_iPhone.h"
 
 #import "SNAppDelegate.h"
+#import "SNImageVO.h"
 
 @interface SNDiscoveryItemView_iPhone() <MBLResourceObserverProtocol>
 @property(nonatomic, strong) MBLAsyncResource *imageResource;
@@ -27,8 +28,10 @@
 		bgImgView.image = [img stretchableImageWithLeftCapWidth:10.0 topCapHeight:20.0];
 		[self addSubview:bgImgView];
 		
+		CGSize size;
+		CGSize size2;
 		
-		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 50.0, 320.0, 18.0)];
+		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 20.0, 320.0, 18.0)];
 		titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 		titleLabel.textColor = [SNAppDelegate snLinkColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
@@ -36,18 +39,61 @@
 		titleLabel.text = _vo.title;
 		[self addSubview:titleLabel];
 		
-		_articleImgView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, 100.0, 300.0, 300.0 * _vo.imgRatio)];
+		size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(46.0, 40.0, size.width, size.height)];
+		viaLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10];
+		viaLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
+		viaLabel.backgroundColor = [UIColor clearColor];
+		viaLabel.text = @"via ";
+		[self addSubview:viaLabel];
+		
+		size2 = [[NSString stringWithFormat:@"@%@ ", _vo.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(46.0 + size.width, 40.0, size2.width, size2.height)];
+		handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
+		handleLabel.textColor = [SNAppDelegate snLinkColor];
+		handleLabel.backgroundColor = [UIColor clearColor];
+		handleLabel.text = [NSString stringWithFormat:@"@%@ ", _vo.twitterHandle];
+		[self addSubview:handleLabel];
+		
+		UIButton *handleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[handleButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+		handleButton.frame = handleLabel.frame;
+		[self addSubview:handleButton];
+		
+		size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, 40.0, size.width, size.height)];
+		inLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10];
+		inLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
+		inLabel.backgroundColor = [UIColor clearColor];
+		inLabel.text = @"into ";
+		[self addSubview:inLabel];
+		
+		size2 = [[NSString stringWithFormat:@"%@", _vo.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(inLabel.frame.origin.x + size.width, 40.0, size2.width, size2.height)];
+		topicLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
+		topicLabel.textColor = [SNAppDelegate snLinkColor];
+		topicLabel.backgroundColor = [UIColor clearColor];
+		topicLabel.text = [NSString stringWithFormat:@"%@", _vo.topicTitle];
+		[self addSubview:topicLabel];
+		
+		
+		UIButton *topicButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[topicButton addTarget:self action:@selector(_goTopic) forControlEvents:UIControlEventTouchUpInside];
+		topicButton.frame = topicLabel.frame;
+		[self addSubview:topicButton];
+		
+		_articleImgView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, 50.0, 300.0, 300.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
 		[_articleImgView setBackgroundColor:[UIColor whiteColor]];
 		_articleImgView.userInteractionEnabled = YES;
 		[self addSubview:_articleImgView];
 		
 		if (_imageResource == nil) {			
-			self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:_vo.imageURL forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
+			self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:((SNImageVO *)[_vo.images objectAtIndex:0]).url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
 		}
 		
 		if (_vo.type_id > 3) {
 			
-			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(10.0, 100.0, 305.0, 229.0)];
+			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(10.0, 50.0, 305.0, 229.0)];
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[self addSubview:_videoImgView];
 			
@@ -63,12 +109,20 @@
 		}
 		
 		if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
+			_sub1ImgView = [[UIImageView alloc] initWithFrame:CGRectMake(10.0, 260.0, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
+			[_sub1ImgView setBackgroundColor:[UIColor whiteColor]];
+			_sub1ImgView.userInteractionEnabled = YES;
+			[self addSubview:_sub1ImgView];
 			
+			_sub2ImgView = [[UIImageView alloc] initWithFrame:CGRectMake(170.0, 260.0, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
+			[_sub2ImgView setBackgroundColor:[UIColor whiteColor]];
+			_sub2ImgView.userInteractionEnabled = YES;
+			[self addSubview:_sub2ImgView];
 		}
 		
 		
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_likeButton.frame = CGRectMake(6.0, 300.0, 64.0, 44.0);
+		_likeButton.frame = CGRectMake(6.0, 360.0, 64.0, 44.0);
 		[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_nonActive.png"] forState:UIControlStateNormal];
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_Active.png"] forState:UIControlStateHighlighted];
@@ -90,7 +144,7 @@
 		}
 		
 		_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_commentButton.frame = CGRectMake(70.0, 300.0, 64.0, 44.0);
+		_commentButton.frame = CGRectMake(70.0, 360.0, 64.0, 44.0);
 		[_commentButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_nonActive.png"] forState:UIControlStateNormal];
 		[_commentButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_Active.png"] forState:UIControlStateHighlighted];
 		[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
@@ -107,7 +161,7 @@
 		
 		
 		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		sourceButton.frame = CGRectMake(231.0, 300.0, 64.0, 44.0);
+		sourceButton.frame = CGRectMake(231.0, 360.0, 64.0, 44.0);
 		[sourceButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[sourceButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
@@ -187,11 +241,36 @@
 	}
 }
 
+-(void)_goVideo {
+	[_videoButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:5]];
+	[UIView animateWithDuration:0.25 animations:^(void) {
+		[_videoButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
+		
+	} completion:^(BOOL finished) {
+		NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+											  @"video", @"type", 
+											  _vo, @"VO", 
+											  [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
+											  [NSValue valueWithCGRect:CGRectMake(_videoImgView.frame.origin.x + self.frame.origin.x, _videoImgView.frame.origin.y, _videoImgView.frame.size.width, _videoImgView.frame.size.height)], @"frame", nil];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];	
+	}];
+}
+
+- (void)_goTopic {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_TOPIC" object:[NSNumber numberWithInt:_vo.topicID]];
+}
+
 
 #pragma mark - Async Resource Observers
 - (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data {
 	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
 	_articleImgView.image = [UIImage imageWithData:data];
+	
+	if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
+		_sub1ImgView.image = [UIImage imageWithData:data];
+		_sub2ImgView.image = [UIImage imageWithData:data];
+	}
 	//_articleImgView.image = [SNAppDelegate imageWithFilters:[UIImage imageWithData:data] filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"saturation", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
 }
 

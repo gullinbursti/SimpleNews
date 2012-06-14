@@ -14,6 +14,8 @@
 @interface SNDiscoveryItemView_iPhone : UIView <EGOImageViewDelegate> {
 	SNArticleVO *_vo;
 	UIImageView *_articleImgView;
+	UIImageView *_sub1ImgView;
+	UIImageView *_sub2ImgView;
 	UIButton *_likeButton;
 	UIButton *_commentButton;
 	UIButton *_videoButton;
