@@ -147,14 +147,14 @@
 			
 		
 		if (_vo.type_id == 2 || _vo.type_id == 3) {
-			UIImageView *shadowImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-10.0, (imgFrame.origin.y + imgFrame.size.height) - 53.0, 319.0, 64.0)];
-			shadowImgView.image = [UIImage imageNamed:@"imageDropShadow.png"];
-			[self addSubview:shadowImgView];
+//			UIImageView *shadowImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-10.0, (imgFrame.origin.y + imgFrame.size.height) - 53.0, 319.0, 64.0)];
+//			shadowImgView.image = [UIImage imageNamed:@"imageDropShadow.png"];
+//			[self addSubview:shadowImgView];
 			
-			_articleImgView = [[UIImageView alloc] initWithFrame:imgFrame];
-			[_articleImgView setBackgroundColor:[UIColor whiteColor]];
-			_articleImgView.userInteractionEnabled = YES;
-			[self addSubview:_articleImgView];
+			_article1ImgView = [[UIImageView alloc] initWithFrame:imgFrame];
+			[_article1ImgView setBackgroundColor:[UIColor whiteColor]];
+			_article1ImgView.userInteractionEnabled = YES;
+			[self addSubview:_article1ImgView];
 			
 			_imgOverlayView = [[UIView alloc] initWithFrame:imgFrame];
 			[_imgOverlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
@@ -169,23 +169,30 @@
 			}
 			
 			if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
-				UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
-				itunesButton.frame = CGRectMake(103.0, imgFrame.origin.y + ((imgFrame.size.height * 0.5) - 22.0), 114.0, 44.0);
-				[itunesButton setBackgroundImage:[UIImage imageNamed:@"availableOnAppStoreBadge_nonActive.png"] forState:UIControlStateNormal];
-				[itunesButton setBackgroundImage:[UIImage imageNamed:@"availableOnAppStoreBadge_Active.png"] forState:UIControlStateHighlighted];
-				[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
-				[self addSubview:itunesButton];
+				imgFrame = CGRectMake(170.0, offset, 150.0, 150.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
+				_article1ImgView.frame = CGRectMake(-3.0, offset, 150.0, 150.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
+				
+				_article2ImgView = [[UIImageView alloc] initWithFrame:imgFrame];
+				[_article2ImgView setBackgroundColor:[UIColor whiteColor]];
+				_article2ImgView.userInteractionEnabled = YES;
+				[self addSubview:_article2ImgView];
+				
+//				UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//				itunesButton.frame = CGRectMake(103.0, imgFrame.origin.y + ((imgFrame.size.height * 0.5) - 22.0), 114.0, 44.0);
+//				[itunesButton setBackgroundImage:[UIImage imageNamed:@"availableOnAppStoreBadge_nonActive.png"] forState:UIControlStateNormal];
+//				[itunesButton setBackgroundImage:[UIImage imageNamed:@"availableOnAppStoreBadge_Active.png"] forState:UIControlStateHighlighted];
+//				[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
+//				[self addSubview:itunesButton];
 			}
 			
 			offset += (imgFrame.size.width * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
 			offset += 9;
 		}
 		
-		if (_vo.type_id > 3) {
-			
-			UIImageView *shadowImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-10.0, (offset + 229.0) - 53.0, 319.0, 64.0)];
-			shadowImgView.image = [UIImage imageNamed:@"imageDropShadow.png"];
-			[self addSubview:shadowImgView];
+		if (_vo.type_id > 3) {			
+//			UIImageView *shadowImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-10.0, (offset + 229.0) - 53.0, 319.0, 64.0)];
+//			shadowImgView.image = [UIImage imageNamed:@"imageDropShadow.png"];
+//			[self addSubview:shadowImgView];
 			
 			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(-3.0, offset, 305.0, 229.0)];
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
@@ -381,7 +388,7 @@
 								 @"photo", @"type", 
 								 _vo, @"VO", 
 								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
-								 [NSValue valueWithCGRect:CGRectMake(_articleImgView.frame.origin.x + self.frame.origin.x, _articleImgView.frame.origin.y, _articleImgView.frame.size.width, _articleImgView.frame.size.height)], @"frame", nil];
+								 [NSValue valueWithCGRect:CGRectMake(_article1ImgView.frame.origin.x + self.frame.origin.x, _article1ImgView.frame.origin.y, _article1ImgView.frame.size.width, _article1ImgView.frame.size.height)], @"frame", nil];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
 }
@@ -407,7 +414,8 @@
 #pragma mark - Async Resource Observers
 - (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data {
 	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
-	_articleImgView.image = [UIImage imageWithData:data];
+	_article1ImgView.image = [UIImage imageWithData:data];
+	_article2ImgView.image = [UIImage imageWithData:data];
 	//_articleImgView.image = [SNAppDelegate imageWithFilters:[UIImage imageWithData:data] filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"saturation", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
 }
 

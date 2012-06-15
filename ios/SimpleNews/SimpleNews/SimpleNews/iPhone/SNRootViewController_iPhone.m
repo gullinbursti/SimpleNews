@@ -22,6 +22,7 @@
 #import "SNAppDelegate.h"
 #import "SNArticleDetailsViewController_iPhone.h"
 #import "SNArticleCommentsViewController_iPhone.h"
+#import "SNFindFriendsViewController_iPhone.h"
 #import "SNDiscoveryListView_iPhone.h"
 
 #import "MBProgressHUD.h"
@@ -775,7 +776,7 @@
 			break;
 			
 		case 2:
-			return (6);
+			return (5);
 			break;
 	}
 }
@@ -835,7 +836,7 @@
 			break;
 			
 		case 2:
-			titles = [NSArray arrayWithObjects:@"Friends", @"Invite Friends", @"Likes", @"Comments", @"Seen", @"Logout", nil];
+			titles = [NSArray arrayWithObjects:@"Friends", @"Invite Friends", @"Likes", @"Comments",@"Logout", nil];
 			otherCell = [tableView dequeueReusableCellWithIdentifier:[SNRootOtherViewCell_iPhone cellReuseIdentifier]];
 			
 			if (otherCell == nil)
@@ -906,7 +907,64 @@
 		}];
 		
 	} else {
+		if (indexPath.row == 0) {
+			SNFindFriendsViewController_iPhone *findFriendsViewController = [[SNFindFriendsViewController_iPhone alloc] initAsList];
+			UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:findFriendsViewController];
+			[navigationController setNavigationBarHidden:YES];
+			[self.navigationController presentModalViewController:navigationController animated:YES];
+			
+		} else if (indexPath.row == 1) {
+			SNFindFriendsViewController_iPhone *findFriendsViewController = [[SNFindFriendsViewController_iPhone alloc] initAsFinder];
+			UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:findFriendsViewController];
+			[navigationController setNavigationBarHidden:YES];
+			[self.navigationController presentModalViewController:navigationController animated:YES];
 		
+		} else if (indexPath.row == 2) {
+			[_topicTimelineView removeFromSuperview];
+			_topicTimelineView = nil;
+			
+			[UIView animateWithDuration:0.33 animations:^(void) {
+				//_shadowImgView.alpha = 0.0;
+				
+			} completion:^(BOOL finished) {
+				_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithProfileType:6];	
+				[_holderView addSubview:_topicTimelineView];
+				
+				[UIView animateWithDuration:0.33 animations:^(void) {
+					_cardListsButton.hidden = YES;
+					_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+					_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+					
+				} completion:^(BOOL finished) {
+					_topicsTableView.contentOffset = CGPointZero;
+					[_topicTimelineView fullscreenMediaEnabled:YES];
+				}];
+			}];
+			
+		} else if (indexPath.row == 3) {
+			[_topicTimelineView removeFromSuperview];
+			_topicTimelineView = nil;
+			
+			[UIView animateWithDuration:0.33 animations:^(void) {
+				//_shadowImgView.alpha = 0.0;
+				
+			} completion:^(BOOL finished) {
+				_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithProfileType:2];	
+				[_holderView addSubview:_topicTimelineView];
+				
+				[UIView animateWithDuration:0.33 animations:^(void) {
+					_cardListsButton.hidden = YES;
+					_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+					_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+					
+				} completion:^(BOOL finished) {
+					_topicsTableView.contentOffset = CGPointZero;
+					[_topicTimelineView fullscreenMediaEnabled:YES];
+				}];
+			}];
+			
+		} else if (indexPath.row == 4) {
+		}
 	}
 }
 

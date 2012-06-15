@@ -121,7 +121,7 @@
 
 #pragma mark Naviagation
 -(void)_goBack {
-	[self.navigationController popViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - Notification handlers
@@ -188,6 +188,10 @@
 				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsSolo];
 		}
 		
+		NSMutableArray *letterArray = [_friendsDictionary objectForKey:[_sectionTitles objectAtIndex:indexPath.section]];
+		_vo = [letterArray objectAtIndex:indexPath.row];
+		cell.twitterUserVO = _vo;
+		
 	} else {
 		if (cell == nil) {
 			if ([_friends count] > 1) {
@@ -205,14 +209,14 @@
 				cell = [[SNTwitterFriendViewCell_iPhone alloc] initAsSolo];
 		}
 		
-		
 //		UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(12.0, 56.0, self.view.frame.size.width - 43.0, 1.0)];
 //		[lineView setBackgroundColor:[SNAppDelegate snLineColor]];
 //		[cell addSubview:lineView];
+		
+		cell.twitterUserVO = [_friends objectAtIndex:indexPath.row];
 	}
 	
 	cell.isFinderCell = _isFinder;
-	cell.twitterUserVO = [_friends objectAtIndex:indexPath.row];
 	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
 	
 	//NSLog(@"\nCELL FOR ROW:[(%d / %d) : (%d / %d]", indexPath.section, [tableView numberOfSections] - 1, indexPath.row, [tableView numberOfRowsInSection:indexPath.section] - 1);

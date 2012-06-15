@@ -33,6 +33,8 @@
 
 - (void)_retrievePopularList;
 - (void)_updatePopularList;
+
+- (void)_retrieveProfileListWithType:(int)type;
 @end
 
 @implementation SNTopicTimelineView_iPhone
@@ -80,7 +82,6 @@
 		_loaderLabel.backgroundColor = [UIColor clearColor];
 		_loaderLabel.text = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
 		[self addSubview:_loaderLabel];
-		
 
 		
 		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
@@ -163,6 +164,79 @@
 		[self addSubview:_overlayView];
 		
 		[self _retrieveTopicList];
+	}
+	
+	return (self);
+}
+
+- (id) initWithProfileType:(int)type {
+	if ((self = [self init])) {
+		
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackPageview:@"/topics/0" withError:&error])
+			NSLog(@"error in trackPageview");
+		
+		NSString *title;
+		
+		switch (type) {
+			case 6:
+				title = @"Likes";
+				break;
+				
+			case 2:
+				title = @"Comments";
+				break;
+				
+			case 5:
+				title = @"Shares";
+				break;
+		}
+		
+		_vo = [SNTopicVO topicWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"0", @"topic_id", title, @"title", nil, @"hashtags", nil]];
+		
+		
+		_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+		_activityIndicatorView.frame = CGRectMake(15.0, 60.0, 20.0, 20.0);
+		[_activityIndicatorView startAnimating];
+		[self addSubview:_activityIndicatorView];
+		
+		_loaderLabel = [[UILabel alloc] initWithFrame:CGRectMake(45.0, 63.0, 145.0, 16.0)];
+		_loaderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_loaderLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		_loaderLabel.textColor = [UIColor blackColor];
+		_loaderLabel.backgroundColor = [UIColor clearColor];
+		_loaderLabel.text = [NSString stringWithFormat:@"Assembling %@…", title];
+		[self addSubview:_loaderLabel];
+		
+		
+		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
+		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		_scrollView.opaque = NO;
+		_scrollView.scrollsToTop = NO;
+		_scrollView.pagingEnabled = NO;
+		_scrollView.delegate = self;
+		_scrollView.showsVerticalScrollIndicator = NO;
+		_scrollView.alwaysBounceVertical = NO;
+		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
+		[self addSubview:_scrollView];
+		
+		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
+		_refreshHeaderView.delegate = self;
+		[_scrollView addSubview:_refreshHeaderView];
+		[_refreshHeaderView refreshLastUpdatedDate];
+		
+		
+		SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.title];
+		[self addSubview:headerView];
+		
+		SNNavListBtnView *listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:listBtnView];
+		
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 44.0, 40.0, self.frame.size.height - 44)];
+		[self addSubview:_overlayView];
+		
+		[self _retrieveProfileListWithType:type];
 	}
 	
 	return (self);
@@ -309,6 +383,42 @@
 }
 
 
+- (void)_retrieveProfileListWithType:(int)type {
+	
+	if (_articleListResource == nil) {
+		NSString *title;
+		
+		switch (type) {
+			case 6:
+				title = @"Likes";
+				break;
+				
+			case 2:
+				title = @"Comments";
+				break;
+				
+			case 5:
+				title = @"Shares";
+				break;
+		}
+		
+		//_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+		//_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
+		_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", title];
+		_progressHUD.mode = MBProgressHUDModeIndeterminate;
+		_progressHUD.graceTime = 2.0;
+		_progressHUD.taskInProgress = YES;
+		
+		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
+		[formValues setObject:[NSString stringWithFormat:@"%d", type] forKey:@"action"];
+		[formValues setObject:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"];
+		self.articleListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0]]; // 1 minute for now
+	}
+}
+
+
 - (void)fullscreenMediaEnabled:(BOOL)isEnabled {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];
 	
@@ -444,10 +554,14 @@
 //				if (vo.topicID == 1 || vo.topicID == 2)
 //					imgWidth = 296;			
 				
+				if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0)
+					imgWidth = 150;
+					
 				if (vo.type_id > 1 && vo.type_id - 4 < 0) {
 					height += imgWidth * ((SNImageVO *)[vo.images objectAtIndex:0]).ratio;
 					height += 26; //20
 				}
+				
 				
 				if (!(vo.topicID == 8)) {
 					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:15] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
@@ -549,6 +663,9 @@
 				int imgWidth = 305;
 				//				if (vo.topicID == 1 || vo.topicID == 2)
 				//					imgWidth = 296;			
+				
+				if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0)
+					imgWidth = 150;
 				
 				if (vo.type_id > 1 && vo.type_id - 4 < 0) {
 					height += imgWidth * ((SNImageVO *)[vo.images objectAtIndex:0]).ratio;

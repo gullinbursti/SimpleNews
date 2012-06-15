@@ -7,16 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <MessageUI/MessageUI.h>
 
 #import "EGORefreshTableHeaderView.h"
 #import "MBProgressHUD.h"
 #import "MBLAsyncResource.h"
 
 #import "SNTopicVO.h"
-#import "SNArticleVideoPlayerView_iPhone.h"
+#import "SNArticleVO.h"
 
-@interface SNTopicTimelineView_iPhone : UIView <MFMailComposeViewControllerDelegate, UIScrollViewDelegate, EGORefreshTableHeaderDelegate> {
+@interface SNTopicTimelineView_iPhone : UIView <UIScrollViewDelegate, EGORefreshTableHeaderDelegate> {
 	NSMutableArray *_articles;
 	EGORefreshTableHeaderView *_refreshHeaderView;
 	MBProgressHUD *_progressHUD;
@@ -33,7 +32,6 @@
 	
 	SNArticleVO *_articleVO;
 	SNTopicVO *_vo;
-	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
 	
 	NSDate *_lastDate;
 	int _lastID;
@@ -43,6 +41,8 @@
 
 -(id)initWithPopularArticles;
 -(id)initWithTopicVO:(SNTopicVO *)vo;
+-(id)initWithProfileType:(int)type;
+
 - (void)fullscreenMediaEnabled:(BOOL)isEnabled;
 
 @end

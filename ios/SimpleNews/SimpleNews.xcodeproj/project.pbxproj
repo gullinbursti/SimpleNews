@@ -272,7 +272,6 @@
 		4CE2F31C15879ED900EF7A29 /* SNDiscoveryItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE2F31B15879ED900EF7A29 /* SNDiscoveryItemView_iPhone.m */; };
 		4CE2F31F15890F1500EF7A29 /* SNImageVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE2F31E15890F1500EF7A29 /* SNImageVO.m */; };
 		4CE2F3221589764E00EF7A29 /* SNRootOtherViewCell_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE2F3211589764E00EF7A29 /* SNRootOtherViewCell_iPhone.m */; };
-		4CE2F3251589ADCA00EF7A29 /* SNProfileTimelineView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE2F3241589ADCA00EF7A29 /* SNProfileTimelineView_iPhone.m */; };
 		4CE53DE81509E9FB004C6810 /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE53DE71509E9FB004C6810 /* icon_57x57.png */; };
 		4CE53DEA1509EA55004C6810 /* icon_114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE53DE91509EA55004C6810 /* icon_114x114.png */; };
 		4CE58F3915530DE100668B1E /* logoLoader_001.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE58F2D15530DE100668B1E /* logoLoader_001.png */; };
@@ -785,8 +784,6 @@
 		4CE2F31E15890F1500EF7A29 /* SNImageVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNImageVO.m; sourceTree = "<group>"; };
 		4CE2F3201589764D00EF7A29 /* SNRootOtherViewCell_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNRootOtherViewCell_iPhone.h; sourceTree = "<group>"; };
 		4CE2F3211589764E00EF7A29 /* SNRootOtherViewCell_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNRootOtherViewCell_iPhone.m; sourceTree = "<group>"; };
-		4CE2F3231589ADCA00EF7A29 /* SNProfileTimelineView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNProfileTimelineView_iPhone.h; sourceTree = "<group>"; };
-		4CE2F3241589ADCA00EF7A29 /* SNProfileTimelineView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNProfileTimelineView_iPhone.m; sourceTree = "<group>"; };
 		4CE53DE71509E9FB004C6810 /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_57x57.png; sourceTree = "<group>"; };
 		4CE53DE91509EA55004C6810 /* icon_114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_114x114.png; sourceTree = "<group>"; };
 		4CE58F2D15530DE100668B1E /* logoLoader_001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoLoader_001.png; sourceTree = "<group>"; };
@@ -1152,8 +1149,6 @@
 		4C2CFC2E15587F9200654D98 /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				4CE2F3231589ADCA00EF7A29 /* SNProfileTimelineView_iPhone.h */,
-				4CE2F3241589ADCA00EF7A29 /* SNProfileTimelineView_iPhone.m */,
 				4CB61CEE155F333300FF151E /* SNProfileViewCell_iPhone.h */,
 				4CB61CEF155F333300FF151E /* SNProfileViewCell_iPhone.m */,
 				4CE58FAF155490C500668B1E /* SNProfileViewController_iPhone.h */,
@@ -2439,7 +2434,6 @@
 				4CE2F31C15879ED900EF7A29 /* SNDiscoveryItemView_iPhone.m in Sources */,
 				4CE2F31F15890F1500EF7A29 /* SNImageVO.m in Sources */,
 				4CE2F3221589764E00EF7A29 /* SNRootOtherViewCell_iPhone.m in Sources */,
-				4CE2F3251589ADCA00EF7A29 /* SNProfileTimelineView_iPhone.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

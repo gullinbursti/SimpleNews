@@ -321,11 +321,27 @@
 		
 		function getArticlesCommentedByUser($user_id) {
 			$article_arr = array();
+			$id_arr = array();
 			
 			$query = 'SELECT `article_id` FROM `tblComments` WHERE `user_id` = '. $user_id .' ORDER BY `added` DESC;';
 			$commented_result = mysql_query($query);
 			
 			while ($commented_row = mysql_fetch_array($commented_result, MYSQL_BOTH)) {
+				
+				$isFound = false;
+				foreach ($id_arr as $article_id) {
+					if ($article_id == $commented_row['article_id']) {
+						$isFound = true;
+						break;
+					}
+				}
+				
+				if (!$isFound)
+				    array_push($id_arr, $commented_row['article_id']);
+				else
+					continue;
+					
+				
 				$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`id` = '. $commented_row['article_id'] .';';				
 				$article_row = mysql_fetch_row(mysql_query($query));
 				
@@ -382,10 +398,10 @@
 					"twitter_name" => $article_row[19], 
 					"twitter_handle" => $article_row[18],
 					"content" => $article_row[7], 
-					"avatar_url" => $article_row[20], 
+					"avatar_url" => $article_row[19], 
 					"video_url" => $article_row[11], 
 					"likes" => mysql_num_rows($likes_result), 
-					"added" => $article_row[16], 
+					"added" => $article_row[14], 
 					"comments" => $comment_arr, 
 					"images" => $img_arr
 				)); 
@@ -405,11 +421,25 @@
 		
 		function getArticlesSharedByUser($user_id) {
 			$article_arr = array();
+			$id_arr = array();
 			
 			$query = 'SELECT `article_id` FROM `tblUsersSharedArticles` WHERE `user_id` = '. $user_id .' ORDER BY `added` DESC;';
 			$shared_result = mysql_query($query);
 			
-			while ($shared_row = mysql_fetch_array($shared_result, MYSQL_BOTH)) {
+			while ($shared_row = mysql_fetch_array($shared_result, MYSQL_BOTH)) { 
+				$isFound = false;
+				foreach ($id_arr as $article_id) {
+					if ($article_id == $commented_row['article_id']) {
+						$isFound = true;
+						break;
+					}
+				}
+				
+				if (!$isFound)
+				    array_push($id_arr, $commented_row['article_id']);
+				else
+					continue;
+					
 				$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`id` = '. $shared_row['article_id'] .';';				
 				$article_row = mysql_fetch_row(mysql_query($query));
 				
@@ -467,10 +497,10 @@
 					"twitter_name" => $article_row[19], 
 					"twitter_handle" => $article_row[18],
 					"content" => $article_row[7], 
-					"avatar_url" => $article_row[20], 
+					"avatar_url" => $article_row[19], 
 					"video_url" => $article_row[11], 
 					"likes" => mysql_num_rows($shares_result), 
-					"added" => $article_row[16], 
+					"added" => $article_row[14], 
 					"comments" => $comment_arr, 
 					"images" => $img_arr
 				)); 
@@ -483,11 +513,25 @@
 		
 		function getArticlesLikedByUser($user_id) {
 			$article_arr = array();
+			$id_arr = array();
 			
 			$query = 'SELECT `article_id` FROM `tblUsersLikedArticles` WHERE `user_id` = '. $user_id .' ORDER BY `added` DESC;';
 			$liked_result = mysql_query($query);
 			
-			while ($liked_row = mysql_fetch_array($liked_result, MYSQL_BOTH)) {
+			while ($liked_row = mysql_fetch_array($liked_result, MYSQL_BOTH)) { 
+				$isFound = false;
+				foreach ($id_arr as $article_id) {
+					if ($article_id == $commented_row['article_id']) {
+						$isFound = true;
+						break;
+					}
+				}
+				
+				if (!$isFound)
+				    array_push($id_arr, $commented_row['article_id']);
+				else
+					continue;
+					
 				$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`id` = '. $liked_row['article_id'] .';';				
 				$article_row = mysql_fetch_row(mysql_query($query));
 				
@@ -542,10 +586,10 @@
 					"twitter_name" => $article_row[19], 
 					"twitter_handle" => $article_row[18],
 					"content" => $article_row[7], 
-					"avatar_url" => $article_row[20], 
+					"avatar_url" => $article_row[19], 
 					"video_url" => $article_row[11], 
 					"likes" => mysql_num_rows($likes_result), 
-					"added" => $article_row[16], 
+					"added" => $article_row[14], 
 					"comments" => $comment_arr, 
 					"images" => $img_arr
 				)); 

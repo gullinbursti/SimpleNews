@@ -19,7 +19,8 @@
 	UIButton *_commentButton;
 	UIView *_imgOverlayView;
 	
-	UIImageView *_articleImgView;
+	UIImageView *_article1ImgView;
+	UIImageView *_article2ImgView;
 	EGOImageView *_videoImgView;
 	
 	SNArticleVO *_vo;
