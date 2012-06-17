@@ -8,20 +8,21 @@
 
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
+#import "ASIFormDataRequest.h"
 
 #import "SNArticleVO.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 #import "SNUnderlinedLabel.h"
 
-@interface SNArticleDetailsViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIWebViewDelegate, UIActionSheetDelegate, EGOImageViewDelegate> {
+@interface SNArticleDetailsViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIWebViewDelegate, UIActionSheetDelegate, ASIHTTPRequestDelegate> {
 	SNArticleVO *_vo;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
 	
 	UIScrollView *_scrollView;
-	UIImageView *_toggleLtImgView;
-	UIImageView *_toggleRtImgView;
-	
 	UIButton *_likeButton;
+	UIButton *_commentButton;
+	
+	ASIFormDataRequest *_likeRequest;
 }
 
 -(id)initWithArticleVO:(SNArticleVO *)vo;

@@ -1046,6 +1046,11 @@
 			case "14":
 				$articles->getDiscoveryArticles();
 				break;
+				
+			case "15":
+				if (isset($_POST['articleID']))
+					$articles->getLikedByUsers($_POST['articleID']);
+				break;
     	}
 	}
 ?>

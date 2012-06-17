@@ -52,6 +52,7 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showShareSheet:) name:@"SHOW_SHARE_SHEET" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticlePage:) name:@"SHOW_ARTICLE_PAGE" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleComments:) name:@"SHOW_ARTICLE_COMMENTS" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
@@ -463,6 +464,11 @@
 -(void)_showArticleComments:(NSNotification *)notification {
 	SNArticleCommentsViewController_iPhone *articleCommentsViewController = [[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]];
 	[self.navigationController pushViewController:articleCommentsViewController animated:YES];
+}
+
+-(void)_showArticleDetails:(NSNotification *)notification {
+	SNArticleDetailsViewController_iPhone *articleDetailsViewController = [[SNArticleDetailsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]];
+	[self.navigationController pushViewController:articleDetailsViewController animated:YES];
 }
 
 -(void)_showArticlePage:(NSNotification *)notification {

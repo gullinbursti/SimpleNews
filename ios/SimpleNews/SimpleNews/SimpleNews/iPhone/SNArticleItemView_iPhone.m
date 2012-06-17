@@ -130,7 +130,7 @@
 			[self addSubview:titleLabel];
 			
 			UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			[titleButton addTarget:self action:@selector(_goSourcePage) forControlEvents:UIControlEventTouchUpInside];
+			[titleButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
 			titleButton.frame = titleLabel.frame;
 			[self addSubview:titleButton];
 			
@@ -282,6 +282,7 @@
 
 #pragma mark - Navigation
 -(void)_goDetails {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_DETAILS" object:_vo];
 }
 
 - (void)_goTopic {
