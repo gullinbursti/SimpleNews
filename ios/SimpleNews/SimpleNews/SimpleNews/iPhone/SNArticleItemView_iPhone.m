@@ -16,6 +16,7 @@
 #import "SNTwitterAvatarView.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 #import "SNImageVO.h"
+#import "SNTwitterUserVO.h"
 
 @interface SNArticleItemView_iPhone () <MBLResourceObserverProtocol>
 @property(nonatomic, strong) MBLAsyncResource *imageResource;
@@ -218,8 +219,8 @@
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_Active.png"] forState:UIControlStateHighlighted];
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
-		[_likeButton setImage:[UIImage imageNamed:@"heartIcon.png"] forState:UIControlStateNormal];
-		[_likeButton setImage:[UIImage imageNamed:@"heartIcon_Active.png"] forState:UIControlStateHighlighted];
+		[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
+		[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
 		[self addSubview:_likeButton];
 		
 		if (_vo.hasLiked)
@@ -258,6 +259,14 @@
 		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
 		[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:sourceButton];
+		
+		
+		int offset2 = 10;
+		for (SNTwitterUserVO *tuVO in _vo.userLikes) {
+			SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, offset - 30.0) imageURL:tuVO.avatarURL];
+			[self addSubview:avatarView];
+			offset2 += 40.0;
+		}
 	}
 	
 	return (self);

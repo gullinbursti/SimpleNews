@@ -9,11 +9,12 @@
 #import "SNArticleVO.h"
 #import "SNCommentVO.h"
 #import "SNImageVO.h"
+#import "SNTwitterUserVO.h"
 
 @implementation SNArticleVO
 
 @synthesize dictionary;
-@synthesize article_id, topicID, type_id, topicTitle, title, article_url, hasLiked, twitterName, twitterHandle, tweetID, tweetMessage, content, video_url, avatarImage_url, totalLikes, added, comments, images;
+@synthesize article_id, topicID, type_id, topicTitle, title, article_url, hasLiked, twitterName, twitterHandle, tweetID, tweetMessage, content, video_url, avatarImage_url, totalLikes, added, comments, images, userLikes;
 
 +(SNArticleVO *)articleWithDictionary:(NSDictionary *)dictionary {
 	
@@ -34,7 +35,7 @@
 	vo.video_url = [dictionary objectForKey:@"video_url"];
 	vo.avatarImage_url = [dictionary objectForKey:@"avatar_url"];
 	vo.hasLiked = (BOOL)[[dictionary objectForKey:@"liked"] intValue];
-	vo.totalLikes = [[dictionary objectForKey:@"likes"] intValue];
+	//vo.totalLikes = [[dictionary objectForKey:@"likes"] intValue];
 	
 	if (vo.title == (id)[NSNull null]) 
 		vo.title = @"Untitled";
@@ -53,6 +54,12 @@
 	vo.images = [NSMutableArray new];
 	for (NSDictionary *image in [dictionary objectForKey:@"images"])
 		[vo.images addObject:[SNImageVO imageWithDictionary:image]];
+	
+	vo.userLikes = [NSMutableArray new];
+	for (NSDictionary *user in [dictionary objectForKey:@"likes"])
+		[vo.userLikes addObject:[SNTwitterUserVO twitterUserWithDictionary:user]];
+	
+	vo.totalLikes = [vo.userLikes count];
 	
 	return (vo);
 }

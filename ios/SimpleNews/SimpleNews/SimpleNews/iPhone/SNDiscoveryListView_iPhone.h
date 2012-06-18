@@ -19,6 +19,7 @@
 	
 	MBProgressHUD *_progressHUD;
 	SNPaginationView *_paginationView;
+	NSDate *_lastDate;
 }
 
 

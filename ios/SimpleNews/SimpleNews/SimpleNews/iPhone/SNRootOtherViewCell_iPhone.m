@@ -20,6 +20,10 @@
 -(id)initWithTitle:(NSString *)title {
 	if ((self = [super init])) {
 		
+//		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(186.0, 14.0, 24.0, 24.0)];
+//		chevronView.image = [UIImage imageNamed:@"chevron.png"];
+//		[self addSubview:chevronView];
+		
 		_nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(19.0, 12.0, 256.0, 28.0)];
 		_nameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 		_nameLabel.textColor = [UIColor blackColor];

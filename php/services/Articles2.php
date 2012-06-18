@@ -129,8 +129,19 @@
 					));
 				}
 				
-				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_row[0] .';';
-				$likes_result = mysql_query($query);
+				$query = 'SELECT * FROM `tblUsers` INNER JOIN `tblUsersLikedArticles` ON `tblUsers`.`id` = `tblUsersLikedArticles`.`user_id` WHERE `tblUsersLikedArticles`.`article_id` = '. $article_row[0] .';';
+				$user_result = mysql_query($query);
+			
+				$user_arr = array();
+				while ($user_row = mysql_fetch_array($user_result, MYSQL_BOTH)) { 				
+					array_push($user_arr, array(
+						"id" => $user_row['id'], 
+						"id_str" => $user_row['twitter_id'], 
+						"screen_name" => $user_row['handle'], 
+						"name" => $user_row['name'], 
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+					)); 
+				}
 								
 				array_push($article_arr, array(
 					"article_id" => $article_row['article_id'], 
@@ -147,7 +158,7 @@
 					"content" => $article_row['content_txt'], 
 					"avatar_url" => $article_row['avatar_url'], 
 					"video_url" => $article_row['youtube_id'], 
-					"likes" => mysql_num_rows($likes_result), 
+					"likes" => $user_arr, 
 					"liked" => false, 
 					"added" => $article_row['created'], 
 					"comments" => $comment_arr, 
@@ -205,8 +216,19 @@
 					));
 				}
 				
-				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_row[0] .';';
-				$likes_result = mysql_query($query);
+				$query = 'SELECT * FROM `tblUsers` INNER JOIN `tblUsersLikedArticles` ON `tblUsers`.`id` = `tblUsersLikedArticles`.`user_id` WHERE `tblUsersLikedArticles`.`article_id` = '. $article_row[0] .';';
+				$user_result = mysql_query($query);
+			
+				$user_arr = array();
+				while ($user_row = mysql_fetch_array($user_result, MYSQL_BOTH)) { 				
+					array_push($user_arr, array(
+						"id" => $user_row['id'], 
+						"id_str" => $user_row['twitter_id'], 
+						"screen_name" => $user_row['handle'], 
+						"name" => $user_row['name'], 
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+					)); 
+				}
 				
 				array_push($article_arr, array(
 					"article_id" => $article_row['article_id'], 
@@ -223,7 +245,7 @@
 					"content" => $article_row['content_txt'], 
 					"avatar_url" => $article_row['avatar_url'], 
 					"video_url" => $article_row['youtube_id'], 
-					"likes" => mysql_num_rows($likes_result), 
+					"likes" => $user_arr, 
 					"liked" => false, 
 					"added" => $article_row['created'], 
 					"comments" => $comment_arr, 
@@ -382,9 +404,20 @@
 					));
 				}
 				
-				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $commented_row['article_id'] .';';
-				$likes_result = mysql_query($query);
-				
+				$query = 'SELECT * FROM `tblUsers` INNER JOIN `tblUsersLikedArticles` ON `tblUsers`.`id` = `tblUsersLikedArticles`.`user_id` WHERE `tblUsersLikedArticles`.`article_id` = '. $commented_row['article_id'] .';';
+				$user_result = mysql_query($query);
+			
+				$user_arr = array();
+				while ($user_row = mysql_fetch_array($user_result, MYSQL_BOTH)) { 				
+					array_push($user_arr, array(
+						"id" => $user_row['id'], 
+						"id_str" => $user_row['twitter_id'], 
+						"screen_name" => $user_row['handle'], 
+						"name" => $user_row['name'], 
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+					)); 
+				}
+			    
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
 					"list_id" => $topic_row[0], 
@@ -400,7 +433,7 @@
 					"content" => $article_row[7], 
 					"avatar_url" => $article_row[19], 
 					"video_url" => $article_row[11], 
-					"likes" => mysql_num_rows($likes_result), 
+					"likes" => $user_arr, 
 					"added" => $article_row[14], 
 					"comments" => $comment_arr, 
 					"images" => $img_arr
@@ -481,8 +514,19 @@
 					));
 				}
 				
-				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $shared_row[0] .';';
-				$shares_result = mysql_query($query);
+				$query = 'SELECT * FROM `tblUsers` INNER JOIN `tblUsersLikedArticles` ON `tblUsers`.`id` = `tblUsersLikedArticles`.`user_id` WHERE `tblUsersLikedArticles`.`article_id` = '. $shared_row[0] .';';
+				$user_result = mysql_query($query);
+			
+				$user_arr = array();
+				while ($user_row = mysql_fetch_array($user_result, MYSQL_BOTH)) { 				
+					array_push($user_arr, array(
+						"id" => $user_row['id'], 
+						"id_str" => $user_row['twitter_id'], 
+						"screen_name" => $user_row['handle'], 
+						"name" => $user_row['name'], 
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+					)); 
+				}
 				
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
@@ -499,7 +543,7 @@
 					"content" => $article_row[7], 
 					"avatar_url" => $article_row[19], 
 					"video_url" => $article_row[11], 
-					"likes" => mysql_num_rows($shares_result), 
+					"likes" => $user_arr, 
 					"added" => $article_row[14], 
 					"comments" => $comment_arr, 
 					"images" => $img_arr
@@ -570,8 +614,19 @@
 					));
 				}
 				
-				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $liked_row[0] .';';
-				$likes_result = mysql_query($query);
+				$query = 'SELECT * FROM `tblUsers` INNER JOIN `tblUsersLikedArticles` ON `tblUsers`.`id` = `tblUsersLikedArticles`.`user_id` WHERE `tblUsersLikedArticles`.`article_id` = '. $liked_row[0] .';';
+				$user_result = mysql_query($query);
+			
+				$user_arr = array();
+				while ($user_row = mysql_fetch_array($user_result, MYSQL_BOTH)) { 				
+					array_push($user_arr, array(
+						"id" => $user_row['id'], 
+						"id_str" => $user_row['twitter_id'], 
+						"screen_name" => $user_row['handle'], 
+						"name" => $user_row['name'], 
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+					)); 
+				}
 				
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
@@ -588,7 +643,7 @@
 					"content" => $article_row[7], 
 					"avatar_url" => $article_row[19], 
 					"video_url" => $article_row[11], 
-					"likes" => mysql_num_rows($likes_result), 
+					"likes" => $user_arr, 
 					"added" => $article_row[14], 
 					"comments" => $comment_arr, 
 					"images" => $img_arr
@@ -641,8 +696,19 @@
 					));
 				}
 				
-				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_row[0] .';';
-				$likes_result = mysql_query($query);
+				$query = 'SELECT * FROM `tblUsers` INNER JOIN `tblUsersLikedArticles` ON `tblUsers`.`id` = `tblUsersLikedArticles`.`user_id` WHERE `tblUsersLikedArticles`.`article_id` = '. $article_row[0] .';';
+				$user_result = mysql_query($query);
+			
+				$user_arr = array();
+				while ($user_row = mysql_fetch_array($user_result, MYSQL_BOTH)) { 				
+					array_push($user_arr, array(
+						"id" => $user_row['id'], 
+						"id_str" => $user_row['twitter_id'], 
+						"screen_name" => $user_row['handle'], 
+						"name" => $user_row['name'], 
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+					)); 
+				}
 				
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
@@ -659,7 +725,7 @@
 					"content" => $article_row['content_txt'], 
 					"avatar_url" => $article_row['avatar_url'], 
 					"video_url" => $article_row['youtube_id'], 
-					"likes" => mysql_num_rows($likes_result), 
+					"likes" => $user_arr, 
 					"liked" => false, 
 					"added" => $article_row['created'], 
 					"comments" => $comment_arr, 
@@ -713,8 +779,19 @@
 					));
 				}
 				
-				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_row[0] .';';
-				$likes_result = mysql_query($query);
+				$query = 'SELECT * FROM `tblUsers` INNER JOIN `tblUsersLikedArticles` ON `tblUsers`.`id` = `tblUsersLikedArticles`.`user_id` WHERE `tblUsersLikedArticles`.`article_id` = '. $article_row[0] .';';
+				$user_result = mysql_query($query);
+			
+				$user_arr = array();
+				while ($user_row = mysql_fetch_array($user_result, MYSQL_BOTH)) { 				
+					array_push($user_arr, array(
+						"id" => $user_row['id'], 
+						"id_str" => $user_row['twitter_id'], 
+						"screen_name" => $user_row['handle'], 
+						"name" => $user_row['name'], 
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+					)); 
+				}
 								
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
@@ -731,7 +808,7 @@
 					"content" => $article_row['content_txt'], 
 					"avatar_url" => $article_row['avatar_url'], 
 					"video_url" => $article_row['youtube_id'], 
-					"likes" => mysql_num_rows($likes_result), 
+					"likes" => $user_arr, 
 					"liked" => false, 
 					"added" => $article_row['created'], 
 					"comments" => $comment_arr, 
@@ -784,8 +861,19 @@
 					));
 				}
 				
-				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_row[0] .';';
-				$likes_result = mysql_query($query);
+				$query = 'SELECT * FROM `tblUsers` INNER JOIN `tblUsersLikedArticles` ON `tblUsers`.`id` = `tblUsersLikedArticles`.`user_id` WHERE `tblUsersLikedArticles`.`article_id` = '. $article_row[0] .';';
+				$user_result = mysql_query($query);
+			
+				$user_arr = array();
+				while ($user_row = mysql_fetch_array($user_result, MYSQL_BOTH)) { 				
+					array_push($user_arr, array(
+						"id" => $user_row['id'], 
+						"id_str" => $user_row['twitter_id'], 
+						"screen_name" => $user_row['handle'], 
+						"name" => $user_row['name'], 
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+					)); 
+				}
 								
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
@@ -802,7 +890,7 @@
 					"content" => $article_row['content_txt'], 
 					"avatar_url" => $article_row['avatar_url'], 
 					"video_url" => $article_row['youtube_id'], 
-					"likes" => mysql_num_rows($likes_result), 
+					"likes" => $user_arr, 
 					"liked" => false, 
 					"added" => $article_row['created'], 
 					"comments" => $comment_arr, 
@@ -859,8 +947,19 @@
 					));
 				}
 				
-				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_row[0] .';';
-				$likes_result = mysql_query($query);
+				$query = 'SELECT * FROM `tblUsers` INNER JOIN `tblUsersLikedArticles` ON `tblUsers`.`id` = `tblUsersLikedArticles`.`user_id` WHERE `tblUsersLikedArticles`.`article_id` = '. $article_row[0] .';';
+				$user_result = mysql_query($query);
+			
+				$user_arr = array();
+				while ($user_row = mysql_fetch_array($user_result, MYSQL_BOTH)) { 				
+					array_push($user_arr, array(
+						"id" => $user_row['id'], 
+						"id_str" => $user_row['twitter_id'], 
+						"screen_name" => $user_row['handle'], 
+						"name" => $user_row['name'], 
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+					)); 
+				}
 				
 				array_push($article_arr, array(
 					"article_id" => $article_row['article_id'], 
@@ -877,7 +976,7 @@
 					"content" => $article_row['content_txt'], 
 					"avatar_url" => $article_row['avatar_url'], 
 					"video_url" => $article_row['youtube_id'], 
-					"likes" => mysql_num_rows($likes_result), 
+					"likes" => $user_arr, 
 					"liked" => false, 
 					"added" => $article_row['created'], 
 					"comments" => $comment_arr, 
@@ -892,7 +991,7 @@
 		function getDiscoveryArticles() {
 			$article_arr = array();
 			
-			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 			$article_result = mysql_query($query);
 			
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
@@ -930,8 +1029,19 @@
 					));
 				}
 				
-				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_row[0] .';';
-				$likes_result = mysql_query($query);
+				$query = 'SELECT * FROM `tblUsers` INNER JOIN `tblUsersLikedArticles` ON `tblUsers`.`id` = `tblUsersLikedArticles`.`user_id` WHERE `tblUsersLikedArticles`.`article_id` = '. $article_row[0] .';';
+				$user_result = mysql_query($query);
+			
+				$user_arr = array();
+				while ($user_row = mysql_fetch_array($user_result, MYSQL_BOTH)) { 				
+					array_push($user_arr, array(
+						"id" => $user_row['id'], 
+						"id_str" => $user_row['twitter_id'], 
+						"screen_name" => $user_row['handle'], 
+						"name" => $user_row['name'], 
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+					)); 
+				}
 				
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
@@ -948,7 +1058,90 @@
 					"content" => $article_row['content_txt'], 
 					"avatar_url" => $article_row['avatar_url'], 
 					"video_url" => $article_row['youtube_id'], 
-					"likes" => mysql_num_rows($likes_result), 
+					"likes" => $user_arr, 
+					"liked" => false, 
+					"added" => $article_row['created'], 
+					"comments" => $comment_arr, 
+					"images" => $img_arr
+				)); 
+			}
+			
+			$this->sendResponse(200, json_encode($article_arr));
+			return (true);
+		}
+		
+		
+		function getDiscoveryArticlesBeforeDate($date) {
+			$article_arr = array();
+			
+			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`created` < "'. $date .'" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+			$article_result = mysql_query($query);
+			
+			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
+				$query = 'SELECT `tblTopics`.`id`, `tblTopics`.`title` FROM `tblTopics` INNER JOIN `tblTopicsArticles` ON `tblTopics`.`id` = `tblTopicsArticles`.`topic_id` WHERE  `tblTopicsArticles`.`article_id` = '. $article_row[0] .";";
+				$topic_row = mysql_fetch_row(mysql_query($query));
+				
+				$query = 'SELECT * FROM `tblArticleImages` WHERE `article_id` = '. $article_row[0] .';';
+				$img_result = mysql_query($query);
+				
+				$img_arr = array();
+				while ($img_row = mysql_fetch_array($img_result, MYSQL_BOTH)) {
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+				}
+							
+				$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row[0] .' ORDER BY `tblComments`.`added` DESC;';
+				$comment_result = mysql_query($query);
+				
+				$comment_arr = array();
+				while ($comment_row = mysql_fetch_array($comment_result, MYSQL_BOTH)) {
+					$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `user_id` = '. $comment_row['user_id'] .' AND `article_id` = '. $article_row[0] .';';
+					$liked_result = mysql_query($query);
+				
+					array_push($comment_arr, array(
+						"comment_id" => $comment_row[0], 
+						"handle" => $comment_row['handle'], 
+						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"content" => $comment_row['content'], 
+						"liked" => (mysql_num_rows($liked_result) > 0), 
+						"added" => $comment_row[5]
+					));
+				}
+				
+				$query = 'SELECT * FROM `tblUsers` INNER JOIN `tblUsersLikedArticles` ON `tblUsers`.`id` = `tblUsersLikedArticles`.`user_id` WHERE `tblUsersLikedArticles`.`article_id` = '. $article_row[0] .';';
+				$user_result = mysql_query($query);
+			
+				$user_arr = array();
+				while ($user_row = mysql_fetch_array($user_result, MYSQL_BOTH)) { 				
+					array_push($user_arr, array(
+						"id" => $user_row['id'], 
+						"id_str" => $user_row['twitter_id'], 
+						"screen_name" => $user_row['handle'], 
+						"name" => $user_row['name'], 
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+					)); 
+				}
+				
+				array_push($article_arr, array(
+					"article_id" => $article_row[0], 
+					"list_id" => $topic_row[0],
+					"topic_name" => $topic_row[1],  
+					"type_id" => $article_row[1], 
+					"title" => $article_row['title'], 
+					"article_url" => $article_row['content_url'], 
+					"short_url" => $article_row['short_url'], 
+					"tweet_id" => $article_row['tweet_id'], 
+					"tweet_msg" => $article_row['tweet_msg'], 
+					"twitter_name" => $article_row['name'], 
+					"twitter_handle" => $article_row['handle'],
+					"content" => $article_row['content_txt'], 
+					"avatar_url" => $article_row['avatar_url'], 
+					"video_url" => $article_row['youtube_id'], 
+					"likes" => $user_arr, 
 					"liked" => false, 
 					"added" => $article_row['created'], 
 					"comments" => $comment_arr, 
@@ -1047,9 +1240,9 @@
 				$articles->getDiscoveryArticles();
 				break;
 				
-			case "15":
-				if (isset($_POST['articleID']))
-					$articles->getLikedByUsers($_POST['articleID']);
+			 case "15":
+				if (isset($_POST['datetime']))
+					$articles->getDiscoveryArticlesBeforeDate($_POST['datetime']);
 				break;
     	}
 	}

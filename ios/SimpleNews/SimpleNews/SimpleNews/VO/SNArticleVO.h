@@ -32,5 +32,6 @@
 @property (nonatomic, retain) NSDate *added;
 @property (nonatomic, retain) NSMutableArray *comments;
 @property (nonatomic, retain) NSMutableArray *images;
+@property (nonatomic, retain) NSMutableArray *userLikes;
 
 @end
