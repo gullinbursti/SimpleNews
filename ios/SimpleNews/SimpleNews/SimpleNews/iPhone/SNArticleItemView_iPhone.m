@@ -34,7 +34,7 @@
 		_vo = vo;
 		_isFirstAppearance = YES;
 		
-		int offset = 22;
+		int offset = 14;
 		CGSize size;
 		CGSize size2;
 		
@@ -50,17 +50,17 @@
 		[[avatarImgView btn] addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:avatarImgView];
 		
-		size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(46.0, offset, size.width, size.height)];
-		viaLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10];
-		viaLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
+		size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(37.0, offset, size.width, size.height)];
+		viaLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11];
+		viaLabel.textColor = [UIColor colorWithWhite:0.482 alpha:1.0];
 		viaLabel.backgroundColor = [UIColor clearColor];
 		viaLabel.text = @"via ";
 		[self addSubview:viaLabel];
 		
-		size2 = [[NSString stringWithFormat:@"@%@ ", _vo.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(46.0 + size.width, offset, size2.width, size2.height)];
-		handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
+		size2 = [[NSString stringWithFormat:@"@%@ ", _vo.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(viaLabel.frame.origin.x + size.width, offset, size2.width, size2.height)];
+		handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 		handleLabel.textColor = [SNAppDelegate snLinkColor];
 		handleLabel.backgroundColor = [UIColor clearColor];
 		handleLabel.text = [NSString stringWithFormat:@"@%@ ", _vo.twitterHandle];
@@ -71,17 +71,17 @@
 		handleButton.frame = handleLabel.frame;
 		[self addSubview:handleButton];
 		
-		size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 		UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, offset, size.width, size.height)];
-		inLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10];
-		inLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
+		inLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11];
+		inLabel.textColor = [UIColor colorWithWhite:0.482 alpha:1.0];
 		inLabel.backgroundColor = [UIColor clearColor];
 		inLabel.text = @"into ";
 		[self addSubview:inLabel];
 		
-		size2 = [[NSString stringWithFormat:@"%@", _vo.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		size2 = [[NSString stringWithFormat:@"%@", _vo.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 		UILabel *topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(inLabel.frame.origin.x + size.width, offset, size2.width, size2.height)];
-		topicLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
+		topicLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 		topicLabel.textColor = [SNAppDelegate snLinkColor];
 		topicLabel.backgroundColor = [UIColor clearColor];
 		topicLabel.text = [NSString stringWithFormat:@"%@", _vo.topicTitle];
@@ -122,7 +122,7 @@
 		
 		if (!(_vo.topicID == 8)) {
 			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:15] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0, offset, 260.0, size.height)];
+			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5.0, offset, 260.0, size.height)];
 			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:15];
 			titleLabel.textColor = [UIColor colorWithWhite:0.482 alpha:1.0];
 			titleLabel.backgroundColor = [UIColor clearColor];
@@ -139,7 +139,7 @@
 		}
 		
 		
-		CGRect imgFrame = CGRectMake(-3.0, offset, 305.0, 305.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
+		CGRect imgFrame = CGRectMake(5, offset, 290.0, 290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
 //		if (_vo.topicID == 1 || _vo.topicID == 2) {
 //			imgFrame.origin.x = 2.0;
 //			imgFrame.size.width = 296.0;
@@ -171,7 +171,7 @@
 			
 			if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 				imgFrame = CGRectMake(170.0, offset, 150.0, 150.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
-				_article1ImgView.frame = CGRectMake(-3.0, offset, 150.0, 150.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
+				_article1ImgView.frame = CGRectMake(5.0, offset, 150.0, 150.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
 				
 				_article2ImgView = [[UIImageView alloc] initWithFrame:imgFrame];
 				[_article2ImgView setBackgroundColor:[UIColor whiteColor]];
@@ -195,7 +195,7 @@
 //			shadowImgView.image = [UIImage imageNamed:@"imageDropShadow.png"];
 //			[self addSubview:shadowImgView];
 			
-			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(-3.0, offset, 305.0, 229.0)];
+			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(5.0, offset, 290.0, 163.0)];
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[self addSubview:_videoImgView];
 			
@@ -208,7 +208,7 @@
 			playImgView.image = [UIImage imageNamed:@"playButton.png"];
 			[_videoImgView addSubview:playImgView];
 			
-			offset += 229;
+			offset += 163;
 			offset += 12;
 		}
 		

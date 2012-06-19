@@ -567,9 +567,9 @@
 	_fullscreenTitleLabel.text = _articleVO.title;
 	[_blackMatteView addSubview:_fullscreenTitleLabel];
 	
-	CGSize size = [@"via " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	CGSize size = [@"via " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 	UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(19.0, self.view.frame.size.height - 33.0, size.width, size.height)];
-	viaLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11];
+	viaLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	viaLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 	viaLabel.backgroundColor = [UIColor clearColor];
 	viaLabel.text = @"via ";
@@ -583,9 +583,9 @@
 	handleLabel.text = [NSString stringWithFormat:@"@%@ ", _articleVO.twitterHandle];
 	[_blackMatteView addSubview:handleLabel];
 	 
-	size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 	UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, self.view.frame.size.height - 33.0, size.width, size.height)];
-	inLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11];
+	inLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	inLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 	inLabel.backgroundColor = [UIColor clearColor];
 	inLabel.text = @"into ";
@@ -652,7 +652,6 @@
 		_videoPlayerView = nil;
 		_shareBtnView = nil;
 	}];
-	
 }
 
 -(void)_changeTopic:(NSNotification *)notification {
