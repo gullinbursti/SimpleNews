@@ -7,16 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SNBaseRootViewCell_iPhone.h"
 #import "SNTopicVO.h"
 
-@interface SNRootTopicViewCell_iPhone : UITableViewCell {
-	UILabel *_nameLabel;
+@interface SNRootTopicViewCell_iPhone : SNBaseRootViewCell_iPhone {
 	UIButton *_followButton;
 }
 
-+(NSString *)cellReuseIdentifier;
-
-@property(nonatomic, retain) UIView *overlayView;
 @property(nonatomic, retain) SNTopicVO *topicVO;
 
 @end

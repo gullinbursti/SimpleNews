@@ -205,7 +205,7 @@
 			_scrollView.contentSize = CGSizeMake(tot * self.frame.size.width, _scrollView.frame.size.height);
 			_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
 			
-			_paginationView = [[SNPaginationView alloc] initWithTotal:tot coords:CGPointMake(160.0, 465.0)];
+			_paginationView = [[SNPaginationView alloc] initWithTotal:tot coords:CGPointMake(160.0, 468.0)];
 			[self addSubview:_paginationView];
 		}
 	
@@ -261,7 +261,7 @@
 			_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
 			_scrollView.contentSize = CGSizeMake(tot * self.frame.size.width, _scrollView.frame.size.height);
 			
-			_paginationView = [[SNPaginationView alloc] initWithTotal:tot coords:CGPointMake(160.0, 465.0)];
+			_paginationView = [[SNPaginationView alloc] initWithTotal:tot coords:CGPointMake(160.0, 468.0)];
 			[self addSubview:_paginationView];
 		}
 	}

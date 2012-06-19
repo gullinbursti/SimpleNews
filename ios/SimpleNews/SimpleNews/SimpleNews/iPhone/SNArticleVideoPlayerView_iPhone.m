@@ -82,16 +82,16 @@
 		_playButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_playButton.frame = CGRectMake((self.frame.size.width * 0.5) - 32.0, (self.frame.size.height * 0.5) - 32.0, 64.0, 64.0);
 		_playButton.alpha = 0.0;
-		[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_nonActive.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-		[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+		[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+		[_playButton setBackgroundImage:[[UIImage imageNamed:@"playButton.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[_playButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_playButton];
 		
 		_pauseButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_pauseButton.frame = CGRectMake((self.frame.size.width * 0.5) - 32.0, (self.frame.size.height * 0.5) - 32.0, 64.0, 64.0);
 		_pauseButton.alpha = 0.0;
-		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"pauseButton_nonActiv.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
-		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"pauseButton_Active.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"pauseButton.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateNormal];
+		[_pauseButton setBackgroundImage:[[UIImage imageNamed:@"pauseButton.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[_pauseButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_pauseButton];
 		

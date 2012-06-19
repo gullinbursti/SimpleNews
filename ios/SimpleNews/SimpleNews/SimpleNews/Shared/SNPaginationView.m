@@ -9,7 +9,7 @@
 #import "SNPaginationView.h"
 
 #define kLEDSize 8.0
-#define kSpacingSize 1.0
+#define kSpacingSize 2.0
 
 @implementation SNPaginationView
 

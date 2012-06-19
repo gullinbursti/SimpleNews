@@ -17,6 +17,7 @@
 #import "SNProfileViewController_iPhone.h"
 #import "SNWebPageViewController_iPhone.h"
 #import "SNHeaderView_iPhone.h"
+#import "SNListHeaderView.h"
 #import "SNRootTopicViewCell_iPhone.h"
 #import "SNRootOtherViewCell_iPhone.h"
 #import "SNAppDelegate.h"
@@ -151,21 +152,17 @@
 	self.view.clipsToBounds = YES;
 	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
+	bgImgView.image = [UIImage imageNamed:@"background_boot.png"];
 	[self.view addSubview:bgImgView];
 	
-	//_holderView = [[UIView alloc] initWithFrame:CGRectMake(-270.0, 0.0, 580.0, self.view.frame.size.height)];
 	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
 	[self.view addSubview:_holderView];
 	
-	_profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_profileButton.frame = CGRectMake(10.0, 8.0, 44.0, 44.0);
-	[_profileButton setBackgroundImage:[UIImage imageNamed:@"profileButton_nonActive.png"] forState:UIControlStateNormal];
-	[_profileButton setBackgroundImage:[UIImage imageNamed:@"profileButton_Active.png"] forState:UIControlStateHighlighted];
-	[_profileButton addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
-	[_holderView addSubview:_profileButton];
+	SNListHeaderView *listHeaderView = [[SNListHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, 230.0, 45.0)];
+	[[listHeaderView btn] addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
+	[_holderView addSubview:listHeaderView];
 	
-	_topicsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 56.0, kTopicOffset, self.view.frame.size.height - 56.0) style:UITableViewStylePlain];
+	_topicsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 45.0, kTopicOffset, self.view.frame.size.height - 45.0) style:UITableViewStylePlain];
 	[_topicsTableView setBackgroundColor:[UIColor clearColor]];
 	_topicsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	_topicsTableView.rowHeight = 50.0;
@@ -812,6 +809,36 @@
 	return (30.0);
 }
 
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, tableView.frame.size.width, 30.0)];
+	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:headerView.frame];
+	bgImgView.image = [UIImage imageNamed:@"leftMenuHeaders"];
+	[headerView addSubview:bgImgView];
+	
+	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(7.0, 0.0, tableView.frame.size.width, 30.0)];
+	label.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
+	label.textColor = [UIColor colorWithWhite:0.290 alpha:1.0];
+	label.backgroundColor = [UIColor clearColor];
+	
+	switch (section) {
+		default:
+			label.text = @"DISCOVER";
+			break;
+			
+		case 1:
+			label.text = @"TOPICS";
+			break;
+			
+		case 2:
+			label.text = @"PROFILE";
+			break;
+	}
+	
+	[headerView addSubview:label];
+	
+	return (headerView);
+}
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	SNRootTopicViewCell_iPhone *topicCell;
 	SNRootOtherViewCell_iPhone *otherCell;
@@ -825,6 +852,7 @@
 			if (otherCell == nil)
 				otherCell = [[SNRootOtherViewCell_iPhone alloc] initWithTitle:[titles objectAtIndex:indexPath.row]];
 			
+			[otherCell setSelectionStyle:UITableViewCellSelectionStyleNone];
 			return (otherCell);
 			break;
 			
@@ -848,6 +876,7 @@
 			if (otherCell == nil)
 				otherCell = [[SNRootOtherViewCell_iPhone alloc] initWithTitle:[titles objectAtIndex:indexPath.row]];
 			
+			[otherCell setSelectionStyle:UITableViewCellSelectionStyleNone];
 			return (otherCell);
 			break;
 	}
@@ -855,7 +884,7 @@
 
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return (50.0);
+	return (41.0);
 }
 
 -(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -869,10 +898,10 @@
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 	
 	[UIView animateWithDuration:0.15 animations:^(void) {
-		((SNRootTopicViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).overlayView.alpha = 1.0;
+		((SNBaseRootViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).activeBGImgView.alpha = 1.0;
 		
 	} completion:^(BOOL finished) {
-		((SNRootTopicViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).overlayView.alpha = 0.0;
+		((SNBaseRootViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).activeBGImgView.alpha = 0.0;
 	}];
 	
 	

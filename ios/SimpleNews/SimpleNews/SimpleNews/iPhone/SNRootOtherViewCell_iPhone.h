@@ -7,14 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SNBaseRootViewCell_iPhone.h"
 
-@interface SNRootOtherViewCell_iPhone : UITableViewCell {
-	UILabel *_nameLabel;
+@interface SNRootOtherViewCell_iPhone : SNBaseRootViewCell_iPhone {
 }
 
-+(NSString *)cellReuseIdentifier;
 - (id)initWithTitle:(NSString *)title;
-
-@property(nonatomic, retain) UIView *overlayView;
 
 @end
