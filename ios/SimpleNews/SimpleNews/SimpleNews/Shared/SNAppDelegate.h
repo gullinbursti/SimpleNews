@@ -56,6 +56,7 @@
 +(UIFont *)snAllerFontBoldItalic;
 
 +(UIColor *)snLineColor;
++(UIColor *)snGreyColor;
 +(UIColor *)snHeaderColor;
 +(UIColor *)snLinkColor;
 

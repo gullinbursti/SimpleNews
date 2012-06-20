@@ -84,6 +84,10 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	return ([UIColor colorWithWhite:0.702 alpha:1.0]);
 }
 
++(UIColor *)snGreyColor {
+	return ([UIColor colorWithWhite:0.482 alpha:1.0]);
+}
+
 +(UIColor *)snHeaderColor {
 	return ([UIColor colorWithWhite:0.941 alpha:1.0]);
 }

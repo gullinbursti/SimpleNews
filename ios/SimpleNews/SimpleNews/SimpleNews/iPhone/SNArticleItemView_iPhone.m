@@ -110,21 +110,21 @@
 		}
 		
 		size = [timeSince sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(281.0 - size.width, offset + 1.0, size.width, size.height)];
+		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(265.0, offset + 1.0, size.width, size.height)];
 		dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
-		dateLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
+		dateLabel.textColor = [SNAppDelegate snGreyColor];
 		dateLabel.backgroundColor = [UIColor clearColor];
 		dateLabel.textAlignment = UITextAlignmentRight;
 		dateLabel.text = timeSince;
 		[self addSubview:dateLabel];
 		
-		offset += 32;
+		offset += 29;
 		
 		if (!(_vo.topicID == 8)) {
-			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:15] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:13] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5.0, offset, 260.0, size.height)];
-			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:15];
-			titleLabel.textColor = [UIColor colorWithWhite:0.482 alpha:1.0];
+			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:13];
+			titleLabel.textColor = [SNAppDelegate snGreyColor];
 			titleLabel.backgroundColor = [UIColor clearColor];
 			titleLabel.text = _vo.title;
 			titleLabel.numberOfLines = 0;
@@ -135,7 +135,7 @@
 			titleButton.frame = titleLabel.frame;
 			[self addSubview:titleButton];
 			
-			offset += size.height + 13.0;
+			offset += size.height + 6.0;
 		}
 		
 		
@@ -170,9 +170,9 @@
 			}
 			
 			if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
-				imgFrame = CGRectMake(170.0, offset, 150.0, 150.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
-				_article1ImgView.frame = CGRectMake(5.0, offset, 150.0, 150.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
+				_article1ImgView.frame = CGRectMake(5.0, offset, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
 				
+				imgFrame = CGRectMake(155.0, offset, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
 				_article2ImgView = [[UIImageView alloc] initWithFrame:imgFrame];
 				[_article2ImgView setBackgroundColor:[UIColor whiteColor]];
 				_article2ImgView.userInteractionEnabled = YES;
@@ -195,7 +195,7 @@
 //			shadowImgView.image = [UIImage imageNamed:@"imageDropShadow.png"];
 //			[self addSubview:shadowImgView];
 			
-			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(5.0, offset, 290.0, 163.0)];
+			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(5.0, offset, 290.0, 217.0)];
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[self addSubview:_videoImgView];
 			
@@ -208,8 +208,8 @@
 			playImgView.image = [UIImage imageNamed:@"playButton.png"];
 			[_videoImgView addSubview:playImgView];
 			
-			offset += 163;
-			offset += 12;
+			offset += 217;
+			offset += 27;
 		}
 		
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -259,14 +259,6 @@
 		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
 		[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:sourceButton];
-		
-		
-		int offset2 = 10;
-		for (SNTwitterUserVO *tuVO in _vo.userLikes) {
-			SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, offset - 30.0) imageURL:tuVO.avatarURL];
-			[self addSubview:avatarView];
-			offset2 += 40.0;
-		}
 	}
 	
 	return (self);

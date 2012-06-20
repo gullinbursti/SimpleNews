@@ -43,7 +43,7 @@
 			[matteView setBackgroundColor:[UIColor blackColor]];
 			[bgImgView addSubview:matteView];
 			
-			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(15.0, 99.0, 290.0, 163.0)];
+			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(15.0, 99.0, 290.0, 217.0)];
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[bgImgView addSubview:_videoImgView];
 			
@@ -52,7 +52,7 @@
 			[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
 			[bgImgView addSubview:_videoButton];
 			
-			UIImageView *playImgView = [[UIImageView alloc] initWithFrame:CGRectMake(120.0, 49.0, 64.0, 64.0)];
+			UIImageView *playImgView = [[UIImageView alloc] initWithFrame:CGRectMake(120.0, 84.0, 64.0, 64.0)];
 			playImgView.image = [UIImage imageNamed:@"playButton_nonActive.png"];
 			[_videoImgView addSubview:playImgView];
 			

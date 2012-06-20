@@ -22,7 +22,6 @@
 		[self addSubview:headerImgView];
 		
 		UIView *profileHolderView = [[UIView alloc] initWithFrame:CGRectMake(7.0, 7.0, 34.0, 30.0)];
-		profileHolderView.alpha = 0.5;
 		profileHolderView.clipsToBounds = YES;
 		profileHolderView.layer.cornerRadius = 4.0;
 		[self addSubview:profileHolderView];

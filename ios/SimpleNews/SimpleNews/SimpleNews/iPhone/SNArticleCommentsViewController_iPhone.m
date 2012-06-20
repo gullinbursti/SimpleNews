@@ -12,11 +12,13 @@
 #import "SNArticleCommentView_iPhone.h"
 #import "SNHeaderView_iPhone.h"
 #import "SNCommentVO.h"
+#import "SNTwitterUserVO.h"
+#import "SNTwitterAvatarView.h"
 #import "SNAppDelegate.h"
 #import "SNNavBackBtnView.h"
 #import "SNNavShareBtnView.h"
 
-#define kItemHeight 51.0
+#define kItemHeight 28.0
 
 @implementation SNArticleCommentsViewController_iPhone
 
@@ -48,16 +50,27 @@
 	[super loadView];
 	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
+	bgImgView.image = [UIImage imageNamed:@"commentsBackground.png"];
 	[self.view addSubview:bgImgView];
 	
 	_commentOffset = 0;
 	for (SNCommentVO *vo in _vo.comments) {
-		CGSize txtSize = [vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14] constrainedToSize:CGSizeMake(230.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		CGSize txtSize = [vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11] constrainedToSize:CGSizeMake(230.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		_commentOffset += ((kItemHeight + txtSize.height) - 10.0);
 	}
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.view.frame.size.width, 387.0)];
+	UIImageView *likesImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 44.0, 320.0, 54.0)];
+	likesImgView.image = [UIImage imageNamed:@"commentsLikeHeaderBG.png"];
+	[self.view addSubview:likesImgView];
+	
+	int offset = 37;
+	for (SNTwitterUserVO *tuVO in _vo.userLikes) {
+		SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset, 55.0) imageURL:tuVO.avatarURL];
+		[self.view addSubview:avatarView];
+		offset += 31.0;
+	}
+	
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 98.0, self.view.frame.size.width, 333.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[_scrollView setBackgroundColor:[UIColor clearColor]];
 	_scrollView.opaque = YES;
@@ -67,7 +80,7 @@
 	_scrollView.showsHorizontalScrollIndicator = NO;
 	_scrollView.showsVerticalScrollIndicator = NO;
 	_scrollView.alwaysBounceVertical = NO;
-	_scrollView.contentInset = UIEdgeInsetsMake(5.0, 0.0, -5.0, 0.0);	
+	//_scrollView.contentInset = UIEdgeInsetsMake(5.0, 0.0, -5.0, 0.0);
 	[self.view addSubview:_scrollView];
 	
 	_scrollBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, _scrollView.frame.size.width, _commentOffset)];
@@ -81,11 +94,11 @@
 	//[_scrollView addSubview:_refreshHeaderView];
 	//[_refreshHeaderView refreshLastUpdatedDate];
 	
-	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 51.0, self.view.frame.size.width, 51.0)];
+	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 44.0, self.view.frame.size.width, 44.0)];
 	[self.view addSubview:_bgView];
 	
-	UIImageView *inputBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 51.0)];
-	inputBgImgView.image = [UIImage imageNamed:@"commentsInputField_BG.png"];
+	UIImageView *inputBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 44.0)];
+	inputBgImgView.image = [UIImage imageNamed:@"comentsFooterBG.png"];
 	inputBgImgView.userInteractionEnabled = YES;
 	[_bgView addSubview:inputBgImgView];
 	
@@ -107,7 +120,8 @@
 //	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 //	[_bgView addSubview:_likeButton];
 	
-	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(20.0, 19.0, 270.0, 16.0)];
+	
+	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(10.0, 15.0, 270.0, 16.0)];
 	[_commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 	[_commentTxtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 	[_commentTxtField setAutocorrectionType:UITextAutocorrectionTypeNo];
@@ -138,7 +152,7 @@
 		[_commentViews addObject:commentView];
 		[_scrollView addSubview:commentView];
 		
-		_commentOffset += ((kItemHeight + txtSize.height) - 6.0);
+		_commentOffset += ((kItemHeight + txtSize.height) + 8.0);
 	}
 	
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, _commentOffset);
