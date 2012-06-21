@@ -17,6 +17,7 @@
 #import "SNArticleVO.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 #import "SNNavShareBtnView.h"
+#import "SNNavLogoBtnView.h"
 
 @class MBProgressHUD;
 
@@ -30,7 +31,8 @@
 	
 	SNArticleVO *_articleVO;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
-    SNNavShareBtnView *_shareBtnView;
+	SNNavShareBtnView *_shareBtnView;
+	SNNavLogoBtnView *_detailsBtnView;
 	
 	NSMutableArray *_topicsList;
 	NSMutableArray *_topicCells;

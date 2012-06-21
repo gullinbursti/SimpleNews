@@ -11,7 +11,7 @@
 #import "SNFindFriendsViewController_iPhone.h"
 
 #import "SNHeaderView_iPhone.h"
-#import "SNNavBackBtnView.h"
+#import "SNNavDoneBtnView.h"
 #import "SNTwitterFriendViewCell_iPhone.h"
 #import "SNTwitterUserVO.h"
 #import "SNFriendProfileViewController_iPhone.h"
@@ -104,9 +104,9 @@
 		_progressHUD.taskInProgress = YES;
 	}
 	
-	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 64.0, 44.0)];
-	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:backBtnView];
+	SNNavDoneBtnView *doneBtnView = [[SNNavDoneBtnView alloc] initWithFrame:CGRectMake(256.0, 0.0, 64.0, 44.0)];
+	[[doneBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	[headerView addSubview:doneBtnView];
 	
 	
 }

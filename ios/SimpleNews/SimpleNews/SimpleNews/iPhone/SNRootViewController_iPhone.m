@@ -286,6 +286,11 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SHARE_SHEET" object:_articleVO];
 }
 
+-(void)_goDetails {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_DETAILS" object:_articleVO];
+	[self performSelector:@selector(_hideFullscreenMedia:) withObject:nil afterDelay:0.5];
+}
+
 -(void)_startVideo {
 	[_videoPlayerView startPlayback];
 }
@@ -435,10 +440,18 @@
 			tapRecognizer.numberOfTapsRequired = 1;
 			[_blackMatteView addGestureRecognizer:tapRecognizer];
 			
+			_detailsBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+			[[_detailsBtnView btn] addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
+			[self.view addSubview:_detailsBtnView];
+			
 			_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(272.0, 0.0, 44.0, 44.0)];
 			[[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 			[self.view addSubview:_shareBtnView];
 		}];
+		
+		_hud.taskInProgress = NO;
+		[_hud hide:YES];
+		_hud = nil;
 	}
 }
 
@@ -614,6 +627,11 @@
 		_fullscreenImgResource = nil;
 		self.fullscreenImgResource = [[MBLResourceLoader sharedInstance] downloadURL:((SNImageVO *)[_articleVO.images objectAtIndex:0]).url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration for now
 		
+		_hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+		_hud.mode = MBProgressHUDModeIndeterminate;
+		_hud.graceTime = 2.0;
+		_hud.taskInProgress = YES;
+		
 	} else if ([type isEqualToString:@"video"]) {
 		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:frame articleVO:_articleVO];
 		[self.view addSubview:_videoPlayerView];
@@ -645,8 +663,8 @@
 		[_videoPlayerView reframe:_fullscreenFrame];
 		[_videoPlayerView stopPlayback];
 		
+		[_detailsBtnView removeFromSuperview];
 		[_shareBtnView removeFromSuperview];
-		_shareBtnView = nil;
 		
 	} completion:^(BOOL finished) {
 		_blackMatteView.hidden = YES;
@@ -656,6 +674,7 @@
 		
 		_fullscreenImgView = nil;
 		_videoPlayerView = nil;
+		_detailsBtnView = nil;
 		_shareBtnView = nil;
 	}];
 }
@@ -722,7 +741,7 @@
 			TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
 			
 			[twitter addURL:[NSURL URLWithString:_articleVO.article_url]];
-			[twitter setInitialText:[NSString stringWithFormat:@"Check out… %@ via @getassembly %@", _articleVO.title, _articleVO.article_url]];
+			[twitter setInitialText:[NSString stringWithFormat:@"%@ via @getassembly %@", _articleVO.title, _articleVO.article_url]];
 			[self presentModalViewController:twitter animated:YES];
 			
 			twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
@@ -741,7 +760,7 @@
 	} else if (buttonIndex == 1) {
 		MFMessageComposeViewController *mfViewController = [[MFMessageComposeViewController alloc] init];
 		if([MFMessageComposeViewController canSendText]) {
-			mfViewController.body = [NSString stringWithFormat:@"Check out… %@ via @getassembly %@", _articleVO.title, _articleVO.article_url];
+			mfViewController.body = [NSString stringWithFormat:@"%@ via @getassembly %@", _articleVO.title, _articleVO.article_url];
 			mfViewController.recipients = [NSArray arrayWithObjects:nil];
 			mfViewController.messageComposeDelegate = self;
 			mfViewController.wantsFullScreenLayout = NO;
@@ -767,8 +786,8 @@
 		if ([MFMailComposeViewController canSendMail]) {
 			MFMailComposeViewController *mfViewController = [[MFMailComposeViewController alloc] init];
 			mfViewController.mailComposeDelegate = self;
-			[mfViewController setSubject:[NSString stringWithFormat:@"Check out… %@ via @getassembly %@", _articleVO.title, _articleVO.article_url]];
-			[mfViewController setMessageBody:[NSString stringWithFormat:@"Check out… %@ via @getassembly %@", _articleVO.title, _articleVO.article_url] isHTML:NO];
+			[mfViewController setSubject:[NSString stringWithFormat:@"%@ via @getassembly %@", _articleVO.title, _articleVO.article_url]];
+			[mfViewController setMessageBody:[NSString stringWithFormat:@"%@ via @getassembly<br />%@", _articleVO.title, _articleVO.article_url] isHTML:YES];
 			
 			[self presentViewController:mfViewController animated:YES completion:nil];
 			
@@ -898,7 +917,7 @@
 			break;
 			
 		case 2:
-			titles = [NSArray arrayWithObjects:@"Friends", @"Invite Friends", @"Likes", @"Comments",@"Logout", nil];
+			titles = [NSArray arrayWithObjects:@"Friends", @"Invite Friends", @"My Likes", @"My Comments",@"Logout", nil];
 			otherCell = [tableView dequeueReusableCellWithIdentifier:[SNRootOtherViewCell_iPhone cellReuseIdentifier]];
 			
 			if (otherCell == nil)

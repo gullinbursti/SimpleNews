@@ -301,13 +301,13 @@
 }
 
 -(void)_photoZoomIn:(UIGestureRecognizer *)gestureRecognizer {
-	[_imgOverlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
-	[UIView animateWithDuration:0.05 animations:^(void) {
-		[_imgOverlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
-		
-	} completion:^(BOOL finished) {
+//	[_imgOverlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
+//	[UIView animateWithDuration:0.05 animations:^(void) {
+//		[_imgOverlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
+//		
+//	} completion:^(BOOL finished) {
 		[self _showFSImage];	
-	}];
+//	}];
 }
 
 

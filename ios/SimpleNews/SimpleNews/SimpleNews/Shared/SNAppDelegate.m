@@ -449,6 +449,7 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	}
 	
 	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	[self.window setBackgroundColor:[UIColor blackColor]];
 	UINavigationController *rootNavigationController;
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {

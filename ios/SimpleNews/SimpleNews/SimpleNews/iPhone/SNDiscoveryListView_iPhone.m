@@ -159,13 +159,16 @@
 
 #pragma mark - ScrollView Delegates
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	[_paginationView changeToPage:_scrollView.contentOffset.x / 320.0];
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
 }
 
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate { 	
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+	[_paginationView changeToPage:scrollView.contentOffset.x / 320.0];
 }
 
 
