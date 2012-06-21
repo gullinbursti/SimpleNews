@@ -223,14 +223,13 @@
 		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 		
-		/*
-		_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-		[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-		[_likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-		[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
-		_likeRequest.delegate = self;
-		[_likeRequest startAsynchronous];
-		 */
+		
+		ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+		[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+		likeRequest.delegate = self;
+		[likeRequest startAsynchronous];
 		
 		_vo.hasLiked = YES;
 	}
@@ -241,14 +240,14 @@
 	[_likeButton removeTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	
-	/*
-	_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-	[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
-	[_likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-	[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
-	_likeRequest.delegate = self;
-	[_likeRequest startAsynchronous];
-	*/
+	
+	ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
+	[likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
+	likeRequest.delegate = self;
+	[likeRequest startAsynchronous];
+	
 	_vo.hasLiked = NO;
 }
 
@@ -296,6 +295,36 @@
 }
 
 - (void)resource:(MBLAsyncResource *)resource didFailWithError:(NSError *)error {
+}
+
+
+#pragma mark - ASI Delegates
+-(void)requestFinished:(ASIHTTPRequest *)request { 
+	NSLog(@"SNArticleItem_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
+	
+	NSError *error = nil;
+	NSDictionary *parsedLike = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+	
+	if (error != nil)
+		NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+	
+	else {
+		_vo.totalLikes = [[parsedLike objectForKey:@"likes"] intValue];
+		//[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
+		
+		if (_vo.totalLikes > 0) {
+			//_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
+			//[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
+			
+		} else {
+			//_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
+			//[_likeButton setTitle:@"" forState:UIControlStateNormal];
+		}
+	}
+}
+
+-(void)requestFailed:(ASIHTTPRequest *)request {
+	NSLog(@"requestFailed:\n[%@]", request.error);
 }
 
 

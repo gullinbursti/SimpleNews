@@ -121,18 +121,25 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 
 +(BOOL)hasNetwork {
 	//Reachability *wifiReachability = [Reachability reachabilityForLocalWiFi];
-	//[wifiReachability startNotifier];
+	//[[Reachability reachabilityForLocalWiFi] startNotifier];
 	
 	//return ([wifiReachability currentReachabilityStatus] == kReachableViaWiFi);
 	
-	Reachability *hostReachability = [Reachability reachabilityForInternetConnection];	
-	NetworkStatus networkStatus = [hostReachability currentReachabilityStatus];	
+	[[Reachability reachabilityForInternetConnection] startNotifier];
+	NetworkStatus networkStatus = [[Reachability reachabilityForInternetConnection] currentReachabilityStatus];	
 	
 	return !(networkStatus == NotReachable);
 }
 
 +(BOOL)hasAirplay {
 	return ([[[NSUserDefaults standardUserDefaults] objectForKey:@"airplay_enabled"] isEqualToString:@"YES"]);
+}
+
++ (BOOL)canPingServer {
+	//[[Reachability reachabilityWithHostName:kServerPath] startNotifier];
+	NetworkStatus netStatus = [[Reachability reachabilityWithHostName:@"getassembly.com"] currentReachabilityStatus];
+	
+	return !(netStatus == NotReachable);
 }
 
 +(int)secondsAfterDate:(NSDate *)date {
@@ -370,63 +377,76 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	[defaults setObject:[NSNumber numberWithInt:0] forKey:@"splash_state"];
 	[defaults synchronize];
 	
-	//if ([SNAppDelegate hasNetwork]) {	
-		[[SNTwitterCaller sharedInstance] writeProfile];
-		
-		if (![defaults objectForKey:@"boot_total"]) {
-			[defaults setObject:[NSNumber numberWithInt:0] forKey:@"boot_total"];
-			[defaults setObject:[NSDate new] forKey:@"install_date"];
-			[defaults synchronize];
-		
-		} else {
-			int boot_total = [[defaults objectForKey:@"boot_total"] intValue];
-			boot_total++;
+	if ([SNAppDelegate canPingServer]) {
+	
+		//if ([SNAppDelegate hasNetwork]) {	
+			[[SNTwitterCaller sharedInstance] writeProfile];
 			
-			[defaults setObject:[NSNumber numberWithInt:boot_total] forKey:@"boot_total"];
-			[defaults synchronize];
+			if (![defaults objectForKey:@"boot_total"]) {
+				[defaults setObject:[NSNumber numberWithInt:0] forKey:@"boot_total"];
+				[defaults setObject:[NSDate new] forKey:@"install_date"];
+				[defaults synchronize];
 			
-			int daysSinceInstall = [[NSDate new] timeIntervalSinceDate:[defaults objectForKey:@"install_date"]] / 86400;
-			if ([[defaults objectForKey:@"boot_total"] intValue] == kLaunchesUntilRateRequest || daysSinceInstall >= kDaysUntilRateRequest) {
-				UIAlertView *alert = [[UIAlertView alloc] 
-											 initWithTitle:@"Rate Assembly" 
-											 message:@"Why not rate Assembly in the app store!" 
-											 delegate:self 
-											 cancelButtonTitle:@"Cancel" 
-											 otherButtonTitles:@"No Thanks", @"Ask Me Later", nil];
+			} else {
+				int boot_total = [[defaults objectForKey:@"boot_total"] intValue];
+				boot_total++;
 				
-				[alert show];
+				[defaults setObject:[NSNumber numberWithInt:boot_total] forKey:@"boot_total"];
+				[defaults synchronize];
+				
+				int daysSinceInstall = [[NSDate new] timeIntervalSinceDate:[defaults objectForKey:@"install_date"]] / 86400;
+				if ([[defaults objectForKey:@"boot_total"] intValue] == kLaunchesUntilRateRequest || daysSinceInstall >= kDaysUntilRateRequest) {
+					UIAlertView *alert = [[UIAlertView alloc] 
+												 initWithTitle:@"Rate Assembly" 
+												 message:@"Why not rate Assembly in the app store!" 
+												 delegate:self 
+												 cancelButtonTitle:@"Cancel" 
+												 otherButtonTitles:@"No Thanks", @"Ask Me Later", nil];
+					
+					[alert show];
+				}
+				
+
+				[SNAppDelegate notificationsToggle:YES];
+						
+				// init Airship launch options
+				NSMutableDictionary *takeOffOptions = [[NSMutableDictionary alloc] init];
+				[takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
+						
+				// create Airship singleton that's used to talk to Urban Airhship servers, populate AirshipConfig.plist with your info from http://go.urbanairship.com
+				[UAirship takeOff:takeOffOptions];
+				[[UAPush shared] resetBadge];//zero badge on startup
+				[[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 			}
 			
-
-			[SNAppDelegate notificationsToggle:YES];
-					
-			// init Airship launch options
-			NSMutableDictionary *takeOffOptions = [[NSMutableDictionary alloc] init];
-			[takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
-					
-			// create Airship singleton that's used to talk to Urban Airhship servers, populate AirshipConfig.plist with your info from http://go.urbanairship.com
-			[UAirship takeOff:takeOffOptions];
-			[[UAPush shared] resetBadge];//zero badge on startup
-			[[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-		}
+			[[GANTracker sharedTracker] startTrackerWithAccountID:kAnalyticsAccountId
+																dispatchPeriod:kGANDispatchPeriodSec
+																		delegate:nil];
+			[[GANTracker sharedTracker] setDryRun:!kIsGoogleAnalyticsLive];
+			
+			NSError *error;
+			if (![[GANTracker sharedTracker] trackPageview:@"/bootup" withError:&error])
+				NSLog(@"error in trackPageview");
 		
-		[[GANTracker sharedTracker] startTrackerWithAccountID:kAnalyticsAccountId
-															dispatchPeriod:kGANDispatchPeriodSec
-																	delegate:nil];
-		[[GANTracker sharedTracker] setDryRun:!kIsGoogleAnalyticsLive];
-		
-		NSError *error;
-		if (![[GANTracker sharedTracker] trackPageview:@"/bootup" withError:&error])
-			NSLog(@"error in trackPageview");
+	//	} else {
+	//		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Bummer :(" 
+	//																			 message:@"A network connection is required for Assembly. Please connect and then try again." 
+	//																			delegate:nil 
+	//																cancelButtonTitle:@"OK" 
+	//																otherButtonTitles:nil];
+	//		[alertView show];
+	//	}
 	
-//	} else {
-//		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Bummer :(" 
-//																			 message:@"A network connection is required for Assembly. Please connect and then try again." 
-//																			delegate:nil 
-//																cancelButtonTitle:@"OK" 
-//																otherButtonTitles:nil];
-//		[alertView show];
-//	}
+	} else {
+		UIAlertView *alert = [[UIAlertView alloc] 
+									 initWithTitle:@"Connection Error" 
+									 message:@"Cannot reach Assembly's servers, try again"
+									 delegate:nil
+									 cancelButtonTitle:@"OK" 
+									 otherButtonTitles:nil];
+		
+		[alert show];
+	}
 	
 	self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	UINavigationController *rootNavigationController;

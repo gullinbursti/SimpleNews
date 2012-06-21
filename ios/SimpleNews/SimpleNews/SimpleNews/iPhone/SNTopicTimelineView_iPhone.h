@@ -15,6 +15,8 @@
 #import "SNTopicVO.h"
 #import "SNArticleVO.h"
 
+#import "SNNavListBtnView.h"
+
 @interface SNTopicTimelineView_iPhone : UIView <UIScrollViewDelegate, EGORefreshTableHeaderDelegate> {
 	NSMutableArray *_articles;
 	EGORefreshTableHeaderView *_refreshHeaderView;
@@ -33,6 +35,8 @@
 	SNArticleVO *_articleVO;
 	SNTopicVO *_vo;
 	
+	SNNavListBtnView *_listBtnView;
+	
 	NSDate *_lastDate;
 	int _lastID;
 }
@@ -43,6 +47,6 @@
 -(id)initWithTopicVO:(SNTopicVO *)vo;
 -(id)initWithProfileType:(int)type;
 
-- (void)fullscreenMediaEnabled:(BOOL)isEnabled;
+- (void)interactionEnabled:(BOOL)isEnabled;
 
 @end

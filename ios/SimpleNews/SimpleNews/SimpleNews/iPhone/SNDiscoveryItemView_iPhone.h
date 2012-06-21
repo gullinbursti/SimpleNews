@@ -10,8 +10,9 @@
 #import "SNArticleVO.h"
 #import "MBLResourceLoader.h"
 #import "EGOImageView.h"
+#import "ASIFormDataRequest.h"
 
-@interface SNDiscoveryItemView_iPhone : UIView <EGOImageViewDelegate> {
+@interface SNDiscoveryItemView_iPhone : UIView <EGOImageViewDelegate, ASIHTTPRequestDelegate> {
 	SNArticleVO *_vo;
 	UIImageView *_articleImgView;
 	UIImageView *_sub1ImgView;

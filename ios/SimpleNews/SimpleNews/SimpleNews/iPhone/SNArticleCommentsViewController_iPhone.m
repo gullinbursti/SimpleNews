@@ -59,6 +59,19 @@
 		_commentOffset += ((kItemHeight + txtSize.height) - 10.0);
 	}
 	
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 90.0, self.view.frame.size.width, 346.0)];
+	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	[_scrollView setBackgroundColor:[UIColor clearColor]];
+	_scrollView.opaque = YES;
+	_scrollView.scrollsToTop = NO;
+	_scrollView.pagingEnabled = NO;
+	_scrollView.delegate = self;
+	_scrollView.showsHorizontalScrollIndicator = NO;
+	_scrollView.showsVerticalScrollIndicator = NO;
+	_scrollView.alwaysBounceVertical = NO;
+	_scrollView.contentInset = UIEdgeInsetsMake(8.0, 0.0, -8.0, 0.0);
+	[self.view addSubview:_scrollView];
+	
 	UIImageView *likesImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 44.0, 320.0, 54.0)];
 	likesImgView.image = [UIImage imageNamed:@"commentsLikeHeaderBG.png"];
 	[self.view addSubview:likesImgView];
@@ -69,24 +82,6 @@
 		[self.view addSubview:avatarView];
 		offset += 31.0;
 	}
-	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 98.0, self.view.frame.size.width, 333.0)];
-	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	[_scrollView setBackgroundColor:[UIColor clearColor]];
-	_scrollView.opaque = YES;
-	_scrollView.scrollsToTop = NO;
-	_scrollView.pagingEnabled = NO;
-	_scrollView.delegate = self;
-	_scrollView.showsHorizontalScrollIndicator = NO;
-	_scrollView.showsVerticalScrollIndicator = NO;
-	_scrollView.alwaysBounceVertical = NO;
-	//_scrollView.contentInset = UIEdgeInsetsMake(5.0, 0.0, -5.0, 0.0);
-	[self.view addSubview:_scrollView];
-	
-	_scrollBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, _scrollView.frame.size.width, _commentOffset)];
-	UIImage *img = [UIImage imageNamed:@"profileBackground.png"];
-	_scrollBgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:10.0];
-	//[_scrollView addSubview:_scrollBgView];
 	
 	
 	_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
@@ -127,7 +122,7 @@
 	[_commentTxtField setAutocorrectionType:UITextAutocorrectionTypeNo];
 	[_commentTxtField setBackgroundColor:[UIColor clearColor]];
 	[_commentTxtField setReturnKeyType:UIReturnKeyDone];
-	[_commentTxtField setTextColor:[UIColor whiteColor]];
+	[_commentTxtField setTextColor:[UIColor colorWithWhite:0.620 alpha:1.0]];
 	[_commentTxtField addTarget:self action:@selector(_onTxtDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
 	_commentTxtField.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 	_commentTxtField.keyboardType = UIKeyboardTypeDefault;
@@ -137,7 +132,7 @@
 	
 	_commentsLabel = [[UILabel alloc] initWithFrame:_commentTxtField.frame];
 	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
-	_commentsLabel.textColor = [UIColor whiteColor];
+	_commentsLabel.textColor = [UIColor colorWithWhite:0.620 alpha:1.0];
 	_commentsLabel.backgroundColor = [UIColor clearColor];
 	_commentsLabel.text = @"Write a comment…";
 	[_bgView addSubview:_commentsLabel];
@@ -165,7 +160,7 @@
 		_commentOffset += ((kItemHeight + txtSize.height) + 8.0);
 	}
 	
-	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, _commentOffset);
+	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, MAX(347.0, _commentOffset));
 }
 
 -(void)viewDidLoad {
@@ -223,12 +218,25 @@
 	if ([_commentTxtField.text length] > 0)
 		[self textFieldDidEndEditing:_commentTxtField];
 	
-	else
+	else {
 		[_commentTxtField resignFirstResponder];	
+		
+		[UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void){
+			_bgView.frame = CGRectMake(_bgView.frame.origin.x, self.view.frame.size.height - 44.0, _bgView.frame.size.width, _bgView.frame.size.height);
+		} completion:nil];
+		
+		_commentsLabel.hidden = NO;
+	}
 }
 
 -(void)_onTxtDoneEditing:(id)sender {
 	[sender resignFirstResponder];
+	
+	[UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void){
+		_bgView.frame = CGRectMake(_bgView.frame.origin.x, self.view.frame.size.height - 44.0, _bgView.frame.size.width, _bgView.frame.size.height);
+	} completion:nil];
+	
+	_commentsLabel.hidden = NO;
 	
 	//_titleLabel.text = _titleInputTxtField.text;
 	//_commentLabel.text = _commentInputTxtView.text;
@@ -240,7 +248,7 @@
 #pragma mark - ScrollView Delegates
 // any offset changes
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+	//[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
 }
 
 
@@ -251,12 +259,12 @@
 
 // called on finger up if the user dragged. velocity is in points/second. targetContentOffset may be changed to adjust where the scroll view comes to rest. not called when pagingEnabled is YES
 -(void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
-	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+	//[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 // called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
-	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+	//[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 
@@ -332,7 +340,7 @@
 	}
 	
 	[UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void){
-		_bgView.frame = CGRectMake(_bgView.frame.origin.x, _bgView.frame.origin.y + 215.0, _bgView.frame.size.width, _bgView.frame.size.height);
+		_bgView.frame = CGRectMake(_bgView.frame.origin.x, self.view.frame.size.height - 44.0, _bgView.frame.size.width, _bgView.frame.size.height);
 	} completion:nil];
 	
 	_commentsLabel.hidden = NO;
@@ -359,7 +367,7 @@
 			size.height += (kItemHeight + commentSize.height);
 			
 			_scrollView.frame = CGRectMake(_scrollView.frame.origin.x, _scrollView.frame.origin.y, _scrollView.frame.size.width, 387.0);
-			commentView.frame = CGRectMake(commentView.frame.origin.x, commentView.frame.origin.y + (kItemHeight + commentSize.height), commentView.frame.size.width, commentView.frame.size.height);
+			commentView.frame = CGRectMake(commentView.frame.origin.x, commentView.frame.origin.y + (kItemHeight + commentSize.height) + 8.0, commentView.frame.size.width, commentView.frame.size.height);
 		//		}];
 	}
 	
@@ -368,7 +376,7 @@
 	[_scrollView addSubview:commentView];		
 	
 	_commentOffset += (kItemHeight + commentSize.height);
-	_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, _commentOffset);
+	_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, MAX(347.0, _commentOffset));
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"COMMENT_ADDED" object:_vo];
 }

@@ -8,7 +8,6 @@
 
 #import "SNDiscoveryListView_iPhone.h"
 #import "SNHeaderView_iPhone.h"
-#import "SNNavListBtnView.h"
 #import "SNNavLogoBtnView.h"
 #import "SNAppDelegate.h"
 #import "SNDiscoveryItemView_iPhone.h"
@@ -50,9 +49,9 @@
 		SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Discovery"];
 		[self addSubview:headerView];
 		
-		SNNavListBtnView *listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
-		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-		[headerView addSubview:listBtnView];
+		_listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:_listBtnView];
 		
 		SNNavLogoBtnView *logoBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
 		[[logoBtnView btn] addTarget:self action:@selector(_goRefresh) forControlEvents:UIControlEventTouchUpInside];
@@ -131,11 +130,27 @@
 	}
 }
 
+- (void)interactionEnabled:(BOOL)isEnabled {
+	if (isEnabled) {
+		[[_listBtnView btn] removeTarget:self action:@selector(_goShow) forControlEvents:UIControlEventTouchUpInside];
+		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+		
+	} else {
+		[[_listBtnView btn] removeTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+		[[_listBtnView btn] addTarget:self action:@selector(_goShow) forControlEvents:UIControlEventTouchUpInside];
+	}
+	
+	_scrollView.userInteractionEnabled = isEnabled;
+}
 
 #pragma mark - Navigation
 - (void)_goBack {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
+}
+
+- (void)_goShow {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_DISCOVERY" object:nil];
 }
 
 - (void)_goRefresh {

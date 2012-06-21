@@ -68,6 +68,7 @@
 
 +(BOOL)hasNetwork;
 +(BOOL)hasAirplay;
++ (BOOL)canPingServer;
 
 +(void)notificationsToggle:(BOOL)isOn;
 +(BOOL)notificationsEnabled;

@@ -64,6 +64,10 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideFullscreenMedia:) name:@"HIDE_FULLSCREEN_MEDIA" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_changeTopic:) name:@"CHANGE_TOPIC" object:nil];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showDiscovery:) name:@"SHOW_DISCOVERY" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTimeline:) name:@"SHOW_TIMELINE" object:nil];
+		
 	}
 	
 	return self;
@@ -126,7 +130,7 @@
 				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
 			} completion:^(BOOL finished) {
-				[_topicTimelineView fullscreenMediaEnabled:YES];
+				[_topicTimelineView interactionEnabled:YES];
 				_topicsTableView.contentOffset = CGPointZero;
 				
 			}];
@@ -138,7 +142,7 @@
 				_shadowImgView.frame = CGRectMake(kTopicOffset - 19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 				
 			} completion:^(BOOL finished) {
-				[_topicTimelineView fullscreenMediaEnabled:NO];
+				[_topicTimelineView interactionEnabled:NO];
 			}];
 		}
 	}
@@ -240,7 +244,7 @@
 			
 		} completion:^(BOOL finished) {
 			_isIntro = NO;
-			//[_topicTimelineView fullscreenMediaEnabled:YES];
+			[_discoveryListView interactionEnabled:YES];
 		}];
 	}
 }
@@ -255,7 +259,7 @@
 		
 	} completion:^(BOOL finished) {
 		_topicsTableView.contentOffset = CGPointZero;
-		[_topicTimelineView fullscreenMediaEnabled:YES];
+		[_topicTimelineView interactionEnabled:YES];
 	}];
 }
 
@@ -500,7 +504,7 @@
 
 
 -(void)_timelineReturn:(NSNotification *)notification {
-	[_topicTimelineView fullscreenMediaEnabled:NO];
+	[_topicTimelineView interactionEnabled:NO];
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_topicTimelineView.frame = CGRectMake(kTopicOffset, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
@@ -512,6 +516,8 @@
 }
 
 - (void)_discoveryReturn:(NSNotification *)notification {
+	[_discoveryListView interactionEnabled:NO];
+	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_discoveryListView.frame = CGRectMake(kTopicOffset, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		_shadowImgView.frame = CGRectMake(kTopicOffset - 19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
@@ -659,7 +665,7 @@
 	
 	for (SNTopicVO *vo in _topicsList) {
 		if (topicID == vo.topic_id) {
-			[_topicTimelineView fullscreenMediaEnabled:NO];
+			[_topicTimelineView interactionEnabled:NO];
 			[_topicTimelineView removeFromSuperview];
 			_topicTimelineView = nil;
 			
@@ -674,13 +680,36 @@
 				
 			} completion:^(BOOL finished) {
 				_topicsTableView.contentOffset = CGPointZero;
-				[_topicTimelineView fullscreenMediaEnabled:YES];
+				[_topicTimelineView interactionEnabled:YES];
 			}];
+			
 			break;
 		}
 	}
 }
 
+- (void)_showDiscovery:(NSNotification *)notification {
+	NSLog(@"SHOW DISCOVERY");
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_cardListsButton.hidden = YES;
+		_discoveryListView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+		[_discoveryListView interactionEnabled:YES];
+	}];
+}
+
+- (void)_showTimeline:(NSNotification *)notification {
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_cardListsButton.hidden = YES;
+		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+		[_topicTimelineView interactionEnabled:YES];
+	}];
+}
 
 #pragma mark - ActionSheet Delegates
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -911,6 +940,7 @@
 			_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
+			[_discoveryListView interactionEnabled:YES];
 		}];
 		
 	} else if (indexPath.section == 1) {
@@ -921,11 +951,7 @@
 			//_shadowImgView.alpha = 0.0;
 				
 		} completion:^(BOOL finished) {
-			if (indexPath.row == 0)
-				_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithPopularArticles];	
-				
-			else
-				_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithTopicVO:(SNTopicVO *)[_topicsList objectAtIndex:indexPath.row]];
+			_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithTopicVO:(SNTopicVO *)[_topicsList objectAtIndex:indexPath.row]];
 				
 			[_holderView addSubview:_topicTimelineView];
 				
@@ -936,7 +962,7 @@
 					
 			} completion:^(BOOL finished) {
 				_topicsTableView.contentOffset = CGPointZero;
-				[_topicTimelineView fullscreenMediaEnabled:YES];
+				[_topicTimelineView interactionEnabled:YES];
 			}];
 		}];
 		
@@ -971,7 +997,7 @@
 					
 				} completion:^(BOOL finished) {
 					_topicsTableView.contentOffset = CGPointZero;
-					[_topicTimelineView fullscreenMediaEnabled:YES];
+					[_topicTimelineView interactionEnabled:YES];
 				}];
 			}];
 			
@@ -993,7 +1019,7 @@
 					
 				} completion:^(BOOL finished) {
 					_topicsTableView.contentOffset = CGPointZero;
-					[_topicTimelineView fullscreenMediaEnabled:YES];
+					[_topicTimelineView interactionEnabled:YES];
 				}];
 			}];
 			

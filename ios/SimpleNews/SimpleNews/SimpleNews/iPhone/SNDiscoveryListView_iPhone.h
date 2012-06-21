@@ -11,6 +11,7 @@
 #import "MBLAsyncResource.h"
 #import "MBProgressHUD.h"
 #import "SNPaginationView.h"
+#import "SNNavListBtnView.h"
 
 @interface SNDiscoveryListView_iPhone : UIView <UIScrollViewDelegate> {
 	UIScrollView *_scrollView;
@@ -19,8 +20,11 @@
 	
 	MBProgressHUD *_progressHUD;
 	SNPaginationView *_paginationView;
+	SNNavListBtnView *_listBtnView;
 	NSDate *_lastDate;
 }
+
+- (void)interactionEnabled:(BOOL)isEnabled;
 
 
 

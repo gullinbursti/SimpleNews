@@ -15,7 +15,6 @@
 
 #import "SNHeaderView_iPhone.h"
 #import "SNNavTitleView.h"
-#import "SNNavListBtnView.h"
 #import "SNNavLogoBtnView.h"
 #import "SNAppDelegate.h"
 #import "SNTweetVO.h"
@@ -156,9 +155,9 @@
 		SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.title];
 		[self addSubview:headerView];
 		
-		SNNavListBtnView *listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
-		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-		[headerView addSubview:listBtnView];
+		_listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:_listBtnView];
 		
 		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 44.0, 40.0, self.frame.size.height - 44.0)];
 		[self addSubview:_overlayView];
@@ -419,11 +418,21 @@
 }
 
 
-- (void)fullscreenMediaEnabled:(BOOL)isEnabled {
+- (void)interactionEnabled:(BOOL)isEnabled {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];
 	
-	if (isEnabled)
+	if (isEnabled) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_fullscreenMedia:) name:@"FULLSCREEN_MEDIA" object:nil];
+		[[_listBtnView btn] removeTarget:self action:@selector(_goShow) forControlEvents:UIControlEventTouchUpInside];
+		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	
+	} else {
+		[[_listBtnView btn] removeTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+		[[_listBtnView btn] addTarget:self action:@selector(_goShow) forControlEvents:UIControlEventTouchUpInside];
+	}
+		
+	
+	_scrollView.userInteractionEnabled = isEnabled;
 }
 
 
@@ -442,6 +451,10 @@
 		[self _updateTopicList];
 	
 	_loadMoreButton.alpha = 0.5;
+}
+
+- (void)_goShow {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TIMELINE" object:nil];
 }
 
 #pragma mark - Notification handlers
@@ -535,99 +548,115 @@
 			[_progressHUD hide:YES afterDelay:1.5];
 			_progressHUD = nil;
 		
-		} else {
-			NSMutableArray *list = [NSMutableArray array];
+		} else {			
+			if ([parsedLists count] > 0) {
 			
-			int tot = 0;
-			int offset = 8;
-			for (NSDictionary *serverList in parsedLists) {
-				SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverList];
-				//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
-				if (vo != nil)
-					[list addObject:vo];
+				NSMutableArray *list = [NSMutableArray array];
 				
-				int height;
-				height = 88;
-				CGSize size;
-				
-				int imgWidth = 290;
-//				if (vo.topicID == 1 || vo.topicID == 2)
-//					imgWidth = 296;			
-				
-				if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0)
-					imgWidth = 150;
+				int tot = 0;
+				int offset = 8;
+				for (NSDictionary *serverList in parsedLists) {
+					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverList];
+					//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
+					if (vo != nil)
+						[list addObject:vo];
 					
-				if (vo.type_id > 1 && vo.type_id - 4 < 0) {
-					height += imgWidth * ((SNImageVO *)[vo.images objectAtIndex:0]).ratio;
-					height += 9; //20
+					int height;
+					height = 88;
+					CGSize size;
+					
+					int imgWidth = 290;
+	//				if (vo.topicID == 1 || vo.topicID == 2)
+	//					imgWidth = 296;			
+					
+					if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0)
+						imgWidth = 150;
+						
+					if (vo.type_id > 1 && vo.type_id - 4 < 0) {
+						height += imgWidth * ((SNImageVO *)[vo.images objectAtIndex:0]).ratio;
+						height += 9; //20
+					}
+					
+					
+					if (!(vo.topicID == 8)) {
+						size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:13] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+						height += size.height + 9;
+					}
+					
+					if (vo.type_id > 3) {
+						height += 217;
+						height += 26; //9
+					}
+					
+					SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo];
+					[_articleViews addObject:articleItemView];
+					
+					offset += height;
+					tot++;
+					
+					offset += 3;
 				}
 				
+				[_progressHUD hide:YES];
+				_progressHUD = nil;
 				
-				if (!(vo.topicID == 8)) {
-					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:13] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-					height += size.height + 9;
+				_articles = list;
+				
+				for (SNArticleItemView_iPhone *itemView in _articleViews) {
+					[_scrollView addSubview:itemView];
+					
+					if (itemView.frame.origin.y > 480.0) {
+						itemView.alpha = 0.0;
+						[UIView beginAnimations:nil context:NULL];
+						[UIView setAnimationDuration:0.1];
+						[UIView setAnimationDelegate:self];
+						[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
+						CGAffineTransform transform = CGAffineTransformMakeScale(1.1, 1.1);
+						itemView.transform = transform;
+						[UIView commitAnimations];
+					}
 				}
 				
-				if (vo.type_id > 3) {
-					height += 217;
-					height += 26; //9
+				offset += 16.0;
+				
+				if ([_articles count] == 30) {
+					_loadMoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
+					_loadMoreButton.frame = CGRectMake(112.0, offset, 96.0, 44.0);
+					[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
+					[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];		
+					[_loadMoreButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+					[_loadMoreButton addTarget:self action:@selector(_goLoadMore) forControlEvents:UIControlEventTouchUpInside];
+					_loadMoreButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10.0];
+					[_loadMoreButton setTitle:@"Load More" forState:UIControlStateNormal];
+					[_scrollView addSubview:_loadMoreButton];
+					offset += 50.0;
 				}
 				
-				SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo];
-				[_articleViews addObject:articleItemView];
+				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
 				
-				offset += height;
-				tot++;
-				
-				offset += 3;
-			}
-			
-			[_progressHUD hide:YES];
-			_progressHUD = nil;
-			
-			_articles = list;
-			
-			for (SNArticleItemView_iPhone *itemView in _articleViews) {
-				[_scrollView addSubview:itemView];
-				
-				if (itemView.frame.origin.y > 480.0) {
-					itemView.alpha = 0.0;
-					[UIView beginAnimations:nil context:NULL];
-					[UIView setAnimationDuration:0.1];
-					[UIView setAnimationDelegate:self];
-					[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
-					CGAffineTransform transform = CGAffineTransformMakeScale(1.1, 1.1);
-					itemView.transform = transform;
-					[UIView commitAnimations];
+				if ([_articles count] > 0) {
+					_lastID = ((SNArticleVO *)[_articles lastObject]).article_id;
+					_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
+					
+					NSLog(@"FIST DATE:[%@]", ((SNArticleVO *)[_articles objectAtIndex:0]).added);
+					NSLog(@"LAST DATE:[%@]", _lastDate);
 				}
-			}
-			
-			offset += 16.0;
-			
-			if ([_articles count] == 30) {
-				_loadMoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
-				_loadMoreButton.frame = CGRectMake(112.0, offset, 96.0, 44.0);
-				[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
-				[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];		
-				[_loadMoreButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-				[_loadMoreButton addTarget:self action:@selector(_goLoadMore) forControlEvents:UIControlEventTouchUpInside];
-				_loadMoreButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10.0];
-				[_loadMoreButton setTitle:@"Load More" forState:UIControlStateNormal];
-				[_scrollView addSubview:_loadMoreButton];
-				offset += 50.0;
-			}
-			
-			[_activityIndicatorView removeFromSuperview];
-			[_loaderLabel removeFromSuperview];
-			
-			_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
-			
-			if ([_articles count] > 0) {
-				_lastID = ((SNArticleVO *)[_articles lastObject]).article_id;
-				_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
 				
-				NSLog(@"FIST DATE:[%@]", ((SNArticleVO *)[_articles objectAtIndex:0]).added);
-				NSLog(@"LAST DATE:[%@]", _lastDate);
+				[_activityIndicatorView removeFromSuperview];
+				[_loaderLabel removeFromSuperview];
+				
+			} else {
+				UIAlertView *alert = [[UIAlertView alloc] 
+											 initWithTitle:@"Nothing Here" 
+											 message:@"There isn't any content available for this topic"
+											 delegate:nil
+											 cancelButtonTitle:@"OK" 
+											 otherButtonTitles:nil];
+				
+				[alert show];
+				
+				[_activityIndicatorView removeFromSuperview];
+				[_loaderLabel removeFromSuperview];
 			}
 		}
 	
