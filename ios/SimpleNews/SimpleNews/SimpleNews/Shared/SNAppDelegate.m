@@ -375,68 +375,58 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	*/
 	
 	[defaults setObject:[NSNumber numberWithInt:0] forKey:@"splash_state"];
+	[defaults setValue:@"YES" forKey:@"first_boot"];
 	[defaults synchronize];
 	
 	if ([SNAppDelegate canPingServer]) {
-	
-		//if ([SNAppDelegate hasNetwork]) {	
-			[[SNTwitterCaller sharedInstance] writeProfile];
+		[[SNTwitterCaller sharedInstance] writeProfile];
+		
+		if (![defaults objectForKey:@"boot_total"]) {
+			[defaults setObject:[NSNumber numberWithInt:0] forKey:@"boot_total"];
+			[defaults setObject:[NSDate new] forKey:@"install_date"];
+			[defaults synchronize];
+		
+		} else {
+			int boot_total = [[defaults objectForKey:@"boot_total"] intValue];
+			boot_total++;
 			
-			if (![defaults objectForKey:@"boot_total"]) {
-				[defaults setObject:[NSNumber numberWithInt:0] forKey:@"boot_total"];
-				[defaults setObject:[NSDate new] forKey:@"install_date"];
-				[defaults synchronize];
+			[defaults setObject:[NSNumber numberWithInt:boot_total] forKey:@"boot_total"];
+			[defaults synchronize];
 			
-			} else {
-				int boot_total = [[defaults objectForKey:@"boot_total"] intValue];
-				boot_total++;
+			int daysSinceInstall = [[NSDate new] timeIntervalSinceDate:[defaults objectForKey:@"install_date"]] / 86400;
+			if ([[defaults objectForKey:@"boot_total"] intValue] == kLaunchesUntilRateRequest || daysSinceInstall >= kDaysUntilRateRequest) {
+				UIAlertView *alert = [[UIAlertView alloc] 
+											 initWithTitle:@"Rate Assembly" 
+											 message:@"Why not rate Assembly in the app store!" 
+											 delegate:self 
+											 cancelButtonTitle:@"Cancel" 
+											 otherButtonTitles:@"No Thanks", @"Ask Me Later", nil];
 				
-				[defaults setObject:[NSNumber numberWithInt:boot_total] forKey:@"boot_total"];
-				[defaults synchronize];
-				
-				int daysSinceInstall = [[NSDate new] timeIntervalSinceDate:[defaults objectForKey:@"install_date"]] / 86400;
-				if ([[defaults objectForKey:@"boot_total"] intValue] == kLaunchesUntilRateRequest || daysSinceInstall >= kDaysUntilRateRequest) {
-					UIAlertView *alert = [[UIAlertView alloc] 
-												 initWithTitle:@"Rate Assembly" 
-												 message:@"Why not rate Assembly in the app store!" 
-												 delegate:self 
-												 cancelButtonTitle:@"Cancel" 
-												 otherButtonTitles:@"No Thanks", @"Ask Me Later", nil];
-					
-					[alert show];
-				}
-				
-
-				[SNAppDelegate notificationsToggle:YES];
-						
-				// init Airship launch options
-				NSMutableDictionary *takeOffOptions = [[NSMutableDictionary alloc] init];
-				[takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
-						
-				// create Airship singleton that's used to talk to Urban Airhship servers, populate AirshipConfig.plist with your info from http://go.urbanairship.com
-				[UAirship takeOff:takeOffOptions];
-				[[UAPush shared] resetBadge];//zero badge on startup
-				[[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+				[alert show];
 			}
 			
-			[[GANTracker sharedTracker] startTrackerWithAccountID:kAnalyticsAccountId
-																dispatchPeriod:kGANDispatchPeriodSec
-																		delegate:nil];
-			[[GANTracker sharedTracker] setDryRun:!kIsGoogleAnalyticsLive];
-			
-			NSError *error;
-			if (![[GANTracker sharedTracker] trackPageview:@"/bootup" withError:&error])
-				NSLog(@"error in trackPageview");
+
+			[SNAppDelegate notificationsToggle:YES];
+					
+			// init Airship launch options
+			NSMutableDictionary *takeOffOptions = [[NSMutableDictionary alloc] init];
+			[takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
+					
+			// create Airship singleton that's used to talk to Urban Airhship servers, populate AirshipConfig.plist with your info from http://go.urbanairship.com
+			[UAirship takeOff:takeOffOptions];
+			[[UAPush shared] resetBadge];//zero badge on startup
+			[[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+		}
 		
-	//	} else {
-	//		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Bummer :(" 
-	//																			 message:@"A network connection is required for Assembly. Please connect and then try again." 
-	//																			delegate:nil 
-	//																cancelButtonTitle:@"OK" 
-	//																otherButtonTitles:nil];
-	//		[alertView show];
-	//	}
-	
+		[[GANTracker sharedTracker] startTrackerWithAccountID:kAnalyticsAccountId
+															dispatchPeriod:kGANDispatchPeriodSec
+																	delegate:nil];
+		[[GANTracker sharedTracker] setDryRun:!kIsGoogleAnalyticsLive];
+		
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackPageview:@"/bootup" withError:&error])
+			NSLog(@"error in trackPageview");
+		
 	} else {
 		UIAlertView *alert = [[UIAlertView alloc] 
 									 initWithTitle:@"Connection Error" 
@@ -487,6 +477,9 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
  If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
  **/
 -(void)applicationDidEnterBackground:(UIApplication *)application {
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];	
+	[defaults setValue:@"NO" forKey:@"first_boot"];
+	[defaults synchronize];
 }
 
 /**
@@ -508,12 +501,14 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 			[_splashViewController_iPhone restart];
 	
 	} else {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Bummer :(" 
-																			 message:@"A network connection is required for Assembly. Please connect and then try again." 
-																			delegate:nil 
-																cancelButtonTitle:@"OK" 
-																otherButtonTitles:nil];
-		[alertView show];
+		if ([defaults objectForKey:@"first_boot"] == @"NO") {
+			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Bummer :(" 
+																				 message:@"A network connection is required for Assembly. Please connect and then try again." 
+																				delegate:nil 
+																	cancelButtonTitle:@"OK" 
+																	otherButtonTitles:nil];
+			[alertView show];
+		}
 	}
 }
 
@@ -658,7 +653,6 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 
 #pragma mark - AlertView delegates
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-	NSLog(@"buttonIndex:[%d]", buttonIndex);
 	switch(buttonIndex) {
 		case 2:
 			[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:0] forKey:@"boot_total"];

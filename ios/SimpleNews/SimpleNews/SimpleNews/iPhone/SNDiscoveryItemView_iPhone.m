@@ -10,6 +10,8 @@
 
 #import "SNAppDelegate.h"
 #import "SNImageVO.h"
+#import "SNTwitterUserVO.h"
+#import "SNTwitterAvatarView.h"
 
 @interface SNDiscoveryItemView_iPhone() <MBLResourceObserverProtocol>
 @property(nonatomic, strong) MBLAsyncResource *imageResource;
@@ -202,6 +204,15 @@
 		[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:sourceButton];
 		
+		
+		if (_vo.totalLikes > 0) {
+			int offset2 = 15;
+			for (SNTwitterUserVO *tuVO in _vo.userLikes) {
+				SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 320.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
+				[self addSubview:avatarView];
+				offset2 += 31.0;
+			}
+		}		
 	}
 	
 	return (self);
@@ -299,7 +310,6 @@
 
 
 -(void)_photoZoomIn:(UIGestureRecognizer *)gestureRecognizer {
-	NSLog(@"ZOOM");
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 										  @"photo", @"type", 
 										  _vo, @"article_vo", 
@@ -311,7 +321,6 @@
 }
 
 -(void)_photo1ZoomIn:(UIGestureRecognizer *)gestureRecognizer {
-	NSLog(@"ZOOM");
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 										  @"photo", @"type", 
 										  _vo, @"article_vo", 
@@ -323,7 +332,6 @@
 }
 
 -(void)_photo2ZoomIn:(UIGestureRecognizer *)gestureRecognizer {
-	NSLog(@"ZOOM");
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 										  @"photo", @"type", 
 										  _vo, @"article_vo", 

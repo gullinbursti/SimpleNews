@@ -405,7 +405,7 @@
 			_topicsList = list;
 			[_topicsTableView reloadData];
 			
-			_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithFrame:CGRectMake(226.0, 0.0, 320.0, 480.0) headerTitle:@"Top 10"];
+			_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithFrame:CGRectMake(226.0, 0.0, 320.0, 480.0) headerTitle:@"Top 10" isTop10:YES];
 			//_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithFrame:CGRectMake(226.0, 0.0, 320.0, 480.0)];
 			[_holderView addSubview:_discoveryListView];
 		}
@@ -624,7 +624,6 @@
 			_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(272.0, 0.0, 44.0, 44.0)];
 			[[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 			[self.view addSubview:_shareBtnView];
-			[self.view addSubview:_shareBtnView];
 		}];
 	}
 }
@@ -681,7 +680,6 @@
 }
 
 - (void)_showDiscovery:(NSNotification *)notification {
-	NSLog(@"SHOW DISCOVERY");
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_discoveryListView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
@@ -928,7 +926,7 @@
 		_discoveryListView = nil;
 		
 		NSArray *titles = [NSArray arrayWithObjects:@"Top 10", @"Trending", nil];
-		_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithFrame:CGRectMake(226.0, 0.0, 320.0, 480.0) headerTitle:[titles objectAtIndex:indexPath.row]];
+		_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithFrame:CGRectMake(226.0, 0.0, 320.0, 480.0) headerTitle:[titles objectAtIndex:indexPath.row] isTop10:(indexPath.row == 0)];
 		[_holderView addSubview:_discoveryListView];
 		
 		

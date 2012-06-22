@@ -1244,6 +1244,10 @@
 				if (isset($_POST['datetime']))
 					$articles->getDiscoveryArticlesBeforeDate($_POST['datetime']);
 				break;
+				
+		     case "16":
+				$articles->getDiscoveryArticlesBeforeDate($_POST['datetime']);
+				break;
     	}
 	}
 ?>

@@ -22,9 +22,10 @@
 	SNPaginationView *_paginationView;
 	SNNavListBtnView *_listBtnView;
 	NSDate *_lastDate;
+	BOOL _isPopularList;
 }
 
-- (id)initWithFrame:(CGRect)frame headerTitle:(NSString *)title;
+- (id)initWithFrame:(CGRect)frame headerTitle:(NSString *)title isTop10:(BOOL)isPopular;
 - (void)interactionEnabled:(BOOL)isEnabled;
 
 

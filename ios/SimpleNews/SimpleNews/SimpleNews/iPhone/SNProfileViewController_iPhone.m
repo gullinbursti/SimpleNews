@@ -186,8 +186,6 @@
 	for (NSDictionary *item in plist)
 		[_items addObject:[SNProfileVO profileWithDictionary:item]];
 	
-	NSLog(@"USERID:[%@]", [[SNAppDelegate profileForUser] objectForKey:@"id"]);
-	
 	ASIFormDataRequest *statsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
 	[statsRequest setPostValue:[NSString stringWithFormat:@"%d", 5] forKey:@"action"];
 	[statsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
@@ -339,7 +337,6 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	NSLog(@"SELECTED");
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:NO];
 	
 	[UIView animateWithDuration:0.25 animations:^(void) {

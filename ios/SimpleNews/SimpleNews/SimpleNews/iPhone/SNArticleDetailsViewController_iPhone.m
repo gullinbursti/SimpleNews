@@ -231,15 +231,17 @@
 	[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 	[footerView addSubview:sourceButton];
 	
-	UIImageView *likesImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 390.0, 320.0, 54.0)];
-	likesImgView.image = [UIImage imageNamed:@"commentsLikeHeaderBG.png"];
-	[self.view addSubview:likesImgView];
-	
-	int offset2 = 37;
-	for (SNTwitterUserVO *tuVO in _vo.userLikes) {
-		SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 400.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
-		[self.view addSubview:avatarView];
-		offset2 += 40.0;
+	if (_vo.totalLikes > 0) {
+		UIImageView *likesImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 390.0, 320.0, 54.0)];
+		likesImgView.image = [UIImage imageNamed:@"commentsLikeHeaderBG.png"];
+		[self.view addSubview:likesImgView];
+		
+		int offset2 = 37;
+		for (SNTwitterUserVO *tuVO in _vo.userLikes) {
+			SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 400.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
+			[self.view addSubview:avatarView];
+			offset2 += 40.0;
+		}
 	}
 }
 

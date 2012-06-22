@@ -241,18 +241,8 @@
 	} completion:nil];
 	
 	_commentsLabel.hidden = NO;
-	
-	//_titleLabel.text = _titleInputTxtField.text;
-	//_commentLabel.text = _commentInputTxtView.text;
-	
-	//_holderView.hidden = NO;
-	//_txtInputView.hidden = YES;
 }
 
-- (void)_goTwitterProfile:(id)sender {
-	SNTwitterUserVO *vo = (SNTwitterUserVO *)[sender object];
-	NSLog(@"USER:[%@]", vo.twitterID);
-}
 
 #pragma mark - ScrollView Delegates
 // any offset changes
@@ -324,7 +314,6 @@
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
 	[textField resignFirstResponder];
-	NSLog(@"%d", [textField.text length]);
 	
 	if ([textField.text length] > 0) {
 		NSString *isLiked = @"N";
@@ -339,8 +328,6 @@
 		[_commentSubmitRequest setPostValue:isLiked forKey:@"liked"];
 		[_commentSubmitRequest setDelegate:self];
 		[_commentSubmitRequest startAsynchronous];
-		
-		NSLog(@"USER:%@, ARTICLE:%d, CONTENT:%@", [[SNAppDelegate profileForUser] objectForKey:@"id"], _vo.article_id, textField.text);
 				
 		textField.text = @"";
 		_isLiked = NO;

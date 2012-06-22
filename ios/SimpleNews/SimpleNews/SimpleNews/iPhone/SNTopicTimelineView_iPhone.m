@@ -459,7 +459,6 @@
 
 #pragma mark - Notification handlers
 -(void)_fullscreenMedia:(NSNotification *)notification {
-	NSLog(@"_fullscreenMedia");
 	NSMutableDictionary *dict = [notification object];
 	
 	_articleVO = [dict objectForKey:@"article_vo"];
@@ -468,11 +467,7 @@
 }
 
 -(void)_showSourcePage:(NSNotification *)notification {
-	SNArticleVO *vo = (SNArticleVO *)[notification object];
-	//NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-	//							 vo.article_url, @"url", 
-	//							 vo.title, @"title", nil];
-	
+	SNArticleVO *vo = (SNArticleVO *)[notification object];	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_PAGE" object:vo];
 }
 
@@ -572,6 +567,10 @@
 					height = 88;
 					CGSize size;
 					
+					if (vo.totalLikes > 0) {
+						height += 51;
+					}
+					
 					int imgWidth = 290;
 	//				if (vo.topicID == 1 || vo.topicID == 2)
 	//					imgWidth = 296;			
@@ -645,8 +644,8 @@
 					_lastID = ((SNArticleVO *)[_articles lastObject]).article_id;
 					_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
 					
-					NSLog(@"FIST DATE:[%@]", ((SNArticleVO *)[_articles objectAtIndex:0]).added);
-					NSLog(@"LAST DATE:[%@]", _lastDate);
+					//NSLog(@"FIST DATE:[%@]", ((SNArticleVO *)[_articles objectAtIndex:0]).added);
+					//NSLog(@"LAST DATE:[%@]", _lastDate);
 				}
 				
 				[_activityIndicatorView removeFromSuperview];
@@ -695,6 +694,10 @@
 				int height;
 				height = 88;
 				CGSize size;
+				
+				if (vo.totalLikes > 0) {
+					height += 51;
+				}
 				
 				int imgWidth = 290;
 				
@@ -775,8 +778,8 @@
 				_lastID = ((SNArticleVO *)[_articles lastObject]).article_id;
 				_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
 				
-				NSLog(@"FIST DATE:[%@]", ((SNArticleVO *)[_articles objectAtIndex:0]).added);
-				NSLog(@"LAST DATE:[%@]", _lastDate);
+				//NSLog(@"FIST DATE:[%@]", ((SNArticleVO *)[_articles objectAtIndex:0]).added);
+				//NSLog(@"LAST DATE:[%@]", _lastDate);
 			}
 			
 		}

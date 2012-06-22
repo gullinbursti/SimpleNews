@@ -27,7 +27,7 @@
 @synthesize refreshListResource = _refreshListResource;
 
 
-- (id)initWithFrame:(CGRect)frame headerTitle:(NSString *)title {
+- (id)initWithFrame:(CGRect)frame headerTitle:(NSString *)title isTop10:(BOOL)isPopular {
 	if ((self = [super initWithFrame:frame])) {
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];
 		
@@ -59,7 +59,9 @@
 		[[rndBtnView btn] addTarget:self action:@selector(_goRefresh) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:rndBtnView];
 		
+		_isPopularList = isPopular;
 		[self _retrieveArticleList];
+			
 	}
 	
 	return (self);
@@ -124,7 +126,13 @@
 		[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 		
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
-		[formValues setObject:[NSString stringWithFormat:@"%d", 15] forKey:@"action"];
+		
+		if (_isPopularList)
+			[formValues setObject:[NSString stringWithFormat:@"%d", 15] forKey:@"action"];
+		
+		else
+			[formValues setObject:[NSString stringWithFormat:@"%d", 16] forKey:@"action"];
+			
 		[formValues setObject:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
 		
 		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"];
@@ -164,7 +172,6 @@
 
 #pragma mark - Notification handlers
 -(void)_fullscreenMedia:(NSNotification *)notification {
-	NSLog(@"_fullscreenMedia");
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_FULLSCREEN_MEDIA" object:[notification object]];
 }
 

@@ -103,8 +103,6 @@ static SNTwitterCaller *sharedInstance = nil;
 
 
 -(void)userTimeline {
-	NSLog(@"TIMELINE");
-	
 	if (_accountStore == nil) {
 		self.accountStore = [[ACAccountStore alloc] init];
 		if (_accounts == nil) {

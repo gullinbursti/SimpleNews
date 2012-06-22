@@ -160,7 +160,6 @@
 			NSMutableArray *list = [NSMutableArray array];
 			for (NSDictionary *serverList in parsedLists) {
 				SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverList];
-				//NSLog(@"ARTICLE \"@%@\"", vo.title);
 					
 				if (vo != nil)
 					[list addObject:vo];
