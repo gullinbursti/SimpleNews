@@ -101,7 +101,7 @@
 - (void)setTwitterUserVO:(SNTwitterUserVO *)twitterUserVO {
 	_twitterUserVO = twitterUserVO;
 	
-	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(25.0, 15.0) imageURL:twitterUserVO.avatarURL];
+	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(25.0, 15.0) imageURL:twitterUserVO.avatarURL handle:twitterUserVO.handle];
 	[self addSubview:avatarImgView];
 	
 	if (_isSoloCell) {

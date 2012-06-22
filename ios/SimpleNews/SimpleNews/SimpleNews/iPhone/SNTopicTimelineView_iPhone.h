@@ -17,7 +17,7 @@
 
 #import "SNNavListBtnView.h"
 
-@interface SNTopicTimelineView_iPhone : UIView <UIScrollViewDelegate, EGORefreshTableHeaderDelegate> {
+@interface SNTopicTimelineView_iPhone : UIView <UIScrollViewDelegate, UIAlertViewDelegate, EGORefreshTableHeaderDelegate> {
 	NSMutableArray *_articles;
 	EGORefreshTableHeaderView *_refreshHeaderView;
 	MBProgressHUD *_progressHUD;

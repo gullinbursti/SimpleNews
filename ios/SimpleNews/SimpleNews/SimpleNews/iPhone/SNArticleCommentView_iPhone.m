@@ -16,7 +16,7 @@
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
 		
-		SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(10.0, 13.0) imageURL:_vo.avatarURL];
+		SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(10.0, 13.0) imageURL:_vo.avatarURL handle:_vo.handle];
 		[self addSubview:avatarImgView];
 		
 		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(43.0, 12.0, 269.0, frame.size.height)];

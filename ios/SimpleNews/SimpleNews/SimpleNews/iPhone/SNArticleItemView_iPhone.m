@@ -20,8 +20,6 @@
 
 @interface SNArticleItemView_iPhone () <MBLResourceObserverProtocol>
 @property(nonatomic, strong) MBLAsyncResource *imageResource;
-- (void)_showFSImage;
-- (void)_showFSVideo;
 @end
 
 @implementation SNArticleItemView_iPhone
@@ -46,8 +44,8 @@
 		bgImgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:20.0];
 		[self addSubview:bgImgView];
 		
-		SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(5.0, 7.0) imageURL:_vo.avatarImage_url];
-		[[avatarImgView btn] addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+		SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(5.0, 7.0) imageURL:_vo.avatarImage_url handle:_vo.twitterHandle];
+		//[[avatarImgView btn] addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:avatarImgView];
 		
 		size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
@@ -178,6 +176,10 @@
 				_article2ImgView.userInteractionEnabled = YES;
 				[self addSubview:_article2ImgView];
 				
+				UITapGestureRecognizer *tap1Recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photo2ZoomIn:)];
+				tap1Recognizer.numberOfTapsRequired = 1;
+				[_article2ImgView addGestureRecognizer:tap1Recognizer];
+				
 //				UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
 //				itunesButton.frame = CGRectMake(103.0, imgFrame.origin.y + ((imgFrame.size.height * 0.5) - 22.0), 114.0, 44.0);
 //				[itunesButton setBackgroundImage:[UIImage imageNamed:@"availableOnAppStoreBadge_nonActive.png"] forState:UIControlStateNormal];
@@ -214,13 +216,14 @@
 		
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_likeButton.frame = CGRectMake(0.0, offset, 93.0, 43.0);
-		[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_Active.png"] forState:UIControlStateHighlighted];
-		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-		_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
 		[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
 		[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
+		_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+		[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes] forState:UIControlStateNormal];
 		[self addSubview:_likeButton];
 		
 		if (_vo.hasLiked)
@@ -229,28 +232,19 @@
 		else
 			[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		
-		if (_vo.totalLikes > 0) {
-			_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
-			[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
-		}
-		
 		_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_commentButton.frame = CGRectMake(93.0, offset, 114.0, 43.0);
 		[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
 		[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_Active.png"] forState:UIControlStateHighlighted];
 		[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
-		[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+		_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
 		[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
 		[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
+		_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+		[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		[_commentButton setTitle:[NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]] forState:UIControlStateNormal];
 		[self addSubview:_commentButton];
-		
-		if ([_vo.comments count] > 0) {
-			_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
-			[_commentButton setTitle:[NSString stringWithFormat:@"%d", [_vo.comments count]] forState:UIControlStateNormal];
-		}
-		
-		
+				
 		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		sourceButton.frame = CGRectMake(207.0, offset, 93.0, 43.0);
 		[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
@@ -296,19 +290,39 @@
 		[_videoButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
 		
 	} completion:^(BOOL finished) {
-		[self _showFSVideo];	
+		NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+											  @"video", @"type", 
+											  _vo, @"article_vo", 
+											  nil, @"image_vo", 
+											  [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
+											  [NSValue valueWithCGRect:CGRectMake(_videoImgView.frame.origin.x + self.frame.origin.x, _videoImgView.frame.origin.y, _videoImgView.frame.size.width, _videoImgView.frame.size.height)], @"frame", nil];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
 	}];
 }
 
 -(void)_photoZoomIn:(UIGestureRecognizer *)gestureRecognizer {
-//	[_imgOverlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
-//	[UIView animateWithDuration:0.05 animations:^(void) {
-//		[_imgOverlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
-//		
-//	} completion:^(BOOL finished) {
-		[self _showFSImage];	
-//	}];
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+										  @"photo", @"type", 
+										  _vo, @"article_vo", 
+										  (SNImageVO *)[_vo.images objectAtIndex:0], @"image_vo", 
+										  [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
+										  [NSValue valueWithCGRect:CGRectMake(_article1ImgView.frame.origin.x + self.frame.origin.x, _article1ImgView.frame.origin.y, _article1ImgView.frame.size.width, _article1ImgView.frame.size.height)], @"frame", nil];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
 }
+
+-(void)_photo2ZoomIn:(UIGestureRecognizer *)gestureRecognizer {
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+										  @"photo", @"type", 
+										  _vo, @"article_vo", 
+										  (SNImageVO *)[_vo.images objectAtIndex:0], @"image_vo", 
+										  [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
+										  [NSValue valueWithCGRect:CGRectMake(_article2ImgView.frame.origin.x + self.frame.origin.x, _article2ImgView.frame.origin.y, _article2ImgView.frame.size.width, _article2ImgView.frame.size.height)], @"frame", nil];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
+}
+
 
 
 -(void)_goSourcePage {
@@ -374,26 +388,6 @@
 	[SNAppDelegate openWithAppStore:_vo.article_url];
 }
 
-#pragma mark - Animations
-- (void)_showFSVideo {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-								 @"video", @"type", 
-								 _vo, @"VO", 
-								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
-								 [NSValue valueWithCGRect:CGRectMake(_videoImgView.frame.origin.x + self.frame.origin.x, _videoImgView.frame.origin.y, _videoImgView.frame.size.width, _videoImgView.frame.size.height)], @"frame", nil];
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
-}
-
-- (void)_showFSImage {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-								 @"photo", @"type", 
-								 _vo, @"VO", 
-								 [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
-								 [NSValue valueWithCGRect:CGRectMake(_article1ImgView.frame.origin.x + self.frame.origin.x, _article1ImgView.frame.origin.y, _article1ImgView.frame.size.width, _article1ImgView.frame.size.height)], @"frame", nil];
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
-}
 
 #pragma mark - Notification handlers
 -(void)_videoEnded:(NSNotification *)notification {
@@ -438,18 +432,8 @@
 		
 		else {
 			_vo.totalLikes = [[parsedLike objectForKey:@"likes"] intValue];
-			[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
-			
-			if (_vo.totalLikes > 0) {
-				_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
-				[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
-			
-			} else {
-				_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
-				[_likeButton setTitle:@"" forState:UIControlStateNormal];
-			}
+			[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes] forState:UIControlStateNormal];
 		}
-		
 	}
 }
 

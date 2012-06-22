@@ -60,7 +60,7 @@
 	[self.view addSubview:_scrollView];
 	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, _scrollView.frame.size.height)];
-	UIImage *img = [UIImage imageNamed:@"cardBackground.png"];
+	UIImage *img = [UIImage imageNamed:@"timelineDiscoverBG.png"];
 	bgImgView.image = [img stretchableImageWithLeftCapWidth:10.0 topCapHeight:20.0];
 	[_scrollView addSubview:bgImgView];
 	
@@ -79,21 +79,20 @@
 	CGSize size2;
 	
 	int offset = 17;
-	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(10.0, 10.0) imageURL:_vo.avatarImage_url];
-	[[avatarImgView btn] addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(10.0, 10.0) imageURL:_vo.avatarImage_url handle:_vo.twitterHandle];
 	[_scrollView addSubview:avatarImgView];
 	
-	size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 	UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(46.0, offset, size.width, size.height)];
-	viaLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10];
-	viaLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
+	viaLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
+	viaLabel.textColor = [SNAppDelegate snGreyColor];
 	viaLabel.backgroundColor = [UIColor clearColor];
 	viaLabel.text = @"via ";
 	[_scrollView addSubview:viaLabel];
 	
-	size2 = [[NSString stringWithFormat:@"@%@ ", _vo.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	size2 = [[NSString stringWithFormat:@"@%@ ", _vo.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(46.0 + size.width, offset, size2.width, size2.height)];
-	handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
+	handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	handleLabel.textColor = [SNAppDelegate snLinkColor];
 	handleLabel.backgroundColor = [UIColor clearColor];
 	handleLabel.text = [NSString stringWithFormat:@"@%@ ", _vo.twitterHandle];
@@ -104,17 +103,17 @@
 	handleButton.frame = handleLabel.frame;
 	[_scrollView addSubview:handleButton];
 	
-	size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 	UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, offset, size.width, size.height)];
-	inLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10];
-	inLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
+	inLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
+	inLabel.textColor = [SNAppDelegate snGreyColor];
 	inLabel.backgroundColor = [UIColor clearColor];
 	inLabel.text = @"into ";
 	[_scrollView addSubview:inLabel];
 	
-	size2 = [[NSString stringWithFormat:@"%@", _vo.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	size2 = [[NSString stringWithFormat:@"%@", _vo.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 	UILabel *topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(inLabel.frame.origin.x + size.width, offset, size2.width, size2.height)];
-	topicLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
+	topicLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 	topicLabel.textColor = [SNAppDelegate snLinkColor];
 	topicLabel.backgroundColor = [UIColor clearColor];
 	topicLabel.text = [NSString stringWithFormat:@"%@", _vo.topicTitle];
@@ -152,11 +151,10 @@
 	[_scrollView addSubview:dateLabel];
 	offset += 30;
 	
-	size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:12] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+	size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 	UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, offset, 280.0, size.height)];
-	titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:12];
-	titleLabel.textColor = [UIColor blackColor];
-	
+	titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	titleLabel.textColor = [SNAppDelegate snGreyColor];
 	titleLabel.backgroundColor = [UIColor clearColor];
 	titleLabel.text = _vo.title;
 	titleLabel.numberOfLines = 0;
@@ -190,36 +188,19 @@
 	
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, offset);
 	
-		
-	UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 440.0, 320.0, 40.0)];
+	UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(10.0, 440.0, 320.0, 40.0)];
 	[self.view addSubview:footerView];
 	
-	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_commentButton.frame = CGRectMake(70.0, 0.0, 64.0, 44.0);
-	[_commentButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_nonActive.png"] forState:UIControlStateNormal];
-	[_commentButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_Active.png"] forState:UIControlStateHighlighted];
-	[_commentButton addTarget:self action:@selector(_goComment) forControlEvents:UIControlEventTouchUpInside];
-	[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-	_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
-	[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
-	[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
-	[footerView addSubview:_commentButton];
-	
-	if ([_vo.comments count] > 0) {
-		_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
-		[_commentButton setTitle:[NSString stringWithFormat:@"%d", [_vo.comments count]] forState:UIControlStateNormal];
-	}
-	
-	
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_likeButton.frame = CGRectMake(6.0, 0.0, 64.0, 44.0);
-	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-	[_likeButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_nonActive.png"] forState:UIControlStateNormal];
-	[_likeButton setBackgroundImage:[UIImage imageNamed:@"genericButtonB_Active.png"] forState:UIControlStateHighlighted];
-	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+	_likeButton.frame = CGRectMake(0.0, 0.0, 93.0, 43.0);
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_Active.png"] forState:UIControlStateHighlighted];
+	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
+	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+	[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes] forState:UIControlStateNormal];
 	[footerView addSubview:_likeButton];
 	
 	if (_vo.hasLiked)
@@ -228,23 +209,35 @@
 	else
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	
-	if (_vo.totalLikes > 0) {
-		_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
-		[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
-	}
+	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	_commentButton.frame = CGRectMake(93.0, 0.0, 114.0, 43.0);
+	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
+	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_Active.png"] forState:UIControlStateHighlighted];
+	[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
+	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
+	[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
+	[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
+	_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+	[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+	[_commentButton setTitle:[NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]] forState:UIControlStateNormal];
+	[footerView addSubview:_commentButton];
 	
 	UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	sourceButton.frame = CGRectMake(231.0, 0.0, 64.0, 44.0);
-	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
-	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+	sourceButton.frame = CGRectMake(207.0, 0.0, 93.0, 43.0);
+	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
+	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
 	[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 	[footerView addSubview:sourceButton];
 	
-	int offset2 = 10;
+	UIImageView *likesImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 390.0, 320.0, 54.0)];
+	likesImgView.image = [UIImage imageNamed:@"commentsLikeHeaderBG.png"];
+	[self.view addSubview:likesImgView];
+	
+	int offset2 = 37;
 	for (SNTwitterUserVO *tuVO in _vo.userLikes) {
-		SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 400.0) imageURL:tuVO.avatarURL];
+		SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 400.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
 		[self.view addSubview:avatarView];
 		offset2 += 40.0;
 	}
@@ -281,13 +274,7 @@
 }
 
 -(void)_goShare {
-	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil 
-																				delegate:self 
-																	cancelButtonTitle:@"Cancel" 
-															 destructiveButtonTitle:nil 
-																	otherButtonTitles:@"Twitter", @"SMS", @"Copy URL", @"Email", nil];
-	[actionSheet showInView:self.view];
-
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SHARE_SHEET" object:_vo];
 }
 
 -(void)_goLike {
@@ -359,48 +346,6 @@
 	}
 	
 	[self dismissViewControllerAnimated:YES completion:nil];
-}
-
-
-#pragma mark - ActionSheet Delegates
--(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-	if (buttonIndex == 0) {
-		TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
-			
-		[twitter addURL:[NSURL URLWithString:_vo.article_url]];
-		[twitter setInitialText:[NSString stringWithFormat:@"via Assembly - %@", _vo.title]];
-		[self presentModalViewController:twitter animated:YES];
-			
-		twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
-			[self dismissModalViewControllerAnimated:YES];
-		};
-		
-	} else if (buttonIndex == 1) {
-		
-	} else if (buttonIndex == 2) {
-		UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-		[pasteboard setValue:_vo.article_url forPasteboardType:@"public.utf8-plain-text"];
-		//pasteboard.string = _vo.article_url;
-		
-	} else if (buttonIndex == 3) {
-		if ([MFMailComposeViewController canSendMail]) {
-			MFMailComposeViewController *mfViewController = [[MFMailComposeViewController alloc] init];
-			mfViewController.mailComposeDelegate = self;
-			[mfViewController setSubject:[NSString stringWithFormat:@"Assembly - %@", _vo.title]];
-			[mfViewController setMessageBody:_vo.content isHTML:NO];
-			
-			[self presentViewController:mfViewController animated:YES completion:nil];
-			
-		} else {
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Status:" 
-																			message:@"Your phone is not currently configured to send mail." 
-																		  delegate:nil 
-															  cancelButtonTitle:@"ok" 
-															  otherButtonTitles:nil];
-			[alert show];
-		}
-	
-	}
 }
 
 

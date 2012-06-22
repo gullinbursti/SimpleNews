@@ -179,11 +179,11 @@
 		
 		switch (type) {
 			case 6:
-				title = @"Likes";
+				title = @"My Likes";
 				break;
 				
 			case 2:
-				title = @"Comments";
+				title = @"My Comments";
 				break;
 				
 			case 5:
@@ -199,7 +199,7 @@
 		[_activityIndicatorView startAnimating];
 		[self addSubview:_activityIndicatorView];
 		
-		_loaderLabel = [[UILabel alloc] initWithFrame:CGRectMake(45.0, 63.0, 145.0, 16.0)];
+		_loaderLabel = [[UILabel alloc] initWithFrame:CGRectMake(45.0, 63.0, 245.0, 16.0)];
 		_loaderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		_loaderLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
 		_loaderLabel.textColor = [UIColor blackColor];
@@ -389,11 +389,11 @@
 		
 		switch (type) {
 			case 6:
-				title = @"Likes";
+				title = @"My Likes";
 				break;
 				
 			case 2:
-				title = @"Comments";
+				title = @"My Comments";
 				break;
 				
 			case 5:
@@ -462,7 +462,7 @@
 	NSLog(@"_fullscreenMedia");
 	NSMutableDictionary *dict = [notification object];
 	
-	_articleVO = [dict objectForKey:@"VO"];
+	_articleVO = [dict objectForKey:@"article_vo"];
 	[dict setValue:[NSNumber numberWithFloat:[[dict objectForKey:@"offset"] floatValue] - _scrollView.contentOffset.y] forKey:@"offset"];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_FULLSCREEN_MEDIA" object:dict];
 }
@@ -523,6 +523,13 @@
 // called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{	
 	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+#pragma mark - AlertView Delegates
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+	if (buttonIndex == 1) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_TOPIC" object:[NSNumber numberWithInt:_vo.topic_id]];
+	}
 }
 
 
@@ -619,7 +626,7 @@
 				
 				offset += 16.0;
 				
-				if ([_articles count] == 30) {
+				if ([_articles count] == 30 && [_articles count] < 250) {
 					_loadMoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
 					_loadMoreButton.frame = CGRectMake(112.0, offset, 96.0, 34.0);
 					[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
@@ -648,7 +655,7 @@
 			} else {
 				UIAlertView *alert = [[UIAlertView alloc] 
 											 initWithTitle:@"Nothing Here" 
-											 message:@"There isn't any content available for this topic"
+											 message:@"Cannot Refresh Content"
 											 delegate:nil
 											 cancelButtonTitle:@"OK" 
 											 otherButtonTitles:nil];
@@ -752,8 +759,11 @@
 			[_articles addObjectsFromArray:list];
 			
 			offset += 16.0;
-			_loadMoreButton.alpha = 1.0;
-			_loadMoreButton.frame = CGRectMake(112.0, offset, 96.0, 44.0);
+			
+			if ([_articles count] < 250) {
+				_loadMoreButton.alpha = 1.0;
+				_loadMoreButton.frame = CGRectMake(112.0, offset, 96.0, 44.0);
+			}
 			
 			[_activityIndicatorView removeFromSuperview];
 			[_loaderLabel removeFromSuperview];

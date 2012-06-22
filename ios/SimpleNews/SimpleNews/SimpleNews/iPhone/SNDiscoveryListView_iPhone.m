@@ -8,7 +8,7 @@
 
 #import "SNDiscoveryListView_iPhone.h"
 #import "SNHeaderView_iPhone.h"
-#import "SNNavLogoBtnView.h"
+#import "SNNavRandomBtnView.h"
 #import "SNAppDelegate.h"
 #import "SNDiscoveryItemView_iPhone.h"
 
@@ -27,8 +27,10 @@
 @synthesize refreshListResource = _refreshListResource;
 
 
-- (id)initWithFrame:(CGRect)frame {
+- (id)initWithFrame:(CGRect)frame headerTitle:(NSString *)title {
 	if ((self = [super initWithFrame:frame])) {
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];
+		
 		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
 		bgImgView.image = [UIImage imageNamed:@"timelineDiscoverBackground.png"];
 		[self addSubview:bgImgView];
@@ -46,16 +48,16 @@
 		_scrollView.contentSize = CGSizeMake(self.frame.size.width, _scrollView.frame.size.height);
 		[self addSubview:_scrollView];
 		
-		SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Discovery"];
+		SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:title];
 		[self addSubview:headerView];
 		
 		_listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
 		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:_listBtnView];
 		
-		SNNavLogoBtnView *logoBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
-		[[logoBtnView btn] addTarget:self action:@selector(_goRefresh) forControlEvents:UIControlEventTouchUpInside];
-		[headerView addSubview:logoBtnView];
+		SNNavRandomBtnView *rndBtnView = [[SNNavRandomBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+		[[rndBtnView btn] addTarget:self action:@selector(_goRefresh) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:rndBtnView];
 		
 		[self _retrieveArticleList];
 	}
@@ -131,7 +133,10 @@
 }
 
 - (void)interactionEnabled:(BOOL)isEnabled {
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];
+	
 	if (isEnabled) {
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_fullscreenMedia:) name:@"FULLSCREEN_MEDIA" object:nil];
 		[[_listBtnView btn] removeTarget:self action:@selector(_goShow) forControlEvents:UIControlEventTouchUpInside];
 		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		
@@ -157,8 +162,15 @@
 	[self _refreshArticleList];
 }
 
+#pragma mark - Notification handlers
+-(void)_fullscreenMedia:(NSNotification *)notification {
+	NSLog(@"_fullscreenMedia");
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_FULLSCREEN_MEDIA" object:[notification object]];
+}
+
 #pragma mark - ScrollView Delegates
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	[_paginationView changeToPage:round(scrollView.contentOffset.x / 320.0)];
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
@@ -166,11 +178,6 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate { 	
 }
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-	[_paginationView changeToPage:scrollView.contentOffset.x / 320.0];
-}
-
 
 
 #pragma mark - Async Resource Observers

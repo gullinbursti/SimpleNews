@@ -34,6 +34,10 @@
 		_articleImgView.userInteractionEnabled = YES;
 		[bgImgView addSubview:_articleImgView];
 		
+		UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photoZoomIn:)];
+		tapRecognizer.numberOfTapsRequired = 1;
+		[_articleImgView addGestureRecognizer:tapRecognizer];
+		
 		if (_imageResource == nil) {			
 			self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:((SNImageVO *)[_vo.images objectAtIndex:0]).url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
 		}
@@ -122,10 +126,18 @@
 			_sub1ImgView.userInteractionEnabled = YES;
 			[self addSubview:_sub1ImgView];
 			
+			UITapGestureRecognizer *tap1Recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photo1ZoomIn:)];
+			tap1Recognizer.numberOfTapsRequired = 1;
+			[_sub1ImgView addGestureRecognizer:tap1Recognizer];
+			
 			_sub2ImgView = [[UIImageView alloc] initWithFrame:CGRectMake(165.0, 260.0, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
 			[_sub2ImgView setBackgroundColor:[UIColor whiteColor]];
 			_sub2ImgView.userInteractionEnabled = YES;
 			[self addSubview:_sub2ImgView];
+			
+			UITapGestureRecognizer *tap2Recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photo2ZoomIn:)];
+			tap2Recognizer.numberOfTapsRequired = 1;
+			[_sub2ImgView addGestureRecognizer:tap2Recognizer];
 		}
 		
 		
@@ -137,7 +149,7 @@
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 		_likeButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 1.0, -2.0, -1.0);
-		[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
+		[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes] forState:UIControlStateNormal];
 		_likeButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, -5.0, -2.0, 5.0);
 		[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
 		[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
@@ -168,7 +180,7 @@
 		[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 		_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 		_commentButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 1.0, -2.0, -1.0);
-		[_commentButton setTitle:@"Comment" forState:UIControlStateNormal];
+		[_commentButton setTitle:[NSString stringWithFormat:@"Comments (%d)", _vo.comments.count] forState:UIControlStateNormal];
 		_commentButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, -5.0, -2.0, 5.0);
 		[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
 		[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
@@ -269,7 +281,7 @@
 	} completion:^(BOOL finished) {
 		NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 											  @"video", @"type", 
-											  _vo, @"VO", 
+											  _vo, @"article_vo", 
 											  [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
 											  [NSValue valueWithCGRect:CGRectMake(_videoImgView.frame.origin.x + self.frame.origin.x, _videoImgView.frame.origin.y, _videoImgView.frame.size.width, _videoImgView.frame.size.height)], @"frame", nil];
 		
@@ -280,6 +292,48 @@
 - (void)_goTopic {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_TOPIC" object:[NSNumber numberWithInt:_vo.topicID]];
 }
+
+-(void)_goTwitterProfile {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TWITTER_PROFILE" object:_vo.twitterHandle];
+}
+
+
+-(void)_photoZoomIn:(UIGestureRecognizer *)gestureRecognizer {
+	NSLog(@"ZOOM");
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+										  @"photo", @"type", 
+										  _vo, @"article_vo", 
+										  (SNImageVO *)[_vo.images objectAtIndex:0], @"image_vo", 
+										  [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
+										  [NSValue valueWithCGRect:CGRectMake(_articleImgView.frame.origin.x, _articleImgView.frame.origin.y + 8.0, _articleImgView.frame.size.width, _articleImgView.frame.size.height)], @"frame", nil];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
+}
+
+-(void)_photo1ZoomIn:(UIGestureRecognizer *)gestureRecognizer {
+	NSLog(@"ZOOM");
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+										  @"photo", @"type", 
+										  _vo, @"article_vo", 
+										  (SNImageVO *)[_vo.images objectAtIndex:0], @"image_vo", 
+										  [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
+										  [NSValue valueWithCGRect:CGRectMake(_sub1ImgView.frame.origin.x, _sub1ImgView.frame.origin.y, _sub1ImgView.frame.size.width, _sub1ImgView.frame.size.height)], @"frame", nil];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
+}
+
+-(void)_photo2ZoomIn:(UIGestureRecognizer *)gestureRecognizer {
+	NSLog(@"ZOOM");
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+										  @"photo", @"type", 
+										  _vo, @"article_vo", 
+										  (SNImageVO *)[_vo.images objectAtIndex:0], @"image_vo", 
+										  [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
+										  [NSValue valueWithCGRect:CGRectMake(_sub2ImgView.frame.origin.x, _sub2ImgView.frame.origin.y, _sub2ImgView.frame.size.width, _sub2ImgView.frame.size.height)], @"frame", nil];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
+}
+
 
 
 #pragma mark - Async Resource Observers
@@ -310,7 +364,7 @@
 	
 	else {
 		_vo.totalLikes = [[parsedLike objectForKey:@"likes"] intValue];
-		//[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
+		[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes] forState:UIControlStateNormal];
 		
 		if (_vo.totalLikes > 0) {
 			//_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);

@@ -14,7 +14,7 @@
 #import "SNArticleVideoPlayerView_iPhone.h"
 #import "SNUnderlinedLabel.h"
 
-@interface SNArticleDetailsViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, UIWebViewDelegate, UIActionSheetDelegate, ASIHTTPRequestDelegate> {
+@interface SNArticleDetailsViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, ASIHTTPRequestDelegate> {
 	SNArticleVO *_vo;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
 	

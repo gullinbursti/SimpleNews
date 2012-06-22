@@ -24,6 +24,7 @@
 	NSDate *_lastDate;
 }
 
+- (id)initWithFrame:(CGRect)frame headerTitle:(NSString *)title;
 - (void)interactionEnabled:(BOOL)isEnabled;
 
 

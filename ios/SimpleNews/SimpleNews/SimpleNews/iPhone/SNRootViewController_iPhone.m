@@ -120,10 +120,9 @@
 			[self _hideFullscreenMedia:nil];
 		
 		//NSLog(@"TOUCHED:[%f, %f] BLACK MATTE(%d)", touchPoint.x, touchPoint.y, !_blackMatteView.hidden);
-	
 	}
 	
-	if (_blackMatteView.hidden) {
+	if (_blackMatteView.hidden && _topicTimelineView != nil) {
 		if (touchPoint.x < 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
 			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
 				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _topicTimelineView.frame.size.width, _topicTimelineView.frame.size.height);
@@ -180,11 +179,6 @@
 	_shadowImgView.image = [UIImage imageNamed:@"dropShadow.png"];
 	[_holderView addSubview:_shadowImgView];
 	
-	_cardListsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_cardListsButton.frame = CGRectMake(kTopicOffset, 45.0, 44.0, self.view.frame.size.height - 45.0);
-	[_cardListsButton addTarget:self action:@selector(_goCardLists) forControlEvents:UIControlEventTouchUpInside];
-	//[self.view addSubview:_cardListsButton];
-	
 	_blackMatteView = [[UIView alloc] initWithFrame:self.view.frame];
 	[_blackMatteView setBackgroundColor:[UIColor blackColor]];
 	_blackMatteView.hidden = YES;
@@ -211,7 +205,6 @@
 	_holderView = nil;
 	_profileButton = nil;
 	_topicsTableView = nil;
-	_cardListsButton = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -238,7 +231,6 @@
 //		}];
 		
 		[UIView animateWithDuration:0.33 delay:1.33 options:UIViewAnimationCurveEaseInOut animations:^(void) {
-			_cardListsButton.hidden = YES;
 			_discoveryListView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 			_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
@@ -253,7 +245,6 @@
 
 - (void)_goCardLists {
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_cardListsButton.hidden = YES;
 		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 		
@@ -270,15 +261,10 @@
 		[alert show];
 	
 	} else {
-		[UIView animateWithDuration:0.33
-						 animations:^(void) {
-							 //_shadowImgView.alpha = 0.0;
-			
-						 }
-						 completion:^(BOOL finished) {
-							 SNProfileViewController_iPhone *profileViewController = [[SNProfileViewController_iPhone alloc] init];
-							 [self.navigationController pushViewController:profileViewController animated:YES];
-						 }];
+		SNProfileViewController_iPhone *profileViewController = [[SNProfileViewController_iPhone alloc] init];
+		UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:profileViewController];
+		[navigationController setNavigationBarHidden:YES];
+		[self.navigationController presentModalViewController:navigationController animated:YES];
 	}
 }
 
@@ -419,16 +405,13 @@
 			_topicsList = list;
 			[_topicsTableView reloadData];
 			
-			_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithFrame:CGRectMake(226.0, 0.0, 320.0, 480.0)];
+			_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithFrame:CGRectMake(226.0, 0.0, 320.0, 480.0) headerTitle:@"Top 10"];
+			//_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithFrame:CGRectMake(226.0, 0.0, 320.0, 480.0)];
 			[_holderView addSubview:_discoveryListView];
-			
-			//_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithPopularArticles];
-			//[_holderView addSubview:_topicTimelineView];
 		}
 	
 	} else if (resource == _fullscreenImgResource) {
 		_fullscreenImgView.image = [UIImage imageWithData:data];
-		//_fullscreenImgView.image = [SNAppDelegate imageWithFilters:[UIImage imageWithData:data] filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"sharpen", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
 		
 		_blackMatteView.hidden = NO;
 		[UIView animateWithDuration:0.33 animations:^(void) {
@@ -448,10 +431,6 @@
 			[[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 			[self.view addSubview:_shareBtnView];
 		}];
-		
-		_hud.taskInProgress = NO;
-		[_hud hide:YES];
-		_hud = nil;
 	}
 }
 
@@ -524,7 +503,6 @@
 		_shadowImgView.frame = CGRectMake(kTopicOffset - 19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
-		_cardListsButton.hidden = NO;
 	}];
 }
 
@@ -568,7 +546,8 @@
 	NSLog(@"\n--SHOW FULLSCREEN MEDIA--");
 	NSMutableDictionary *dict = [notification object];
 	
-	_articleVO = [dict objectForKey:@"VO"];
+	_articleVO = [dict objectForKey:@"article_vo"];
+	SNImageVO *imgVO = [dict objectForKey:@"image_vo"];
 	float offset = [[dict objectForKey:@"offset"] floatValue];
 	CGRect frame = [[dict objectForKey:@"frame"] CGRectValue];
 	NSString *type = [dict objectForKey:@"type"];
@@ -625,13 +604,8 @@
 		[self.view addSubview:_fullscreenImgView];
 		
 		_fullscreenImgResource = nil;
-		self.fullscreenImgResource = [[MBLResourceLoader sharedInstance] downloadURL:((SNImageVO *)[_articleVO.images objectAtIndex:0]).url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration for now
-		
-		_hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-		_hud.mode = MBProgressHUDModeIndeterminate;
-		_hud.graceTime = 2.0;
-		_hud.taskInProgress = YES;
-		
+		self.fullscreenImgResource = [[MBLResourceLoader sharedInstance] downloadURL:imgVO.url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration for now
+				
 	} else if ([type isEqualToString:@"video"]) {
 		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:frame articleVO:_articleVO];
 		[self.view addSubview:_videoPlayerView];
@@ -693,7 +667,6 @@
 			[_holderView addSubview:_topicTimelineView];
 			
 			[UIView animateWithDuration:0.33 animations:^(void) {
-				_cardListsButton.hidden = YES;
 				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 				
@@ -710,7 +683,6 @@
 - (void)_showDiscovery:(NSNotification *)notification {
 	NSLog(@"SHOW DISCOVERY");
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_cardListsButton.hidden = YES;
 		_discoveryListView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 		
@@ -721,7 +693,6 @@
 
 - (void)_showTimeline:(NSNotification *)notification {
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_cardListsButton.hidden = YES;
 		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 		
@@ -917,7 +888,7 @@
 			break;
 			
 		case 2:
-			titles = [NSArray arrayWithObjects:@"Friends", @"Invite Friends", @"My Likes", @"My Comments",@"Logout", nil];
+			titles = [NSArray arrayWithObjects:@"My Likes", @"My Comments", @"Friends", @"Invite Friends", @"Logout", nil];
 			otherCell = [tableView dequeueReusableCellWithIdentifier:[SNRootOtherViewCell_iPhone cellReuseIdentifier]];
 			
 			if (otherCell == nil)
@@ -953,8 +924,15 @@
 	
 	
 	if (indexPath.section == 0) {
-		[UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
-			_cardListsButton.hidden = YES;
+		[_discoveryListView removeFromSuperview];
+		_discoveryListView = nil;
+		
+		NSArray *titles = [NSArray arrayWithObjects:@"Top 10", @"Trending", nil];
+		_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithFrame:CGRectMake(226.0, 0.0, 320.0, 480.0) headerTitle:[titles objectAtIndex:indexPath.row]];
+		[_holderView addSubview:_discoveryListView];
+		
+		
+		[UIView animateWithDuration:0.33 animations:^(void) {
 			_discoveryListView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 			_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
@@ -975,7 +953,6 @@
 			[_holderView addSubview:_topicTimelineView];
 				
 			[UIView animateWithDuration:0.33 animations:^(void) {
-				_cardListsButton.hidden = YES;
 				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 					
@@ -987,18 +964,6 @@
 		
 	} else {
 		if (indexPath.row == 0) {
-			SNFindFriendsViewController_iPhone *findFriendsViewController = [[SNFindFriendsViewController_iPhone alloc] initAsList];
-			UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:findFriendsViewController];
-			[navigationController setNavigationBarHidden:YES];
-			[self.navigationController presentModalViewController:navigationController animated:YES];
-			
-		} else if (indexPath.row == 1) {
-			SNFindFriendsViewController_iPhone *findFriendsViewController = [[SNFindFriendsViewController_iPhone alloc] initAsFinder];
-			UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:findFriendsViewController];
-			[navigationController setNavigationBarHidden:YES];
-			[self.navigationController presentModalViewController:navigationController animated:YES];
-		
-		} else if (indexPath.row == 2) {
 			[_topicTimelineView removeFromSuperview];
 			_topicTimelineView = nil;
 			
@@ -1010,7 +975,6 @@
 				[_holderView addSubview:_topicTimelineView];
 				
 				[UIView animateWithDuration:0.33 animations:^(void) {
-					_cardListsButton.hidden = YES;
 					_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 					_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 					
@@ -1020,7 +984,8 @@
 				}];
 			}];
 			
-		} else if (indexPath.row == 3) {
+			
+		} else if (indexPath.row == 1) {
 			[_topicTimelineView removeFromSuperview];
 			_topicTimelineView = nil;
 			
@@ -1032,7 +997,6 @@
 				[_holderView addSubview:_topicTimelineView];
 				
 				[UIView animateWithDuration:0.33 animations:^(void) {
-					_cardListsButton.hidden = YES;
 					_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 					_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 					
@@ -1041,6 +1005,18 @@
 					[_topicTimelineView interactionEnabled:YES];
 				}];
 			}];
+		
+		} else if (indexPath.row == 2) {
+			SNFindFriendsViewController_iPhone *findFriendsViewController = [[SNFindFriendsViewController_iPhone alloc] initAsList];
+			UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:findFriendsViewController];
+			[navigationController setNavigationBarHidden:YES];
+			[self.navigationController presentModalViewController:navigationController animated:YES];
+			
+		} else if (indexPath.row == 3) {
+			SNFindFriendsViewController_iPhone *findFriendsViewController = [[SNFindFriendsViewController_iPhone alloc] initAsFinder];
+			UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:findFriendsViewController];
+			[navigationController setNavigationBarHidden:YES];
+			[self.navigationController presentModalViewController:navigationController animated:YES];
 			
 		} else if (indexPath.row == 4) {
 		}

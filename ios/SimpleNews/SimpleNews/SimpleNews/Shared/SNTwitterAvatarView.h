@@ -13,10 +13,12 @@
 @interface SNTwitterAvatarView : UIView {
 	UIImageView *_imgView;
 	UIButton *_btn;
+	NSString *_handle;
 }
 
 @property (nonatomic, retain) UIButton *btn;
+@property (nonatomic, retain) NSString *handle;
 
-- (id)initWithPosition:(CGPoint)pos imageURL:(NSString *)url;
+- (id)initWithPosition:(CGPoint)pos imageURL:(NSString *)url handle:(NSString *)name;
 
 @end

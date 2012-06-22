@@ -9,7 +9,7 @@
 #import "SNProfileViewController_iPhone.h"
 
 #import "SNHeaderView_iPhone.h"
-#import "SNNavBackBtnView.h"
+#import "SNNavDoneBtnView.h"
 #import "SNProfileViewCell_iPhone.h"
 #import "SNAppDelegate.h"
 #import "SNTwitterAvatarView.h"
@@ -32,12 +32,12 @@
 -(void)loadView {
 	[super loadView];
 	
-	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-	bgImgView.image = [UIImage imageNamed:@"background_plain.png"];
+	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
+	bgImgView.image = [UIImage imageNamed:@"background_timeline.png"];
 	[self.view addSubview:bgImgView];
 	
-	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(20.0, 68.0) imageURL:[SNAppDelegate twitterAvatar]];
-	[[avatarImgView btn] addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(20.0, 68.0) imageURL:[SNAppDelegate twitterAvatar] handle:[SNAppDelegate twitterHandle]];
+	//[[avatarImgView btn] addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:avatarImgView];
 	
 	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 72.0, 200.0, 16.0)];
@@ -176,9 +176,9 @@
 	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Profile"];
 	[self.view addSubview:headerView];
 	
-	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 64.0, 44.0)];
-	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:backBtnView];
+	SNNavDoneBtnView *doneBtnView = [[SNNavDoneBtnView alloc] initWithFrame:CGRectMake(256.0, 0.0, 64.0, 44.0)];
+	[[doneBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+	[headerView addSubview:doneBtnView];
 	
 	NSString *profilePath = [[NSBundle mainBundle] pathForResource:@"user_profile" ofType:@"plist"];
 	NSDictionary *plist = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfFile:profilePath] options:NSPropertyListImmutable format:nil error:nil];
@@ -206,7 +206,7 @@
 
 #pragma mark - Navigation
 -(void)_goBack {
-	[self.navigationController popViewControllerAnimated:YES];
+	[self.navigationController dismissModalViewControllerAnimated:YES];
 }
 
 -(void)_goTwitterProfile {

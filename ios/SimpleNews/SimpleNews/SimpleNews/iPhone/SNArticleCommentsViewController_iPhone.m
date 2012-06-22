@@ -78,7 +78,7 @@
 	
 	int offset = 37;
 	for (SNTwitterUserVO *tuVO in _vo.userLikes) {
-		SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset, 55.0) imageURL:tuVO.avatarURL];
+		SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset, 55.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
 		[self.view addSubview:avatarView];
 		offset += 31.0;
 	}
@@ -249,6 +249,11 @@
 	//_txtInputView.hidden = YES;
 }
 
+- (void)_goTwitterProfile:(id)sender {
+	SNTwitterUserVO *vo = (SNTwitterUserVO *)[sender object];
+	NSLog(@"USER:[%@]", vo.twitterID);
+}
+
 #pragma mark - ScrollView Delegates
 // any offset changes
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -306,7 +311,7 @@
 	if (![SNAppDelegate twitterHandle])
 		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"prefs:root=TWITTER"]];
 	
-	[UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^(void){
+	[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^(void){
 		//_scrollView.contentOffset = CGPointMake(0.0, _scrollView.contentSize.height - 250.0);
 		_bgView.frame = CGRectMake(_bgView.frame.origin.x, _bgView.frame.origin.y - 215.0, _bgView.frame.size.width, _bgView.frame.size.height);
 	} completion:nil];

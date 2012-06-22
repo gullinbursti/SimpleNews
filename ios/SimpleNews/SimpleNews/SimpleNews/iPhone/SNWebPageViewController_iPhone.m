@@ -8,7 +8,7 @@
 
 #import "SNWebPageViewController_iPhone.h"
 
-#import "SNHeaderView_iPhone.h"
+#import "SNWebHeaderView_iPhone.h"
 #import "SNNavBackBtnView.h"
 #import "SNAppDelegate.h"
 
@@ -38,7 +38,7 @@
 	[_webView loadRequest:[NSURLRequest requestWithURL:_url]];	
 	[self.view addSubview:_webView];
 	
-	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_pageTitle];
+	SNWebHeaderView_iPhone *headerView = [[SNWebHeaderView_iPhone alloc] initWithTitle:_pageTitle];
 	[self.view addSubview:headerView];
 	
 	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 64.0, 44.0)];

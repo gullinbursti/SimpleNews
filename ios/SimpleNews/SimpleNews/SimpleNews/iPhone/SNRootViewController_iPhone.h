@@ -44,7 +44,6 @@
 	UIView *_holderView;
 	UIImageView *_shadowImgView;
 	UIButton *_profileButton;
-	UIButton *_cardListsButton;
 	UILabel *_fullscreenTitleLabel;
 	
 	UIView *_blackMatteView;
