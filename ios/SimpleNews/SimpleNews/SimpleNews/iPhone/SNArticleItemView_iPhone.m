@@ -36,11 +36,19 @@
 		CGSize size;
 		CGSize size2;
 		
+		NSString *cardBG;
+		
+		if (_vo.totalLikes > 0)
+			cardBG = @"defaultCardTimeline_Likes";
+		
+		else
+			cardBG = @"defaultCardTimeline_noLikes";
+		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_commentAdded:) name:@"COMMENT_ADDED" object:nil];
 		
-		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-10.0, 0.0, 320.0, frame.size.height + 1.0)];
-		UIImage *img = [UIImage imageNamed:@"myFriendsBackground.png"];
+		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-4.0, 0.0, 308.0, frame.size.height)];
+		UIImage *img = [UIImage imageNamed:cardBG];
 		bgImgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:20.0];
 		[self addSubview:bgImgView];
 		
@@ -217,13 +225,8 @@
 			offset += 51;
 		}
 		
-		UIImageView *footerBGImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, offset - 3.0, 299.0, 43.0)];
-		footerBGImgView.image = [UIImage imageNamed:@"articleFooterBG.png"];
-		[self addSubview:footerBGImgView];
-		
-		
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_likeButton.frame = CGRectMake(0.0, offset - 2.0, 92.0, 43.0);
+		_likeButton.frame = CGRectMake(0.0, offset - 2.0, 93.0, 43.0);
 		//[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_Active.png"] forState:UIControlStateHighlighted];
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
@@ -241,7 +244,7 @@
 			[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		
 		_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_commentButton.frame = CGRectMake(93.0, offset - 2.0, 116.0, 43.0);
+		_commentButton.frame = CGRectMake(92.0, offset - 2.0, 115.0, 43.0);
 		//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
 		[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_Active.png"] forState:UIControlStateHighlighted];
 		[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
@@ -254,7 +257,7 @@
 		[self addSubview:_commentButton];
 				
 		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		sourceButton.frame = CGRectMake(207.0, offset - 2.0, 92.0, 43.0);
+		sourceButton.frame = CGRectMake(208.0, offset - 2.0, 93.0, 43.0);
 		//[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
@@ -263,17 +266,7 @@
 		[self addSubview:sourceButton];
 		
 		
-		UIImageView *footerLinesImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, offset - 3.0, 299.0, 43.0)];
-		footerLinesImgView.image = [UIImage imageNamed:@"articleFooterPipes.png"];
-		[self addSubview:footerLinesImgView];
-		
-		
 		if (_vo.totalLikes > 0) {
-			UIImageView *likesBGImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, offset - 44.0, 299.0, 52.0)];
-			likesBGImgView.image = [UIImage imageNamed:@"timelineLikesBG.png"];
-			[self addSubview:likesBGImgView];
-			
-			
 			int offset2 = 5;
 			for (SNTwitterUserVO *tuVO in _vo.userLikes) {
 				SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, offset - 35.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
