@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>cms/lists.php</string>
+	<string>services/Articles2.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -224,14 +224,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>5</integer>
+				<integer>34</integer>
 				<key>line</key>
-				<integer>1244</integer>
+				<integer>1220</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>1208</integer>
+			<integer>1213</integer>
 		</dict>
 		<key>services/Categories.php</key>
 		<dict>
@@ -331,7 +331,7 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>88</integer>
+			<integer>95</integer>
 		</dict>
 		<key>services/Users.php</key>
 		<dict>

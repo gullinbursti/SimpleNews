@@ -32,7 +32,7 @@
 		_vo = vo;
 		_isFirstAppearance = YES;
 		
-		int offset = 14;
+		int offset = 16;
 		CGSize size;
 		CGSize size2;
 		
@@ -52,7 +52,7 @@
 		bgImgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:20.0];
 		[self addSubview:bgImgView];
 		
-		SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(5.0, 7.0) imageURL:_vo.avatarImage_url handle:_vo.twitterHandle];
+		SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(5.0, 10.0) imageURL:_vo.avatarImage_url handle:_vo.twitterHandle];
 		[self addSubview:avatarImgView];
 		
 		size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
@@ -140,11 +140,11 @@
 			titleButton.frame = titleLabel.frame;
 			[self addSubview:titleButton];
 			
-			offset += size.height + 6.0;
+			offset += size.height + 4.0;
 		}
 		
 		
-		CGRect imgFrame = CGRectMake(5, offset, 290.0, 290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
+		CGRect imgFrame = CGRectMake(5, offset + 1.0, 290.0, 290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
 //		if (_vo.topicID == 1 || _vo.topicID == 2) {
 //			imgFrame.origin.x = 2.0;
 //			imgFrame.size.width = 296.0;
@@ -269,7 +269,7 @@
 		if (_vo.totalLikes > 0) {
 			int offset2 = 5;
 			for (SNTwitterUserVO *tuVO in _vo.userLikes) {
-				SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, offset - 35.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
+				SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, offset - 38.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
 				[self addSubview:avatarView];
 				offset2 += 31.0;
 			}

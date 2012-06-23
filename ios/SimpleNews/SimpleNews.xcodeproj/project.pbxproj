@@ -282,6 +282,10 @@
 		4CE14C981595130A007F99D5 /* defaultCardTimeline_Likes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE14C941595130A007F99D5 /* defaultCardTimeline_Likes@2x.png */; };
 		4CE14C991595130A007F99D5 /* defaultCardTimeline_noLikes.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE14C951595130A007F99D5 /* defaultCardTimeline_noLikes.png */; };
 		4CE14C9A1595130A007F99D5 /* defaultCardTimeline_noLikes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE14C961595130A007F99D5 /* defaultCardTimeline_noLikes@2x.png */; };
+		4CE14C9F15951D9D007F99D5 /* defaultCardDiscover_Likes.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE14C9B15951D9D007F99D5 /* defaultCardDiscover_Likes.png */; };
+		4CE14CA015951D9D007F99D5 /* defaultCardDiscover_Likes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE14C9C15951D9D007F99D5 /* defaultCardDiscover_Likes@2x.png */; };
+		4CE14CA115951D9D007F99D5 /* defaultCardDiscover_noLikes.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE14C9D15951D9D007F99D5 /* defaultCardDiscover_noLikes.png */; };
+		4CE14CA215951D9D007F99D5 /* defaultCardDiscover_noLikes@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE14C9E15951D9D007F99D5 /* defaultCardDiscover_noLikes@2x.png */; };
 		4CE2F31915879EC000EF7A29 /* SNDiscoveryListView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE2F31815879EC000EF7A29 /* SNDiscoveryListView_iPhone.m */; };
 		4CE2F31C15879ED900EF7A29 /* SNDiscoveryItemView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE2F31B15879ED900EF7A29 /* SNDiscoveryItemView_iPhone.m */; };
 		4CE2F31F15890F1500EF7A29 /* SNImageVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE2F31E15890F1500EF7A29 /* SNImageVO.m */; };
@@ -859,6 +863,10 @@
 		4CE14C941595130A007F99D5 /* defaultCardTimeline_Likes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "defaultCardTimeline_Likes@2x.png"; sourceTree = "<group>"; };
 		4CE14C951595130A007F99D5 /* defaultCardTimeline_noLikes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = defaultCardTimeline_noLikes.png; sourceTree = "<group>"; };
 		4CE14C961595130A007F99D5 /* defaultCardTimeline_noLikes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "defaultCardTimeline_noLikes@2x.png"; sourceTree = "<group>"; };
+		4CE14C9B15951D9D007F99D5 /* defaultCardDiscover_Likes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = defaultCardDiscover_Likes.png; sourceTree = "<group>"; };
+		4CE14C9C15951D9D007F99D5 /* defaultCardDiscover_Likes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "defaultCardDiscover_Likes@2x.png"; sourceTree = "<group>"; };
+		4CE14C9D15951D9D007F99D5 /* defaultCardDiscover_noLikes.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = defaultCardDiscover_noLikes.png; sourceTree = "<group>"; };
+		4CE14C9E15951D9D007F99D5 /* defaultCardDiscover_noLikes@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "defaultCardDiscover_noLikes@2x.png"; sourceTree = "<group>"; };
 		4CE2F31715879EC000EF7A29 /* SNDiscoveryListView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNDiscoveryListView_iPhone.h; sourceTree = "<group>"; };
 		4CE2F31815879EC000EF7A29 /* SNDiscoveryListView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNDiscoveryListView_iPhone.m; sourceTree = "<group>"; };
 		4CE2F31A15879ED900EF7A29 /* SNDiscoveryItemView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNDiscoveryItemView_iPhone.h; sourceTree = "<group>"; };
@@ -2256,6 +2264,10 @@
 		4CE2F32A158EBB0600EF7A29 /* Discovery */ = {
 			isa = PBXGroup;
 			children = (
+				4CE14C9B15951D9D007F99D5 /* defaultCardDiscover_Likes.png */,
+				4CE14C9C15951D9D007F99D5 /* defaultCardDiscover_Likes@2x.png */,
+				4CE14C9D15951D9D007F99D5 /* defaultCardDiscover_noLikes.png */,
+				4CE14C9E15951D9D007F99D5 /* defaultCardDiscover_noLikes@2x.png */,
 				4CE2F347158ED72C00EF7A29 /* timelineDiscoverBG.png */,
 				4CE2F348158ED72C00EF7A29 /* timelineDiscoverBG@2x.png */,
 				4CE2F32B158EBB1F00EF7A29 /* timelineDiscoverBackground.png */,
@@ -2598,6 +2610,10 @@
 				4CE14C981595130A007F99D5 /* defaultCardTimeline_Likes@2x.png in Resources */,
 				4CE14C991595130A007F99D5 /* defaultCardTimeline_noLikes.png in Resources */,
 				4CE14C9A1595130A007F99D5 /* defaultCardTimeline_noLikes@2x.png in Resources */,
+				4CE14C9F15951D9D007F99D5 /* defaultCardDiscover_Likes.png in Resources */,
+				4CE14CA015951D9D007F99D5 /* defaultCardDiscover_Likes@2x.png in Resources */,
+				4CE14CA115951D9D007F99D5 /* defaultCardDiscover_noLikes.png in Resources */,
+				4CE14CA215951D9D007F99D5 /* defaultCardDiscover_noLikes@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

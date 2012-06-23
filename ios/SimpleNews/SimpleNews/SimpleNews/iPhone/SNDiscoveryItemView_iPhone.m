@@ -25,13 +25,21 @@
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
 		
-		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 8.0, 320.0, 405.0)];
-		UIImage *img = [UIImage imageNamed:@"timelineDiscoverBG.png"];
+		NSString *cardBG;
+		
+		if (_vo.totalLikes > 0)
+			cardBG = @"defaultCardDiscover_Likes.png";
+		
+		else
+			cardBG = @"defaultCardDiscover_noLikes.png";
+		
+		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(6.0, 8.0, 308.0, 408.0)];
+		UIImage *img = [UIImage imageNamed:cardBG];
 		bgImgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:20.0];
 		bgImgView.userInteractionEnabled = YES;
 		[self addSubview:bgImgView];
 		
-		_articleImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15.0, 8.0, 290.0, 290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
+		_articleImgView = [[UIImageView alloc] initWithFrame:CGRectMake(9.0, 8.0, 290.0, 290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
 		[_articleImgView setBackgroundColor:[UIColor whiteColor]];
 		_articleImgView.userInteractionEnabled = YES;
 		[bgImgView addSubview:_articleImgView];
@@ -45,11 +53,11 @@
 		}
 		
 		if (_vo.type_id > 3) {
-			UIView *matteView = [[UIView alloc] initWithFrame:CGRectMake(15.0, 8.0, 290.0, 344.0)];
+			UIView *matteView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 8.0, 290.0, 344.0)];
 			[matteView setBackgroundColor:[UIColor blackColor]];
 			[bgImgView addSubview:matteView];
 			
-			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(15.0, 99.0, 290.0, 217.0)];
+			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(9.0, 99.0, 290.0, 217.0)];
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[bgImgView addSubview:_videoImgView];
 			
@@ -64,7 +72,7 @@
 			
 		}
 		
-		UIView *titleBGView = [[UIView alloc] initWithFrame:CGRectMake(15.0, 8.0, 290.0, 52.0)];
+		UIView *titleBGView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 8.0, 290.0, 52.0)];
 		[titleBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
 		titleBGView.userInteractionEnabled = YES;
 		[bgImgView addSubview:titleBGView];
@@ -72,7 +80,7 @@
 		CGSize size;
 		CGSize size2;
 		
-		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(26.0, 24.0, 250.0, 18.0)];
+		UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, 24.0, 250.0, 18.0)];
 		titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13];
 		titleLabel.textColor = [UIColor whiteColor];
 		titleLabel.backgroundColor = [UIColor clearColor];
@@ -80,7 +88,7 @@
 		[self addSubview:titleLabel];
 		
 		size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:12] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(26.0, 41.0, size.width, size.height)];
+		UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, 41.0, size.width, size.height)];
 		viaLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:12];
 		viaLabel.textColor = [UIColor whiteColor];
 		viaLabel.backgroundColor = [UIColor clearColor];
@@ -123,7 +131,7 @@
 		[self addSubview:topicButton];
 		
 		if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
-			_sub1ImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15.0, 260.0, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
+			_sub1ImgView = [[UIImageView alloc] initWithFrame:CGRectMake(9.0, 260.0, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
 			[_sub1ImgView setBackgroundColor:[UIColor whiteColor]];
 			_sub1ImgView.userInteractionEnabled = YES;
 			[self addSubview:_sub1ImgView];
@@ -132,7 +140,7 @@
 			tap1Recognizer.numberOfTapsRequired = 1;
 			[_sub1ImgView addGestureRecognizer:tap1Recognizer];
 			
-			_sub2ImgView = [[UIImageView alloc] initWithFrame:CGRectMake(165.0, 260.0, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
+			_sub2ImgView = [[UIImageView alloc] initWithFrame:CGRectMake(161.0, 260.0, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
 			[_sub2ImgView setBackgroundColor:[UIColor whiteColor]];
 			_sub2ImgView.userInteractionEnabled = YES;
 			[self addSubview:_sub2ImgView];
@@ -144,9 +152,9 @@
 		
 		
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_likeButton.frame = CGRectMake(9.0, 365.0, 93.0, 43.0);
+		_likeButton.frame = CGRectMake(9.0, 367.0, 93.0, 43.0);
 		[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
+		//[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_Active.png"] forState:UIControlStateHighlighted];
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
@@ -175,8 +183,8 @@
 		//rt = UIEdgeInsetsMake(0.0, 2.0, 0.0, -2.0);
 		
 		_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_commentButton.frame = CGRectMake(103.0, 365.0, 114.0, 43.0);
-		[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
+		_commentButton.frame = CGRectMake(102.0, 367.0, 115.0, 43.0);
+		//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
 		[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_Active.png"] forState:UIControlStateHighlighted];
 		[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
 		[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
@@ -195,8 +203,8 @@
 		
 		
 		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		sourceButton.frame = CGRectMake(217.0, 365.0, 93.0, 43.0);
-		[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
+		sourceButton.frame = CGRectMake(217.0, 367.0, 93.0, 43.0);
+		//[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		sourceButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, 1.0, -2.0, -1.0);
 		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
@@ -208,7 +216,7 @@
 		if (_vo.totalLikes > 0) {
 			int offset2 = 15;
 			for (SNTwitterUserVO *tuVO in _vo.userLikes) {
-				SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 320.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
+				SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 332.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
 				[self addSubview:avatarView];
 				offset2 += 31.0;
 			}
@@ -315,7 +323,7 @@
 										  _vo, @"article_vo", 
 										  (SNImageVO *)[_vo.images objectAtIndex:0], @"image_vo", 
 										  [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
-										  [NSValue valueWithCGRect:CGRectMake(_articleImgView.frame.origin.x, _articleImgView.frame.origin.y + 8.0, _articleImgView.frame.size.width, _articleImgView.frame.size.height)], @"frame", nil];
+										  [NSValue valueWithCGRect:CGRectMake(_articleImgView.frame.origin.x + 5.0, _articleImgView.frame.origin.y + 8.0, _articleImgView.frame.size.width, _articleImgView.frame.size.height)], @"frame", nil];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
 }

@@ -556,7 +556,7 @@
 				NSMutableArray *list = [NSMutableArray array];
 				
 				int tot = 0;
-				int offset = 8;
+				int offset = 6;
 				for (NSDictionary *serverList in parsedLists) {
 					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverList];
 					//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);

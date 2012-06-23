@@ -79,7 +79,7 @@
 	CGSize size2;
 	
 	int offset = 17;
-	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(10.0, 10.0) imageURL:_vo.avatarImage_url handle:_vo.twitterHandle];
+	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(15.0, 10.0) imageURL:_vo.avatarImage_url handle:_vo.twitterHandle];
 	[_scrollView addSubview:avatarImgView];
 	
 	size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
