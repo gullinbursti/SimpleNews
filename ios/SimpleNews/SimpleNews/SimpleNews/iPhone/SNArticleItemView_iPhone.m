@@ -213,7 +213,7 @@
 			[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:_videoButton];
 			
-			UIImageView *playImgView = [[UIImageView alloc] initWithFrame:CGRectMake(120.0, 82.0, 64.0, 64.0)];
+			UIImageView *playImgView = [[UIImageView alloc] initWithFrame:CGRectMake(113.0, 76.0, 64.0, 64.0)];
 			playImgView.image = [UIImage imageNamed:@"playButton.png"];
 			[_videoImgView addSubview:playImgView];
 			
@@ -229,7 +229,8 @@
 		_likeButton.frame = CGRectMake(0.0, offset - 2.0, 93.0, 43.0);
 		//[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_Active.png"] forState:UIControlStateHighlighted];
-		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
+		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+		_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
 		[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
 		[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
 		_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0];
@@ -268,10 +269,12 @@
 		
 		if (_vo.totalLikes > 0) {
 			int offset2 = 5;
+			int tot = 0;
 			for (SNTwitterUserVO *tuVO in _vo.userLikes) {
 				SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, offset - 38.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
 				[self addSubview:avatarView];
 				offset2 += 31.0;
+				tot++;
 			}
 		}
 	}
@@ -306,6 +309,7 @@
 }
 
 -(void)_goVideo {
+	NSLog(@"Y-POS:[%f]", self.frame.origin.y);
 	[_videoButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
 	[UIView animateWithDuration:0.05 animations:^(void) {
 		[_videoButton setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
@@ -314,7 +318,7 @@
 		NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 											  @"video", @"type", 
 											  _vo, @"article_vo", 
-											  nil, @"image_vo", 
+											  (SNImageVO *)[_vo.images objectAtIndex:0], @"image_vo", 
 											  [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
 											  [NSValue valueWithCGRect:CGRectMake(_videoImgView.frame.origin.x + self.frame.origin.x, _videoImgView.frame.origin.y, _videoImgView.frame.size.width, _videoImgView.frame.size.height)], @"frame", nil];
 		

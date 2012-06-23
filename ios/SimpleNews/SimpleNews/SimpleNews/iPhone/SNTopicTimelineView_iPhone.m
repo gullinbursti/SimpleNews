@@ -461,6 +461,8 @@
 -(void)_fullscreenMedia:(NSNotification *)notification {
 	NSMutableDictionary *dict = [notification object];
 	
+	NSLog(@"SCROLL-Y:[%f]", [[NSNumber numberWithFloat:[[dict objectForKey:@"offset"] floatValue]] floatValue]);
+	
 	_articleVO = [dict objectForKey:@"article_vo"];
 	[dict setValue:[NSNumber numberWithFloat:[[dict objectForKey:@"offset"] floatValue] - _scrollView.contentOffset.y] forKey:@"offset"];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_FULLSCREEN_MEDIA" object:dict];

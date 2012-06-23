@@ -555,6 +555,9 @@
 	frame.origin.y = 44.0 + frame.origin.y + offset;
 	_fullscreenFrame = frame;
 	
+	NSLog(@"OFFSET:[%f]", offset);
+	
+	
 	for (UIView *view in [_blackMatteView subviews])
 		[view removeFromSuperview];
 	

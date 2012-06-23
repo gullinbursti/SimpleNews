@@ -95,8 +95,7 @@
 		[_pauseButton addTarget:self action:@selector(_goPlayPause) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:_pauseButton];
 		
-		_bufferingImgView = [[UIImageView alloc] initWithFrame:CGRectMake((_videoHolderView.frame.size.width * 0.5) - 32.0, (_videoHolderView.frame.size.height * 0.5) - 32.0, 64.0, 64.0)];
-		_bufferingImgView.alpha = 0.0;
+		_bufferingImgView = [[UIImageView alloc] initWithFrame:CGRectMake((self.frame.size.width * 0.5) - 32.0, (self.frame.size.height * 0.5) - 32.0, 64.0, 64.0)];
 		_bufferingImgView.image = [UIImage imageNamed:@"videoBufferingBackground.png"];
 		[self addSubview:_bufferingImgView];
 		
@@ -158,6 +157,7 @@
 	_progressImgView.frame = CGRectMake(_progressImgView.frame.origin.x, _videoHolderView.frame.size.height - 8.0, 0.0, 8.0);
 	_timeLabel.frame = CGRectMake(_timeLabel.frame.origin.x, _videoHolderView.frame.size.height - 18.0, _timeSize.width, _timeSize.height);
 	
+	_bufferingImgView.frame = CGRectMake((self.frame.size.width * 0.5) - 32.0, (self.frame.size.height * 0.5) - 32.0, 64.0, 64.0);
 	_playButton.frame = CGRectMake((self.frame.size.width * 0.5) - 32.0, (self.frame.size.height * 0.5) - 32.0, 64.0, 64.0);
 	_pauseButton.frame = CGRectMake((self.frame.size.width * 0.5) - 32.0, (self.frame.size.height * 0.5) - 32.0, 64.0, 64.0);
 }

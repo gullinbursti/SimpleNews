@@ -17,6 +17,8 @@
 @synthesize article_id, topicID, type_id, topicTitle, title, article_url, hasLiked, twitterName, twitterHandle, tweetID, tweetMessage, content, video_url, avatarImage_url, totalLikes, added, comments, images, userLikes;
 
 +(SNArticleVO *)articleWithDictionary:(NSDictionary *)dictionary {
+	NSError *error = NULL;
+	NSRegularExpression *contentRegex = [NSRegularExpression regularExpressionWithPattern:@"&[^;]*;" options:NSRegularExpressionCaseInsensitive error:&error];
 	
 	SNArticleVO *vo = [[SNArticleVO alloc] init];
 	vo.dictionary = dictionary;
@@ -31,11 +33,16 @@
 	vo.twitterName = [dictionary objectForKey:@"twitter_name"];
 	vo.twitterHandle = [dictionary objectForKey:@"twitter_handle"];
 	vo.tweetMessage = [dictionary objectForKey:@"tweet_msg"]; 
-	vo.content = [dictionary objectForKey:@"content"];
+	
+	if ([dictionary objectForKey:@"content"] != (id)[NSNull null]) {
+		vo.content = [contentRegex stringByReplacingMatchesInString:[dictionary objectForKey:@"content"] options:0 range:NSMakeRange(0, [[dictionary objectForKey:@"content"] length]) withTemplate:@""];
+		[vo.content stringByAppendingString:@"…"];
+	} else
+		vo.content = @"";
+	
 	vo.video_url = [dictionary objectForKey:@"video_url"];
 	vo.avatarImage_url = [dictionary objectForKey:@"avatar_url"];
 	vo.hasLiked = (BOOL)[[dictionary objectForKey:@"liked"] intValue];
-	//vo.totalLikes = [[dictionary objectForKey:@"likes"] intValue];
 	
 	if (vo.title == (id)[NSNull null]) 
 		vo.title = @"Untitled";

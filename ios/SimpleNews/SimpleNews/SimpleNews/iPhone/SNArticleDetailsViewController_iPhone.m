@@ -59,8 +59,15 @@
 	_scrollView.showsVerticalScrollIndicator = NO;
 	[self.view addSubview:_scrollView];
 	
-	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, _scrollView.frame.size.height)];
-	UIImage *img = [UIImage imageNamed:@"timelineDiscoverBG.png"];
+//	NSString *cardBG;	
+//	if (_vo.totalLikes > 0)
+//		cardBG = @"defaultCardTimeline_Likes.png";
+//	
+//	else
+//		cardBG = @"defaultCardTimeline_noLikes.png";
+	
+	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 4.0, 320.0, _scrollView.frame.size.height)];
+	UIImage *img = [UIImage imageNamed:@"myFriendsBackground.png"];
 	bgImgView.image = [img stretchableImageWithLeftCapWidth:10.0 topCapHeight:20.0];
 	[_scrollView addSubview:bgImgView];
 	
@@ -78,8 +85,8 @@
 	CGSize size;
 	CGSize size2;
 	
-	int offset = 17;
-	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(15.0, 10.0) imageURL:_vo.avatarImage_url handle:_vo.twitterHandle];
+	int offset = 22;
+	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(15.0, 16.0) imageURL:_vo.avatarImage_url handle:_vo.twitterHandle];
 	[_scrollView addSubview:avatarImgView];
 	
 	size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
@@ -142,7 +149,7 @@
 	}
 	
 	size = [timeSince sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(281.0 - size.width, offset + 1.0, size.width, size.height)];
+	UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(293.0 - size.width, offset + 1.0, size.width, size.height)];
 	dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
 	dateLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 	dateLabel.backgroundColor = [UIColor clearColor];
@@ -152,23 +159,23 @@
 	offset += 30;
 	
 	size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(274.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-	UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, offset, 280.0, size.height)];
+	UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(16.0, offset, 280.0, size.height)];
 	titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
 	titleLabel.textColor = [SNAppDelegate snGreyColor];
 	titleLabel.backgroundColor = [UIColor clearColor];
 	titleLabel.text = _vo.title;
 	titleLabel.numberOfLines = 0;
 	[_scrollView addSubview:titleLabel];
-	offset += size.height + 20;
+	offset += size.height + 7;
 	
-	EGOImageView *articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(20.0, offset, 280.0, 280.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
+	EGOImageView *articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(15.0, offset, 290.0, 290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
 	articleImgView.imageURL = [NSURL URLWithString:((SNImageVO *)[_vo.images objectAtIndex:0]).url];
 	[_scrollView addSubview:articleImgView];
-	offset += (280.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
+	offset += (290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
 	
-	offset += 28;
+	offset += 8;
 	if (_vo.type_id > 4) {
-		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(25.0, offset, 270.0, 202.0) articleVO:_vo];
+		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:CGRectMake(15.0, offset, 290.0, 202.0) articleVO:_vo];
 		//[_videoPlayerView startPlayback];
 		[_scrollView addSubview:_videoPlayerView];		
 		offset += _videoPlayerView.frame.size.height + 38;
@@ -186,22 +193,27 @@
 	[_scrollView addSubview:contentLabel];
 	offset += size.height;
 	
-	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, offset);
+	offset += 10;
+	bgImgView.frame = CGRectMake(bgImgView.frame.origin.x, bgImgView.frame.origin.y, bgImgView.frame.size.width, offset);
+	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, offset + 10.0);
 	
-	UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(10.0, 440.0, 320.0, 40.0)];
-	[self.view addSubview:footerView];
+	UIImageView *footerImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 435.0, 320.0, 44.0)];
+	footerImgView.image = [UIImage imageNamed:@"articleDetailsFooterBG.png"];
+	footerImgView.userInteractionEnabled = YES;
+	[self.view addSubview:footerImgView];
 	
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_likeButton.frame = CGRectMake(0.0, 0.0, 93.0, 43.0);
-	[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
+	_likeButton.frame = CGRectMake(0.0, 1.0, 95.0, 43.0);
+	//[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
 	[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_Active.png"] forState:UIControlStateHighlighted];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
+	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
 	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
 	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes] forState:UIControlStateNormal];
-	[footerView addSubview:_likeButton];
+	[footerImgView addSubview:_likeButton];
 	
 	if (_vo.hasLiked)
 		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
@@ -210,8 +222,8 @@
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	
 	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_commentButton.frame = CGRectMake(93.0, 0.0, 114.0, 43.0);
-	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
+	_commentButton.frame = CGRectMake(95.0, 1.0, 130.0, 43.0);
+	//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
 	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_Active.png"] forState:UIControlStateHighlighted];
 	[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
 	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
@@ -220,29 +232,30 @@
 	_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
 	[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	[_commentButton setTitle:[NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]] forState:UIControlStateNormal];
-	[footerView addSubview:_commentButton];
+	[footerImgView addSubview:_commentButton];
 	
 	UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	sourceButton.frame = CGRectMake(207.0, 0.0, 93.0, 43.0);
-	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
+	sourceButton.frame = CGRectMake(226.0, 1.0, 95.0, 43.0);
+	//[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+	//sourceButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, 4.0, 0.0, -4.0);
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
 	[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-	[footerView addSubview:sourceButton];
+	[footerImgView addSubview:sourceButton];
 	
-	if (_vo.totalLikes > 0) {
-		UIImageView *likesImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 390.0, 320.0, 54.0)];
-		likesImgView.image = [UIImage imageNamed:@"commentsLikeHeaderBG.png"];
-		[self.view addSubview:likesImgView];
-		
-		int offset2 = 37;
-		for (SNTwitterUserVO *tuVO in _vo.userLikes) {
-			SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 400.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
-			[self.view addSubview:avatarView];
-			offset2 += 40.0;
-		}
-	}
+//	if (_vo.totalLikes > 0) {
+//		UIImageView *likesImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 390.0, 320.0, 54.0)];
+//		likesImgView.image = [UIImage imageNamed:@"commentsLikeHeaderBG.png"];
+//		[self.view addSubview:likesImgView];
+//		
+//		int offset2 = 37;
+//		for (SNTwitterUserVO *tuVO in _vo.userLikes) {
+//			SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 400.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
+//			[self.view addSubview:avatarView];
+//			offset2 += 40.0;
+//		}
+//	}
 }
 
 -(void)viewDidLoad {
@@ -271,7 +284,7 @@
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
--(void)_goComment {
+-(void)_goComments {
 	[self.navigationController pushViewController:[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:_vo] animated:YES];
 }
 
@@ -364,18 +377,8 @@
 		
 		else {
 			_vo.totalLikes = [[parsedLike objectForKey:@"likes"] intValue];
-			[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
-			
-			if (_vo.totalLikes > 0) {
-				_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
-				[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
-				
-			} else {
-				_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
-				[_likeButton setTitle:@"" forState:UIControlStateNormal];
-			}
+			[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes] forState:UIControlStateNormal];
 		}
-		
 	}
 }
 
