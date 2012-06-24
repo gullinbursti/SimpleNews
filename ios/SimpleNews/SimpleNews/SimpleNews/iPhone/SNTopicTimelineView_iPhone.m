@@ -307,7 +307,7 @@
 	if (_articleListResource == nil) {
 		//_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
 		//_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
-		_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
+		//_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 		_progressHUD.graceTime = 2.0;
 		_progressHUD.taskInProgress = YES;
@@ -325,7 +325,7 @@
 	
 	if (_updateListResource == nil) {
 		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
-		_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
+		//_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 		_progressHUD.graceTime = 2.0;
 		_progressHUD.taskInProgress = YES;
@@ -345,7 +345,7 @@
 - (void)_retrieveTopicList {
 	if (_articleListResource == nil) {
 		//_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
-		_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
+		//_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
 		//_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 		_progressHUD.graceTime = 2.0;
@@ -363,7 +363,7 @@
 - (void)_updateTopicList {
 	if (_updateListResource == nil) {
 		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
-		_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
+		//_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
 		_progressHUD.mode = MBProgressHUDModeIndeterminate;
 		_progressHUD.graceTime = 2.0;
 		_progressHUD.taskInProgress = YES;
@@ -566,7 +566,7 @@
 						[list addObject:vo];
 					
 					int height;
-					height = 88;
+					height = 81;
 					CGSize size;
 					
 					if (vo.totalLikes > 0) {
@@ -577,9 +577,11 @@
 	//				if (vo.topicID == 1 || vo.topicID == 2)
 	//					imgWidth = 296;			
 					
-					if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0)
-						imgWidth = 150;
-						
+					if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
+						imgWidth = 145;
+						height -= 2;
+					}
+					
 					if (vo.type_id > 1 && vo.type_id - 4 < 0) {
 						height += imgWidth * ((SNImageVO *)[vo.images objectAtIndex:0]).ratio;
 						height += 9; //20
@@ -593,7 +595,7 @@
 					
 					if (vo.type_id > 3) {
 						height += 217;
-						height += 26; //9
+						height += 7; //9
 					}
 					
 					SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo];
@@ -625,16 +627,16 @@
 					}
 				}
 				
-				offset += 16.0;
+				offset += 12.0;
 				
 				if ([_articles count] == 30 && [_articles count] < 250) {
 					_loadMoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
-					_loadMoreButton.frame = CGRectMake(112.0, offset, 96.0, 34.0);
-					[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
-					[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];		
+					_loadMoreButton.frame = CGRectMake(118.0, offset, 84.0, 38.0);
+					[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
+					[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
 					[_loadMoreButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 					[_loadMoreButton addTarget:self action:@selector(_goLoadMore) forControlEvents:UIControlEventTouchUpInside];
-					_loadMoreButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:10.0];
+					_loadMoreButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
 					[_loadMoreButton setTitle:@"Load More" forState:UIControlStateNormal];
 					[_scrollView addSubview:_loadMoreButton];
 					offset += 50.0;
@@ -694,7 +696,7 @@
 					[list addObject:vo];
 				
 				int height;
-				height = 88;
+				height = 81;
 				CGSize size;
 				
 				if (vo.totalLikes > 0) {
@@ -702,6 +704,13 @@
 				}
 				
 				int imgWidth = 290;
+				//				if (vo.topicID == 1 || vo.topicID == 2)
+				//					imgWidth = 296;			
+				
+				if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
+					imgWidth = 145;
+					height -= 2;
+				}
 				
 				
 				if (vo.type_id > 1 && vo.type_id - 4 < 0) {
@@ -716,7 +725,7 @@
 				
 				if (vo.type_id > 3) {
 					height += 217;
-					height += 26; //9
+					height += 7; //9
 				}
 				
 				SNArticleItemView_iPhone *articleItemView = [[SNArticleItemView_iPhone alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo];

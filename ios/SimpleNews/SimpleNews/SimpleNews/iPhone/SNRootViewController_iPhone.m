@@ -50,8 +50,10 @@
 		_profileItems = [NSMutableArray new];
 		
 		_isIntro = YES;
+		_isMainShare = NO;
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showShareSheet:) name:@"SHOW_SHARE_SHEET" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showMainShareSheet:) name:@"SHOW_MAIN_SHARE_SHEET" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showSubShareSheet:) name:@"SHOW_SUB_SHARE_SHEET" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticlePage:) name:@"SHOW_ARTICLE_PAGE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleComments:) name:@"SHOW_ARTICLE_COMMENTS" object:nil];
@@ -173,6 +175,7 @@
 	_topicsTableView.dataSource = self;
 	_topicsTableView.scrollsToTop = NO;
 	_topicsTableView.showsVerticalScrollIndicator = NO;
+	_topicsTableView.userInteractionEnabled = NO;
 	[_holderView addSubview:_topicsTableView];
 	
 	_shadowImgView = [[UIImageView alloc] initWithFrame:CGRectMake(207.0, 0.0, 113.0, 480.0)];
@@ -237,6 +240,7 @@
 		} completion:^(BOOL finished) {
 			_isIntro = NO;
 			[_discoveryListView interactionEnabled:YES];
+			_topicsTableView.userInteractionEnabled = YES;
 		}];
 	}
 }
@@ -269,7 +273,11 @@
 }
 
 -(void)_goShare {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SHARE_SHEET" object:_articleVO];
+	if (_articleVO.type_id < 4)
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_MAIN_SHARE_SHEET" object:_articleVO];
+	
+	else
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SUB_SHARE_SHEET" object:_articleVO];
 }
 
 -(void)_goDetails {
@@ -470,7 +478,9 @@
 	[self.navigationController pushViewController:webPageViewController animated:YES];
 }
 
--(void)_showShareSheet:(NSNotification *)notification {
+-(void)_showMainShareSheet:(NSNotification *)notification {
+	_isMainShare = YES;
+	
 	_articleVO = (SNArticleVO *)[notification object];
 	
 	NSString *openSource;
@@ -484,6 +494,27 @@
 																				delegate:self 
 																	cancelButtonTitle:@"Cancel" 
 																 destructiveButtonTitle:nil 
+																	otherButtonTitles:@"View Article", @"Twitter", @"SMS", @"Copy URL", @"Email", openSource, nil];
+	actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+	[actionSheet showInView:self.view];
+}
+
+-(void)_showSubShareSheet:(NSNotification *)notification {
+	_isMainShare = NO;
+	
+	_articleVO = (SNArticleVO *)[notification object];
+	
+	NSString *openSource;
+	if ([_articleVO.article_url rangeOfString:@"itunes.apple.com"].length > 0)
+		openSource = @"View in App Store";
+	
+	else
+		openSource = @"Open Web View";
+	
+	UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil 
+																				delegate:self 
+																	cancelButtonTitle:@"Cancel" 
+															 destructiveButtonTitle:nil 
 																	otherButtonTitles:@"Twitter", @"SMS", @"Copy URL", @"Email", openSource, nil];
 	actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[actionSheet showInView:self.view];
@@ -704,7 +735,12 @@
 
 #pragma mark - ActionSheet Delegates
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-	if (buttonIndex == 0) {
+	int ind = -1 + (buttonIndex + (int)!_isMainShare);
+	
+	if (ind == -1) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_DETAILS" object:_articleVO];
+	
+	} else if (ind == 0) {
 		if (![SNAppDelegate twitterHandle]) {
 			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
 			[alert show];
@@ -729,7 +765,7 @@
 			};
 		}
 		
-	} else if (buttonIndex == 1) {
+	} else if (ind == 1) {
 		MFMessageComposeViewController *mfViewController = [[MFMessageComposeViewController alloc] init];
 		if([MFMessageComposeViewController canSendText]) {
 			mfViewController.body = [NSString stringWithFormat:@"%@ via @getassembly %@", _articleVO.title, _articleVO.article_url];
@@ -742,7 +778,7 @@
 		}
 		
 		
-	} else if (buttonIndex == 2) {
+	} else if (ind == 2) {
 		UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
 		[pasteboard setValue:_articleVO.article_url forPasteboardType:@"public.utf8-plain-text"];
 		//pasteboard.string = _vo.article_url;
@@ -754,7 +790,7 @@
 														  otherButtonTitles:nil];
 		[alert show];
 		
-	} else if (buttonIndex == 3) {
+	} else if (ind == 3) {
 		if ([MFMailComposeViewController canSendMail]) {
 			MFMailComposeViewController *mfViewController = [[MFMailComposeViewController alloc] init];
 			mfViewController.mailComposeDelegate = self;
@@ -772,8 +808,7 @@
 			[alert show];
 		}
 	
-	} else if (buttonIndex == 4) {
-		
+	} else if (ind == 4) {
 		if ([_articleVO.article_url rangeOfString:@"itunes.apple.com"].length > 0)
 			[SNAppDelegate openWithAppStore:_articleVO.article_url];
 		
@@ -798,7 +833,7 @@
 			break;
 			
 		case 2:
-			return (5);
+			return (4);
 			break;
 	}
 }
@@ -889,7 +924,7 @@
 			break;
 			
 		case 2:
-			titles = [NSArray arrayWithObjects:@"My Likes", @"My Comments", @"Friends", @"Invite Friends", @"Logout", nil];
+			titles = [NSArray arrayWithObjects:@"My Likes", @"My Comments", @"Friends", @"Invite Friends", nil];
 			otherCell = [tableView dequeueReusableCellWithIdentifier:[SNRootOtherViewCell_iPhone cellReuseIdentifier]];
 			
 			if (otherCell == nil)
@@ -1019,7 +1054,6 @@
 			[navigationController setNavigationBarHidden:YES];
 			[self.navigationController presentModalViewController:navigationController animated:YES];
 			
-		} else if (indexPath.row == 4) {
 		}
 	}
 }

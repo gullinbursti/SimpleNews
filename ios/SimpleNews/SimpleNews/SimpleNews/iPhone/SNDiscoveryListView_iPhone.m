@@ -285,6 +285,7 @@
 				tot++;
 			}
 			
+			_scrollView.contentOffset = CGPointZero;
 			_articles = list;
 			
 			for (SNDiscoveryItemView_iPhone *itemView in _cardViews)

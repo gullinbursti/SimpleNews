@@ -135,34 +135,25 @@
 			titleLabel.numberOfLines = 0;
 			[self addSubview:titleLabel];
 			
-			UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			[titleButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
-			titleButton.frame = titleLabel.frame;
-			[self addSubview:titleButton];
+			if (_vo.type_id < 4) {
+				UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+				[titleButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
+				titleButton.frame = titleLabel.frame;
+				[self addSubview:titleButton];
+			}
 			
 			offset += size.height + 4.0;
 		}
 		
 		
 		CGRect imgFrame = CGRectMake(5, offset + 1.0, 290.0, 290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
-//		if (_vo.topicID == 1 || _vo.topicID == 2) {
-//			imgFrame.origin.x = 2.0;
-//			imgFrame.size.width = 296.0;
-//			imgFrame.size.height = 296.0 * _vo.imgRatio;
-//		}
-			
-		
 		if (_vo.type_id == 2 || _vo.type_id == 3) {
-//			UIImageView *shadowImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-10.0, (imgFrame.origin.y + imgFrame.size.height) - 53.0, 319.0, 64.0)];
-//			shadowImgView.image = [UIImage imageNamed:@"imageDropShadow.png"];
-//			[self addSubview:shadowImgView];
-			
 			_article1ImgView = [[UIImageView alloc] initWithFrame:imgFrame];
 			[_article1ImgView setBackgroundColor:[UIColor whiteColor]];
 			_article1ImgView.userInteractionEnabled = YES;
 			[self addSubview:_article1ImgView];
 			
-			_imgOverlayView = [[UIView alloc] initWithFrame:imgFrame];
+			_imgOverlayView = [[UIView alloc] initWithFrame:_article1ImgView.frame];
 			[_imgOverlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
 			[self addSubview:_imgOverlayView];
 			
@@ -177,7 +168,7 @@
 			if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 				_article1ImgView.frame = CGRectMake(5.0, offset, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
 				
-				imgFrame = CGRectMake(155.0, offset, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
+				imgFrame = CGRectMake(150.0, offset, 145.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
 				_article2ImgView = [[UIImageView alloc] initWithFrame:imgFrame];
 				[_article2ImgView setBackgroundColor:[UIColor whiteColor]];
 				_article2ImgView.userInteractionEnabled = YES;
@@ -193,17 +184,15 @@
 //				[itunesButton setBackgroundImage:[UIImage imageNamed:@"availableOnAppStoreBadge_Active.png"] forState:UIControlStateHighlighted];
 //				[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
 //				[self addSubview:itunesButton];
+				
+				offset -= 2;
 			}
 			
 			offset += (imgFrame.size.width * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
-			offset += 9;
+			offset += 2;
 		}
 		
 		if (_vo.type_id > 3) {			
-//			UIImageView *shadowImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-10.0, (offset + 229.0) - 53.0, 319.0, 64.0)];
-//			shadowImgView.image = [UIImage imageNamed:@"imageDropShadow.png"];
-//			[self addSubview:shadowImgView];
-			
 			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(5.0, offset, 290.0, 217.0)];
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[self addSubview:_videoImgView];
@@ -218,7 +207,6 @@
 			[_videoImgView addSubview:playImgView];
 			
 			offset += 217;
-			offset += 27;
 		}
 		
 		if (_vo.totalLikes > 0) {
@@ -271,6 +259,9 @@
 			int offset2 = 5;
 			int tot = 0;
 			for (SNTwitterUserVO *tuVO in _vo.userLikes) {
+				if (tot >= 9)
+					break;
+				
 				SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, offset - 38.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
 				[self addSubview:avatarView];
 				offset2 += 31.0;
@@ -390,7 +381,11 @@
 }
 
 -(void)_goShare {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SHARE_SHEET" object:_vo];
+	if (_vo.type_id < 4)
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_MAIN_SHARE_SHEET" object:_vo];
+	
+	else
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SUB_SHARE_SHEET" object:_vo];
 }
 
 

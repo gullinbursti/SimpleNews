@@ -52,6 +52,7 @@
 	
 	BOOL _reloading;
 	BOOL _isIntro;
+	BOOL _isMainShare;
 	
 	int _swipeIndex;
 	

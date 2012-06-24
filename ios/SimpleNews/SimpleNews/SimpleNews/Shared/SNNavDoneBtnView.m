@@ -18,7 +18,7 @@
 		_btn.frame = CGRectMake(1.0, -1.0, frame.size.width, frame.size.height);
 		[_btn setBackgroundImage:[UIImage imageNamed:@"doneButton_nonActive.png"] forState:UIControlStateNormal];
 		[_btn setBackgroundImage:[UIImage imageNamed:@"doneButton_Active.png"] forState:UIControlStateHighlighted];		
-		_btn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
+		_btn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0];
 		//_btn.titleLabel.shadowColor = [UIColor blackColor];
 		//_btn.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
 		//_btn.titleEdgeInsets = UIEdgeInsetsMake(1, 3, -1, -3);

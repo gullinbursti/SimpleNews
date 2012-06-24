@@ -72,15 +72,25 @@
 	_scrollView.contentInset = UIEdgeInsetsMake(8.0, 0.0, -8.0, 0.0);
 	[self.view addSubview:_scrollView];
 	
-	UIImageView *likesImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 44.0, 320.0, 54.0)];
-	likesImgView.image = [UIImage imageNamed:@"commentsLikeHeaderBG.png"];
-	[self.view addSubview:likesImgView];
+	if (_vo.totalLikes > 0) {
+		UIImageView *likesImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 44.0, 320.0, 54.0)];
+		likesImgView.image = [UIImage imageNamed:@"commentsLikeHeaderBG.png"];
+		[self.view addSubview:likesImgView];
 	
-	int offset = 37;
-	for (SNTwitterUserVO *tuVO in _vo.userLikes) {
-		SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset, 55.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
-		[self.view addSubview:avatarView];
-		offset += 31.0;
+		int tot = 0;
+		int offset = 37;
+		for (SNTwitterUserVO *tuVO in _vo.userLikes) {
+			if (tot >= 9)
+				break;
+			
+			SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset, 55.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
+			[self.view addSubview:avatarView];
+			offset += 31.0;
+			tot++;
+		}
+	
+	} else {
+		_scrollView.frame = CGRectMake(_scrollView.frame.origin.x, 44.0, _scrollView.frame.size.width, 301.0);
 	}
 	
 	
@@ -116,7 +126,7 @@
 //	[_bgView addSubview:_likeButton];
 	
 	
-	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(10.0, 15.0, 270.0, 16.0)];
+	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(15.0, 14.0, 270.0, 16.0)];
 	[_commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 	[_commentTxtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 	[_commentTxtField setAutocorrectionType:UITextAutocorrectionTypeNo];
@@ -138,7 +148,7 @@
 	[_bgView addSubview:_commentsLabel];
 	
 	UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	sendButton.frame = CGRectMake(260.0, 5.0, 60.0, 35.0);
+	sendButton.frame = CGRectMake(264.0, 5.0, 54.0, 35.0);
 	[sendButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 	[sendButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 	[sendButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
@@ -160,7 +170,11 @@
 		_commentOffset += ((kItemHeight + txtSize.height) + 8.0);
 	}
 	
-	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, MAX(347.0, _commentOffset));
+	if (_vo.totalLikes > 0)
+		_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, MAX(347.0, _commentOffset));
+	
+	else
+		_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, MAX(305.0, _commentOffset));
 }
 
 -(void)viewDidLoad {
@@ -211,7 +225,11 @@
 }
 
 -(void)_goShare {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SHARE_SHEET" object:_vo];
+	if (_vo.type_id < 4)
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_MAIN_SHARE_SHEET" object:_vo];
+	
+	else
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SUB_SHARE_SHEET" object:_vo];
 }
 
 -(void)_goLike {

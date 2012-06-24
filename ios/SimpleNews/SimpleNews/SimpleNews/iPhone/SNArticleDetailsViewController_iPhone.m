@@ -78,9 +78,9 @@
 	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:backBtnView];
 	
-	SNNavShareBtnView *shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
-	[[shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:shareBtnView];
+//	SNNavShareBtnView *shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+//	[[shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+//	[headerView addSubview:shareBtnView];
 	
 	CGSize size;
 	CGSize size2;
@@ -183,7 +183,7 @@
 	
 	size = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12] constrainedToSize:CGSizeMake(280.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 	UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, offset, size.width, size.height)];
-	contentLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	contentLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:12];
 	contentLabel.textColor = [UIColor colorWithWhite:0.5 alpha:1.0];
 	contentLabel.backgroundColor = [UIColor clearColor];
 	contentLabel.shadowColor = [UIColor colorWithWhite:1.0 alpha:0.5];
@@ -193,7 +193,7 @@
 	[_scrollView addSubview:contentLabel];
 	offset += size.height;
 	
-	offset += 10;
+	offset += 13;
 	bgImgView.frame = CGRectMake(bgImgView.frame.origin.x, bgImgView.frame.origin.y, bgImgView.frame.size.width, offset);
 	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, offset + 10.0);
 	
@@ -207,10 +207,11 @@
 	//[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
 	[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_Active.png"] forState:UIControlStateHighlighted];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
-	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
+	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, -4.0, -2.0, 4.0);
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
-	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0];
+	_likeButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes] forState:UIControlStateNormal];
 	[footerImgView addSubview:_likeButton];
@@ -226,10 +227,11 @@
 	//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
 	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_Active.png"] forState:UIControlStateHighlighted];
 	[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
-	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
+	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, -4.0, -2.0, 4.0);
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
-	_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:10.0];
+	_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0];
+	_commentButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 	[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	[_commentButton setTitle:[NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]] forState:UIControlStateNormal];
 	[footerImgView addSubview:_commentButton];
@@ -238,24 +240,24 @@
 	sourceButton.frame = CGRectMake(226.0, 1.0, 95.0, 43.0);
 	//[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-	//sourceButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, 4.0, 0.0, -4.0);
+	sourceButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
 	[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
 	[footerImgView addSubview:sourceButton];
 	
-//	if (_vo.totalLikes > 0) {
-//		UIImageView *likesImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 390.0, 320.0, 54.0)];
-//		likesImgView.image = [UIImage imageNamed:@"commentsLikeHeaderBG.png"];
-//		[self.view addSubview:likesImgView];
-//		
-//		int offset2 = 37;
-//		for (SNTwitterUserVO *tuVO in _vo.userLikes) {
-//			SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 400.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
-//			[self.view addSubview:avatarView];
-//			offset2 += 40.0;
-//		}
-//	}
+	if (_vo.totalLikes > 0) {
+		UIImageView *likesImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 390.0, 320.0, 54.0)];
+		likesImgView.image = [UIImage imageNamed:@"articleDetailsLikeBG.png"];
+		[self.view addSubview:likesImgView];
+		
+		int offset2 = 10;
+		for (SNTwitterUserVO *tuVO in _vo.userLikes) {
+			SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 401.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
+			[self.view addSubview:avatarView];
+			offset2 += 40.0;
+		}
+	}
 }
 
 -(void)viewDidLoad {
@@ -289,7 +291,7 @@
 }
 
 -(void)_goShare {
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SHARE_SHEET" object:_vo];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_SUB_SHARE_SHEET" object:_vo];
 }
 
 -(void)_goLike {

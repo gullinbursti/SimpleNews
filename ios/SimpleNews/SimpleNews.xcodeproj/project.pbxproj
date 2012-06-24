@@ -391,6 +391,8 @@
 		4CE58F9F1553658A00668B1E /* SNNavTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE58F9E1553658A00668B1E /* SNNavTitleView.m */; };
 		4CE58FB4155499CD00668B1E /* profile.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CE58FB2155499CD00668B1E /* profile.plist */; };
 		4CE58FB5155499CD00668B1E /* sources.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CE58FB3155499CD00668B1E /* sources.plist */; };
+		4CEE8B2B1596DAAE0039B601 /* articleDetailsLikeBG.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B291596DAAE0039B601 /* articleDetailsLikeBG.png */; };
+		4CEE8B2C1596DAAE0039B601 /* articleDetailsLikeBG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B2A1596DAAE0039B601 /* articleDetailsLikeBG@2x.png */; };
 		4CEF4A701506D58E00A1AD7E /* options.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CEF4A6F1506D58E00A1AD7E /* options.plist */; };
 		4CEF4AB91506F44000A1AD7E /* SNPaginationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEF4AB81506F44000A1AD7E /* SNPaginationView.m */; };
 		4CF63C32150B207B00055EFD /* overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CF63C30150B207B00055EFD /* overlay.png */; };
@@ -988,6 +990,8 @@
 		4CE58FAF155490C500668B1E /* SNProfileViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNProfileViewController_iPhone.h; sourceTree = "<group>"; };
 		4CE58FB2155499CD00668B1E /* profile.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = profile.plist; sourceTree = "<group>"; };
 		4CE58FB3155499CD00668B1E /* sources.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = sources.plist; sourceTree = "<group>"; };
+		4CEE8B291596DAAE0039B601 /* articleDetailsLikeBG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = articleDetailsLikeBG.png; sourceTree = "<group>"; };
+		4CEE8B2A1596DAAE0039B601 /* articleDetailsLikeBG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "articleDetailsLikeBG@2x.png"; sourceTree = "<group>"; };
 		4CEF4A6F1506D58E00A1AD7E /* options.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = options.plist; sourceTree = "<group>"; };
 		4CEF4AB71506F44000A1AD7E /* SNPaginationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPaginationView.h; sourceTree = "<group>"; };
 		4CEF4AB81506F44000A1AD7E /* SNPaginationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPaginationView.m; sourceTree = "<group>"; };
@@ -1902,6 +1906,8 @@
 		4CD01B571514049B005B490C /* Articles */ = {
 			isa = PBXGroup;
 			children = (
+				4CEE8B291596DAAE0039B601 /* articleDetailsLikeBG.png */,
+				4CEE8B2A1596DAAE0039B601 /* articleDetailsLikeBG@2x.png */,
 				4CA0DA7B159577F60070B774 /* articleDetailsFooterBG.png */,
 				4CA0DA7C159577F60070B774 /* articleDetailsFooterBG@2x.png */,
 				4CE14C931595130A007F99D5 /* defaultCardTimeline_Likes.png */,
@@ -2622,6 +2628,8 @@
 				4CE14CA215951D9D007F99D5 /* defaultCardDiscover_noLikes@2x.png in Resources */,
 				4CA0DA7D159577F60070B774 /* articleDetailsFooterBG.png in Resources */,
 				4CA0DA7E159577F60070B774 /* articleDetailsFooterBG@2x.png in Resources */,
+				4CEE8B2B1596DAAE0039B601 /* articleDetailsLikeBG.png in Resources */,
+				4CEE8B2C1596DAAE0039B601 /* articleDetailsLikeBG@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
