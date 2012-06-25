@@ -33,6 +33,30 @@
 @synthesize selectedIndex = _selectedIndex;
 @synthesize scrollView = _scrollView;
 
+- (void)loadView
+{
+	self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	
+	CGRect bounds = self.view.bounds;
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, bounds.size.width, bounds.size.height - 44.0)];
+	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	//_scrollView.opaque = NO;
+	_scrollView.scrollsToTop = NO;
+	_scrollView.pagingEnabled = YES;
+	_scrollView.showsHorizontalScrollIndicator = NO;
+	_scrollView.showsVerticalScrollIndicator = NO;
+	_scrollView.alwaysBounceVertical = NO;
+	_scrollView.delegate = self;
+	[self.view addSubview:_scrollView];
+
+	_centerView = [_delegate makeItemViewControllerForPageViewController:self];
+	[_scrollView addSubview:_centerView.view];
+	_previousView = [_delegate makeItemViewControllerForPageViewController:self];
+	_nextView = [_delegate makeItemViewControllerForPageViewController:self];
+	
+	[self configureView:NO];
+}
+
 - (void)configureWithSelectedIndex:(NSUInteger)index fromItems:(NSArray *)allItems
 {
 	self.selectedIndex = index;
@@ -95,23 +119,6 @@
 		
 		[self _adjustItemPositions:YES];
 	}
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-
-	_scrollView.pagingEnabled = YES;
-	_scrollView.showsHorizontalScrollIndicator = NO;
-	_scrollView.showsVerticalScrollIndicator = NO;
-	_scrollView.delegate = self;
-	
-	_centerView = [_delegate makeItemViewControllerForPageViewController:self];
-	[_scrollView addSubview:_centerView.view];
-	_previousView = [_delegate makeItemViewControllerForPageViewController:self];
-	_nextView = [_delegate makeItemViewControllerForPageViewController:self];
-	
-	[self configureView:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
