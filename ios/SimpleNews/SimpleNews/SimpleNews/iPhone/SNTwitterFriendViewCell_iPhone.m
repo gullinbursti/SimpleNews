@@ -50,11 +50,13 @@
 
 - (id)initAsSolo {
 	if ((self = [self init])) {
-		_bgImgView.frame = CGRectMake(12.0, 0.0, 284, 69.0);
+		_isSoloCell = YES;
+		
+		_bgImgView.frame = CGRectMake(8.0, -1.0, 285, 65.0);
 		_bgImgView.image = [UIImage imageNamed:@"soloBackground.png"];
 		
-		_handleLabel.frame = CGRectMake(59.0, 27.0, 200.0, 16.0);
-		_overlayView.frame = CGRectMake(5.0, 4.0, self.frame.size.width - 31.0, 58.0);
+		_handleLabel.frame = CGRectMake(59.0, 21.0, 200.0, 16.0);
+		_overlayView.frame = CGRectMake(5.0, 3.0, self.frame.size.width - 31.0, 54.0);
 		[_lineView removeFromSuperview];
 	}
 	
@@ -68,7 +70,7 @@
 	if ((self = [super init])) { //WithStyle:UITableViewCellStyleDefault reuseIdentifier:nil])) {
 		_isSoloCell = NO;
 		
-		_bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.frame.size.width - 20.0, 56.0)];
+		_bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-1.0, 0.0, self.frame.size.width - 18.0, 56.0)];
 		[self addSubview:_bgImgView];
 		
 		_handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(59.0, 21.0, 200.0, 16.0)];
@@ -106,10 +108,17 @@
 	
 	if (_isSoloCell) {
 		CGRect frame = avatarImgView.frame;
-		frame.origin.y += 4.0;
+		frame.origin.y += 2.0;
 		avatarImgView.frame = frame;
 		
-		_handleLabel.frame = CGRectMake(59.0, 24.0, 200.0, 16.0);
+		_handleLabel.frame = CGRectMake(59.0, 22.0, 200.0, 16.0);
+		
+		if (_isFinderCell) {
+			frame.origin.y -= 3.0;
+			avatarImgView.frame = frame;	
+			
+			_handleLabel.frame = CGRectMake(59.0, 19.0, 200.0, 16.0);
+		}
 	}
 	
 	_handleLabel.text = [NSString stringWithFormat:@"@%@", _twitterUserVO.handle];
@@ -121,22 +130,23 @@
 	
 	if (_isFinderCell) {
 		_inviteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_inviteButton.frame = CGRectMake(215.0, 7.0, 63.0, 44.0);
-		[_inviteButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
-		[_inviteButton setBackgroundImage:[[UIImage imageNamed:@"genericButtonB_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];		
+		_inviteButton.frame = CGRectMake(219.0, 10.0, 57.0, 39.0);
+		[_inviteButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
+		[_inviteButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];		
 		[_inviteButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 		[_inviteButton addTarget:self action:@selector(_goInvite) forControlEvents:UIControlEventTouchUpInside];
-		_inviteButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11.0];
+		_inviteButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
 		[_inviteButton setTitle:@"Invite" forState:UIControlStateNormal];
 		[self addSubview:_inviteButton];
 		
 	} else {
-		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(250.0, 17.0, 24.0, 24.0)];
+		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(257.0, 14.0, 24.0, 24.0)];
 		chevronView.image = [UIImage imageNamed:@"chevron.png"];
 		[self addSubview:chevronView];
 		
-		if (_isSoloCell)
-			chevronView.frame = CGRectMake(250.0, 21.0, 24.0, 24.0);
+		if (_isSoloCell) {
+			chevronView.frame = CGRectMake(257.0, 18.0, 24.0, 24.0);
+		}
 	}
 }
 

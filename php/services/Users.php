@@ -151,18 +151,22 @@
 			return (true);
 		}
 	    
-		function findFriends($twitter_id) {
+		function findFriends($user_id, $twitter_id) {
 			$isFound = "false";
 			
 			$query = 'SELECT `id` FROM `tblUsers` WHERE `twitter_id` = "'. $twitter_id .'";';
 			$result = mysql_query($query);
-			
-			if (mysql_num_rows($result) > 0)
+			if (mysql_num_rows($result) > 0) {
 				$isFound = "true";
+				
+				$row = mysql_fetch_row($result);				
+				$query = 'INSERT INTO `tblUserFriends` (`user_id`, `friend_id`, `isComment`, `isLike`, `isShare`, `added`) VALUES ('. $user_id .', '. $row[0] .', "Y", "Y", "Y", NOW());';
+				$result = mysql_query($query);				
+			}
 			
 			$this->sendResponse(200, json_encode(array(
 				"result" => $isFound
-			)));
+			)));			
 			return (true);
 		}
 		

@@ -25,6 +25,8 @@
 	BOOL _isPopularList;
 }
 
+@property (nonatomic, retain)UIView *overlayView;
+
 - (id)initWithFrame:(CGRect)frame headerTitle:(NSString *)title isTop10:(BOOL)isPopular;
 - (void)interactionEnabled:(BOOL)isEnabled;
 

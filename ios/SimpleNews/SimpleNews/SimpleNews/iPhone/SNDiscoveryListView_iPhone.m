@@ -25,6 +25,7 @@
 
 @synthesize articleListResource = _articleListResource;
 @synthesize refreshListResource = _refreshListResource;
+@synthesize overlayView = _overlayView;
 
 
 - (id)initWithFrame:(CGRect)frame headerTitle:(NSString *)title isTop10:(BOOL)isPopular {
@@ -58,6 +59,9 @@
 		SNNavRandomBtnView *rndBtnView = [[SNNavRandomBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
 		[[rndBtnView btn] addTarget:self action:@selector(_goRefresh) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:rndBtnView];
+		
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 44.0, 40.0, self.frame.size.height - 44)];
+		[self addSubview:_overlayView];
 		
 		_isPopularList = isPopular;
 		[self _retrieveArticleList];

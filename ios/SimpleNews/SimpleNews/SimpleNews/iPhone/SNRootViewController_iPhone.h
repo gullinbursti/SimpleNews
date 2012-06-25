@@ -26,6 +26,11 @@
 	MBLAsyncResource *_userResource;
 	ASIHTTPRequest *_twitterRequest;
 	
+	
+	ASIFormDataRequest *_shareRequest;
+	ASIFormDataRequest *_likeRequest;
+	
+	
 	SNTopicTimelineView_iPhone *_topicTimelineView;
 	SNDiscoveryListView_iPhone *_discoveryListView;
 	
@@ -44,11 +49,15 @@
 	UIView *_holderView;
 	UIImageView *_shadowImgView;
 	UIButton *_profileButton;
+	UIButton *_itunesButton;
 	UILabel *_fullscreenTitleLabel;
+	UIImageView *_fullscreenFooterImgView;
 	
 	UIView *_blackMatteView;
 	UIImageView *_fullscreenImgView;
 	CGRect _fullscreenFrame;
+	UIButton *_likeButton;
+	UIButton *_commentButton;
 	
 	BOOL _reloading;
 	BOOL _isIntro;

@@ -166,13 +166,14 @@
 			}
 			
 			if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
-				_article1ImgView.frame = CGRectMake(5.0, offset, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
+				_article1ImgView.frame = CGRectMake(5.0, offset, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:1]).ratio);
 				
-				imgFrame = CGRectMake(150.0, offset, 145.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
+				imgFrame = CGRectMake(150.0, offset, 145.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:1]).ratio);
 				_article2ImgView = [[UIImageView alloc] initWithFrame:imgFrame];
 				[_article2ImgView setBackgroundColor:[UIColor whiteColor]];
 				_article2ImgView.userInteractionEnabled = YES;
 				[self addSubview:_article2ImgView];
+				
 				
 				UITapGestureRecognizer *tap1Recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photo2ZoomIn:)];
 				tap1Recognizer.numberOfTapsRequired = 1;
@@ -180,15 +181,15 @@
 				
 //				UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
 //				itunesButton.frame = CGRectMake(103.0, imgFrame.origin.y + ((imgFrame.size.height * 0.5) - 22.0), 114.0, 44.0);
-//				[itunesButton setBackgroundImage:[UIImage imageNamed:@"availableOnAppStoreBadge_nonActive.png"] forState:UIControlStateNormal];
-//				[itunesButton setBackgroundImage:[UIImage imageNamed:@"availableOnAppStoreBadge_Active.png"] forState:UIControlStateHighlighted];
+//				[itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateNormal];
+//				[itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateHighlighted];
 //				[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
 //				[self addSubview:itunesButton];
 				
 				offset -= 2;
 			}
 			
-			offset += (imgFrame.size.width * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
+			offset += (imgFrame.size.width * ((SNImageVO *)[_vo.images objectAtIndex:1]).ratio);
 			offset += 2;
 		}
 		
@@ -210,13 +211,22 @@
 		}
 		
 		if (_vo.totalLikes > 0) {
-			offset += 51;
+			offset += 45;
 		}
 		
+		offset += 5;
+		
+		NSString *likeActive;
+		if (_vo.totalLikes == 0)
+			likeActive = @"leftBottomUIB_Active.png";
+		
+		else
+			likeActive = @"leftBottomUI_Active.png";
+		
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_likeButton.frame = CGRectMake(0.0, offset - 2.0, 93.0, 43.0);
+		_likeButton.frame = CGRectMake(0.0, offset, 93.0, 43.0);
 		//[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
-		[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_Active.png"] forState:UIControlStateHighlighted];
+		[_likeButton setBackgroundImage:[UIImage imageNamed:likeActive] forState:UIControlStateHighlighted];
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
 		[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
@@ -233,7 +243,7 @@
 			[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		
 		_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_commentButton.frame = CGRectMake(92.0, offset - 2.0, 115.0, 43.0);
+		_commentButton.frame = CGRectMake(92.0, offset, 115.0, 43.0);
 		//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
 		[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_Active.png"] forState:UIControlStateHighlighted];
 		[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
@@ -246,7 +256,7 @@
 		[self addSubview:_commentButton];
 				
 		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		sourceButton.frame = CGRectMake(208.0, offset - 2.0, 93.0, 43.0);
+		sourceButton.frame = CGRectMake(208.0, offset, 93.0, 43.0);
 		//[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
@@ -332,7 +342,7 @@
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 										  @"photo", @"type", 
 										  _vo, @"article_vo", 
-										  (SNImageVO *)[_vo.images objectAtIndex:0], @"image_vo", 
+										  (SNImageVO *)[_vo.images objectAtIndex:1], @"image_vo", 
 										  [NSNumber numberWithFloat:self.frame.origin.y], @"offset", 
 										  [NSValue valueWithCGRect:CGRectMake(_article2ImgView.frame.origin.x + self.frame.origin.x, _article2ImgView.frame.origin.y, _article2ImgView.frame.size.width, _article2ImgView.frame.size.height)], @"frame", nil];
 	

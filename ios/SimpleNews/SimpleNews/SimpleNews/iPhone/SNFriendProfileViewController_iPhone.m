@@ -112,20 +112,20 @@
 	sharesLabel.text = @"Shares";
 	[statsBgView addSubview:sharesLabel];
 	
-	UIButton *likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	likeButton.frame = CGRectMake(108.0, 115.0, 96.0, 70.0);
-	[likeButton addTarget:self action:@selector(_goLikedArticles) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:likeButton];
-	
-	UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	commentButton.frame = CGRectMake(12.0, 115.0, 96.0, 70.0);
-	[commentButton addTarget:self action:@selector(_goCommentedArticles) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:commentButton];
-	
-	UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	shareButton.frame = CGRectMake(204.0, 115.0, 96.0, 70.0);
-	[shareButton addTarget:self action:@selector(_goSharedArticles) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:shareButton];
+//	UIButton *likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//	likeButton.frame = CGRectMake(108.0, 115.0, 96.0, 70.0);
+//	[likeButton addTarget:self action:@selector(_goLikedArticles) forControlEvents:UIControlEventTouchUpInside];
+//	[self.view addSubview:likeButton];
+//	
+//	UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//	commentButton.frame = CGRectMake(12.0, 115.0, 96.0, 70.0);
+//	[commentButton addTarget:self action:@selector(_goCommentedArticles) forControlEvents:UIControlEventTouchUpInside];
+//	[self.view addSubview:commentButton];
+//	
+//	UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//	shareButton.frame = CGRectMake(204.0, 115.0, 96.0, 70.0);
+//	[shareButton addTarget:self action:@selector(_goSharedArticles) forControlEvents:UIControlEventTouchUpInside];
+//	[self.view addSubview:shareButton];
 	
 	UIImageView *tableBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 186.0, 320.0, self.view.frame.size.height - 267.0)];
 	UIImage *img = [UIImage imageNamed:@"profileBackground.png"];

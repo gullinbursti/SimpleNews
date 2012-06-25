@@ -68,12 +68,14 @@
 	_tableView.userInteractionEnabled = YES;
 	_tableView.scrollsToTop = NO;
 	_tableView.showsVerticalScrollIndicator = YES;
-	_tableView.contentInset = UIEdgeInsetsMake(12.0, 0.0f, 12.0f, 0.0f);
+	_tableView.contentInset = UIEdgeInsetsMake(8.0, 0.0f, 8.0f, 0.0f);
 	[self.view addSubview:_tableView];
 	
 	SNHeaderView_iPhone *headerView;
 	
 	if (_isFinder) {
+		_tableView.contentInset = UIEdgeInsetsMake(10.0, 0.0f, 10.0f, 0.0f);
+		
 		headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Invite Friends"];
 		[self.view addSubview:headerView];	
 		
@@ -130,6 +132,7 @@
 	
 	_friendLookupRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
 	[_friendLookupRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+	[_friendLookupRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 	[_friendLookupRequest setPostValue:_vo.twitterID forKey:@"twitterID"];
 	[_friendLookupRequest setDelegate:self];
 	[_friendLookupRequest startAsynchronous];

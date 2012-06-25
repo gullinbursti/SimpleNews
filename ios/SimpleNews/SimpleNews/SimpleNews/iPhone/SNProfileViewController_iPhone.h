@@ -13,6 +13,7 @@
 @interface SNProfileViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, ASIHTTPRequestDelegate> {
 	UITableView *_tableView;
 	NSMutableArray *_items;
+	NSArray *_switches;
 	
 	UILabel *_likesLabel;
 	UILabel *_commentsLabel;

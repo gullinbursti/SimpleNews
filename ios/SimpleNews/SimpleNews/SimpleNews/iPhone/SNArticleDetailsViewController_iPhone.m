@@ -169,9 +169,9 @@
 	offset += size.height + 7;
 	
 	EGOImageView *articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(15.0, offset, 290.0, 290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
-	articleImgView.imageURL = [NSURL URLWithString:((SNImageVO *)[_vo.images objectAtIndex:0]).url];
+	articleImgView.imageURL = [NSURL URLWithString:((SNImageVO *)[_vo.images objectAtIndex:1]).url];
 	[_scrollView addSubview:articleImgView];
-	offset += (290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
+	offset += (290.0 * ((SNImageVO *)[_vo.images objectAtIndex:2]).ratio);
 	
 	offset += 8;
 	if (_vo.type_id > 4) {
@@ -202,16 +202,23 @@
 	footerImgView.userInteractionEnabled = YES;
 	[self.view addSubview:footerImgView];
 	
+	NSString *likeActive;
+	if (_vo.totalLikes == 0)
+		likeActive = @"leftBottomUIB_Active.png";
+	
+	else
+		likeActive = @"leftBottomUI_Active.png";
+	
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_likeButton.frame = CGRectMake(0.0, 1.0, 95.0, 43.0);
+	_likeButton.frame = CGRectMake(0.0, 2.0, 95.0, 43.0);
 	//[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
-	[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_Active.png"] forState:UIControlStateHighlighted];
+	[_likeButton setBackgroundImage:[UIImage imageNamed:likeActive] forState:UIControlStateHighlighted];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
-	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, -4.0, -2.0, 4.0);
+	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(1.0, -5.0, -1.0, 5.0);
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
 	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0];
-	_likeButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
+	//_likeButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes] forState:UIControlStateNormal];
 	[footerImgView addSubview:_likeButton];
@@ -223,21 +230,21 @@
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	
 	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_commentButton.frame = CGRectMake(95.0, 1.0, 130.0, 43.0);
+	_commentButton.frame = CGRectMake(95.0, 2.0, 130.0, 43.0);
 	//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
 	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_Active.png"] forState:UIControlStateHighlighted];
 	[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
-	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, -4.0, -2.0, 4.0);
+	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(1.0, -5.0, -1.0, 5.0);
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
 	_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0];
-	_commentButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
+	//_commentButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 	[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	[_commentButton setTitle:[NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]] forState:UIControlStateNormal];
 	[footerImgView addSubview:_commentButton];
 	
 	UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	sourceButton.frame = CGRectMake(226.0, 1.0, 95.0, 43.0);
+	sourceButton.frame = CGRectMake(226.0, 2.0, 95.0, 43.0);
 	//[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 	sourceButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);

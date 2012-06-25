@@ -21,6 +21,10 @@
 -(id)init {
 	if ((self = [super init])) {
 		_items = [NSMutableArray new];
+		_switches = [NSArray arrayWithObjects:
+						 [[UISwitch alloc] initWithFrame:CGRectZero], 
+						 [[UISwitch alloc] initWithFrame:CGRectZero], 
+						 [[UISwitch alloc] initWithFrame:CGRectZero], nil];
 	}
 	
 	return (self);
@@ -65,7 +69,7 @@
 	[self.view addSubview:statsBgView];
 	
 	_commentsLabel = [[UILabel alloc] initWithFrame:CGRectMake(12.0, 23.0, 97.0, 18.0)];
-	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18];
+	_commentsLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:18];
 	_commentsLabel.textAlignment = UITextAlignmentCenter;
 	_commentsLabel.textColor = [UIColor blackColor];
 	_commentsLabel.backgroundColor = [UIColor clearColor];
@@ -80,7 +84,7 @@
 	[statsBgView addSubview:commentsLabel];
 	
 	_likesLabel = [[UILabel alloc] initWithFrame:CGRectMake(110.0, 23.0, 100.0, 18.0)];
-	_likesLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18];
+	_likesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:18];
 	_likesLabel.textAlignment = UITextAlignmentCenter;
 	_likesLabel.textColor = [UIColor blackColor];
 	_likesLabel.backgroundColor = [UIColor clearColor];
@@ -95,7 +99,7 @@
 	[statsBgView addSubview:likesLabel];
 	
 	_sharesLabel = [[UILabel alloc] initWithFrame:CGRectMake(210.0, 23.0, 97.0, 18.0)];
-	_sharesLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:18];
+	_sharesLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:18];
 	_sharesLabel.textAlignment = UITextAlignmentCenter;
 	_sharesLabel.textColor = [UIColor blackColor];
 	_sharesLabel.backgroundColor = [UIColor clearColor];
@@ -109,27 +113,27 @@
 	sharesLabel.text = @"Shares";
 	[statsBgView addSubview:sharesLabel];
 	
-	UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	commentButton.frame = CGRectMake(12.0, 115.0, 97.0, 68.0);
-	[commentButton addTarget:self action:@selector(_goCommentedArticles:) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:commentButton];
-	 
-	UIButton *likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	likeButton.frame = CGRectMake(110.0, 115.0, 100.0, 68.0);
-	[likeButton addTarget:self action:@selector(_goLikedArticles:) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:likeButton];
+//	UIButton *commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//	commentButton.frame = CGRectMake(12.0, 115.0, 97.0, 68.0);
+//	[commentButton addTarget:self action:@selector(_goCommentedArticles:) forControlEvents:UIControlEventTouchUpInside];
+//	[self.view addSubview:commentButton];
+//	 
+//	UIButton *likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//	likeButton.frame = CGRectMake(110.0, 115.0, 100.0, 68.0);
+//	[likeButton addTarget:self action:@selector(_goLikedArticles:) forControlEvents:UIControlEventTouchUpInside];
+//	[self.view addSubview:likeButton];
+//	
+//	UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//	shareButton.frame = CGRectMake(210.0, 115.0, 97.0, 68.0);
+//	[shareButton addTarget:self action:@selector(_goSharedArticles:) forControlEvents:UIControlEventTouchUpInside];
+//	[self.view addSubview:shareButton];
 	
-	UIButton *shareButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	shareButton.frame = CGRectMake(210.0, 115.0, 97.0, 68.0);
-	[shareButton addTarget:self action:@selector(_goSharedArticles:) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:shareButton];
-	
-	UIImageView *tableBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 186.0, 320.0, self.view.frame.size.height - 267.0)];
+	UIImageView *tableBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 187.0, 320.0, self.view.frame.size.height - 267.0)];
 	UIImage *img = [UIImage imageNamed:@"profileBackground.png"];
 	tableBgView.image = [img stretchableImageWithLeftCapWidth:0.0 topCapHeight:10.0];
 	[self.view addSubview:tableBgView];
 	
-	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(12.0, 195.0, self.view.frame.size.width - 24.0, self.view.frame.size.height - 277.0) style:UITableViewStylePlain];
+	_tableView = [[UITableView alloc] initWithFrame:CGRectMake(12.0, 196.0, self.view.frame.size.width - 24.0, self.view.frame.size.height - 277.0) style:UITableViewStylePlain];
 	[_tableView setBackgroundColor:[UIColor clearColor]];
 	_tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	_tableView.rowHeight = 64.0;
@@ -151,7 +155,7 @@
 	[self.view addSubview:line2View];
 	
 	
-	UIImageView *privacyBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 393.0, 320.0, 74.0)];
+	UIImageView *privacyBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 397.0, 320.0, 74.0)];
 	privacyBgView.image = [UIImage imageNamed:@"privacyPolicy_nonActive.png"];
 	privacyBgView.userInteractionEnabled = YES;
 	privacyBgView.clipsToBounds = YES;
@@ -165,7 +169,7 @@
 	[privacyBgView addSubview:privacyLabel];
 	
 	UIButton *privacyButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	privacyButton.frame = CGRectMake(12.0, 395.0, 296.0, 67.0);
+	privacyButton.frame = CGRectMake(12.0, 398.0, 296.0, 67.0);
 	[privacyButton addTarget:self action:@selector(_goPrivacy:) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:privacyButton];
 	
@@ -213,22 +217,30 @@
 }
 
 -(void)_goNotificationsToggle:(UISwitch *)switchView {
+//	NSString *msg;
 	
-	NSString *msg;
+	for (UISwitch *switchV in _switches) {
+		switchV.on = switchView.on;
+	}
 	
-	if (switchView.on)
-		msg = @"Turn on notifications?";
+	_switch = switchView;
 	
-	else
-		msg = @"Turn off notifications?";
+	[SNAppDelegate notificationsToggle:switchView.on];
 	
-	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications" 
-																	message:msg 
-																  delegate:self 
-													  cancelButtonTitle:@"Yes" 
-													  otherButtonTitles:@"No", nil];
-	[alert show];
+//	if (switchView.on)
+//		msg = @"Turn on notifications?";
+//	
+//	else
+//		msg = @"Turn off notifications?";
+//	
+//	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Notifications" 
+//																	message:msg 
+//																  delegate:self 
+//													  cancelButtonTitle:@"Yes" 
+//													  otherButtonTitles:@"No", nil];
+//	[alert show];
 }
+
 
 -(void)_goCommentedArticles:(UIButton *)button {
 	[button setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.25]];
@@ -299,8 +311,8 @@
 	
 	cell.profileVO = (SNProfileVO *)[_items objectAtIndex:indexPath.row];
 	
-	if (indexPath.row == 2) {
-		_switch = [[UISwitch alloc] initWithFrame:CGRectZero];
+//	if (indexPath.row == 2) {
+		_switch = [_switches objectAtIndex:indexPath.row];
 			
 		if ([SNAppDelegate notificationsEnabled])
 			_switch.on = YES;
@@ -308,11 +320,11 @@
 		[_switch addTarget:self action:@selector(_goNotificationsToggle:) forControlEvents:UIControlEventValueChanged];
 		cell.accessoryView = _switch;
 			
-	} else {
-		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(265.0, 23.0, 24.0, 24.0)];
-		chevronView.image = [UIImage imageNamed:@"chevron.png"];
-		[cell addSubview:chevronView];
-	}
+//	} else {
+//		UIImageView *chevronView = [[UIImageView alloc] initWithFrame:CGRectMake(265.0, 23.0, 24.0, 24.0)];
+//		chevronView.image = [UIImage imageNamed:@"chevron.png"];
+//		[cell addSubview:chevronView];
+//	}
 	
 	[cell setSelectionStyle:UITableViewCellSelectionStyleNone];
 	return (cell);
@@ -330,10 +342,10 @@
 
 
 -(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	if (indexPath.row == 2)
+	//if (indexPath.row == 2)
 		return (nil);
 	
-	return (indexPath);
+	//return (indexPath);
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

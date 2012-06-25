@@ -89,6 +89,9 @@
 	if ([touch view] == [_topicTimelineView overlayView]) {
 		_touchPt = CGPointMake(_topicTimelineView.center.x - location.x, _topicTimelineView.center.y - location.y);
 	
+	} else if ([touch view] == [_discoveryListView overlayView]) {
+		_touchPt = CGPointMake(_discoveryListView.center.x - location.x, _discoveryListView.center.y - location.y);
+		
 	} else
 		_touchPt = location;
 }
@@ -107,6 +110,12 @@
 		
 		//NSLog(@"TOUCHED:[%f, %f]", _topicTimelineView.center.x, _topicTimelineView.center.y);
 		return;
+	} else if ([touch view] == [_discoveryListView overlayView]) {
+		CGPoint touchLocation = [touch locationInView:self.view];
+		CGPoint location = CGPointMake(MIN(MAX(_touchPt.x + touchLocation.x, 160.0), 386.0), _discoveryListView.center.y);
+		
+		_discoveryListView.center = location;
+		_shadowImgView.center = CGPointMake(_discoveryListView.center.x - 123.0, _shadowImgView.center.y);
 	}
 }
 
@@ -144,6 +153,29 @@
 				
 			} completion:^(BOOL finished) {
 				[_topicTimelineView interactionEnabled:NO];
+			}];
+		}
+	
+	} else if (_blackMatteView.hidden && _discoveryListView != nil) {
+		if (touchPoint.x < 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
+			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
+				_discoveryListView.frame = CGRectMake(0.0, 0.0, _discoveryListView.frame.size.width, _discoveryListView.frame.size.height);
+				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+				
+			} completion:^(BOOL finished) {
+				[_discoveryListView interactionEnabled:YES];
+				_topicsTableView.contentOffset = CGPointZero;
+				
+			}];
+		} 
+		
+		if (touchPoint.x >= 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
+			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
+				_discoveryListView.frame = CGRectMake(kTopicOffset, 0.0, _discoveryListView.frame.size.width, _discoveryListView.frame.size.height);
+				_shadowImgView.frame = CGRectMake(kTopicOffset - 19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+				
+			} completion:^(BOOL finished) {
+				[_discoveryListView interactionEnabled:NO];
 			}];
 		}
 	}
@@ -284,6 +316,59 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_DETAILS" object:_articleVO];
 	[self performSelector:@selector(_hideFullscreenMedia:) withObject:nil afterDelay:0.5];
 }
+
+- (void)_goAppStore {
+	[SNAppDelegate openWithAppStore:_articleVO.article_url];
+}
+
+-(void)_goTwitterProfile {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TWITTER_PROFILE" object:_articleVO.twitterHandle];
+}
+
+- (void)_goTopic {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_TOPIC" object:[NSNumber numberWithInt:_articleVO.topicID]];
+}
+
+-(void)_goLike {
+	if (![SNAppDelegate twitterHandle]) {
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Twitter Accounts" message:@"There are no Twitter accounts configured. You can add or create a Twitter account in Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+		
+	} else {		
+		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+		
+		_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+		[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[_likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+		[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", _articleVO.article_id] forKey:@"articleID"];
+		_likeRequest.delegate = self;
+		[_likeRequest startAsynchronous];
+		
+		_articleVO.hasLiked = YES;
+	}
+}
+
+-(void)_goDislike {
+	
+	[_likeButton removeTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	
+	_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+	[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
+	[_likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+	[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", _articleVO.article_id] forKey:@"articleID"];
+	_likeRequest.delegate = self;
+	[_likeRequest startAsynchronous];
+	
+	_articleVO.hasLiked = NO;
+}
+
+
+-(void)_goComments {
+	[self.navigationController pushViewController:[[SNArticleCommentsViewController_iPhone alloc] initWithArticleVO:_articleVO] animated:YES];
+}
+
 
 -(void)_startVideo {
 	[_videoPlayerView startPlayback];
@@ -431,13 +516,9 @@
 			tapRecognizer.numberOfTapsRequired = 1;
 			[_blackMatteView addGestureRecognizer:tapRecognizer];
 			
-			_detailsBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
-			[[_detailsBtnView btn] addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
-			[self.view addSubview:_detailsBtnView];
-			
-			_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(272.0, 0.0, 44.0, 44.0)];
-			[[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-			[self.view addSubview:_shareBtnView];
+			//_detailsBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+			//[[_detailsBtnView btn] addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
+			//[self.view addSubview:_detailsBtnView];
 		}];
 	}
 }
@@ -592,53 +673,117 @@
 	for (UIView *view in [_blackMatteView subviews])
 		[view removeFromSuperview];
 	
-	_fullscreenTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(19.0, self.view.frame.size.height - 60.0, 256.0, 28.0)];
+	_fullscreenTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 7.0, 256.0, 28.0)];
 	_fullscreenTitleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 	_fullscreenTitleLabel.textColor = [UIColor whiteColor];
 	_fullscreenTitleLabel.backgroundColor = [UIColor clearColor];
 	_fullscreenTitleLabel.text = _articleVO.title;
 	[_blackMatteView addSubview:_fullscreenTitleLabel];
 	
-	CGSize size = [@"via " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(19.0, self.view.frame.size.height - 33.0, size.width, size.height)];
-	viaLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
+	CGSize size = [@"via " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 34.0, size.width, size.height)];
+	viaLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11];
 	viaLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 	viaLabel.backgroundColor = [UIColor clearColor];
 	viaLabel.text = @"via ";
 	[_blackMatteView addSubview:viaLabel];
 	
 	CGSize size2 = [[NSString stringWithFormat:@"@%@ ", _articleVO.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(viaLabel.frame.origin.x + size.width, self.view.frame.size.height - 33.0, size2.width, size2.height)];
+	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(viaLabel.frame.origin.x + size.width, 34.0, size2.width, size2.height)];
 	handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
-	handleLabel.textColor = [UIColor whiteColor];
+	handleLabel.textColor = [SNAppDelegate snLinkColor];
 	handleLabel.backgroundColor = [UIColor clearColor];
 	handleLabel.text = [NSString stringWithFormat:@"@%@ ", _articleVO.twitterHandle];
 	[_blackMatteView addSubview:handleLabel];
+	
+	UIButton *handleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	[handleButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+	handleButton.frame = handleLabel.frame;
+	[_blackMatteView addSubview:handleButton];
 	 
-	size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, self.view.frame.size.height - 33.0, size.width, size.height)];
-	inLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
+	size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, 34.0, size.width, size.height)];
+	inLabel.font = [[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11];
 	inLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 	inLabel.backgroundColor = [UIColor clearColor];
 	inLabel.text = @"into ";
 	[_blackMatteView addSubview:inLabel];
 	 
 	size2 = [[NSString stringWithFormat:@"%@", _articleVO.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(inLabel.frame.origin.x + size.width, self.view.frame.size.height - 33.0, size2.width, size2.height)];
+	UILabel *topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(inLabel.frame.origin.x + size.width, 34.0, size2.width, size2.height)];
 	topicLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
-	topicLabel.textColor = [UIColor whiteColor];
+	topicLabel.textColor = [SNAppDelegate snLinkColor];
 	topicLabel.backgroundColor = [UIColor clearColor];
 	topicLabel.text = [NSString stringWithFormat:@"%@", _articleVO.topicTitle];
 	[_blackMatteView addSubview:topicLabel];
 	
+	UIButton *topicButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	[topicButton addTarget:self action:@selector(_goTopic) forControlEvents:UIControlEventTouchUpInside];
+	topicButton.frame = topicLabel.frame;
+	[_blackMatteView addSubview:topicButton];
+	
+	_fullscreenFooterImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 436.0, 320.0, 44.0)];
+	_fullscreenFooterImgView.image = [UIImage imageNamed:@"articleDetailsFooterBG.png"];
+	_fullscreenFooterImgView.userInteractionEnabled = YES;
+	[self.view addSubview:_fullscreenFooterImgView];
+	
+	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	_likeButton.frame = CGRectMake(0.0, 2.0, 95.0, 43.0);
+	//[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUIB_Active.png"] forState:UIControlStateHighlighted];
+	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -5.0, 0.0, 5.0);
+	[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
+	[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
+	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0];
+	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+	[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _articleVO.totalLikes] forState:UIControlStateNormal];
+	[_fullscreenFooterImgView addSubview:_likeButton];
+	
+	if (_articleVO.hasLiked)
+		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+	
+	else
+		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	
+	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	_commentButton.frame = CGRectMake(95.0, 2.0, 130.0, 43.0);
+	//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
+	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_Active.png"] forState:UIControlStateHighlighted];
+	[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
+	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -5.0, 0.0, 5.0);
+	[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
+	[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
+	_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0];
+	[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+	[_commentButton setTitle:[NSString stringWithFormat:@"Comments (%d)", [_articleVO.comments count]] forState:UIControlStateNormal];
+	[_fullscreenFooterImgView addSubview:_commentButton];
+	
+	UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	sourceButton.frame = CGRectMake(226.0, 2.0, 95.0, 43.0);
+	//[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
+	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
+	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
+	[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+	[_fullscreenFooterImgView addSubview:sourceButton];
 	
 	if ([type isEqualToString:@"photo"]) {
 		_fullscreenImgView = [[UIImageView alloc] initWithFrame:frame];
 		_fullscreenImgView.userInteractionEnabled = YES;
-		[self.view addSubview:_fullscreenImgView];
+		[_blackMatteView addSubview:_fullscreenImgView];
 		
 		_fullscreenImgResource = nil;
 		self.fullscreenImgResource = [[MBLResourceLoader sharedInstance] downloadURL:imgVO.url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration for now
+		
+		if ([_articleVO.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
+			_itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
+			_itunesButton.frame = CGRectMake(200.0, 388.0, 114.0, 44.0);
+			[_itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateNormal];
+			[_itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateHighlighted];
+			[_itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
+			[self.view addSubview:_itunesButton];
+		}
 				
 	} else if ([type isEqualToString:@"video"]) {
 		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:frame articleVO:_articleVO];
@@ -655,11 +800,37 @@
 			tapRecognizer.numberOfTapsRequired = 1;
 			[_blackMatteView addGestureRecognizer:tapRecognizer];
 			
-			_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(272.0, 0.0, 44.0, 44.0)];
-			[[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-			[self.view addSubview:_shareBtnView];
+			//_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(272.0, 0.0, 44.0, 44.0)];
+			//[[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+			//[self.view addSubview:_shareBtnView];
 		}];
 	}
+	
+	
+	UIView *overlayView = [[UIView alloc] initWithFrame:CGRectMake(83.0, 224.0, 154.0, 32.0)];
+	[overlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
+	overlayView.layer.cornerRadius = 8.0;
+	[_blackMatteView addSubview:overlayView];
+	
+	UILabel *overlayLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 154.0, 32.0)];
+	overlayLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+	overlayLabel.textColor = [UIColor whiteColor];
+	overlayLabel.backgroundColor = [UIColor clearColor];
+	overlayLabel.textAlignment = UITextAlignmentCenter;
+	overlayLabel.text = @"tap anywhere to close";
+	[overlayView addSubview:overlayLabel];
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		overlayView.alpha = 1.0;
+		
+	} completion:^(BOOL finished) {
+		[UIView animateWithDuration:0.33 delay:1.5 options:UIViewAnimationCurveEaseOut animations:^(void) {
+			overlayView.alpha = 0.0;
+			
+		} completion:^(BOOL finished) {
+			[overlayView removeFromSuperview];
+		}];
+	}];
 }
 
 -(void)_hideFullscreenMedia:(NSNotification *)notification {
@@ -672,6 +843,8 @@
 		
 		[_detailsBtnView removeFromSuperview];
 		[_shareBtnView removeFromSuperview];
+		[_itunesButton removeFromSuperview];
+		[_fullscreenFooterImgView removeFromSuperview];
 		
 	} completion:^(BOOL finished) {
 		_blackMatteView.hidden = YES;
@@ -679,10 +852,12 @@
 		[_videoPlayerView removeFromSuperview];
 		[_shareBtnView removeFromSuperview];
 		
+		_itunesButton = nil;
 		_fullscreenImgView = nil;
 		_videoPlayerView = nil;
 		_detailsBtnView = nil;
 		_shareBtnView = nil;
+		_fullscreenFooterImgView = nil;
 	}];
 }
 
@@ -985,7 +1160,7 @@
 				
 		} completion:^(BOOL finished) {
 			_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithTopicVO:(SNTopicVO *)[_topicsList objectAtIndex:indexPath.row]];
-				
+
 			[_holderView addSubview:_topicTimelineView];
 				
 			[UIView animateWithDuration:0.33 animations:^(void) {
@@ -1000,6 +1175,29 @@
 		
 	} else {
 		if (indexPath.row == 0) {
+			[_topicTimelineView removeFromSuperview];
+			_topicTimelineView = nil;
+			
+			[UIView animateWithDuration:0.33 animations:^(void) {
+				//_shadowImgView.alpha = 0.0;
+				
+			} completion:^(BOOL finished) {
+				_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithTopicVO:(SNTopicVO *)[_topicsList objectAtIndex:indexPath.row]];
+				[_holderView addSubview:_topicTimelineView];
+				
+				[UIView animateWithDuration:0.33 animations:^(void) {
+					_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+					_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+					
+				} completion:^(BOOL finished) {
+					_topicsTableView.contentOffset = CGPointZero;
+					[_topicTimelineView interactionEnabled:YES];
+				}];
+			}];
+			
+			
+			
+			
 			[_topicTimelineView removeFromSuperview];
 			_topicTimelineView = nil;
 			
@@ -1061,8 +1259,6 @@
 
 #pragma mark - MailComposeViewController Delegates
 -(void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-	ASIFormDataRequest *shareRequest;
-	
 	switch (result) {
 		case MFMailComposeResultCancelled:
 			break;
@@ -1072,13 +1268,13 @@
 			break;
 			
 		case MFMailComposeResultSent:			
-			shareRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
-			[shareRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
-			[shareRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
-			[shareRequest setPostValue:[NSString stringWithFormat:@"%d", _articleVO.article_id] forKey:@"articleID"];
-			[shareRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"typeID"];
-			[shareRequest setDelegate:self];
-			[shareRequest startAsynchronous];
+			_shareRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+			[_shareRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
+			[_shareRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
+			[_shareRequest setPostValue:[NSString stringWithFormat:@"%d", _articleVO.article_id] forKey:@"articleID"];
+			[_shareRequest setPostValue:[NSString stringWithFormat:@"%d", 2] forKey:@"typeID"];
+			[_shareRequest setDelegate:self];
+			[_shareRequest startAsynchronous];
 			break;
 			
 		case MFMailComposeResultFailed:
@@ -1117,15 +1313,30 @@
 -(void)requestFinished:(ASIHTTPRequest *)request { 
 	NSLog(@"SNProfileArticlesViewController_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
-	@autoreleasepool {
+	
+	if ([request isEqual:_shareRequest]) {
+		@autoreleasepool {
+			NSError *error = nil;
+			NSDictionary *sharedResult = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			
+			if (error != nil)
+				NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
+			
+			else {
+				NSLog(@"RESULT:%@", [sharedResult objectForKey:@"result"]);
+			}
+		}
+	
+	} else if ([request isEqual:_likeRequest]) {
 		NSError *error = nil;
-		NSDictionary *sharedResult = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+		NSDictionary *parsedLike = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
 		
 		if (error != nil)
 			NSLog(@"Failed to parse job list JSON: %@", [error localizedFailureReason]);
 		
 		else {
-			NSLog(@"RESULT:%@", [sharedResult objectForKey:@"result"]);
+			_articleVO.totalLikes = [[parsedLike objectForKey:@"likes"] intValue];
+			[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _articleVO.totalLikes] forState:UIControlStateNormal];
 		}
 	}
 }

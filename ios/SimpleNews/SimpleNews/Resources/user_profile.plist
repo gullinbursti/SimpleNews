@@ -6,7 +6,7 @@
 		<key>profile_id</key>
 		<integer>1</integer>
 		<key>title</key>
-		<string>Invite Friends</string>
+		<string>Likes</string>
 		<key>info</key>
 		<string></string>
 	</dict>
@@ -14,7 +14,7 @@
 		<key>profile_id</key>
 		<integer>2</integer>
 		<key>title</key>
-		<string>My Friends</string>
+		<string>Comments</string>
 		<key>info</key>
 		<string></string>
 	</dict>
@@ -22,7 +22,7 @@
 		<key>profile_id</key>
 		<integer>3</integer>
 		<key>title</key>
-		<string>Notifications</string>
+		<string>Friends</string>
 		<key>info</key>
 		<string></string>
 	</dict>

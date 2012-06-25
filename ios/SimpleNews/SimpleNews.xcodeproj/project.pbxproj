@@ -163,10 +163,6 @@
 		4C921757153B722400AAD992 /* SNArticleCommentsViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C921756153B720D00AAD992 /* SNArticleCommentsViewController_iPhone.m */; };
 		4C929DC4157FACF4003FD673 /* imageDropShadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DC2157FACF4003FD673 /* imageDropShadow.png */; };
 		4C929DC5157FACF4003FD673 /* imageDropShadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DC3157FACF4003FD673 /* imageDropShadow@2x.png */; };
-		4C929DCB157FBA66003FD673 /* availableOnAppStoreBadge_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DC7157FBA66003FD673 /* availableOnAppStoreBadge_Active.png */; };
-		4C929DCC157FBA66003FD673 /* availableOnAppStoreBadge_Active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DC8157FBA66003FD673 /* availableOnAppStoreBadge_Active@2x.png */; };
-		4C929DCD157FBA66003FD673 /* availableOnAppStoreBadge_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DC9157FBA66003FD673 /* availableOnAppStoreBadge_nonActive.png */; };
-		4C929DCE157FBA66003FD673 /* availableOnAppStoreBadge_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DCA157FBA66003FD673 /* availableOnAppStoreBadge_nonActive@2x.png */; };
 		4C929DD1158001B9003FD673 /* privacyPolicy_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DCF158001B9003FD673 /* privacyPolicy_nonActive.png */; };
 		4C929DD2158001B9003FD673 /* privacyPolicy_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DD0158001B9003FD673 /* privacyPolicy_nonActive@2x.png */; };
 		4C929DD515802FD3003FD673 /* soloBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C929DD315802FD3003FD673 /* soloBackground.png */; };
@@ -347,8 +343,6 @@
 		4CE2F3A41592FCAB00EF7A29 /* doneButton_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE2F3A01592FCAB00EF7A29 /* doneButton_nonActive.png */; };
 		4CE2F3A51592FCAB00EF7A29 /* doneButton_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE2F3A11592FCAB00EF7A29 /* doneButton_nonActive@2x.png */; };
 		4CE2F3A81593030700EF7A29 /* SNNavDoneBtnView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE2F3A71593030500EF7A29 /* SNNavDoneBtnView.m */; };
-		4CE53DE81509E9FB004C6810 /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE53DE71509E9FB004C6810 /* icon_57x57.png */; };
-		4CE53DEA1509EA55004C6810 /* icon_114x114.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE53DE91509EA55004C6810 /* icon_114x114.png */; };
 		4CE58F3915530DE100668B1E /* logoLoader_001.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE58F2D15530DE100668B1E /* logoLoader_001.png */; };
 		4CE58F3A15530DE100668B1E /* logoLoader_001@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE58F2E15530DE100668B1E /* logoLoader_001@2x.png */; };
 		4CE58F3B15530DE100668B1E /* logoLoader_002.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CE58F2F15530DE100668B1E /* logoLoader_002.png */; };
@@ -393,6 +387,12 @@
 		4CE58FB5155499CD00668B1E /* sources.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CE58FB3155499CD00668B1E /* sources.plist */; };
 		4CEE8B2B1596DAAE0039B601 /* articleDetailsLikeBG.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B291596DAAE0039B601 /* articleDetailsLikeBG.png */; };
 		4CEE8B2C1596DAAE0039B601 /* articleDetailsLikeBG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B2A1596DAAE0039B601 /* articleDetailsLikeBG@2x.png */; };
+		4CEE8B301597D12F0039B601 /* leftBottomUIB_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B2E1597D12F0039B601 /* leftBottomUIB_Active.png */; };
+		4CEE8B311597D12F0039B601 /* leftBottomUIB@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B2F1597D12F0039B601 /* leftBottomUIB@2x.png */; };
+		4CEE8B34159823820039B601 /* appStoreBadge.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B32159823820039B601 /* appStoreBadge.png */; };
+		4CEE8B35159823820039B601 /* appStoreBadge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B33159823820039B601 /* appStoreBadge@2x.png */; };
+		4CEE8B3815985A250039B601 /* icon_57x57.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B3615985A250039B601 /* icon_57x57.png */; };
+		4CEE8B3915985A250039B601 /* icon_114x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B3715985A250039B601 /* icon_114x144.png */; };
 		4CEF4A701506D58E00A1AD7E /* options.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CEF4A6F1506D58E00A1AD7E /* options.plist */; };
 		4CEF4AB91506F44000A1AD7E /* SNPaginationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEF4AB81506F44000A1AD7E /* SNPaginationView.m */; };
 		4CF63C32150B207B00055EFD /* overlay.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CF63C30150B207B00055EFD /* overlay.png */; };
@@ -648,10 +648,6 @@
 		4C921756153B720D00AAD992 /* SNArticleCommentsViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNArticleCommentsViewController_iPhone.m; sourceTree = "<group>"; };
 		4C929DC2157FACF4003FD673 /* imageDropShadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = imageDropShadow.png; sourceTree = "<group>"; };
 		4C929DC3157FACF4003FD673 /* imageDropShadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "imageDropShadow@2x.png"; sourceTree = "<group>"; };
-		4C929DC7157FBA66003FD673 /* availableOnAppStoreBadge_Active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = availableOnAppStoreBadge_Active.png; sourceTree = "<group>"; };
-		4C929DC8157FBA66003FD673 /* availableOnAppStoreBadge_Active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "availableOnAppStoreBadge_Active@2x.png"; sourceTree = "<group>"; };
-		4C929DC9157FBA66003FD673 /* availableOnAppStoreBadge_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = availableOnAppStoreBadge_nonActive.png; sourceTree = "<group>"; };
-		4C929DCA157FBA66003FD673 /* availableOnAppStoreBadge_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "availableOnAppStoreBadge_nonActive@2x.png"; sourceTree = "<group>"; };
 		4C929DCF158001B9003FD673 /* privacyPolicy_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = privacyPolicy_nonActive.png; sourceTree = "<group>"; };
 		4C929DD0158001B9003FD673 /* privacyPolicy_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "privacyPolicy_nonActive@2x.png"; sourceTree = "<group>"; };
 		4C929DD315802FD3003FD673 /* soloBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = soloBackground.png; sourceTree = "<group>"; };
@@ -939,8 +935,6 @@
 		4CE2F3A11592FCAB00EF7A29 /* doneButton_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "doneButton_nonActive@2x.png"; sourceTree = "<group>"; };
 		4CE2F3A61593030300EF7A29 /* SNNavDoneBtnView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNNavDoneBtnView.h; sourceTree = "<group>"; };
 		4CE2F3A71593030500EF7A29 /* SNNavDoneBtnView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNNavDoneBtnView.m; sourceTree = "<group>"; };
-		4CE53DE71509E9FB004C6810 /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_57x57.png; sourceTree = "<group>"; };
-		4CE53DE91509EA55004C6810 /* icon_114x114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_114x114.png; sourceTree = "<group>"; };
 		4CE58F2D15530DE100668B1E /* logoLoader_001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoLoader_001.png; sourceTree = "<group>"; };
 		4CE58F2E15530DE100668B1E /* logoLoader_001@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logoLoader_001@2x.png"; sourceTree = "<group>"; };
 		4CE58F2F15530DE100668B1E /* logoLoader_002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoLoader_002.png; sourceTree = "<group>"; };
@@ -992,6 +986,12 @@
 		4CE58FB3155499CD00668B1E /* sources.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = sources.plist; sourceTree = "<group>"; };
 		4CEE8B291596DAAE0039B601 /* articleDetailsLikeBG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = articleDetailsLikeBG.png; sourceTree = "<group>"; };
 		4CEE8B2A1596DAAE0039B601 /* articleDetailsLikeBG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "articleDetailsLikeBG@2x.png"; sourceTree = "<group>"; };
+		4CEE8B2E1597D12F0039B601 /* leftBottomUIB_Active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leftBottomUIB_Active.png; sourceTree = "<group>"; };
+		4CEE8B2F1597D12F0039B601 /* leftBottomUIB@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "leftBottomUIB@2x.png"; sourceTree = "<group>"; };
+		4CEE8B32159823820039B601 /* appStoreBadge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appStoreBadge.png; sourceTree = "<group>"; };
+		4CEE8B33159823820039B601 /* appStoreBadge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "appStoreBadge@2x.png"; sourceTree = "<group>"; };
+		4CEE8B3615985A250039B601 /* icon_57x57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_57x57.png; sourceTree = "<group>"; };
+		4CEE8B3715985A250039B601 /* icon_114x144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_114x144.png; sourceTree = "<group>"; };
 		4CEF4A6F1506D58E00A1AD7E /* options.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = options.plist; sourceTree = "<group>"; };
 		4CEF4AB71506F44000A1AD7E /* SNPaginationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNPaginationView.h; sourceTree = "<group>"; };
 		4CEF4AB81506F44000A1AD7E /* SNPaginationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPaginationView.m; sourceTree = "<group>"; };
@@ -1841,6 +1841,8 @@
 		4CD01B5515140452005B490C /* Articles */ = {
 			isa = PBXGroup;
 			children = (
+				4CEE8B2E1597D12F0039B601 /* leftBottomUIB_Active.png */,
+				4CEE8B2F1597D12F0039B601 /* leftBottomUIB@2x.png */,
 				4CE2F39115917D9D00EF7A29 /* sendButton_Active.png */,
 				4CE2F39215917D9D00EF7A29 /* sendButton_Active@2x.png */,
 				4CE2F39315917D9D00EF7A29 /* sendButton_nonActive.png */,
@@ -1861,10 +1863,6 @@
 				4CE2F338158ED6DA00EF7A29 /* rightBottomUI_Active@2x.png */,
 				4CE2F339158ED6DA00EF7A29 /* rightBottomUI_nonActive.png */,
 				4CE2F33A158ED6DA00EF7A29 /* rightBottomUI_nonActive@2x.png */,
-				4C929DC7157FBA66003FD673 /* availableOnAppStoreBadge_Active.png */,
-				4C929DC8157FBA66003FD673 /* availableOnAppStoreBadge_Active@2x.png */,
-				4C929DC9157FBA66003FD673 /* availableOnAppStoreBadge_nonActive.png */,
-				4C929DCA157FBA66003FD673 /* availableOnAppStoreBadge_nonActive@2x.png */,
 				4CB8D95F157F1F6B006DD8E3 /* commentIcon_Active.png */,
 				4CB8D960157F1F6B006DD8E3 /* commentIcon_Active@2x.png */,
 				4CB8D961157F1F6C006DD8E3 /* commentIcon.png */,
@@ -1906,6 +1904,8 @@
 		4CD01B571514049B005B490C /* Articles */ = {
 			isa = PBXGroup;
 			children = (
+				4CEE8B32159823820039B601 /* appStoreBadge.png */,
+				4CEE8B33159823820039B601 /* appStoreBadge@2x.png */,
 				4CEE8B291596DAAE0039B601 /* articleDetailsLikeBG.png */,
 				4CEE8B2A1596DAAE0039B601 /* articleDetailsLikeBG@2x.png */,
 				4CA0DA7B159577F60070B774 /* articleDetailsFooterBG.png */,
@@ -1964,11 +1964,11 @@
 		4CDC8BE214F2CDEB00D42EA5 = {
 			isa = PBXGroup;
 			children = (
+				4CEE8B3615985A250039B601 /* icon_57x57.png */,
+				4CEE8B3715985A250039B601 /* icon_114x144.png */,
 				E4F729FB154AF80B0073F60C /* Entitlements.plist */,
 				4C6B218E1510739A0027AEE4 /* Default.png */,
 				4C6B218F1510739A0027AEE4 /* Default@2x.png */,
-				4CE53DE91509EA55004C6810 /* icon_114x114.png */,
-				4CE53DE71509E9FB004C6810 /* icon_57x57.png */,
 				4C9EFFC315194B9B00AEB803 /* Airship */,
 				4CDC8C2414F2D71800D42EA5 /* ASI */,
 				4CDC8C3914F2D71800D42EA5 /* EGOImageLoading */,
@@ -2359,8 +2359,6 @@
 				4C8B444714FEA7D300F89F7C /* fpo_tapVideo.mp3 in Resources */,
 				4C7D600E14FF02B600156054 /* fpo_startVideo.mp3 in Resources */,
 				4CEF4A701506D58E00A1AD7E /* options.plist in Resources */,
-				4CE53DE81509E9FB004C6810 /* icon_57x57.png in Resources */,
-				4CE53DEA1509EA55004C6810 /* icon_114x114.png in Resources */,
 				4CF63C32150B207B00055EFD /* overlay.png in Resources */,
 				4CF63C33150B207B00055EFD /* overlay@2x.png in Resources */,
 				4C6B21901510739B0027AEE4 /* Default.png in Resources */,
@@ -2550,10 +2548,6 @@
 				4CB8D96E157F2045006DD8E3 /* moreIcon_nonActive@2x.png in Resources */,
 				4C929DC4157FACF4003FD673 /* imageDropShadow.png in Resources */,
 				4C929DC5157FACF4003FD673 /* imageDropShadow@2x.png in Resources */,
-				4C929DCB157FBA66003FD673 /* availableOnAppStoreBadge_Active.png in Resources */,
-				4C929DCC157FBA66003FD673 /* availableOnAppStoreBadge_Active@2x.png in Resources */,
-				4C929DCD157FBA66003FD673 /* availableOnAppStoreBadge_nonActive.png in Resources */,
-				4C929DCE157FBA66003FD673 /* availableOnAppStoreBadge_nonActive@2x.png in Resources */,
 				4C929DD1158001B9003FD673 /* privacyPolicy_nonActive.png in Resources */,
 				4C929DD2158001B9003FD673 /* privacyPolicy_nonActive@2x.png in Resources */,
 				4C929DD515802FD3003FD673 /* soloBackground.png in Resources */,
@@ -2630,6 +2624,12 @@
 				4CA0DA7E159577F60070B774 /* articleDetailsFooterBG@2x.png in Resources */,
 				4CEE8B2B1596DAAE0039B601 /* articleDetailsLikeBG.png in Resources */,
 				4CEE8B2C1596DAAE0039B601 /* articleDetailsLikeBG@2x.png in Resources */,
+				4CEE8B301597D12F0039B601 /* leftBottomUIB_Active.png in Resources */,
+				4CEE8B311597D12F0039B601 /* leftBottomUIB@2x.png in Resources */,
+				4CEE8B34159823820039B601 /* appStoreBadge.png in Resources */,
+				4CEE8B35159823820039B601 /* appStoreBadge@2x.png in Resources */,
+				4CEE8B3815985A250039B601 /* icon_57x57.png in Resources */,
+				4CEE8B3915985A250039B601 /* icon_114x144.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

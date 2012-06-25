@@ -142,7 +142,7 @@
 		_scrollView.scrollsToTop = NO;
 		_scrollView.pagingEnabled = NO;
 		_scrollView.delegate = self;
-		_scrollView.showsVerticalScrollIndicator = YES;
+		_scrollView.showsVerticalScrollIndicator = NO;
 		_scrollView.alwaysBounceVertical = NO;
 		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
 		[self addSubview:_scrollView];
@@ -228,9 +228,9 @@
 		SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.title];
 		[self addSubview:headerView];
 		
-		SNNavListBtnView *listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
-		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-		[headerView addSubview:listBtnView];
+		_listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:_listBtnView];
 		
 		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 44.0, 40.0, self.frame.size.height - 44)];
 		[self addSubview:_overlayView];
@@ -430,7 +430,6 @@
 		[[_listBtnView btn] removeTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[[_listBtnView btn] addTarget:self action:@selector(_goShow) forControlEvents:UIControlEventTouchUpInside];
 	}
-		
 	
 	_scrollView.userInteractionEnabled = isEnabled;
 }
@@ -566,11 +565,11 @@
 						[list addObject:vo];
 					
 					int height;
-					height = 81;
+					height = 88;
 					CGSize size;
 					
 					if (vo.totalLikes > 0) {
-						height += 51;
+						height += 45;
 					}
 					
 					int imgWidth = 290;
@@ -604,7 +603,7 @@
 					offset += height;
 					tot++;
 					
-					offset += 3;
+					offset -= 1;
 				}
 				
 				[_progressHUD hide:YES];
@@ -696,11 +695,11 @@
 					[list addObject:vo];
 				
 				int height;
-				height = 81;
+				height = 88;
 				CGSize size;
 				
 				if (vo.totalLikes > 0) {
-					height += 51;
+					height += 45;
 				}
 				
 				int imgWidth = 290;

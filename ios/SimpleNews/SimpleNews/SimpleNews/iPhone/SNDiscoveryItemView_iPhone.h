@@ -15,7 +15,9 @@
 @interface SNDiscoveryItemView_iPhone : UIView <EGOImageViewDelegate, ASIHTTPRequestDelegate> {
 	SNArticleVO *_vo;
 	UIImageView *_articleImgView;
+	UIView *_sub1ImgHolderView;
 	UIImageView *_sub1ImgView;
+	UIView *_sub2ImgHolderView;
 	UIImageView *_sub2ImgView;
 	UIButton *_likeButton;
 	UIButton *_commentButton;

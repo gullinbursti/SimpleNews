@@ -109,6 +109,20 @@
 						"url" => $img_row['url'], 
 						"ratio" => $img_row['ratio']
 					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
 				}
 				
 				$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row[0] .' ORDER BY `tblComments`.`added` DESC;';
@@ -190,6 +204,20 @@
 				
 				$img_arr = array();
 				while ($img_row = mysql_fetch_array($img_result, MYSQL_BOTH)) {
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
 					array_push($img_arr, array(
 						"id" => $img_row['id'], 
 						"type_id" => $img_row['type_id'], 
@@ -384,6 +412,20 @@
 						"url" => $img_row['url'], 
 						"ratio" => $img_row['ratio']
 					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
 				}
 				
 				$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $commented_row['article_id'] .' ORDER BY `tblComments`.`added` DESC;';
@@ -493,6 +535,20 @@
 						"url" => $img_row['url'], 
 						"ratio" => $img_row['ratio']
 					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
 				}
 				
 				
@@ -596,6 +652,20 @@
 						"url" => $img_row['url'], 
 						"ratio" => $img_row['ratio']
 					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
 				}
 				
 				
@@ -673,6 +743,20 @@
 				
 				$img_arr = array();
 				while ($img_row = mysql_fetch_array($img_result, MYSQL_BOTH)) {
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
 					array_push($img_arr, array(
 						"id" => $img_row['id'], 
 						"type_id" => $img_row['type_id'], 
@@ -759,6 +843,20 @@
 						"url" => $img_row['url'], 
 						"ratio" => $img_row['ratio']
 					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
 				}
 				
 				$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row[0] .' ORDER BY `tblComments`.`added` DESC;';
@@ -835,6 +933,20 @@
 				
 				$img_arr = array();
 				while ($img_row = mysql_fetch_array($img_result, MYSQL_BOTH)) {
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
 					array_push($img_arr, array(
 						"id" => $img_row['id'], 
 						"type_id" => $img_row['type_id'], 
@@ -927,6 +1039,20 @@
 						"url" => $img_row['url'], 
 						"ratio" => $img_row['ratio']
 					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
 				}
 				
 				$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row[0] .' ORDER BY `tblComments`.`added` DESC;';
@@ -1003,6 +1129,20 @@
 				
 				$img_arr = array();
 				while ($img_row = mysql_fetch_array($img_result, MYSQL_BOTH)) {
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
 					array_push($img_arr, array(
 						"id" => $img_row['id'], 
 						"type_id" => $img_row['type_id'], 
@@ -1086,6 +1226,20 @@
 				
 				$img_arr = array();
 				while ($img_row = mysql_fetch_array($img_result, MYSQL_BOTH)) {
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
+					array_push($img_arr, array(
+						"id" => $img_row['id'], 
+						"type_id" => $img_row['type_id'], 
+						"url" => $img_row['url'], 
+						"ratio" => $img_row['ratio']
+					));
+					
 					array_push($img_arr, array(
 						"id" => $img_row['id'], 
 						"type_id" => $img_row['type_id'], 
