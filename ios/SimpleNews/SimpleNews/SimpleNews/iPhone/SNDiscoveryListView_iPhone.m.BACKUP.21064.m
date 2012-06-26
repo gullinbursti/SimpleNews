@@ -27,10 +27,48 @@
 @synthesize refreshListResource = _refreshListResource;
 @synthesize overlayView = _overlayView;
 
+<<<<<<< HEAD
+
+- (id)initWithFrame:(CGRect)frame headerTitle:(NSString *)title isTop10:(BOOL)isPopular {
+	if ((self = [super initWithFrame:frame])) {
+		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];
+		
+		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
+		bgImgView.image = [UIImage imageNamed:@"timelineDiscoverBackground.png"];
+		[self addSubview:bgImgView];
+		
+		_cardViews = [NSMutableArray new];
+		
+		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
+		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		_scrollView.opaque = NO;
+		_scrollView.scrollsToTop = NO;
+		_scrollView.pagingEnabled = YES;
+		_scrollView.delegate = self;
+		_scrollView.showsHorizontalScrollIndicator = NO;
+		_scrollView.alwaysBounceVertical = NO;
+		_scrollView.contentSize = CGSizeMake(self.frame.size.width, _scrollView.frame.size.height);
+		[self addSubview:_scrollView];
+		
+		SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:title];
+		[self addSubview:headerView];
+		
+		_listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:_listBtnView];
+		
+		SNNavRandomBtnView *rndBtnView = [[SNNavRandomBtnView alloc] initWithFrame:CGRectMake(273.0, 0.0, 44.0, 44.0)];
+		[[rndBtnView btn] addTarget:self action:@selector(_goRefresh) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:rndBtnView];
+		
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 40.0, self.frame.size.height - 188.0)];
+		[self addSubview:_overlayView];
+=======
 - (id)initWithHeaderTitle:(NSString *)title isTop10:(BOOL)isPopular {
 	if ((self = [super init])) {
 		// Seems like this shouldn't be necessary because a new object won't be observing any notifications
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];	
+>>>>>>> 31e6543b9ebd6f19866845e9eec521e03c918a55
 		
 		self.title = title;
 		self.delegate = self;

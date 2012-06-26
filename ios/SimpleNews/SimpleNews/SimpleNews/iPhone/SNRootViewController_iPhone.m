@@ -90,7 +90,7 @@
 		_touchPt = CGPointMake(_topicTimelineView.center.x - location.x, _topicTimelineView.center.y - location.y);
 	
 	} else if ([touch view] == [_discoveryListView overlayView]) {
-		_touchPt = CGPointMake(_discoveryListView.center.x - location.x, _discoveryListView.center.y - location.y);
+		_touchPt = CGPointMake(_discoveryListView.view.center.x - location.x, _discoveryListView.view.center.y - location.y);
 		
 	} else
 		_touchPt = location;
@@ -112,10 +112,10 @@
 		return;
 	} else if ([touch view] == [_discoveryListView overlayView]) {
 		CGPoint touchLocation = [touch locationInView:self.view];
-		CGPoint location = CGPointMake(MIN(MAX(_touchPt.x + touchLocation.x, 160.0), 386.0), _discoveryListView.center.y);
+		CGPoint location = CGPointMake(MIN(MAX(_touchPt.x + touchLocation.x, 160.0), 386.0), _discoveryListView.view.center.y);
 		
-		_discoveryListView.center = location;
-		_shadowImgView.center = CGPointMake(_discoveryListView.center.x - 123.0, _shadowImgView.center.y);
+		_discoveryListView.view.center = location;
+		_shadowImgView.center = CGPointMake(_discoveryListView.view.center.x - 123.0, _shadowImgView.center.y);
 	}
 }
 
@@ -159,7 +159,7 @@
 	} else if (_blackMatteView.hidden && _discoveryListView != nil) {
 		if (touchPoint.x < 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
 			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
-				_discoveryListView.frame = CGRectMake(0.0, 0.0, _discoveryListView.frame.size.width, _discoveryListView.frame.size.height);
+				_discoveryListView.view.frame = CGRectMake(0.0, 0.0, _discoveryListView.view.frame.size.width, _discoveryListView.view.frame.size.height);
 				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 				
 			} completion:^(BOOL finished) {
@@ -171,7 +171,7 @@
 		
 		if (touchPoint.x >= 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
 			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
-				_discoveryListView.frame = CGRectMake(kTopicOffset, 0.0, _discoveryListView.frame.size.width, _discoveryListView.frame.size.height);
+				_discoveryListView.view.frame = CGRectMake(kTopicOffset, 0.0, _discoveryListView.view.frame.size.width, _discoveryListView.view.frame.size.height);
 				_shadowImgView.frame = CGRectMake(kTopicOffset - 19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 				
 			} completion:^(BOOL finished) {
@@ -266,7 +266,7 @@
 //		}];
 		
 		[UIView animateWithDuration:0.33 delay:1.67 options:UIViewAnimationCurveEaseInOut animations:^(void) {
-			_discoveryListView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+			_discoveryListView.view.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 			_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
@@ -498,9 +498,10 @@
 			_topicsList = list;
 			[_topicsTableView reloadData];
 			
-			_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithFrame:CGRectMake(226.0, 0.0, 320.0, 480.0) headerTitle:@"Top 10" isTop10:YES];
+			_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithHeaderTitle:@"Top 10" isTop10:YES];
+			_discoveryListView.view.frame = CGRectMake(226.0, 0.0, 320.0, 480.0);
 			//_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithFrame:CGRectMake(226.0, 0.0, 320.0, 480.0)];
-			[_holderView addSubview:_discoveryListView];
+			[_holderView addSubview:_discoveryListView.view];
 		}
 	
 	} else if (resource == _fullscreenImgResource) {
@@ -622,7 +623,7 @@
 	[_discoveryListView interactionEnabled:NO];
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_discoveryListView.frame = CGRectMake(kTopicOffset, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_discoveryListView.view.frame = CGRectMake(kTopicOffset, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		_shadowImgView.frame = CGRectMake(kTopicOffset - 19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
@@ -893,7 +894,7 @@
 
 - (void)_showDiscovery:(NSNotification *)notification {
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_discoveryListView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_discoveryListView.view.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
@@ -1138,16 +1139,17 @@
 	
 	
 	if (indexPath.section == 0) {
-		[_discoveryListView removeFromSuperview];
+		[_discoveryListView.view removeFromSuperview];
 		_discoveryListView = nil;
 		
 		NSArray *titles = [NSArray arrayWithObjects:@"Top 10", @"Trending", nil];
-		_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithFrame:CGRectMake(226.0, 0.0, 320.0, 480.0) headerTitle:[titles objectAtIndex:indexPath.row] isTop10:(indexPath.row == 0)];
-		[_holderView addSubview:_discoveryListView];
+		_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithHeaderTitle:[titles objectAtIndex:indexPath.row] isTop10:(indexPath.row == 0)];
+		_discoveryListView.view.frame = CGRectMake(226.0, 0.0, 320.0, 480.0);
+		[_holderView addSubview:_discoveryListView.view];
 		
 		
 		[UIView animateWithDuration:0.33 animations:^(void) {
-			_discoveryListView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+			_discoveryListView.view.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 			_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
 		} completion:^(BOOL finished) {

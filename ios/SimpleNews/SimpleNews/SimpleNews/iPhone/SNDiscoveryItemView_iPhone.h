@@ -7,13 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBLPageItemViewController.h"
+
 #import "SNArticleVO.h"
 #import "MBLResourceLoader.h"
 #import "EGOImageView.h"
 #import "ASIFormDataRequest.h"
 
-@interface SNDiscoveryItemView_iPhone : UIView <EGOImageViewDelegate, ASIHTTPRequestDelegate> {
-	SNArticleVO *_vo;
+@interface SNDiscoveryItemView_iPhone : MBLPageItemViewController <EGOImageViewDelegate, ASIHTTPRequestDelegate> {
+	UIView *_cardView;
+	UIImageView *_backgroundImageView;
+	UIView *_mainImageHolderView;
+	
+	UILabel *_titleLabel;
+	NSArray *_attributionViews;
+	NSArray *_twitterAvatars;
+	
 	UIImageView *_articleImgView;
 	UIView *_sub1ImgHolderView;
 	UIImageView *_sub1ImgView;
@@ -21,11 +30,11 @@
 	UIImageView *_sub2ImgView;
 	UIButton *_likeButton;
 	UIButton *_commentButton;
-	UIButton *_videoButton;
-	
-	EGOImageView *_videoImgView;
-}
 
-- (id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;
+	// For videos
+	UIView *_videoMatteView;
+	EGOImageView *_videoImgView;
+	UIButton *_videoButton;
+}
 
 @end

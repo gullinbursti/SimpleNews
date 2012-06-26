@@ -418,6 +418,8 @@
 		E423F8F61559B9900094042E /* MBLResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = E423F8F31559B9900094042E /* MBLResourceLoader.m */; };
 		E484E0961562D105004297D0 /* error.png in Resources */ = {isa = PBXBuildFile; fileRef = E484E0941562D105004297D0 /* error.png */; };
 		E484E0971562D105004297D0 /* error@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E484E0951562D105004297D0 /* error@2x.png */; };
+		E4D9000F15991014009F71D5 /* MBLPageItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4D9000C15991014009F71D5 /* MBLPageItemViewController.m */; };
+		E4D9001015991014009F71D5 /* MBLPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E4D9000E15991014009F71D5 /* MBLPageViewController.m */; };
 		E4F729FC154AF80B0073F60C /* Entitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = E4F729FB154AF80B0073F60C /* Entitlements.plist */; };
 		E4F729FF154AF8470073F60C /* UAPushLocalization.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E4F729FE154AF8470073F60C /* UAPushLocalization.bundle */; };
 /* End PBXBuildFile section */
@@ -1023,6 +1025,10 @@
 		E423F8F31559B9900094042E /* MBLResourceLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBLResourceLoader.m; sourceTree = "<group>"; };
 		E484E0941562D105004297D0 /* error.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = error.png; sourceTree = "<group>"; };
 		E484E0951562D105004297D0 /* error@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "error@2x.png"; sourceTree = "<group>"; };
+		E4D9000B15991014009F71D5 /* MBLPageItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBLPageItemViewController.h; sourceTree = "<group>"; };
+		E4D9000C15991014009F71D5 /* MBLPageItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBLPageItemViewController.m; sourceTree = "<group>"; };
+		E4D9000D15991014009F71D5 /* MBLPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBLPageViewController.h; sourceTree = "<group>"; };
+		E4D9000E15991014009F71D5 /* MBLPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBLPageViewController.m; sourceTree = "<group>"; };
 		E4F729FB154AF80B0073F60C /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
 		E4F729FE154AF8470073F60C /* UAPushLocalization.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = UAPushLocalization.bundle; path = SimpleNews/Airship/UI/Default/Push/Resources/Shared/UAPushLocalization.bundle; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -1976,6 +1982,7 @@
 				4C7954F41547AFCF009E40DC /* Google Analytics */,
 				4C2CFC071555BB6E00654D98 /* ios-image-filters */,
 				4CDC8C4814F2D71800D42EA5 /* MBProgressHUD */,
+				E4D9000A15991014009F71D5 /* MBLPageViewController */,
 				4CDC8C7414F2D80300D42EA5 /* Reachability */,
 				4CDC8BF714F2CDEB00D42EA5 /* SimpleNews */,
 				4CDC8C8214F2DAF700D42EA5 /* Resources */,
@@ -2297,6 +2304,18 @@
 				4CE14C8515942179007F99D5 /* SNWebHeaderView_iPhone.m */,
 			);
 			name = Nav;
+			sourceTree = "<group>";
+		};
+		E4D9000A15991014009F71D5 /* MBLPageViewController */ = {
+			isa = PBXGroup;
+			children = (
+				E4D9000B15991014009F71D5 /* MBLPageItemViewController.h */,
+				E4D9000C15991014009F71D5 /* MBLPageItemViewController.m */,
+				E4D9000D15991014009F71D5 /* MBLPageViewController.h */,
+				E4D9000E15991014009F71D5 /* MBLPageViewController.m */,
+			);
+			name = MBLPageViewController;
+			path = SimpleNews/ThirdParty/MBLPageViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2752,6 +2771,8 @@
 				4CE2F3A81593030700EF7A29 /* SNNavDoneBtnView.m in Sources */,
 				4C4D77E71593CB2D0020A116 /* SNNavRandomBtnView.m in Sources */,
 				4CE14C8615942179007F99D5 /* SNWebHeaderView_iPhone.m in Sources */,
+				E4D9000F15991014009F71D5 /* MBLPageItemViewController.m in Sources */,
+				E4D9001015991014009F71D5 /* MBLPageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

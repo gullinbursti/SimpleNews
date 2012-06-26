@@ -8,15 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+#import "MBLPageViewController.h"
 #import "MBLAsyncResource.h"
 #import "MBProgressHUD.h"
 #import "SNPaginationView.h"
 #import "SNNavListBtnView.h"
 
-@interface SNDiscoveryListView_iPhone : UIView <UIScrollViewDelegate> {
-	UIScrollView *_scrollView;
+@interface SNDiscoveryListView_iPhone : MBLPageViewController <MBLPageViewControllerDelegate> {
 	NSMutableArray *_articles;
-	NSMutableArray *_cardViews;
 	
 	MBProgressHUD *_progressHUD;
 	SNPaginationView *_paginationView;
@@ -25,11 +24,10 @@
 	BOOL _isPopularList;
 }
 
-@property (nonatomic, retain)UIView *overlayView;
+@property (nonatomic, retain) UIView *overlayView;
 
-- (id)initWithFrame:(CGRect)frame headerTitle:(NSString *)title isTop10:(BOOL)isPopular;
+- (id)initWithHeaderTitle:(NSString *)title isTop10:(BOOL)isPopular;
+
 - (void)interactionEnabled:(BOOL)isEnabled;
-
-
 
 @end
