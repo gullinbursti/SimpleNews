@@ -29,10 +29,14 @@
 - (void)viewDidLoad
 {
 	[super viewDidLoad];
-			
+	
+	_cardView = [[UIView alloc] initWithFrame:self.view.bounds];
+	_cardView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	[self.view addSubview:_cardView];
+	
 	_backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(6.0, 7.0, 308.0, 408.0)];
 	_backgroundImageView.userInteractionEnabled = YES;
-	[self.view addSubview:_backgroundImageView];
+	[_cardView addSubview:_backgroundImageView];
 		
 	_mainImageHolderView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 302.0)];
 	_mainImageHolderView.backgroundColor = [UIColor colorWithWhite:0.882 alpha:1.0];
@@ -57,7 +61,7 @@
 	_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13];
 	_titleLabel.textColor = [UIColor whiteColor];
 	_titleLabel.backgroundColor = [UIColor clearColor];
-	[self.view addSubview:_titleLabel];
+	[_cardView addSubview:_titleLabel];
 		
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_likeButton.frame = CGRectMake(9.0, 366.0, 93.0, 43.0);
@@ -69,7 +73,7 @@
 	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -5.0, 0.0, 5.0);
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
-	[self.view addSubview:_likeButton];
+	[_cardView addSubview:_likeButton];
 		
 	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_commentButton.frame = CGRectMake(102.0, 366.0, 115.0, 43.0);
@@ -82,7 +86,7 @@
 	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(1.0, -5.0, -1.0, 5.0);
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
-	[self.view addSubview:_commentButton];
+	[_cardView addSubview:_commentButton];
 		
 	UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	sourceButton.frame = CGRectMake(217.0, 366.0, 93.0, 43.0);
@@ -92,7 +96,7 @@
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
 	[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-	[self.view addSubview:sourceButton];	
+	[_cardView addSubview:sourceButton];	
 }
 
 - (void)_resetContentViews
@@ -158,7 +162,7 @@
 	}
 	[_twitterAvatars makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	_twitterAvatars = twitterAvatars;
-	[_twitterAvatars enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) { [self.view addSubview:obj]; }];
+	[_twitterAvatars enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) { [_cardView addSubview:obj]; }];
 	
 	// Check for different article types and reconfigure as needed
 	if (article.type_id > 3) {
@@ -185,7 +189,7 @@
 		_sub1ImgHolderView = [[UIView alloc] initWithFrame:CGRectMake(15.0, 214.0, 142.0, 95.0)];
 		[_sub1ImgHolderView setBackgroundColor:[UIColor colorWithWhite:0.882 alpha:1.0]];
 		_sub1ImgHolderView.clipsToBounds = YES;
-		[self.view addSubview:_sub1ImgHolderView];
+		[_cardView addSubview:_sub1ImgHolderView];
 		
 		_sub1ImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 142.0, 95.0)];
 		[_sub1ImgView setBackgroundColor:[UIColor whiteColor]];
@@ -201,7 +205,7 @@
 		_sub2ImgHolderView = [[UIView alloc] initWithFrame:CGRectMake(162.0, 214.0, 142.0, 95.0)];
 		[_sub2ImgHolderView setBackgroundColor:[UIColor colorWithWhite:0.882 alpha:1.0]];
 		_sub2ImgHolderView.clipsToBounds = YES;
-		[self.view addSubview:_sub2ImgHolderView];
+		[_cardView addSubview:_sub2ImgHolderView];
 		
 		_sub2ImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 142.0, 95.0)];
 		[_sub2ImgView setBackgroundColor:[UIColor whiteColor]];
@@ -266,7 +270,7 @@
 	
 	[_attributionViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	_attributionViews = attributionViews;
-	[_attributionViews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) { [self.view addSubview:obj]; }];
+	[_attributionViews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) { [_cardView addSubview:obj]; }];
 }
 
 - (void)_goShare {
@@ -299,13 +303,45 @@
 	}
 }
 
+static CGFloat clamp_alpha(CGFloat alpha)
+{
+	if (alpha > 1.0)
+		alpha = 1.0;
+	if (alpha < 0.0)
+		alpha = 0.0;
+	return alpha;
+}
+
 - (void)updateAnimationWithPercent:(float)percent appearing:(BOOL)appearing
 {
+	// Map the percentage to the position in the appearance or disappearance animation.
+	CGFloat animationPosition = percent;
+	if (!appearing)
+		animationPosition = (1.0 - percent);
+	
+	UIView *animatingView = _cardView;
+	
+	// Fade in/out on transition
+	if (appearing)
+		animatingView.alpha = 0.5 + (0.5 * animationPosition);
+	else
+		animatingView.alpha = 1.0;
+	
+	// Add a "pop" by scaling down offscreen images
+	if (appearing) {
+		CGFloat scalePosition = fmaxf(animationPosition - 0.95, 0.0);
+		CGFloat scaleFactor = fminf(0.85 + (3.0 * scalePosition), 1.0);
+		animatingView.transform = CGAffineTransformMakeScale(scaleFactor, scaleFactor);
+	}
+	else {
+		animatingView.transform = CGAffineTransformIdentity;
+	}
 }
 
 - (void)pageItemViewWasPlacedOffscreen
 {
 	[self _resetContentViews];
+	_cardView.transform = CGAffineTransformMakeScale(0.85, 0.85);
 }
 
 - (void)pageItemViewDidBecomeFocusAnimated:(BOOL)animated

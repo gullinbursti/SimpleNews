@@ -15,6 +15,7 @@
 #import "ASIFormDataRequest.h"
 
 @interface SNDiscoveryItemView_iPhone : MBLPageItemViewController <EGOImageViewDelegate, ASIHTTPRequestDelegate> {
+	UIView *_cardView;
 	UIImageView *_backgroundImageView;
 	UIView *_mainImageHolderView;
 	
