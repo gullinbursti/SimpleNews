@@ -145,13 +145,19 @@
 	_nextView = _centerView;
 	_centerView = _previousView;
 	_previousView = newPrevious;
-	_previousView.item = [_items objectAtIndex:_selectedIndex - 1];
 	
-	// We need to position the previous view directly since we may be in the middle of scrolling
-	CGRect previousFrame = _centerView.view.frame;
-	previousFrame.origin.x -= previousFrame.size.width;
-	_previousView.view.frame = previousFrame;
-	[_previousView pageItemViewWasPlacedOffscreen];
+	if (_selectedIndex > 0) {
+		_previousView.item = [_items objectAtIndex:_selectedIndex - 1];
+	
+		// We need to position the previous view directly since we may be in the middle of scrolling
+		CGRect previousFrame = _centerView.view.frame;
+		previousFrame.origin.x -= previousFrame.size.width;
+		_previousView.view.frame = previousFrame;
+		[_previousView pageItemViewWasPlacedOffscreen];
+	}
+	else {
+		[_previousView.view removeFromSuperview];
+	}
 }
 
 - (void)_shiftToNext
@@ -161,13 +167,19 @@
 	_previousView = _centerView;
 	_centerView = _nextView;
 	_nextView = newNext;
-	_nextView.item = [_items objectAtIndex:_selectedIndex + 1];
 	
-	// We need to position the previous view directly since we may be in the middle of scrolling
-	CGRect nextFrame = _centerView.view.frame;
-	nextFrame.origin.x += nextFrame.size.width;
-	_nextView.view.frame = nextFrame;
-	[_nextView pageItemViewWasPlacedOffscreen];
+	if (_selectedIndex < [_items count] - 1) {
+		_nextView.item = [_items objectAtIndex:_selectedIndex + 1];
+		
+		// We need to position the previous view directly since we may be in the middle of scrolling
+		CGRect nextFrame = _centerView.view.frame;
+		nextFrame.origin.x += nextFrame.size.width;
+		_nextView.view.frame = nextFrame;
+		[_nextView pageItemViewWasPlacedOffscreen];
+	}
+	else {
+		[_nextView.view removeFromSuperview];
+	}
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
@@ -219,14 +231,14 @@
 			_selectedIndex--;
 			_currentPage--;
 			[self _updateMasterSelection];
-			if (_selectedIndex > 0)
+			//if (_selectedIndex > 0)
 				[self _shiftToPrevious];
 		}
 		else if (newIndex > _selectedIndex) {
 			_selectedIndex++;
 			_currentPage++;
 			[self _updateMasterSelection];
-			if (_selectedIndex < [_items count] - 1)
+			//if (_selectedIndex < [_items count] - 1)
 				[self _shiftToNext];
 		}
 	}

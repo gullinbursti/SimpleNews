@@ -161,11 +161,8 @@
 
 - (MBLPageItemViewController *)makeItemViewControllerForPageViewController:(MBLPageViewController *)pageViewController
 {
-	MBLPageItemViewController *itemViewController = [[MBLPageItemViewController alloc] init];
-	itemViewController.view.backgroundColor = [UIColor colorWithWhite:(float)(rand() % 100) / 100.0f alpha:1.0];
+	SNDiscoveryItemView_iPhone *itemViewController = [[SNDiscoveryItemView_iPhone alloc] init];
 	return itemViewController;
-	
-	//SNDiscoveryItemView_iPhone *discoveryItemView = [[SNDiscoveryItemView_iPhone alloc] initWithFrame:CGRectMake(tot * 320.0, 0.0, _scrollView.frame.size.width, _scrollView.frame.size.height) articleVO:vo];
 }
 
 - (void)pageViewController:(MBLPageViewController *)pageViewController selectionDidChangeToIndex:(NSUInteger)index
@@ -174,6 +171,7 @@
 }
 
 #pragma mark - Navigation
+
 - (void)_goBack {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"KILL_VIDEO" object:nil];
@@ -194,6 +192,7 @@
 }
 
 #pragma mark - Async Resource Observers
+
 - (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data {
 	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
 	
@@ -227,23 +226,12 @@
 				//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
 				if (vo != nil)
 					[list addObject:vo];
-				
-				
-				//SNDiscoveryItemView_iPhone *discoveryItemView = [[SNDiscoveryItemView_iPhone alloc] initWithFrame:CGRectMake(tot * 320.0, 0.0, _scrollView.frame.size.width, _scrollView.frame.size.height) articleVO:vo];
-				//[_cardViews addObject:discoveryItemView];
-				
 				tot++;
 			}
 			
 			_articles = list;
 			_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
 			[self configureWithSelectedIndex:0 fromItems:list];
-			
-			//for (SNDiscoveryItemView_iPhone *itemView in _cardViews)
-			//	[_scrollView addSubview:itemView];
-			
-			//_scrollView.contentSize = CGSizeMake(tot * self.frame.size.width, _scrollView.frame.size.height);
-			
 			
 			_paginationView = [[SNPaginationView alloc] initWithTotal:tot coords:CGPointMake(160.0, 468.0)];
 			[self.view addSubview:_paginationView];
@@ -269,12 +257,7 @@
 			NSMutableArray *list = [NSMutableArray array];
 			[_progressHUD hide:YES];
 			_progressHUD = nil;
-			
-			//for (SNDiscoveryItemView_iPhone *itemView in _cardViews)
-			//	[itemView removeFromSuperview];
-			
-			//_cardViews = [NSMutableArray new];
-			
+
 			[_paginationView removeFromSuperview];
 			_paginationView = nil;
 			
@@ -285,15 +268,9 @@
 				//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
 				if (vo != nil)
 					[list addObject:vo];
-				
-				
-				//SNDiscoveryItemView_iPhone *discoveryItemView = [[SNDiscoveryItemView_iPhone alloc] initWithFrame:CGRectMake(tot * 320.0, 0.0, _scrollView.frame.size.width, _scrollView.frame.size.height) articleVO:vo];
-				//[_cardViews addObject:discoveryItemView];
-				
 				tot++;
 			}
 			
-			//_scrollView.contentOffset = CGPointZero;
 			_articles = list;
 			_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
 			[self configureWithSelectedIndex:0 fromItems:list];
@@ -303,7 +280,6 @@
 		}
 	}
 }
-
 
 - (void)resource:(MBLAsyncResource *)resource didFailWithError:(NSError *)error
 {
