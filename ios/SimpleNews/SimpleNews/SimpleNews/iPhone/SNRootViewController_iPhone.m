@@ -844,7 +844,7 @@
 }
 
 -(void)_hideFullscreenMedia:(NSNotification *)notification {
-	[UIView animateWithDuration:0.25 animations:^(void) {
+	[UIView animateWithDuration:0.5 animations:^(void) {
 		_blackMatteView.alpha = 0.0;
 		
 		_fullscreenImgView.frame = _fullscreenFrame;
