@@ -238,7 +238,7 @@
 		[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
 		_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 		[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		[_likeButton setTitle:likeCaption forState:UIControlStateNormal];
+		[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
 		[self addSubview:_likeButton];
 		
 		if (_vo.hasLiked)
@@ -255,6 +255,7 @@
 		else
 			commentCaption = [NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]];
 		
+		commentCaption = ([_vo.comments count] >= 10) ? [NSString stringWithFormat:@"Comm… (%d)", [_vo.comments count]] : [NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]];
 		_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_commentButton.frame = CGRectMake(92.0, offset, 115.0, 43.0);
 		//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
@@ -475,8 +476,8 @@
 		else {
 			_vo.totalLikes = [[parsedLike objectForKey:@"likes"] intValue];
 			
-			if (_vo.totalLikes > 0)
-				[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes] forState:UIControlStateNormal];
+			if (_vo.hasLiked)
+				[_likeButton setTitle:@"Liked" forState:UIControlStateNormal];
 			
 			else
 				[_likeButton setTitle:@"Like" forState:UIControlStateNormal];

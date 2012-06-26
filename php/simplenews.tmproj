@@ -224,14 +224,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>34</integer>
+				<integer>53</integer>
 				<key>line</key>
-				<integer>1220</integer>
+				<integer>623</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>1213</integer>
+			<integer>613</integer>
 		</dict>
 		<key>services/Categories.php</key>
 		<dict>
@@ -338,30 +338,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>7</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>181</integer>
+				<integer>153</integer>
 			</dict>
-			<key>columnSelection</key>
-			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>151</integer>
-			<key>selectFrom</key>
-			<dict>
-				<key>column</key>
-				<integer>4</integer>
-				<key>line</key>
-				<integer>175</integer>
-			</dict>
-			<key>selectTo</key>
-			<dict>
-				<key>column</key>
-				<integer>7</integer>
-				<key>line</key>
-				<integer>181</integer>
-			</dict>
+			<integer>142</integer>
 		</dict>
 		<key>signup/_oauth_cfg.php</key>
 		<dict>
@@ -433,11 +417,10 @@
 		<string>services/Users.php</string>
 		<string>services/Articles2.php</string>
 		<string>workers/article_worker.php</string>
-		<string>services/Users.php</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{596, 220}, {1596, 1041}}</string>
+	<string>{{760, 202}, {1596, 1041}}</string>
 </dict>
 </plist>

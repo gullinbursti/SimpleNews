@@ -63,7 +63,7 @@
 	_titleLabel.textColor = [UIColor whiteColor];
 	_titleLabel.backgroundColor = [UIColor clearColor];
 	[_cardView addSubview:_titleLabel];
-		
+	
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_likeButton.frame = CGRectMake(9.0, 366.0, 93.0, 43.0);
 	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
@@ -75,7 +75,8 @@
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
 	[_cardView addSubview:_likeButton];
-		
+	_likeButton.hidden = YES;
+	
 	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_commentButton.frame = CGRectMake(102.0, 366.0, 115.0, 43.0);
 	//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
@@ -88,16 +89,18 @@
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
 	[_cardView addSubview:_commentButton];
+	_commentButton.hidden = YES;
 		
-	UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	sourceButton.frame = CGRectMake(217.0, 366.0, 93.0, 43.0);
-	//[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
-	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-	sourceButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, 1.0, -2.0, -1.0);
-	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
-	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
-	[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-	[_cardView addSubview:sourceButton];	
+	_sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	_sourceButton.frame = CGRectMake(217.0, 366.0, 93.0, 43.0);
+	//[_sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
+	[_sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+	_sourceButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, 1.0, -2.0, -1.0);
+	[_sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
+	[_sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
+	[_sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+	[_cardView addSubview:_sourceButton];	
+	_sourceButton.hidden = YES;
 }
 
 - (void)_resetContentViews
@@ -119,6 +122,10 @@
 	_sub2ImgHolderView = nil;
 	[_sub2ImgView removeFromSuperview];
 	_sub2ImgView = nil;
+	
+	_likeButton.hidden = NO;
+	_commentButton.hidden = NO;
+	_sourceButton.hidden = NO;
 }
 
 - (void)_refreshWithArticle:(SNArticleVO *)article
@@ -138,13 +145,16 @@
 	
 	// Update likes button
 	NSString *likeActiveImageName = (article.totalLikes == 0) ? @"leftBottomUIB_Active.png" : @"leftBottomUI_Active.png";
+	//NSString *likeCaption = (article.totalLikes == 0) ? @"Like" : [NSString stringWithFormat:@"Likes (%d)", article.totalLikes];
 	[_likeButton setBackgroundImage:[UIImage imageNamed:likeActiveImageName] forState:UIControlStateHighlighted];
-	[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", article.totalLikes] forState:UIControlStateNormal];
+	[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
 	SEL likeAction = (article.hasLiked ? @selector(_goDislike) : @selector(_goLike));
 	[_likeButton addTarget:self action:likeAction forControlEvents:UIControlEventTouchUpInside];
 	
 	// Update comments count
-	[_commentButton setTitle:[NSString stringWithFormat:@"Comments (%d)", article.comments.count] forState:UIControlStateNormal];
+	NSString *commentCaption = ([article.comments count] == 0) ? @"Comment" : [NSString stringWithFormat:@"Comments (%d)", [article.comments count]];
+	commentCaption = ([article.comments count] >= 10) ? [NSString stringWithFormat:@"Comm… (%d)", [article.comments count]] : [NSString stringWithFormat:@"Comments (%d)", [article.comments count]];
+	[_commentButton setTitle:commentCaption forState:UIControlStateNormal];
 	
 	// Update twitter avatars
 	NSMutableArray *twitterAvatars = [NSMutableArray array];
@@ -167,11 +177,11 @@
 	
 	// Check for different article types and reconfigure as needed
 	if (article.type_id > 3) {
-		_videoMatteView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 344.0)];
-		_videoMatteView.backgroundColor = [UIColor blackColor];
+		_videoMatteView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 297.0)];
+		_videoMatteView.backgroundColor = [UIColor colorWithWhite:0.882 alpha:1.0];
 		[_backgroundImageView addSubview:_videoMatteView];
 		
-		_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(9.0, 99.0, 290.0, 217.0)];
+		_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(9.0, 50.0, 290.0, 217.0)];
 		_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", article.video_url]];
 		[_backgroundImageView addSubview:_videoImgView];
 		
@@ -491,16 +501,9 @@ static CGFloat clamp_alpha(CGFloat alpha)
 	else {
 		SNArticleVO *article = [self article];
 		article.totalLikes = [[parsedLike objectForKey:@"likes"] intValue];
-		[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", article.totalLikes] forState:UIControlStateNormal];
 		
-		if (article.totalLikes > 0) {
-			//_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
-			//[_likeButton setTitle:[NSString stringWithFormat:@"%d", _vo.totalLikes] forState:UIControlStateNormal];
-			
-		} else {
-			//_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0);
-			//[_likeButton setTitle:@"" forState:UIControlStateNormal];
-		}
+		NSString *likeCaption = (article.hasLiked) ? @"Liked" : @"Like";
+		[_likeButton setTitle:likeCaption forState:UIControlStateNormal];
 	}
 }
 

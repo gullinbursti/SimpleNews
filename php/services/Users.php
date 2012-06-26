@@ -288,8 +288,8 @@
 				break;
 				
 			case "3":
-				if (isset($_POST['twitterID']))
-					$users->findFriends($_POST['twitterID']);
+				if (isset($_POST['userID']) && isset($_POST['twitterID']))
+					$users->findFriends($_POST['userID'], $_POST['twitterID']);
 				break;
 				
 			 case "4":

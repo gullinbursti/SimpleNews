@@ -68,13 +68,13 @@
 	_tableView.userInteractionEnabled = YES;
 	_tableView.scrollsToTop = NO;
 	_tableView.showsVerticalScrollIndicator = YES;
-	_tableView.contentInset = UIEdgeInsetsMake(8.0, 0.0f, 8.0f, 0.0f);
+	_tableView.contentInset = UIEdgeInsetsMake(9.0, 0.0f, 9.0f, 0.0f);
 	[self.view addSubview:_tableView];
 	
 	SNHeaderView_iPhone *headerView;
 	
 	if (_isFinder) {
-		_tableView.contentInset = UIEdgeInsetsMake(10.0, 0.0f, 10.0f, 0.0f);
+		_tableView.contentInset = UIEdgeInsetsMake(11.0, 0.0f, 11.0f, 0.0f);
 		
 		headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Invite Friends"];
 		[self.view addSubview:headerView];	

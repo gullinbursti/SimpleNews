@@ -51,7 +51,7 @@
 	bgView.image = [UIImage imageNamed:@"background_timeline.png"];
 	[self.view addSubview:bgView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 45.0, self.view.frame.size.width, self.view.frame.size.height - 84.0)];
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 45.0, self.view.frame.size.width, self.view.frame.size.height - 85.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;	
 	[_scrollView setBackgroundColor:[UIColor clearColor]];
 	_scrollView.scrollsToTop = NO;
@@ -194,8 +194,14 @@
 	offset += size.height;
 	
 	offset += 13;
+	
+	int scrollSize;
+	if (_vo.totalLikes > 0)
+		scrollSize = 44;
+		
 	bgImgView.frame = CGRectMake(bgImgView.frame.origin.x, bgImgView.frame.origin.y, bgImgView.frame.size.width, offset);
-	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, offset + 10.0);
+	_scrollView.frame = CGRectMake(0.0, 45.0, self.view.frame.size.width, self.view.frame.size.height - (85.0 + scrollSize));
+	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, MAX(offset + 10.0, self.view.frame.size.height - (84.0 + scrollSize)));
 	
 	UIImageView *footerImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 435.0, 320.0, 44.0)];
 	footerImgView.image = [UIImage imageNamed:@"articleDetailsFooterBG.png"];
@@ -203,11 +209,16 @@
 	[self.view addSubview:footerImgView];
 	
 	NSString *likeActive;
-	if (_vo.totalLikes == 0)
-		likeActive = @"leftBottomUIB_Active.png";
+	NSString *likeCaption;
 	
-	else
+	if (_vo.totalLikes == 0) {
+		likeActive = @"leftBottomUIB_Active.png";
+		likeCaption = @"Like";
+		
+	} else {
 		likeActive = @"leftBottomUI_Active.png";
+		likeCaption = [NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes];
+	}
 	
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_likeButton.frame = CGRectMake(0.0, 2.0, 95.0, 43.0);
@@ -220,7 +231,7 @@
 	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 	//_likeButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-	[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes] forState:UIControlStateNormal];
+	[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
 	[footerImgView addSubview:_likeButton];
 	
 	if (_vo.hasLiked)
@@ -229,6 +240,14 @@
 	else
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	
+	NSString *commentCaption;
+	if ([_vo.comments count] == 0)
+		commentCaption = @"Comment";
+	
+	else
+		commentCaption = [NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]];
+	
+	commentCaption = ([_vo.comments count] >= 10) ? [NSString stringWithFormat:@"Comm… (%d)", [_vo.comments count]] : [NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]];
 	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_commentButton.frame = CGRectMake(95.0, 2.0, 130.0, 43.0);
 	//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
@@ -240,7 +259,7 @@
 	_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 	//_commentButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 	[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-	[_commentButton setTitle:[NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]] forState:UIControlStateNormal];
+	[_commentButton setTitle:commentCaption forState:UIControlStateNormal];
 	[footerImgView addSubview:_commentButton];
 	
 	UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -391,7 +410,12 @@
 		
 		else {
 			_vo.totalLikes = [[parsedLike objectForKey:@"likes"] intValue];
-			[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes] forState:UIControlStateNormal];
+			
+			if (_vo.hasLiked)
+				[_likeButton setTitle:@"Liked" forState:UIControlStateNormal];
+			
+			else
+				[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
 		}
 	}
 }

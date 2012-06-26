@@ -30,7 +30,8 @@
 	UIImageView *_sub2ImgView;
 	UIButton *_likeButton;
 	UIButton *_commentButton;
-
+	UIButton *_sourceButton;
+	
 	// For videos
 	UIView *_videoMatteView;
 	EGOImageView *_videoImgView;

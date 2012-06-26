@@ -714,11 +714,11 @@
 				
 				if (vo.type_id > 1 && vo.type_id - 4 < 0) {
 					height += imgWidth * ((SNImageVO *)[vo.images objectAtIndex:0]).ratio;
-					height += 26; //20
+					height += 9; //20
 				}
 				
 				if (!(vo.topicID == 8)) {
-					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:15] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:13] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 					height += size.height + 9;
 				}
 				

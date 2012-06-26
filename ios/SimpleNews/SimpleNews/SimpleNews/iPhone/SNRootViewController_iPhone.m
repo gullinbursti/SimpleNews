@@ -747,6 +747,15 @@
 	else
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	
+	
+	NSString *commentCaption;
+	if ([_articleVO.comments count] == 0)
+		commentCaption = @"Comment";
+	
+	else
+		commentCaption = [NSString stringWithFormat:@"Comments (%d)", [_articleVO.comments count]];
+	
+	commentCaption = ([_articleVO.comments count] >= 10) ? [NSString stringWithFormat:@"Comm… (%d)", [_articleVO.comments count]] : [NSString stringWithFormat:@"Comments (%d)", [_articleVO.comments count]];
 	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_commentButton.frame = CGRectMake(95.0, 2.0, 130.0, 43.0);
 	//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
@@ -757,7 +766,7 @@
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
 	_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 	[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-	[_commentButton setTitle:[NSString stringWithFormat:@"Comments (%d)", [_articleVO.comments count]] forState:UIControlStateNormal];
+	[_commentButton setTitle:commentCaption forState:UIControlStateNormal];
 	[_fullscreenFooterImgView addSubview:_commentButton];
 	
 	UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -808,7 +817,7 @@
 	}
 	
 	
-	UIView *overlayView = [[UIView alloc] initWithFrame:CGRectMake(83.0, 224.0, 154.0, 32.0)];
+	UIView *overlayView = [[UIView alloc] initWithFrame:CGRectMake(83.0, 199.0, 154.0, 32.0)];
 	[overlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
 	overlayView.layer.cornerRadius = 8.0;
 	[_blackMatteView addSubview:overlayView];
@@ -825,12 +834,12 @@
 		overlayView.alpha = 1.0;
 		
 	} completion:^(BOOL finished) {
-		[UIView animateWithDuration:0.33 delay:1.5 options:UIViewAnimationCurveEaseOut animations:^(void) {
-			overlayView.alpha = 0.0;
-			
-		} completion:^(BOOL finished) {
-			[overlayView removeFromSuperview];
-		}];
+//		[UIView animateWithDuration:0.33 delay:1.5 options:UIViewAnimationCurveEaseOut animations:^(void) {
+//			overlayView.alpha = 0.0;
+//			
+//		} completion:^(BOOL finished) {
+//			[overlayView removeFromSuperview];
+//		}];
 	}];
 }
 
