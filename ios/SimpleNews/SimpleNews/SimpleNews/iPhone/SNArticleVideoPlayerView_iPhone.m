@@ -58,11 +58,11 @@
 		
 		_progressBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, _videoHolderView.frame.size.height - 8.0, _videoHolderView.frame.size.width, 8.0)];
 		_progressBgImgView.image = [UIImage imageNamed:@"playerPlayHeadBG.png"];
-		[self addSubview:_progressBgImgView];
+		//[self addSubview:_progressBgImgView];
 		
 		_progressImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, _videoHolderView.frame.size.height - 8.0, 0.0, 8.0)];
 		_progressImgView.image = [UIImage imageNamed:@"playerPlayHeadProgression.png"];
-		[self addSubview:_progressImgView];
+		//[self addSubview:_progressImgView];
 		
 		MPVolumeView *volumeView = [[MPVolumeView alloc] initWithFrame:CGRectMake(270.0, 440.0, 40.0, 20.0)];
 		[volumeView setShowsVolumeSlider:NO];
@@ -77,7 +77,7 @@
 		_timeLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
 		_timeLabel.shadowOffset = CGSizeMake(1.0, 1.0);
 		_timeLabel.text = @"0:00";
-		[self addSubview:_timeLabel];
+		//[self addSubview:_timeLabel];
 		
 		_playButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_playButton.frame = CGRectMake((self.frame.size.width * 0.5) - 32.0, (self.frame.size.height * 0.5) - 32.0, 64.0, 64.0);

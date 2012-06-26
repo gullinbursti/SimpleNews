@@ -106,7 +106,7 @@
 		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:listBtnView];
 		
-		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 44.0, 40.0, self.frame.size.height - 44)];
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 40.0, self.frame.size.height - 188.0)];
 		[self addSubview:_overlayView];
 		
 		[self _retrievePopularList];
@@ -159,7 +159,7 @@
 		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:_listBtnView];
 		
-		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 44.0, 40.0, self.frame.size.height - 44.0)];
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 40.0, self.frame.size.height - 188.0)];
 		[self addSubview:_overlayView];
 		
 		[self _retrieveTopicList];
@@ -232,7 +232,7 @@
 		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:_listBtnView];
 		
-		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 44.0, 40.0, self.frame.size.height - 44)];
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 40.0, self.frame.size.height - 188.0)];
 		[self addSubview:_overlayView];
 		
 		[self _retrieveProfileListWithType:type];
@@ -603,7 +603,7 @@
 					offset += height;
 					tot++;
 					
-					offset -= 1;
+					offset++;
 				}
 				
 				[_progressHUD hide:YES];
@@ -635,7 +635,7 @@
 					[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
 					[_loadMoreButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 					[_loadMoreButton addTarget:self action:@selector(_goLoadMore) forControlEvents:UIControlEventTouchUpInside];
-					_loadMoreButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11.0];
+					_loadMoreButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
 					[_loadMoreButton setTitle:@"Load More" forState:UIControlStateNormal];
 					[_scrollView addSubview:_loadMoreButton];
 					offset += 50.0;
@@ -656,7 +656,7 @@
 				
 			} else {
 				UIAlertView *alert = [[UIAlertView alloc] 
-											 initWithTitle:@"Nothing Here" 
+											 initWithTitle:@"Refresh Error!" 
 											 message:@"Cannot Refresh Content"
 											 delegate:nil
 											 cancelButtonTitle:@"OK" 
@@ -763,7 +763,7 @@
 				offset += height;
 				tot++;
 				
-				offset += 3;
+				offset++;
 			}
 			
 			[_progressHUD hide:YES];

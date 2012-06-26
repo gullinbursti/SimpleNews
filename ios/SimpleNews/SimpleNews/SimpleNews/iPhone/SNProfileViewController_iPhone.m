@@ -41,7 +41,7 @@
 	[self.view addSubview:bgImgView];
 	
 	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(20.0, 68.0) imageURL:[SNAppDelegate twitterAvatar] handle:[SNAppDelegate twitterHandle]];
-	//[[avatarImgView btn] addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+	[[avatarImgView btn] addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:avatarImgView];
 	
 	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(54.0, 72.0, 200.0, 16.0)];

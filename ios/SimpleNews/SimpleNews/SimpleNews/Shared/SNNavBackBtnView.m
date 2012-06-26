@@ -19,10 +19,10 @@
 		_btn.frame = CGRectMake(1.0, -1.0, frame.size.width, frame.size.height);
 		[_btn setBackgroundImage:[UIImage imageNamed:@"backButton_nonActive.png"] forState:UIControlStateNormal];
 		[_btn setBackgroundImage:[UIImage imageNamed:@"backButton_Active.png"] forState:UIControlStateHighlighted];		
-		_btn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0];
+		_btn.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
 		//_btn.titleLabel.shadowColor = [UIColor blackColor];
 		//_btn.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-		_btn.titleEdgeInsets = UIEdgeInsetsMake(0.0, 4.0, 0.0, -4.0);
+		_btn.titleEdgeInsets = UIEdgeInsetsMake(0.0, 3.0, 0.0, -3.0);
 		[_btn setTitle:@"Back" forState:UIControlStateNormal];
 		[self addSubview:_btn];
 	}

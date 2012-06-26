@@ -51,7 +51,7 @@
 	bgView.image = [UIImage imageNamed:@"background_timeline.png"];
 	[self.view addSubview:bgView];
 	
-	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.view.frame.size.width, self.view.frame.size.height - 84.0)];
+	_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 45.0, self.view.frame.size.width, self.view.frame.size.height - 84.0)];
 	_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;	
 	[_scrollView setBackgroundColor:[UIColor clearColor]];
 	_scrollView.scrollsToTop = NO;
@@ -66,7 +66,7 @@
 //	else
 //		cardBG = @"defaultCardTimeline_noLikes.png";
 	
-	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 4.0, 320.0, _scrollView.frame.size.height)];
+	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 5.0, 320.0, _scrollView.frame.size.height)];
 	UIImage *img = [UIImage imageNamed:@"myFriendsBackground.png"];
 	bgImgView.image = [img stretchableImageWithLeftCapWidth:10.0 topCapHeight:20.0];
 	[_scrollView addSubview:bgImgView];
@@ -217,7 +217,7 @@
 	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(1.0, -5.0, -1.0, 5.0);
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
-	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0];
+	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 	//_likeButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes] forState:UIControlStateNormal];
@@ -237,7 +237,7 @@
 	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(1.0, -5.0, -1.0, 5.0);
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
-	_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0];
+	_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 	//_commentButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 	[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	[_commentButton setTitle:[NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]] forState:UIControlStateNormal];
@@ -338,6 +338,11 @@
 
 
 -(void)_resetToggle {
+}
+
+- (void)_goTopic {
+	[self.navigationController popViewControllerAnimated:YES];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_TOPIC" object:[NSNumber numberWithInt:_vo.topicID]];
 }
 
 #pragma mark - MailComposeViewController Delegates

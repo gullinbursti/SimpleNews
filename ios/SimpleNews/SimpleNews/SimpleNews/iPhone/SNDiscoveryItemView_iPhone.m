@@ -58,11 +58,11 @@
 		}
 		
 		if (_vo.type_id > 3) {
-			UIView *matteView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 344.0)];
-			[matteView setBackgroundColor:[UIColor blackColor]];
+			UIView *matteView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 297.0)];
+			[matteView setBackgroundColor:[UIColor colorWithWhite:0.882 alpha:1.0]];
 			[bgImgView addSubview:matteView];
 			
-			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(9.0, 99.0, 290.0, 217.0)];
+			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(9.0, 49.0, 290.0, 217.0)];
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[bgImgView addSubview:_videoImgView];
 			

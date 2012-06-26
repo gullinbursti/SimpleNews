@@ -502,8 +502,8 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	
 	} else {
 		if ([defaults objectForKey:@"first_boot"] == @"NO") {
-			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Bummer :(" 
-																				 message:@"A network connection is required for Assembly. Please connect and then try again." 
+			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Connection Required" 
+																				 message:@"A network connection is required for Assembly." 
 																				delegate:nil 
 																	cancelButtonTitle:@"OK" 
 																	otherButtonTitles:nil];

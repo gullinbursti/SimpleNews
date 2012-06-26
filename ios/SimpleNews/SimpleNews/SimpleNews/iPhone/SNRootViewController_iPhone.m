@@ -265,7 +265,7 @@
 //			[_topicTimelineView fullscreenMediaEnabled:YES];
 //		}];
 		
-		[UIView animateWithDuration:0.33 delay:1.33 options:UIViewAnimationCurveEaseInOut animations:^(void) {
+		[UIView animateWithDuration:0.33 delay:1.67 options:UIViewAnimationCurveEaseInOut animations:^(void) {
 			_discoveryListView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 			_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
@@ -404,11 +404,11 @@
 - (void)_refreshTopicsList
 {
 	if (_topicsListResource == nil) {
-		_hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-		_hud.labelText = NSLocalizedString(@"Loading Topics…", @"Status message when loading topics list");
-		_hud.mode = MBProgressHUDModeIndeterminate;
-		_hud.graceTime = 2.0;
-		_hud.taskInProgress = YES;
+//		_hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//		_hud.labelText = NSLocalizedString(@"Loading Topics…", @"Status message when loading topics list");
+//		_hud.mode = MBProgressHUDModeIndeterminate;
+//		_hud.graceTime = 2.0;
+//		_hud.taskInProgress = YES;
 		
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
 		[formValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
@@ -735,7 +735,7 @@
 	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -5.0, 0.0, 5.0);
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
-	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0];
+	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _articleVO.totalLikes] forState:UIControlStateNormal];
 	[_fullscreenFooterImgView addSubview:_likeButton];
@@ -754,7 +754,7 @@
 	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -5.0, 0.0, 5.0);
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
-	_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10.0];
+	_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 	[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	[_commentButton setTitle:[NSString stringWithFormat:@"Comments (%d)", [_articleVO.comments count]] forState:UIControlStateNormal];
 	[_fullscreenFooterImgView addSubview:_commentButton];
@@ -863,6 +863,9 @@
 
 -(void)_changeTopic:(NSNotification *)notification {
 	int topicID = [[notification object] intValue];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
 	
 	for (SNTopicVO *vo in _topicsList) {
 		if (topicID == vo.topic_id) {
@@ -1175,29 +1178,6 @@
 		
 	} else {
 		if (indexPath.row == 0) {
-			[_topicTimelineView removeFromSuperview];
-			_topicTimelineView = nil;
-			
-			[UIView animateWithDuration:0.33 animations:^(void) {
-				//_shadowImgView.alpha = 0.0;
-				
-			} completion:^(BOOL finished) {
-				_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithTopicVO:(SNTopicVO *)[_topicsList objectAtIndex:indexPath.row]];
-				[_holderView addSubview:_topicTimelineView];
-				
-				[UIView animateWithDuration:0.33 animations:^(void) {
-					_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-					_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
-					
-				} completion:^(BOOL finished) {
-					_topicsTableView.contentOffset = CGPointZero;
-					[_topicTimelineView interactionEnabled:YES];
-				}];
-			}];
-			
-			
-			
-			
 			[_topicTimelineView removeFromSuperview];
 			_topicTimelineView = nil;
 			
