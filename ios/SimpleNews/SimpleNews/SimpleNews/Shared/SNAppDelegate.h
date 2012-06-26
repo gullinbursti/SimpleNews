@@ -28,7 +28,7 @@
 #define kServerPath @"http://107.20.161.159/services"
 #define kTweetInvite @"@%@ would like you to check out @getAssembly Get it now! http://bit.ly/KPSkKm"
 #define kPrivacyPage @"http://107.20.161.159/privacy_policy.htm"
-#define kLiveTweet YES
+#define kLiveTweet NO
 
 +(SNAppDelegate *)sharedInstance;
 

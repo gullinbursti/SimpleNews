@@ -60,67 +60,13 @@
 	return (self);
 }
 
--(id)initWithPopularArticles {
-	if ((self = [self init])) {
-		_vo = [SNTopicVO topicWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"0", @"topic_id", @"Popular", @"title", nil, @"hashtags", nil]];
-				
-		NSError *error;
-		if (![[GANTracker sharedTracker] trackPageview:@"/topics/0" withError:&error])
-			NSLog(@"error in trackPageview");
-		
-		
-		_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-		_activityIndicatorView.frame = CGRectMake(15.0, 60.0, 20.0, 20.0);
-		[_activityIndicatorView startAnimating];
-		[self addSubview:_activityIndicatorView];
-		
-		_loaderLabel = [[UILabel alloc] initWithFrame:CGRectMake(45.0, 63.0, 145.0, 16.0)];
-		_loaderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		_loaderLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-		_loaderLabel.textColor = [UIColor blackColor];
-		_loaderLabel.backgroundColor = [UIColor clearColor];
-		_loaderLabel.text = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
-		[self addSubview:_loaderLabel];
-
-		
-		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
-		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-		_scrollView.opaque = NO;
-		_scrollView.scrollsToTop = NO;
-		_scrollView.pagingEnabled = NO;
-		_scrollView.delegate = self;
-		_scrollView.showsVerticalScrollIndicator = NO;
-		_scrollView.alwaysBounceVertical = NO;
-		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
-		[self addSubview:_scrollView];
-		
-		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
-		_refreshHeaderView.delegate = self;
-		[_scrollView addSubview:_refreshHeaderView];
-		[_refreshHeaderView refreshLastUpdatedDate];
-		
-		SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.title];
-		[self addSubview:headerView];
-		
-		SNNavListBtnView *listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
-		[[listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-		[headerView addSubview:listBtnView];
-		
-		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 40.0, self.frame.size.height - 188.0)];
-		[self addSubview:_overlayView];
-		
-		[self _retrievePopularList];
-	}
-	
-	return (self);
-}
 
 -(id)initWithTopicVO:(SNTopicVO *)vo {
 	if ((self = [self init])) {
 		_vo = vo;
 		
 		NSError *error;
-		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/topics/%d", _vo.topic_id] withError:&error])
+		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/topics/%@", _vo.title] withError:&error])
 			NSLog(@"error in trackPageview");
 		
 		_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -172,7 +118,7 @@
 	if ((self = [self init])) {
 		
 		NSError *error;
-		if (![[GANTracker sharedTracker] trackPageview:@"/topics/0" withError:&error])
+		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/topics/%d", type] withError:&error])
 			NSLog(@"error in trackPageview");
 		
 		NSString *title;
@@ -491,23 +437,23 @@
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
 	
-	for (SNArticleItemView_iPhone *itemView in _articleViews) {
-		if (scrollView.contentOffset.y + 340.0 > itemView.frame.origin.y && itemView.isFirstAppearance) {
-			[itemView setIsFirstAppearance:NO];
-			
-			[UIView animateWithDuration:0.25 animations:^(void) {
-				itemView.alpha = 1.0;
-			}];
-			
-			[UIView beginAnimations:nil context:NULL];
-			[UIView setAnimationDuration:0.25];
-			[UIView setAnimationDelegate:self];
-			[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
-			CGAffineTransform transform = CGAffineTransformMakeScale(1.0, 1.0);
-			itemView.transform = transform;
-			[UIView commitAnimations];
-		}
-	}
+//	for (SNArticleItemView_iPhone *itemView in _articleViews) {
+//		if (scrollView.contentOffset.y + 340.0 > itemView.frame.origin.y && itemView.isFirstAppearance) {
+//			[itemView setIsFirstAppearance:NO];
+//			
+//			[UIView animateWithDuration:0.25 animations:^(void) {
+//				itemView.alpha = 1.0;
+//			}];
+//			
+//			[UIView beginAnimations:nil context:NULL];
+//			[UIView setAnimationDuration:0.25];
+//			[UIView setAnimationDelegate:self];
+//			[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
+//			CGAffineTransform transform = CGAffineTransformMakeScale(1.0, 1.0);
+//			itemView.transform = transform;
+//			[UIView commitAnimations];
+//		}
+//	}
 }
 
 
@@ -614,16 +560,16 @@
 				for (SNArticleItemView_iPhone *itemView in _articleViews) {
 					[_scrollView addSubview:itemView];
 					
-					if (itemView.frame.origin.y > 480.0) {
-						itemView.alpha = 0.0;
-						[UIView beginAnimations:nil context:NULL];
-						[UIView setAnimationDuration:0.1];
-						[UIView setAnimationDelegate:self];
-						[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
-						CGAffineTransform transform = CGAffineTransformMakeScale(1.1, 1.1);
-						itemView.transform = transform;
-						[UIView commitAnimations];
-					}
+//					if (itemView.frame.origin.y > 480.0) {
+//						itemView.alpha = 0.0;
+//						[UIView beginAnimations:nil context:NULL];
+//						[UIView setAnimationDuration:0.1];
+//						[UIView setAnimationDelegate:self];
+//						[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
+//						CGAffineTransform transform = CGAffineTransformMakeScale(1.1, 1.1);
+//						itemView.transform = transform;
+//						[UIView commitAnimations];
+//					}
 				}
 				
 				offset += 12.0;
@@ -703,9 +649,6 @@
 				}
 				
 				int imgWidth = 290;
-				//				if (vo.topicID == 1 || vo.topicID == 2)
-				//					imgWidth = 296;			
-				
 				if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 					imgWidth = 145;
 					height -= 2;

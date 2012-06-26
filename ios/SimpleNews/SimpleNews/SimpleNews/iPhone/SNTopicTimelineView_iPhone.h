@@ -43,7 +43,6 @@
 
 @property (nonatomic, retain)UIView *overlayView;
 
--(id)initWithPopularArticles;
 -(id)initWithTopicVO:(SNTopicVO *)vo;
 -(id)initWithProfileType:(int)type;
 

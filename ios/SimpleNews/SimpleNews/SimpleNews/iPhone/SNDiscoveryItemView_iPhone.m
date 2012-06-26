@@ -48,9 +48,14 @@
 	_articleImgView.backgroundColor = [UIColor whiteColor];
 	_articleImgView.userInteractionEnabled = YES;
 	[_mainImageHolderView addSubview:_articleImgView];
-		
+	
+	UIButton *detailsButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	detailsButton.frame = _articleImgView.frame;
+	[detailsButton addTarget:self action:@selector(_goDetails:) forControlEvents:UIControlEventTouchUpInside];
+	//[_mainImageHolderView addSubview:detailsButton];
+	
 	UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photoZoomIn:)];
-	tapRecognizer.numberOfTapsRequired = 1;
+	tapRecognizer.numberOfTapsRequired = 2;
 	[_articleImgView addGestureRecognizer:tapRecognizer];
 		
 	UIView *titleBGView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 52.0)];
@@ -148,8 +153,9 @@
 	//NSString *likeCaption = (article.totalLikes == 0) ? @"Like" : [NSString stringWithFormat:@"Likes (%d)", article.totalLikes];
 	[_likeButton setBackgroundImage:[UIImage imageNamed:likeActiveImageName] forState:UIControlStateHighlighted];
 	[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
-	SEL likeAction = (article.hasLiked ? @selector(_goDislike) : @selector(_goLike));
-	[_likeButton addTarget:self action:likeAction forControlEvents:UIControlEventTouchUpInside];
+	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+//	SEL likeAction = (article.hasLiked ? @selector(_goDislike) : @selector(_goLike));
+//	[_likeButton addTarget:self action:likeAction forControlEvents:UIControlEventTouchUpInside];
 	
 	// Update comments count
 	NSString *commentCaption = ([article.comments count] == 0) ? @"Comment" : [NSString stringWithFormat:@"Comments (%d)", [article.comments count]];
@@ -162,12 +168,18 @@
 		int offset2 = 15;
 		int tot = 0;
 		for (SNTwitterUserVO *tuVO in article.userLikes) {
-			if (tot >= 9)
-				break;
+			if ([tuVO.twitterID isEqualToString:[[SNAppDelegate profileForUser] objectForKey:@"twitter_id"]]) {
+				article.hasLiked = YES;
+				[_likeButton setTitle:@"Liked" forState:UIControlStateNormal];
+				[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+				[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+			}
 			
-			SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 331.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
-			[twitterAvatars addObject:avatarView];
-			offset2 += 31.0;
+			if (tot < 9) {
+				SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 331.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
+				[twitterAvatars addObject:avatarView];
+				offset2 += 31.0;
+			}
 			tot++;
 		}
 	}
@@ -210,7 +222,7 @@
 			_sub1ImgView.frame = CGRectMake(35.0, 0.0, 70.0, 105.0);
 		
 		UITapGestureRecognizer *tap1Recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photo1ZoomIn:)];
-		tap1Recognizer.numberOfTapsRequired = 1;
+		tap1Recognizer.numberOfTapsRequired = 2;
 		[_sub1ImgView addGestureRecognizer:tap1Recognizer];
 		
 		_sub2ImgHolderView = [[UIView alloc] initWithFrame:CGRectMake(162.0, 214.0, 142.0, 95.0)];
@@ -429,6 +441,11 @@ static CGFloat clamp_alpha(CGFloat alpha)
 - (void)_goTopic {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_TOPIC" object:[NSNumber numberWithInt:self.article.topicID]];
 }
+
+- (void)_goDetails:(id)sender {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_DETAILS" object:self.article];
+}
+
 
 - (void)_goTwitterProfile {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TWITTER_PROFILE" object:self.article.twitterHandle];

@@ -411,11 +411,11 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 			// init Airship launch options
 			NSMutableDictionary *takeOffOptions = [[NSMutableDictionary alloc] init];
 			[takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
-					
+			
 			// create Airship singleton that's used to talk to Urban Airhship servers, populate AirshipConfig.plist with your info from http://go.urbanairship.com
-			[UAirship takeOff:takeOffOptions];
-			[[UAPush shared] resetBadge];//zero badge on startup
-			[[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+//			[UAirship takeOff:takeOffOptions];
+//			[[UAPush shared] resetBadge];//zero badge on startup
+//			[[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 		}
 		
 		[[GANTracker sharedTracker] startTrackerWithAccountID:kAnalyticsAccountId

@@ -17,7 +17,6 @@
 	UIButton *_likeButton;
 	UIButton *_videoButton;
 	UIButton *_commentButton;
-	UIView *_imgOverlayView;
 	
 	UIImageView *_article1ImgView;
 	UIImageView *_article2ImgView;

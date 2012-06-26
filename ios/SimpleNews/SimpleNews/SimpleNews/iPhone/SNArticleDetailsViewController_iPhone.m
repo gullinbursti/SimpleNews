@@ -31,7 +31,7 @@
 		_vo = vo;
 		
 		NSError *error;
-		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/%@/%@/comments", _vo.topicTitle, _vo.title] withError:&error])
+		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/%@/%@/details", _vo.topicTitle, _vo.title] withError:&error])
 			NSLog(@"error in trackPageview");
 	}
 	
@@ -278,10 +278,22 @@
 		[self.view addSubview:likesImgView];
 		
 		int offset2 = 10;
+		int tot = 0;
 		for (SNTwitterUserVO *tuVO in _vo.userLikes) {
-			SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 401.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
-			[self.view addSubview:avatarView];
-			offset2 += 40.0;
+			
+			if ([tuVO.twitterID isEqualToString:[[SNAppDelegate profileForUser] objectForKey:@"twitter_id"]]) {
+				_vo.hasLiked = YES;
+				[_likeButton setTitle:@"Liked" forState:UIControlStateNormal];
+				[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+				[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+			}
+			
+			if (tot < 9) {
+				SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 401.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
+				[self.view addSubview:avatarView];
+				offset2 += 40.0;
+			}
+			tot++;
 		}
 	}
 }

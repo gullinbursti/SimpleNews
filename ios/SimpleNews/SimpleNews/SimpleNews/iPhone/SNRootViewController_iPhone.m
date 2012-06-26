@@ -576,7 +576,7 @@
 																				delegate:self 
 																	cancelButtonTitle:@"Cancel" 
 																 destructiveButtonTitle:nil 
-																	otherButtonTitles:@"View Article", @"Twitter", @"SMS", @"Copy URL", @"Email", openSource, nil];
+																	otherButtonTitles:@"View Article", @"Share on Twitter", @"SMS", @"Copy URL", @"Email", openSource, nil];
 	actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[actionSheet showInView:self.view];
 }
@@ -597,7 +597,7 @@
 																				delegate:self 
 																	cancelButtonTitle:@"Cancel" 
 															 destructiveButtonTitle:nil 
-																	otherButtonTitles:@"Twitter", @"SMS", @"Copy URL", @"Email", openSource, nil];
+																	otherButtonTitles:@"Share on Twitter", @"SMS", @"Copy URL", @"Email", openSource, nil];
 	actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[actionSheet showInView:self.view];
 }

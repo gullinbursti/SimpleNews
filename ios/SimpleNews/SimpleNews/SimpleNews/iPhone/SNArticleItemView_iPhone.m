@@ -137,7 +137,7 @@
 			
 			if (_vo.type_id < 4) {
 				UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-				[titleButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
+				[titleButton addTarget:self action:@selector(_goDetails:) forControlEvents:UIControlEventTouchUpInside];
 				titleButton.frame = titleLabel.frame;
 				[self addSubview:titleButton];
 			}
@@ -153,13 +153,14 @@
 			_article1ImgView.userInteractionEnabled = YES;
 			[self addSubview:_article1ImgView];
 			
-			_imgOverlayView = [[UIView alloc] initWithFrame:_article1ImgView.frame];
-			[_imgOverlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];
-			[self addSubview:_imgOverlayView];
-			
+			UIButton *detailsButton = [UIButton buttonWithType:UIButtonTypeCustom];
+			detailsButton.frame = _article1ImgView.frame;
+			[detailsButton addTarget:self action:@selector(_goDetails:) forControlEvents:UIControlEventTouchUpInside];
+			//[self addSubview:detailsButton];
+
 			UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photoZoomIn:)];
-			tapRecognizer.numberOfTapsRequired = 1;
-			[_imgOverlayView addGestureRecognizer:tapRecognizer];
+			tapRecognizer.numberOfTapsRequired = 2;
+			[_article1ImgView addGestureRecognizer:tapRecognizer];
 			
 			if (_imageResource == nil) {			
 				self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:((SNImageVO *)[_vo.images objectAtIndex:0]).url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
@@ -283,12 +284,18 @@
 			int offset2 = 5;
 			int tot = 0;
 			for (SNTwitterUserVO *tuVO in _vo.userLikes) {
-				if (tot >= 9)
-					break;
+				if ([tuVO.twitterID isEqualToString:[[SNAppDelegate profileForUser] objectForKey:@"twitter_id"]]) {
+					_vo.hasLiked = YES;
+					[_likeButton setTitle:@"Liked" forState:UIControlStateNormal];
+					[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+					[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+				}
 				
-				SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, offset - 38.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
-				[self addSubview:avatarView];
-				offset2 += 31.0;
+				if (tot < 9) {
+					SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, offset - 35.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
+					[self addSubview:avatarView];
+					offset2 += 31.0;
+				}
 				tot++;
 			}
 		}
@@ -315,7 +322,7 @@
 
 
 #pragma mark - Navigation
--(void)_goDetails {
+-(void)_goDetails:(id)sender {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_DETAILS" object:_vo];
 }
 
