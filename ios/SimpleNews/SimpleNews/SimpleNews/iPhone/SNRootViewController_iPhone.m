@@ -742,7 +742,6 @@
 	
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_likeButton.frame = CGRectMake(0.0, 2.0, 95.0, 43.0);
-	//[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
 	[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUIB_Active.png"] forState:UIControlStateHighlighted];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -5.0, 0.0, 5.0);
@@ -770,7 +769,6 @@
 	commentCaption = ([_articleVO.comments count] >= 10) ? [NSString stringWithFormat:@"Comm… (%d)", [_articleVO.comments count]] : [NSString stringWithFormat:@"Comments (%d)", [_articleVO.comments count]];
 	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_commentButton.frame = CGRectMake(95.0, 2.0, 130.0, 43.0);
-	//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
 	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_Active.png"] forState:UIControlStateHighlighted];
 	[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
 	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -5.0, 0.0, 5.0);
@@ -783,7 +781,6 @@
 	
 	UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	sourceButton.frame = CGRectMake(226.0, 2.0, 95.0, 43.0);
-	//[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];

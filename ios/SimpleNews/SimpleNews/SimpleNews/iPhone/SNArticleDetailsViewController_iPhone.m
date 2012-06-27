@@ -212,17 +212,16 @@
 	NSString *likeCaption;
 	
 	if (_vo.totalLikes == 0) {
-		likeActive = @"leftBottomUIB_Active.png";
+		likeActive = @"leftBottomUIBFull_Active.png";
 		likeCaption = @"Like";
 		
 	} else {
-		likeActive = @"leftBottomUI_Active.png";
+		likeActive = @"leftBottomUIFull_Active.png";
 		likeCaption = [NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes];
 	}
 	
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_likeButton.frame = CGRectMake(0.0, 2.0, 95.0, 43.0);
-	//[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
 	[_likeButton setBackgroundImage:[UIImage imageNamed:likeActive] forState:UIControlStateHighlighted];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
 	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(1.0, -5.0, -1.0, 5.0);
@@ -250,7 +249,6 @@
 	commentCaption = ([_vo.comments count] >= 10) ? [NSString stringWithFormat:@"Comm… (%d)", [_vo.comments count]] : [NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]];
 	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_commentButton.frame = CGRectMake(95.0, 2.0, 130.0, 43.0);
-	//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
 	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_Active.png"] forState:UIControlStateHighlighted];
 	[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
 	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(1.0, -5.0, -1.0, 5.0);
@@ -264,7 +262,6 @@
 	
 	UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	sourceButton.frame = CGRectMake(226.0, 2.0, 95.0, 43.0);
-	//[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 	sourceButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];

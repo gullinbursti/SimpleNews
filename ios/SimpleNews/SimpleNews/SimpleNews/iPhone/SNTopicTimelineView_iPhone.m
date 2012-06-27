@@ -105,7 +105,8 @@
 		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:_listBtnView];
 		
-		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 40.0, self.frame.size.height - 188.0)];
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 20.0, self.frame.size.height - 88.0)];
+		//[_overlayView setBackgroundColor:[SNAppDelegate snDebugRedColor]];
 		[self addSubview:_overlayView];
 		
 		[self _retrieveTopicList];
@@ -178,7 +179,8 @@
 		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:_listBtnView];
 		
-		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 40.0, self.frame.size.height - 188.0)];
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 20.0, self.frame.size.height - 88.0)];
+		//[_overlayView setBackgroundColor:[SNAppDelegate snDebugRedColor]];
 		[self addSubview:_overlayView];
 		
 		[self _retrieveProfileListWithType:type];

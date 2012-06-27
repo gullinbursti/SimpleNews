@@ -68,7 +68,6 @@
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_likeButton.frame = CGRectMake(9.0, 366.0, 93.0, 43.0);
 	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-	//[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 	//_likeButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 1.0, -2.0, -1.0);
@@ -80,7 +79,6 @@
 	
 	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_commentButton.frame = CGRectMake(102.0, 366.0, 115.0, 43.0);
-	//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
 	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_Active.png"] forState:UIControlStateHighlighted];
 	[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
 	[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
@@ -94,7 +92,6 @@
 		
 	_sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_sourceButton.frame = CGRectMake(217.0, 366.0, 93.0, 43.0);
-	//[_sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 	[_sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 	_sourceButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, 1.0, -2.0, -1.0);
 	[_sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];

@@ -243,7 +243,6 @@
 		
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_likeButton.frame = CGRectMake(0.0, offset, 93.0, 43.0);
-		//[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_nonActive.png"] forState:UIControlStateNormal];
 		[_likeButton setBackgroundImage:[UIImage imageNamed:likeActive] forState:UIControlStateHighlighted];
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
@@ -271,7 +270,6 @@
 		commentCaption = ([_vo.comments count] >= 10) ? [NSString stringWithFormat:@"Comm… (%d)", [_vo.comments count]] : [NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]];
 		_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		_commentButton.frame = CGRectMake(92.0, offset, 115.0, 43.0);
-		//[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_nonActive.png"] forState:UIControlStateNormal];
 		[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_Active.png"] forState:UIControlStateHighlighted];
 		[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
 		_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
@@ -284,7 +282,6 @@
 				
 		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		sourceButton.frame = CGRectMake(208.0, offset, 93.0, 43.0);
-		//[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 		[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
 		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
