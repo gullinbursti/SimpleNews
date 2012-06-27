@@ -44,6 +44,15 @@
 	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 64.0, 44.0)];
 	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:backBtnView];
+	
+	if (!_progressHUD) {
+		_progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+		_progressHUD.mode = MBProgressHUDModeIndeterminate;
+		_progressHUD.taskInProgress = YES;
+		_progressHUD.graceTime = 5.0;
+		
+		[self performSelector:@selector(_removeHUD) withObject:nil afterDelay:5.0];
+	}
 }
 
 -(void)viewDidLoad {
@@ -99,15 +108,6 @@
 }
 
 -(void)webViewDidStartLoad:(UIWebView *)webView {
-	
-	if (!_progressHUD) {
-		_progressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-		_progressHUD.mode = MBProgressHUDModeIndeterminate;
-		_progressHUD.taskInProgress = YES;
-		_progressHUD.graceTime = 3.0;
-		
-		[self performSelector:@selector(_removeHUD) withObject:nil afterDelay:3.33];
-	}
 }
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView {

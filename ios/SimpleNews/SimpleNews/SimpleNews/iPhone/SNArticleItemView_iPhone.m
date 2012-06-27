@@ -197,8 +197,8 @@
 				offset -= 2;
 			}
 			
-			offset += (imgFrame.size.width * ((SNImageVO *)[_vo.images objectAtIndex:1]).ratio);
-			offset += 2;
+			offset += (imgFrame.size.width * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
+			offset += 1;
 		}
 		
 		if (_vo.type_id > 3) {

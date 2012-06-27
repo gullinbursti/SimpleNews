@@ -511,7 +511,7 @@
 						[list addObject:vo];
 					
 					int height;
-					height = 88;
+					height = 87;
 					CGSize size;
 					
 					if (vo.totalLikes > 0) {
@@ -549,8 +549,6 @@
 					
 					offset += height;
 					tot++;
-					
-					offset++;
 				}
 				
 				[_progressHUD hide:YES];
@@ -642,7 +640,7 @@
 					[list addObject:vo];
 				
 				int height;
-				height = 88;
+				height = 87;
 				CGSize size;
 				
 				if (vo.totalLikes > 0) {
@@ -707,8 +705,6 @@
 				
 				offset += height;
 				tot++;
-				
-				offset++;
 			}
 			
 			[_progressHUD hide:YES];
