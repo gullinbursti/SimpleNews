@@ -57,7 +57,7 @@
 	[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:_listBtnView];
 	
-	SNNavRandomBtnView *rndBtnView = [[SNNavRandomBtnView alloc] initWithFrame:CGRectMake(276.0, 0.0, 44.0, 44.0)];
+	SNNavRandomBtnView *rndBtnView = [[SNNavRandomBtnView alloc] initWithFrame:CGRectMake(273.0, 0.0, 44.0, 44.0)];
 	[[rndBtnView btn] addTarget:self action:@selector(_goRefresh) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:rndBtnView];
 	

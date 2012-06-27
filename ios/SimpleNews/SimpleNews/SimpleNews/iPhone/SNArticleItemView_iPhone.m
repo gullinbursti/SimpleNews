@@ -31,6 +31,7 @@
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
 		_isFirstAppearance = YES;
+		_isFullscreenDblTap = NO;
 		
 		int offset = 16;
 		CGSize size;
@@ -148,20 +149,21 @@
 		
 		CGRect imgFrame = CGRectMake(5, offset + 1.0, 290.0, 290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
 		if (_vo.type_id == 2 || _vo.type_id == 3) {
+//			UIActivityIndicatorView *imgIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+//			imgIndicatorView.frame = CGRectMake((imgFrame.size.width * 0.5) - 12.0, (imgFrame.size.height * 0.5) - 12.0, 24.0, 24.0);
+//			[imgIndicatorView startAnimating];
+//			[self addSubview:imgIndicatorView];
+			
 			_article1ImgView = [[UIImageView alloc] initWithFrame:imgFrame];
 			[_article1ImgView setBackgroundColor:[UIColor whiteColor]];
 			_article1ImgView.userInteractionEnabled = YES;
 			[self addSubview:_article1ImgView];
 			
-			UIButton *detailsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			detailsButton.frame = _article1ImgView.frame;
-			[detailsButton addTarget:self action:@selector(_goDetails:) forControlEvents:UIControlEventTouchUpInside];
-			//[self addSubview:detailsButton];
+			UIButton *details1Button = [UIButton buttonWithType:UIButtonTypeCustom];
+			details1Button.frame = _article1ImgView.frame;
+			[details1Button addTarget:self action:@selector(_goImage1) forControlEvents:UIControlEventTouchUpInside];
+			[self addSubview:details1Button];
 
-			UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photoZoomIn:)];
-			tapRecognizer.numberOfTapsRequired = 2;
-			[_article1ImgView addGestureRecognizer:tapRecognizer];
-			
 			if (_imageResource == nil) {			
 				self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:((SNImageVO *)[_vo.images objectAtIndex:0]).url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
 			}
@@ -170,23 +172,28 @@
 				_article1ImgView.frame = CGRectMake(5.0, offset, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:1]).ratio);
 				
 				imgFrame = CGRectMake(150.0, offset, 145.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:1]).ratio);
+//				UIActivityIndicatorView *imgIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+//				imgIndicatorView.frame = CGRectMake((imgFrame.size.width * 0.5) - 12.0, (imgFrame.size.height * 0.5) - 12.0, 24.0, 24.0);
+//				[imgIndicatorView startAnimating];
+//				[self addSubview:imgIndicatorView];
+				
 				_article2ImgView = [[UIImageView alloc] initWithFrame:imgFrame];
 				[_article2ImgView setBackgroundColor:[UIColor whiteColor]];
 				_article2ImgView.userInteractionEnabled = YES;
 				[self addSubview:_article2ImgView];
 				
+				UIButton *details2Button = [UIButton buttonWithType:UIButtonTypeCustom];
+				details2Button.frame = _article2ImgView.frame;
+				[details2Button addTarget:self action:@selector(_goImage2) forControlEvents:UIControlEventTouchUpInside];
+				[self addSubview:details2Button];
 				
-				UITapGestureRecognizer *tap1Recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photo2ZoomIn:)];
-				tap1Recognizer.numberOfTapsRequired = 1;
-				[_article2ImgView addGestureRecognizer:tap1Recognizer];
-				
-//				UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//				itunesButton.frame = CGRectMake(103.0, imgFrame.origin.y + ((imgFrame.size.height * 0.5) - 22.0), 114.0, 44.0);
-//				[itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateNormal];
-//				[itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateHighlighted];
-//				[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
-//				[self addSubview:itunesButton];
-				
+				UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
+				itunesButton.frame = CGRectMake(180.0, offset + imgFrame.size.height + 10, 114.0, 44.0);
+				[itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateNormal];
+				[itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateHighlighted];
+				[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
+				[self addSubview:itunesButton];
+				offset += 54;
 				offset -= 2;
 			}
 			
@@ -194,7 +201,12 @@
 			offset += 2;
 		}
 		
-		if (_vo.type_id > 3) {			
+		if (_vo.type_id > 3) {
+			UIActivityIndicatorView *imgIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+			imgIndicatorView.frame = CGRectMake(5.0 + (290.0 * 0.5) - 12.0, offset + (217.0 * 0.5) - 12.0, 24.0, 24.0);
+			[imgIndicatorView startAnimating];
+			[self addSubview:imgIndicatorView];
+			
 			_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(5.0, offset, 290.0, 217.0)];
 			_videoImgView.imageURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://img.youtube.com/vi/%@/0.jpg", _vo.video_url]];
 			[self addSubview:_videoImgView];
@@ -292,7 +304,7 @@
 				}
 				
 				if (tot < 9) {
-					SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, offset - 35.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
+					SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, offset - 36.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
 					[self addSubview:avatarView];
 					offset2 += 31.0;
 				}
@@ -437,6 +449,41 @@
 
 - (void)_goAppStore {
 	[SNAppDelegate openWithAppStore:_vo.article_url];
+}
+
+- (void)_imageBtnTimeout {
+	_isFullscreenDblTap = NO;
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_DETAILS" object:_vo];
+}
+
+- (void)_goImage1 {
+	if (!_isFullscreenDblTap) {
+		_isFullscreenDblTap = YES;
+		_dblTapTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_imageBtnTimeout) userInfo:nil repeats:NO];
+		
+	} else {
+		_isFullscreenDblTap = NO;
+		
+		[_dblTapTimer invalidate];
+		_dblTapTimer = nil;
+		
+		[self _photoZoomIn:nil];
+	}
+}
+
+- (void)_goImage2 {
+	if (!_isFullscreenDblTap) {
+		_isFullscreenDblTap = YES;
+		_dblTapTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_imageBtnTimeout) userInfo:nil repeats:NO];
+		
+	} else {
+		_isFullscreenDblTap = NO;
+		
+		[_dblTapTimer invalidate];
+		_dblTapTimer = nil;
+		
+		[self _photo2ZoomIn:nil];
+	}
 }
 
 

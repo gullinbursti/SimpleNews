@@ -495,7 +495,7 @@
 		
 		if (suffixRange.location < prefixRange.location) {
 			[self _goClose];
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"HIDE_FULLSCREEN_MEDIA" object:nil];//HIDE_FULLSCREEN_MEDIA
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"HIDE_FULLSCREEN_MEDIA" object:nil];
 		
 		} else {	
 			//NSString *streamMap = [videoInfo substringWithRange:NSMakeRange(prefixRange.location + prefixRange.length, suffixRange.location - (prefixRange.location + prefixRange.length))];
@@ -528,7 +528,7 @@
 	
 	} else {
 		[self _goClose];
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"HIDE_FULLSCREEN_MEDIA" object:nil];//HIDE_FULLSCREEN_MEDIA
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"HIDE_FULLSCREEN_MEDIA" object:nil];
 	}
 		
 	//NSLog(@"%@", [@"http%3A%2F%2Fo-o.preferred.comcast-lax1.v21.lscache4.c.youtube.com%2Fvideoplayback%3Fupn%3DNjE0NjE0NjY0NzY4NDEzNDA5OA%253D%253D%26sparams%3Dcp%252Cid%252Cip%252Cipbits%252Citag%252Cratebypass%252Csource%252Cupn%252Cexpire%26fexp%3D902904%252C904820%252C901601%26itag%3D37%26ip%3D98.0.0.0%26signature%3DAC36EF98C4CFECF8E5BFEA29EE9A009A40D18106.4BE3C83EE174FEC7EEDC72303CD49FCBE4F9F150%26sver%3D3%26ratebypass%3Dyes%26source%3Dyoutube%26expire%3D1332511088%26key%3Dyt1%26ipbits%3D8%26cp%3DU0hSR1VMT19NUkNOMl9NRlNBOjNqczdGMmdmd2pJ%26id%3Dd5783ada74dc476c" stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]);

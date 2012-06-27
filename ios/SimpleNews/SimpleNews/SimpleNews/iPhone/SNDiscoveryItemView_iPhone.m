@@ -40,7 +40,7 @@
 	[_cardView addSubview:_backgroundImageView];
 		
 	_mainImageHolderView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 302.0)];
-	_mainImageHolderView.backgroundColor = [UIColor colorWithWhite:0.882 alpha:1.0];
+	_mainImageHolderView.backgroundColor = [UIColor colorWithWhite:0.961 alpha:1.0];
 	_mainImageHolderView.clipsToBounds = YES;
 	[_backgroundImageView addSubview:_mainImageHolderView];
 	
@@ -49,17 +49,13 @@
 	_articleImgView.userInteractionEnabled = YES;
 	[_mainImageHolderView addSubview:_articleImgView];
 	
-	UIButton *detailsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	detailsButton.frame = _articleImgView.frame;
-	[detailsButton addTarget:self action:@selector(_goDetails:) forControlEvents:UIControlEventTouchUpInside];
-	//[_mainImageHolderView addSubview:detailsButton];
+	UIButton *details1Button = [UIButton buttonWithType:UIButtonTypeCustom];
+	details1Button.frame = _articleImgView.frame;
+	[details1Button addTarget:self action:@selector(_goImage1) forControlEvents:UIControlEventTouchUpInside];
+	[_mainImageHolderView addSubview:details1Button];
 	
-	UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photoZoomIn:)];
-	tapRecognizer.numberOfTapsRequired = 2;
-	[_articleImgView addGestureRecognizer:tapRecognizer];
-		
 	UIView *titleBGView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 52.0)];
-	[titleBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
+	[titleBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.75]];
 	titleBGView.userInteractionEnabled = YES;
 	[_backgroundImageView addSubview:titleBGView];
 				
@@ -189,8 +185,8 @@
 	
 	// Check for different article types and reconfigure as needed
 	if (article.type_id > 3) {
-		_videoMatteView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 297.0)];
-		_videoMatteView.backgroundColor = [UIColor colorWithWhite:0.882 alpha:1.0];
+		_videoMatteView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 302.0)];
+		_videoMatteView.backgroundColor = [UIColor blackColor];
 		[_backgroundImageView addSubview:_videoMatteView];
 		
 		_videoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(9.0, 50.0, 290.0, 217.0)];
@@ -210,7 +206,7 @@
 		_mainImageHolderView.frame = CGRectMake(9.0, 9.0, 290.0, 194.0);
 		
 		_sub1ImgHolderView = [[UIView alloc] initWithFrame:CGRectMake(15.0, 214.0, 142.0, 95.0)];
-		[_sub1ImgHolderView setBackgroundColor:[UIColor colorWithWhite:0.882 alpha:1.0]];
+		[_sub1ImgHolderView setBackgroundColor:[UIColor colorWithWhite:0.961 alpha:1.0]];
 		_sub1ImgHolderView.clipsToBounds = YES;
 		[_cardView addSubview:_sub1ImgHolderView];
 		
@@ -221,12 +217,13 @@
 		if (firstImage.ratio > 1.0)
 			_sub1ImgView.frame = CGRectMake(35.0, 0.0, 70.0, 105.0);
 		
-		UITapGestureRecognizer *tap1Recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photo1ZoomIn:)];
-		tap1Recognizer.numberOfTapsRequired = 2;
-		[_sub1ImgView addGestureRecognizer:tap1Recognizer];
+		UIButton *details2Button = [UIButton buttonWithType:UIButtonTypeCustom];
+		details2Button.frame = _sub1ImgView.frame;
+		[details2Button addTarget:self action:@selector(_goImage2) forControlEvents:UIControlEventTouchUpInside];
+		[_mainImageHolderView addSubview:details2Button];
 		
 		_sub2ImgHolderView = [[UIView alloc] initWithFrame:CGRectMake(162.0, 214.0, 142.0, 95.0)];
-		[_sub2ImgHolderView setBackgroundColor:[UIColor colorWithWhite:0.882 alpha:1.0]];
+		[_sub2ImgHolderView setBackgroundColor:[UIColor colorWithWhite:0.961 alpha:1.0]];
 		_sub2ImgHolderView.clipsToBounds = YES;
 		[_cardView addSubview:_sub2ImgHolderView];
 		
@@ -239,9 +236,10 @@
 		if (secondaryImage.ratio > 1.0)
 			_sub2ImgView.frame = CGRectMake(35.0, 0.0, 70.0, 105.0);
 		
-		UITapGestureRecognizer *tap2Recognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_photo2ZoomIn:)];
-		tap2Recognizer.numberOfTapsRequired = 1;
-		[_sub2ImgView addGestureRecognizer:tap2Recognizer];
+		UIButton *details3Button = [UIButton buttonWithType:UIButtonTypeCustom];
+		details3Button.frame = _sub2ImgView.frame;
+		[details3Button addTarget:self action:@selector(_goImage3) forControlEvents:UIControlEventTouchUpInside];
+		[_mainImageHolderView addSubview:details3Button];
 	}
 }
 
@@ -260,7 +258,7 @@
 	CGSize size2 = [[NSString stringWithFormat:@"@%@ ", article.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(viaLabel.frame.origin.x + size.width, 41.0, size2.width, size2.height)];
 	handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
-	handleLabel.textColor = [UIColor whiteColor];
+	handleLabel.textColor = [SNAppDelegate snLinkColor];
 	handleLabel.backgroundColor = [UIColor clearColor];
 	handleLabel.text = [NSString stringWithFormat:@"@%@ ", article.twitterHandle];
 	[attributionViews addObject:handleLabel];
@@ -281,7 +279,7 @@
 	size2 = [[NSString stringWithFormat:@"%@", article.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 	UILabel *topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(inLabel.frame.origin.x + size.width, 41.0, size2.width, size2.height)];
 	topicLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
-	topicLabel.textColor = [UIColor whiteColor];
+	topicLabel.textColor = [SNAppDelegate snLinkColor];
 	topicLabel.backgroundColor = [UIColor clearColor];
 	topicLabel.text = [NSString stringWithFormat:@"%@", article.topicTitle];
 	[attributionViews addObject:topicLabel];
@@ -432,7 +430,7 @@ static CGFloat clamp_alpha(CGFloat alpha)
 											  @"video", @"type", 
 											  self.article, @"article_vo", 
 											  [NSNumber numberWithFloat:self.view.frame.origin.y], @"offset", 
-											  [NSValue valueWithCGRect:CGRectMake(_videoImgView.frame.origin.x + self.view.frame.origin.x, _videoImgView.frame.origin.y, _videoImgView.frame.size.width, _videoImgView.frame.size.height)], @"frame", nil];
+											  [NSValue valueWithCGRect:CGRectMake(_videoImgView.frame.origin.x + self.view.frame.origin.x + _backgroundImageView.frame.origin.x, _videoImgView.frame.origin.y, _videoImgView.frame.size.width, _videoImgView.frame.size.height)], @"frame", nil];
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];	
 	}];
@@ -486,6 +484,57 @@ static CGFloat clamp_alpha(CGFloat alpha)
 										  [NSValue valueWithCGRect:CGRectMake(_sub2ImgHolderView.frame.origin.x, _sub2ImgHolderView.frame.origin.y, _sub2ImgHolderView.frame.size.width, _sub2ImgHolderView.frame.size.height)], @"frame", nil];
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];
+}
+
+
+- (void)_imageBtnTimeout {
+	_isFullscreenDblTap = NO;
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_DETAILS" object:self.article];
+}
+
+- (void)_goImage1 {
+	if (!_isFullscreenDblTap) {
+		_isFullscreenDblTap = YES;
+		_dblTapTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_imageBtnTimeout) userInfo:nil repeats:NO];
+		
+	} else {
+		_isFullscreenDblTap = NO;
+		
+		[_dblTapTimer invalidate];
+		_dblTapTimer = nil;
+		
+		[self _photoZoomIn:nil];
+	}
+}
+
+- (void)_goImage2 {
+	if (!_isFullscreenDblTap) {
+		_isFullscreenDblTap = YES;
+		_dblTapTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_imageBtnTimeout) userInfo:nil repeats:NO];
+		
+	} else {
+		_isFullscreenDblTap = NO;
+		
+		[_dblTapTimer invalidate];
+		_dblTapTimer = nil;
+		
+		[self _photo1ZoomIn:nil];
+	}
+}
+
+- (void)_goImage3 {
+	if (!_isFullscreenDblTap) {
+		_isFullscreenDblTap = YES;
+		_dblTapTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_imageBtnTimeout) userInfo:nil repeats:NO];
+		
+	} else {
+		_isFullscreenDblTap = NO;
+		
+		[_dblTapTimer invalidate];
+		_dblTapTimer = nil;
+		
+		[self _photo2ZoomIn:nil];
+	}
 }
 
 #pragma mark - Async Resource Observers

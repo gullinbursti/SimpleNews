@@ -24,6 +24,9 @@
 	
 	SNArticleVO *_vo;
 	ASIFormDataRequest *_likeRequest;
+	
+	BOOL _isFullscreenDblTap;
+	NSTimer *_dblTapTimer;
 }
 
 @property (nonatomic)BOOL isFirstAppearance;

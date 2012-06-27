@@ -19,7 +19,6 @@
 
 @interface SNAppDelegate : UIResponder <UIApplicationDelegate, UIAlertViewDelegate> {
 	SNSplashViewController_iPhone *_splashViewController_iPhone;
-	
 	SNRootViewController_iPhone *_rootViewController_iPhone;
 }
 

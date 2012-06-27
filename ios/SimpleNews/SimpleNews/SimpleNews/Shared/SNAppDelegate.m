@@ -407,21 +407,21 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 			
 
 			[SNAppDelegate notificationsToggle:YES];
-					
-			// init Airship launch options
-			NSMutableDictionary *takeOffOptions = [[NSMutableDictionary alloc] init];
-			[takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
-			
-			// create Airship singleton that's used to talk to Urban Airhship servers, populate AirshipConfig.plist with your info from http://go.urbanairship.com
-//			[UAirship takeOff:takeOffOptions];
-//			[[UAPush shared] resetBadge];//zero badge on startup
-//			[[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 		}
 		
 		[[GANTracker sharedTracker] startTrackerWithAccountID:kAnalyticsAccountId
 															dispatchPeriod:kGANDispatchPeriodSec
 																	delegate:nil];
 		[[GANTracker sharedTracker] setDryRun:!kIsGoogleAnalyticsLive];
+		
+		// init Airship launch options
+		NSMutableDictionary *takeOffOptions = [[NSMutableDictionary alloc] init];
+		[takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
+		
+		// create Airship singleton that's used to talk to Urban Airhship servers, populate AirshipConfig.plist with your info from http://go.urbanairship.com
+		[UAirship takeOff:takeOffOptions];
+		[[UAPush shared] resetBadge];//zero badge on startup
+		[[UAPush shared] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 		
 		NSError *error;
 		if (![[GANTracker sharedTracker] trackPageview:@"/bootup" withError:&error])
@@ -497,7 +497,7 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	if ([SNAppDelegate hasNetwork]) {
 		[[SNTwitterCaller sharedInstance] writeProfile];
 		
-		if ([[defaults objectForKey:@"splash_state"] intValue] == 1)
+		if ([[defaults objectForKey:@"splash_state"] intValue] == 2)
 			[_splashViewController_iPhone restart];
 	
 	} else {
@@ -528,6 +528,8 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	deviceID = [deviceID substringToIndex:[deviceID length] - 1];
 	deviceID = [deviceID stringByReplacingOccurrencesOfString:@" " withString:@""];
 	[SNAppDelegate writeDeviceToken:deviceID];
+	
+	[_splashViewController_iPhone proceedToList];
 	
 	/*
     
@@ -586,6 +588,7 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	UALOG(@"Failed To Register For Remote Notifications With Error: %@", error);
 	
 	[SNAppDelegate writeDeviceToken:[NSString stringWithFormat:@"%064d", 0]];
+	[_splashViewController_iPhone proceedToList];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {

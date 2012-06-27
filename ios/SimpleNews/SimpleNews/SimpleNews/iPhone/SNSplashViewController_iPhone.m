@@ -32,9 +32,11 @@
 		_frameIndex = 1;
 		_topicIndex = 0;
 		_imgIndex = 0;
-		_topicNames = [NSMutableArray new];
+		_topicNames = [NSMutableArray new];//arrayWithObjects:@"Funny", @"Apps", @"Games", @"Pics", @"Videos", nil];
 		_imageURLs = [NSMutableArray new];
 		
+		_isIntroComplete = NO;
+		_hasDeviceToken = NO;
 		
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		[defaults setObject:[NSNumber numberWithInt:1] forKey:@"splash_state"];
@@ -145,6 +147,8 @@
 		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Topics.php"];
 		self.topicsListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 60.0]]; // 1 hour for now
 	}
+	
+	//_frameTimer = [NSTimer scheduledTimerWithTimeInterval:0.15 target:self selector:@selector(_nextFrame) userInfo:nil repeats:YES];
 }
 
 -(void)viewDidLoad {
@@ -197,10 +201,20 @@
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		[defaults setObject:[NSNumber numberWithInt:2] forKey:@"splash_state"];
 		[defaults synchronize];
-		[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
+		_isIntroComplete = YES;
+		
+		if (_hasDeviceToken && _isIntroComplete)
+			[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
 	}
 	
 	_topicLabel.text = [NSString stringWithFormat:@"Assembling %@", [_topicNames objectAtIndex:_topicIndex]];
+}
+
+- (void)proceedToList {
+	_hasDeviceToken = YES;
+	
+	if (_isIntroComplete)
+		[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
 }
 
 #pragma mark - Async Resource Observers

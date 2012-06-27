@@ -525,6 +525,7 @@
 					if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 						imgWidth = 145;
 						height -= 2;
+						height += 54;
 					}
 					
 					if (vo.type_id > 1 && vo.type_id - 4 < 0) {
@@ -652,6 +653,7 @@
 				if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 					imgWidth = 145;
 					height -= 2;
+					height += 54;
 				}
 				
 				

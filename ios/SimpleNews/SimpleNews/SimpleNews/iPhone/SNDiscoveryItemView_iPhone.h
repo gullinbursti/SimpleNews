@@ -36,6 +36,9 @@
 	UIView *_videoMatteView;
 	EGOImageView *_videoImgView;
 	UIButton *_videoButton;
+	
+	BOOL _isFullscreenDblTap;
+	NSTimer *_dblTapTimer;
 }
 
 @end

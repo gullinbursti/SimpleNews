@@ -71,6 +71,10 @@
 		contentLabel.text = _vo.content;
 		[self addSubview:contentLabel];
 		
+		UIButton *twitterButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		twitterButton.frame = bgImgView.frame;
+		[twitterButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
+		[self addSubview:twitterButton];
 		
 				
 //		int offset = 0;
@@ -88,6 +92,10 @@
 -(void)dealloc {
 }
 
+
+- (void)_goTwitterProfile {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TWITTER_PROFILE" object:_vo.handle];
+}
 
 
 @end

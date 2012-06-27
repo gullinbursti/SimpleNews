@@ -22,8 +22,12 @@
 	NSMutableArray *_imageURLs;
 	
 	UILabel *_topicLabel;
+	
+	BOOL _hasDeviceToken;
+	BOOL _isIntroComplete;
 }
 
+- (void)proceedToList;
 - (void)restart;
 
 @end

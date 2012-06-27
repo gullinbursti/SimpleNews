@@ -50,7 +50,7 @@
 	UIImageView *_shadowImgView;
 	UIButton *_profileButton;
 	UIButton *_itunesButton;
-	UILabel *_fullscreenTitleLabel;
+	UIView *_fullscreenHeaderView;
 	UIImageView *_fullscreenFooterImgView;
 	
 	UIView *_blackMatteView;
@@ -62,6 +62,7 @@
 	BOOL _reloading;
 	BOOL _isIntro;
 	BOOL _isMainShare;
+	
 	
 	int _swipeIndex;
 	

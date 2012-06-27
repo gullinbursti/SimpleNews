@@ -16,7 +16,6 @@
 #import "SNTwitterAvatarView.h"
 #import "SNAppDelegate.h"
 #import "SNNavBackBtnView.h"
-#import "SNNavShareBtnView.h"
 
 #define kItemHeight 28.0
 
@@ -113,10 +112,6 @@
 	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 64.0, 44.0)];
 	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:backBtnView];
-	
-	SNNavShareBtnView *shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(273.0, 0.0, 44.0, 44.0)];
-	[[shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:shareBtnView];
 	
 //	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 //	_likeButton.frame = CGRectMake(2.0, 2.0, 44.0, 44.0);

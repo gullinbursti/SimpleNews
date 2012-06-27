@@ -219,14 +219,7 @@
 	_blackMatteView.hidden = YES;
 	_blackMatteView.alpha = 0.0;
 	[self.view addSubview:_blackMatteView];
-	
-	
-	_fullscreenTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, 6.0, 256.0, 28.0)];
-	_fullscreenTitleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
-	_fullscreenTitleLabel.textColor = [UIColor whiteColor];
-	_fullscreenTitleLabel.backgroundColor = [UIColor clearColor];
-	[_blackMatteView addSubview:_fullscreenTitleLabel];
-	
+		
 	UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(19.0, 12.0, 256.0, 28.0)];
 	infoLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
 	infoLabel.textColor = [UIColor blackColor];
@@ -326,6 +319,7 @@
 }
 
 - (void)_goTopic {
+	[self _hideFullscreenMedia:nil];
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"CHANGE_TOPIC" object:[NSNumber numberWithInt:_articleVO.topicID]];
 }
 
@@ -373,6 +367,8 @@
 -(void)_startVideo {
 	[_videoPlayerView startPlayback];
 }
+
+
 
 #pragma mark - Network Requests
 - (void)setFullscreenImgResource:(MBLAsyncResource *)fullscreenImgResource 
@@ -510,12 +506,18 @@
 		_blackMatteView.hidden = NO;
 		[UIView animateWithDuration:0.33 animations:^(void) {
 			_blackMatteView.alpha = 0.95;
-			_fullscreenImgView.frame = CGRectMake(0.0, (self.view.frame.size.height - (320.0 * ((SNImageVO *)[_articleVO.images objectAtIndex:0]).ratio)) * 0.5, 320.0, 320.0 * ((SNImageVO *)[_articleVO.images objectAtIndex:0]).ratio);
+			_fullscreenHeaderView.alpha = 1.0;
+			_fullscreenFooterImgView.alpha = 1.0;
+			_fullscreenImgView.frame = CGRectMake(0.0, ((self.view.frame.size.height - 44.0) - (320.0 * ((SNImageVO *)[_articleVO.images objectAtIndex:0]).ratio)) * 0.5, 320.0, 320.0 * ((SNImageVO *)[_articleVO.images objectAtIndex:0]).ratio);
 			
 		} completion:^(BOOL finished) {
 			UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_hideFullscreenMedia:)];
 			tapRecognizer.numberOfTapsRequired = 1;
 			[_blackMatteView addGestureRecognizer:tapRecognizer];
+			
+			//_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(272.0, 0.0, 44.0, 44.0)];
+			//[[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
+			//[self.view addSubview:_shareBtnView];
 			
 			//_detailsBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
 			//[[_detailsBtnView btn] addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
@@ -674,12 +676,21 @@
 	for (UIView *view in [_blackMatteView subviews])
 		[view removeFromSuperview];
 	
-	_fullscreenTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 7.0, 256.0, 28.0)];
-	_fullscreenTitleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
-	_fullscreenTitleLabel.textColor = [UIColor whiteColor];
-	_fullscreenTitleLabel.backgroundColor = [UIColor clearColor];
-	_fullscreenTitleLabel.text = _articleVO.title;
-	[_blackMatteView addSubview:_fullscreenTitleLabel];
+	_fullscreenHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 55.0)];
+	_fullscreenHeaderView.alpha = 0.0;
+	[self.view addSubview:_fullscreenHeaderView];
+	
+	UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 7.0, 256.0, 28.0)];
+	titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:14];
+	titleLabel.textColor = [UIColor whiteColor];
+	titleLabel.backgroundColor = [UIColor clearColor];
+	titleLabel.text = _articleVO.title;
+	[_fullscreenHeaderView addSubview:titleLabel];
+	
+	UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+	[titleButton addTarget:self action:@selector(_goDetails) forControlEvents:UIControlEventTouchUpInside];
+	titleButton.frame = titleLabel.frame;
+	[_fullscreenHeaderView addSubview:titleButton];
 	
 	CGSize size = [@"via " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 	UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0, 34.0, size.width, size.height)];
@@ -687,7 +698,7 @@
 	viaLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 	viaLabel.backgroundColor = [UIColor clearColor];
 	viaLabel.text = @"via ";
-	[_blackMatteView addSubview:viaLabel];
+	[_fullscreenHeaderView addSubview:viaLabel];
 	
 	CGSize size2 = [[NSString stringWithFormat:@"@%@ ", _articleVO.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 	UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(viaLabel.frame.origin.x + size.width, 34.0, size2.width, size2.height)];
@@ -695,12 +706,12 @@
 	handleLabel.textColor = [SNAppDelegate snLinkColor];
 	handleLabel.backgroundColor = [UIColor clearColor];
 	handleLabel.text = [NSString stringWithFormat:@"@%@ ", _articleVO.twitterHandle];
-	[_blackMatteView addSubview:handleLabel];
+	[_fullscreenHeaderView addSubview:handleLabel];
 	
 	UIButton *handleButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	[handleButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 	handleButton.frame = handleLabel.frame;
-	[_blackMatteView addSubview:handleButton];
+	[_fullscreenHeaderView addSubview:handleButton];
 	 
 	size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontRegular] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 	UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, 34.0, size.width, size.height)];
@@ -708,7 +719,7 @@
 	inLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
 	inLabel.backgroundColor = [UIColor clearColor];
 	inLabel.text = @"into ";
-	[_blackMatteView addSubview:inLabel];
+	[_fullscreenHeaderView addSubview:inLabel];
 	 
 	size2 = [[NSString stringWithFormat:@"%@", _articleVO.topicTitle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 	UILabel *topicLabel = [[UILabel alloc] initWithFrame:CGRectMake(inLabel.frame.origin.x + size.width, 34.0, size2.width, size2.height)];
@@ -716,16 +727,17 @@
 	topicLabel.textColor = [SNAppDelegate snLinkColor];
 	topicLabel.backgroundColor = [UIColor clearColor];
 	topicLabel.text = [NSString stringWithFormat:@"%@", _articleVO.topicTitle];
-	[_blackMatteView addSubview:topicLabel];
+	[_fullscreenHeaderView addSubview:topicLabel];
 	
 	UIButton *topicButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	[topicButton addTarget:self action:@selector(_goTopic) forControlEvents:UIControlEventTouchUpInside];
 	topicButton.frame = topicLabel.frame;
-	[_blackMatteView addSubview:topicButton];
+	[_fullscreenHeaderView addSubview:topicButton];
 	
 	_fullscreenFooterImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 436.0, 320.0, 44.0)];
 	_fullscreenFooterImgView.image = [UIImage imageNamed:@"articleDetailsFooterBG.png"];
 	_fullscreenFooterImgView.userInteractionEnabled = YES;
+	_fullscreenFooterImgView.alpha = 0.0;
 	[self.view addSubview:_fullscreenFooterImgView];
 	
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -794,6 +806,31 @@
 			[_itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
 			[self.view addSubview:_itunesButton];
 		}
+		
+		UIView *overlayView = [[UIView alloc] initWithFrame:CGRectMake(83.0, 199.0, 154.0, 32.0)];
+		[overlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
+		overlayView.layer.cornerRadius = 8.0;
+		[_blackMatteView addSubview:overlayView];
+		
+		UILabel *overlayLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 154.0, 32.0)];
+		overlayLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+		overlayLabel.textColor = [UIColor whiteColor];
+		overlayLabel.backgroundColor = [UIColor clearColor];
+		overlayLabel.textAlignment = UITextAlignmentCenter;
+		overlayLabel.text = @"tap anywhere to close";
+		[overlayView addSubview:overlayLabel];
+		
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			overlayView.alpha = 1.0;
+			
+		} completion:^(BOOL finished) {
+			[UIView animateWithDuration:0.33 delay:1.5 options:UIViewAnimationCurveEaseOut animations:^(void) {
+				overlayView.alpha = 0.0;
+				
+			} completion:^(BOOL finished) {
+				[overlayView removeFromSuperview];
+			}];
+		}];
 				
 	} else if ([type isEqualToString:@"video"]) {
 		_videoPlayerView = [[SNArticleVideoPlayerView_iPhone alloc] initWithFrame:frame articleVO:_articleVO];
@@ -802,65 +839,37 @@
 	
 		_blackMatteView.hidden = NO;
 		[UIView animateWithDuration:0.33 animations:^(void) {
+			_fullscreenHeaderView.alpha = 1.0;
+			_fullscreenFooterImgView.alpha = 1.0;
+			
 			_blackMatteView.alpha = 0.95;
-			[_videoPlayerView reframe:CGRectMake(0.0, (self.view.frame.size.height - 240.0) * 0.5, 320.0, 240.0)];
+			[_videoPlayerView reframe:CGRectMake(0.0, (self.view.frame.size.height - 240.0 - 44.0) * 0.5, 320.0, 240.0)];
 			
 		} completion:^(BOOL finished) {
-			UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_hideFullscreenMedia:)];
-			tapRecognizer.numberOfTapsRequired = 1;
-			[_blackMatteView addGestureRecognizer:tapRecognizer];
-			
-			//_shareBtnView = [[SNNavShareBtnView alloc] initWithFrame:CGRectMake(272.0, 0.0, 44.0, 44.0)];
-			//[[_shareBtnView btn] addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
-			//[self.view addSubview:_shareBtnView];
 		}];
 	}
-	
-	
-	UIView *overlayView = [[UIView alloc] initWithFrame:CGRectMake(83.0, 199.0, 154.0, 32.0)];
-	[overlayView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
-	overlayView.layer.cornerRadius = 8.0;
-	[_blackMatteView addSubview:overlayView];
-	
-	UILabel *overlayLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0, 0.0, 154.0, 32.0)];
-	overlayLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
-	overlayLabel.textColor = [UIColor whiteColor];
-	overlayLabel.backgroundColor = [UIColor clearColor];
-	overlayLabel.textAlignment = UITextAlignmentCenter;
-	overlayLabel.text = @"tap anywhere to close";
-	[overlayView addSubview:overlayLabel];
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		overlayView.alpha = 1.0;
-		
-	} completion:^(BOOL finished) {
-//		[UIView animateWithDuration:0.33 delay:1.5 options:UIViewAnimationCurveEaseOut animations:^(void) {
-//			overlayView.alpha = 0.0;
-//			
-//		} completion:^(BOOL finished) {
-//			[overlayView removeFromSuperview];
-//		}];
-	}];
 }
 
 -(void)_hideFullscreenMedia:(NSNotification *)notification {
 	[UIView animateWithDuration:0.5 animations:^(void) {
 		_blackMatteView.alpha = 0.0;
+		_fullscreenHeaderView.alpha = 0.0;
+		_fullscreenFooterImgView.alpha = 0.0;
 		
 		_fullscreenImgView.frame = _fullscreenFrame;
 		[_videoPlayerView reframe:_fullscreenFrame];
 		[_videoPlayerView stopPlayback];
-		
-		[_detailsBtnView removeFromSuperview];
-		[_shareBtnView removeFromSuperview];
-		[_itunesButton removeFromSuperview];
-		[_fullscreenFooterImgView removeFromSuperview];
 		
 	} completion:^(BOOL finished) {
 		_blackMatteView.hidden = YES;
 		[_fullscreenImgView removeFromSuperview];
 		[_videoPlayerView removeFromSuperview];
 		[_shareBtnView removeFromSuperview];
+		[_fullscreenHeaderView removeFromSuperview];
+		[_detailsBtnView removeFromSuperview];
+		[_shareBtnView removeFromSuperview];
+		[_itunesButton removeFromSuperview];
+		[_fullscreenFooterImgView removeFromSuperview];
 		
 		_itunesButton = nil;
 		_fullscreenImgView = nil;
@@ -868,6 +877,7 @@
 		_detailsBtnView = nil;
 		_shareBtnView = nil;
 		_fullscreenFooterImgView = nil;
+		_fullscreenHeaderView = nil;
 	}];
 }
 
@@ -937,7 +947,7 @@
 			TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
 			
 			[twitter addURL:[NSURL URLWithString:_articleVO.article_url]];
-			[twitter setInitialText:[NSString stringWithFormat:@"%@ via @getassembly %@", _articleVO.title, _articleVO.article_url]];
+			[twitter setInitialText:[NSString stringWithFormat:@"%@ via @getassembly", _articleVO.title]];
 			[self presentModalViewController:twitter animated:YES];
 			
 			twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
@@ -1088,7 +1098,7 @@
 	
 	switch (indexPath.section) {
 		default:
-			titles = [NSArray arrayWithObjects:@"Top 10", @"Trending", nil];
+			titles = [NSArray arrayWithObjects:@"Top 10", @"Most Liked", nil];
 			otherCell = [tableView dequeueReusableCellWithIdentifier:[SNRootOtherViewCell_iPhone cellReuseIdentifier]];
 			
 			if (otherCell == nil)
@@ -1151,11 +1161,10 @@
 		[_discoveryListView.view removeFromSuperview];
 		_discoveryListView = nil;
 		
-		NSArray *titles = [NSArray arrayWithObjects:@"Top 10", @"Trending", nil];
+		NSArray *titles = [NSArray arrayWithObjects:@"Top 10", @"Most Liked", nil];
 		_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithHeaderTitle:[titles objectAtIndex:indexPath.row] isTop10:(indexPath.row == 0)];
 		_discoveryListView.view.frame = CGRectMake(226.0, 0.0, 320.0, 480.0);
 		[_holderView addSubview:_discoveryListView.view];
-		
 		
 		[UIView animateWithDuration:0.33 animations:^(void) {
 			_discoveryListView.view.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
