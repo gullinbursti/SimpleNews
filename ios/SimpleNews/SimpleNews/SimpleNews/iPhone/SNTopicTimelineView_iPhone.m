@@ -527,7 +527,7 @@
 					if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 						imgWidth = 145;
 						height -= 2;
-						height += 54;
+						height += 37;
 					}
 					
 					if (vo.type_id > 1 && vo.type_id - 4 < 0) {
@@ -587,10 +587,11 @@
 					_loadMoreButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
 					[_loadMoreButton setTitle:@"Load More" forState:UIControlStateNormal];
 					[_scrollView addSubview:_loadMoreButton];
-					offset += 50.0;
+					offset += 57.0;
 				}
 				
 				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
+				_scrollView.contentOffset = CGPointMake(0.0, offset);
 				
 				if ([_articles count] > 0) {
 					_lastID = ((SNArticleVO *)[_articles lastObject]).article_id;
@@ -655,7 +656,7 @@
 				if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 					imgWidth = 145;
 					height -= 2;
-					height += 54;
+					height += 37;
 				}
 				
 				

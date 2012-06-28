@@ -190,12 +190,12 @@
 				[self addSubview:details2Button];
 				
 				UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
-				itunesButton.frame = CGRectMake(180.0, offset + imgFrame.size.height + 10, 114.0, 44.0);
+				itunesButton.frame = CGRectMake(184.0, offset + imgFrame.size.height, 114.0, 44.0);
 				[itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateNormal];
 				[itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateHighlighted];
 				[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
 				[self addSubview:itunesButton];
-				offset += 54;
+				offset += 37;
 				offset -= 2;
 			}
 			
@@ -292,18 +292,19 @@
 		
 		
 		if (_vo.totalLikes > 0) {
-			int offset2 = 5;
+			int offset2 = 8;
 			int tot = 0;
 			for (SNTwitterUserVO *tuVO in _vo.userLikes) {
 				if ([tuVO.twitterID isEqualToString:[[SNAppDelegate profileForUser] objectForKey:@"twitter_id"]]) {
 					_vo.hasLiked = YES;
+					[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_Active.png"] forState:UIControlStateNormal];
 					[_likeButton setTitle:@"Liked" forState:UIControlStateNormal];
 					[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 					[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 				}
 				
 				if (tot < 9) {
-					SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, offset - 36.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
+					SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, offset - 35.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
 					[self addSubview:avatarView];
 					offset2 += 31.0;
 				}
@@ -536,12 +537,11 @@
 		
 		else {
 			_vo.totalLikes = [[parsedLike objectForKey:@"likes"] intValue];
+			NSString *likeImg = (_vo.hasLiked) ? @"leftBottomUI_Active.png" : @"";
+			[_likeButton setBackgroundImage:[UIImage imageNamed:likeImg] forState:UIControlStateNormal];
 			
-			if (_vo.hasLiked)
-				[_likeButton setTitle:@"Liked" forState:UIControlStateNormal];
-			
-			else
-				[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
+			NSString *likeCaption = (_vo.hasLiked) ? @"Liked" : @"Like";			
+			[_likeButton setTitle:likeCaption forState:UIControlStateNormal];
 		}
 	}
 }

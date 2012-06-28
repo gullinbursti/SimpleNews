@@ -10,10 +10,10 @@
 
 @interface SNBaseRootViewCell_iPhone : UITableViewCell {
 	UILabel *_nameLabel;
+	UIImageView *_activeBGImgView;
 }
 
 +(NSString *)cellReuseIdentifier;
-
-@property(nonatomic, retain) UIImageView *activeBGImgView;
+- (void)tapped;
 
 @end

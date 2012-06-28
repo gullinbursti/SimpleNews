@@ -86,7 +86,7 @@
 //		cardBG = @"defaultCardTimeline_noLikes.png";
 	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 5.0, 320.0, _scrollView.frame.size.height)];
-	UIImage *img = [UIImage imageNamed:@"myFriendsBackground.png"];
+	UIImage *img = [UIImage imageNamed:@"articleFriendsBG.png"];
 	bgImgView.image = [img stretchableImageWithLeftCapWidth:10.0 topCapHeight:20.0];
 	[_scrollView addSubview:bgImgView];
 	
@@ -168,9 +168,9 @@
 	}
 	
 	size = [timeSince sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(293.0 - size.width, offset + 1.0, size.width, size.height)];
+	UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(287.0, offset + 1.0, size.width, size.height)];
 	dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
-	dateLabel.textColor = [UIColor colorWithWhite:0.675 alpha:1.0];
+	dateLabel.textColor = [SNAppDelegate snGreyColor];
 	dateLabel.backgroundColor = [UIColor clearColor];
 	dateLabel.textAlignment = UITextAlignmentRight;
 	dateLabel.text = timeSince;
@@ -253,10 +253,11 @@
 	[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
 	[footerImgView addSubview:_likeButton];
 	
-	if (_vo.hasLiked)
+	if (_vo.hasLiked) {
 		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUIB_Active.png"] forState:UIControlStateNormal];
 	
-	else
+	} else
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	
 	NSString *commentCaption;
@@ -357,6 +358,7 @@
 	} else {		
 		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUIB_Active.png"] forState:UIControlStateNormal];
 		
 		_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
 		[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
@@ -373,6 +375,7 @@
 	
 	[_likeButton removeTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
 	
 	_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
 	[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];

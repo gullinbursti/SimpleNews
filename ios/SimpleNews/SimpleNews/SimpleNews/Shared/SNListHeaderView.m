@@ -27,7 +27,6 @@
 		[self addSubview:profileHolderView];
 		
 		EGOImageView *profileImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 35.0, 35.0)];
-		profileImgView.imageURL = [NSURL URLWithString:[SNAppDelegate twitterAvatar]];
 		[profileHolderView addSubview:profileImgView];
 		CGSize size = [[NSString stringWithFormat:@"@%@", [SNAppDelegate twitterHandle]] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 		
@@ -41,10 +40,11 @@
 		[self addSubview:_label];
 		
 		if ([SNAppDelegate twitterHandle].length == 0) {
-			profileImgView.image = [UIImage imageNamed:@"defaultAvatar.png"];
 			_label.text = @"";
 			
 		} else {
+			profileImgView.imageURL = [NSURL URLWithString:[SNAppDelegate twitterAvatar]];
+			
 			_btn = [UIButton buttonWithType:UIButtonTypeCustom];
 			_btn.frame = CGRectMake(7.0, 7.0, _label.frame.origin.x + size.width, 35.0);
 			[self addSubview:_btn];

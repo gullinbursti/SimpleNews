@@ -49,7 +49,6 @@
 	[_mainImageHolderView addSubview:_mainIndicatorView];
 	
 	_articleImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 290.0, 290.0)];
-	_articleImgView.backgroundColor = [UIColor whiteColor];
 	_articleImgView.userInteractionEnabled = YES;
 	[_mainImageHolderView addSubview:_articleImgView];
 	
@@ -63,7 +62,7 @@
 //	titleBGView.userInteractionEnabled = YES;
 //	[_backgroundImageView addSubview:titleBGView];
 				
-	_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, 24.0, 250.0, 18.0)];
+	_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(26.0, 24.0, 250.0, 18.0)];
 	_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13];
 	_titleLabel.textColor = [UIColor whiteColor];
 	_titleLabel.backgroundColor = [UIColor clearColor];
@@ -176,6 +175,7 @@
 		for (SNTwitterUserVO *tuVO in article.userLikes) {
 			if ([tuVO.twitterID isEqualToString:[[SNAppDelegate profileForUser] objectForKey:@"twitter_id"]]) {
 				article.hasLiked = YES;
+				[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_Active.png"] forState:UIControlStateNormal];
 				[_likeButton setTitle:@"Liked" forState:UIControlStateNormal];
 				[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 				[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
@@ -268,7 +268,7 @@
 	NSMutableArray *attributionViews = [NSMutableArray array];
 	
 	CGSize size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:12] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-	UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, 41.0, size.width, size.height)];
+	UILabel *viaLabel = [[UILabel alloc] initWithFrame:CGRectMake(26.0, 41.0, size.width, size.height)];
 	viaLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:12];
 	viaLabel.textColor = [UIColor whiteColor];
 	viaLabel.backgroundColor = [UIColor clearColor];
@@ -636,6 +636,8 @@ static CGFloat clamp_alpha(CGFloat alpha)
 		
 		NSString *likeCaption = (article.hasLiked) ? @"Liked" : @"Like";
 		[_likeButton setTitle:likeCaption forState:UIControlStateNormal];
+		NSString *likeImg = (article.hasLiked) ? @"leftBottomUI_Active.png" : @"";
+		[_likeButton setBackgroundImage:[UIImage imageNamed:likeImg] forState:UIControlStateNormal];
 	}
 }
 

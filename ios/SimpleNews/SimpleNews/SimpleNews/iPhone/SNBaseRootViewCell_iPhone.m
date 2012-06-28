@@ -11,12 +11,21 @@
 
 @implementation SNBaseRootViewCell_iPhone
 
-@synthesize activeBGImgView = _activeBGImgView;
-
 +(NSString *)cellReuseIdentifier {
 	return (NSStringFromClass(self));
 }
 
+- (void)tapped {
+	_nameLabel.textColor = [UIColor colorWithWhite:0.373 alpha:1.0];
+	
+	[UIView animateWithDuration:0.15 animations:^(void) {
+		_activeBGImgView.alpha = 1.0;
+		
+	} completion:^(BOOL finished) {
+		_nameLabel.textColor = [UIColor whiteColor];
+		_activeBGImgView.alpha = 0.0;
+	}];
+}
 
 - (id)init {
 	if ((self = [super init])) {

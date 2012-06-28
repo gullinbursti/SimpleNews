@@ -331,6 +331,7 @@
 	} else {		
 		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUIB_Active.png"] forState:UIControlStateNormal];
 		
 		_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
 		[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
@@ -347,6 +348,7 @@
 	
 	[_likeButton removeTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
 	
 	_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
 	[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
@@ -752,11 +754,13 @@
 	[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _articleVO.totalLikes] forState:UIControlStateNormal];
 	[_fullscreenFooterImgView addSubview:_likeButton];
 	
-	if (_articleVO.hasLiked)
+	if (_articleVO.hasLiked) {
 		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
+		[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUIB_Active.png"] forState:UIControlStateNormal];
 	
-	else
+	} else {
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	}
 	
 	
 	NSString *commentCaption;
@@ -797,11 +801,16 @@
 		
 		if ([_articleVO.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 			_itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			_itunesButton.frame = CGRectMake(200.0, 388.0, 114.0, 44.0);
+			_itunesButton.frame = CGRectMake(217.0, 388.0, 114.0, 44.0);
 			[_itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateNormal];
 			[_itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateHighlighted];
 			[_itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
+			_itunesButton.alpha = 0.0;
 			[self.view addSubview:_itunesButton];
+			
+			[UIView animateWithDuration:0.33 animations:^(void) {
+				_itunesButton.alpha = 1.0;
+			} completion:nil];
 		}
 		
 		UIView *overlayView = [[UIView alloc] initWithFrame:CGRectMake(83.0, 199.0, 154.0, 32.0)];
@@ -814,7 +823,7 @@
 		overlayLabel.textColor = [UIColor whiteColor];
 		overlayLabel.backgroundColor = [UIColor clearColor];
 		overlayLabel.textAlignment = UITextAlignmentCenter;
-		overlayLabel.text = @"tap anywhere to close";
+		overlayLabel.text = @"Tap anywhere to close";
 		[overlayView addSubview:overlayLabel];
 		
 		[UIView animateWithDuration:0.33 animations:^(void) {
@@ -855,6 +864,7 @@
 		_blackMatteView.alpha = 0.0;
 		_fullscreenHeaderView.alpha = 0.0;
 		_fullscreenFooterImgView.alpha = 0.0;
+		_itunesButton.alpha = 0.0;
 		
 		_fullscreenImgView.frame = _fullscreenFrame;
 		[_videoPlayerView reframe:_fullscreenFrame];
@@ -870,6 +880,7 @@
 		[_shareBtnView removeFromSuperview];
 		[_itunesButton removeFromSuperview];
 		[_fullscreenFooterImgView removeFromSuperview];
+		[_itunesButton removeFromSuperview];
 		
 		_itunesButton = nil;
 		_fullscreenImgView = nil;
@@ -878,6 +889,7 @@
 		_shareBtnView = nil;
 		_fullscreenFooterImgView = nil;
 		_fullscreenHeaderView = nil;
+		_itunesButton = nil;
 	}];
 }
 
@@ -992,7 +1004,7 @@
 		if ([MFMailComposeViewController canSendMail]) {
 			MFMailComposeViewController *mfViewController = [[MFMailComposeViewController alloc] init];
 			mfViewController.mailComposeDelegate = self;
-			[mfViewController setSubject:[NSString stringWithFormat:@"%@ via @getassembly %@", _articleVO.title, _articleVO.article_url]];
+			[mfViewController setSubject:[NSString stringWithFormat:@"%@", _articleVO.title]];
 			[mfViewController setMessageBody:[NSString stringWithFormat:@"%@ via @getassembly<br />%@", _articleVO.title, _articleVO.article_url] isHTML:YES];
 			
 			[self presentViewController:mfViewController animated:YES completion:nil];
@@ -1149,13 +1161,7 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	[tableView deselectRowAtIndexPath:[tableView indexPathForSelectedRow] animated:YES];
 	
-	[UIView animateWithDuration:0.15 animations:^(void) {
-		((SNBaseRootViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).activeBGImgView.alpha = 1.0;
-		
-	} completion:^(BOOL finished) {
-		((SNBaseRootViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).activeBGImgView.alpha = 0.0;
-	}];
-	
+	[((SNBaseRootViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]) tapped];
 	
 	if (indexPath.section == 0) {
 		[_discoveryListView.view removeFromSuperview];
@@ -1198,60 +1204,103 @@
 		
 	} else {
 		if (indexPath.row == 0) {
-			[_topicTimelineView removeFromSuperview];
-			_topicTimelineView = nil;
-			
-			[UIView animateWithDuration:0.33 animations:^(void) {
-				//_shadowImgView.alpha = 0.0;
-				
-			} completion:^(BOOL finished) {
-				_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithProfileType:6];	
-				[_holderView addSubview:_topicTimelineView];
+			if ([SNAppDelegate twitterHandle].length > 0) {
+				[_topicTimelineView removeFromSuperview];
+				_topicTimelineView = nil;
 				
 				[UIView animateWithDuration:0.33 animations:^(void) {
-					_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-					_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+					//_shadowImgView.alpha = 0.0;
 					
 				} completion:^(BOOL finished) {
-					_topicsTableView.contentOffset = CGPointZero;
-					[_topicTimelineView interactionEnabled:YES];
+					_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithProfileType:6];	
+					[_holderView addSubview:_topicTimelineView];
+					
+					[UIView animateWithDuration:0.33 animations:^(void) {
+						_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+						_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+						
+					} completion:^(BOOL finished) {
+						_topicsTableView.contentOffset = CGPointZero;
+						[_topicTimelineView interactionEnabled:YES];
+					}];
 				}];
-			}];
-			
+			} else {
+				UIAlertView *alert = [[UIAlertView alloc] 
+											 initWithTitle:@"Twitter Account" 
+											 message:@"This action requires that you log into Twitter" 
+											 delegate:nil 
+											 cancelButtonTitle:@"OK" 
+											 otherButtonTitles:nil];
+				
+				[alert show];
+			}
+				
 			
 		} else if (indexPath.row == 1) {
-			[_topicTimelineView removeFromSuperview];
-			_topicTimelineView = nil;
-			
-			[UIView animateWithDuration:0.33 animations:^(void) {
-				//_shadowImgView.alpha = 0.0;
-				
-			} completion:^(BOOL finished) {
-				_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithProfileType:2];	
-				[_holderView addSubview:_topicTimelineView];
+			if ([SNAppDelegate twitterHandle].length > 0) {
+				[_topicTimelineView removeFromSuperview];
+				_topicTimelineView = nil;
 				
 				[UIView animateWithDuration:0.33 animations:^(void) {
-					_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-					_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+					//_shadowImgView.alpha = 0.0;
 					
 				} completion:^(BOOL finished) {
-					_topicsTableView.contentOffset = CGPointZero;
-					[_topicTimelineView interactionEnabled:YES];
+					_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithProfileType:2];	
+					[_holderView addSubview:_topicTimelineView];
+					
+					[UIView animateWithDuration:0.33 animations:^(void) {
+						_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+						_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+						
+					} completion:^(BOOL finished) {
+						_topicsTableView.contentOffset = CGPointZero;
+						[_topicTimelineView interactionEnabled:YES];
+					}];
 				}];
-			}];
+			} else {
+				UIAlertView *alert = [[UIAlertView alloc] 
+											 initWithTitle:@"Twitter Account" 
+											 message:@"This action requires that you log into Twitter" 
+											 delegate:nil 
+											 cancelButtonTitle:@"OK" 
+											 otherButtonTitles:nil];
+				
+				[alert show];
+			}
 		
 		} else if (indexPath.row == 2) {
-			SNFindFriendsViewController_iPhone *findFriendsViewController = [[SNFindFriendsViewController_iPhone alloc] initAsList];
-			UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:findFriendsViewController];
-			[navigationController setNavigationBarHidden:YES];
-			[self.navigationController presentModalViewController:navigationController animated:YES];
+			if ([SNAppDelegate twitterHandle].length > 0) {
+				SNFindFriendsViewController_iPhone *findFriendsViewController = [[SNFindFriendsViewController_iPhone alloc] initAsList];
+				UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:findFriendsViewController];
+				[navigationController setNavigationBarHidden:YES];
+				[self.navigationController presentModalViewController:navigationController animated:YES];
+			} else {
+				UIAlertView *alert = [[UIAlertView alloc] 
+											 initWithTitle:@"Twitter Account" 
+											 message:@"This action requires that you log into Twitter" 
+											 delegate:nil 
+											 cancelButtonTitle:@"OK" 
+											 otherButtonTitles:nil];
+				
+				[alert show];
+			}
 			
 		} else if (indexPath.row == 3) {
-			SNFindFriendsViewController_iPhone *findFriendsViewController = [[SNFindFriendsViewController_iPhone alloc] initAsFinder];
-			UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:findFriendsViewController];
-			[navigationController setNavigationBarHidden:YES];
-			[self.navigationController presentModalViewController:navigationController animated:YES];
-			
+			if ([SNAppDelegate twitterHandle].length > 0) {
+				SNFindFriendsViewController_iPhone *findFriendsViewController = [[SNFindFriendsViewController_iPhone alloc] initAsFinder];
+				UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:findFriendsViewController];
+				[navigationController setNavigationBarHidden:YES];
+				[self.navigationController presentModalViewController:navigationController animated:YES];
+			} else {
+				UIAlertView *alert = [[UIAlertView alloc] 
+											 initWithTitle:@"Twitter Account" 
+											 message:@"This action requires that you log into Twitter" 
+											 delegate:nil 
+											 cancelButtonTitle:@"OK" 
+											 otherButtonTitles:nil];
+				
+				[alert show];
+			}
 		}
 	}
 }
