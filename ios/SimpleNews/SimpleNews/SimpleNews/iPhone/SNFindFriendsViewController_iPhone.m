@@ -74,7 +74,7 @@
 	SNHeaderView_iPhone *headerView;
 	
 	if (_isFinder) {
-		_tableView.contentInset = UIEdgeInsetsMake(11.0, 0.0f, 11.0f, 0.0f);
+		_tableView.contentInset = UIEdgeInsetsMake(12.0, 0.0f, 12.0f, 0.0f);
 		
 		headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Invite Friends"];
 		[self.view addSubview:headerView];	

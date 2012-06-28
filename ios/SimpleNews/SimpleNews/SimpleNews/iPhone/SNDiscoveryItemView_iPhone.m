@@ -40,9 +40,13 @@
 	[_cardView addSubview:_backgroundImageView];
 		
 	_mainImageHolderView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 302.0)];
-	_mainImageHolderView.backgroundColor = [UIColor colorWithWhite:0.961 alpha:1.0];
 	_mainImageHolderView.clipsToBounds = YES;
 	[_backgroundImageView addSubview:_mainImageHolderView];
+	
+	_mainIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+	_mainIndicatorView.frame = CGRectMake((_mainImageHolderView.frame.size.width * 0.5) - 12.0, (_mainImageHolderView.frame.size.height * 0.5) - 12.0, 24.0, 24.0);
+	[_mainIndicatorView startAnimating];
+	[_mainImageHolderView addSubview:_mainIndicatorView];
 	
 	_articleImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 290.0, 290.0)];
 	_articleImgView.backgroundColor = [UIColor whiteColor];
@@ -54,10 +58,10 @@
 	[details1Button addTarget:self action:@selector(_goImage1) forControlEvents:UIControlEventTouchUpInside];
 	[_mainImageHolderView addSubview:details1Button];
 	
-	UIView *titleBGView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 52.0)];
-	[titleBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.75]];
-	titleBGView.userInteractionEnabled = YES;
-	[_backgroundImageView addSubview:titleBGView];
+//	UIView *titleBGView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 52.0)];
+//	[titleBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.75]];
+//	titleBGView.userInteractionEnabled = YES;
+//	[_backgroundImageView addSubview:titleBGView];
 				
 	_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(22.0, 24.0, 250.0, 18.0)];
 	_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13];
@@ -106,6 +110,9 @@
 	// Restores views to default state so they can be reconfigured based on the current article
 	_mainImageHolderView.frame = CGRectMake(9.0, 9.0, 290.0, 302.0);
 	
+	if (self.article.totalLikes == 0)
+		_mainImageHolderView.frame = CGRectMake(9.0, 9.0, 290.0, 346.0);
+	
 	[_videoMatteView removeFromSuperview];
 	_videoMatteView = nil;
 	[_videoImgView removeFromSuperview];
@@ -132,8 +139,14 @@
 	
 	NSString *cardBackgroundImageName = (article.totalLikes > 0) ? @"defaultCardDiscover_Likes.png" : @"defaultCardDiscover_noLikes.png";
 	_backgroundImageView.image = [[UIImage imageNamed:cardBackgroundImageName] stretchableImageWithLeftCapWidth:0.0 topCapHeight:20.0];
+	_mainImageHolderView.backgroundColor = [UIColor colorWithWhite:0.961 alpha:1.0];
 	
 	_titleLabel.text = article.title;
+	UIView *titleBGView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 52.0)];
+	[titleBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.75]];
+	titleBGView.userInteractionEnabled = YES;
+	[_backgroundImageView addSubview:titleBGView];
+	
 	[self _updateAttributionViewsWithArticle:article];
 	
 	// Load the first article image
@@ -207,6 +220,11 @@
 		_sub1ImgHolderView.clipsToBounds = YES;
 		[_cardView addSubview:_sub1ImgHolderView];
 		
+		_sub1IndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+		_sub1IndicatorView.frame = CGRectMake((_sub1ImgHolderView.frame.size.width * 0.5) - 12.0, (_sub1ImgHolderView.frame.size.height * 0.5) - 12.0, 24.0, 24.0);
+		[_sub1IndicatorView startAnimating];
+		[_sub1ImgHolderView addSubview:_sub1IndicatorView];
+		
 		_sub1ImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 142.0, 95.0)];
 		[_sub1ImgView setBackgroundColor:[UIColor whiteColor]];
 		_sub1ImgView.userInteractionEnabled = YES;
@@ -223,6 +241,11 @@
 		[_sub2ImgHolderView setBackgroundColor:[UIColor colorWithWhite:0.961 alpha:1.0]];
 		_sub2ImgHolderView.clipsToBounds = YES;
 		[_cardView addSubview:_sub2ImgHolderView];
+		
+		_sub2IndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+		_sub2IndicatorView.frame = CGRectMake((_sub2ImgHolderView.frame.size.width * 0.5) - 12.0, (_sub2ImgHolderView.frame.size.height * 0.5) - 12.0, 24.0, 24.0);
+		[_sub2IndicatorView startAnimating];
+		[_sub1ImgHolderView addSubview:_sub2IndicatorView];
 		
 		_sub2ImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 142.0, 95.0)];
 		[_sub2ImgView setBackgroundColor:[UIColor whiteColor]];
@@ -502,6 +525,18 @@ static CGFloat clamp_alpha(CGFloat alpha)
 		
 		[self _photoZoomIn:nil];
 	}
+	
+//	UIView *overlayView = [[UIView alloc] initWithFrame:_articleImgView.frame];
+//	[overlayView setBackgroundColor:[UIColor blackColor]];
+//	overlayView.alpha = 0.33;
+//	[_mainImageHolderView addSubview:overlayView];
+//	
+//	[UIView animateWithDuration:0.15 animations:^(void) {
+//		overlayView.alpha = 0.0;
+//		
+//	} completion:^(BOOL finished) {
+//		[overlayView removeFromSuperview];
+//	}];
 }
 
 - (void)_goImage2 {
@@ -517,6 +552,18 @@ static CGFloat clamp_alpha(CGFloat alpha)
 		
 		[self _photo1ZoomIn:nil];
 	}
+	
+//	UIView *overlayView = [[UIView alloc] initWithFrame:_sub1ImgHolderView.frame];
+//	[overlayView setBackgroundColor:[UIColor blackColor]];
+//	overlayView.alpha = 0.33;
+//	[_cardView addSubview:overlayView];
+//	
+//	[UIView animateWithDuration:0.15 animations:^(void) {
+//		overlayView.alpha = 0.0;
+//		
+//	} completion:^(BOOL finished) {
+//		[overlayView removeFromSuperview];
+//	}];
 }
 
 - (void)_goImage3 {
@@ -532,6 +579,18 @@ static CGFloat clamp_alpha(CGFloat alpha)
 		
 		[self _photo2ZoomIn:nil];
 	}
+	
+//	UIView *overlayView = [[UIView alloc] initWithFrame:_sub2ImgHolderView.frame];
+//	[overlayView setBackgroundColor:[UIColor blackColor]];
+//	overlayView.alpha = 0.33;
+//	[_cardView addSubview:overlayView];
+//	
+//	[UIView animateWithDuration:0.15 animations:^(void) {
+//		overlayView.alpha = 0.0;
+//		
+//	} completion:^(BOOL finished) {
+//		[overlayView removeFromSuperview];
+//	}];
 }
 
 #pragma mark - Async Resource Observers
@@ -539,10 +598,20 @@ static CGFloat clamp_alpha(CGFloat alpha)
 - (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data {
 	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
 	_articleImgView.image = [UIImage imageWithData:data];
+	[_mainIndicatorView stopAnimating];
+	[_mainIndicatorView removeFromSuperview];
+	_mainIndicatorView = nil;
 	
 	if ([self.article.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 		_sub1ImgView.image = [UIImage imageWithData:data];
+		[_sub1IndicatorView stopAnimating];
+		[_sub1IndicatorView removeFromSuperview];
+		_sub1IndicatorView = nil;
+		
 		_sub2ImgView.image = [UIImage imageWithData:data];
+		[_sub2IndicatorView stopAnimating];
+		[_sub2IndicatorView removeFromSuperview];
+		_sub2IndicatorView = nil;
 	}
 	//_articleImgView.image = [SNAppDelegate imageWithFilters:[UIImage imageWithData:data] filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"saturation", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
 }

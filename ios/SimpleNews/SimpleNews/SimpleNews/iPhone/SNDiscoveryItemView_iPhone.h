@@ -39,6 +39,10 @@
 	
 	BOOL _isFullscreenDblTap;
 	NSTimer *_dblTapTimer;
+	
+	UIActivityIndicatorView *_mainIndicatorView;
+	UIActivityIndicatorView *_sub1IndicatorView;
+	UIActivityIndicatorView *_sub2IndicatorView;
 }
 
 @end

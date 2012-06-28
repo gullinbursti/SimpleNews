@@ -843,6 +843,9 @@
 			[_videoPlayerView reframe:CGRectMake(0.0, (self.view.frame.size.height - 240.0 - 44.0) * 0.5, 320.0, 240.0)];
 			
 		} completion:^(BOOL finished) {
+			UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(_hideFullscreenMedia:)];
+			tapRecognizer.numberOfTapsRequired = 1;
+			[_blackMatteView addGestureRecognizer:tapRecognizer];
 		}];
 	}
 }

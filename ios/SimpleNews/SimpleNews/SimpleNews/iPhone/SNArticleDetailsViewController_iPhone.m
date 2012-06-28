@@ -24,7 +24,26 @@
 
 #import "ImageFilter.h"
 
+@interface SNArticleDetailsViewController_iPhone () <MBLResourceObserverProtocol>
+@property(nonatomic, strong) MBLAsyncResource *imageResource;
+@end
+
 @implementation SNArticleDetailsViewController_iPhone
+
+@synthesize imageResource = _imageResource;
+
+-(void)setImageResource:(MBLAsyncResource *)imageResource {
+	if (_imageResource != nil) {
+		[_imageResource unsubscribe:self];
+		_imageResource = nil;
+	}
+	
+	_imageResource = imageResource;
+	
+	if (_imageResource != nil)
+		[_imageResource subscribe:self];
+}
+
 
 -(id)initWithArticleVO:(SNArticleVO *)vo {
 	if ((self = [super init])) {
@@ -56,7 +75,7 @@
 	[_scrollView setBackgroundColor:[UIColor clearColor]];
 	_scrollView.scrollsToTop = NO;
 	_scrollView.pagingEnabled = NO;
-	_scrollView.showsVerticalScrollIndicator = NO;
+	_scrollView.showsVerticalScrollIndicator = YES;
 	[self.view addSubview:_scrollView];
 	
 //	NSString *cardBG;	
@@ -431,6 +450,18 @@
 
 -(void)requestFailed:(ASIHTTPRequest *)request {
 	NSLog(@"requestFailed:\n[%@]", request.error);
+}
+
+#pragma mark - Async Resource Observers
+- (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data {
+	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+	//	_article1ImgView.image = [UIImage imageWithData:data];
+	//	_article2ImgView.image = [UIImage imageWithData:data];
+	
+	//_articleImgView.image = [SNAppDelegate imageWithFilters:[UIImage imageWithData:data] filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"saturation", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
+}
+
+- (void)resource:(MBLAsyncResource *)resource didFailWithError:(NSError *)error {
 }
 
 

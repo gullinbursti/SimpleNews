@@ -22,6 +22,7 @@
 - (id)initWithPosition:(CGPoint)pos imageURL:(NSString *)url handle:(NSString *)name {
 	if ((self = [super initWithFrame:CGRectMake(pos.x, pos.y, 26.0, 26.0)])) {
 		_imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 26.0, 26.0)];
+		[_imgView setBackgroundColor:[UIColor colorWithWhite:0.961 alpha:1.0]];
 		[self addSubview:_imgView];
 		
 		_handle = name;

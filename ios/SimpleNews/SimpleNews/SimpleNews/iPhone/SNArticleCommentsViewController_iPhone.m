@@ -25,6 +25,7 @@
 	if ((self = [super init])) {
 		_vo = vo;
 		_isLiked = NO;
+		_isOutro = NO;
 		
 		_commentViews = [NSMutableArray new];
 		
@@ -66,7 +67,7 @@
 	_scrollView.pagingEnabled = NO;
 	_scrollView.delegate = self;
 	_scrollView.showsHorizontalScrollIndicator = NO;
-	_scrollView.showsVerticalScrollIndicator = NO;
+	_scrollView.showsVerticalScrollIndicator = YES;
 	_scrollView.alwaysBounceVertical = NO;
 	_scrollView.contentInset = UIEdgeInsetsMake(8.0, 0.0, -8.0, 0.0);
 	[self.view addSubview:_scrollView];
@@ -216,6 +217,7 @@
 
 #pragma mark - Navigation
 -(void)_goBack {
+	_isOutro = YES;
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -328,10 +330,8 @@
 -(void)textFieldDidEndEditing:(UITextField *)textField {
 	[textField resignFirstResponder];
 	
-	if ([textField.text length] > 0) {
-		NSString *isLiked = @"N";
-		if (_isLiked)
-			isLiked = @"Y";
+	if ([textField.text length] > 0 && !_isOutro) {
+		NSString *isLiked = (_isLiked) ? @"Y" : @"N";
 		
 		_commentSubmitRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
 		[_commentSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", 9] forKey:@"action"];

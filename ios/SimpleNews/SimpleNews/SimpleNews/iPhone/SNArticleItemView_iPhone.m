@@ -116,7 +116,7 @@
 		}
 		
 		size = [timeSince sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(265.0, offset + 1.0, size.width, size.height)];
+		UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(275.0, offset + 1.0, size.width, size.height)];
 		dateLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
 		dateLabel.textColor = [SNAppDelegate snGreyColor];
 		dateLabel.backgroundColor = [UIColor clearColor];
@@ -149,10 +149,10 @@
 		
 		CGRect imgFrame = CGRectMake(5, offset + 1.0, 290.0, 290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
 		if (_vo.type_id == 2 || _vo.type_id == 3) {
-//			UIActivityIndicatorView *imgIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-//			imgIndicatorView.frame = CGRectMake((imgFrame.size.width * 0.5) - 12.0, (imgFrame.size.height * 0.5) - 12.0, 24.0, 24.0);
-//			[imgIndicatorView startAnimating];
-//			[self addSubview:imgIndicatorView];
+			UIActivityIndicatorView *imgIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+			imgIndicatorView.frame = CGRectMake((imgFrame.size.width * 0.5) - 12.0, offset + (imgFrame.size.height * 0.5) - 12.0, 24.0, 24.0);
+			[imgIndicatorView startAnimating];
+			[self addSubview:imgIndicatorView];
 			
 			_article1ImgView = [[UIImageView alloc] initWithFrame:imgFrame];
 			[_article1ImgView setBackgroundColor:[UIColor whiteColor]];
@@ -161,7 +161,7 @@
 			
 			UIButton *details1Button = [UIButton buttonWithType:UIButtonTypeCustom];
 			details1Button.frame = _article1ImgView.frame;
-			[details1Button addTarget:self action:@selector(_goImage1) forControlEvents:UIControlEventTouchUpInside];
+			[details1Button addTarget:self action:@selector(_goImage1:) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:details1Button];
 
 			if (_imageResource == nil) {			
@@ -170,12 +170,14 @@
 			
 			if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 				_article1ImgView.frame = CGRectMake(5.0, offset, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:1]).ratio);
+				imgIndicatorView.frame = CGRectMake((_article1ImgView.frame.size.width * 0.5) - 12.0, offset + (_article1ImgView.frame.size.height * 0.5) - 12.0, 24.0, 24.0);
+				
 				
 				imgFrame = CGRectMake(150.0, offset, 145.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:1]).ratio);
-//				UIActivityIndicatorView *imgIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-//				imgIndicatorView.frame = CGRectMake((imgFrame.size.width * 0.5) - 12.0, (imgFrame.size.height * 0.5) - 12.0, 24.0, 24.0);
-//				[imgIndicatorView startAnimating];
-//				[self addSubview:imgIndicatorView];
+				UIActivityIndicatorView *img2IndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+				img2IndicatorView.frame = CGRectMake(150.0 + (imgFrame.size.width * 0.5) - 12.0, offset + (imgFrame.size.height * 0.5) - 12.0, 24.0, 24.0);
+				[img2IndicatorView startAnimating];
+				[self addSubview:img2IndicatorView];
 				
 				_article2ImgView = [[UIImageView alloc] initWithFrame:imgFrame];
 				[_article2ImgView setBackgroundColor:[UIColor whiteColor]];
@@ -184,7 +186,7 @@
 				
 				UIButton *details2Button = [UIButton buttonWithType:UIButtonTypeCustom];
 				details2Button.frame = _article2ImgView.frame;
-				[details2Button addTarget:self action:@selector(_goImage2) forControlEvents:UIControlEventTouchUpInside];
+				[details2Button addTarget:self action:@selector(_goImage2:) forControlEvents:UIControlEventTouchUpInside];
 				[self addSubview:details2Button];
 				
 				UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -453,7 +455,7 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_DETAILS" object:_vo];
 }
 
-- (void)_goImage1 {
+- (void)_goImage1:(id)sender {
 	if (!_isFullscreenDblTap) {
 		_isFullscreenDblTap = YES;
 		_dblTapTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_imageBtnTimeout) userInfo:nil repeats:NO];
@@ -466,9 +468,16 @@
 		
 		[self _photoZoomIn:nil];
 	}
+	
+//	[sender setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];	
+//	[UIView animateWithDuration:0.15 animations:^(void) {
+//		[sender setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];	
+//		
+//	} completion:^(BOOL finished) {
+//	}];
 }
 
-- (void)_goImage2 {
+- (void)_goImage2:(id)sender {
 	if (!_isFullscreenDblTap) {
 		_isFullscreenDblTap = YES;
 		_dblTapTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_imageBtnTimeout) userInfo:nil repeats:NO];
@@ -506,6 +515,7 @@
 	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
 	_article1ImgView.image = [UIImage imageWithData:data];
 	_article2ImgView.image = [UIImage imageWithData:data];
+	
 	//_articleImgView.image = [SNAppDelegate imageWithFilters:[UIImage imageWithData:data] filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"saturation", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
 }
 

@@ -13,6 +13,7 @@
 #import "SNArticleVO.h"
 #import "SNArticleVideoPlayerView_iPhone.h"
 #import "SNUnderlinedLabel.h"
+#import "MBLResourceLoader.h"
 
 @interface SNArticleDetailsViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, ASIHTTPRequestDelegate> {
 	SNArticleVO *_vo;

@@ -28,6 +28,7 @@
 	int _commentOffset;
 	BOOL _isLiked;
 	BOOL _reloading;
+	BOOL _isOutro;
 }
 
 -(id)initWithArticleVO:(SNArticleVO *)vo;

@@ -40,9 +40,15 @@
 		_label.text = [NSString stringWithFormat:@"@%@", [SNAppDelegate twitterHandle]];
 		[self addSubview:_label];
 		
-		_btn = [UIButton buttonWithType:UIButtonTypeCustom];
-		_btn.frame = CGRectMake(7.0, 7.0, _label.frame.origin.x + size.width, 35.0);
-		[self addSubview:_btn];
+		if ([SNAppDelegate twitterHandle].length == 0) {
+			profileImgView.image = [UIImage imageNamed:@"defaultAvatar.png"];
+			_label.text = @"";
+			
+		} else {
+			_btn = [UIButton buttonWithType:UIButtonTypeCustom];
+			_btn.frame = CGRectMake(7.0, 7.0, _label.frame.origin.x + size.width, 35.0);
+			[self addSubview:_btn];
+		}
 	}
 	
 	return (self);

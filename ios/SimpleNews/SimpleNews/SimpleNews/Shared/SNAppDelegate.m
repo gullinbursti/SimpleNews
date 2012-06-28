@@ -20,7 +20,7 @@ static const NSInteger kGANDispatchPeriodSec = 10;
 static NSString* const kAnalyticsAccountId = @"UA-30531077-1";
 static const NSInteger kLaunchesUntilRateRequest = 16;
 static const NSInteger kDaysUntilRateRequest = 5;
-static const BOOL kIsGoogleAnalyticsLive = NO;
+static const BOOL kIsGoogleAnalyticsLive = YES;
 
 @implementation SNAppDelegate
 

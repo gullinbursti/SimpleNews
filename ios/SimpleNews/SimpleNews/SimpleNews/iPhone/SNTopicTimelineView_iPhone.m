@@ -88,7 +88,7 @@
 		_scrollView.scrollsToTop = NO;
 		_scrollView.pagingEnabled = NO;
 		_scrollView.delegate = self;
-		_scrollView.showsVerticalScrollIndicator = NO;
+		_scrollView.showsVerticalScrollIndicator = YES;
 		_scrollView.alwaysBounceVertical = NO;
 		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
 		[self addSubview:_scrollView];
@@ -161,7 +161,7 @@
 		_scrollView.scrollsToTop = NO;
 		_scrollView.pagingEnabled = NO;
 		_scrollView.delegate = self;
-		_scrollView.showsVerticalScrollIndicator = NO;
+		_scrollView.showsVerticalScrollIndicator = YES;
 		_scrollView.alwaysBounceVertical = NO;
 		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
 		[self addSubview:_scrollView];
@@ -551,6 +551,8 @@
 					
 					offset += height;
 					tot++;
+					
+					offset += 3;
 				}
 				
 				[_progressHUD hide:YES];
@@ -677,32 +679,32 @@
 				
 				[_scrollView addSubview:articleItemView];
 				
-				if (articleItemView.frame.origin.y > 480.0) {
-					articleItemView.alpha = 0.0;
-					[UIView beginAnimations:nil context:NULL];
-					[UIView setAnimationDuration:0.1];
-					[UIView setAnimationDelegate:self];
-					[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
-					CGAffineTransform transform = CGAffineTransformMakeScale(1.1, 1.1);
-					articleItemView.transform = transform;
-					[UIView commitAnimations];
-				}
-				
-				if (tot == 0) {
-					[articleItemView setIsFirstAppearance:NO];
-					
-					[UIView animateWithDuration:0.25 animations:^(void) {
-						articleItemView.alpha = 1.0;
-					}];
-					
-					[UIView beginAnimations:nil context:NULL];
-					[UIView setAnimationDuration:0.25];
-					[UIView setAnimationDelegate:self];
-					[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
-					CGAffineTransform transform = CGAffineTransformMakeScale(1.0, 1.0);
-					articleItemView.transform = transform;
-					[UIView commitAnimations];
-				}
+//				if (articleItemView.frame.origin.y > 480.0) {
+//					articleItemView.alpha = 0.0;
+//					[UIView beginAnimations:nil context:NULL];
+//					[UIView setAnimationDuration:0.1];
+//					[UIView setAnimationDelegate:self];
+//					[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
+//					CGAffineTransform transform = CGAffineTransformMakeScale(1.1, 1.1);
+//					articleItemView.transform = transform;
+//					[UIView commitAnimations];
+//				}
+//				
+//				if (tot == 0) {
+//					[articleItemView setIsFirstAppearance:NO];
+//					
+//					[UIView animateWithDuration:0.25 animations:^(void) {
+//						articleItemView.alpha = 1.0;
+//					}];
+//					
+//					[UIView beginAnimations:nil context:NULL];
+//					[UIView setAnimationDuration:0.25];
+//					[UIView setAnimationDelegate:self];
+//					[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
+//					CGAffineTransform transform = CGAffineTransformMakeScale(1.0, 1.0);
+//					articleItemView.transform = transform;
+//					[UIView commitAnimations];
+//				}
 				
 				
 				offset += height;
