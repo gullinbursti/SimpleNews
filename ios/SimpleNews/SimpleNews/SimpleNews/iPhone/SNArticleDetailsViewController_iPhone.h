@@ -18,6 +18,7 @@
 @interface SNArticleDetailsViewController_iPhone : UIViewController <MFMailComposeViewControllerDelegate, ASIHTTPRequestDelegate> {
 	SNArticleVO *_vo;
 	SNArticleVideoPlayerView_iPhone *_videoPlayerView;
+	UIImageView *_articleImgView;
 	
 	UIScrollView *_scrollView;
 	UIButton *_likeButton;

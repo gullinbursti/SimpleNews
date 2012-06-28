@@ -450,7 +450,7 @@ static CGFloat clamp_alpha(CGFloat alpha)
 											  @"video", @"type", 
 											  self.article, @"article_vo", 
 											  [NSNumber numberWithFloat:self.view.frame.origin.y], @"offset", 
-											  [NSValue valueWithCGRect:CGRectMake(_videoImgView.frame.origin.x + self.view.frame.origin.x + _backgroundImageView.frame.origin.x, _videoImgView.frame.origin.y, _videoImgView.frame.size.width, _videoImgView.frame.size.height)], @"frame", nil];
+											  [NSValue valueWithCGRect:CGRectMake(_videoImgView.frame.origin.x + self.view.frame.origin.x + _backgroundImageView.frame.origin.x, _videoImgView.frame.origin.y + _backgroundImageView.frame.origin.y, _videoImgView.frame.size.width, _videoImgView.frame.size.height)], @"frame", nil];
 		
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"FULLSCREEN_MEDIA" object:dict];	
 	}];

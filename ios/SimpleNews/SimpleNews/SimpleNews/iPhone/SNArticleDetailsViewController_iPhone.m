@@ -187,10 +187,14 @@
 	[_scrollView addSubview:titleLabel];
 	offset += size.height + 7;
 	
-	EGOImageView *articleImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(15.0, offset, 290.0, 290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
-	articleImgView.imageURL = [NSURL URLWithString:((SNImageVO *)[_vo.images objectAtIndex:1]).url];
-	[_scrollView addSubview:articleImgView];
+	_articleImgView = [[UIImageView alloc] initWithFrame:CGRectMake(15.0, offset, 290.0, 290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio)];
+	//_articleImgView.imageURL = [NSURL URLWithString:((SNImageVO *)[_vo.images objectAtIndex:1]).url];
+	[_scrollView addSubview:_articleImgView];
 	offset += (290.0 * ((SNImageVO *)[_vo.images objectAtIndex:2]).ratio);
+	
+	if (_imageResource == nil) {			
+		self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:((SNImageVO *)[_vo.images objectAtIndex:0]).url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
+	}
 	
 	offset += 8;
 	if (_vo.type_id > 4) {
@@ -214,13 +218,10 @@
 	
 	offset += 13;
 	
-	int scrollSize;
-	if (_vo.totalLikes > 0)
-		scrollSize = 44;
-		
+	int scrollSize = (_vo.totalLikes > 0) ? 44 : 0;		
 	bgImgView.frame = CGRectMake(bgImgView.frame.origin.x, bgImgView.frame.origin.y, bgImgView.frame.size.width, offset);
-	_scrollView.frame = CGRectMake(0.0, 45.0, self.view.frame.size.width, self.view.frame.size.height - (85.0 + scrollSize));
-	_scrollView.contentSize = CGSizeMake(self.view.frame.size.width, MAX(offset + 10.0, self.view.frame.size.height - (84.0 + scrollSize)));
+	_scrollView.frame = CGRectMake(0.0, 45.0, _scrollView.frame.size.width, self.view.frame.size.height - (85.0 + scrollSize));
+	_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, MAX(offset + 10.0, self.view.frame.size.height - (84.0 + scrollSize)));
 	
 	UIImageView *footerImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 435.0, 320.0, 44.0)];
 	footerImgView.image = [UIImage imageNamed:@"articleDetailsFooterBG.png"];
@@ -455,22 +456,11 @@
 #pragma mark - Async Resource Observers
 - (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data {
 	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
-	//	_article1ImgView.image = [UIImage imageWithData:data];
-	//	_article2ImgView.image = [UIImage imageWithData:data];
+	_articleImgView.image = [UIImage imageWithData:data];
 	
 	//_articleImgView.image = [SNAppDelegate imageWithFilters:[UIImage imageWithData:data] filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"saturation", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
 }
 
 - (void)resource:(MBLAsyncResource *)resource didFailWithError:(NSError *)error {
 }
-
-
-#pragma mark - Image View delegates
--(void)imageViewLoadedImage:(EGOImageView *)imageView {
-	imageView.image = [SNAppDelegate imageWithFilters:imageView.image filter:[NSArray arrayWithObjects:
-																									  [NSDictionary dictionaryWithObjectsAndKeys:
-																										@"sepia", @"type", nil, nil], 
-																									  nil]];
-}
-
 @end
