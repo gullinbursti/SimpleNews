@@ -773,7 +773,7 @@
 	commentCaption = ([_articleVO.comments count] >= 10) ? [NSString stringWithFormat:@"Comm… (%d)", [_articleVO.comments count]] : [NSString stringWithFormat:@"Comments (%d)", [_articleVO.comments count]];
 	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_commentButton.frame = CGRectMake(95.0, 2.0, 130.0, 43.0);
-	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerBottomUI_Active.png"] forState:UIControlStateHighlighted];
+	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerbottomUI_Active.png"] forState:UIControlStateHighlighted];
 	[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
 	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -5.0, 0.0, 5.0);
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];

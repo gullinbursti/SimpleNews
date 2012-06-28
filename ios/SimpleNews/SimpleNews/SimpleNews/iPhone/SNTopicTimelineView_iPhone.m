@@ -591,7 +591,6 @@
 				}
 				
 				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
-				_scrollView.contentOffset = CGPointMake(0.0, offset);
 				
 				if ([_articles count] > 0) {
 					_lastID = ((SNArticleVO *)[_articles lastObject]).article_id;
