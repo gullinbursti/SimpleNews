@@ -16,11 +16,15 @@
 @interface SNDiscoveryItemView_iPhone() <MBLResourceObserverProtocol>
 - (void)_updateAttributionViewsWithArticle:(SNArticleVO *)article;
 @property(nonatomic, strong) MBLAsyncResource *imageResource;
+@property(nonatomic, strong) MBLAsyncResource *sub1Resource;
+@property(nonatomic, strong) MBLAsyncResource *sub2Resource;
 @end
 
 @implementation SNDiscoveryItemView_iPhone
 
 @synthesize imageResource = _imageResource;
+@synthesize sub1Resource = _sub1Resource;
+@synthesize sub2Resource = _sub2Resource;
 
 - (SNArticleVO *)article
 {
@@ -46,7 +50,7 @@
 	_mainIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 	_mainIndicatorView.frame = CGRectMake((_mainImageHolderView.frame.size.width * 0.5) - 12.0, (_mainImageHolderView.frame.size.height * 0.5) - 12.0, 24.0, 24.0);
 	[_mainIndicatorView startAnimating];
-	[_mainImageHolderView addSubview:_mainIndicatorView];
+	//[_mainImageHolderView addSubview:_mainIndicatorView];
 	
 	_articleImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 290.0, 290.0)];
 	_articleImgView.userInteractionEnabled = YES;
@@ -69,7 +73,7 @@
 	[_cardView addSubview:_titleLabel];
 	
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_likeButton.frame = CGRectMake(9.0, 366.0, 93.0, 43.0);
+	_likeButton.frame = CGRectMake(10.0, 366.0, 93.0, 43.0);
 	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
@@ -81,7 +85,7 @@
 	_likeButton.hidden = YES;
 	
 	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_commentButton.frame = CGRectMake(102.0, 366.0, 115.0, 43.0);
+	_commentButton.frame = CGRectMake(103.0, 366.0, 115.0, 43.0);
 	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerbottomUI_Active.png"] forState:UIControlStateHighlighted];
 	[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
 	[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
@@ -112,20 +116,26 @@
 	if (self.article.totalLikes == 0)
 		_mainImageHolderView.frame = CGRectMake(9.0, 9.0, 290.0, 346.0);
 	
+	if ([self.article.article_url rangeOfString:@"itunes.apple.com"].length > 0)
+		_mainImageHolderView.frame = CGRectMake(9.0, 9.0, 290.0, 203.0);
+	
+	if (self.article.totalLikes == 0 && [self.article.article_url rangeOfString:@"itunes.apple.com"].length > 0)
+		_mainImageHolderView.frame = CGRectMake(9.0, 9.0, 290.0, 253.0);
+	
 	[_videoMatteView removeFromSuperview];
 	_videoMatteView = nil;
 	[_videoImgView removeFromSuperview];
 	_videoImgView = nil;
 	[_videoButton removeFromSuperview];
 	_videoButton = nil;
-	[_sub1ImgHolderView removeFromSuperview];
-	_sub1ImgHolderView = nil;
-	[_sub1ImgView removeFromSuperview];
-	_sub1ImgView = nil;
-	[_sub2ImgHolderView removeFromSuperview];
-	_sub2ImgHolderView = nil;
-	[_sub2ImgView removeFromSuperview];
-	_sub2ImgView = nil;
+//	[_sub1ImgHolderView removeFromSuperview];
+//	_sub1ImgHolderView = nil;
+//	[_sub1ImgView removeFromSuperview];
+//	_sub1ImgView = nil;
+//	[_sub2ImgHolderView removeFromSuperview];
+//	_sub2ImgHolderView = nil;
+//	[_sub2ImgView removeFromSuperview];
+//	_sub2ImgView = nil;
 	
 	_likeButton.hidden = NO;
 	_commentButton.hidden = NO;
@@ -154,9 +164,10 @@
 	self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:firstImage.url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
 	
 	// Update likes button
-	NSString *likeActiveImageName = (article.totalLikes == 0) ? @"leftBottomUIB_Active.png" : @"leftBottomUI_Active.png";
+	//NSString *likeActiveImageName = (article.totalLikes == 0) ? @"" : @"leftBottomUI_Active.png";
 	//NSString *likeCaption = (article.totalLikes == 0) ? @"Like" : [NSString stringWithFormat:@"Likes (%d)", article.totalLikes];
-	[_likeButton setBackgroundImage:[UIImage imageNamed:likeActiveImageName] forState:UIControlStateHighlighted];
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+	//[_likeButton setBackgroundImage:[UIImage imageNamed:likeActiveImageName] forState:UIControlStateHighlighted];
 	[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 //	SEL likeAction = (article.hasLiked ? @selector(_goDislike) : @selector(_goLike));
@@ -170,7 +181,7 @@
 	// Update twitter avatars
 	NSMutableArray *twitterAvatars = [NSMutableArray array];
 	if (article.totalLikes > 0) {
-		int offset2 = 15;
+		int offset2 = 18;
 		int tot = 0;
 		for (SNTwitterUserVO *tuVO in article.userLikes) {
 			if ([tuVO.twitterID isEqualToString:[[SNAppDelegate profileForUser] objectForKey:@"twitter_id"]]) {
@@ -212,43 +223,38 @@
 		playImgView.image = [UIImage imageNamed:@"playButton_nonActive.png"];
 		[_videoImgView addSubview:playImgView];	
 	}
-	else if ([article.article_url rangeOfString:@"itunes.apple.com"].length > 0) { 
-		_mainImageHolderView.frame = CGRectMake(9.0, 9.0, 290.0, 194.0);
-		
-		_sub1ImgHolderView = [[UIView alloc] initWithFrame:CGRectMake(15.0, 214.0, 142.0, 95.0)];
+	else if ([article.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
+		NSLog(@"ITUNES????");
+		_sub1ImgHolderView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 216.0, 142.0, 95.0)];
 		[_sub1ImgHolderView setBackgroundColor:[UIColor colorWithWhite:0.961 alpha:1.0]];
 		_sub1ImgHolderView.clipsToBounds = YES;
-		[_cardView addSubview:_sub1ImgHolderView];
-		
-		_sub1IndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-		_sub1IndicatorView.frame = CGRectMake((_sub1ImgHolderView.frame.size.width * 0.5) - 12.0, (_sub1ImgHolderView.frame.size.height * 0.5) - 12.0, 24.0, 24.0);
-		[_sub1IndicatorView startAnimating];
-		[_sub1ImgHolderView addSubview:_sub1IndicatorView];
+		//[_cardView addSubview:_sub1ImgHolderView];
+		[_backgroundImageView addSubview:_sub1ImgHolderView];
 		
 		_sub1ImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 142.0, 95.0)];
-		[_sub1ImgView setBackgroundColor:[UIColor whiteColor]];
+		[_sub1ImgView setBackgroundColor:[UIColor colorWithWhite:0.961 alpha:1.0]];
 		_sub1ImgView.userInteractionEnabled = YES;
 		[_sub1ImgHolderView addSubview:_sub1ImgView];
+		
 		if (firstImage.ratio > 1.0)
 			_sub1ImgView.frame = CGRectMake(35.0, 0.0, 70.0, 105.0);
+		
 		
 		UIButton *details2Button = [UIButton buttonWithType:UIButtonTypeCustom];
 		details2Button.frame = _sub1ImgView.frame;
 		[details2Button addTarget:self action:@selector(_goImage2) forControlEvents:UIControlEventTouchUpInside];
-		[_mainImageHolderView addSubview:details2Button];
+		[_backgroundImageView addSubview:details2Button];
 		
-		_sub2ImgHolderView = [[UIView alloc] initWithFrame:CGRectMake(162.0, 214.0, 142.0, 95.0)];
+		SNImageVO *secondImage = [article.images objectAtIndex:1];
+		self.sub1Resource = [[MBLResourceLoader sharedInstance] downloadURL:secondImage.url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
+		
+		_sub2ImgHolderView = [[UIView alloc] initWithFrame:CGRectMake(157.0, 216.0, 142.0, 95.0)];
 		[_sub2ImgHolderView setBackgroundColor:[UIColor colorWithWhite:0.961 alpha:1.0]];
 		_sub2ImgHolderView.clipsToBounds = YES;
-		[_cardView addSubview:_sub2ImgHolderView];
-		
-		_sub2IndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-		_sub2IndicatorView.frame = CGRectMake((_sub2ImgHolderView.frame.size.width * 0.5) - 12.0, (_sub2ImgHolderView.frame.size.height * 0.5) - 12.0, 24.0, 24.0);
-		[_sub2IndicatorView startAnimating];
-		[_sub1ImgHolderView addSubview:_sub2IndicatorView];
+		[_backgroundImageView addSubview:_sub2ImgHolderView];
 		
 		_sub2ImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 142.0, 95.0)];
-		[_sub2ImgView setBackgroundColor:[UIColor whiteColor]];
+		[_sub2ImgView setBackgroundColor:[UIColor colorWithWhite:0.961 alpha:1.0]];
 		_sub2ImgView.userInteractionEnabled = YES;
 		[_sub2ImgHolderView addSubview:_sub2ImgView];
 		
@@ -256,10 +262,28 @@
 		if (secondaryImage.ratio > 1.0)
 			_sub2ImgView.frame = CGRectMake(35.0, 0.0, 70.0, 105.0);
 		
+		SNImageVO *thirdImage = [article.images objectAtIndex:2];
+		self.sub2Resource = [[MBLResourceLoader sharedInstance] downloadURL:thirdImage.url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
+		
 		UIButton *details3Button = [UIButton buttonWithType:UIButtonTypeCustom];
 		details3Button.frame = _sub2ImgView.frame;
 		[details3Button addTarget:self action:@selector(_goImage3) forControlEvents:UIControlEventTouchUpInside];
-		[_mainImageHolderView addSubview:details3Button];
+		[_backgroundImageView addSubview:details3Button];
+		
+		_sub1IndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+		_sub1IndicatorView.frame = CGRectMake((_sub1ImgHolderView.frame.size.width * 0.5) - 12.0, (_sub1ImgHolderView.frame.size.height * 0.5) - 12.0, 24.0, 24.0);
+		[_sub1IndicatorView startAnimating];
+		[_sub1ImgHolderView addSubview:_sub1IndicatorView];
+		
+		_sub2IndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+		_sub2IndicatorView.frame = CGRectMake((_sub2ImgHolderView.frame.size.width * 0.5) - 12.0, (_sub2ImgHolderView.frame.size.height * 0.5) - 12.0, 24.0, 24.0);
+		[_sub2IndicatorView startAnimating];
+		[_sub1ImgHolderView addSubview:_sub2IndicatorView];
+		
+		if (article.totalLikes == 0) {
+			_sub1ImgHolderView.frame = CGRectMake(_sub1ImgHolderView.frame.origin.x, _sub1ImgHolderView.frame.origin.y + 50.0, _sub1ImgHolderView.frame.size.width, _sub1ImgHolderView.frame.size.height);
+			_sub2ImgHolderView.frame = CGRectMake(_sub2ImgHolderView.frame.origin.x, _sub2ImgHolderView.frame.origin.y + 50.0, _sub2ImgHolderView.frame.size.width, _sub2ImgHolderView.frame.size.height);
+		}
 	}
 }
 
@@ -332,6 +356,30 @@
 	
 	if (_imageResource != nil)
 		[_imageResource subscribe:self];
+}
+
+- (void)setSub1Resource:(MBLAsyncResource *)sub1Resource {
+	if (_sub1Resource != nil) {
+		[_sub1Resource unsubscribe:self];
+		_sub1Resource = nil;
+	}
+	
+	_sub1Resource = sub1Resource;
+	
+	if (_sub1Resource != nil)
+		[_sub1Resource subscribe:self];
+}
+
+- (void)setSub2Resource:(MBLAsyncResource *)sub2Resource {
+	if (_sub2Resource != nil) {
+		[_sub2Resource unsubscribe:self];
+		_sub2Resource = nil;
+	}
+	
+	_sub2Resource = sub2Resource;
+	
+	if (_sub2Resource != nil)
+		[_sub2Resource subscribe:self];
 }
 
 #pragma mark - MBLPageItemViewController subclass
@@ -597,17 +645,20 @@ static CGFloat clamp_alpha(CGFloat alpha)
 
 - (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data {
 	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
-	_articleImgView.image = [UIImage imageWithData:data];
-	[_mainIndicatorView stopAnimating];
-	[_mainIndicatorView removeFromSuperview];
-	_mainIndicatorView = nil;
 	
-	if ([self.article.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
+	if (resource == _imageResource) {
+		_articleImgView.image = [UIImage imageWithData:data];
+		[_mainIndicatorView stopAnimating];
+		[_mainIndicatorView removeFromSuperview];
+		_mainIndicatorView = nil;
+	
+	} else if (resource == _sub1Resource) {
 		_sub1ImgView.image = [UIImage imageWithData:data];
 		[_sub1IndicatorView stopAnimating];
 		[_sub1IndicatorView removeFromSuperview];
 		_sub1IndicatorView = nil;
-		
+	
+	} else if (resource == _sub2Resource) {	
 		_sub2ImgView.image = [UIImage imageWithData:data];
 		[_sub2IndicatorView stopAnimating];
 		[_sub2IndicatorView removeFromSuperview];
@@ -636,7 +687,10 @@ static CGFloat clamp_alpha(CGFloat alpha)
 		
 		NSString *likeCaption = (article.hasLiked) ? @"Liked" : @"Like";
 		[_likeButton setTitle:likeCaption forState:UIControlStateNormal];
-		NSString *likeImg = (article.hasLiked) ? @"leftBottomUI_Active.png" : @"";
+		NSString *likeImg = (article.hasLiked) ? @"leftBottomUIB_Active.png" : @"";
+		if (article.totalLikes > 1)
+			likeImg = @"leftBottomUI_Active.png";
+		
 		[_likeButton setBackgroundImage:[UIImage imageNamed:likeImg] forState:UIControlStateNormal];
 	}
 }

@@ -93,11 +93,6 @@
 		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
 		[self addSubview:_scrollView];
 		
-		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
-		_refreshHeaderView.delegate = self;
-		[_scrollView addSubview:_refreshHeaderView];
-		[_refreshHeaderView refreshLastUpdatedDate];
-		
 		SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.title];
 		[self addSubview:headerView];
 		
@@ -602,6 +597,11 @@
 				
 				[_activityIndicatorView removeFromSuperview];
 				[_loaderLabel removeFromSuperview];
+				
+				_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
+				_refreshHeaderView.delegate = self;
+				[_scrollView addSubview:_refreshHeaderView];
+				[_refreshHeaderView refreshLastUpdatedDate];
 				
 			} else {
 				UIAlertView *alert = [[UIAlertView alloc] 

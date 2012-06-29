@@ -62,6 +62,7 @@
 	BOOL _reloading;
 	BOOL _isIntro;
 	BOOL _isMainShare;
+	BOOL _isMenuCovered;
 	
 	
 	int _swipeIndex;

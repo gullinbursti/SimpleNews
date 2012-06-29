@@ -51,7 +51,7 @@
 		_progressHUD.taskInProgress = YES;
 		_progressHUD.graceTime = 5.0;
 		
-		[self performSelector:@selector(_removeHUD) withObject:nil afterDelay:5.0];
+		[self performSelector:@selector(_removeHUD) withObject:nil afterDelay:8.0];
 	}
 }
 

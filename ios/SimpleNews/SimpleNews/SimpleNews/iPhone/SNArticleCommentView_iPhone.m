@@ -62,8 +62,8 @@
 		dateLabel.text = timeSince;
 		[self addSubview:dateLabel];
 		
-		size = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11] constrainedToSize:CGSizeMake(256.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-		UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(56.0, 36.0, 256.0, size.height)];
+		size = [_vo.content sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11] constrainedToSize:CGSizeMake(250.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(56.0, 36.0, 250.0, size.height)];
 		contentLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11];
 		contentLabel.textColor = [UIColor colorWithWhite:0.482 alpha:1.0];
 		contentLabel.numberOfLines = 0;
@@ -75,15 +75,6 @@
 		twitterButton.frame = bgImgView.frame;
 		[twitterButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:twitterButton];
-		
-				
-//		int offset = 0;
-//		if (_vo.isLiked) {
-//			UIImageView *likeIcoImgView = [[UIImageView alloc] initWithFrame:CGRectMake(45.0, size.height + 23.0, 24.0, 24.0)];
-//			likeIcoImgView.image = [UIImage imageNamed:@"heartCommentsIcon.png"];
-//			[self addSubview:likeIcoImgView];
-//			offset = 15;
-//		}		
 	}
 	
 	return (self);

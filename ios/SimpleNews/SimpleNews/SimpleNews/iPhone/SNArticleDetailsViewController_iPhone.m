@@ -104,8 +104,8 @@
 	CGSize size;
 	CGSize size2;
 	
-	int offset = 22;
-	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(15.0, 16.0) imageURL:_vo.avatarImage_url handle:_vo.twitterHandle];
+	int offset = 26;
+	SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(15.0, 20.0) imageURL:_vo.avatarImage_url handle:_vo.twitterHandle];
 	[_scrollView addSubview:avatarImgView];
 	
 	size = [@"via 	" sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
@@ -241,7 +241,7 @@
 	}
 	
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_likeButton.frame = CGRectMake(0.0, 2.0, 95.0, 43.0);
+	_likeButton.frame = CGRectMake(0.0, 1.0, 95.0, 43.0);
 	[_likeButton setBackgroundImage:[UIImage imageNamed:likeActive] forState:UIControlStateHighlighted];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
 	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(1.0, -5.0, -1.0, 5.0);
@@ -269,7 +269,7 @@
 	
 	commentCaption = ([_vo.comments count] >= 10) ? [NSString stringWithFormat:@"Comm… (%d)", [_vo.comments count]] : [NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]];
 	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_commentButton.frame = CGRectMake(95.0, 2.0, 130.0, 43.0);
+	_commentButton.frame = CGRectMake(96.0, 1.0, 130.0, 43.0);
 	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerbottomUI_Active.png"] forState:UIControlStateHighlighted];
 	[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
 	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(1.0, -5.0, -1.0, 5.0);
@@ -282,7 +282,7 @@
 	[footerImgView addSubview:_commentButton];
 	
 	UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	sourceButton.frame = CGRectMake(226.0, 2.0, 95.0, 43.0);
+	sourceButton.frame = CGRectMake(226.0, 1.0, 95.0, 43.0);
 	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 	sourceButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];

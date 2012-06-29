@@ -20,11 +20,13 @@
 
 @interface SNArticleItemView_iPhone () <MBLResourceObserverProtocol>
 @property(nonatomic, strong) MBLAsyncResource *imageResource;
+@property(nonatomic, strong) MBLAsyncResource *image2Resource;
 @end
 
 @implementation SNArticleItemView_iPhone
 
 @synthesize imageResource = _imageResource;
+@synthesize image2Resource = _image2Resource;
 @synthesize isFirstAppearance = _isFirstAppearance;
 
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo {
@@ -189,6 +191,10 @@
 				[details2Button addTarget:self action:@selector(_goImage2:) forControlEvents:UIControlEventTouchUpInside];
 				[self addSubview:details2Button];
 				
+				if (_image2Resource == nil) {			
+					self.image2Resource = [[MBLResourceLoader sharedInstance] downloadURL:((SNImageVO *)[_vo.images objectAtIndex:1]).url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
+				}
+				
 				UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
 				itunesButton.frame = CGRectMake(184.0, offset + imgFrame.size.height, 114.0, 44.0);
 				[itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateNormal];
@@ -244,7 +250,7 @@
 		}
 		
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_likeButton.frame = CGRectMake(0.0, offset, 93.0, 43.0);
+		_likeButton.frame = CGRectMake(0.0, offset - 1.0, 93.0, 43.0);
 		[_likeButton setBackgroundImage:[UIImage imageNamed:likeActive] forState:UIControlStateHighlighted];
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
@@ -271,7 +277,7 @@
 		
 		commentCaption = ([_vo.comments count] >= 10) ? [NSString stringWithFormat:@"Comm… (%d)", [_vo.comments count]] : [NSString stringWithFormat:@"Comments (%d)", [_vo.comments count]];
 		_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_commentButton.frame = CGRectMake(92.0, offset, 115.0, 43.0);
+		_commentButton.frame = CGRectMake(92.0, offset - 1.0, 115.0, 43.0);
 		[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerbottomUI_Active.png"] forState:UIControlStateHighlighted];
 		[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
 		_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
@@ -283,7 +289,7 @@
 		[self addSubview:_commentButton];
 				
 		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		sourceButton.frame = CGRectMake(208.0, offset, 93.0, 43.0);
+		sourceButton.frame = CGRectMake(207.0, offset - 1.0, 93.0, 43.0);
 		[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
 		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
@@ -330,6 +336,18 @@
 	
 	if (_imageResource != nil)
 		[_imageResource subscribe:self];
+}
+
+-(void)setImage2Resource:(MBLAsyncResource *)image2Resource {
+	if (_image2Resource != nil) {
+		[_image2Resource unsubscribe:self];
+		_image2Resource = nil;
+	}
+	
+	_image2Resource = image2Resource;
+	
+	if (_image2Resource != nil)
+		[_image2Resource subscribe:self];
 }
 
 
@@ -514,8 +532,12 @@
 #pragma mark - Async Resource Observers
 - (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data {
 	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
-	_article1ImgView.image = [UIImage imageWithData:data];
-	_article2ImgView.image = [UIImage imageWithData:data];
+	
+	if (resource == _imageResource)
+		_article1ImgView.image = [UIImage imageWithData:data];
+	
+	else if (resource == _image2Resource)
+		_article2ImgView.image = [UIImage imageWithData:data];
 	
 	//_articleImgView.image = [SNAppDelegate imageWithFilters:[UIImage imageWithData:data] filter:[NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:@"saturation", @"type", [NSNumber numberWithFloat:1.0], @"amount", nil], nil]];
 }
@@ -538,6 +560,9 @@
 		else {
 			_vo.totalLikes = [[parsedLike objectForKey:@"likes"] intValue];
 			NSString *likeImg = (_vo.hasLiked) ? @"leftBottomUI_Active.png" : @"";
+			if (_vo.totalLikes == 1)
+				likeImg = @"leftBottomUIB_Active.png";
+			
 			[_likeButton setBackgroundImage:[UIImage imageNamed:likeImg] forState:UIControlStateNormal];
 			
 			NSString *likeCaption = (_vo.hasLiked) ? @"Liked" : @"Like";			

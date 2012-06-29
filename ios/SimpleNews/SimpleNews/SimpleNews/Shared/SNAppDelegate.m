@@ -64,22 +64,6 @@ static const BOOL kIsGoogleAnalyticsLive = YES;
 	return [UIFont fontWithName:@"HelveticaNeue-Medium" size:14.0];
 }
 
-+(UIFont *)snAllerFontRegular {
-	return [UIFont fontWithName:@"Aller" size:14.0];
-}
-
-+(UIFont *)snAllerFontBold {
-	return [UIFont fontWithName:@"Aller-Bold" size:14.0];
-}
-
-+(UIFont *)snAllerFontItalic {
-	return [UIFont fontWithName:@"Aller-Italic" size:14.0];
-}
-
-+(UIFont *)snAllerFontBoldItalic {
-	return [UIFont fontWithName:@"Aller-BoldItalic" size:14.0];
-}
-
 +(UIColor *)snLineColor {
 	return ([UIColor colorWithWhite:0.702 alpha:1.0]);
 }

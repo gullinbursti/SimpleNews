@@ -49,11 +49,6 @@
 +(UIFont *)snHelveticaNeueFontBold;
 +(UIFont *)snHelveticaNeueFontMedium;
 
-+(UIFont *)snAllerFontRegular;
-+(UIFont *)snAllerFontBold;
-+(UIFont *)snAllerFontItalic;
-+(UIFont *)snAllerFontBoldItalic;
-
 +(UIColor *)snLineColor;
 +(UIColor *)snGreyColor;
 +(UIColor *)snHeaderColor;

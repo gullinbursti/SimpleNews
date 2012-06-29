@@ -679,6 +679,7 @@
 		[view removeFromSuperview];
 	
 	_fullscreenHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 55.0)];
+	[_fullscreenHeaderView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];
 	_fullscreenHeaderView.alpha = 0.0;
 	[self.view addSubview:_fullscreenHeaderView];
 	
@@ -742,8 +743,9 @@
 	_fullscreenFooterImgView.alpha = 0.0;
 	[self.view addSubview:_fullscreenFooterImgView];
 	
+	//NSString *likeActive = (_articleVO.totalLikes == 0) ? @"leftBottomUIB_Active.png" : @"leftBottomUI_Active.png";
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_likeButton.frame = CGRectMake(0.0, 2.0, 95.0, 43.0);
+	_likeButton.frame = CGRectMake(0.0, 1.0, 95.0, 43.0);
 	[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUIB_Active.png"] forState:UIControlStateHighlighted];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -5.0, 0.0, 5.0);
@@ -751,7 +753,7 @@
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
 	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-	[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _articleVO.totalLikes] forState:UIControlStateNormal];
+	[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
 	[_fullscreenFooterImgView addSubview:_likeButton];
 	
 	if (_articleVO.hasLiked) {
@@ -772,7 +774,7 @@
 	
 	commentCaption = ([_articleVO.comments count] >= 10) ? [NSString stringWithFormat:@"Comm… (%d)", [_articleVO.comments count]] : [NSString stringWithFormat:@"Comments (%d)", [_articleVO.comments count]];
 	_commentButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_commentButton.frame = CGRectMake(95.0, 2.0, 130.0, 43.0);
+	_commentButton.frame = CGRectMake(96.0, 1.0, 130.0, 43.0);
 	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerbottomUI_Active.png"] forState:UIControlStateHighlighted];
 	[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
 	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -5.0, 0.0, 5.0);
@@ -784,7 +786,7 @@
 	[_fullscreenFooterImgView addSubview:_commentButton];
 	
 	UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	sourceButton.frame = CGRectMake(226.0, 2.0, 95.0, 43.0);
+	sourceButton.frame = CGRectMake(226.0, 1.0, 95.0, 43.0);
 	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
@@ -801,7 +803,7 @@
 		
 		if ([_articleVO.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 			_itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			_itunesButton.frame = CGRectMake(217.0, 388.0, 114.0, 44.0);
+			_itunesButton.frame = CGRectMake(197.0, 383.0, 114.0, 44.0);
 			[_itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateNormal];
 			[_itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateHighlighted];
 			[_itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
@@ -1385,7 +1387,11 @@
 		
 		else {
 			_articleVO.totalLikes = [[parsedLike objectForKey:@"likes"] intValue];
-			[_likeButton setTitle:[NSString stringWithFormat:@"Likes (%d)", _articleVO.totalLikes] forState:UIControlStateNormal];
+			NSString *likeImg = (_articleVO.hasLiked) ? @"leftBottomUIB_Active.png" : @"";
+			[_likeButton setBackgroundImage:[UIImage imageNamed:likeImg] forState:UIControlStateNormal];
+			
+			NSString *likeCaption = (_articleVO.hasLiked) ? @"Liked" : @"Like";			
+			[_likeButton setTitle:likeCaption forState:UIControlStateNormal];
 		}
 	}
 }
