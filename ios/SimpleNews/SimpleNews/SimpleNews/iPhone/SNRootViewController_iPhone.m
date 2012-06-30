@@ -569,6 +569,10 @@
 	
 	_articleVO = (SNArticleVO *)[notification object];
 	
+	NSError *error;
+	if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/share/%d", _articleVO.article_id] withError:&error])
+		NSLog(@"error in trackPageview");
+	
 	NSString *openSource;
 	if ([_articleVO.article_url rangeOfString:@"itunes.apple.com"].length > 0)
 		openSource = @"View in App Store";
@@ -589,6 +593,10 @@
 	_isMainShare = NO;
 	
 	_articleVO = (SNArticleVO *)[notification object];
+	
+	NSError *error;
+	if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/share/%d", _articleVO.article_id] withError:&error])
+		NSLog(@"error in trackPageview");
 	
 	NSString *openSource;
 	if ([_articleVO.article_url rangeOfString:@"itunes.apple.com"].length > 0)
@@ -675,6 +683,11 @@
 	NSLog(@"OFFSET:[%f]", offset);
 	
 	
+	NSError *error;
+	if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/zoom/%d/", _articleVO.article_id] withError:&error])
+		NSLog(@"error in trackPageview");
+	
+	
 	for (UIView *view in [_blackMatteView subviews])
 		[view removeFromSuperview];
 	
@@ -748,9 +761,10 @@
 	_likeButton.frame = CGRectMake(0.0, 1.0, 95.0, 43.0);
 	[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUIB_Active.png"] forState:UIControlStateHighlighted];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -5.0, 0.0, 5.0);
+	_likeButton.imageEdgeInsets = UIEdgeInsetsMake(1.0, -5.0, -1.0, 5.0);
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
 	[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
+	_likeButton.titleEdgeInsets = UIEdgeInsetsMake(1.0, 0.0, -1.0, 0.0);
 	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
@@ -777,9 +791,10 @@
 	_commentButton.frame = CGRectMake(96.0, 1.0, 130.0, 43.0);
 	[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerbottomUI_Active.png"] forState:UIControlStateHighlighted];
 	[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
-	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -5.0, 0.0, 5.0);
+	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(1.0, -5.0, -1.0, 5.0);
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
+	_commentButton.titleEdgeInsets = UIEdgeInsetsMake(1.0, 0.0, -1.0, 0.0);
 	_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 	[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	[_commentButton setTitle:commentCaption forState:UIControlStateNormal];
@@ -788,6 +803,7 @@
 	UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	sourceButton.frame = CGRectMake(226.0, 1.0, 95.0, 43.0);
 	[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+	_commentButton.imageEdgeInsets = UIEdgeInsetsMake(1.0, 0.0, -1.0, 0.0);
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
 	[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
 	[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
@@ -862,7 +878,7 @@
 }
 
 -(void)_hideFullscreenMedia:(NSNotification *)notification {
-	[UIView animateWithDuration:0.5 animations:^(void) {
+	[UIView animateWithDuration:0.33 animations:^(void) {
 		_blackMatteView.alpha = 0.0;
 		_fullscreenHeaderView.alpha = 0.0;
 		_fullscreenFooterImgView.alpha = 0.0;
@@ -1170,6 +1186,11 @@
 		_discoveryListView = nil;
 		
 		NSArray *titles = [NSArray arrayWithObjects:@"Top 10", @"Most Liked", nil];
+		
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/discover/%@", [titles objectAtIndex:indexPath.row]] withError:&error])
+			NSLog(@"error in trackPageview");
+		
 		_discoveryListView = [[SNDiscoveryListView_iPhone alloc] initWithHeaderTitle:[titles objectAtIndex:indexPath.row] isTop10:(indexPath.row == 0)];
 		_discoveryListView.view.frame = CGRectMake(226.0, 0.0, 320.0, 480.0);
 		[_holderView addSubview:_discoveryListView.view];
@@ -1193,6 +1214,10 @@
 			_topicTimelineView = [[SNTopicTimelineView_iPhone alloc] initWithTopicVO:(SNTopicVO *)[_topicsList objectAtIndex:indexPath.row]];
 
 			[_holderView addSubview:_topicTimelineView];
+			
+			NSError *error;
+			if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/topics/%@", ((SNTopicVO *)[_topicsList objectAtIndex:indexPath.row]).title] withError:&error])
+				NSLog(@"error in trackPageview");
 				
 			[UIView animateWithDuration:0.33 animations:^(void) {
 				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
@@ -1209,6 +1234,10 @@
 			if ([SNAppDelegate twitterHandle].length > 0) {
 				[_topicTimelineView removeFromSuperview];
 				_topicTimelineView = nil;
+				
+				NSError *error;
+				if (![[GANTracker sharedTracker] trackPageview:@"/profile/likes" withError:&error])
+					NSLog(@"error in trackPageview");
 				
 				[UIView animateWithDuration:0.33 animations:^(void) {
 					//_shadowImgView.alpha = 0.0;
@@ -1243,6 +1272,10 @@
 				[_topicTimelineView removeFromSuperview];
 				_topicTimelineView = nil;
 				
+				NSError *error;
+				if (![[GANTracker sharedTracker] trackPageview:@"/profile/comments" withError:&error])
+					NSLog(@"error in trackPageview");
+				
 				[UIView animateWithDuration:0.33 animations:^(void) {
 					//_shadowImgView.alpha = 0.0;
 					
@@ -1272,6 +1305,10 @@
 		
 		} else if (indexPath.row == 2) {
 			if ([SNAppDelegate twitterHandle].length > 0) {
+				NSError *error;
+				if (![[GANTracker sharedTracker] trackPageview:@"/profile/friends" withError:&error])
+					NSLog(@"error in trackPageview");
+				
 				SNFindFriendsViewController_iPhone *findFriendsViewController = [[SNFindFriendsViewController_iPhone alloc] initAsList];
 				UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:findFriendsViewController];
 				[navigationController setNavigationBarHidden:YES];
@@ -1289,6 +1326,10 @@
 			
 		} else if (indexPath.row == 3) {
 			if ([SNAppDelegate twitterHandle].length > 0) {
+				NSError *error;
+				if (![[GANTracker sharedTracker] trackPageview:@"/profile/find_friends" withError:&error])
+					NSLog(@"error in trackPageview");
+				
 				SNFindFriendsViewController_iPhone *findFriendsViewController = [[SNFindFriendsViewController_iPhone alloc] initAsFinder];
 				UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:findFriendsViewController];
 				[navigationController setNavigationBarHidden:YES];

@@ -75,6 +75,7 @@
 		4C4456141570B8130010CB8D /* SNProfileViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4456131570B8130010CB8D /* SNProfileViewController_iPhone.m */; };
 		4C45B7A6150BD8520039F45B /* SNSplashViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C45B7A5150BD8520039F45B /* SNSplashViewController_iPhone.m */; };
 		4C45B7AD150C1F360039F45B /* SNSplashHighlightView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C45B7AC150C1F360039F45B /* SNSplashHighlightView.m */; };
+		4C4A574A159ECF5C001C05FB /* icon_72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4A5749159ECF5C001C05FB /* icon_72x72.png */; };
 		4C4D77E01593CB150020A116 /* randomIcon_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D77DC1593CB150020A116 /* randomIcon_Active.png */; };
 		4C4D77E11593CB150020A116 /* randomIcon_Active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D77DD1593CB150020A116 /* randomIcon_Active@2x.png */; };
 		4C4D77E21593CB150020A116 /* randomIcon_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D77DE1593CB150020A116 /* randomIcon_nonActive.png */; };
@@ -499,6 +500,7 @@
 		4C45B7A5150BD8520039F45B /* SNSplashViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSplashViewController_iPhone.m; sourceTree = "<group>"; };
 		4C45B7AB150C1F360039F45B /* SNSplashHighlightView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSplashHighlightView.h; sourceTree = "<group>"; };
 		4C45B7AC150C1F360039F45B /* SNSplashHighlightView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSplashHighlightView.m; sourceTree = "<group>"; };
+		4C4A5749159ECF5C001C05FB /* icon_72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_72x72.png; sourceTree = "<group>"; };
 		4C4D77DC1593CB150020A116 /* randomIcon_Active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = randomIcon_Active.png; sourceTree = "<group>"; };
 		4C4D77DD1593CB150020A116 /* randomIcon_Active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "randomIcon_Active@2x.png"; sourceTree = "<group>"; };
 		4C4D77DE1593CB150020A116 /* randomIcon_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = randomIcon_nonActive.png; sourceTree = "<group>"; };
@@ -1833,6 +1835,7 @@
 			isa = PBXGroup;
 			children = (
 				4C9EC921159ADCD500C5CBD2 /* icon_57x57.png */,
+				4C4A5749159ECF5C001C05FB /* icon_72x72.png */,
 				4C9EC922159ADCD500C5CBD2 /* icon_114x144.png */,
 				E4F729FB154AF80B0073F60C /* Entitlements.plist */,
 				4C6B218E1510739A0027AEE4 /* Default.png */,
@@ -2465,6 +2468,7 @@
 				4CFC2C27159D7EE200585E56 /* sendCommentButton_Active@2x.png in Resources */,
 				4CFC2C28159D7EE200585E56 /* sendCommentButton_nonActive.png in Resources */,
 				4CFC2C29159D7EE200585E56 /* sendCommentButton_nonActive@2x.png in Resources */,
+				4C4A574A159ECF5C001C05FB /* icon_72x72.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2628,7 +2632,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Matthew Holcombe (RTUXT9B8RZ)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2643,7 +2647,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FCDC819E-2320-42B1-B10A-95059506B7F3";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2655,7 +2659,7 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Matthew Holcombe (RTUXT9B8RZ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jason Festa";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2664,7 +2668,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FCDC819E-2320-42B1-B10A-95059506B7F3";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "AD9C3DFD-2F27-4F0C-ACCB-B0140AE33EB9";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -2677,6 +2681,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SimpleNews/SimpleNews-Prefix.pch";
 				INFOPLIST_FILE = "SimpleNews/SimpleNews-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/SimpleNews/Airship\"",
@@ -2688,6 +2693,7 @@
 				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -2698,6 +2704,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SimpleNews/SimpleNews-Prefix.pch";
 				INFOPLIST_FILE = "SimpleNews/SimpleNews-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/SimpleNews/Airship\"",
@@ -2709,6 +2716,7 @@
 				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -2720,7 +2728,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Matthew Holcombe";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Jason Festa";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2729,7 +2737,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "F3FFDCCE-3DC1-4CFD-99AD-D94E112148E4";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DE8DBF9F-200B-4F4F-9393-8E705436493E";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -2743,6 +2751,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SimpleNews/SimpleNews-Prefix.pch";
 				INFOPLIST_FILE = "SimpleNews/SimpleNews-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/SimpleNews/Airship\"",
@@ -2754,6 +2763,7 @@
 				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Ad Hoc";

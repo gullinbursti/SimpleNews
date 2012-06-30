@@ -65,10 +65,6 @@
 	if ((self = [self init])) {
 		_vo = vo;
 		
-		NSError *error;
-		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/topics/%@", _vo.title] withError:&error])
-			NSLog(@"error in trackPageview");
-		
 		_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 		_activityIndicatorView.frame = CGRectMake(15.0, 60.0, 20.0, 20.0);
 		[_activityIndicatorView startAnimating];
@@ -523,6 +519,9 @@
 						imgWidth = 145;
 						height -= 2;
 						height += 37;
+						
+						if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0)
+							height -= 5;
 					}
 					
 					if (vo.type_id > 1 && vo.type_id - 4 < 0) {
@@ -570,7 +569,7 @@
 //					}
 				}
 				
-				offset += 12.0;
+				offset += 17.0;
 				
 				if ([_articles count] == 30 && [_articles count] < 250) {
 					_loadMoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -636,7 +635,7 @@
 			NSMutableArray *list = [NSMutableArray array];
 			
 			int tot = 0;
-			int offset = _scrollView.contentSize.height - 50;
+			int offset = _scrollView.contentSize.height - 75;
 			for (NSDictionary *serverList in parsedLists) {
 				SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverList];
 				//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
@@ -656,6 +655,9 @@
 					imgWidth = 145;
 					height -= 2;
 					height += 37;
+					
+					if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0)
+						height -= 5;
 				}
 				
 				
@@ -716,7 +718,7 @@
 			
 			[_articles addObjectsFromArray:list];
 			
-			offset += 16.0;
+			offset += 17.0;
 			
 			if ([_articles count] < 250) {
 				_loadMoreButton.alpha = 1.0;

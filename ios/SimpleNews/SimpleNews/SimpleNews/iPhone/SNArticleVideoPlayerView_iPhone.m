@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import "GANTracker.h"
+
 #import "SNArticleVideoPlayerView_iPhone.h"
 #import "SNAppDelegate.h"
 
@@ -30,6 +32,10 @@
 -(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo {
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
+		
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/video/%d", _vo.article_id] withError:&error])
+			NSLog(@"error in trackPageview");
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_playingChangeCallback:) name:MPMoviePlayerNowPlayingMovieDidChangeNotification object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_playbackStateChangedCallback:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];

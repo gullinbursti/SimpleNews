@@ -31,6 +31,7 @@
 	UIButton *_likeButton;
 	UIButton *_commentButton;
 	UIButton *_sourceButton;
+	UIView *_titleBGView;
 	
 	// For videos
 	UIView *_videoMatteView;

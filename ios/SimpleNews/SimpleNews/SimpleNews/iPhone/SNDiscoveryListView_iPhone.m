@@ -194,7 +194,7 @@
 #pragma mark - Async Resource Observers
 
 - (void)resource:(MBLAsyncResource *)resource isAvailableWithData:(NSData *)data {
-	NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+	//NSLog(@"MBLAsyncResource.data [%@]", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
 	
 	_progressHUD.taskInProgress = NO;
 	

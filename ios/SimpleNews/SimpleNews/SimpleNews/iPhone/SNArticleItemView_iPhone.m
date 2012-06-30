@@ -7,6 +7,7 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
+#import "GANTracker.h"
 
 #import "SNArticleItemView_iPhone.h"
 #import "SNAppDelegate.h"
@@ -196,9 +197,10 @@
 				}
 				
 				UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
-				itunesButton.frame = CGRectMake(184.0, offset + imgFrame.size.height, 114.0, 44.0);
+				itunesButton.frame = CGRectMake(184.0, offset + _article1ImgView.frame.size.height, 114.0, 44.0);
 				[itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateNormal];
 				[itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateHighlighted];
+				//[itunesButton setBackgroundColor:[SNAppDelegate snDebugRedColor]];
 				[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
 				[self addSubview:itunesButton];
 				offset += 37;
@@ -250,12 +252,13 @@
 		}
 		
 		_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		_likeButton.frame = CGRectMake(0.0, offset - 1.0, 93.0, 43.0);
+		_likeButton.frame = CGRectMake(-1.0, offset - 1.0, 93.0, 43.0);
 		[_likeButton setBackgroundImage:[UIImage imageNamed:likeActive] forState:UIControlStateHighlighted];
 		[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-		_likeButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
+		_likeButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, -4.0, -2.0, 4.0);
 		[_likeButton setImage:[UIImage imageNamed:@"likeIcon.png"] forState:UIControlStateNormal];
 		[_likeButton setImage:[UIImage imageNamed:@"likeIcon_Active.png"] forState:UIControlStateHighlighted];
+		_likeButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 		_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 		[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 		[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
@@ -280,9 +283,10 @@
 		_commentButton.frame = CGRectMake(92.0, offset - 1.0, 115.0, 43.0);
 		[_commentButton setBackgroundImage:[UIImage imageNamed:@"centerbottomUI_Active.png"] forState:UIControlStateHighlighted];
 		[_commentButton addTarget:self action:@selector(_goComments) forControlEvents:UIControlEventTouchUpInside];
-		_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
+		_commentButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, -4.0, -2.0, 4.0);
 		[_commentButton setImage:[UIImage imageNamed:@"commentIcon.png"] forState:UIControlStateNormal];
 		[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
+		_commentButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 		_commentButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 		[_commentButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 		[_commentButton setTitle:commentCaption forState:UIControlStateNormal];
@@ -291,6 +295,7 @@
 		UIButton *sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		sourceButton.frame = CGRectMake(207.0, offset - 1.0, 93.0, 43.0);
 		[sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
+		sourceButton.imageEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_nonActive.png"] forState:UIControlStateNormal];
 		[sourceButton setImage:[UIImage imageNamed:@"moreIcon_Active.png"] forState:UIControlStateHighlighted];
 		[sourceButton addTarget:self action:@selector(_goShare) forControlEvents:UIControlEventTouchUpInside];
@@ -412,6 +417,10 @@
 		[alert show];
 	
 	} else {		
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/%@/%d/like", _vo.topicTitle, _vo.article_id] withError:&error])
+			NSLog(@"error in trackPageview");
+		
 		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 		
@@ -427,6 +436,10 @@
 }
 
 -(void)_goDislike {
+	
+	NSError *error;
+	if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/%@/%d/dislike", _vo.topicTitle, _vo.article_id] withError:&error])
+		NSLog(@"error in trackPageview");
 	
 	[_likeButton removeTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];

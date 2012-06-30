@@ -42,7 +42,7 @@
 	_backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(6.0, 7.0, 308.0, 408.0)];
 	_backgroundImageView.userInteractionEnabled = YES;
 	[_cardView addSubview:_backgroundImageView];
-		
+	
 	_mainImageHolderView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 302.0)];
 	_mainImageHolderView.clipsToBounds = YES;
 	[_backgroundImageView addSubview:_mainImageHolderView];
@@ -60,12 +60,7 @@
 	details1Button.frame = _articleImgView.frame;
 	[details1Button addTarget:self action:@selector(_goImage1) forControlEvents:UIControlEventTouchUpInside];
 	[_mainImageHolderView addSubview:details1Button];
-	
-//	UIView *titleBGView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 52.0)];
-//	[titleBGView setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.75]];
-//	titleBGView.userInteractionEnabled = YES;
-//	[_backgroundImageView addSubview:titleBGView];
-				
+		
 	_titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(26.0, 24.0, 250.0, 18.0)];
 	_titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:13];
 	_titleLabel.textColor = [UIColor whiteColor];
@@ -96,7 +91,7 @@
 	[_commentButton setImage:[UIImage imageNamed:@"commentIcon_Active.png"] forState:UIControlStateHighlighted];
 	[_cardView addSubview:_commentButton];
 	_commentButton.hidden = YES;
-		
+	
 	_sourceButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_sourceButton.frame = CGRectMake(217.0, 366.0, 93.0, 43.0);
 	[_sourceButton setBackgroundImage:[[UIImage imageNamed:@"rightBottomUI_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
@@ -116,11 +111,11 @@
 	if (self.article.totalLikes == 0)
 		_mainImageHolderView.frame = CGRectMake(9.0, 9.0, 290.0, 346.0);
 	
-	if ([self.article.article_url rangeOfString:@"itunes.apple.com"].length > 0)
-		_mainImageHolderView.frame = CGRectMake(9.0, 9.0, 290.0, 203.0);
-	
-	if (self.article.totalLikes == 0 && [self.article.article_url rangeOfString:@"itunes.apple.com"].length > 0)
-		_mainImageHolderView.frame = CGRectMake(9.0, 9.0, 290.0, 253.0);
+	//	if ([self.article.article_url rangeOfString:@"itunes.apple.com"].length > 0)
+	//		_mainImageHolderView.frame = CGRectMake(9.0, 9.0, 290.0, 203.0);
+	//	
+	//	if (self.article.totalLikes == 0 && [self.article.article_url rangeOfString:@"itunes.apple.com"].length > 0)
+	//		_mainImageHolderView.frame = CGRectMake(9.0, 9.0, 290.0, 253.0);
 	
 	[_videoMatteView removeFromSuperview];
 	_videoMatteView = nil;
@@ -137,6 +132,9 @@
 //	[_sub2ImgView removeFromSuperview];
 //	_sub2ImgView = nil;
 	
+	[_titleBGView removeFromSuperview];
+	_titleBGView = nil;
+	
 	_likeButton.hidden = NO;
 	_commentButton.hidden = NO;
 	_sourceButton.hidden = NO;
@@ -145,6 +143,8 @@
 - (void)_refreshWithArticle:(SNArticleVO *)article
 {
 	[self _resetContentViews];
+	
+	//_titleBGView.hidden = NO;
 	
 	NSString *cardBackgroundImageName = (article.totalLikes > 0) ? @"defaultCardDiscover_Likes.png" : @"defaultCardDiscover_noLikes.png";
 	_backgroundImageView.image = [[UIImage imageNamed:cardBackgroundImageName] stretchableImageWithLeftCapWidth:0.0 topCapHeight:20.0];
@@ -160,7 +160,10 @@
 	
 	// Load the first article image
 	SNImageVO *firstImage = [article.images objectAtIndex:0];
-	_articleImgView.frame = CGRectMake(0.0, 0.0, 290.0, 290.0 * firstImage.ratio);
+	int height = 290.0 * firstImage.ratio;
+	int diff = (height > _mainImageHolderView.frame.size.height) ? (_mainImageHolderView.frame.size.height - height) * 0.5 : 0;
+	
+	_articleImgView.frame = CGRectMake(0.0, diff, 290.0, 290.0 * firstImage.ratio);
 	self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:firstImage.url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
 	
 	// Update likes button
@@ -170,8 +173,8 @@
 	//[_likeButton setBackgroundImage:[UIImage imageNamed:likeActiveImageName] forState:UIControlStateHighlighted];
 	[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-//	SEL likeAction = (article.hasLiked ? @selector(_goDislike) : @selector(_goLike));
-//	[_likeButton addTarget:self action:likeAction forControlEvents:UIControlEventTouchUpInside];
+	//	SEL likeAction = (article.hasLiked ? @selector(_goDislike) : @selector(_goLike));
+	//	[_likeButton addTarget:self action:likeAction forControlEvents:UIControlEventTouchUpInside];
 	
 	// Update comments count
 	NSString *commentCaption = ([article.comments count] == 0) ? @"Comment" : [NSString stringWithFormat:@"Comments (%d)", [article.comments count]];
@@ -223,8 +226,10 @@
 		playImgView.image = [UIImage imageNamed:@"playButton_nonActive.png"];
 		[_videoImgView addSubview:playImgView];	
 	}
-	else if ([article.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
-		NSLog(@"ITUNES????");
+	/*else if ([article.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
+		//int offset = (self.article.totalLikes == 0) ? 43 : 0;
+		//int offset = (self.article.totalLikes == 0) ? 143 : 0;
+		
 		_sub1ImgHolderView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 216.0, 142.0, 95.0)];
 		[_sub1ImgHolderView setBackgroundColor:[UIColor colorWithWhite:0.961 alpha:1.0]];
 		_sub1ImgHolderView.clipsToBounds = YES;
@@ -239,11 +244,10 @@
 		if (firstImage.ratio > 1.0)
 			_sub1ImgView.frame = CGRectMake(35.0, 0.0, 70.0, 105.0);
 		
-		
 		UIButton *details2Button = [UIButton buttonWithType:UIButtonTypeCustom];
 		details2Button.frame = _sub1ImgView.frame;
 		[details2Button addTarget:self action:@selector(_goImage2) forControlEvents:UIControlEventTouchUpInside];
-		[_backgroundImageView addSubview:details2Button];
+		[_sub1ImgHolderView addSubview:details2Button];
 		
 		SNImageVO *secondImage = [article.images objectAtIndex:1];
 		self.sub1Resource = [[MBLResourceLoader sharedInstance] downloadURL:secondImage.url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
@@ -268,7 +272,7 @@
 		UIButton *details3Button = [UIButton buttonWithType:UIButtonTypeCustom];
 		details3Button.frame = _sub2ImgView.frame;
 		[details3Button addTarget:self action:@selector(_goImage3) forControlEvents:UIControlEventTouchUpInside];
-		[_backgroundImageView addSubview:details3Button];
+		[_sub2ImgHolderView addSubview:details3Button];
 		
 		_sub1IndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 		_sub1IndicatorView.frame = CGRectMake((_sub1ImgHolderView.frame.size.width * 0.5) - 12.0, (_sub1ImgHolderView.frame.size.height * 0.5) - 12.0, 24.0, 24.0);
@@ -279,12 +283,7 @@
 		_sub2IndicatorView.frame = CGRectMake((_sub2ImgHolderView.frame.size.width * 0.5) - 12.0, (_sub2ImgHolderView.frame.size.height * 0.5) - 12.0, 24.0, 24.0);
 		[_sub2IndicatorView startAnimating];
 		[_sub1ImgHolderView addSubview:_sub2IndicatorView];
-		
-		if (article.totalLikes == 0) {
-			_sub1ImgHolderView.frame = CGRectMake(_sub1ImgHolderView.frame.origin.x, _sub1ImgHolderView.frame.origin.y + 50.0, _sub1ImgHolderView.frame.size.width, _sub1ImgHolderView.frame.size.height);
-			_sub2ImgHolderView.frame = CGRectMake(_sub2ImgHolderView.frame.origin.x, _sub2ImgHolderView.frame.origin.y + 50.0, _sub2ImgHolderView.frame.size.width, _sub2ImgHolderView.frame.size.height);
-		}
-	}
+	}*/
 }
 
 - (void)_updateAttributionViewsWithArticle:(SNArticleVO *)article
@@ -336,6 +335,12 @@
 	[_attributionViews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	_attributionViews = attributionViews;
 	[_attributionViews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) { [_cardView addSubview:obj]; }];
+	
+	//	if (self.article.totalLikes == 0) {
+	//		_mainImageHolderView.frame = CGRectMake(9.0, 9.0, 290.0, 203.0);
+	//		_sub1ImgHolderView.frame = CGRectMake(_sub1ImgHolderView.frame.origin.x, 216.0 + 43.0, _sub1ImgHolderView.frame.size.width, _sub1ImgHolderView.frame.size.height);
+	//		_sub2ImgHolderView.frame = CGRectMake(_sub2ImgHolderView.frame.origin.x, 216.0 + 43.0, _sub2ImgHolderView.frame.size.width, _sub2ImgHolderView.frame.size.height);
+	//	}
 }
 
 - (void)_goShare {
@@ -574,17 +579,17 @@ static CGFloat clamp_alpha(CGFloat alpha)
 		[self _photoZoomIn:nil];
 	}
 	
-//	UIView *overlayView = [[UIView alloc] initWithFrame:_articleImgView.frame];
-//	[overlayView setBackgroundColor:[UIColor blackColor]];
-//	overlayView.alpha = 0.33;
-//	[_mainImageHolderView addSubview:overlayView];
-//	
-//	[UIView animateWithDuration:0.15 animations:^(void) {
-//		overlayView.alpha = 0.0;
-//		
-//	} completion:^(BOOL finished) {
-//		[overlayView removeFromSuperview];
-//	}];
+	//	UIView *overlayView = [[UIView alloc] initWithFrame:_articleImgView.frame];
+	//	[overlayView setBackgroundColor:[UIColor blackColor]];
+	//	overlayView.alpha = 0.33;
+	//	[_mainImageHolderView addSubview:overlayView];
+	//	
+	//	[UIView animateWithDuration:0.15 animations:^(void) {
+	//		overlayView.alpha = 0.0;
+	//		
+	//	} completion:^(BOOL finished) {
+	//		[overlayView removeFromSuperview];
+	//	}];
 }
 
 - (void)_goImage2 {
@@ -601,17 +606,17 @@ static CGFloat clamp_alpha(CGFloat alpha)
 		[self _photo1ZoomIn:nil];
 	}
 	
-//	UIView *overlayView = [[UIView alloc] initWithFrame:_sub1ImgHolderView.frame];
-//	[overlayView setBackgroundColor:[UIColor blackColor]];
-//	overlayView.alpha = 0.33;
-//	[_cardView addSubview:overlayView];
-//	
-//	[UIView animateWithDuration:0.15 animations:^(void) {
-//		overlayView.alpha = 0.0;
-//		
-//	} completion:^(BOOL finished) {
-//		[overlayView removeFromSuperview];
-//	}];
+	//	UIView *overlayView = [[UIView alloc] initWithFrame:_sub1ImgHolderView.frame];
+	//	[overlayView setBackgroundColor:[UIColor blackColor]];
+	//	overlayView.alpha = 0.33;
+	//	[_cardView addSubview:overlayView];
+	//	
+	//	[UIView animateWithDuration:0.15 animations:^(void) {
+	//		overlayView.alpha = 0.0;
+	//		
+	//	} completion:^(BOOL finished) {
+	//		[overlayView removeFromSuperview];
+	//	}];
 }
 
 - (void)_goImage3 {
@@ -628,17 +633,17 @@ static CGFloat clamp_alpha(CGFloat alpha)
 		[self _photo2ZoomIn:nil];
 	}
 	
-//	UIView *overlayView = [[UIView alloc] initWithFrame:_sub2ImgHolderView.frame];
-//	[overlayView setBackgroundColor:[UIColor blackColor]];
-//	overlayView.alpha = 0.33;
-//	[_cardView addSubview:overlayView];
-//	
-//	[UIView animateWithDuration:0.15 animations:^(void) {
-//		overlayView.alpha = 0.0;
-//		
-//	} completion:^(BOOL finished) {
-//		[overlayView removeFromSuperview];
-//	}];
+	//	UIView *overlayView = [[UIView alloc] initWithFrame:_sub2ImgHolderView.frame];
+	//	[overlayView setBackgroundColor:[UIColor blackColor]];
+	//	overlayView.alpha = 0.33;
+	//	[_cardView addSubview:overlayView];
+	//	
+	//	[UIView animateWithDuration:0.15 animations:^(void) {
+	//		overlayView.alpha = 0.0;
+	//		
+	//	} completion:^(BOOL finished) {
+	//		[overlayView removeFromSuperview];
+	//	}];
 }
 
 #pragma mark - Async Resource Observers
@@ -651,13 +656,13 @@ static CGFloat clamp_alpha(CGFloat alpha)
 		[_mainIndicatorView stopAnimating];
 		[_mainIndicatorView removeFromSuperview];
 		_mainIndicatorView = nil;
-	
+		
 	} else if (resource == _sub1Resource) {
 		_sub1ImgView.image = [UIImage imageWithData:data];
 		[_sub1IndicatorView stopAnimating];
 		[_sub1IndicatorView removeFromSuperview];
 		_sub1IndicatorView = nil;
-	
+		
 	} else if (resource == _sub2Resource) {	
 		_sub2ImgView.image = [UIImage imageWithData:data];
 		[_sub2IndicatorView stopAnimating];

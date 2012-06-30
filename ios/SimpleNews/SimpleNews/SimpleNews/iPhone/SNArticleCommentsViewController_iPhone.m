@@ -119,6 +119,7 @@
 	[_commentTxtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 	[_commentTxtField setAutocorrectionType:UITextAutocorrectionTypeNo];
 	[_commentTxtField setBackgroundColor:[UIColor clearColor]];
+	_commentTxtField.keyboardAppearance = UIKeyboardAppearanceAlert;
 	[_commentTxtField setReturnKeyType:UIReturnKeyDone];
 	[_commentTxtField setTextColor:[UIColor colorWithWhite:0.482 alpha:1.0]];
 	[_commentTxtField addTarget:self action:@selector(_onTxtDoneEditing:) forControlEvents:UIControlEventEditingDidEndOnExit];
@@ -136,7 +137,7 @@
 	[_bgView addSubview:_commentsLabel];
 	
 	UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	sendButton.frame = CGRectMake(264.0, 5.0, 54.0, 35.0);
+	sendButton.frame = CGRectMake(264.0, 4.0, 54.0, 35.0);
 	[sendButton setBackgroundImage:[[UIImage imageNamed:@"sendCommentButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 	[sendButton setBackgroundImage:[[UIImage imageNamed:@"sendCommentButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 	[sendButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
