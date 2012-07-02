@@ -205,6 +205,13 @@
 				[self addSubview:itunesButton];
 				offset += 37;
 				offset -= 2;
+				
+				if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0) {
+					itunesButton.frame = CGRectMake(184.0, itunesButton.frame.origin.y + 1.0, 114.0, 44.0);
+					
+					if (_vo.totalLikes > 0)
+						itunesButton.frame = CGRectMake(184.0, itunesButton.frame.origin.y + 1.0, 114.0, 44.0);	
+				}
 			}
 			
 			offset += (imgFrame.size.width * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);

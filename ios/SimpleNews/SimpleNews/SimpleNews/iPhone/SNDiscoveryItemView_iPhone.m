@@ -208,7 +208,9 @@
 	[_twitterAvatars enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) { [_cardView addSubview:obj]; }];
 	
 	// Check for different article types and reconfigure as needed
+	
 	if (article.type_id > 3) {
+		NSLog(@"TYPE_ID:[%d]", article.type_id);
 		_videoMatteView = [[UIView alloc] initWithFrame:CGRectMake(9.0, 9.0, 290.0, 302.0)];
 		_videoMatteView.backgroundColor = [UIColor blackColor];
 		[_backgroundImageView addSubview:_videoMatteView];

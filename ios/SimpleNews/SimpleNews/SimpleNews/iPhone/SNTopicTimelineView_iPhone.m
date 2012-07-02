@@ -517,11 +517,11 @@
 					
 					if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 						imgWidth = 145;
-						height -= 2;
+						//height -= 2;
 						height += 37;
 						
 						if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0)
-							height -= 5;
+							height -= 2;
 					}
 					
 					if (vo.type_id > 1 && vo.type_id - 4 < 0) {
@@ -653,11 +653,11 @@
 				int imgWidth = 290;
 				if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 					imgWidth = 145;
-					height -= 2;
+					//height -= 2;
 					height += 37;
 					
 					if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0)
-						height -= 5;
+						height -= 2;
 				}
 				
 				
