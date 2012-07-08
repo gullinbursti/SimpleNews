@@ -109,7 +109,7 @@
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
 		[formValues setObject:[NSString stringWithFormat:@"%d", 14] forKey:@"action"];
 		
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"];
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"];
 		self.articleListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0]]; // 1 minute expiration for now
 	}
 }
@@ -136,7 +136,7 @@
 			
 		[formValues setObject:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
 		
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"];
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"];
 		self.refreshListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0]]; // 1 minute expiration for now
 	}
 }

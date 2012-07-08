@@ -333,7 +333,7 @@
 		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 		[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUIB_Active.png"] forState:UIControlStateNormal];
 		
-		_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+		_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"]]];
 		[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		[_likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", _articleVO.article_id] forKey:@"articleID"];
@@ -350,7 +350,7 @@
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	[_likeButton setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
 	
-	_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+	_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"]]];
 	[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
 	[_likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 	[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", _articleVO.article_id] forKey:@"articleID"];
@@ -411,7 +411,7 @@
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
 		[formValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Topics.php"];
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Topics2.php"];
 		self.topicsListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration for now
 	}
 }
@@ -425,7 +425,7 @@
 		[userFormValues setObject:[SNAppDelegate twitterHandle] forKey:@"handle"];
 		[userFormValues setObject:[SNAppDelegate twitterID] forKey:@"twitterID"]; 
 		
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"];
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Users2.php"];
 		_userResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:userFormValues forceFetch:YES expiration:[NSDate date]];
 		[_userResource subscribe:self];
 	}
@@ -655,7 +655,7 @@
 	
 	twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
 		
-		ASIFormDataRequest *shareRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+		ASIFormDataRequest *shareRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"]]];
 		[shareRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 		[shareRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[shareRequest setPostValue:[NSString stringWithFormat:@"%d", _articleVO.article_id] forKey:@"articleID"];
@@ -983,7 +983,7 @@
 			twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
 				[self dismissModalViewControllerAnimated:YES];
 				
-				ASIFormDataRequest *shareRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+				ASIFormDataRequest *shareRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"]]];
 				[shareRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 				[shareRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 				[shareRequest setPostValue:[NSString stringWithFormat:@"%d", _articleVO.article_id] forKey:@"articleID"];
@@ -1360,7 +1360,7 @@
 			break;
 			
 		case MFMailComposeResultSent:			
-			_shareRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles2.php"]]];
+			_shareRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"]]];
 			[_shareRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 			[_shareRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 			[_shareRequest setPostValue:[NSString stringWithFormat:@"%d", _articleVO.article_id] forKey:@"articleID"];

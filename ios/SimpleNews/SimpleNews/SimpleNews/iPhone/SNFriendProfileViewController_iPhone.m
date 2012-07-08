@@ -175,13 +175,13 @@
 	_shareSwitch = [[UISwitch alloc] initWithFrame:CGRectZero];
 	[_shareSwitch addTarget:self action:@selector(_goShareSwitch:) forControlEvents:UIControlEventValueChanged];
 	
-	ASIFormDataRequest *statsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
+	ASIFormDataRequest *statsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users2.php"]]];
 	[statsRequest setPostValue:[NSString stringWithFormat:@"%d", 5] forKey:@"action"];
 	[statsRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.userID] forKey:@"userID"];
 	[statsRequest setDelegate:self];
 	[statsRequest startAsynchronous];
 	
-	_notificationsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
+	_notificationsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users2.php"]]];
 	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", 6] forKey:@"action"];
 	[_notificationsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 	[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.userID] forKey:@"friendID"];
@@ -279,7 +279,7 @@
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 	switch(buttonIndex) {
 		case 0:
-			_notificationsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users.php"]]];
+			_notificationsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users2.php"]]];
 			[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
 			[_notificationsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 			[_notificationsRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.userID] forKey:@"friendID"];

@@ -6,7 +6,7 @@
 	  	function __construct() {
 		
 			$this->db_conn = mysql_connect('localhost', 'db41232_sn_usr', 'dope911t') or die("Could not connect to database.");
-			mysql_select_db('assembly2') or die("Could not select database.");
+			mysql_select_db('assemblyDEV') or die("Could not select database.");
 		}
 	
 		function __destruct() {	
@@ -1104,7 +1104,7 @@
 		function getDiscoveryArticles() {
 			$article_arr = array();
 			
-			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4 ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 			$article_result = mysql_query($query);
 			
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
@@ -1201,7 +1201,7 @@
 		function getDiscoveryArticlesBeforeDate($date) {
 			$article_arr = array();
 			
-			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4 AND `tblArticles`.`created` < "'. $date .'" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`created` < "'. $date .'" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 			$article_result = mysql_query($query);
 			
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
