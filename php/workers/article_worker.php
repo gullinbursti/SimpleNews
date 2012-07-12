@@ -24,6 +24,7 @@ while ($keyword_row = mysql_fetch_array($keyword_result, MYSQL_BOTH)) {
 $line = 0;
 $keywordCSV_arr = array();
 $hashtagCSV_arr = array();
+$handleCSV_arr = array();
 
 if (($handle = fopen("funny.csv", "r")) !== FALSE) {
 	while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
@@ -33,8 +34,11 @@ if (($handle = fopen("funny.csv", "r")) !== FALSE) {
 				array_push($keywordCSV_arr, $data[0]);
 				
 			if ($line > 0 && $i == 1 && strlen($data[$i]) > 0) {
-				array_push($keywordCSV_arr, $data[1]);
-			}   							
+				array_push($hashtagCSV_arr, $data[1]);
+			}
+			
+			if ($line > 0 && $i == 2 && strlen($data[$i]) > 0)
+			   	array_push($handleCSV_arr, $data[2]);
 		}
 		
 		$line++;
@@ -46,6 +50,8 @@ $query = 'DELETE FROM `tblTopicsKeywords` WHERE `topic_id` = '. $topic_id .';';
 $result = mysql_query($query);
 
 foreach ($keywordCSV_arr as $val) {
+	echo ($val ."\n");
+	
 	$query = 'SELECT `id` FROM `tblKeywords` WHERE `title` = "'. $val .'";';
 	$result = mysql_query($query);
 	
@@ -54,20 +60,65 @@ foreach ($keywordCSV_arr as $val) {
 		$keyword_result = mysql_query($query);	
 		$keyword_id = mysql_insert_id();
 		
-		$query = 'INSERT INTO `tblTopicsKeywords` (`topic_id`, `keyword_id`) VALUES ("'. $topic_id .'", "'. $keyword_id .'");';
-		$keyword_result = mysql_query($query);	
-		
 	} else {
 		$row = mysql_fetch_row($result);
 		$keyword_id = $row[0];
-		
-		$query = 'INSERT INTO `tblTopicsKeywords` (`topic_id`, `keyword_id`) VALUES ("'. $topic_id .'", "'. $keyword_id .'");';
-		$keyword_result = mysql_query($query);	
 	}
+	
+	$query = 'INSERT INTO `tblTopicsKeywords` (`topic_id`, `keyword_id`) VALUES ("'. $topic_id .'", "'. $keyword_id .'");';
+	$keyword_result = mysql_query($query);	
 }
 
+echo ("\n[=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=]\n");
 
-$query = 'DELETE FROM `tblTopicsHashtags` WHERE `topic`'
+
+$query = 'DELETE FROM `tblTopicsHashtags` WHERE `topic_id` = '. $topic_id .';';
+$result = mysql_query($query);
+
+foreach ($hashtagCSV_arr as $val) {
+	echo (substr($val, 1) ."\n");
+	
+	$query = 'SELECT `id` FROM `tblHashtags` WHERE `title` = "'. substr($val, 1) .'";';
+	$result = mysql_query($query);
+	
+	if (mysql_num_rows($result) == 0) {
+	    $query = 'INSERT INTO `tblHashtags` (`id`, `title`, `active`, `added`) VALUES (NULL, "'. substr($val, 1) .'", "Y", NOW());';
+		$hastag_result = mysql_query($query);	
+		$hashtag_id = mysql_insert_id();
+		
+	} else {
+		$row = mysql_fetch_row($result);
+		$hashtag_id = $row[0];
+	}
+	
+	$query = 'INSERT INTO `tblTopicsHashtags` (`topic_id`, `hashtag_id`) VALUES ("'. $topic_id .'", "'. $hashtag_id .'");';
+	$hashtag_result = mysql_query($query);	
+}
+echo ("\n[=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=]\n");
+
+
+$query = 'DELETE FROM `tblTopicsContributors` WHERE `topic_id` = '. $topic_id .';';
+$result = mysql_query($query);
+
+foreach ($handleCSV_arr as $val) {
+	echo (substr($val, 1) ."\n");
+	
+	$query = 'SELECT `id` FROM `tblContributors` WHERE `handle` = "'. substr($val, 1) .'";';
+	$result = mysql_query($query);
+	
+	if (mysql_num_rows($result) == 0) {
+	    $query = 'INSERT INTO `tblContributors` (`id`, `handle`, `name`, `avatar_url`, `type_id`, `active`, `added`) VALUES (NULL, "'. substr($val, 1) .'", "'. substr($val, 1) .'", "https://api.twitter.com/1/users/profile_image?screen_name='. substr($val, 1) .'&size=reasonably_small", "1", "Y", NOW());';
+		$handle_result = mysql_query($query);
+		$handle_id = mysql_insert_id();
+	
+	} else {
+		$row = mysql_fetch_row($result);
+		$handle_id = $row[0];
+	}
+	
+	$query = 'INSERT INTO `tblTopicsContributors` (`topic_id`, `contributor_id`) VALUES ("'. $topic_id .'", "'. $handle_id .'");';
+	$handle_result = mysql_query($query);	
+}
 
 
 echo ("\n[=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=]\n". $argv[1] ."\n");
@@ -77,8 +128,7 @@ $query = 'SELECT * FROM `tblArticles` WHERE `type_id` < -1;';
 $result = mysql_query($query);
 
 while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
-	$type_id = $row['type_id'] + 100;
-	echo ("ID:[". $row['id'] ."] (". $type_id .") <". $row['tweet_msg'] .">\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
+	echo ("ID:[". $row['id'] ."] <". $row['tweet_msg'] .">\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
 	
 	//$query = 'INSERT INTO `tblArticleImages` (`id`, `type_id`, `article_id`, `url`, `ratio`, `added`) VALUES (NULL, 1, '. $row['id'] .', "'. $row['image_url'] .'", '. $row['image_ratio'] .', "'. $row['added'] .'");';
 	//$img_result = mysql_query($query);

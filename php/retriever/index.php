@@ -25,7 +25,7 @@ $month_arr = array(
 $search = new TwitterSearch();
 $search->user_agent = 'assembly:staff@getassembly.com';
 
-$query = 'SELECT * FROM `tblTopics` WHERE `active` = "Y";';
+$query = 'SELECT * FROM `tblTopics` WHERE `active` = "Y" AND `id` = 11;';
 $topic_result = mysql_query($query);
 
 $topic_arr = array();
@@ -116,8 +116,8 @@ while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {
 			
 				if (strlen($short_url[0]) > 0) {
 					$query = 'INSERT INTO `tblArticles` (';
-					$query .= '`id`, `type_id`, `tweet_id`, `contributor_id`, `tweet_msg`, `short_url`, `title`, `content_txt`, `content_url`, `image_url`, `image_ratio`, `youtube_id`, `likes`, `active`, `created`, `added`) ';
-					$query .= 'VALUES (NULL, "0", "'. $tweet_arr[$key]['tweet_id'] .'", "'. $contributor_id .'", "'. $tweet_arr[$key]['message'] .'", "'. $short_url[0] .'", "", "", "", "", "1.0", "", "0", "N", "'. $created .'", NOW());';	 
+					$query .= '`id`, `type_id`, `tweet_id`, `contributor_id`, `tweet_msg`, `short_url`, `title`, `content_txt`, `content_url`, `image_url`, `image_ratio`, `youtube_id`, `active`, `created`, `added`) ';
+					$query .= 'VALUES (NULL, "0", "'. $tweet_arr[$key]['tweet_id'] .'", "'. $contributor_id .'", "'. $tweet_arr[$key]['message'] .'", "'. $short_url[0] .'", "", "", "", "", "1.0", "", "N", "'. $created .'", NOW());';	 
 				    $result = mysql_query($query);
 					$article_id = mysql_insert_id();
 					
