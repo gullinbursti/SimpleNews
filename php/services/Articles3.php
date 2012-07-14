@@ -86,12 +86,32 @@
 		function getArticlesForTopic($topic_id) {
 			$article_arr = array();
 			
-			if ($topic_id == "10")
-				$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 4 ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
-			
-			else
-				$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+			switch ($topic_id) {
+				case 1:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`itunes_url` LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+					break;
+					
+				case 2:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`itunes_url` LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+					break;
 				
+				case 3:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+					break;
+					
+				case 4:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+				    break;
+				
+				case 10:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 4 ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+					break;
+					
+				default:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+					break;
+			}
+							
 			$article_result = mysql_query($query);
 			
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) { 				
@@ -109,20 +129,17 @@
 						"url" => $img_row['url'], 
 						"ratio" => $img_row['ratio']
 					));
+				}
 					
-					array_push($img_arr, array(
-						"id" => $img_row['id'], 
-						"type_id" => $img_row['type_id'], 
-						"url" => $img_row['url'], 
-						"ratio" => $img_row['ratio']
-					));
-					
-					array_push($img_arr, array(
-						"id" => $img_row['id'], 
-						"type_id" => $img_row['type_id'], 
-						"url" => $img_row['url'], 
-						"ratio" => $img_row['ratio']
-					));
+				switch (mysql_num_rows($img_result)) {
+					case 1:
+						array_push($img_arr, $img_arr[0]);						
+				   		array_push($img_arr, $img_arr[0]);
+						break;
+						
+					case 2:					
+						array_push($img_arr, $img_arr[0]);
+						break;
 				}
 				
 				$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row[0] .' ORDER BY `tblComments`.`added` DESC;';
@@ -156,7 +173,7 @@
 						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
 					)); 
 				}
-								
+				
 				array_push($article_arr, array(
 					"article_id" => $article_row['article_id'], 
 					"list_id" => $topic_id, 
@@ -189,10 +206,24 @@
 		function getTopicArticlesAfterID($topic_id, $article_id) {
 			$article_arr = array();
 			
-			if ($topic_id == "10")
-				$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 4 AND `tblArticles`.`id` > '. $article_id .' ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
-			else
-				$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`id` > '. $article_id .' ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+			switch ($topic_id) {
+				case 3:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+					break;
+					
+				case 4:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+				    break;
+				
+				case 10:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 4 ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+					break;
+					
+				default:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+					break;
+			}
+			
 			$article_result = mysql_query($query);
 			
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {				
@@ -411,21 +442,18 @@
 						"type_id" => $img_row['type_id'], 
 						"url" => $img_row['url'], 
 						"ratio" => $img_row['ratio']
-					));
-					
-					array_push($img_arr, array(
-						"id" => $img_row['id'], 
-						"type_id" => $img_row['type_id'], 
-						"url" => $img_row['url'], 
-						"ratio" => $img_row['ratio']
-					));
-					
-					array_push($img_arr, array(
-						"id" => $img_row['id'], 
-						"type_id" => $img_row['type_id'], 
-						"url" => $img_row['url'], 
-						"ratio" => $img_row['ratio']
-					));
+					));					
+				}
+				
+				switch (mysql_num_rows($img_result)) {
+					case 1:
+						array_push($img_arr, $img_arr[0]);						
+				   		array_push($img_arr, $img_arr[0]);
+						break;
+						
+					case 2:					
+						array_push($img_arr, $img_arr[0]);
+						break;
 				}
 				
 				$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $commented_row['article_id'] .' ORDER BY `tblComments`.`added` DESC;';
@@ -535,20 +563,17 @@
 						"url" => $img_row['url'], 
 						"ratio" => $img_row['ratio']
 					));
-					
-					array_push($img_arr, array(
-						"id" => $img_row['id'], 
-						"type_id" => $img_row['type_id'], 
-						"url" => $img_row['url'], 
-						"ratio" => $img_row['ratio']
-					));
-					
-					array_push($img_arr, array(
-						"id" => $img_row['id'], 
-						"type_id" => $img_row['type_id'], 
-						"url" => $img_row['url'], 
-						"ratio" => $img_row['ratio']
-					));
+				}
+				
+				switch (mysql_num_rows($img_result)) {
+					case 1:
+						array_push($img_arr, $img_arr[0]);						
+				   		array_push($img_arr, $img_arr[0]);
+						break;
+						
+					case 2:					
+						array_push($img_arr, $img_arr[0]);
+						break;
 				}
 				
 				
@@ -639,20 +664,17 @@
 						"url" => $img_row['url'], 
 						"ratio" => $img_row['ratio']
 					));
-					
-					array_push($img_arr, array(
-						"id" => $img_row['id'], 
-						"type_id" => $img_row['type_id'], 
-						"url" => $img_row['url'], 
-						"ratio" => $img_row['ratio']
-					));
-					
-					array_push($img_arr, array(
-						"id" => $img_row['id'], 
-						"type_id" => $img_row['type_id'], 
-						"url" => $img_row['url'], 
-						"ratio" => $img_row['ratio']
-					));
+				}
+				   
+				switch (mysql_num_rows($img_result)) {
+					case 1:
+						array_push($img_arr, $img_arr[0]);						
+				   		array_push($img_arr, $img_arr[0]);
+						break;
+						
+					case 2:					
+						array_push($img_arr, $img_arr[0]);
+						break;
 				}
 				
 				
@@ -712,7 +734,7 @@
 		}
 		
 		
-		function getPopularArticles() {
+		function getMostLikedArticles() {
 			$article_arr = array();
 			
 			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
@@ -721,9 +743,6 @@
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
 				$query = 'SELECT `tblTopics`.`id`, `tblTopics`.`title` FROM `tblTopics` INNER JOIN `tblTopicsArticles` ON `tblTopics`.`id` = `tblTopicsArticles`.`topic_id` WHERE  `tblTopicsArticles`.`article_id` = '. $article_row[0] .";";
 				$topic_row = mysql_fetch_row(mysql_query($query));
-							
-				$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row[0] .' ORDER BY `tblComments`.`added` DESC;';
-				$comment_result = mysql_query($query);
 				
 				$query = 'SELECT * FROM `tblArticleImages` WHERE `article_id` = '. $article_row[0] .';';
 				$img_result = mysql_query($query);
@@ -751,6 +770,9 @@
 						"ratio" => $img_row['ratio']
 					));
 				}
+							
+				$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row[0] .' ORDER BY `tblComments`.`added` DESC;';
+				$comment_result = mysql_query($query);
 				
 				$comment_arr = array();
 				while ($comment_row = mysql_fetch_array($comment_result, MYSQL_BOTH)) {
@@ -809,103 +831,7 @@
 		} 
 		
 		
-		function getPopularArticlesAfterID($article_id) {
-			$article_arr = array();
-			
-			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`id` > '. $article_id .' ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
-			$article_result = mysql_query($query);
-			
-			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
-				$query = 'SELECT `tblTopics`.`id`, `tblTopics`.`title` FROM `tblTopics` INNER JOIN `tblTopicsArticles` ON `tblTopics`.`id` = `tblTopicsArticles`.`topic_id` WHERE  `tblTopicsArticles`.`article_id` = '. $article_row[0] .";";
-				$topic_row = mysql_fetch_row(mysql_query($query));
-				
-				$query = 'SELECT * FROM `tblArticleImages` WHERE `article_id` = '. $article_row[0] .';';
-				$img_result = mysql_query($query);
-				
-				$img_arr = array();
-				while ($img_row = mysql_fetch_array($img_result, MYSQL_BOTH)) {
-					array_push($img_arr, array(
-						"id" => $img_row['id'], 
-						"type_id" => $img_row['type_id'], 
-						"url" => $img_row['url'], 
-						"ratio" => $img_row['ratio']
-					));
-					
-					array_push($img_arr, array(
-						"id" => $img_row['id'], 
-						"type_id" => $img_row['type_id'], 
-						"url" => $img_row['url'], 
-						"ratio" => $img_row['ratio']
-					));
-					
-					array_push($img_arr, array(
-						"id" => $img_row['id'], 
-						"type_id" => $img_row['type_id'], 
-						"url" => $img_row['url'], 
-						"ratio" => $img_row['ratio']
-					));
-				}
-				
-				$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row[0] .' ORDER BY `tblComments`.`added` DESC;';
-				$comment_result = mysql_query($query);
-				
-				$comment_arr = array();
-				while ($comment_row = mysql_fetch_array($comment_result, MYSQL_BOTH)) {
-					$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `user_id` = '. $comment_row['user_id'] .' AND `article_id` = '. $article_row[0] .';';
-					$liked_result = mysql_query($query);
-				
-					array_push($comment_arr, array(
-						"comment_id" => $comment_row[0], 
-						"handle" => $comment_row['handle'], 
-						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
-						"content" => $comment_row['content'], 
-						"liked" => (mysql_num_rows($liked_result) > 0), 
-						"added" => $comment_row[5]
-					));
-				}
-				
-				$query = 'SELECT * FROM `tblUsers` INNER JOIN `tblUsersLikedArticles` ON `tblUsers`.`id` = `tblUsersLikedArticles`.`user_id` WHERE `tblUsersLikedArticles`.`article_id` = '. $article_row[0] .';';
-				$user_result = mysql_query($query);
-			
-				$user_arr = array();
-				while ($user_row = mysql_fetch_array($user_result, MYSQL_BOTH)) { 				
-					array_push($user_arr, array(
-						"id" => $user_row['id'], 
-						"id_str" => $user_row['twitter_id'], 
-						"screen_name" => $user_row['handle'], 
-						"name" => $user_row['name'], 
-						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
-					)); 
-				}
-								
-				array_push($article_arr, array(
-					"article_id" => $article_row[0], 
-					"list_id" => $topic_row[0], 
-					"topic_name" => $topic_row[1],  
-					"type_id" => $article_row[1], 
-					"title" => $article_row['title'], 
-					"article_url" => $article_row['content_url'], 
-					"short_url" => $article_row['short_url'], 
-					"tweet_id" => $article_row['tweet_id'], 
-					"tweet_msg" => $article_row['tweet_msg'], 
-					"twitter_name" => $article_row['name'], 
-					"twitter_handle" => $article_row['handle'],
-					"content" => $article_row['content_txt'], 
-					"avatar_url" => $article_row['avatar_url'], 
-					"video_url" => $article_row['youtube_id'], 
-					"likes" => $user_arr, 
-					"liked" => false, 
-					"added" => $article_row['created'], 
-					"comments" => $comment_arr, 
-					"images" => $img_arr
-				)); 
-			}
-			
-			$this->sendResponse(200, json_encode($article_arr));
-			return (true);	
-		}
-		
-		function getPopularArticlesBeforeDate($date) {
+		function getMostLikedArticlesBeforeDate($date) {
 			$article_arr = array();
 			
 			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`created` < "'. $date .'" ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
@@ -941,7 +867,7 @@
 						"ratio" => $img_row['ratio']
 					));
 				}
-				
+							
 				$query = 'SELECT * FROM `tblComments` INNER JOIN `tblUsers` ON `tblComments`.`user_id` = `tblUsers`.`id` WHERE `tblComments`.`article_id` = '. $article_row[0] .' ORDER BY `tblComments`.`added` DESC;';
 				$comment_result = mysql_query($query);
 				
@@ -973,10 +899,10 @@
 						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
 					)); 
 				}
-								
+				
 				array_push($article_arr, array(
 					"article_id" => $article_row[0], 
-					"list_id" => $topic_row[0], 
+					"list_id" => $topic_row[0],
 					"topic_name" => $topic_row[1],  
 					"type_id" => $article_row[1], 
 					"title" => $article_row['title'], 
@@ -997,7 +923,6 @@
 				)); 
 			}
 			
-			
 			$this->sendResponse(200, json_encode($article_arr));
 			return (true);
 		}
@@ -1005,10 +930,32 @@
 		function getTopicArticlesBeforeDate($topic_id, $date) {
 			$article_arr = array();
 			
-			if ($topic_id == "10")
-				$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 4 AND `tblArticles`.`created` < "'. $date .'" ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
-			else
-				$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`created` < "'. $date .'" ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+			switch ($topic_id) {
+				case 1:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`itunes_url` LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+					break;
+					
+				case 2:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`itunes_url` LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+					break;
+					
+				case 3:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+					break;
+					
+				case 4:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+				    break;
+				
+				case 10:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 4 ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+					break;
+					
+				default:
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
+					break;
+			}
+			
 			$article_result = mysql_query($query);
 			
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {				
@@ -1104,7 +1051,7 @@
 		function getDiscoveryArticles() {
 			$article_arr = array();
 			
-			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
 			$article_result = mysql_query($query);
 			
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
@@ -1201,7 +1148,7 @@
 		function getDiscoveryArticlesBeforeDate($date) {
 			$article_arr = array();
 			
-			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`created` < "'. $date .'" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+			$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`active` = "Y" AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`created` < "'. $date .'" ORDER BY `tblArticles`.`created` DESC LIMIT 30;';
 			$article_result = mysql_query($query);
 			
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
@@ -1359,17 +1306,13 @@
 				break;
 				
 			case "10":
-				$articles->getPopularArticles();
+				$articles->getMostLikedArticles();
 				break;
 				
 			case "11":
-				if (isset($_POST['articleID']))
-					$articles->getPopularArticlesAfterID($_POST['articleID']);
 				break;
 				 
 			case "12":
-				if (isset($_POST['datetime']))
-					$articles->getPopularArticlesBeforeDate($_POST['datetime']);
 				break;
 				
 			case "13":
@@ -1387,7 +1330,8 @@
 				break;
 				
 		     case "16":
-				$articles->getDiscoveryArticlesBeforeDate($_POST['datetime']);
+				if (isset($_POST['datetime']))
+					$articles->getMostLikedArticlesBeforeDate($_POST['datetime']);
 				break;
     	}
 	}

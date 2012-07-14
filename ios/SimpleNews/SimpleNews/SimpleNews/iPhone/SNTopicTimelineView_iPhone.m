@@ -30,9 +30,6 @@
 - (void)_retrieveTopicList;
 - (void)_updateTopicList;
 
-- (void)_retrievePopularList;
-- (void)_updatePopularList;
-
 - (void)_retrieveProfileListWithType:(int)type;
 @end
 
@@ -242,44 +239,6 @@
 }
 
 
-- (void)_retrievePopularList {
-	if (_articleListResource == nil) {
-		//_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
-		//_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");
-		//_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
-		_progressHUD.mode = MBProgressHUDModeIndeterminate;
-		_progressHUD.graceTime = 2.0;
-		_progressHUD.taskInProgress = YES;
-		
-		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
-		[formValues setObject:[NSString stringWithFormat:@"%d", 10] forKey:@"action"];
-		
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"];
-		self.articleListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0]]; // 1 minute for now
-	}
-}
-
-- (void)_updatePopularList {
-	_updateListResource = nil;
-	
-	if (_updateListResource == nil) {
-		_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
-		//_progressHUD.labelText = [NSString stringWithFormat:@"Assembling %@…", _vo.title];
-		_progressHUD.mode = MBProgressHUDModeIndeterminate;
-		_progressHUD.graceTime = 2.0;
-		_progressHUD.taskInProgress = YES;
-		
-		NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-		[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-		
-		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
-		[formValues setObject:[NSString stringWithFormat:@"%d", 12] forKey:@"action"];
-		[formValues setObject:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
-		
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"];
-		self.updateListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate date]]; // 1 hour expiration for now
-	}
-}
 
 - (void)_retrieveTopicList {
 	if (_articleListResource == nil) {
@@ -382,10 +341,10 @@
 
 - (void)_goLoadMore {
 	
-	if (_vo.topic_id == 0)
-		[self _updatePopularList];
-	
-	else
+//	if (_vo.topic_id == 0)
+//		[self _updatePopularList];
+//	
+//	else
 		[self _updateTopicList];
 	
 	_loadMoreButton.alpha = 0.5;

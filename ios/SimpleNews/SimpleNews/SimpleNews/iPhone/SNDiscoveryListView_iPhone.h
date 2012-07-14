@@ -21,7 +21,7 @@
 	SNPaginationView *_paginationView;
 	SNNavListBtnView *_listBtnView;
 	NSDate *_lastDate;
-	BOOL _isPopularList;
+	BOOL _isTop10List;
 }
 
 @property (nonatomic, retain) UIView *overlayView;

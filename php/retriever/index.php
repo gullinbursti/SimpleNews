@@ -25,7 +25,7 @@ $month_arr = array(
 $search = new TwitterSearch();
 $search->user_agent = 'assembly:staff@getassembly.com';
 
-$query = 'SELECT * FROM `tblTopics` WHERE `active` = "Y" AND `id` = 11;';
+$query = 'SELECT * FROM `tblTopics` WHERE `active` = "Y";';
 $topic_result = mysql_query($query);
 
 $topic_arr = array();
@@ -50,9 +50,9 @@ while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {
 	
 	$keyword_arr = array();
 	while ($keyword_row = mysql_fetch_array($keyword_result, MYSQL_BOTH)) {
-		array_push($hashtag_arr, $keyword_row['title']);
+		array_push($keyword_arr, str_replace("%22", "\"", $keyword_row['title']));
 		
-		$results = $search->with($keyword_row['title'])->results();
+		$results = $search->contains(str_replace("%22", "\"", $keyword_row['title']))->results();
 		foreach ($results as $key => $val) {
 			array_push($search_arr, $results[$key]);
 		}
@@ -63,7 +63,7 @@ while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {
 	
 	$contributor_arr = array();
 	while ($contributor_row = mysql_fetch_array($contributor_result, MYSQL_BOTH)) {
-		array_push($hashtag_arr, $contributor_row['handle']);
+		array_push($contributor_arr, $contributor_row['handle']);
 		
 		$results = $search->from($contributor_row['handle'])->results();
 		foreach ($results as $key => $val) {

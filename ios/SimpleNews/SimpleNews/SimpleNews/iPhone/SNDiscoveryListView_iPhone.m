@@ -27,14 +27,14 @@
 @synthesize refreshListResource = _refreshListResource;
 @synthesize overlayView = _overlayView;
 
-- (id)initWithHeaderTitle:(NSString *)title isTop10:(BOOL)isPopular {
+- (id)initWithHeaderTitle:(NSString *)title isTop10:(BOOL)top10 {
 	if ((self = [super init])) {
 		// Seems like this shouldn't be necessary because a new object won't be observing any notifications
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:@"FULLSCREEN_MEDIA" object:nil];	
 		
 		self.title = title;
 		self.delegate = self;
-		_isPopularList = isPopular;
+		_isTop10List = top10;
 	}
 	return self;
 }
@@ -107,7 +107,12 @@
 		_progressHUD.graceTime = 3.0;
 		
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
-		[formValues setObject:[NSString stringWithFormat:@"%d", 14] forKey:@"action"];
+		
+		if (_isTop10List)
+			[formValues setObject:[NSString stringWithFormat:@"%d", 14] forKey:@"action"];
+		
+		else
+			[formValues setObject:[NSString stringWithFormat:@"%d", 10] forKey:@"action"];
 		
 		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"];
 		self.articleListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0]]; // 1 minute expiration for now
@@ -128,7 +133,7 @@
 		
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
 		
-		if (_isPopularList)
+		if (_isTop10List)
 			[formValues setObject:[NSString stringWithFormat:@"%d", 15] forKey:@"action"];
 		
 		else
