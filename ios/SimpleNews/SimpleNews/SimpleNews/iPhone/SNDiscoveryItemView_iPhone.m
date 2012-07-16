@@ -457,7 +457,7 @@ static CGFloat clamp_alpha(CGFloat alpha)
 		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 		
 		
-		ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"]]];
+		ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI]]];
 		[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		[likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[likeRequest setPostValue:[NSString stringWithFormat:@"%d", article.article_id] forKey:@"articleID"];
@@ -474,7 +474,7 @@ static CGFloat clamp_alpha(CGFloat alpha)
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 	
 	
-	ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"]]];
+	ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI]]];
 	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
 	[likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", article.article_id] forKey:@"articleID"];

@@ -11,6 +11,9 @@ $ts_result = mysql_query("SELECT NOW();") or die("Couldn't get the date from MyS
 $row = mysql_fetch_row($ts_result);
 $sql_time = $row[0];
 
+
+
+
 /*
 $topic_id = $argv[1];
 
@@ -126,6 +129,22 @@ foreach ($handleCSV_arr as $val) {
 echo ("\n[=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=]\n". $argv[1] ."\n");
 */
 
+
+
+/*
+$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblTopicsArticles`.`topic_id` = 3 OR `tblTopicsArticles`.`topic_id` = 4 OR `tblTopicsArticles`.`topic_id` = 10 OR `tblTopicsArticles`.`topic_id` = 11;';
+$result = mysql_query($query);                         
+
+while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
+	echo ("\nID:[". $row['id'] ."] <". $row['title'] .">\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
+	$query = 'UPDATE `tblArticles` SET `title` = "" WHERE `id` = '. $row['id'] .';';
+	$upd_result = mysql_query($query);
+}
+*/
+
+
+
+/*
 $query = 'SELECT * FROM `tblArticles` WHERE `itunes_url` LIKE "http://itunes.apple.com/%";';
 $result = mysql_query($query);
 
@@ -197,4 +216,5 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 	//$query = 'UPDATE `tblArticles` SET `type_id` = '. $type_id .' WHERE `id` = '. $row['id'] .';';
 	//$upd_result = mysql_query($query);
 }
+*/
 ?>

@@ -93,7 +93,7 @@
 		headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"My Friends"];
 		[self.view addSubview:headerView];
 		
-		_myFriendsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users2.php"]]];
+		_myFriendsRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kUsersAPI]]];
 		[_myFriendsRequest setPostValue:[NSString stringWithFormat:@"%d", 4] forKey:@"action"];
 		[_myFriendsRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[_myFriendsRequest setDelegate:self];
@@ -130,7 +130,7 @@
 -(void)_inviteFollower:(NSNotification *)notification {
 	_vo = (SNTwitterUserVO *)[notification object];
 	
-	_friendLookupRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users2.php"]]];
+	_friendLookupRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kUsersAPI]]];
 	[_friendLookupRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 	[_friendLookupRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 	[_friendLookupRequest setPostValue:_vo.twitterID forKey:@"twitterID"];
@@ -279,7 +279,7 @@
 //			((SNTwitterFriendViewCell_iPhone *)[tableView cellForRowAtIndexPath:indexPath]).overlayView.alpha = 0.0;
 //		}];
 		
-		_friendLookupRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Users2.php"]]];
+		_friendLookupRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kUsersAPI]]];
 		[_friendLookupRequest setPostValue:[NSString stringWithFormat:@"%d", 3] forKey:@"action"];
 		[_friendLookupRequest setPostValue:_vo.twitterID forKey:@"twitterID"];
 		[_friendLookupRequest setDelegate:self];

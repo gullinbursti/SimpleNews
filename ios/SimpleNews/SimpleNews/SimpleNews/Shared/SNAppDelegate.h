@@ -29,6 +29,10 @@
 #define kPrivacyPage @"http://107.20.161.159/privacy_policy.htm"
 #define kLiveTweet YES
 
+#define kArticlesAPI @"Articles3.php"
+#define kUsersAPI @"Users2.php"
+#define kTopicsAPI @"Topics2.php"
+
 +(SNAppDelegate *)sharedInstance;
 
 +(void)writeUserProfile:(NSDictionary *)userInfo;

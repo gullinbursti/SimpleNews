@@ -35,7 +35,7 @@
 		}
 		
 		
-		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"]]];
+		_articlesRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI]]];
 		[_articlesRequest setPostValue:[NSString stringWithFormat:@"%d", type] forKey:@"action"];
 		[_articlesRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[_articlesRequest setDelegate:self];

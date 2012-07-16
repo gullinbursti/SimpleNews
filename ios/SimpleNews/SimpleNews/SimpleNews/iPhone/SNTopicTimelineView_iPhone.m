@@ -253,7 +253,7 @@
 		[formValues setObject:[NSString stringWithFormat:@"%d", 8] forKey:@"action"];
 		[formValues setObject:[NSString stringWithFormat:@"%d", _vo.topic_id] forKey:@"topicID"];
 		
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"];
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI];
 		self.articleListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0]]; // 1 minute expiration for now
 	}
 }
@@ -274,7 +274,7 @@
 		[formValues setObject:[NSString stringWithFormat:@"%d", _vo.topic_id] forKey:@"topicID"];
 		[formValues setObject:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
 		
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"];
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI];
 		self.updateListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate date]]; // 1 hour expiration for now
 	}
 }
@@ -310,7 +310,7 @@
 		[formValues setObject:[NSString stringWithFormat:@"%d", type] forKey:@"action"];
 		[formValues setObject:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"];
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI];
 		self.articleListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0]]; // 1 minute for now
 	}
 }

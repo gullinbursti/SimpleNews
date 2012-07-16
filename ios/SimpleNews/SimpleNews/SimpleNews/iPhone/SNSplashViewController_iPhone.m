@@ -111,7 +111,7 @@
 	NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
 	[formValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		
-	NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Topics2.php"];
+	NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kTopicsAPI];
 	self.topicsListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 60.0]]; // 1 hour for now
 }
 
@@ -144,7 +144,7 @@
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
 		[formValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 	
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Topics2.php"];
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kTopicsAPI];
 		self.topicsListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 60.0]]; // 1 hour for now
 	}
 	
@@ -243,7 +243,7 @@
 				NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
 				[formValues setObject:[NSString stringWithFormat:@"%d", 10] forKey:@"action"];
 				
-				NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"];
+				NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI];
 				self.popularArticlesResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 5.0]]; // 5 minutes for now
 			}
 		}

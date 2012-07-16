@@ -114,7 +114,7 @@
 		else
 			[formValues setObject:[NSString stringWithFormat:@"%d", 10] forKey:@"action"];
 		
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"];
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI];
 		self.articleListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0]]; // 1 minute expiration for now
 	}
 }
@@ -141,7 +141,7 @@
 			
 		[formValues setObject:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
 		
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, @"Articles3.php"];
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI];
 		self.refreshListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0]]; // 1 minute expiration for now
 	}
 }
