@@ -20,7 +20,7 @@ unset($_SESSION['oauth_token_secret']);
 
 if ($connection->http_code == 200) {
 	$_SESSION['status'] = 'verified';
-	header('Location: ./index.php');
+	header('Location: ./retweets.php');
 
 } else
-	header('Location: ./index.php');
+	header('Location: ./retweets.php');

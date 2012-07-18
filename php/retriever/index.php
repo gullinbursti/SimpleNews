@@ -83,6 +83,9 @@ while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {
 		));
 	}
 	
+	shuffle($tweet_arr);
+	$tot = 0;
+		
 	foreach($tweet_arr as $key => $val) {
 		
 		$query = 'SELECT `id` FROM `tblContributors` WHERE `handle` = "'. $tweet_arr[$key]['twitter_handle'] .'";';		
@@ -127,13 +130,17 @@ while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {
 					$result = mysql_query($query);
 					
 					echo ("INSERT -> [". $article_id ."][". $tweet_arr[$key]['tweet_id'] ."] (". $created .")\n\"". $tweet_arr[$key]['message'] ."\"\n\n");
+					$tot++;
 				}
 			}
 		
 		} else {
 			$article_row = mysql_fetch_row(mysql_query($query));
 			$article_id = $article_row[0];
-		}	  
+		}
+		
+		if ($tot >= 20)
+			break;
 	}
 }
 
