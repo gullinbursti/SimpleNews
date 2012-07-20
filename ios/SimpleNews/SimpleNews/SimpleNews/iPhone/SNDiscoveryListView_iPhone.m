@@ -133,13 +133,19 @@
 		
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
 		
+//		if (_isTop10List)
+//			[formValues setObject:[NSString stringWithFormat:@"%d", 15] forKey:@"action"];
+//		
+//		else
+//			[formValues setObject:[NSString stringWithFormat:@"%d", 16] forKey:@"action"];
+//			
+//		[formValues setObject:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
+		
 		if (_isTop10List)
-			[formValues setObject:[NSString stringWithFormat:@"%d", 15] forKey:@"action"];
+			[formValues setObject:[NSString stringWithFormat:@"%d", 14] forKey:@"action"];
 		
 		else
-			[formValues setObject:[NSString stringWithFormat:@"%d", 16] forKey:@"action"];
-			
-		[formValues setObject:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
+			[formValues setObject:[NSString stringWithFormat:@"%d", 10] forKey:@"action"];
 		
 		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI];
 		self.refreshListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0]]; // 1 minute expiration for now

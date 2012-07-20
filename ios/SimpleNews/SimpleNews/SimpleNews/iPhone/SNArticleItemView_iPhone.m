@@ -172,30 +172,30 @@
 			}
 			
 			if ([_vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
-				_article1ImgView.frame = CGRectMake(5.0, offset, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:1]).ratio);
-				imgIndicatorView.frame = CGRectMake((_article1ImgView.frame.size.width * 0.5) - 12.0, offset + (_article1ImgView.frame.size.height * 0.5) - 12.0, 24.0, 24.0);
-				
-				
-				imgFrame = CGRectMake(150.0, offset, 145.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:1]).ratio);
-				UIActivityIndicatorView *img2IndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-				img2IndicatorView.frame = CGRectMake(150.0 + (imgFrame.size.width * 0.5) - 12.0, offset + (imgFrame.size.height * 0.5) - 12.0, 24.0, 24.0);
-				[img2IndicatorView startAnimating];
-				[self addSubview:img2IndicatorView];
-				
-				_article2ImgView = [[UIImageView alloc] initWithFrame:imgFrame];
-				[_article2ImgView setBackgroundColor:[UIColor whiteColor]];
-				_article2ImgView.userInteractionEnabled = YES;
-				[self addSubview:_article2ImgView];
-				
-				UIButton *details2Button = [UIButton buttonWithType:UIButtonTypeCustom];
-				details2Button.frame = _article2ImgView.frame;
-				[details2Button addTarget:self action:@selector(_goImage2:) forControlEvents:UIControlEventTouchUpInside];
-				[self addSubview:details2Button];
-				
-				if (_image2Resource == nil) {			
-					self.image2Resource = [[MBLResourceLoader sharedInstance] downloadURL:((SNImageVO *)[_vo.images objectAtIndex:1]).url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
-				}
-				
+//				_article1ImgView.frame = CGRectMake(5.0, offset, 140.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:1]).ratio);
+//				imgIndicatorView.frame = CGRectMake((_article1ImgView.frame.size.width * 0.5) - 12.0, offset + (_article1ImgView.frame.size.height * 0.5) - 12.0, 24.0, 24.0);
+//				
+//				
+//				imgFrame = CGRectMake(150.0, offset, 145.0, 140.0 * ((SNImageVO *)[_vo.images objectAtIndex:1]).ratio);
+//				UIActivityIndicatorView *img2IndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+//				img2IndicatorView.frame = CGRectMake(150.0 + (imgFrame.size.width * 0.5) - 12.0, offset + (imgFrame.size.height * 0.5) - 12.0, 24.0, 24.0);
+//				[img2IndicatorView startAnimating];
+//				[self addSubview:img2IndicatorView];
+//				
+//				_article2ImgView = [[UIImageView alloc] initWithFrame:imgFrame];
+//				[_article2ImgView setBackgroundColor:[UIColor whiteColor]];
+//				_article2ImgView.userInteractionEnabled = YES;
+//				[self addSubview:_article2ImgView];
+//				
+//				UIButton *details2Button = [UIButton buttonWithType:UIButtonTypeCustom];
+//				details2Button.frame = _article2ImgView.frame;
+//				[details2Button addTarget:self action:@selector(_goImage2:) forControlEvents:UIControlEventTouchUpInside];
+//				[self addSubview:details2Button];
+//				
+//				if (_image2Resource == nil) {			
+//					self.image2Resource = [[MBLResourceLoader sharedInstance] downloadURL:((SNImageVO *)[_vo.images objectAtIndex:1]).url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now
+//				}
+//				
 				UIButton *itunesButton = [UIButton buttonWithType:UIButtonTypeCustom];
 				itunesButton.frame = CGRectMake(184.0, offset + _article1ImgView.frame.size.height, 114.0, 44.0);
 				[itunesButton setBackgroundImage:[UIImage imageNamed:@"appStoreBadge.png"] forState:UIControlStateNormal];
@@ -203,8 +203,7 @@
 				//[itunesButton setBackgroundColor:[SNAppDelegate snDebugRedColor]];
 				[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
 				[self addSubview:itunesButton];
-				offset += 37;
-				offset -= 2;
+				offset += 40;
 				
 				if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0) {
 					itunesButton.frame = CGRectMake(184.0, itunesButton.frame.origin.y + 1.0, 114.0, 44.0);

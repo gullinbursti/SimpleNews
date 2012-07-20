@@ -475,12 +475,12 @@
 	//					imgWidth = 296;			
 					
 					if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
-						imgWidth = 145;
-						//height -= 2;
-						height += 37;
+//						imgWidth = 145;
+//						//height -= 2;
+						height += 39;
 						
 						if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0)
-							height -= 2;
+							height++;
 					}
 					
 					if (vo.type_id > 1 && vo.type_id - 4 < 0) {
@@ -530,7 +530,7 @@
 				
 				offset += 17.0;
 				
-				if ([_articles count] == 30 && [_articles count] < 250) {
+				if ([_articles count] >= 10) {
 					_loadMoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
 					_loadMoreButton.frame = CGRectMake(118.0, offset, 84.0, 38.0);
 					[_loadMoreButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
@@ -611,12 +611,12 @@
 				
 				int imgWidth = 290;
 				if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
-					imgWidth = 145;
+//					imgWidth = 145;
 					//height -= 2;
 					height += 37;
 					
-					if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0)
-						height -= 2;
+//					if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0)
+//						height -= 2;
 				}
 				
 				

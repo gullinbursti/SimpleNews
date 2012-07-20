@@ -118,20 +118,9 @@ while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {
 			
 			
 				if (strlen($short_url[0]) > 0) {
-					$ch = curl_init();
-					curl_setopt($ch, CURLOPT_URL, "https://api.twitter.com/1/statuses/show.json?id=". $tweet_arr[$key]['tweet_id']);
-					curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-					$response = curl_exec($ch);
-    				curl_close ($ch);
-    
-					$json_arr = json_decode($response, true);
-					$retweet_count = $json_arr['retweet_count'];
-					
-					
 					$query = 'INSERT INTO `tblArticles` (';
 					$query .= '`id`, `type_id`, `tweet_id`, `contributor_id`, `tweet_msg`, `short_url`, `title`, `content_txt`, `content_url`, `image_url`, `retweets`, `image_ratio`, `youtube_id`, `active`, `created`, `added`) ';
-					$query .= 'VALUES (NULL, "0", "'. $tweet_arr[$key]['tweet_id'] .'", "'. $contributor_id .'", "'. $tweet_arr[$key]['message'] .'", "'. $short_url[0] .'", "", "", "", "", "'. $retweet_count .'", "1.0", "", "N", "'. $created .'", NOW());';	 
+					$query .= 'VALUES (NULL, "0", "'. $tweet_arr[$key]['tweet_id'] .'", "'. $contributor_id .'", "'. $tweet_arr[$key]['message'] .'", "'. $short_url[0] .'", "", "", "", "", "'. $tweet_arr[$key]['retweet_count'] .'", "1.0", "", "N", "'. $created .'", NOW());';	 
 				    $result = mysql_query($query);
 					$article_id = mysql_insert_id();
 					
@@ -140,7 +129,7 @@ while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {
 					$query .= 'VALUES ("'. $topic_row['id'] .'", "'. $article_id .'");';
 					$result = mysql_query($query);
 					
-					echo ("INSERT -> [". $article_id ."][". $tweet_arr[$key]['tweet_id'] ."] (". $created .") >> ". $retweet_count ."\n\"". $tweet_arr[$key]['message'] ."\"\n\n");
+					echo ("INSERT -> [". $article_id ."][". $tweet_arr[$key]['tweet_id'] ."] (". $created .")\n\"". $tweet_arr[$key]['message'] ."\"\n\n");
 					$tot++;
 				}
 			}

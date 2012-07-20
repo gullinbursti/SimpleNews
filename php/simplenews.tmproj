@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>workers/article_worker.php</string>
+	<string>services/Articles3.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
@@ -163,47 +163,47 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>retriever/TwitterSearch.php</key>
+		<key>retriever/app_images.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
+				<integer>6</integer>
+				<key>line</key>
 				<integer>0</integer>
-				<key>line</key>
-				<integer>9</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
-		</dict>
-		<key>retriever/index copy.php</key>
-		<dict>
-			<key>caret</key>
-			<dict>
-				<key>column</key>
-				<integer>3</integer>
-				<key>line</key>
-				<integer>151</integer>
-			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>138</integer>
 		</dict>
 		<key>retriever/index.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>49</integer>
+				<integer>4</integer>
 				<key>line</key>
-				<integer>102</integer>
+				<integer>119</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>65</integer>
+			<integer>119</integer>
+		</dict>
+		<key>retriever/search_test.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>6</integer>
+				<key>line</key>
+				<integer>131</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>100</integer>
 		</dict>
 		<key>services/Articles.php</key>
 		<dict>
@@ -224,28 +224,44 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>181</integer>
+				<integer>383</integer>
 				<key>line</key>
-				<integer>1207</integer>
+				<integer>1008</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>1180</integer>
+			<integer>984</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>339</integer>
+				<key>line</key>
+				<integer>1008</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>383</integer>
+				<key>line</key>
+				<integer>1008</integer>
+			</dict>
 		</dict>
 		<key>services/Articles3.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>40</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>208</integer>
+				<integer>85</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>183</integer>
+			<integer>80</integer>
 		</dict>
 		<key>services/Categories.php</key>
 		<dict>
@@ -333,33 +349,49 @@
 				<integer>258</integer>
 			</dict>
 		</dict>
-		<key>services/Topics2.php</key>
+		<key>services/Users.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>31</integer>
+				<integer>34</integer>
 				<key>line</key>
-				<integer>8</integer>
+				<integer>109</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>84</integer>
 		</dict>
 		<key>services/Users2.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>31</integer>
+				<integer>33</integer>
 				<key>line</key>
-				<integer>8</integer>
+				<integer>111</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>0</integer>
+			<integer>80</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>4</integer>
+				<key>line</key>
+				<integer>107</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>33</integer>
+				<key>line</key>
+				<integer>111</integer>
+			</dict>
 		</dict>
 		<key>signup/_oauth_cfg.php</key>
 		<dict>
@@ -412,30 +444,44 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>15</integer>
+				<integer>134</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>10</integer>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>141</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>134</integer>
+			</dict>
 		</dict>
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>services/Lists.php</string>
-		<string>services/Topics2.php</string>
-		<string>cms/lists.php</string>
 		<string>retriever/index.php</string>
-		<string>retriever/TwitterSearch.php</string>
-		<string>retriever/index copy.php</string>
+		<string>retriever/search_test.php</string>
+		<string>workers/article_worker.php</string>
+		<string>retriever/app_images.php</string>
+		<string>services/Users.php</string>
 		<string>services/Users2.php</string>
 		<string>services/Articles3.php</string>
 		<string>services/Articles2.php</string>
-		<string>workers/article_worker.php</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{889, 352}, {1596, 1041}}</string>
+	<string>{{946, 347}, {1596, 1041}}</string>
 </dict>
 </plist>

@@ -106,8 +106,8 @@
 				
 			} else {
 				$query = 'INSERT INTO `tblUsers` (';
-				$query .= '`id`, `twitter_id`, `handle`, `name`, `device_token`, `added`, `modified`) ';
-				$query .= 'VALUES (NULL, "'. $twitter_id .'", "'. $twitter_handle .'", "", "'. $device_token .'", NOW(), CURRENT_TIMESTAMP);';
+				$query .= '`id`, `type_id`, `twitter_id`, `handle`, `name`, `device_token`, `added`, `modified`) ';
+				$query .= 'VALUES (NULL, "4", "'. $twitter_id .'", "'. $twitter_handle .'", "", "'. $device_token .'", NOW(), CURRENT_TIMESTAMP);';
 				$result = mysql_query($query);
 				$user_id = mysql_insert_id();
 				

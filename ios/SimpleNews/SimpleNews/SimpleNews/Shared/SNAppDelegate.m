@@ -377,14 +377,14 @@ static const BOOL kIsGoogleAnalyticsLive = YES;
 			[defaults setObject:[NSNumber numberWithInt:boot_total] forKey:@"boot_total"];
 			[defaults synchronize];
 			
-			int daysSinceInstall = [[NSDate new] timeIntervalSinceDate:[defaults objectForKey:@"install_date"]] / 86400;
+			int daysSinceInstall = [[NSDate new] timeIntervalSinceDate:[defaults objectForKey:@"install_date"]] / 86400;			
 			if ([[defaults objectForKey:@"boot_total"] intValue] == kLaunchesUntilRateRequest || daysSinceInstall >= kDaysUntilRateRequest) {
 				UIAlertView *alert = [[UIAlertView alloc] 
 											 initWithTitle:@"Rate Assembly" 
 											 message:@"Why not rate Assembly in the app store!" 
 											 delegate:self 
-											 cancelButtonTitle:@"Cancel" 
-											 otherButtonTitles:@"No Thanks", @"Ask Me Later", nil];
+											 cancelButtonTitle:nil 
+											 otherButtonTitles:@"No Thanks", @"Ask Me Later", @"Visit App Store", nil];
 				
 				[alert show];
 			}
@@ -641,11 +641,20 @@ static const BOOL kIsGoogleAnalyticsLive = YES;
 #pragma mark - AlertView delegates
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 	switch(buttonIndex) {
-		case 2:
+		case 0:
 			[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:0] forKey:@"boot_total"];
+			[[NSUserDefaults standardUserDefaults] setObject:[NSDate new] forKey:@"install_date"];
 			[[NSUserDefaults standardUserDefaults] synchronize];
+		
+		case 1:
+			[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:0] forKey:@"boot_total"];
+			[[NSUserDefaults standardUserDefaults] setObject:[NSDate new] forKey:@"install_date"];
+			[[NSUserDefaults standardUserDefaults] synchronize];
+			break;
+			
+		case 2:
 			//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms://itunes.apple.com/us/app/id284417350?mt=8"]];
-			//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms://itunes.com/apps/getassembly"]];
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms://itunes.com/apps/getassembly"]];
 			break;
 	}
 }
