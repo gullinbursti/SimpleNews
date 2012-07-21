@@ -161,7 +161,7 @@
 	// Load the first article image
 	SNImageVO *firstImage = [article.images objectAtIndex:0];
 	int height = 290.0 * firstImage.ratio;
-	int diff = (height > _mainImageHolderView.frame.size.height) ? (_mainImageHolderView.frame.size.height - height) * 0.5 : 0;
+	int diff = (_mainImageHolderView.frame.size.height - height) * 0.5;//(height > _mainImageHolderView.frame.size.height) ? (_mainImageHolderView.frame.size.height - height) * 0.5 : 0;
 	
 	_articleImgView.frame = CGRectMake(0.0, diff, 290.0, 290.0 * firstImage.ratio);
 	self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:firstImage.url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration from now

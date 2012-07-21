@@ -749,6 +749,13 @@
 			$article_result = mysql_query($query);
 			
 			while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
+				$query = 'SELECT * FROM `tblArticleImages` WHERE `article_id` = '. $article_row[0] .';';
+				$img_result = mysql_query($query);
+				$img_row = mysql_fetch_array($img_result, MYSQL_BOTH);
+				
+				if ($img_row['ratio'] < 1.0)
+					continue;
+				
 				$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_row[0] .';';
 				$likes_result = mysql_query($query);
 				$likes_tot = mysql_num_rows($likes_result);

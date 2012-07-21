@@ -480,7 +480,7 @@
 						height += 39;
 						
 						if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0)
-							height++;
+							height--;
 					}
 					
 					if (vo.type_id > 1 && vo.type_id - 4 < 0) {
@@ -489,10 +489,15 @@
 					}
 					
 					
-					if (!(vo.topicID == 8)) {
+					if (vo.topicID == 1 || vo.topicID == 2) {
 						size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:13] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-						height += size.height + 9;
-					}
+						height += size.height + 11;
+					
+					} else if (vo.topicID == 10)
+						height += 6;
+					
+					else
+						height += 4;
 					
 					if (vo.type_id > 3) {
 						height += 217;
@@ -613,10 +618,10 @@
 				if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
 //					imgWidth = 145;
 					//height -= 2;
-					height += 37;
+					height += 39;
 					
-//					if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0)
-//						height -= 2;
+					if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0)
+						height--;
 				}
 				
 				
@@ -625,10 +630,15 @@
 					height += 9; //20
 				}
 				
-				if (!(vo.topicID == 8)) {
+				if (vo.topicID == 1 || vo.topicID == 2) {
 					size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:13] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-					height += size.height + 9;
-				}
+					height += size.height + 11;
+					
+				} else if (vo.topicID == 10)
+					height += 6;
+				
+				else
+					height += 4;
 				
 				if (vo.type_id > 3) {
 					height += 217;

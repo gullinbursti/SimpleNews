@@ -2,46 +2,58 @@
 
 require './_db_open.php'; 
 
-$query = 'SELECT * FROM `tblTopics`;';
+$query = 'SELECT * FROM `tblTopics` WHERE `active` = "Y";';
 $topic_result = mysql_query($query);
 
+
+if (isset($_GET['tID'])) {
+	$topic_id = $_GET['tID'];
+	
+	$query = 'SELECT * FROM `tblHashtags` INNER JOIN `tblTopicsHashtags` ON `tblHashtags`.`id` = `tblTopicsHashtags`.`hashtag_id` INNER JOIN `tblTopics` ON `tblTopicsHashtags`.`topic_id` = `tblTopics`.`id` WHERE `tblTopics`.`id` = '. $topic_id .';';
+	$hashtag_result = mysql_query($query);
+	
+	
+}
+
+
+/*
 if ($_GET['postback'] == "1") {
 	$topic_id = $_POST['selTopics'];
-	$hashtag_arr = explode(',', $_POST['txtHashtags']);
-	
-	/*foreach ($_POST as $key => $val) {
-		echo ("POST['". $key ."'] = '". $val ."'");
-	}*/
-	
-	foreach ($hashtag_arr as $val) {
-		$query = 'SELECT `id` FROM `tblHashtags` WHERE `title` = "'. $val .'";';
+	$keyword_arr = explode(',', $_POST['txtKeywords']);
+		
+	foreach ($keyword_arr as $val) {
+		$query = 'SELECT `id` FROM `tblKeywords` WHERE `title` = "'. $val .'";';
 		$result = mysql_query($query);
 		
 		if (mysql_num_rows($result) == 0) {
-			echo ("Adding hashtag #". $val ."<br />");
-			$query = 'INSERT INTO `tblHashtags` (`id`, `title`, `active`, `added`) VALUES (NULL, "'. $val .'", "Y", NOW());';
+			echo ("Adding keyword \"". $val ."\"<br />");
+			$query = 'INSERT INTO `tblKeywords` (`id`, `title`, `active`, `added`) VALUES (NULL, "'. $val .'", "Y", NOW());';
 			$result = mysql_query($query);
-			$hashtag_id = mysql_insert_id();
+			$keyword_id = mysql_insert_id();
 		
 		} else {   	
 			$row = mysql_fetch_row($result);
-			$hashtag_id = $row[0];
-			echo ("Existing hashtag #". $val ." as [". $hashtag_id ."]<br />");
+			$keyword_id = $row[0];
+			echo ("Existing keyword \"". $val ."\" as [". $keyword_id ."]<br />");
 		}
 		
-		$query = 'SELECT * FROM `tblTopicsHashtags` WHERE `topic_id` = '. $topic_id .' AND `hashtag_id` = '. $hashtag_id .';';
+		$query = 'SELECT * FROM `tblTopicsKeywords` WHERE `topic_id` = '. $topic_id .' AND `keyword_id` = '. $keyword_id .';';
 		if (mysql_num_rows(mysql_query($query)) == 0) {
-			$query = 'INSERT INTO `tblTopicsHashtags` (`topic_id`, `hashtag_id`) VALUES ("'. $topic_id .'", "'. $hashtag_id .'")';
+			$query = 'INSERT INTO `tblTopicsKeywords` (`topic_id`, `keyword_id`) VALUES ("'. $topic_id .'", "'. $keyword_id .'")';
 			$result = mysql_query($query);
-			echo ("Inserting hashtag #". $val ." for topic [". $topic_id ."]<br />");
+			echo ("Inserting keyword \"". $val ."\" for topic [". $topic_id ."]<br />");
 		
 		} else {
-			echo ("Topic [". $topic_id ."] already has hashtag #". $val ."<br />");
+			echo ("Topic [". $topic_id ."] already has keyword \"". $val ."\"<br />");
 		}
 	}
 	
 	echo ("<hr />");
+
+} else {
+	
 }
+*/
         
 ?>
 
@@ -58,16 +70,33 @@ if ($_GET['postback'] == "1") {
 		<a href="./hashtags.php">hashtags</a><br />
 		<a href="./contributors.php">handles</a><br />
 		<hr />
-		<form id="frmHashtags" name="frmHashtags" method="post" action="./hashtags.php?postback=1">
-		Topics:<br /><select id="selTopics" name="selTopics">
+		Topics:<br />
+		<select id="selTopics" name="selTopics">
+		<option value="">Select a topic…</option>
 		<?php while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {
-			echo ("<option value=\"". $topic_row['id'] ."\">[". $topic_row['id'] ."] ". $topic_row['title'] ."</option>");
+			
+			if ($topic_id == $topic_row['id'])
+				echo ("<option value=\"". $topic_row['id'] ."\" selected>[". $topic_row['id'] ."] ". $topic_row['title'] ."</option>");
+				
+			else
+				echo ("<option value=\"". $topic_row['id'] ."\">[". $topic_row['id'] ."] ". $topic_row['title'] ."</option>");
 		}
 		?></select><br />
-		Hashtags:<br />
-		<textarea id="txtHashtags" name="txtHashtags" rows="3" cols="80"></textarea><br />
-		<input type="submit" />
-	</form></body>
+		<hr />	
+		<form id="frmHashtags" name="frmHashtags" method="post" action="./hashtags.php?postback=1">
+			<?php while ($hashtag_row = mysql_fetch_array($hashtag_result, MYSQL_BOTH)) {
+				echo ("#". $hashtag_row[1] ."<br />");
+			} ?>
+			<!--<input type="submit" />-->
+		</form>
+	</body>
+	<script type="text/javascript">
+		var objTopics = document.getElementById("selTopics");
+		objTopics.onchange = function() {
+			if (this.selectedIndex > 0)
+				location.href = "./hashtags.php?tID=" + this.options[this.selectedIndex].value;
+		}
+	</script>
 </html>
 
 

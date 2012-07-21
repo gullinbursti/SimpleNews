@@ -2,48 +2,58 @@
 
 require './_db_open.php'; 
 
-$query = 'SELECT * FROM `tblTopics`;';
+$query = 'SELECT * FROM `tblTopics` WHERE `active` = "Y";';
 $topic_result = mysql_query($query);
 
+
+if (isset($_GET['tID'])) {
+	$topic_id = $_GET['tID'];
+	
+	$query = 'SELECT * FROM `tblContributors` INNER JOIN `tblTopicsContributors` ON `tblContributors`.`id` = `tblTopicsContributors`.`contributor_id` INNER JOIN `tblTopics` ON `tblTopicsContributors`.`topic_id` = `tblTopics`.`id` WHERE `tblTopics`.`id` = '. $topic_id .';';
+	$contributor_result = mysql_query($query);
+	
+	
+}
+
+
+/*
 if ($_GET['postback'] == "1") {
 	$topic_id = $_POST['selTopics'];
-	$contributor_arr = explode(',', $_POST['txtContributors']);
-	
-	/*foreach ($_POST as $key => $val) {
-		echo ("POST['". $key ."'] = '". $val ."'");
-	}*/
-	
-	foreach ($contributor_arr as $val) {
-		$query = 'SELECT `id` FROM `tblContributors` WHERE `handle` = "'. $val .'";';
+	$keyword_arr = explode(',', $_POST['txtKeywords']);
+		
+	foreach ($keyword_arr as $val) {
+		$query = 'SELECT `id` FROM `tblKeywords` WHERE `title` = "'. $val .'";';
 		$result = mysql_query($query);
 		
 		if (mysql_num_rows($result) == 0) {
-			echo ("Adding contributor @". $val ."<br />");
-			$query = 'INSERT INTO `tblContributors` (';
-			$query .= '`id`, `handle`, `name`, `avatar_url`, `type_id`, `active`, `added`) VALUES (';
-			$query .='NULL, "'. $val .'", "'. $val .'", "https://api.twitter.com/1/users/profile_image?screen_name='. $val .'&size=reasonably_small", "1", "Y", NOW());';
+			echo ("Adding keyword \"". $val ."\"<br />");
+			$query = 'INSERT INTO `tblKeywords` (`id`, `title`, `active`, `added`) VALUES (NULL, "'. $val .'", "Y", NOW());';
 			$result = mysql_query($query);
-			$contributor_id = mysql_insert_id();
+			$keyword_id = mysql_insert_id();
 		
 		} else {   	
 			$row = mysql_fetch_row($result);
-			$contributor_id = $row[0];
-			echo ("Existing contributor @". $val ." as [". $contributor_id ."]<br />");
+			$keyword_id = $row[0];
+			echo ("Existing keyword \"". $val ."\" as [". $keyword_id ."]<br />");
 		}
 		
-		$query = 'SELECT * FROM `tblTopicsContributors` WHERE `topic_id` = '. $topic_id .' AND `contributor_id` = '. $contributor_id .';';
+		$query = 'SELECT * FROM `tblTopicsKeywords` WHERE `topic_id` = '. $topic_id .' AND `keyword_id` = '. $keyword_id .';';
 		if (mysql_num_rows(mysql_query($query)) == 0) {
-			$query = 'INSERT INTO `tblTopicsContributors` (`topic_id`, `contributor_id`) VALUES ("'. $topic_id .'", "'. $contributor_id .'")';
+			$query = 'INSERT INTO `tblTopicsKeywords` (`topic_id`, `keyword_id`) VALUES ("'. $topic_id .'", "'. $keyword_id .'")';
 			$result = mysql_query($query);
-			echo ("Inserting contributor @". $val ." for topic [". $topic_id ."]<br />");
+			echo ("Inserting keyword \"". $val ."\" for topic [". $topic_id ."]<br />");
 		
 		} else {
-			echo ("Topic [". $topic_id ."] already has contributor @". $val ."<br />");
+			echo ("Topic [". $topic_id ."] already has keyword \"". $val ."\"<br />");
 		}
 	}
 	
 	echo ("<hr />");
+
+} else {
+	
 }
+*/
         
 ?>
 
@@ -60,17 +70,34 @@ if ($_GET['postback'] == "1") {
 		<a href="./hashtags.php">hashtags</a><br />
 		<a href="./contributors.php">handles</a><br />
 		<hr />
-		<form id="frmContributors" name="frmContributors" method="post" action="./contributors.php?postback=1">
-		Topics:<br /><select id="selTopics" name="selTopics">
+		Topics:<br />
+		<select id="selTopics" name="selTopics">
+		<option value="">Select a topic…</option>
 		<?php while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {
-			echo ("<option value=\"". $topic_row['id'] ."\">[". $topic_row['id'] ."] ". $topic_row['title'] ."</option>");
+			
+			if ($topic_id == $topic_row['id'])
+				echo ("<option value=\"". $topic_row['id'] ."\" selected>[". $topic_row['id'] ."] ". $topic_row['title'] ."</option>");
+				
+			else
+				echo ("<option value=\"". $topic_row['id'] ."\">[". $topic_row['id'] ."] ". $topic_row['title'] ."</option>");
 		}
 		?></select><br />
-		Twitter Handles:<br />
-		<textarea id="txtContributors" name="txtContributors" rows="3" cols="80"></textarea>
-		<input type="submit" />
-	</form></body>
+		<hr />	
+		<form id="frmContributors" name="frmContributors" method="post" action="./contributors.php?postback=1">
+			<?php while ($contributor_row = mysql_fetch_array($contributor_result, MYSQL_BOTH)) {
+				echo ("@". $contributor_row[1] ."<br />");
+			} ?>
+			<!--<input type="submit" />-->
+		</form>
+	</body>
+	<script type="text/javascript">
+		var objTopics = document.getElementById("selTopics");
+		objTopics.onchange = function() {
+			if (this.selectedIndex > 0)
+				location.href = "./contributors.php?tID=" + this.options[this.selectedIndex].value;
+		}
+	</script>
 </html>
 
 
-<?php require './_db_close.php'; ?> 
+<?php require './_db_close.php'; ?>

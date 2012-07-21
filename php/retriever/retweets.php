@@ -6,80 +6,48 @@ require './_db_open.php';
 require_once('twitteroauth.php');
 require_once('_oauth_cfg.php');
 require_once('TwitterSearch.php');
-// /var/lib/php/session/
 
-$access_token = $_SESSION['access_token'];
-$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $access_token['oauth_token'], $access_token['oauth_token_secret']);
-$tweetProfile_obj = $connection->get('account/verify_credentials');
+$query = 'SELECT * FROM `tblArticles` WHERE `retweets` > 0 AND `active` = "Y";';
+$result = mysql_query($query);                         
 
-/*
-$friend_arr = array();
-$tweetLookup_obj = $connection->get('friends/ids', array('screen_name' => 'andvari'));	
-foreach ($tweetLookup_obj->ids as $key => $val) {
-	print_r ("IDS:[". $val ."]");
-}
-*/
-
-?>
-
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<meta http-equiv="Content-language" value="en" />
-	</head>
+while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
+	$query = 'SELECT `user_id` FROM `tblUsersLikedArticles` WHERE `article_id` = "'. $row['id'] .'";';
+	$like_result = mysql_query($query);
 	
-	<body>
-		<?php if (empty($_SESSION['access_token'])) {
-			echo ("<a href=\"./redirect.php\">Sign in</a>");
+	if (mysql_num_rows($like_result) == 0) {
+		echo ("\nID:[". $row['id'] ."] <". $row['title'] .">\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
+		$tot = min($row['retweets'], rand(10, 15));
 		
-		} else {
-			echo ("Signed into Twitter as @". $tweetProfile_obj->screen_name ." <a href=\"./signout.php\">Signout</a>");
-		} ?><hr />   
-	</body>
-</html>
-
-<?php require './_db_close.php'; ?>
-
-
-
-<?php
-	//print_r($tweet_obj);
-
-	//$content = $connection->get('account/rate_limit_status');
-	//echo "Current API hits remaining: {$content->remaining_hits}.";
-
-/*
-	$tweet_obj = $connection->get('friends/ids', array('screen_name' => $handle));
-	$follower_tot = count($tweet_obj->ids);
-
-	$id_arr = array();
-	foreach ($tweet_obj->ids as $key => $val)
-		array_push($id_arr, $val);
-	
-
-	$paged_arr = array_chunk($id_arr, 100);
-	$follower_arr = array();
-
-	for ($i=0; $i<count($paged_arr); $i++) {
-		$id_str = "";
-	
-		foreach ($paged_arr[$i] as $val)
-			$id_str .= $val .",";	
-	
-		$id_str = substr_replace($id_str, "", -1);
-		$tweet_obj = $connection->get('users/lookup', array('user_id' => $id_str));
-	
-		foreach ($tweet_obj as $key => $val) {
-			array_push($follower_arr, array(
-				"id" => $tweet_obj[$key]->id_str, 
-				"name" => $tweet_obj[$key]->name, 
-				"handle" => $tweet_obj[$key]->screen_name,  
-				"avatar" => str_replace("_normal.", "_reasonably_small.", $tweet_obj[$key]->profile_image_url), 
-				"info" => $tweet_obj[$key]->description
-			));
+		for ($i=0; $i<$tot; $i++) {
+			$range_result = mysql_query(" SELECT MAX(`id`) AS max_id , MIN(`id`) AS min_id FROM `tblContributors`");
+			$range_row = mysql_fetch_object($range_result); 
+			$id_rnd = mt_rand($range_row->min_id , $range_row->max_id);
+			$query = "SELECT * FROM `tblContributors` WHERE `id` >= $id_rnd LIMIT 0,1";
+			$contrib_row = mysql_fetch_row(mysql_query($query));
+			
+			$query = 'SELECT `id` FROM `tblUsers` WHERE `handle` = "'. $contrib_row[1] .'";';
+			$user_result = mysql_query($query);
+						
+			if (mysql_num_rows($user_result) == 0) {
+				$query = 'INSERT INTO `tblUsers` (';
+				$query .= '`id`, `type_id`, `twitter_id`, `handle`, `name`, `device_token`, `added`, `modified`) ';
+				$query .= 'VALUES (NULL, "5", "0", "'. $contrib_row[1] .'", "", "", NOW(), CURRENT_TIMESTAMP);';
+				$ins_result = mysql_query($query);
+				$user_id = mysql_insert_id();
+			
+		   	} else {
+				$user_row = mysql_fetch_row($user_result);
+				$user_id = $user_row[0];
+			}
+		
+			$query = 'INSERT INTO `tblUsersLikedArticles` (`user_id`, `article_id`, `added`) VALUES ('. $user_id .', '. $row['id'] .', NOW());';
+		    $like_result = mysql_query($query);
+		
+			echo ("ADD LIKE FROM: @". $contrib_row[1] ."\n"); 
 		}
 	}
-*/	
+}  
+
+require './_db_close.php';
+
 ?>

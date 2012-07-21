@@ -2,17 +2,25 @@
 
 require './_db_open.php'; 
 
-$query = 'SELECT * FROM `tblTopics`;';
+$query = 'SELECT * FROM `tblTopics` WHERE `active` = "Y";';
 $topic_result = mysql_query($query);
 
+
+if (isset($_GET['tID'])) {
+	$topic_id = $_GET['tID'];
+	
+	$query = 'SELECT * FROM `tblKeywords` INNER JOIN `tblTopicsKeywords` ON `tblKeywords`.`id` = `tblTopicsKeywords`.`keyword_id` INNER JOIN `tblTopics` ON `tblTopicsKeywords`.`topic_id` = `tblTopics`.`id` WHERE `tblTopics`.`id` = '. $topic_id .';';
+	$keyword_result = mysql_query($query);
+	
+	
+}
+
+
+/*
 if ($_GET['postback'] == "1") {
 	$topic_id = $_POST['selTopics'];
 	$keyword_arr = explode(',', $_POST['txtKeywords']);
-	
-	/*foreach ($_POST as $key => $val) {
-		echo ("POST['". $key ."'] = '". $val ."'");
-	}*/
-	
+		
 	foreach ($keyword_arr as $val) {
 		$query = 'SELECT `id` FROM `tblKeywords` WHERE `title` = "'. $val .'";';
 		$result = mysql_query($query);
@@ -41,7 +49,11 @@ if ($_GET['postback'] == "1") {
 	}
 	
 	echo ("<hr />");
+
+} else {
+	
 }
+*/
         
 ?>
 
@@ -58,16 +70,34 @@ if ($_GET['postback'] == "1") {
 		<a href="./hashtags.php">hashtags</a><br />
 		<a href="./contributors.php">handles</a><br />
 		<hr />
-		<form id="frmKeywords" name="frmKeywords" method="post" action="./keywords.php?postback=1">
-		Topics:<br /><select id="selTopics" name="selTopics">
+		Topics:<br />
+		<select id="selTopics" name="selTopics">
+		<option value="">Select a topic…</option>
 		<?php while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {
-			echo ("<option value=\"". $topic_row['id'] ."\">[". $topic_row['id'] ."] ". $topic_row['title'] ."</option>");
+			
+			if ($topic_id == $topic_row['id'])
+				echo ("<option value=\"". $topic_row['id'] ."\" selected>[". $topic_row['id'] ."] ". $topic_row['title'] ."</option>");
+				
+			else
+				echo ("<option value=\"". $topic_row['id'] ."\">[". $topic_row['id'] ."] ". $topic_row['title'] ."</option>");
 		}
 		?></select><br />
-		Keywords:<br />
-		<textarea id="txtKeywords" name="txtKeywords" rows="3" cols="80"></textarea>
-		<input type="submit" />
-	</form></body>
+		<hr />	
+		<form id="frmKeywords" name="frmKeywords" method="post" action="./keywords.php?postback=1">
+			<?php while ($keyword_row = mysql_fetch_array($keyword_result, MYSQL_BOTH)) {
+				$keyword_title = str_replace("%22", "\"", $keyword_row[1]);
+				echo ($keyword_title ."<br />");
+			} ?>
+			<!--<input type="submit" />-->
+		</form>
+	</body>
+	<script type="text/javascript">
+		var objTopics = document.getElementById("selTopics");
+		objTopics.onchange = function() {
+			if (this.selectedIndex > 0)
+				location.href = "./keywords.php?tID=" + this.options[this.selectedIndex].value;
+		}
+	</script>
 </html>
 
 

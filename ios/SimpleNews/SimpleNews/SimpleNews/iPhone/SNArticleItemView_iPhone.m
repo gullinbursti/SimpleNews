@@ -129,7 +129,7 @@
 		
 		offset += 29;
 		
-		if (!(_vo.topicID == 8)) {
+		if (_vo.topicID == 1 || _vo.topicID == 2) {
 			size = [_vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:13] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
 			UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(5.0, offset, 260.0, size.height)];
 			titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:13];

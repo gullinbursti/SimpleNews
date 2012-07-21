@@ -976,8 +976,8 @@
 		} else {
 			TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
 			
-			[twitter addURL:[NSURL URLWithString:_articleVO.article_url]];
-			[twitter setInitialText:[NSString stringWithFormat:@"%@ via @getassembly", _articleVO.title]];
+			//[twitter addURL:[NSURL URLWithString:_articleVO.article_url]];
+			[twitter setInitialText:[NSString stringWithFormat:@"%@ via @getassembly %@", _articleVO.title, _articleVO.article_url]];
 			[self presentModalViewController:twitter animated:YES];
 			
 			twitter.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
