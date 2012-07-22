@@ -184,7 +184,7 @@
 	// Update twitter avatars
 	NSMutableArray *twitterAvatars = [NSMutableArray array];
 	if (article.totalLikes > 0) {
-		int offset2 = 18;
+		int offset2 = 19;
 		int tot = 0;
 		for (SNTwitterUserVO *tuVO in article.userLikes) {
 			if ([tuVO.twitterID isEqualToString:[[SNAppDelegate profileForUser] objectForKey:@"twitter_id"]]) {
@@ -198,7 +198,7 @@
 			if (tot < 9) {
 				SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 331.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
 				[twitterAvatars addObject:avatarView];
-				offset2 += 31.0;
+				offset2 += 32.0;
 			}
 			tot++;
 		}
