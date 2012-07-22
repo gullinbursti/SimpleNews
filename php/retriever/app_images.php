@@ -19,8 +19,12 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 } 
 */
 
+$start_date = "0000-00-00 00:00:00";
+if (isset($argv[1]))
+	$start_date = $argv[1];
+	
 
-$query = 'SELECT * FROM `tblArticles` WHERE `itunes_url` LIKE "http://itunes.apple.com/%";';
+$query = 'SELECT * FROM `tblArticles` WHERE `itunes_url` LIKE "http://itunes.apple.com/%" AND `added` >= "'. $start_date .'";';
 $result = mysql_query($query);
 
 while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {

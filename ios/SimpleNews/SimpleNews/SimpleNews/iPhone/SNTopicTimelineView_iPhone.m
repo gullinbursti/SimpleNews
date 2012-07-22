@@ -340,14 +340,9 @@
 }
 
 - (void)_goLoadMore {
-	
-//	if (_vo.topic_id == 0)
-//		[self _updatePopularList];
-//	
-//	else
-		[self _updateTopicList];
-	
+	_updateListResource = nil;
 	_loadMoreButton.alpha = 0.5;
+	[self _updateTopicList];
 }
 
 - (void)_goShow {
@@ -533,7 +528,7 @@
 //					}
 				}
 				
-				offset += 17.0;
+				offset += 12.0;
 				
 				if ([_articles count] >= 10) {
 					_loadMoreButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -687,7 +682,7 @@
 			
 			[_articles addObjectsFromArray:list];
 			
-			offset += 17.0;
+			offset += 12.0;
 			
 			if ([_articles count] < 250) {
 				_loadMoreButton.alpha = 1.0;
@@ -697,7 +692,7 @@
 			[_activityIndicatorView removeFromSuperview];
 			[_loaderLabel removeFromSuperview];
 			
-			offset += 50.0;
+			offset += 57.0;
 			_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
 			
 			if ([_articles count] > 0) {

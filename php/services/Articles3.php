@@ -153,7 +153,7 @@
 					array_push($comment_arr, array(
 						"comment_id" => $comment_row[0], 
 						"handle" => $comment_row['handle'], 
-						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=normal", 
 						"content" => $comment_row['content'], 
 						"liked" => (mysql_num_rows($liked_result) > 0), 
 						"added" => $comment_row[5]
@@ -170,7 +170,7 @@
 						"id_str" => $user_row['twitter_id'], 
 						"screen_name" => $user_row['handle'], 
 						"name" => $user_row['name'], 
-						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=normal"
 					)); 
 				}
 				
@@ -268,7 +268,7 @@
 					array_push($comment_arr, array(
 						"comment_id" => $comment_row[0], 
 						"handle" => $comment_row['handle'], 
-						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=normal", 
 						"content" => $comment_row['content'], 
 						"liked" => (mysql_num_rows($liked_result) > 0), 
 						"added" => $comment_row[5]
@@ -285,7 +285,7 @@
 						"id_str" => $user_row['twitter_id'], 
 						"screen_name" => $user_row['handle'], 
 						"name" => $user_row['name'], 
-						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=normal"
 					)); 
 				}
 				
@@ -330,7 +330,7 @@
 				array_push($comment_arr, array(
 					"comment_id" => $comment_row[0], 
 			      	"handle" => $comment_row['handle'], 
-				   	"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+				   	"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=normal", 
 				   	"content" => $comment_row['content'], 
 					"liked" => (mysql_num_rows($article_result) > 0), 
 				   	"added" => $comment_row[5]
@@ -361,7 +361,7 @@
 			$this->sendResponse(200, json_encode(array(
 				"comment_id" => $comment_id, 
 		      	"handle" => $comment_row[8], 
-			   	"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row[8] ."&size=reasonably_small", 
+			   	"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row[8] ."&size=normal", 
 			   	"content" => $comment_row[4], 
 				"liked" => (int)$isLiked, 
 			   	"added" => $comment_row[5]
@@ -475,7 +475,7 @@
 					array_push($comment_arr, array(
 						"comment_id" => $comment_row[0], 
 						"handle" => $comment_row['handle'], 
-						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=normal", 
 						"content" => $comment_row['content'], 
 						"liked" => (mysql_num_rows($liked_result) > 0), 
 						"added" => $comment_row[5]
@@ -492,7 +492,7 @@
 						"id_str" => $user_row['twitter_id'], 
 						"screen_name" => $user_row['handle'], 
 						"name" => $user_row['name'], 
-						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=normal"
 					)); 
 				}
 			    
@@ -509,10 +509,10 @@
 					"twitter_name" => $article_row[19], 
 					"twitter_handle" => $article_row[18],
 					"content" => $article_row[7], 
-					"avatar_url" => $article_row[19], 
-					"video_url" => $article_row[11], 
+					"avatar_url" => $article_row[20], 
+					"video_url" => $article_row[12], 
 					"likes" => $user_arr, 
-					"added" => $article_row[14], 
+					"added" => $article_row[15], 
 					"comments" => $comment_arr, 
 					"images" => $img_arr
 				)); 
@@ -596,7 +596,7 @@
 					array_push($comment_arr, array(
 						"comment_id" => $comment_row[0], 
 						"handle" => $comment_row['handle'], 
-						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=normal", 
 						"content" => $comment_row['content'], 
 						"liked" => (mysql_num_rows($liked_result) > 0), 
 						"added" => $comment_row[5]
@@ -613,7 +613,7 @@
 						"id_str" => $user_row['twitter_id'], 
 						"screen_name" => $user_row['handle'], 
 						"name" => $user_row['name'], 
-						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=normal"
 					)); 
 				}
 				
@@ -630,10 +630,10 @@
 					"twitter_name" => $article_row[19], 
 					"twitter_handle" => $article_row[18],
 					"content" => $article_row[7], 
-					"avatar_url" => $article_row[19], 
-					"video_url" => $article_row[11], 
+					"avatar_url" => $article_row[20], 
+					"video_url" => $article_row[13], 
 					"likes" => $user_arr, 
-					"added" => $article_row[14], 
+					"added" => $article_row[15], 
 					"comments" => $comment_arr, 
 					"images" => $img_arr
 				)); 
@@ -673,7 +673,7 @@
 						"ratio" => $img_row['ratio']
 					));
 				}
-				   
+					
 				switch (mysql_num_rows($img_result)) {
 					case 1:
 						array_push($img_arr, $img_arr[0]);						
@@ -694,7 +694,7 @@
 					array_push($comment_arr, array(
 						"comment_id" => $comment_row[0], 
 						"handle" => $comment_row['handle'], 
-						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=normal", 
 						"content" => $comment_row['content'], 
 						"liked" => true, 
 						"added" => $comment_row[5]
@@ -711,7 +711,7 @@
 						"id_str" => $user_row['twitter_id'], 
 						"screen_name" => $user_row['handle'], 
 						"name" => $user_row['name'], 
-						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=normal"
 					)); 
 				}
 				
@@ -728,10 +728,10 @@
 					"twitter_name" => $article_row[19], 
 					"twitter_handle" => $article_row[18],
 					"content" => $article_row[7], 
-					"avatar_url" => $article_row[19], 
-					"video_url" => $article_row[11], 
+					"avatar_url" => $article_row[20], 
+					"video_url" => $article_row[12], 
 					"likes" => $user_arr, 
-					"added" => $article_row[14], 
+					"added" => $article_row[15], 
 					"comments" => $comment_arr, 
 					"images" => $img_arr
 				)); 
@@ -813,7 +813,7 @@
 					array_push($comment_arr, array(
 						"comment_id" => $comment_row[0], 
 						"handle" => $comment_row['handle'], 
-						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=normal", 
 						"content" => $comment_row['content'], 
 						"liked" => (mysql_num_rows($liked_result) > 0), 
 						"added" => $comment_row[5]
@@ -830,7 +830,7 @@
 						"id_str" => $user_row['twitter_id'], 
 						"screen_name" => $user_row['handle'], 
 						"name" => $user_row['name'], 
-						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=normal"
 					)); 
 				}
 				
@@ -911,7 +911,7 @@
 					array_push($comment_arr, array(
 						"comment_id" => $comment_row[0], 
 						"handle" => $comment_row['handle'], 
-						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=normal", 
 						"content" => $comment_row['content'], 
 						"liked" => (mysql_num_rows($liked_result) > 0), 
 						"added" => $comment_row[5]
@@ -928,7 +928,7 @@
 						"id_str" => $user_row['twitter_id'], 
 						"screen_name" => $user_row['handle'], 
 						"name" => $user_row['name'], 
-						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=normal"
 					)); 
 				}
 				
@@ -1010,7 +1010,7 @@
 					array_push($comment_arr, array(
 						"comment_id" => $comment_row[0], 
 						"handle" => $comment_row['handle'], 
-						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=normal", 
 						"content" => $comment_row['content'], 
 						"liked" => (mysql_num_rows($liked_result) > 0), 
 						"added" => $comment_row[5]
@@ -1027,7 +1027,7 @@
 						"id_str" => $user_row['twitter_id'], 
 						"screen_name" => $user_row['handle'], 
 						"name" => $user_row['name'], 
-						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=normal"
 					)); 
 				}
 				
@@ -1131,7 +1131,7 @@
 					array_push($comment_arr, array(
 						"comment_id" => $comment_row[0], 
 						"handle" => $comment_row['handle'], 
-						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=normal", 
 						"content" => $comment_row['content'], 
 						"liked" => (mysql_num_rows($liked_result) > 0), 
 						"added" => $comment_row[5]
@@ -1148,7 +1148,7 @@
 						"id_str" => $user_row['twitter_id'], 
 						"screen_name" => $user_row['handle'], 
 						"name" => $user_row['name'], 
-						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=normal"
 					)); 
 				}
 				
@@ -1227,7 +1227,7 @@
 					array_push($comment_arr, array(
 						"comment_id" => $comment_row[0], 
 						"handle" => $comment_row['handle'], 
-						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=normal", 
 						"content" => $comment_row['content'], 
 						"liked" => (mysql_num_rows($liked_result) > 0), 
 						"added" => $comment_row[5]
@@ -1244,7 +1244,7 @@
 						"id_str" => $user_row['twitter_id'], 
 						"screen_name" => $user_row['handle'], 
 						"name" => $user_row['name'], 
-						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=normal"
 					)); 
 				}
 				
@@ -1324,7 +1324,7 @@
 					array_push($comment_arr, array(
 						"comment_id" => $comment_row[0], 
 						"handle" => $comment_row['handle'], 
-						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=reasonably_small", 
+						"avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $comment_row['handle'] ."&size=normal", 
 						"content" => $comment_row['content'], 
 						"liked" => (mysql_num_rows($liked_result) > 0), 
 						"added" => $comment_row[5]
@@ -1341,7 +1341,7 @@
 						"id_str" => $user_row['twitter_id'], 
 						"screen_name" => $user_row['handle'], 
 						"name" => $user_row['name'], 
-						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=reasonably_small"
+						"profile_image_url" => "https://api.twitter.com/1/users/profile_image?screen_name=". $user_row['handle'] ."&size=normal"
 					)); 
 				}
 				

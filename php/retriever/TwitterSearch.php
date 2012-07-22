@@ -72,6 +72,9 @@ class TwitterSearch {
 	 * @var boolean
 	 */
 	var $show_user = false;
+	
+	
+	var $tweet_id;
 
 	/**
 	* @param string $query optional
@@ -252,7 +255,7 @@ class TwitterSearch {
 			curl_setopt ($ch, CURLOPT_POSTFIELDS, $postargs);
         }
         
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
         curl_setopt($ch, CURLOPT_NOBODY, 0);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
@@ -296,6 +299,13 @@ class TwitterSearch {
 		}
 		else
 			return false;
+	}
+	
+	function lookup($id) {
+		$this->tweet_id = $id;
+		$request  = 'https://api.twitter.com/1/statuses/show.json?id='. $this->tweet_id;
+		
+		return $this->objectify($this->process($request));
 	}
 }
 

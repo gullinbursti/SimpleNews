@@ -99,10 +99,10 @@
 	//[_scrollView addSubview:_refreshHeaderView];
 	//[_refreshHeaderView refreshLastUpdatedDate];
 	
-	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 42.0, self.view.frame.size.width, 44.0)];
+	_bgView = [[UIView alloc] initWithFrame:CGRectMake(0.0, self.view.frame.size.height - 45.0, self.view.frame.size.width, 46.0)];
 	[self.view addSubview:_bgView];
 	
-	UIImageView *inputBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 2.0, 320.0, 44.0)];
+	UIImageView *inputBgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 46.0)];
 	inputBgImgView.image = [UIImage imageNamed:@"comentsFooterBG.png"];
 	inputBgImgView.userInteractionEnabled = YES;
 	[_bgView addSubview:inputBgImgView];
@@ -114,7 +114,7 @@
 	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	[headerView addSubview:backBtnView];
 		
-	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(15.0, 15.0, 237.0, 16.0)];
+	_commentTxtField = [[UITextField alloc] initWithFrame:CGRectMake(15.0, 14.0, 237.0, 16.0)];
 	[_commentTxtField setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 	[_commentTxtField setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 	[_commentTxtField setAutocorrectionType:UITextAutocorrectionTypeNo];
@@ -137,7 +137,7 @@
 	[_bgView addSubview:_commentsLabel];
 	
 	UIButton *sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	sendButton.frame = CGRectMake(264.0, 6.0, 54.0, 35.0);
+	sendButton.frame = CGRectMake(264.0, 5.0, 54.0, 35.0);
 	[sendButton setBackgroundImage:[[UIImage imageNamed:@"sendCommentButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateNormal];
 	[sendButton setBackgroundImage:[[UIImage imageNamed:@"sendCommentButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
 	[sendButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
@@ -226,7 +226,7 @@
 		[_commentTxtField resignFirstResponder];	
 		
 		[UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void){
-			_bgView.frame = CGRectMake(_bgView.frame.origin.x, self.view.frame.size.height - 42.0, _bgView.frame.size.width, _bgView.frame.size.height);
+			_bgView.frame = CGRectMake(_bgView.frame.origin.x, self.view.frame.size.height - 45.0, _bgView.frame.size.width, _bgView.frame.size.height);
 		} completion:nil];
 		
 		_commentsLabel.hidden = NO;
@@ -237,7 +237,7 @@
 	[sender resignFirstResponder];
 	
 	[UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void){
-		_bgView.frame = CGRectMake(_bgView.frame.origin.x, self.view.frame.size.height - 42.0, _bgView.frame.size.width, _bgView.frame.size.height);
+		_bgView.frame = CGRectMake(_bgView.frame.origin.x, self.view.frame.size.height - 45.0, _bgView.frame.size.width, _bgView.frame.size.height);
 	} completion:nil];
 	
 	_commentsLabel.hidden = NO;
@@ -303,7 +303,7 @@
 	
 	[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseOut animations:^(void){
 		//_scrollView.contentOffset = CGPointMake(0.0, _scrollView.contentSize.height - 250.0);
-		_bgView.frame = CGRectMake(_bgView.frame.origin.x, _bgView.frame.origin.y - 217.0, _bgView.frame.size.width, _bgView.frame.size.height);
+		_bgView.frame = CGRectMake(_bgView.frame.origin.x, _bgView.frame.origin.y - 216.0, _bgView.frame.size.width, _bgView.frame.size.height);
 	} completion:nil];
 }
 
@@ -334,7 +334,7 @@
 	}
 	
 	[UIView animateWithDuration:0.33 delay:0.0 options:UIViewAnimationCurveEaseIn animations:^(void){
-		_bgView.frame = CGRectMake(_bgView.frame.origin.x, self.view.frame.size.height - 44.0, _bgView.frame.size.width, _bgView.frame.size.height);
+		_bgView.frame = CGRectMake(_bgView.frame.origin.x, self.view.frame.size.height - 45.0, _bgView.frame.size.width, _bgView.frame.size.height);
 	} completion:nil];
 	
 	_commentsLabel.hidden = NO;

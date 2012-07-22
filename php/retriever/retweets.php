@@ -7,7 +7,11 @@ require_once('twitteroauth.php');
 require_once('_oauth_cfg.php');
 require_once('TwitterSearch.php');
 
-$query = 'SELECT * FROM `tblArticles` WHERE `retweets` > 0 AND `active` = "Y";';
+$start_date = "0000-00-00 00:00:00";
+if (isset($argv[1]))
+	$start_date = $argv[1];
+	
+$query = 'SELECT * FROM `tblArticles` WHERE `retweets` > 0 AND `active` = "Y" AND `added` >= "'. $start_date .'";';
 $result = mysql_query($query);                         
 
 while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
