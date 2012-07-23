@@ -654,7 +654,7 @@ static const BOOL kIsGoogleAnalyticsLive = YES;
 			
 		case 2:
 			//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms://itunes.apple.com/us/app/id284417350?mt=8"]];
-			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms://itunes.com/apps/getassembly"]];
+			[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms://itunes.apple.com/us/app/id541336885?mt=8"]];
 			break;
 	}
 }

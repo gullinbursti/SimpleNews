@@ -109,7 +109,7 @@
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
 		
 		if (_isTop10List)
-			[formValues setObject:[NSString stringWithFormat:@"%d", 14] forKey:@"action"];
+			[formValues setObject:[NSString stringWithFormat:@"%d", 11] forKey:@"action"];
 		
 		else
 			[formValues setObject:[NSString stringWithFormat:@"%d", 10] forKey:@"action"];
@@ -132,17 +132,9 @@
 		[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 		
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
-		
-//		if (_isTop10List)
-//			[formValues setObject:[NSString stringWithFormat:@"%d", 15] forKey:@"action"];
-//		
-//		else
-//			[formValues setObject:[NSString stringWithFormat:@"%d", 16] forKey:@"action"];
-//			
-//		[formValues setObject:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
-		
+				
 		if (_isTop10List)
-			[formValues setObject:[NSString stringWithFormat:@"%d", 14] forKey:@"action"];
+			[formValues setObject:[NSString stringWithFormat:@"%d", 11] forKey:@"action"];
 		
 		else
 			[formValues setObject:[NSString stringWithFormat:@"%d", 10] forKey:@"action"];
@@ -241,7 +233,6 @@
 			}
 			
 			_articles = list;
-			_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
 			[self configureWithSelectedIndex:0 fromItems:list];
 			
 			_paginationView = [[SNPaginationView alloc] initWithTotal:tot coords:CGPointMake(160.0, 468.0)];
@@ -283,7 +274,6 @@
 			}
 			
 			_articles = list;
-			_lastDate = ((SNArticleVO *)[_articles lastObject]).added;
 			[self configureWithSelectedIndex:0 fromItems:list];
 
 			_paginationView = [[SNPaginationView alloc] initWithTotal:tot coords:CGPointMake(160.0, 468.0)];

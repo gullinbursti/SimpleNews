@@ -20,7 +20,7 @@
 	MBProgressHUD *_progressHUD;
 	SNPaginationView *_paginationView;
 	SNNavListBtnView *_listBtnView;
-	NSDate *_lastDate;
+	//NSDate *_lastDate;
 	BOOL _isTop10List;
 }
 
