@@ -8,63 +8,190 @@ import MySQLdb, readability
 token = readability.xauth('getassembly', 'CutXN5cHHAS8NxnPt3eq9au6hHfvUqcB', 'getassembly', 'assembly')
 rdd = readability.oauth('getassembly', 'CutXN5cHHAS8NxnPt3eq9au6hHfvUqcB', token=token)
 
-# --/ bookmark url
-url = sys.argv[1]
-print url
+conn = MySQLdb.connect (host="localhost", user="db41232_sn_usr", passwd="dope911t", db="assemblyDEV")
+conn.autocommit(True)
+cursor = conn.cursor(MySQLdb.cursors.DictCursor)
 
-# --/ add to readability
-try:
-	b = rdd.add_bookmark(url)
-except ResponseError:
-	print "Article already exists"
+cursor.execute ("SELECT id, short_url, added FROM tblArticles WHERE active = 'N' AND type_id != -1")
+result_set = cursor.fetchall ()
+for row in result_set:
+	print "\nBookmarking: [%s] <%s>..." % (row["id"], row["short_url"])
+	type_id = -1
 
-a = rdd.get_article(b.article.id) 
+	# --/ bookmark url
+	#--url = sys.argv[1]
+	url = row["short_url"]
 
-# --/ article content
-t = a.title
-c = a.content
+	# --/ add to readability
+	try:
+		b = rdd.add_bookmark(url)
+	except readability.api.ResponseError:
+		print "Bookmark already exists for <%s>" % (url)
+		cursor.execute ("""
+    		UPDATE tblArticles SET type_id=%s, active=%s
+    		WHERE id=%s
+    		""", (type_id, "N", row["id"]))
 
-print t
-print c
+		continue
+		
+	except readability.api.BadRequestError:
+		print "Couldn't add bookmark for <%s> - bad syntax" % (url)
+		cursor.execute ("""
+    		UPDATE tblArticles SET type_id=%s, active=%s
+    		WHERE id=%s
+    		""", (type_id, "N", row["id"]))
 
-# --/ extract video
-m = re.compile(r'<iframe src="http://www.youtube.com/embed/(.*?)".*?</iframe>').search(c)
-if m is None:
-	vid = ''
-else:
-	vid = m.group(1)
-	print vid
+		continue
+		
+	except readability.api.ServerError:
+		print "Couldn't add bookmark for <%s> - server error" % (url)
+		cursor.execute ("""
+    		UPDATE tblArticles SET type_id=%s, active=%s
+    		WHERE id=%s
+    		""", (type_id, "N", row["id"]))
 
-# --/ extract image
-m = re.compile(r'<img .*?src="(.*?)".*?>').search(c)
-if m is None:
-	img_url = ''
-else:
-	img_url = m.group(1)
-
-	# --/ open image & get size
-	img = Image.open(cStringIO.StringIO(urllib.urlopen(img_url).read()))
-	img_w, img_h = img.size
-	img_ratio = img_h / float(img_w)
+		continue
+		
+		#-sys.exit()
     
-	print img_url
-	print img.size
-	print img_ratio
+	try:
+		a = rdd.get_article(b.article.id) 
+		
+	except readability.api.ResponseError:
+		print "Couldn't extract article <%s> - invalid API response" % (url)
+		cursor.execute ("""
+    		UPDATE tblArticles SET type_id=%s, active=%s
+    		WHERE id=%s
+    		""", (type_id, "N", row["id"]))
+
+		continue
 	
-c = c.replace('<div>', '')
-c = c.replace('</div>', '')
-c = c.replace('</p><p>'. '\n\n')
-c = c.replace('<em>', '')
-c = c.replace('</em>', '')
-c = c.replace('<p>', '')
-c = c.replace('</p>', '')
+	# --/ article type
+	type_id = 0
+	
+	# --/ article content	
+	t = a.title
+	c = a.content
+	blurb = a.excerpt
+	url = a.url
+	
+	
+	if t == "Processing Article" or t == "(Article Could not be Parsed)":
+		print "Article couldn't be processed for <%s>" % (row["short_url"])
+		cursor.execute ("""
+    		UPDATE tblArticles SET type_id=%s, active=%s
+    		WHERE id=%s
+    		""", (type_id, "N", row["id"]))
+
+		continue
+
+	print "\"%s\" <%s>" % (t, url)
+    
+	# --/ extract video from url
+	m = re.compile(r'.*?www.youtube.com/watch\?v=(.*?)&.*?').search(url)
+	if m is None:
+		vid = ''
+		
+		#--/ extract video from content		
+		m = re.compile(r'<iframe.*?src="http://www.youtube.com/embed/(.*?)\?.*?</iframe>').search(c)
+		if m is None:
+			vid = ''
+		else:
+			vid = m.group(1)
+			print "Found YouTube video [%s]" % (vid)
+			type_id += 4
+		
+	else:
+		vid = m.group(1)
+		print "Found YouTube video [%s]" % (vid)
+		type_id += 4
+		
+		
+	# --/ extract itunes
+	m = re.compile(r'<a href="http://itunes.apple.com/(.*?)".*?</a>').search(c)
+	if m is None:
+		itunes = ''
+	else:
+		itunes = 'http://itunes.apple.com/' + m.group(1)
+		print "Found iTunes link <%s>" % (itunes)
+		
+
+	# --/ extract image
+	#- m = re.compile(r'<img .*?src="(.*?)".*?>').search(c)
+	m = re.findall(r'<img .*?src="(.*?)".*?>', c)
+	img_url = ''
+	img_ratio = 1.0 / float(1.0)
+	
+	for img_src in m:
+		try:
+			print "--Trying image <%s>" % (img_src)
+			img = Image.open(cStringIO.StringIO(urllib.urlopen(img_src).read()))
+			img_w, img_h = img.size
+			
+			if img_src == "http://www.memestache.com/sites/memestache.com//images/builder/loader_top.jpg":
+				cursor.execute ("""
+    				UPDATE tblArticles SET type_id=%s, active=%s
+    				WHERE id=%s
+    				""", (type_id, "N", row["id"]))
+
+				continue
+		
+			if img_w > 400:
+				img_url = img_src
+				type_id += 2
+				img_ratio = img_h / float(img_w)
+				
+				print "Using image <%s> (%f)" % (img_url, img_ratio)
+				break
+				
+		except IOError:
+			print "  --Cannot identify image file for <%s>" % (img_src)
+			cursor.execute ("""
+    			UPDATE tblArticles SET type_id=%s, active=%s
+    			WHERE id=%s
+    			""", (type_id, "N", row["id"]))
+
+			continue 
+		
+	#-if m is None:
+	#-	img_url = ''
+	#-	img_ratio = 1.0 / float(1.0)
+	#-else:
+	#-	
+	#-	img_url = m.group(1)
+	#-	type_id += 2
+
+		# --/ open image & get size
+	#-	img = Image.open(cStringIO.StringIO(urllib.urlopen(img_url).read()))
+	#-	img_w, img_h = img.size
+	#-	img_ratio = img_h / float(img_w)
+    
+	if type_id < 2:
+		print "Writing article as inactive..."
+		
+	else:
+		print "Writing article as ACTIVE..."
+		
+	if type_id >= 2:
+		cursor.execute ("""
+			INSERT INTO tblArticleImages (id, type_id, article_id, url, ratio, added)
+    		VALUES (%s, %s, %s, %s, %s, %s)
+    		""", (None, "1", row["id"], img_url, img_ratio, row["added"]))
+    
+	try:
+		cursor.execute ("""
+    		UPDATE tblArticles SET type_id=%s, title=%s, content_txt=%s, content_url=%s, image_url=%s, image_ratio=%s, youtube_id=%s, itunes_url=%s, active=%s
+    		WHERE id=%s
+    		""", (type_id, t, blurb, url, img_url, img_ratio, vid, itunes, "Y", row["id"]))
+	except UnicodeEncodeError:
+		cursor.execute ("""
+    		UPDATE tblArticles SET type_id=%s, title=%s, content_url=%s, image_url=%s, image_ratio=%s, youtube_id=%s, itunes_url=%s, active=%s
+    		WHERE id=%s
+    		""", (type_id, "Untitled", url, img_url, img_ratio, vid, itunes, "Y", row["id"]))
 
 
-
-#-- conn = MySQLdb.connect (host="localhost", user="db41232_sn_usr", passwd="dope911t", db="assembly")
-#-- cursor = conn.cursor()
-
-
+cursor.close ()
+conn.close ()
 
 
 #-- http://techcrunch.com/2012/04/30/uk-high-court-isps-must-block-the-pirate-bay/
