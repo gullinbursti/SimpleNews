@@ -4,6 +4,44 @@ session_start();
 
 require './_db_open.php'; 
 
+
+$keyVal_arr = array();
+			
+$query = 'SELECT * FROM `tblArticles` WHERE `active` = "Y" AND `type_id` >= 2 AND `retweets` > 0;';
+$article_result = mysql_query($query);
+
+while ($article_row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
+	$query = 'SELECT * FROM `tblArticleImages` WHERE `article_id` = '. $article_row[0] .';';
+	$img_result = mysql_query($query);
+	$img_row = mysql_fetch_array($img_result, MYSQL_BOTH);
+	
+	if ($img_row['ratio'] < 1.0)
+		continue;
+	
+	$query = 'SELECT * FROM `tblUsersLikedArticles` WHERE `article_id` = '. $article_row[0] .';';
+	$likes_result = mysql_query($query);
+	$likes_tot = mysql_num_rows($likes_result);
+	
+	$keyVal_arr[$article_row['id']] = $likes_tot;
+}
+
+arsort($keyVal_arr);
+$article_arr = array();
+$tot = 0;
+
+$query = 'DELETE FROM `tblTopArticles` WHERE `type_id` = 1;';
+$result = mysql_query($query);
+
+foreach ($keyVal_arr as $key => $val) {
+	$query = 'INSERT INTO `tblTopArticles` (`article_id`, `type_id`, `total`) VALUES ('. $key .', 1, '. $val .');';
+	$ins_result = mysql_query($query);
+	
+	$tot++;
+	if ($tot >= 10)
+		break;
+}
+
+/*
 $query = 'SELECT * FROM `tblContributors` WHERE `avatar_url` LIKE "%size=reasonably_small";';
 $result = mysql_query($query);
 
@@ -14,7 +52,7 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 	
 	echo ("UPDATING -> [". $row['id'] ."] @". $row['handle'] ." <". $url .">\n");				
 }
-
+*/
 
 /*
 $start_date = "2012-07-21 00:00:00";

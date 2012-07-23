@@ -23,7 +23,12 @@
 	if ((self = [super initWithFrame:CGRectMake(pos.x, pos.y, 26.0, 26.0)])) {
 		_imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 26.0, 26.0)];
 		[_imgView setBackgroundColor:[UIColor colorWithWhite:0.961 alpha:1.0]];
-		[self addSubview:_imgView];
+		//[self addSubview:_imgView];
+		
+		_egoImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 26.0, 26.0)];
+		[_egoImgView setBackgroundColor:[UIColor colorWithWhite:0.961 alpha:1.0]];
+		_egoImgView.imageURL = [NSURL URLWithString:url];
+		[self addSubview:_egoImgView];
 		
 		_handle = name;
 		_btn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -33,7 +38,7 @@
 		[_btn addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside]; 
 		[self addSubview:_btn];
 		
-		self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 60.0 * 24.0]]; // 1 day expiration
+		//self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 60.0 * 24.0]]; // 1 day expiration
     }
 	
     return (self);

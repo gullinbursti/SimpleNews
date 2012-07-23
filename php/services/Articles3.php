@@ -743,6 +743,7 @@
 		
 		
 		function getMostLikedArticles() {			
+			/*
 			$keyVal_arr = array();
 			
 			$query = 'SELECT * FROM `tblArticles` WHERE `active` = "Y" AND `type_id` >= 2 AND `retweets` > 0;';
@@ -766,12 +767,18 @@
 			arsort($keyVal_arr);
 			$article_arr = array();
 			$tot = 0;
-						
-			foreach ($keyVal_arr as $key => $val) {
-				$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`id` = '. $key .';';
+			*/
+			
+			$query = 'SELECT * FROM `tblTopArticles` ORDER BY `total` DESC;';
+			$top_result = mysql_query($query);
+			
+			$article_arr = array();
+			while ($top_row = mysql_fetch_array($top_result, MYSQL_BOTH)) {
+				$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` WHERE `tblArticles`.`id` = '. $top_row['article_id'] .';';
 				$article_result = mysql_query($query);				
 				$article_row = mysql_fetch_row($article_result);
-				
+						
+			//foreach ($keyVal_arr as $key => $val) {
 				$query = 'SELECT `tblTopics`.`id`, `tblTopics`.`title` FROM `tblTopics` INNER JOIN `tblTopicsArticles` ON `tblTopics`.`id` = `tblTopicsArticles`.`topic_id` WHERE  `tblTopicsArticles`.`article_id` = '. $article_row[0] .";";
 				$topic_row = mysql_fetch_row(mysql_query($query));
 				
@@ -856,10 +863,10 @@
 					"images" => $img_arr
 				));
 				
-				$tot++;
+				//$tot++;
 	
-				if ($tot >= 10)
-					break;
+				//if ($tot >= 10)
+				//	break;
 			}
 			
 			/*

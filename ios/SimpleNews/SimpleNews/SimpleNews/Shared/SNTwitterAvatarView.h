@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 
 #import "MBLAsyncResource.h"
+#import "EGOImageView.h"
 
 @interface SNTwitterAvatarView : UIView {
 	UIImageView *_imgView;
+	EGOImageView *_egoImgView;
 	UIButton *_btn;
 	NSString *_handle;
 }

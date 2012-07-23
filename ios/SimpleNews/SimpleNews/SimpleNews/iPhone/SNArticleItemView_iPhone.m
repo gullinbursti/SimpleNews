@@ -203,7 +203,7 @@
 				//[itunesButton setBackgroundColor:[SNAppDelegate snDebugRedColor]];
 				[itunesButton addTarget:self action:@selector(_goAppStore) forControlEvents:UIControlEventTouchUpInside];
 				[self addSubview:itunesButton];
-				offset += 40;
+				offset += 42;
 				
 				if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0) {
 					itunesButton.frame = CGRectMake(184.0, itunesButton.frame.origin.y + 1.0, 114.0, 44.0);
