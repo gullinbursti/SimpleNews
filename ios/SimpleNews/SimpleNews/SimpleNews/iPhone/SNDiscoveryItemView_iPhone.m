@@ -456,6 +456,8 @@ static CGFloat clamp_alpha(CGFloat alpha)
 		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 		
+		NSString *likeImg = (article.totalLikes > 0) ? @"leftBottomUI_Active.png" : @"leftBottomUIB_Active.png";		
+		[_likeButton setBackgroundImage:[UIImage imageNamed:likeImg] forState:UIControlStateNormal];
 		
 		ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI]]];
 		[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
@@ -472,7 +474,7 @@ static CGFloat clamp_alpha(CGFloat alpha)
 	SNArticleVO *article = [self article];
 	[_likeButton removeTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
-	
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
 	
 	ASIFormDataRequest *likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI]]];
 	[likeRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
@@ -694,11 +696,6 @@ static CGFloat clamp_alpha(CGFloat alpha)
 		
 		NSString *likeCaption = (article.hasLiked) ? @"Liked" : @"Like";
 		[_likeButton setTitle:likeCaption forState:UIControlStateNormal];
-		NSString *likeImg = (article.hasLiked) ? @"leftBottomUIB_Active.png" : @"";
-		if (article.totalLikes > 1)
-			likeImg = @"leftBottomUI_Active.png";
-		
-		[_likeButton setBackgroundImage:[UIImage imageNamed:likeImg] forState:UIControlStateNormal];
 	}
 }
 

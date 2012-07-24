@@ -95,10 +95,10 @@
 				
 				$user_arr = array(
 					"id" => $row[0], 
-					"twitter_id" => $row[1], 
-					"handle" => $row[2], 
-					"name" => $row[3], 
-					"token" => $row[4]					
+					"twitter_id" => $row[2], 
+					"handle" => $row[3], 
+					"name" => $row[4], 
+					"token" => $row[5]					
 				);
 				
 				$query = 'UPDATE `tblUsers` SET `modified` = CURRENT_TIMESTAMP WHERE `id` ='. $row[0] .';';

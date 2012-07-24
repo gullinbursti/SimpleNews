@@ -154,10 +154,10 @@
 		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
 		[self addSubview:_scrollView];
 		
-		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
-		_refreshHeaderView.delegate = self;
-		[_scrollView addSubview:_refreshHeaderView];
-		[_refreshHeaderView refreshLastUpdatedDate];
+//		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
+//		_refreshHeaderView.delegate = self;
+//		[_scrollView addSubview:_refreshHeaderView];
+//		[_refreshHeaderView refreshLastUpdatedDate];
 		
 		
 		SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:_vo.title];
@@ -692,7 +692,7 @@
 			[_activityIndicatorView removeFromSuperview];
 			[_loaderLabel removeFromSuperview];
 			
-			offset += 57.0;
+			offset += 60.0;
 			_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
 			
 			if ([_articles count] > 0) {

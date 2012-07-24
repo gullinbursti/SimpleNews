@@ -1,0 +1,41 @@
+#!/bin/bash
+
+cnt=0
+
+start_time=`date +%Y-%m-%d\ %H-%M-%S`
+
+#-- grab tweets
+while [ $cnt -eq 0 ]; do
+	echo "TWEET GRAB [`date +%Y-%m-%d\ %H-%M-%S`]" >> /usr/local/bin/update_logs/timestamps.txt
+	cd /var/www/html/retriever && php index.php
+	cnt=$((cnt + 1))
+done
+
+#-- run thru readability
+while [ $cnt -eq 1 ]; do
+	echo "READABILITY [`date +%Y-%m-%d\ %H-%M-%S`]" >> /usr/local/bin/update_logs/timestamps.txt
+	cd /usr/local/scp && python readability_api.py
+	cnt=$((cnt + 1))
+done
+
+#-- get app store images
+while [ $cnt -eq 2 ]; do
+	echo "APP IMAGES [`date +%Y-%m-%d\ %H-%M-%S`]" >> /usr/local/bin/update_logs/timestamps.txt
+	cd /var/www/html/retriever && php app_images.php "${start_time}"
+	cnt=$((cnt + 1))
+done
+
+#-- fill retweets
+while [ $cnt -eq 3 ]; do
+	echo "RETWEETS [`date +%Y-%m-%d\ %H-%M-%S`]" >> /usr/local/bin/update_logs/timestamps.txt
+	cd /var/www/html/retriever && php retweets.php "${start_time}"
+	cnt=$((cnt + 1))
+done
+
+# appends extra line
+echo "-/>> [`date +%Y-%m-%d\ %H-%M-%S`]" >> /usr/local/bin/update_logs/timestamps.txt
+echo "" >> /usr/local/bin/update_logs/timestamps.txt
+
+
+#-- exit w/o error
+exit 0;

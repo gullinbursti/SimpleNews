@@ -228,18 +228,9 @@
 	footerImgView.userInteractionEnabled = YES;
 	[self.view addSubview:footerImgView];
 	
-	NSString *likeActive;
-	NSString *likeCaption;
-	
-	if (_vo.totalLikes == 0) {
-		likeActive = @"leftBottomUIBFull_Active.png";
-		likeCaption = @"Like";
+	NSString *likeActive = (_vo.totalLikes == 0) ? @"leftBottomUIBFull_Active.png" : @"leftBottomUIFull_Active.png";
+	NSString *likeCaption = (_vo.hasLiked) ? @"Liked" : @"Like";
 		
-	} else {
-		likeActive = @"leftBottomUIFull_Active.png";
-		likeCaption = [NSString stringWithFormat:@"Likes (%d)", _vo.totalLikes];
-	}
-	
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_likeButton.frame = CGRectMake(0.0, 1.0, 95.0, 43.0);
 	[_likeButton setBackgroundImage:[UIImage imageNamed:likeActive] forState:UIControlStateHighlighted];
@@ -250,7 +241,7 @@
 	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 	_likeButton.titleEdgeInsets = UIEdgeInsetsMake(2.0, 0.0, -2.0, 0.0);
 	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-	[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
+	[_likeButton setTitle:likeCaption forState:UIControlStateNormal];
 	[footerImgView addSubview:_likeButton];
 	
 	if (_vo.hasLiked) {
@@ -302,6 +293,7 @@
 			if ([tuVO.twitterID isEqualToString:[[SNAppDelegate profileForUser] objectForKey:@"twitter_id"]]) {
 				_vo.hasLiked = YES;
 				[_likeButton setTitle:@"Liked" forState:UIControlStateNormal];
+				[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUI_Active.png"] forState:UIControlStateNormal];
 				[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 				[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 			}
@@ -309,7 +301,7 @@
 			if (tot < 9) {
 				SNTwitterAvatarView *avatarView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(offset2, 401.0) imageURL:tuVO.avatarURL handle:tuVO.handle];
 				[self.view addSubview:avatarView];
-				offset2 += 40.0;
+				offset2 += 34.0;
 			}
 			tot++;
 		}
@@ -358,7 +350,9 @@
 	} else {		
 		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
-		[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUIB_Active.png"] forState:UIControlStateNormal];
+		
+		NSString *likeImg = (_vo.totalLikes > 0) ? @"leftBottomUI_Active.png" : @"leftBottomUIB_Active.png";		
+		[_likeButton setBackgroundImage:[UIImage imageNamed:likeImg] forState:UIControlStateNormal];
 		
 		_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI]]];
 		[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];

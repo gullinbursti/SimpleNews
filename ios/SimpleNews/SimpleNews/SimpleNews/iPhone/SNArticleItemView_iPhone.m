@@ -430,6 +430,9 @@
 		[_likeButton removeTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
 		[_likeButton addTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 		
+		NSString *likeImg = (_vo.totalLikes > 0) ? @"leftBottomUI_Active.png" : @"leftBottomUIB_Active.png";		
+		[_likeButton setBackgroundImage:[UIImage imageNamed:likeImg] forState:UIControlStateNormal];
+		
 		_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI]]];
 		[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		[_likeRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
@@ -449,6 +452,7 @@
 	
 	[_likeButton removeTarget:self action:@selector(_goDislike) forControlEvents:UIControlEventTouchUpInside];
 	[_likeButton addTarget:self action:@selector(_goLike) forControlEvents:UIControlEventTouchUpInside];
+	[_likeButton setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
 	
 	_likeRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI]]];
 	[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", 7] forKey:@"action"];
@@ -578,12 +582,6 @@
 		
 		else {
 			_vo.totalLikes = [[parsedLike objectForKey:@"likes"] intValue];
-			NSString *likeImg = (_vo.hasLiked) ? @"leftBottomUI_Active.png" : @"";
-			if (_vo.totalLikes == 1)
-				likeImg = @"leftBottomUIB_Active.png";
-			
-			[_likeButton setBackgroundImage:[UIImage imageNamed:likeImg] forState:UIControlStateNormal];
-			
 			NSString *likeCaption = (_vo.hasLiked) ? @"Liked" : @"Like";			
 			[_likeButton setTitle:likeCaption forState:UIControlStateNormal];
 		}

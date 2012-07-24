@@ -756,7 +756,7 @@
 	_fullscreenFooterImgView.alpha = 0.0;
 	[self.view addSubview:_fullscreenFooterImgView];
 	
-	//NSString *likeActive = (_articleVO.totalLikes == 0) ? @"leftBottomUIB_Active.png" : @"leftBottomUI_Active.png";
+	NSString *likeCaption = (_articleVO.hasLiked) ? @"Liked" : @"Like";
 	_likeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	_likeButton.frame = CGRectMake(0.0, 1.0, 95.0, 43.0);
 	[_likeButton setBackgroundImage:[UIImage imageNamed:@"leftBottomUIB_Active.png"] forState:UIControlStateHighlighted];
@@ -767,7 +767,7 @@
 	_likeButton.titleEdgeInsets = UIEdgeInsetsMake(1.0, 0.0, -1.0, 0.0);
 	_likeButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11.0];
 	[_likeButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-	[_likeButton setTitle:@"Like" forState:UIControlStateNormal];
+	[_likeButton setTitle:likeCaption forState:UIControlStateNormal];
 	[_fullscreenFooterImgView addSubview:_likeButton];
 	
 	if (_articleVO.hasLiked) {
