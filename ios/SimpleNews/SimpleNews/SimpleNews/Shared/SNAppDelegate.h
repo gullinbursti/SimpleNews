@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <FBiOSSDK/FacebookSDK.h>
 #import "SNSplashViewController_iPhone.h"
 
 #import "SNRootViewController_iPhone.h"
@@ -22,7 +23,6 @@
 	SNRootViewController_iPhone *_rootViewController_iPhone;
 }
 
-//#define kServerPath @"http://dev.gullinbursti-creations.com/simplenews/services"
 //#define kServerPath @"http://ec2-23-20-197-174.compute-1.amazonaws.com/services"
 //#define kServerPath @"http://107.20.161.159/services"
 #define kServerPath @"http://discover.getassembly.com/services"
@@ -77,6 +77,7 @@
 +(int)hoursAfterDate:(NSDate *)date;
 +(int)daysAfterDate:(NSDate *)date;
 
+- (void)openSession;
 
 + (void)openWithAppStore:(NSString *)url;
 +(UIImage *)imageWithFilters:(UIImage *)srcImg filter:(NSDictionary *)fx;

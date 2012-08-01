@@ -8,6 +8,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import <Twitter/Twitter.h>
+#import <FBiOSSDK/FacebookSDK.h>
 #import "GANTracker.h"
 
 #import "SNRootViewController_iPhone.h"
@@ -29,7 +30,7 @@
 #import "MBProgressHUD.h"
 #import "MBLResourceLoader.h"
 
-@interface SNRootViewController_iPhone () <MBLResourceObserverProtocol>
+@interface SNRootViewController_iPhone () <MBLResourceObserverProtocol, FBLoginViewDelegate>
 @property(nonatomic, strong) MBLAsyncResource *topicsListResource;
 @property(nonatomic, strong) MBLAsyncResource *fullscreenImgResource;
 - (void)_refreshUserAccount;
@@ -225,6 +226,24 @@
 	infoLabel.textColor = [UIColor blackColor];
 	infoLabel.backgroundColor = [UIColor clearColor];
 	[_blackMatteView addSubview:infoLabel];
+	
+	// Create Login View so that the app will be granted "status_update" permission.
+	FBLoginView *loginview = [[FBLoginView alloc] initWithPermissions:[NSArray arrayWithObject:@"status_update"]];
+	
+	loginview.frame = CGRectOffset(loginview.frame, 5, 5);
+	loginview.delegate = self;
+	
+	[self.view addSubview:loginview];
+	
+	// home
+	[FBRequest startWithGraphPath:@"me/home" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+		NSLog(@"%@", (NSDictionary *)result);
+	}];
+	
+	// wall
+	[FBRequest startWithGraphPath:@"me/feed" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+		NSLog(@"%@", (NSDictionary *)result);
+	}];
 }
 
 - (void)viewDidUnload {
@@ -584,7 +603,7 @@
 																				delegate:self 
 																	cancelButtonTitle:@"Cancel" 
 																 destructiveButtonTitle:nil 
-																	otherButtonTitles:@"View Article", @"Share on Twitter", @"SMS", @"Copy URL", @"Email", openSource, nil];
+																	otherButtonTitles:@"View Article", @"Share on Twitter", @"SMS", @"Copy URL", @"Email", openSource, @"Share on Facebook", nil];
 	actionSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 	[actionSheet showInView:self.view];
 }
@@ -1044,6 +1063,20 @@
 			SNWebPageViewController_iPhone *webPageViewController = [[SNWebPageViewController_iPhone alloc] initWithURL:[NSURL URLWithString:_articleVO.article_url] title:_articleVO.title];
 			[self.navigationController pushViewController:webPageViewController animated:YES];
 		}
+		
+	} else if (ind == 5) {
+		// Post a status update to the user's feedm via the Graph API, and display an alert view 
+		// with the results or an error.
+		
+		
+		NSString *message = [NSString stringWithFormat:@"%@ via @getassembly %@", _articleVO.title, ((SNImageVO *)[_articleVO.images objectAtIndex:0]).url];
+		NSDictionary *params = [NSDictionary dictionaryWithObject:message forKey:@"message"];
+		
+		// use the "startWith" helper static on FBRequest to both create and start a request, with
+		// a specified completion handler.
+		[FBRequest startWithGraphPath:@"me/feed" parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+			NSLog(@"POSTED TO FEED");
+		}];
 	}
 }
 

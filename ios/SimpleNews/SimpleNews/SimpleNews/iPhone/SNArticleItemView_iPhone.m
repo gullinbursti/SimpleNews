@@ -50,6 +50,7 @@
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_videoEnded:) name:@"VIDEO_ENDED" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_commentAdded:) name:@"COMMENT_ADDED" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_toggleLikedArticle:) name:@"TOGGLE_LIKED_ARTICLE" object:nil];
 		
 		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(-4.0, 0.0, 308.0, frame.size.height)];
 		UIImage *img = [UIImage imageNamed:cardBG];
@@ -541,13 +542,33 @@
 	[_videoButton addTarget:self action:@selector(_goVideo) forControlEvents:UIControlEventTouchUpInside];
 }
 
-#pragma mark - Notification handlers
 -(void)_commentAdded:(NSNotification *)notification {
 	SNArticleVO *vo = (SNArticleVO *)[notification object];
 	
 	if (vo.article_id == _vo.article_id) {
 		_commentButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, -4.0, 0.0, 4.0);
 		[_commentButton setTitle:[NSString stringWithFormat:@"%d", [_vo.comments count]] forState:UIControlStateNormal];
+	}
+}
+
+- (void)_toggleLikedArticle:(NSNotification *)notification {
+	NSLog(@"_toggleLikedArticle");
+	
+	SNArticleVO *vo = (SNArticleVO *)[notification object];
+	
+	if (vo.article_id == _vo.article_id) {
+		_vo = vo;
+		
+		NSString *likeCaption = (_vo.hasLiked) ? @"Liked" : @"Like";			
+		[_likeButton setTitle:likeCaption forState:UIControlStateNormal];
+		
+		if (_vo.hasLiked) {
+			NSString *likeImg = (_vo.totalLikes > 0) ? @"leftBottomUI_Active.png" : @"leftBottomUIB_Active.png";
+			[_likeButton setBackgroundImage:[UIImage imageNamed:likeImg] forState:UIControlStateNormal];
+			
+		} else {
+			[_likeButton setBackgroundImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
+		}
 	}
 }
 

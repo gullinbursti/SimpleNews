@@ -40,6 +40,8 @@
 	<string>1.1</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>FacebookAppID</key>
+	<string>316539575066102</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

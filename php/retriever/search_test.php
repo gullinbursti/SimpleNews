@@ -5,6 +5,70 @@ session_start();
 require './_db_open.php'; 
 
 
+if (($handle = fopen("images.csv", "r")) !== FALSE) {
+	while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+		
+		//for ($i=0; $i<count($data); $i++) {
+		//	echo ($data[$i] .", ");
+		//}
+		
+		$query = 'SELECT * FROM `tblArticleImages` WHERE `id` = '. $data[0] .';';
+		$result = mysql_query($query);
+		
+		if (mysql_num_rows($result) == 0) {		
+			$query = 'INSERT INTO `tblArticleImages` (';
+			$query .= '`id`, `type_id`, `article_id`, `url`, `ratio`, `added`) ';
+			$query .= 'VALUES (NULL, "1", "'. $data[2] .'", "'. $data[3] .'", "'. $data[4] .'", "'. $data[5] .'");';
+			$img_result = mysql_query($query);
+			$img_id = mysql_insert_id();		
+		}
+	}
+}
+
+
+/*
+$article_arr = array();
+$query = 'SELECT `tblArticles`.`id`, `tblArticles`.`type_id`, `tblArticles`.`tweet_id`, `tblArticles`.`contributor_id`, `tblArticles`.`tweet_msg`, `tblArticles`.`short_url`, `tblArticles`.`title`, `tblArticles`.`content_txt`, `tblArticles`.`content_url`, `tblArticles`.`image_url`, `tblArticles`.`retweets`, `tblArticles`.`image_ratio`, `tblArticles`.`youtube_id`, `tblArticles`.`itunes_url`, `tblArticles`.`active`, `tblArticles`.`created`, `tblArticles`.`added` FROM `tblArticles` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblTopicsArticles`.`topic_id` = 2 AND `tblArticles`.`id` < 25944 AND `tblArticles`.`active` =  "Y" AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`itunes_url` LIKE "http://itunes.apple.com/%";';
+$article_result = mysql_query($query);
+
+while ($article_row = mysql_fetch_array($article_result, MYSQL_ASSOC)) {
+	echo ("[". $article_row['id'] ."]\n");
+	
+	/*
+	$line = "\n";
+	foreach($article_row as $key => $val) {
+		echo ("===[". $key ."]===");
+		if ($key == 'title' || $key == 'content_url' || $key == 'tweet_msg' || $key == 'short_url' || $key == 'itunes_url' || $key == 'image_url')
+			$line = $line . "\"". $val ."\",";
+		
+		else
+			$line = $line . $val .",";
+	}
+	
+	$line = substr_replace($line, "", -1);	
+	echo ($line);
+	*/
+	
+	/*
+	$query = 'SELECT * FROM `tblArticleImages` WHERE `article_id` = '. $article_row['id'] .';';
+	$img_result = mysql_query($query);
+	
+	$img_arr = array();
+	while ($img_row = mysql_fetch_array($img_result, MYSQL_ASSOC)) {
+		$line = "image_row";
+		foreach($img_row as $key => $val) {
+			$line = $line . "[". $key ."] = ". $val ." ";
+		}	
+		echo ($line ."\n");
+	}
+	
+	echo ("===================================================================\n\n\n");
+	*/
+//}
+
+
+
+/* MAKE TOP10 TABLE
 $keyVal_arr = array();
 			
 $query = 'SELECT * FROM `tblArticles` WHERE `active` = "Y" AND `type_id` >= 2 AND `retweets` > 0;';
@@ -40,8 +104,10 @@ foreach ($keyVal_arr as $key => $val) {
 	if ($tot >= 10)
 		break;
 }
+*/
 
-/*
+
+/* CHANGE AVATAR SIZES
 $query = 'SELECT * FROM `tblContributors` WHERE `avatar_url` LIKE "%size=reasonably_small";';
 $result = mysql_query($query);
 
@@ -54,7 +120,7 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 }
 */
 
-/*
+/* REMOVE DUPLICATES ACROSS TOPICS
 $start_date = "2012-07-21 00:00:00";
 
 $query = 'SELECT * FROM `tblArticles` WHERE `added` >= "'. $start_date .'";';

@@ -22,6 +22,10 @@ static const NSInteger kLaunchesUntilRateRequest = 16;
 static const NSInteger kDaysUntilRateRequest = 5;
 static const BOOL kIsGoogleAnalyticsLive = YES;
 
+@interface SNAppDelegate ()
+- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)state error:(NSError *)error;
+@end
+
 @implementation SNAppDelegate
 
 @synthesize window = _window;
@@ -341,6 +345,52 @@ static const BOOL kIsGoogleAnalyticsLive = YES;
 }
 
 
+- (void)openSession {
+	NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", nil];
+	[FBSession sessionOpenWithPermissions:permissions completionHandler:
+	 ^(FBSession *session, FBSessionState state, NSError *error) {
+		 //[self sessionStateChanged:session state:state error:error];
+	 }];    
+}
+
+- (void)sessionStateChanged:(FBSession *)session state:(FBSessionState)state error:(NSError *)error {
+	// FBSample logic
+	// Any time the session is closed, we want to display the login controller (the user
+	// cannot use the application unless they are logged in to Facebook). When the session
+	// is opened successfully, hide the login controller and show the main UI.
+	switch (state) {
+		case FBSessionStateOpen: {
+			// FBSample logic
+			// Pre-fetch and cache the friends for the friend picker as soon as possible to improve
+			// responsiveness when the user tags their friends.
+			FBCacheDescriptor *cacheDescriptor = [FBFriendPickerViewController cacheDescriptor];
+			[cacheDescriptor prefetchAndCacheForSession:session];
+		}
+			break;
+		case FBSessionStateClosed:
+		case FBSessionStateClosedLoginFailed:
+			// FBSample logic
+			// Once the user has logged in, we want them to be looking at the root view.
+			[FBSession.activeSession closeAndClearTokenInformation];
+			
+			//[self showLoginView];
+			break;
+		default:
+			break;
+	}
+	
+	//[[NSNotificationCenter defaultCenter] postNotificationName:SCSessionStateChangedNotification object:session];
+	
+	if (error) {
+		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+																			 message:error.localizedDescription
+																			delegate:nil
+																cancelButtonTitle:@"OK"
+																otherButtonTitles:nil];
+		[alertView show];
+	}    
+}
+
 -(void)dealloc {
 	[[GANTracker sharedTracker] stopTracker];
 }
@@ -500,6 +550,14 @@ static const BOOL kIsGoogleAnalyticsLive = YES;
  Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
  **/
 - (void)applicationWillTerminate:(UIApplication *)application {
+	// FBSample logic
+	// if the app is going away, we close the session object
+	[FBSession.activeSession close];
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+	// attempt to extract a token from the url
+	return [FBSession.activeSession handleOpenURL:url]; 
 }
 
 #pragma mark - PushNotification Delegates

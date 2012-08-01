@@ -156,6 +156,8 @@
 		4CB39171153DF1A500C1324D /* SNArticleDetailsViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB39170153DF1A500C1324D /* SNArticleDetailsViewController_iPhone.m */; };
 		4CB39175153DF1FF00C1324D /* SNWebPageViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB39174153DF1FF00C1324D /* SNWebPageViewController_iPhone.m */; };
 		4CB391C8153F85A800C1324D /* article.html in Resources */ = {isa = PBXBuildFile; fileRef = 4CB391C7153F85A800C1324D /* article.html */; };
+		4CB41C5315C0DA4000962CFA /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CB41C5215C0DA4000962CFA /* FBiOSSDK.framework */; };
+		4CB41C5B15C0DAC200962CFA /* FBiOSSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4CB41C5A15C0DAC200962CFA /* FBiOSSDKResources.bundle */; };
 		4CB61CF0155F333300FF151E /* SNProfileViewCell_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB61CEF155F333300FF151E /* SNProfileViewCell_iPhone.m */; };
 		4CB61D01155F580A00FF151E /* background_plain.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CB61CFF155F580A00FF151E /* background_plain.png */; };
 		4CB61D02155F580A00FF151E /* background_plain@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CB61D00155F580A00FF151E /* background_plain@2x.png */; };
@@ -670,6 +672,8 @@
 		4CB39173153DF1FF00C1324D /* SNWebPageViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNWebPageViewController_iPhone.h; sourceTree = "<group>"; };
 		4CB39174153DF1FF00C1324D /* SNWebPageViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNWebPageViewController_iPhone.m; sourceTree = "<group>"; };
 		4CB391C7153F85A800C1324D /* article.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = article.html; sourceTree = "<group>"; };
+		4CB41C5215C0DA4000962CFA /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = SimpleNews/FBiOSSDK.framework; sourceTree = "<group>"; };
+		4CB41C5A15C0DAC200962CFA /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBiOSSDKResources.bundle; path = SimpleNews/FBiOSSDKResources.bundle; sourceTree = "<group>"; };
 		4CB61CEE155F333300FF151E /* SNProfileViewCell_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNProfileViewCell_iPhone.h; sourceTree = "<group>"; };
 		4CB61CEF155F333300FF151E /* SNProfileViewCell_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNProfileViewCell_iPhone.m; sourceTree = "<group>"; };
 		4CB61CFF155F580A00FF151E /* background_plain.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background_plain.png; sourceTree = "<group>"; };
@@ -969,6 +973,7 @@
 				4CD919B7151E9F6B004081B7 /* Accounts.framework in Frameworks */,
 				4C9E00BC15194B9B00AEB803 /* libUAirship-1.1.1.a in Frameworks */,
 				4C7954F71547AFCF009E40DC /* libGoogleAnalytics.a in Frameworks */,
+				4CB41C5315C0DA4000962CFA /* FBiOSSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1867,6 +1872,8 @@
 		4CDC8BF014F2CDEB00D42EA5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4CB41C5A15C0DAC200962CFA /* FBiOSSDKResources.bundle */,
+				4CB41C5215C0DA4000962CFA /* FBiOSSDK.framework */,
 				4CD919B5151E9F5B004081B7 /* Accounts.framework */,
 				4CD01B88151440E7005B490C /* Twitter.framework */,
 				4C8B444814FEA88700F89F7C /* AVFoundation.framework */,
@@ -2469,6 +2476,7 @@
 				4CFC2C28159D7EE200585E56 /* sendCommentButton_nonActive.png in Resources */,
 				4CFC2C29159D7EE200585E56 /* sendCommentButton_nonActive@2x.png in Resources */,
 				4C4A574A159ECF5C001C05FB /* icon_72x72.png in Resources */,
+				4CB41C5B15C0DAC200962CFA /* FBiOSSDKResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2678,6 +2686,10 @@
 		4CDC8C0F14F2CDEB00D42EA5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/SimpleNews\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SimpleNews/SimpleNews-Prefix.pch";
 				INFOPLIST_FILE = "SimpleNews/SimpleNews-Info.plist";
@@ -2690,7 +2702,7 @@
 					"\"$(SRCROOT)/SimpleNews/openssl\"",
 					"\"$(SRCROOT)/SimpleNews/Google Analytics\"",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2701,6 +2713,10 @@
 		4CDC8C1014F2CDEB00D42EA5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/SimpleNews\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SimpleNews/SimpleNews-Prefix.pch";
 				INFOPLIST_FILE = "SimpleNews/SimpleNews-Info.plist";
@@ -2713,7 +2729,7 @@
 					"\"$(SRCROOT)/SimpleNews/openssl\"",
 					"\"$(SRCROOT)/SimpleNews/Google Analytics\"",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2737,7 +2753,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "BA7B2574-53AD-44D3-928A-55C4EE7BBD00";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "867535B0-22ED-4073-852D-75C6FA04F47E";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -2748,6 +2764,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_ENTITLEMENTS[sdk=*]" = Entitlements.plist;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/SimpleNews\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SimpleNews/SimpleNews-Prefix.pch";
 				INFOPLIST_FILE = "SimpleNews/SimpleNews-Info.plist";
@@ -2760,7 +2780,7 @@
 					"\"$(SRCROOT)/SimpleNews/openssl\"",
 					"\"$(SRCROOT)/SimpleNews/Google Analytics\"",
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = 1;
