@@ -77,7 +77,7 @@
 +(int)hoursAfterDate:(NSDate *)date;
 +(int)daysAfterDate:(NSDate *)date;
 
-- (void)openSession;
++ (void)openSession;
 
 + (void)openWithAppStore:(NSString *)url;
 +(UIImage *)imageWithFilters:(UIImage *)srcImg filter:(NSDictionary *)fx;

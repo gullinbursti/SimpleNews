@@ -65,39 +65,83 @@ function tweetsForTopicID($topic_id) {
 	}
 	
 	echo ("\n");	
-	$tweet_arr = array();
+	$allTweet_arr = array();
 	foreach($search_arr as $key => $val) {
+		array_push($allTweet_arr, array(
+			"tweet_id" => $search_arr[$key]->id_str, 
+			"twitter_handle" => $search_arr[$key]->from_user,
+			"twitter_name" => $search_arr[$key]->from_user_name, 
+			"twitter_avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $search_arr[$key]->from_user ."&size=normal", //$search_arr[$key]->profile_image_url, 
+			"message" => $search_arr[$key]->text, 
+			"retweets" => 0, 
+			"created" => $search_arr[$key]->created_at,
+			"created_at" => $search_arr[$key]->created_at			
+		));
+	}
+	
+	shuffle($allTweet_arr);
+	$tweet_arr = array();
+	
+	$tot = 0;	
+	foreach($allTweet_arr as $key => $val) {
+		echo ("TWEET LOOKUP --> [". $allTweet_arr[$key]['tweet_id'] ."]\n");
+		
+		$allTweet_arr[$key]['retweets'] = 0;
+		
+		$timestamp_arr = explode(' ', $allTweet_arr[$key]['created_at']);
+		$month = strtolower($timestamp_arr[2]);
+		$day = $timestamp_arr[1];
+		$time = $timestamp_arr[4];
+		$year = $timestamp_arr[3];
+		$allTweet_arr[$key]['created'] = $year ."-". $month_arr[$month] ."-". $day ." ". $time;
+				
+		$lookup = $search->lookup($allTweet_arr[$key]['tweet_id']);
+	    $allTweet_arr[$key]['retweets'] = $lookup->retweet_count;
+	
+		array_push($tweet_arr, $allTweet_arr[$key]);
+	
+		$tot++;		
+		if ($tot >= 20)
+			break;
+	}
+	
+	echo ("\n");
+	$search_arr = array();	
+	$query = 'SELECT `tblContributors`.`handle` FROM `tblContributors` INNER JOIN `tblTopicsContributors` ON `tblContributors`.`id` = `tblTopicsContributors`.`contributor_id` WHERE `tblTopicsContributors`.`topic_id` = '. $topic_id .' AND `tblContributors`.`active` = "Y" AND `tblContributors`.`type_id` = 3;';
+	$contributor_result = mysql_query($query);	
+	while ($contributor_row = mysql_fetch_array($contributor_result, MYSQL_BOTH)) {
+		echo ("TOPIC[". $topic_id ."] HANDLE --> @". $contributor_row['handle'] ."\n");
+		
+		$results = $search->from($contributor_row['handle'])->results();
+		foreach ($results as $key => $val) {
+			array_push($search_arr, $results[$key]);
+		}
+	}
+	
+	foreach($search_arr as $key => $val) {
+		$query = 'SELECT `id` FROM `tblArticlesWorking` WHERE `tweet_id` = "'. $search_arr[$key]->id_str .'";';		
+		if (mysql_num_rows(mysql_query($query)) > 0)
+			continue;
+			
+		echo ("TWEET LOOKUP --> [". $search_arr[$key]->id_str ."]\n");		
+		$lookup = $search->lookup($search_arr[$key]->id_str);
+	
+		$timestamp_arr = explode(' ', $search_arr[$key]->created_at);
+		$month = strtolower($timestamp_arr[2]);
+		$day = $timestamp_arr[1];
+		$time = $timestamp_arr[4];
+		$year = $timestamp_arr[3];		
+		
 		array_push($tweet_arr, array(
 			"tweet_id" => $search_arr[$key]->id_str, 
 			"twitter_handle" => $search_arr[$key]->from_user,
 			"twitter_name" => $search_arr[$key]->from_user_name, 
 			"twitter_avatar" => "https://api.twitter.com/1/users/profile_image?screen_name=". $search_arr[$key]->from_user ."&size=normal", //$search_arr[$key]->profile_image_url, 
 			"message" => $search_arr[$key]->text, 
-			"retweets" => 0, 	
-			"created" => $search_arr[$key]->created_at
-			
+			"retweets" => $lookup->retweet_count, 	
+			"created_at" => $search_arr[$key]->created_at, 
+			"created" => $year ."-". $month_arr[$month] ."-". $day ." ". $time			
 		));
-	}
-	
-	shuffle($tweet_arr);
-	
-	$tot = 0;	
-	foreach($tweet_arr as $key => $val) {
-		echo ("TWEET LOOKUP --> [". $tweet_arr[$key]['tweet_id'] ."]\n");
-		
-		$lookup = $search->lookup($tweet_arr[$key]['tweet_id']);
-	    $tweet_arr[$key]['retweets'] = $lookup->retweet_count;
-	
-		$timestamp_arr = explode(' ', $tweet_arr[$key]['created']);
-		$month = strtolower($timestamp_arr[2]);
-		$day = $timestamp_arr[1];
-		$time = $timestamp_arr[4];
-		$year = $timestamp_arr[3];
-		$tweet_arr[$key]['created'] = $year ."-". $month_arr[$month] ."-". $day ." ". $time;
-		
-		$tot++;		
-		if ($tot >= 20)
-			break;
 	}
 	
 	$tot = 0;
@@ -135,7 +179,7 @@ function tweetsForTopicID($topic_id) {
 					$query .= 'VALUES ("'. $topic_id .'", "'. $article_id .'");';
 					$ins2_result = mysql_query($query);
 					
-					echo ("INSERT(". ($tot + 1) ."/20) -> [". $article_id ."][". $tweet_arr[$key]['tweet_id'] ."] (". $tweet_arr[$key]['created'] .") FOR [". $topic_id ."]>> ". $tweet_arr[$key]['retweets'] ."\n\"". $tweet_arr[$key]['message'] ."\"\n\n");
+					echo ("INSERT(". ($tot + 1) ."/". count($tweet_arr) .") -> [". $article_id ."][". $tweet_arr[$key]['tweet_id'] ."] (". $tweet_arr[$key]['created'] .") FOR [". $topic_id ."]>> ". $tweet_arr[$key]['retweets'] ."\n\"". $tweet_arr[$key]['message'] ."\"\n\n");
 					$tot++;
 				}
 			}   	
@@ -164,6 +208,9 @@ while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {
 
 
 /*
+16:34:00
+16:36:05
+16:39:00
 128x128
 https://api.twitter.com/1/users/profile_image?screen_name=Contreras_J&size=reasonably_small
 

@@ -1,0 +1,19 @@
+KEYWORD,HASH TAGS,HANDLE,DOMAIN SOURCE,DATA CONDITIONS
+"""App Store""",#AppStore,@AppStore,iTunes API,iTunes Title
+"""iPhone Game""",#iPhoneGame,@PocketGamer,iTunes API,iTunes Images
+"""iPhone Games""",#iPadGame,@toucharcade,iTunes API,iTunes Preview Text
+"""App Store""",#iPadGames,@slidetoplay,iTunes API,iTunes URL
+Apps,#iPhoneGames,@appspy,iTunes API,iTunes Affiliate URL
+"""iPhone Apps""",#AppStore,@148Apps,iTunes API,Videos are OK if they have an iTunes ID
+"""iPod Touch""",#Apps,@touchgen,iTunes API,Combined Search: Apps + iTunes
+"""iPad Apps""",#iPhoneApps,@appvee,iTunes API,Combined Search: Apps + iTunes + Games
+"""Mobile Games""",#iPadApps,@freeappaday,iTunes API,Combined Search: Games + iTunes
+"""Android Game""",#iOSApps,@greatappaday,iTunes API,Combined Search: Mobile Games + iTunes
+"""Android Apps""",#MobileApps,@AppAdvice,iTunes API,Combined Search: Mobile Games + Videos
+"""Pocket Gamer""",#pocketgamer,@iPhone_Games,iTunes API,
+"""Best iPhone Apps""",#bestiphoneapp,@cultofmac,iTunes API,
+Apps+iTunes,,@iHeartThisApp,iTunes API,
+Apps+iTunes+Games,,@AssemblyApps,,
+Games+iTunes,,@AssemblyGames1,,
+"""Mobile Games""+iTunes",,@AssemblyGames2,,
+"""Mobile Games""+Videos",,,,

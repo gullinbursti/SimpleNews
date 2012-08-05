@@ -233,7 +233,8 @@
 	loginview.frame = CGRectOffset(loginview.frame, 5, 5);
 	loginview.delegate = self;
 	
-	[self.view addSubview:loginview];
+	//[self.view addSubview:loginview];
+	//[SNAppDelegate openSession];
 	
 	// home
 	[FBRequest startWithGraphPath:@"me/home" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {

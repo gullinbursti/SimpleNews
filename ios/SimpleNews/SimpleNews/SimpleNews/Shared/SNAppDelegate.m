@@ -345,10 +345,11 @@ static const BOOL kIsGoogleAnalyticsLive = YES;
 }
 
 
-- (void)openSession {
++ (void)openSession {
 	NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", nil];
 	[FBSession sessionOpenWithPermissions:permissions completionHandler:
 	 ^(FBSession *session, FBSessionState state, NSError *error) {
+		 NSLog(@"STATE:%d", state);
 		 //[self sessionStateChanged:session state:state error:error];
 	 }];    
 }

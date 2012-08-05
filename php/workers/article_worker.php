@@ -14,22 +14,16 @@ $sql_time = $row[0];
 
 
 
-/*
 $topic_id = $argv[1];
-
-$query = 'SELECT * FROM `tblKeywords`;';
-$keyword_result = mysql_query($query);
-
-$keyword_arr = array();
-while ($keyword_row = mysql_fetch_array($keyword_result, MYSQL_BOTH))
-	array_push($keyword_arr, $keyword_row['title']);
+$topic_name = $argv[2];
 
 $line = 0;
+
 $keywordCSV_arr = array();
 $hashtagCSV_arr = array();
 $handleCSV_arr = array();
 
-if (($handle = fopen("quotes.csv", "r")) !== FALSE) {
+if (($handle = fopen($topic_name .".csv", "r")) !== FALSE) {
 	while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
 		
 		for ($i=0; $i<count($data); $i++) {
@@ -126,95 +120,6 @@ foreach ($handleCSV_arr as $val) {
 }
 
 
-echo ("\n[=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=]\n". $argv[1] ."\n");
-*/
+echo ("\n[=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=]\n[". $argv[1] ."] \"". $topic_name ."\"\n");
 
-
-
-/*
-$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblTopicsArticles`.`topic_id` = 3 OR `tblTopicsArticles`.`topic_id` = 4 OR `tblTopicsArticles`.`topic_id` = 10 OR `tblTopicsArticles`.`topic_id` = 11;';
-$result = mysql_query($query);                         
-
-while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
-	echo ("\nID:[". $row['id'] ."] <". $row['title'] .">\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
-	$query = 'UPDATE `tblArticles` SET `title` = "" WHERE `id` = '. $row['id'] .';';
-	$upd_result = mysql_query($query);
-}
-*/
-
-
-
-/*
-$query = 'SELECT * FROM `tblArticles` WHERE `itunes_url` LIKE "http://itunes.apple.com/%";';
-$result = mysql_query($query);
-
-while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
-	if (mysql_num_rows(mysql_query('SELECT * FROM `tblArticleImages` WHERE `article_id` = '. $row['id'] .';')) == 2)
-		continue;	
-	
-	$url_arr = explode('/', $row['itunes_url']);
-	$id_str = substr(array_pop($url_arr), 2);
-	$itunes_id = substr($id_str, 0, strpos($id_str, '?'));
-	
-	echo ("\nID:[". $row['id'] ."]\n<". $row['itunes_url'] ."> (". $itunes_id .")\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
-	
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, "http://itunes.apple.com/lookup?id=". $itunes_id);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	$response = curl_exec($ch);
-    curl_close ($ch);
-    
-	$json_arr = json_decode($response, true);
-	
-	if (count($json_arr['results']) == 0) {
-		$query = 'UPDATE `tblArticles` SET `active` = "N" WHERE `id` = '. $row['id'] .';';
-		$upd_result = mysql_query($query);
-		echo ("SKIPPING...\n");		
-		continue;
-	}
-		
-	$json_results = $json_arr['results'][0];	
-	$json_title = $json_results['trackName'];
-	$json_imgs = $json_results['screenshotUrls'];
-	
-	if (count($json_imgs) == 0) {
-		$query = 'UPDATE `tblArticles` SET `active` = "N" WHERE `id` = '. $row['id'] .';';
-		$upd_result = mysql_query($query);		
-		echo ("SKIPPING...\n");
-		continue;
-	}
-	
-	$json_url = $json_results['trackViewUrl'];
-	$json_descript = substr($json_results['description'], 0, 511) . "…";
-	$img_size = getimagesize($json_imgs[0]);
-	$img_ratio = $img_size[1] / $img_size[0];
-	echo ($json_title ." <". $json_url ."> (". $img_ratio .")\n");
-	echo ($json_imgs[0] ."\n". $json_imgs[1] ."\n");
-	
-	$query = 'UPDATE `tblArticles` SET `type_id` = 2, `title` = "'. $json_title .'", `content_txt` = "'. $json_descript .'", `content_url` = "'. $json_url .'", `active` = "Y" WHERE `id` = '. $row['id'] .';';
-	$upd_result = mysql_query($query);
-	
-	
-	$query = 'DELETE FROM `tblArticleImages` WHERE `article_id` = '. $row['id'] .';';
-	$img_result = mysql_query($query);
-		
-	$query = 'INSERT INTO `tblArticleImages` (`id`, `type_id`, `article_id`, `url`, `ratio`, `added`) VALUES (NULL, 1, '. $row['id'] .', "'. $json_imgs[0] .'", '. $img_ratio .', "'. $row['added'] .'");';			
-	$img_result = mysql_query($query);
-	
-	$query = 'INSERT INTO `tblArticleImages` (`id`, `type_id`, `article_id`, `url`, `ratio`, `added`) VALUES (NULL, 1, '. $row['id'] .', "'. $json_imgs[1] .'", '. $img_ratio .', "'. $row['added'] .'");';			
-	$img_result = mysql_query($query);
-	
-	//print_r ($json_results['screenshotUrls']);
-    
-	//$query = 'INSERT INTO `tblArticleImages` (`id`, `type_id`, `article_id`, `url`, `ratio`, `added`) VALUES (NULL, 1, '. $row['id'] .', "'. $row['image_url'] .'", '. $row['image_ratio'] .', "'. $row['added'] .'");';
-	//$img_result = mysql_query($query);
-	
-	//$query = 'DELETE FROM `tblUsersLikedArticles` WHERE `user_id` = '. $user_id .' AND `article_id` = '. $article_id .';';
-	//$result = mysql_query($query);
-	
-	//$query = 'UPDATE `tblArticles` SET `type_id` = '. $type_id .' WHERE `id` = '. $row['id'] .';';
-	//$upd_result = mysql_query($query);
-}
-*/
 ?>

@@ -36,7 +36,7 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 	$json_arr = json_decode($response, true);
 	
 	if (count($json_arr['results']) == 0) {
-		$query = 'UPDATE `tblArticlesWorking` SET `active` = "N" WHERE `id` = '. $row['id'] .';';
+		$query = 'UPDATE `tblArticles` SET `active` = "N" WHERE `id` = '. $row['id'] .';';
 		$upd_result = mysql_query($query);
 		echo ("SKIPPING...\n");		
 		continue;
@@ -47,7 +47,7 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 	$json_imgs = $json_results['screenshotUrls'];
 	
 	if (count($json_imgs) == 0) {
-		$query = 'UPDATE `tblArticlesWorking` SET `active` = "N" WHERE `id` = '. $row['id'] .';';
+		$query = 'UPDATE `tblArticles` SET `active` = "N" WHERE `id` = '. $row['id'] .';';
 		$upd_result = mysql_query($query);		
 		echo ("SKIPPING...\n");
 		continue;
@@ -60,7 +60,7 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 	echo ($json_title ." <". $json_url ."> (". $img_ratio .")\n");
 	echo ($json_imgs[0] ."\n". $json_imgs[1] ."\n");
 	
-	$query = 'UPDATE `tblArticlesWorking` SET `type_id` = 2, `title` = "'. $json_title .'", `content_txt` = "'. $json_descript .'", `content_url` = "'. $json_url .'", `itunes_url` = "'. $json_url .'", `active` = "Y" WHERE `id` = '. $row['id'] .';';
+	$query = 'UPDATE `tblArticles` SET `type_id` = 2, `title` = "'. $json_title .'", `content_txt` = "'. $json_descript .'", `content_url` = "'. $json_url .'", `itunes_url` = "'. $json_url .'", `active` = "Y" WHERE `id` = '. $row['id'] .';';
 	$upd_result = mysql_query($query);
 	
 	

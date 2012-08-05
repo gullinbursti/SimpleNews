@@ -607,7 +607,7 @@
 		
 		
 		function getMostLikedArticles() {			
-			$query = 'SELECT * FROM `tblTopArticles` ORDER BY `total` DESC;';
+			$query = 'SELECT * FROM `tblTopArticles` WHERE `type_id` = 1 ORDER BY `total` DESC;';
 			$top_result = mysql_query($query);
 			
 			$article_arr = array();
@@ -707,7 +707,7 @@
 		
 		
 		function getMostLikedArticlesRandomized() {
-			$query = 'SELECT * FROM `tblTopArticles` ORDER BY `total` DESC;';
+			$query = 'SELECT * FROM `tblTopArticles` WHERE `type_id` = 1 ORDER BY `total` DESC;';
 			$top_result = mysql_query($query);
 			
 			$article_arr = array();
@@ -933,7 +933,7 @@
 		 
 		
 		function getTop10Articles() {
-			$query = 'SELECT * FROM `tblTopArticles` ORDER BY `total` DESC;';
+			$query = 'SELECT * FROM `tblTopArticles` WHERE `type_id` = 2 ORDER BY `total` DESC;';
 			$top_result = mysql_query($query);
 			
 			$article_arr = array();
@@ -1032,7 +1032,7 @@
 		}
 				
 		function getTop10ArticlesRandomized() {
-			$query = 'SELECT * FROM `tblTopArticles` ORDER BY `total` DESC;';
+			$query = 'SELECT * FROM `tblTopArticles` WHERE `type_id` = 2 ORDER BY `total` DESC;';
 			$top_result = mysql_query($query);
 			
 			$article_arr = array();
@@ -1208,8 +1208,7 @@
 					$articles->getArticlesForTopicBeforeDate($_POST['topicID'], $_POST['datetime']);
 				break;
 				
-			case "14": //tmp
-				$articles->getTop10Articles();
+			case "14":
 				break;
 				
 			 case "15":

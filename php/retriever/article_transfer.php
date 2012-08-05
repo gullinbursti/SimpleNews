@@ -17,6 +17,10 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 	$topic_row = mysql_fetch_row($topic_result);
 	$topic_id = $topic_row[0];
 	
+	$query = 'SELECT `url`, `ratio` FROM `tblArticleImagesWorking` WHERE `article_id` = '. $row['id'] .';';
+	$img_result = mysql_query($query);
+	$img_row = mysql_fetch_row($img_result);
+	
 	$query = 'INSERT INTO `tblArticles` (';
 	$query .= '`id`, `type_id`, `tweet_id`, `contributor_id`, `tweet_msg`, `short_url`, `title`, `content_txt`, `content_url`, `image_url`, `retweets`, `image_ratio`, `youtube_id`, `itunes_url`, `active`, `created`, `added`) ';
 	$query .= 'VALUES (NULL, "'. $row['type_id'] .'", "'. $row['tweet_id'] .'", "'. $row['contributor_id'] .'", "'. $row['tweet_msg'] .'", "'. $row['short_url'] .'", "'. $row['title'] .'", "'. $row['content_txt'] .'", "'. $row['content_url'] .'", "'. $row['image_url'] .'", "'. $row['retweets'] .'", "'. $row['image_ratio'] .'", "'. $row['youtube_id'] .'", "'. $row['itunes_url'] .'", "'. $row['active'] .'", "'. $row['created'] .'", "'. $row['added'] .'");';	 
@@ -28,6 +32,11 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 	$query .= 'VALUES ("'. $topic_id .'", "'. $article_id .'");';
 	$ins_result = mysql_query($query);
 	
+	$query = 'INSERT INTO `tblArticleImages` (';
+	$query .= '`id`, `type_id`, `article_id`, `url`, `ratio`, `added`) ';
+	$query .= 'VALUES (NULL, "1", "'. $article_id .'", "'. $img_row[0] .'", "'. $img_row[1] .'", NOW());';
+	$ins_result = mysql_query($query);
+	
 	echo ("TRANSFER[". $article_id ."] ->[". $row['tweet_id'] ."] (". $row['created'] .") FOR [". $topic_id ."]>>\n\"". $row['tweet_msg'] ."\"\n\n");
 	
 }
@@ -35,6 +44,8 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 $result = mysql_query('DELETE FROM `tblArticlesWorking` WHERE 1 = 1;');
 $result = mysql_query('ALTER TABLE `tblArticlesWorking` AUTO_INCREMENT = 1;');  
 $result = mysql_query('DELETE FROM `tblTopicsArticlesWorking` WHERE 1 = 1;');  
+$result = mysql_query('DELETE FROM `tblArticleImagesWorking` WHERE 1 = 1;');
+$result = mysql_query('ALTER TABLE `tblArticleImagesWorking` AUTO_INCREMENT = 1;');  
 
 require './_db_close.php';
 
