@@ -1,25 +1,25 @@
-KEYWORD,HASH TAGS,HANDLE,DOMAIN SOURCE,CONDITIONS
-girlythingsss,#sotrue,@girlythingsss,http://justgirlythings.tumblr.com/,Tumblr Image Safe / Specific
-tmblr.co,#lolsotrue,@ohteenquotes,http://quotethattalk.tumblr.com/,Images Only
-"""quote that talk""",#quotethattalk,@quotethattalk,http://lol-sotrue.tumblr.com/,No Titles or Excerpts
-lol-sotrue,#imagequotes,@teenquotes_,,No Videos
-imagequotes,#quotes-for-facebook,@TeenThings,,Combined Search: TEEN SWAG + Tumblr
-"""quotes-for-facebook""",#girlthings,@coolstorybro,,Combined Search: TEEN QUOTES + Tumblr
-"""quotes for facebook""",#teenquotes,@AssemblyQuotes,,Combined Search: QUOTES + Tumblr
-"""girly things""",#4uquotesru,@AssemblyQuotes1,,Combined Search: TEENS + Tumblr
-girlthings,#TeenQuotes,@AssemblyQuotes2,,
-"""girl things""",#textgram,,,
-4uquotesru,#idcapthat,,,
-"""Teen Quotes""",#piccollage,,,
-idcapthat,#faceinhole,,,
-textgram,#TeenThings,,,
-piccollage,#teenpics,,,
-faceinhole,#coolstorybro,,,
-TeenThings,,,,
-teenpics,,,,
-"""cool story bro""",,,,
-"""lol sotrue""",,,,
-"""TEEN SWAG""+Tumblr",,,,
-"""TEEN QUOTES""+Tumblr",,,,
-QUOTES+Tumblr,,,,
-TEENS+Tumblr,,,,
+KEYWORD,HASH TAGS,HANDLE,OUR HANDLES,DOMAIN SOURCE,CONDITIONS
+girlythingsss,#sotrue,@girlythingsss,@AssemblyQuotes,http://justgirlythings.tumblr.com/,Tumblr Image Safe / Specific
+tmblr.co,#lolsotrue,@ohteenquotes,@AssemblyQuotes1,http://quotethattalk.tumblr.com/,Images Only
+"""quote that talk""",#quotethattalk,@quotethattalk,,http://lol-sotrue.tumblr.com/,No Titles or Excerpts
+lol-sotrue,#imagequotes,@teenquotes_,,,No Videos
+imagequotes,#quotes-for-facebook,@TeenThings,,,Combined Search: TEEN SWAG + Tumblr
+"""quotes-for-facebook""",#girlthings,@coolstorybro,,,Combined Search: TEEN QUOTES + Tumblr
+"""quotes for facebook""",#teenquotes,@AssemblyQuotes,,,Combined Search: QUOTES + Tumblr
+"""girly things""",#4uquotesru,@AssemblyQuotes1,,,Combined Search: TEENS + Tumblr
+girlthings,#TeenQuotes,,,,
+"""girl things""",#textgram,,,,
+4uquotesru,#idcapthat,,,,
+"""Teen Quotes""",#piccollage,,,,
+idcapthat,#faceinhole,,,,
+textgram,#TeenThings,,,,
+piccollage,#teenpics,,,,
+faceinhole,#coolstorybro,,,,
+TeenThings,,,,,
+teenpics,,,,,
+"""cool story bro""",,,,,
+"""lol sotrue""",,,,,
+"""TEEN SWAG""+Tumblr",,,,,
+"""TEEN QUOTES""+Tumblr",,,,,
+QUOTES+Tumblr,,,,,
+TEENS+Tumblr,,,,,

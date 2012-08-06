@@ -67,6 +67,19 @@ function tweetsForTopicID($topic_id) {
 	echo ("\n");	
 	$allTweet_arr = array();
 	foreach($search_arr as $key => $val) {
+		$query = 'SELECT `id` FROM `tblArticles` WHERE `tweet_id` = "'. $search_arr[$key]->id_str .'";';		
+		if (mysql_num_rows(mysql_query($query)) > 0)
+			continue;
+			
+		$query = 'SELECT `id` FROM `tblArticlesWorking` WHERE `tweet_id` = "'. $search_arr[$key]->id_str .'";';		
+		if (mysql_num_rows(mysql_query($query)) > 0)
+			continue;
+			
+			
+		preg_match_all('!https?://[\S]+!', $search_arr[$key]->text, $matches);
+		if (count($matches[0]) == 0)
+			continue;
+			
 		array_push($allTweet_arr, array(
 			"tweet_id" => $search_arr[$key]->id_str, 
 			"twitter_handle" => $search_arr[$key]->from_user,
@@ -119,6 +132,10 @@ function tweetsForTopicID($topic_id) {
 	}
 	
 	foreach($search_arr as $key => $val) {
+		$query = 'SELECT `id` FROM `tblArticles` WHERE `tweet_id` = "'. $search_arr[$key]->id_str .'";';		
+		if (mysql_num_rows(mysql_query($query)) > 0)
+			continue;
+			
 		$query = 'SELECT `id` FROM `tblArticlesWorking` WHERE `tweet_id` = "'. $search_arr[$key]->id_str .'";';		
 		if (mysql_num_rows(mysql_query($query)) > 0)
 			continue;
@@ -159,40 +176,45 @@ function tweetsForTopicID($topic_id) {
 			$contributor_row = mysql_fetch_row(mysql_query($query));
 			$contributor_id = $contributor_row[0];
 		}
+			   		
+		preg_match_all('!https?://[\S]+!', $tweet_arr[$key]['message'], $matches);
+		$url_arr = $matches[0];
+		
+		if (count($url_arr) == 1)
+			$short_url = $url_arr[0];
+		
+		else
+			$short_url = $url_arr[1];
 		
 		
-		$query = 'SELECT `id` FROM `tblArticlesWorking` WHERE `tweet_id` = "'. $tweet_arr[$key]['tweet_id'] .'";';		
-		if (mysql_num_rows(mysql_query($query)) == 0) {
-			preg_match_all('!https?://[\S]+!', $tweet_arr[$key]['message'], $matches);			
-			$short_url = $matches[0];
-			
-			if (count($short_url) > 0) {
-				if (strlen($short_url[0]) > 0) {
-					$query = 'INSERT INTO `tblArticlesWorking` (';
-					$query .= '`id`, `type_id`, `tweet_id`, `contributor_id`, `tweet_msg`, `short_url`, `title`, `content_txt`, `content_url`, `image_url`, `retweets`, `image_ratio`, `youtube_id`, `active`, `created`, `added`) ';
-					$query .= 'VALUES (NULL, "0", "'. $tweet_arr[$key]['tweet_id'] .'", "'. $contributor_id .'", "'. $tweet_arr[$key]['message'] .'", "'. $short_url[0] .'", "", "", "", "", "'. $tweet_arr[$key]['retweets'] .'", "1.0", "", "N", "'. $tweet_arr[$key]['created'] .'", NOW());';	 
-				    $ins1_result = mysql_query($query);
-					$article_id = mysql_insert_id();
-					
-					$query = 'INSERT INTO `tblTopicsArticlesWorking` ('; 
-					$query .= '`topic_id`, `article_id`) ';
-					$query .= 'VALUES ("'. $topic_id .'", "'. $article_id .'");';
-					$ins2_result = mysql_query($query);
-					
-					echo ("INSERT(". ($tot + 1) ."/". count($tweet_arr) .") -> [". $article_id ."][". $tweet_arr[$key]['tweet_id'] ."] (". $tweet_arr[$key]['created'] .") FOR [". $topic_id ."]>> ". $tweet_arr[$key]['retweets'] ."\n\"". $tweet_arr[$key]['message'] ."\"\n\n");
-					$tot++;
-				}
-			}   	
-		}
+		$query = 'INSERT INTO `tblArticlesWorking` (';
+		$query .= '`id`, `type_id`, `tweet_id`, `contributor_id`, `tweet_msg`, `short_url`, `title`, `content_txt`, `content_url`, `image_url`, `retweets`, `image_ratio`, `youtube_id`, `active`, `created`, `added`) ';
+		$query .= 'VALUES (NULL, "0", "'. $tweet_arr[$key]['tweet_id'] .'", "'. $contributor_id .'", "'. $tweet_arr[$key]['message'] .'", "'. $short_url .'", "", "", "", "", "'. $tweet_arr[$key]['retweets'] .'", "1.0", "", "N", "'. $tweet_arr[$key]['created'] .'", NOW());';	 
+	    $ins1_result = mysql_query($query);
+		$article_id = mysql_insert_id();
 		
-		if ($tot >= 20)
-			break;
+		$query = 'INSERT INTO `tblTopicsArticlesWorking` ('; 
+		$query .= '`topic_id`, `article_id`) ';
+		$query .= 'VALUES ("'. $topic_id .'", "'. $article_id .'");';
+		$ins2_result = mysql_query($query);
+		
+		echo ("INSERT(". ($tot + 1) ."/". count($tweet_arr) .") -> [". $article_id ."][". $tweet_arr[$key]['tweet_id'] ."] (". $tweet_arr[$key]['created'] .") FOR [". $topic_id ."]>> ". $tweet_arr[$key]['retweets'] ."\n\"". $tweet_arr[$key]['message'] ."\"\n\n");
+		$tot++;
+		
 	}	
 }
+
 
 $start_date = "0000-00-00 00:00:00";
 if (isset($argv[1]))
 	$start_date = $argv[1];
+
+
+$result = mysql_query('DELETE FROM `tblArticlesWorking` WHERE 1 = 1;');
+$result = mysql_query('ALTER TABLE `tblArticlesWorking` AUTO_INCREMENT = 1;');  
+$result = mysql_query('DELETE FROM `tblTopicsArticlesWorking` WHERE 1 = 1;');  
+$result = mysql_query('DELETE FROM `tblArticleImagesWorking` WHERE 1 = 1;');
+$result = mysql_query('ALTER TABLE `tblArticleImagesWorking` AUTO_INCREMENT = 1;');
 	
 
 $query = 'SELECT * FROM `tblTopics` WHERE `active` = "Y" ORDER BY `id`;';

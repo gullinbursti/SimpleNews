@@ -11,6 +11,7 @@ if (isset($argv[1]))
 $query = 'SELECT * FROM `tblArticlesWorking` WHERE `type_id` > 0 AND `active` = "Y" AND `added` >= "'. $start_date .'";';
 $result = mysql_query($query);                         
 
+$cnt = 0;
 while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 	$query = 'SELECT `topic_id` FROM `tblTopicsArticlesWorking` WHERE `article_id` = '. $row['id'] .';';
 	$topic_result = mysql_query($query);
@@ -37,15 +38,9 @@ while ($row = mysql_fetch_array($result, MYSQL_BOTH)) {
 	$query .= 'VALUES (NULL, "1", "'. $article_id .'", "'. $img_row[0] .'", "'. $img_row[1] .'", NOW());';
 	$ins_result = mysql_query($query);
 	
-	echo ("TRANSFER[". $article_id ."] ->[". $row['tweet_id'] ."] (". $row['created'] .") FOR [". $topic_id ."]>>\n\"". $row['tweet_msg'] ."\"\n\n");
-	
-}
-
-$result = mysql_query('DELETE FROM `tblArticlesWorking` WHERE 1 = 1;');
-$result = mysql_query('ALTER TABLE `tblArticlesWorking` AUTO_INCREMENT = 1;');  
-$result = mysql_query('DELETE FROM `tblTopicsArticlesWorking` WHERE 1 = 1;');  
-$result = mysql_query('DELETE FROM `tblArticleImagesWorking` WHERE 1 = 1;');
-$result = mysql_query('ALTER TABLE `tblArticleImagesWorking` AUTO_INCREMENT = 1;');  
+	echo ("TRANSFER #". ($cnt + 1) ." --> [". $article_id ."] ->[". $row['tweet_id'] ."] (". $row['created'] .") FOR [". $topic_id ."]>>\n\"". $row['tweet_msg'] ."\"\n\n");
+	$cnt++;
+}  
 
 require './_db_close.php';
 

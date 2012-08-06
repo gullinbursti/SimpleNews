@@ -1,22 +1,21 @@
-KEYWORD,HASH TAGS,HANDLE,DOMAIN SOURCE,DATA CONDITIONS
-"""App Store""",#AppStore,@AppStore,iTunes API,iTunes Title
-"""iPhone App""",#iPhoneApp,@gruber,iTunes API,iTunes Images
-"""iPad App""",#iPadApp,@PocketGamer,iTunes API,iTunes Preview Text
-"""iPad Apps""",#iPadApps,@TheNextWeb,iTunes API,iTunes URL
-"""iPhone Apps""",#iPhoneApps,@Pocketlint,iTunes API,iTunes Affiliate URL
-"""App Store""",#AppStore,@AppAdvice,iTunes API,Videos are OK if they have an iTunes ID
-Apps,#Apps,@AppsNewsFeed,iTunes API,Combined Search: Apps + iTunes
-"""iPhone Apps""",#iPhoneApps,@freeappaday,iTunes API,Combined Search: Apps + iTunes + Games
-"""iPad Apps""",#iPadApps,@greatappaday,iTunes API,Combined Search: Games + iTunes
-"""iOS Apps""",#iOSApps,@AppAdvice,iTunes API,Combined Search: Mobile Games + iTunes
-"""'Mobile Apps""",#MobileApps,@iHeartThisApp,iTunes API,Combined Search: Mobile Games + Videos
-"""Best iPhone App""",#BestiPhoneApp,@AppPicker,iTunes API,
-"""Best iPhone Game""",#BestiPhoneGame,@cultofmac,iTunes API,
-"""Mobile Games""",#MobileGames,@AllThingsiPhone,iTunes API,
-Apps+iTunes,,@App_Score,iTunes API,
-Apps+iTunes+Games,,@techcrunch,iTunes API,
-Games+iTunes,,@venturebeat,iTunes API,
-"""Mobile Games""+iTunes",,@betakit,iTunes API,
-"""Mobile Games""+Videos",,@AssemblyApps,,
-,,@AssemblyApps1,,
-,,@AssemblyApps2,,
+KEYWORD,HASH TAGS,HANDLE,OUR HANDLES,DOMAIN SOURCE,DATA CONDITIONS
+"""App Store""",#AppStore,@AppStore,@AssemblyApps1a,iTunes API,iTunes Title
+"""iPhone App""",#iPhoneApp,@gruber,@AssemblyApps1,iTunes API,iTunes Images
+"""iPad App""",#iPadApp,@PocketGamer,,iTunes API,iTunes Preview Text
+"""iPad Apps""",#iPadApps,@TheNextWeb,,iTunes API,iTunes URL
+"""iPhone Apps""",#iPhoneApps,@Pocketlint,,iTunes API,iTunes Affiliate URL
+"""App Store""",#AppStore,@AppAdvice,,iTunes API,Videos are OK if they have an iTunes ID
+Apps,#Apps,@AppsNewsFeed,,iTunes API,Combined Search: Apps + iTunes
+"""iPhone Apps""",#iPhoneApps,@freeappaday,,iTunes API,Combined Search: Apps + iTunes + Games
+"""iPad Apps""",#iPadApps,@greatappaday,,iTunes API,Combined Search: Games + iTunes
+"""iOS Apps""",#iOSApps,@AppAdvice,,iTunes API,Combined Search: Mobile Games + iTunes
+"""'Mobile Apps""",#MobileApps,@iHeartThisApp,,iTunes API,Combined Search: Mobile Games + Videos
+"""Best iPhone App""",#BestiPhoneApp,@AppPicker,,iTunes API,
+"""Best iPhone Game""",#BestiPhoneGame,@cultofmac,,iTunes API,
+"""Mobile Games""",#MobileGames,@AllThingsiPhone,,iTunes API,
+Apps+iTunes,,@App_Score,,iTunes API,
+Apps+iTunes+Games,,@techcrunch,,iTunes API,
+Games+iTunes,,@venturebeat,,iTunes API,
+"""Mobile Games""+iTunes",,@betakit,,iTunes API,
+"""Mobile Games""+Videos",,@AssemblyApps1a,,,
+,,@AssemblyApps1,,,

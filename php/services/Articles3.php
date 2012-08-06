@@ -96,19 +96,19 @@
 					break;
 				
 				case 3:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `itunes_url` = "" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 					break;
 					
 				case 4:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `itunes_url` = "" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 				    break;
 				
 				case 10:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 4 ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 4 AND `itunes_url` = "" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 					break;
 					
 				case 11:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `itunes_url` = "" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 					break;
 					
 				default:
