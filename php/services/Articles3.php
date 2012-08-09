@@ -88,31 +88,31 @@
 			
 			switch ($topic_id) {
 				case 1:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`itunes_url` LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `tblArticles`.`itunes_url` LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 					break;
 					
 				case 2:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`itunes_url` LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `tblArticles`.`itunes_url` LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 					break;
 				
 				case 3:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `itunes_url` = "" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `itunes_url` NOT LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 					break;
 					
 				case 4:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `itunes_url` = "" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `itunes_url` NOT LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 				    break;
 				
 				case 10:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 4 AND `itunes_url` = "" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 4 AND `itunes_url` NOT LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 					break;
 					
 				case 11:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `itunes_url` = "" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `itunes_url` NOT LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 					break;
 					
 				default:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `itunes_url` NOT LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 					break;
 			}
 							
@@ -811,31 +811,31 @@
 
 			switch ($topic_id) {
 				case 1:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`created` < "'. $date .'" AND `tblArticles`.`itunes_url` LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `tblArticles`.`created` < "'. $date .'" AND `tblArticles`.`itunes_url` LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 					break;
 
 				case 2:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`created` < "'. $date .'" AND `tblArticles`.`itunes_url` LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `tblArticles`.`created` < "'. $date .'" AND `tblArticles`.`itunes_url` LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 					break;
 
 				case 3:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`created` < "'. $date .'" AND `tblArticles`.`type_id` < 4) ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`created` < "'. $date .'" AND `tblArticles`.`type_id` < 4) AND `itunes_url` NOT LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 					break;
 
 				case 4:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`created` < "'. $date .'" AND `tblArticles`.`type_id` < 4) ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`created` < "'. $date .'" AND `tblArticles`.`type_id` < 4) AND `itunes_url` NOT LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 				    break;
 
 				case 10:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 4 AND `tblArticles`.`created` < "'. $date .'" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 4 AND `tblArticles`.`created` < "'. $date .'" AND `itunes_url` NOT LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 					break;
 					
 				case 11:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`created` < "'. $date .'" AND `tblArticles`.`type_id` < 4) ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `tblArticles`.`created` < "'. $date .'" AND `itunes_url` NOT LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 				    break;
 
 				default:
-					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND `tblArticles`.`type_id` >= 2 AND `tblArticles`.`created` < "'. $date .'" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
+					$query = 'SELECT * FROM `tblArticles` INNER JOIN `tblContributors` ON `tblArticles`.`contributor_id` = `tblContributors`.`id` INNER JOIN `tblTopicsArticles` ON `tblArticles`.`id` = `tblTopicsArticles`.`article_id` WHERE `tblArticles`.`active` = "Y" AND `tblTopicsArticles`.`topic_id` = '. $topic_id .' AND (`tblArticles`.`type_id` >= 2 AND `tblArticles`.`type_id` < 4) AND `tblArticles`.`created` < "'. $date .'" AND `itunes_url` NOT LIKE "http://itunes.apple.com/%" ORDER BY `tblArticles`.`created` DESC LIMIT 10;';
 					break;
 			}
 

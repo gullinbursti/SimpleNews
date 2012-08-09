@@ -230,10 +230,10 @@
 	// Create Login View so that the app will be granted "status_update" permission.
 	FBLoginView *loginview = [[FBLoginView alloc] initWithPermissions:[NSArray arrayWithObject:@"status_update"]];
 	
-	loginview.frame = CGRectOffset(loginview.frame, 5, 5);
+	loginview.frame = CGRectOffset(loginview.frame, 130.0, 5.0);
 	loginview.delegate = self;
 	
-	//[self.view addSubview:loginview];
+	[self.view addSubview:loginview];
 	//[SNAppDelegate openSession];
 	
 	// home
@@ -1070,14 +1070,22 @@
 		// with the results or an error.
 		
 		
-		NSString *message = [NSString stringWithFormat:@"%@ via @getassembly %@", _articleVO.title, ((SNImageVO *)[_articleVO.images objectAtIndex:0]).url];
-		NSDictionary *params = [NSDictionary dictionaryWithObject:message forKey:@"message"];
+		NSMutableDictionary *params = [NSMutableDictionary new];
+		[params setObject:[NSString stringWithFormat:@"http://discover.getassembly.com/canvas/index.php?aID=%d", _articleVO.article_id] forKey:@"quote"];
+		[params setObject:((SNImageVO *)[_articleVO.images objectAtIndex:0]).url forKey:@"image[0][url]"];
+		
 		
 		// use the "startWith" helper static on FBRequest to both create and start a request, with
 		// a specified completion handler.
-		[FBRequest startWithGraphPath:@"me/feed" parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+		[FBRequest startWithGraphPath:@"me/getassembly:share" parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
 			NSLog(@"POSTED TO FEED");
 		}];
+
+//		NSString *message = [NSString stringWithFormat:@"%@ via @getassembly %@", _articleVO.title, ((SNImageVO *)[_articleVO.images objectAtIndex:0]).url];
+//		NSDictionary *params = [NSDictionary dictionaryWithObject:message forKey:@"message"];
+//		[FBRequest startWithGraphPath:@"me/feed" parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+//			NSLog(@"POSTED TO FEED");
+//		}];
 	}
 }
 

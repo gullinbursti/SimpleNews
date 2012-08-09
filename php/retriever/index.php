@@ -75,6 +75,9 @@ function tweetsForTopicID($topic_id) {
 		if (mysql_num_rows(mysql_query($query)) > 0)
 			continue;
 			
+		if ($search_arr[$key]->from_user == "OneWord_kenny")
+			continue;
+			
 			
 		preg_match_all('!https?://[\S]+!', $search_arr[$key]->text, $matches);
 		if (count($matches[0]) == 0)
@@ -198,9 +201,8 @@ function tweetsForTopicID($topic_id) {
 		$query .= 'VALUES ("'. $topic_id .'", "'. $article_id .'");';
 		$ins2_result = mysql_query($query);
 		
-		echo ("INSERT(". ($tot + 1) ."/". count($tweet_arr) .") -> [". $article_id ."][". $tweet_arr[$key]['tweet_id'] ."] (". $tweet_arr[$key]['created'] .") FOR [". $topic_id ."]>> ". $tweet_arr[$key]['retweets'] ."\n\"". $tweet_arr[$key]['message'] ."\"\n\n");
-		$tot++;
-		
+		echo ("INSERT(". ($tot + 1) ."/". count($tweet_arr) .") -> [". $article_id ."][". $tweet_arr[$key]['tweet_id'] ."] (". $tweet_arr[$key]['created'] .") FOR [". $topic_id ."]>> {". $tweet_arr[$key]['retweets'] ."} \"". $tweet_arr[$key]['message'] ."\"\n");
+		$tot++;		
 	}	
 }
 

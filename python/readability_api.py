@@ -65,6 +65,15 @@ for row in result_set:
     		""", (type_id, "N", row["id"]))
 
 		continue
+		
+	except readability.api.ServerError:
+		print "Readability server error"
+		cursor.execute ("""
+    		UPDATE tblArticlesWorking SET type_id=%s, active=%s
+    		WHERE id=%s
+    		""", (type_id, "N", row["id"]))
+
+		continue
 	
 	# --/ article type
 	type_id = 0
@@ -112,6 +121,7 @@ for row in result_set:
 		
 		
 	# --/ extract itunes
+	itunes_id = ''
 	m = re.compile(r'<a href="http://itunes.apple.com/(.*?)".*?</a>').search(c)
 	if m is None:
 		itunes = ''
@@ -120,14 +130,21 @@ for row in result_set:
 			itunes = ''
 			
 		else:
+			itunes_id = m.group(1)
 			itunes = 'http://itunes.apple.com/' + m.group(1)
 			print "Found iTunes link <%s>" % (itunes)
 			type_id += 2
 							
 	else:
+		itunes_id = m.group(1)
 		itunes = 'http://itunes.apple.com/' + m.group(1)
 		print "Found iTunes link <%s>" % (itunes)
 		type_id += 2
+	
+	# --/ ignore my clinic app	
+	if itunes_id == "us/app/my-clinic-for-iphone/id503156674?mt=8&uo=4":
+		type_id -= 2
+		itunes = ''
 		
 
 	# --/ extract image
