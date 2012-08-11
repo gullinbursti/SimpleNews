@@ -1071,7 +1071,7 @@
 		
 		
 		NSMutableDictionary *params = [NSMutableDictionary new];
-		[params setObject:[NSString stringWithFormat:@"http://discover.getassembly.com/canvas/index.php?aID=%d", _articleVO.article_id] forKey:@"quote"];
+		[params setObject:[NSString stringWithFormat:@"http://discover.getassembly.com/facebook/opengraph/index.php?aID=%d", _articleVO.article_id] forKey:@"quote"];
 		[params setObject:((SNImageVO *)[_articleVO.images objectAtIndex:0]).url forKey:@"image[0][url]"];
 		
 		

@@ -907,6 +907,7 @@
 		4CEF4AB81506F44000A1AD7E /* SNPaginationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNPaginationView.m; sourceTree = "<group>"; };
 		4CF63C30150B207B00055EFD /* overlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = overlay.png; sourceTree = "<group>"; };
 		4CF63C31150B207B00055EFD /* overlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "overlay@2x.png"; sourceTree = "<group>"; };
+		4CF8713715D6200100A1C960 /* SNProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNProtocols.h; sourceTree = "<group>"; };
 		4CFC2C14159BE76800585E56 /* defaultAvatar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = defaultAvatar.png; sourceTree = "<group>"; };
 		4CFC2C15159BE76800585E56 /* defaultAvatar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "defaultAvatar@2x.png"; sourceTree = "<group>"; };
 		4CFC2C1E159D032700585E56 /* articleFriendsBG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = articleFriendsBG.png; sourceTree = "<group>"; };
@@ -1978,6 +1979,7 @@
 				E423F8F11559B9900094042E /* MBLResourceCache.m */,
 				E423F8F21559B9900094042E /* MBLResourceLoader.h */,
 				E423F8F31559B9900094042E /* MBLResourceLoader.m */,
+				4CF8713715D6200100A1C960 /* SNProtocols.h */,
 			);
 			name = Shared;
 			path = SimpleNews/Shared;

@@ -5,10 +5,11 @@ require './_db_open.php';
 if (isset($_GET['aID'])) {
 	$article_id = $_GET['aID'];
 	
-	$query = 'SELECT `title`, `content_txt` FROM `tblArticles` WHERE `id` = '. $article_id .';';
+	$query = 'SELECT `title`, `content_txt`, `content_url` FROM `tblArticles` WHERE `id` = '. $article_id .';';
 	$row = mysql_fetch_row(mysql_query($query));
 	$title = $row[0];
 	$blurb = $row[1];
+	$url = $row[2];
 	
 	$query = 'SELECT `url` FROM `tblArticleImages` WHERE `article_id` = '. $article_id .';';
 	$row = mysql_fetch_row(mysql_query($query));
@@ -27,7 +28,13 @@ require './_db_close.php'; ?>
     <meta property="og:title"       content="<?php echo ($title); ?>" /> 
     <meta property="og:image"       content="<?php echo ($img_url); ?>" />
     <meta property="og:description" content="<?php echo ($blurb); ?>" />
-  </head>  
+  </head>
+
+  <body>
+  	<script type="text/javascript">
+      setTimeout(function() {window.location = "<?php echo ($url); ?>";}, 500);
+    </script>
+  </body>  
 </html>
 
 <!--

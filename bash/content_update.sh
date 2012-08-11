@@ -23,7 +23,7 @@ php index.php "${start_time}"
 
 #-- run thru readability
 echo "READABILITY [`date +%Y-%m-%d\ %H-%M-%S`]" >> $time_file
-python readability_api.py
+php readability.php "${start_time}"
 
 #-- transfer app ready articles
 echo "TRANSFER [`date +%Y-%m-%d\ %H-%M-%S`]" >> $time_file
