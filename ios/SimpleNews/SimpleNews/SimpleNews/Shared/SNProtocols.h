@@ -7,7 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <FBiOSSDK/FacebookSDK.h>
 
-@protocol SNProtocols <NSObject>
 
+@protocol SNOGArticle<FBGraphObject>
+@property (retain, nonatomic) NSString* graphID;
+@property (retain, nonatomic) NSString* graphURL;
+@end
+
+@protocol SNOGShareArticleAction<FBOpenGraphAction>
+@property (retain, nonatomic) id<SNOGArticle> article;
 @end

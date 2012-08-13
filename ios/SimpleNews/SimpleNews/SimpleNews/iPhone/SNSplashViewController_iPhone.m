@@ -6,8 +6,11 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import <FBiOSSDK/FacebookSDK.h>
+
 #import "SNSplashViewController_iPhone.h"
 #import "SNRootViewController_iPhone.h"
+#import "SNLoginViewController_iPhone.h"
 
 #import "SNAppDelegate.h"
 #import "SNTopicVO.h"
@@ -203,8 +206,17 @@
 		[defaults synchronize];
 		_isIntroComplete = YES;
 		
-		if (_hasDeviceToken && _isIntroComplete)
-			[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
+		if (_hasDeviceToken && _isIntroComplete) {
+			//[SNAppDelegate openSession];
+			
+			if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded)
+				[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
+			
+			else
+				[self.navigationController pushViewController:[[SNLoginViewController_iPhone alloc] init] animated:YES];
+			
+//			[self.navigationController pushViewController:[[SNLoginViewController_iPhone alloc] init] animated:YES];
+		}
 	}
 	
 	_topicLabel.text = [NSString stringWithFormat:@"Assembling %@", [_topicNames objectAtIndex:_topicIndex]];
@@ -213,8 +225,17 @@
 - (void)proceedToList {
 	_hasDeviceToken = YES;
 	
-	if (_isIntroComplete)
-		[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
+	if (_isIntroComplete) {
+		if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded)
+			[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
+		
+		else
+			[self.navigationController pushViewController:[[SNLoginViewController_iPhone alloc] init] animated:YES];
+
+		
+		//[self.navigationController pushViewController:[[SNLoginViewController_iPhone alloc] init] animated:YES];
+		//[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
+	}
 }
 
 #pragma mark - Async Resource Observers

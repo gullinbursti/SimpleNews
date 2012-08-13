@@ -119,7 +119,7 @@ while ($row = mysql_fetch_array($article_result, MYSQL_BOTH)) {
 			continue;
 				
 		$size_arr = getimagesize($val);
-		if ($size_arr[0] > 400) {
+		if ($size_arr[0] > 400 && $size_arr[1] > 160) {
 			$img_url = $val;
 			$type_id += 2;
 			$img_ratio = $size_arr[1] / $size_arr[0];

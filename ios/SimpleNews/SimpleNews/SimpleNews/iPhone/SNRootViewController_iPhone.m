@@ -11,6 +11,7 @@
 #import <FBiOSSDK/FacebookSDK.h>
 #import "GANTracker.h"
 
+#import "SNProtocols.h"
 #import "SNRootViewController_iPhone.h"
 #import "SNTopicVO.h"
 #import "SNImageVO.h"
@@ -227,22 +228,18 @@
 	infoLabel.backgroundColor = [UIColor clearColor];
 	[_blackMatteView addSubview:infoLabel];
 	
-	// Create Login View so that the app will be granted "status_update" permission.
-	FBLoginView *loginview = [[FBLoginView alloc] initWithPermissions:[NSArray arrayWithObject:@"status_update"]];
+//	// home
+//	[FBRequest startWithGraphPath:@"me/home" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+//		NSLog(@"%@", (NSDictionary *)result);
+//	}];
+//	
+//	// wall
+//	[FBRequest startWithGraphPath:@"me/feed" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+//		NSLog(@"%@", (NSDictionary *)result);
+//	}];
 	
-	loginview.frame = CGRectOffset(loginview.frame, 130.0, 5.0);
-	loginview.delegate = self;
-	
-	[self.view addSubview:loginview];
-	//[SNAppDelegate openSession];
-	
-	// home
-	[FBRequest startWithGraphPath:@"me/home" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-		NSLog(@"%@", (NSDictionary *)result);
-	}];
-	
-	// wall
-	[FBRequest startWithGraphPath:@"me/feed" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+	// profile
+	[FBRequest startWithGraphPath:@"me" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
 		NSLog(@"%@", (NSDictionary *)result);
 	}];
 }
@@ -1069,17 +1066,47 @@
 		// Post a status update to the user's feedm via the Graph API, and display an alert view 
 		// with the results or an error.
 		
+		NSLog(@"%d", _articleVO.article_id);
 		
-		NSMutableDictionary *params = [NSMutableDictionary new];
-		[params setObject:[NSString stringWithFormat:@"http://discover.getassembly.com/facebook/opengraph/index.php?aID=%d", _articleVO.article_id] forKey:@"quote"];
-		[params setObject:((SNImageVO *)[_articleVO.images objectAtIndex:0]).url forKey:@"image[0][url]"];
+		id<SNOGArticle> articleObject = (id<SNOGArticle>)[FBGraphObject graphObject];
+		articleObject.graphURL = [NSString stringWithFormat:@"http://discover.getassembly.com/facebook/opengraph/index.php?aID=%d", _articleVO.article_id];
 		
+		id<SNOGShareArticleAction> action = (id<SNOGShareArticleAction>)[FBGraphObject graphObject];
+		action.article = articleObject;
 		
-		// use the "startWith" helper static on FBRequest to both create and start a request, with
-		// a specified completion handler.
-		[FBRequest startWithGraphPath:@"me/getassembly:share" parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-			NSLog(@"POSTED TO FEED");
+		NSMutableDictionary *image = [[NSMutableDictionary alloc] init];
+		[image setObject:((SNImageVO *)[_articleVO.images objectAtIndex:0]).url forKey:@"url"];
+		
+		NSMutableArray *images = [[NSMutableArray alloc] init];
+		[images addObject:image];
+		
+		action.image = images;
+		
+		[FBRequest startForPostWithGraphPath:@"me/getassembly:share" graphObject:action completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {			 
+			NSString *alertText;
+		 
+			if (!error)
+				alertText = [NSString stringWithFormat:@"Posted Open Graph action, id: %@", [result objectForKey:@"id"]];
+		 
+			else
+				alertText = [NSString stringWithFormat:@"error: domain = %@, code = %d", error.description, error.code];
+		 
+			[[[UIAlertView alloc] initWithTitle:@"Result" message:alertText delegate:nil cancelButtonTitle:@"Thanks!" otherButtonTitles:nil] show];
 		}];
+		
+		
+		
+//		NSMutableDictionary *params = [NSMutableDictionary new];
+//		[params setObject:[NSString stringWithFormat:@"http://discover.getassembly.com/facebook/opengraph/index.php?aID=%d", _articleVO.article_id] forKey:@"quote"];
+//		[params setObject:((SNImageVO *)[_articleVO.images objectAtIndex:0]).url forKey:@"image[0][url]"];
+//		
+//		// use the "startWith" helper static on FBRequest to both create and start a request, with
+//		// a specified completion handler.
+//		[FBRequest startWithGraphPath:@"me/getassembly:share" parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+//			NSLog(@"POSTED TO FEED");
+//		}];
+		
+		
 
 //		NSString *message = [NSString stringWithFormat:@"%@ via @getassembly %@", _articleVO.title, ((SNImageVO *)[_articleVO.images objectAtIndex:0]).url];
 //		NSDictionary *params = [NSDictionary dictionaryWithObject:message forKey:@"message"];

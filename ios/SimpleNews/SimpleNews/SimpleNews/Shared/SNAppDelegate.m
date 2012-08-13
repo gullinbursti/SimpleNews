@@ -558,7 +558,12 @@ static const BOOL kIsGoogleAnalyticsLive = YES;
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
 	// attempt to extract a token from the url
-	return [FBSession.activeSession handleOpenURL:url]; 
+	
+	NSLog(@"application:openURL");
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SESSION_STATE_CHANGED" object:nil];
+	
+	return [FBSession.activeSession handleOpenURL:url];
 }
 
 #pragma mark - PushNotification Delegates

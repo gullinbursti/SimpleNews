@@ -28,12 +28,21 @@ require './_db_close.php'; ?>
     <meta property="og:title"       content="<?php echo ($title); ?>" /> 
     <meta property="og:image"       content="<?php echo ($img_url); ?>" />
     <meta property="og:description" content="<?php echo ($blurb); ?>" />
+	
+	<title><?php echo ($title); ?></title>
   </head>
 
   <body>
-  	<script type="text/javascript">
+	<h2><?php echo ($title); ?></h2>
+	<hr />
+	<p><?php echo ($blurb); ?></p>
+	<p><img src="<?php echo ($img_url); ?>" /></p>
+	<p><a href="<?php echo ($url); ?>" target="_blank"><?php echo ($url); ?></a></p>
+<!--
+	<script type="text/javascript">
       setTimeout(function() {window.location = "<?php echo ($url); ?>";}, 500);
     </script>
+-->
   </body>  
 </html>
 

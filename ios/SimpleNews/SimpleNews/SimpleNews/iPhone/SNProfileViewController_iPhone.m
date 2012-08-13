@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import <FBiOSSDK/FacebookSDK.h>
+
 #import "SNProfileViewController_iPhone.h"
 
 #import "SNHeaderView_iPhone.h"
@@ -72,6 +74,12 @@
 	[profileButton setBackgroundImage:[UIImage imageNamed:@"moreButton_Active.png"] forState:UIControlStateHighlighted];
 	[profileButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:profileButton];
+	
+	// Create Login View so that the app will be granted "status_update" permission.
+	FBLoginView *loginview = [[FBLoginView alloc] initWithPermissions:[NSArray arrayWithObject:@"status_update"]];
+	
+	loginview.frame = CGRectOffset(loginview.frame, 130.0, 65.0);
+	[self.view addSubview:loginview];
 	
 	UIImageView *statsBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 108.0, 320.0, 84.0)];
 	statsBgView.image = [UIImage imageNamed:@"profileBackgroundStats.png"];
