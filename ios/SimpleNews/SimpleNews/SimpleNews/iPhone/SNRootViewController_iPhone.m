@@ -15,6 +15,7 @@
 #import "SNRootViewController_iPhone.h"
 #import "SNTopicVO.h"
 #import "SNImageVO.h"
+#import "SNFacebookCaller.h"
 
 #import "SNProfileViewController_iPhone.h"
 #import "SNWebPageViewController_iPhone.h"
@@ -37,6 +38,9 @@
 - (void)_refreshUserAccount;
 - (void)_refreshTopicsList;
 - (void)_hideFullscreenMedia:(NSNotification *)notification;
+- (void)_fbPostToActivity:(SNArticleVO *)vo withAction:(NSString *)action;
+- (void)_fbPostToTimeline:(SNArticleVO *)vo;
+- (void)_fbPostStatus:(NSString *)msg;
 @end
 
 @implementation SNRootViewController_iPhone
@@ -228,20 +232,32 @@
 	infoLabel.backgroundColor = [UIColor clearColor];
 	[_blackMatteView addSubview:infoLabel];
 	
-//	// home
-//	[FBRequest startWithGraphPath:@"me/home" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-//		NSLog(@"%@", (NSDictionary *)result);
-//	}];
-//	
+	if (FBSession.activeSession.isOpen) {
+		[[FBRequest requestForMe] startWithCompletionHandler:
+		 ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
+			 if (!error) {
+				 NSLog(@"user.id [%@]", [user objectForKey:@"id"]);
+				 NSLog(@"user.name [%@]", user.name);
+				 
+				 [SNAppDelegate writeFBProfile:user];
+				 
+				 [FBRequest startWithGraphPath:@"me/home" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+					 ASIFormDataRequest *feedRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kUsersAPI]]];
+					 [feedRequest setPostValue:[NSString stringWithFormat:@"%d", 8] forKey:@"action"];
+					 [feedRequest setPostValue:[NSString stringWithFormat:@"%@", [[SNAppDelegate fbProfileForUser] objectForKey:@"id"]] forKey:@"fbID"];
+					 [feedRequest setPostValue:[NSString stringWithFormat:@"%@", (NSDictionary *)result] forKey:@"feed"];
+					 [feedRequest startAsynchronous];
+				 }];
+			 }
+		 }];		
+	}	
+
 //	// wall
 //	[FBRequest startWithGraphPath:@"me/feed" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
 //		NSLog(@"%@", (NSDictionary *)result);
 //	}];
 	
-	// profile
-	[FBRequest startWithGraphPath:@"me" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-		NSLog(@"%@", (NSDictionary *)result);
-	}];
+
 }
 
 - (void)viewDidUnload {
@@ -358,6 +374,8 @@
 		[_likeRequest startAsynchronous];
 		
 		_articleVO.hasLiked = YES;
+		
+		[SNFacebookCaller postToActivity:_articleVO withAction:@"vote_up"];
 	}
 }
 
@@ -446,6 +464,48 @@
 		_userResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:userFormValues forceFetch:YES expiration:[NSDate date]];
 		[_userResource subscribe:self];
 	}
+}
+
+#pragma mark - Helpers
+- (void)_fbPostToActivity:(SNArticleVO *)vo withAction:(NSString *)action {
+	NSMutableDictionary *params = [NSMutableDictionary new];
+	[params setObject:[NSString stringWithFormat:@"http://discover.getassembly.com/facebook/opengraph/index.php?aID=%d", vo.article_id] forKey:@"quote"];
+	[params setObject:((SNImageVO *)[vo.images objectAtIndex:0]).url forKey:@"image[0][url]"];
+	
+	[FBRequest startWithGraphPath:[NSString stringWithFormat:@"me/getassembly:%@", action] parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+		NSLog(@"POSTED TO FEED :[%@]",[result objectForKey:@"id"]);
+	}];
+
+}
+
+- (void)_fbPostToTimeline:(SNArticleVO *)vo {
+	NSMutableDictionary *postParams = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+												  [NSString stringWithFormat:@"http://discover.getassembly.com/facebook/opengraph/index.php?aID=%d", vo.article_id], @"link",
+												  ((SNImageVO *)[vo.images objectAtIndex:0]).url, @"picture",
+												  vo.title, @"name",
+												  vo.topicTitle, @"caption",
+												  vo.content, @"description", nil];
+	
+	[FBRequest startWithGraphPath:@"me/feed" parameters:postParams HTTPMethod:@"POST" completionHandler:
+	 ^(FBRequestConnection *connection, id result, NSError *error) {
+		 NSString *alertText;
+		 
+		 if (error)
+			 alertText = [NSString stringWithFormat:@"error: description = %@, code = %d", error.description, error.code];
+		 
+		 else
+			 alertText = [NSString stringWithFormat: @"Posted action, id: %@", [result objectForKey:@"id"]];
+		 
+		 
+		 [[[UIAlertView alloc] initWithTitle:@"Result" message:alertText delegate:self cancelButtonTitle:@"OK!" otherButtonTitles:nil] show];
+	}];
+}
+
+- (void)_fbPostStatus:(NSString *)msg {
+	NSDictionary *params = [NSDictionary dictionaryWithObject:msg forKey:@"message"];
+	[FBRequest startWithGraphPath:@"me/feed" parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+		NSLog(@"POSTED STATUS");
+	}];
 }
 
 
@@ -699,6 +759,7 @@
 	
 	NSLog(@"OFFSET:[%f]", offset);
 	
+	[SNFacebookCaller postToActivity:_articleVO withAction:@"view"];
 	
 	NSError *error;
 	if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/zoom/%d/", _articleVO.article_id] withError:&error])
@@ -1063,59 +1124,10 @@
 		}
 		
 	} else if (ind == 5) {
-		// Post a status update to the user's feedm via the Graph API, and display an alert view 
-		// with the results or an error.
-		
 		NSLog(@"%d", _articleVO.article_id);
-		
-		id<SNOGArticle> articleObject = (id<SNOGArticle>)[FBGraphObject graphObject];
-		articleObject.graphURL = [NSString stringWithFormat:@"http://discover.getassembly.com/facebook/opengraph/index.php?aID=%d", _articleVO.article_id];
-		
-		id<SNOGShareArticleAction> action = (id<SNOGShareArticleAction>)[FBGraphObject graphObject];
-		action.article = articleObject;
-		
-		NSMutableDictionary *image = [[NSMutableDictionary alloc] init];
-		[image setObject:((SNImageVO *)[_articleVO.images objectAtIndex:0]).url forKey:@"url"];
-		
-		NSMutableArray *images = [[NSMutableArray alloc] init];
-		[images addObject:image];
-		
-		action.image = images;
-		
-		[FBRequest startForPostWithGraphPath:@"me/getassembly:share" graphObject:action completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {			 
-			NSString *alertText;
-		 
-			if (!error)
-				alertText = [NSString stringWithFormat:@"Posted Open Graph action, id: %@", [result objectForKey:@"id"]];
-		 
-			else
-				alertText = [NSString stringWithFormat:@"error: domain = %@, code = %d", error.description, error.code];
-		 
-			[[[UIAlertView alloc] initWithTitle:@"Result" message:alertText delegate:nil cancelButtonTitle:@"Thanks!" otherButtonTitles:nil] show];
-		}];
-		
-		
-		
-//		NSMutableDictionary *params = [NSMutableDictionary new];
-//		[params setObject:[NSString stringWithFormat:@"http://discover.getassembly.com/facebook/opengraph/index.php?aID=%d", _articleVO.article_id] forKey:@"quote"];
-//		[params setObject:((SNImageVO *)[_articleVO.images objectAtIndex:0]).url forKey:@"image[0][url]"];
-//		
-//		// use the "startWith" helper static on FBRequest to both create and start a request, with
-//		// a specified completion handler.
-//		[FBRequest startWithGraphPath:@"me/getassembly:share" parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-//			NSLog(@"POSTED TO FEED");
-//		}];
-		
-		
-
-//		NSString *message = [NSString stringWithFormat:@"%@ via @getassembly %@", _articleVO.title, ((SNImageVO *)[_articleVO.images objectAtIndex:0]).url];
-//		NSDictionary *params = [NSDictionary dictionaryWithObject:message forKey:@"message"];
-//		[FBRequest startWithGraphPath:@"me/feed" parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-//			NSLog(@"POSTED TO FEED");
-//		}];
+		[SNFacebookCaller postToTimeline:_articleVO];
 	}
 }
-
 
 
 #pragma mark - TableView DataSource Delegates
@@ -1130,7 +1142,7 @@
 			break;
 			
 		case 2:
-			return (4);
+			return (3);
 			break;
 	}
 }
@@ -1221,7 +1233,7 @@
 			break;
 			
 		case 2:
-			titles = [NSArray arrayWithObjects:@"My Likes", @"My Comments", @"Friends", @"Invite Friends", nil];
+			titles = [NSArray arrayWithObjects:@"My Likes", @"My Comments", @"Invite All Friends", nil];
 			otherCell = [tableView dequeueReusableCellWithIdentifier:[SNRootOtherViewCell_iPhone cellReuseIdentifier]];
 			
 			if (otherCell == nil)
@@ -1373,6 +1385,7 @@
 			}
 		
 		} else if (indexPath.row == 2) {
+			/*
 			if ([SNAppDelegate twitterHandle].length > 0) {
 				NSError *error;
 				if (![[GANTracker sharedTracker] trackPageview:@"/profile/friends" withError:&error])
@@ -1413,6 +1426,7 @@
 				
 				[alert show];
 			}
+			 */
 		}
 	}
 }

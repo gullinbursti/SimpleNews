@@ -228,7 +228,7 @@ while ($topic_row = mysql_fetch_array($topic_result, MYSQL_BOTH)) {
 }
 
 
-
+   
 
 
 /*

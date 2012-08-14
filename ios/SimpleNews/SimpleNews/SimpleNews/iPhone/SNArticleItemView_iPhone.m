@@ -9,6 +9,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "GANTracker.h"
 
+#import "SNFacebookCaller.h"
 #import "SNArticleItemView_iPhone.h"
 #import "SNAppDelegate.h"
 #import "SNUnderlinedLabel.h"
@@ -139,13 +140,6 @@
 			titleLabel.text = _vo.title;
 			titleLabel.numberOfLines = 0;
 			[self addSubview:titleLabel];
-			
-			if (_vo.type_id < 4) {
-				UIButton *titleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-				[titleButton addTarget:self action:@selector(_goDetails:) forControlEvents:UIControlEventTouchUpInside];
-				titleButton.frame = titleLabel.frame;
-				[self addSubview:titleButton];
-			}
 			
 			offset += size.height + 4.0;
 		}
@@ -440,7 +434,7 @@
 		[_likeRequest setPostValue:[NSString stringWithFormat:@"%d", _vo.article_id] forKey:@"articleID"];
 		_likeRequest.delegate = self;
 		[_likeRequest startAsynchronous];
-		
+		[SNFacebookCaller postToActivity:_vo withAction:@"vote_up"];
 		_vo.hasLiked = YES;
 	}
 }
@@ -493,46 +487,12 @@
 	[SNAppDelegate openWithAppStore:_vo.article_url];
 }
 
-- (void)_imageBtnTimeout {
-	_isFullscreenDblTap = NO;
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ARTICLE_DETAILS" object:_vo];
-}
-
 - (void)_goImage1:(id)sender {
-	if (!_isFullscreenDblTap) {
-		_isFullscreenDblTap = YES;
-		_dblTapTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_imageBtnTimeout) userInfo:nil repeats:NO];
-		
-	} else {
-		_isFullscreenDblTap = NO;
-		
-		[_dblTapTimer invalidate];
-		_dblTapTimer = nil;
-		
-		[self _photoZoomIn:nil];
-	}
-	
-//	[sender setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.5]];	
-//	[UIView animateWithDuration:0.15 animations:^(void) {
-//		[sender setBackgroundColor:[UIColor colorWithWhite:0.0 alpha:0.0]];	
-//		
-//	} completion:^(BOOL finished) {
-//	}];
+	[self _photoZoomIn:nil];
 }
 
 - (void)_goImage2:(id)sender {
-	if (!_isFullscreenDblTap) {
-		_isFullscreenDblTap = YES;
-		_dblTapTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_imageBtnTimeout) userInfo:nil repeats:NO];
-		
-	} else {
-		_isFullscreenDblTap = NO;
-		
-		[_dblTapTimer invalidate];
-		_dblTapTimer = nil;
-		
-		[self _photo2ZoomIn:nil];
-	}
+	[self _photo2ZoomIn:nil];
 }
 
 

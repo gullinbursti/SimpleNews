@@ -39,6 +39,9 @@
 +(void)writeUserProfile:(NSDictionary *)userInfo;
 +(NSDictionary *)profileForUser;
 
++(void)writeFBProfile:(NSDictionary *)userInfo;
++(NSDictionary *)fbProfileForUser;
+
 +(void)writeDeviceToken:(NSString *)token;
 +(NSString *)deviceToken;
 

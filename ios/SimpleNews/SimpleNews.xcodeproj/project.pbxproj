@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C02D16B15DA2F0F002152A5 /* SNFacebookCaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C02D16A15DA2F0F002152A5 /* SNFacebookCaller.m */; };
 		4C119B6F1574C64300E663CD /* chevron.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C119B6D1574C64300E663CD /* chevron.png */; };
 		4C119B701574C64300E663CD /* chevron@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C119B6E1574C64300E663CD /* chevron@2x.png */; };
 		4C119B741574C73400E663CD /* background_timeline.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C119B721574C73400E663CD /* background_timeline.png */; };
@@ -383,6 +384,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4C02D16915DA2F0E002152A5 /* SNFacebookCaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNFacebookCaller.h; sourceTree = "<group>"; };
+		4C02D16A15DA2F0F002152A5 /* SNFacebookCaller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNFacebookCaller.m; sourceTree = "<group>"; };
 		4C119B6D1574C64300E663CD /* chevron.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chevron.png; sourceTree = "<group>"; };
 		4C119B6E1574C64300E663CD /* chevron@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron@2x.png"; sourceTree = "<group>"; };
 		4C119B721574C73400E663CD /* background_timeline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background_timeline.png; sourceTree = "<group>"; };
@@ -1954,6 +1957,8 @@
 				4CEF4AB81506F44000A1AD7E /* SNPaginationView.m */,
 				4C45B7AB150C1F360039F45B /* SNSplashHighlightView.h */,
 				4C45B7AC150C1F360039F45B /* SNSplashHighlightView.m */,
+				4C02D16915DA2F0E002152A5 /* SNFacebookCaller.h */,
+				4C02D16A15DA2F0F002152A5 /* SNFacebookCaller.m */,
 				4CD919B2151E9D88004081B7 /* SNTwitterCaller.h */,
 				4CD919B3151E9D89004081B7 /* SNTwitterCaller.m */,
 				4C8671921543D00A00E27CCA /* SNUnderlinedLabel.h */,
@@ -2609,6 +2614,7 @@
 				E4D9000F15991014009F71D5 /* MBLPageItemViewController.m in Sources */,
 				E4D9001015991014009F71D5 /* MBLPageViewController.m in Sources */,
 				4CF8713B15D7492C00A1C960 /* SNLoginViewController_iPhone.m in Sources */,
+				4C02D16B15DA2F0F002152A5 /* SNFacebookCaller.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

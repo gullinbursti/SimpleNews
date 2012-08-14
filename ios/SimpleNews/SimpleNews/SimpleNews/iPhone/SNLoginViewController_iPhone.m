@@ -53,15 +53,6 @@
 	twitterButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
 	[twitterButton setTitle:@"Twitter" forState:UIControlStateNormal];
 	[self.view addSubview:twitterButton];
-	
-	// Create Login View so that the app will be granted "status_update" permission.
-//	FBLoginView *loginview = [[FBLoginView alloc] initWithPermissions:[NSArray arrayWithObject:@"status_update"]];
-//	
-//	loginview.frame = CGRectOffset(loginview.frame, 30.0, 250.0);
-//	loginview.delegate = self;
-//	
-//	[self.view addSubview:loginview];
-	//[SNAppDelegate openSession];
 }
 
 - (void)viewDidLoad
@@ -76,12 +67,13 @@
 
 #pragma mark - Notifications
 - (void)_sessionStateChanged:(NSNotification *)notification {
-	[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:NO];
+	[self dismissModalViewControllerAnimated:YES];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"LOGIN_VIEW_DISMISSED" object:nil];
 }
 
 #pragma mark - Navigation
 - (void)_goFacebook {
-	NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", nil];
+	NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", @"read_stream", @"status_update", nil];
 	[FBSession sessionOpenWithPermissions:permissions completionHandler:
 	 ^(FBSession *session, FBSessionState state, NSError *error) {
 		 switch (state) {
@@ -116,6 +108,7 @@
 }
 
 - (void)_goTwitter {
-	[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
+	[self dismissModalViewControllerAnimated:YES];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"LOGIN_VIEW_DISMISSED" object:nil];
 }
 @end

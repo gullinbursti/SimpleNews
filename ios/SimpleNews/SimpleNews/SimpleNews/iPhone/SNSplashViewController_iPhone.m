@@ -44,6 +44,8 @@
 		NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 		[defaults setObject:[NSNumber numberWithInt:1] forKey:@"splash_state"];
 		[defaults synchronize];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_loginViewDismissed:) name:@"LOGIN_VIEW_DISMISSED" object:nil];
 	}
 	
 	return (self);
@@ -151,6 +153,8 @@
 		self.topicsListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 60.0]]; // 1 hour for now
 	}
 	
+	//[SNAppDelegate openSession];
+	
 	//_frameTimer = [NSTimer scheduledTimerWithTimeInterval:0.15 target:self selector:@selector(_nextFrame) userInfo:nil repeats:YES];
 }
 
@@ -207,13 +211,14 @@
 		_isIntroComplete = YES;
 		
 		if (_hasDeviceToken && _isIntroComplete) {
-			//[SNAppDelegate openSession];
-			
-			if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded)
+			if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
+				[SNAppDelegate openSession];
 				[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
 			
-			else
-				[self.navigationController pushViewController:[[SNLoginViewController_iPhone alloc] init] animated:YES];
+			} else
+				[[self.navigationController topViewController] presentModalViewController:[[SNLoginViewController_iPhone alloc] init] animated:YES];
+				//[self.navigationController presentModalViewController:[[SNLoginViewController_iPhone alloc] init] animated:YES];
+				//[self.navigationController pushViewController:[[SNLoginViewController_iPhone alloc] init] animated:YES];
 			
 //			[self.navigationController pushViewController:[[SNLoginViewController_iPhone alloc] init] animated:YES];
 		}
@@ -230,12 +235,18 @@
 			[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
 		
 		else
-			[self.navigationController pushViewController:[[SNLoginViewController_iPhone alloc] init] animated:YES];
+			[[self.navigationController topViewController] presentModalViewController:[[SNLoginViewController_iPhone alloc] init] animated:YES];
+			//[self.navigationController pushViewController:[[SNLoginViewController_iPhone alloc] init] animated:YES];
 
 		
 		//[self.navigationController pushViewController:[[SNLoginViewController_iPhone alloc] init] animated:YES];
 		//[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
 	}
+}
+
+#pragma mark - Notifications
+-(void)_loginViewDismissed:(NSNotification *)notification {
+	[self.navigationController pushViewController:[[SNRootViewController_iPhone alloc] init] animated:YES];
 }
 
 #pragma mark - Async Resource Observers

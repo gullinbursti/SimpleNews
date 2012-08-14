@@ -12,7 +12,7 @@
 
 @protocol SNOGArticle<FBGraphObject>
 @property (retain, nonatomic) NSString* graphID;
-@property (retain, nonatomic) NSString* graphURL;
+@property (retain, nonatomic) NSString* url;
 @end
 
 @protocol SNOGShareArticleAction<FBOpenGraphAction>

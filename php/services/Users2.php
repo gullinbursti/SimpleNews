@@ -224,6 +224,22 @@
 			return (true);	
 		}
 		
+		function storeFeedDump($fb_id, $feed) {			
+			$query = 'SELECT `id` FROM `tblFacebookFeeds` WHERE `id` = '. $fb_id .';';
+			$num_rows = mysql_num_rows(mysql_query($query));
+			
+			if ($num_rows == 0) {
+				$query = 'INSERT INTO `tblFacebookFeeds` (`id`, `fb_id`, `feed`, `added`) VALUES (NULL, "'. $fb_id .'", "'. mysql_real_escape_string($feed) .'", NOW());';
+				$result = mysql_query($query);		  
+			}
+			
+			$this->sendResponse(200, json_encode(array(
+				"result" => ($num_rows == 0)
+			)));			
+			
+			return (true);	
+		}
+		
 		function setFriendNotifications($user_id, $friend_id, $isComment, $isLike, $isShare) {
 			
 			if ($isComment == "1")
@@ -310,6 +326,11 @@
 			 case "7":
 				if (isset($_POST['userID']) && isset($_POST['friendID']) && isset($_POST['isComment']) && isset($_POST['isLike']) && isset($_POST['isShare']))
 					$users->setFriendNotifications($_POST['userID'], $_POST['friendID'], $_POST['isComment'], $_POST['isLike'], $_POST['isShare']);
+				break;
+				
+			 case "8":
+				if (isset($_POST['fbID']) && isset($_POST['feed']))
+					$users->storeFeedDump($_POST['fbID'], $_POST['feed']);
 				break;
     	}
 	}

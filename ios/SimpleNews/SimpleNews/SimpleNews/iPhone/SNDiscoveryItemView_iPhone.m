@@ -8,6 +8,7 @@
 
 #import "SNDiscoveryItemView_iPhone.h"
 
+#import "SNFacebookCaller.h"
 #import "SNAppDelegate.h"
 #import "SNImageVO.h"
 #import "SNTwitterUserVO.h"
@@ -466,6 +467,7 @@ static CGFloat clamp_alpha(CGFloat alpha)
 		likeRequest.delegate = self;
 		[likeRequest startAsynchronous];
 		
+		[SNFacebookCaller postToActivity:article withAction:@"vote_up"];
 		article.hasLiked = YES;
 	}
 }
@@ -570,84 +572,15 @@ static CGFloat clamp_alpha(CGFloat alpha)
 }
 
 - (void)_goImage1 {
-	if (!_isFullscreenDblTap) {
-		_isFullscreenDblTap = YES;
-		_dblTapTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_imageBtnTimeout) userInfo:nil repeats:NO];
-		
-	} else {
-		_isFullscreenDblTap = NO;
-		
-		[_dblTapTimer invalidate];
-		_dblTapTimer = nil;
-		
-		[self _photoZoomIn:nil];
-	}
-	
-	//	UIView *overlayView = [[UIView alloc] initWithFrame:_articleImgView.frame];
-	//	[overlayView setBackgroundColor:[UIColor blackColor]];
-	//	overlayView.alpha = 0.33;
-	//	[_mainImageHolderView addSubview:overlayView];
-	//	
-	//	[UIView animateWithDuration:0.15 animations:^(void) {
-	//		overlayView.alpha = 0.0;
-	//		
-	//	} completion:^(BOOL finished) {
-	//		[overlayView removeFromSuperview];
-	//	}];
+	[self _photoZoomIn:nil];
 }
 
 - (void)_goImage2 {
-	if (!_isFullscreenDblTap) {
-		_isFullscreenDblTap = YES;
-		_dblTapTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_imageBtnTimeout) userInfo:nil repeats:NO];
-		
-	} else {
-		_isFullscreenDblTap = NO;
-		
-		[_dblTapTimer invalidate];
-		_dblTapTimer = nil;
-		
-		[self _photo1ZoomIn:nil];
-	}
-	
-	//	UIView *overlayView = [[UIView alloc] initWithFrame:_sub1ImgHolderView.frame];
-	//	[overlayView setBackgroundColor:[UIColor blackColor]];
-	//	overlayView.alpha = 0.33;
-	//	[_cardView addSubview:overlayView];
-	//	
-	//	[UIView animateWithDuration:0.15 animations:^(void) {
-	//		overlayView.alpha = 0.0;
-	//		
-	//	} completion:^(BOOL finished) {
-	//		[overlayView removeFromSuperview];
-	//	}];
+	[self _photo1ZoomIn:nil];
 }
 
 - (void)_goImage3 {
-	if (!_isFullscreenDblTap) {
-		_isFullscreenDblTap = YES;
-		_dblTapTimer = [NSTimer scheduledTimerWithTimeInterval:0.25 target:self selector:@selector(_imageBtnTimeout) userInfo:nil repeats:NO];
-		
-	} else {
-		_isFullscreenDblTap = NO;
-		
-		[_dblTapTimer invalidate];
-		_dblTapTimer = nil;
-		
-		[self _photo2ZoomIn:nil];
-	}
-	
-	//	UIView *overlayView = [[UIView alloc] initWithFrame:_sub2ImgHolderView.frame];
-	//	[overlayView setBackgroundColor:[UIColor blackColor]];
-	//	overlayView.alpha = 0.33;
-	//	[_cardView addSubview:overlayView];
-	//	
-	//	[UIView animateWithDuration:0.15 animations:^(void) {
-	//		overlayView.alpha = 0.0;
-	//		
-	//	} completion:^(BOOL finished) {
-	//		[overlayView removeFromSuperview];
-	//	}];
+	[self _photo2ZoomIn:nil];
 }
 
 #pragma mark - Async Resource Observers

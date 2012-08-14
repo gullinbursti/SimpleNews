@@ -315,12 +315,12 @@ static const BOOL kIsGoogleAnalyticsLive = YES;
 }
 
 
-+(NSDictionary *)fbProfile {
++(NSDictionary *)fbProfileForUser {
 	return [[NSUserDefaults standardUserDefaults] objectForKey:kSNProfileInfoKey];
 }
 
 +(BOOL)isProfileInfoAvailable {
-	return ([self fbProfile] != nil);
+	return ([self fbProfileForUser] != nil);
 }
 
 +(void)writeFBProfile:(NSDictionary *)profile {
@@ -346,7 +346,7 @@ static const BOOL kIsGoogleAnalyticsLive = YES;
 
 
 + (void)openSession {
-	NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", nil];
+	NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", @"read_stream", @"status_update", nil];
 	[FBSession sessionOpenWithPermissions:permissions completionHandler:
 	 ^(FBSession *session, FBSessionState state, NSError *error) {
 		 NSLog(@"STATE:%d", state);
