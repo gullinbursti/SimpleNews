@@ -77,6 +77,8 @@
 		4C45B7A6150BD8520039F45B /* SNSplashViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C45B7A5150BD8520039F45B /* SNSplashViewController_iPhone.m */; };
 		4C45B7AD150C1F360039F45B /* SNSplashHighlightView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C45B7AC150C1F360039F45B /* SNSplashHighlightView.m */; };
 		4C4A574A159ECF5C001C05FB /* icon_72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4A5749159ECF5C001C05FB /* icon_72x72.png */; };
+		4C4C76A915DAF3AE009E0B9B /* AWSiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4C76A815DAF3AE009E0B9B /* AWSiOSSDK.framework */; };
+		4C4C76AD15DB07C3009E0B9B /* SNComposerViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4C76AC15DB07C3009E0B9B /* SNComposerViewController_iPhone.m */; };
 		4C4D77E01593CB150020A116 /* randomIcon_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D77DC1593CB150020A116 /* randomIcon_Active.png */; };
 		4C4D77E11593CB150020A116 /* randomIcon_Active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D77DD1593CB150020A116 /* randomIcon_Active@2x.png */; };
 		4C4D77E21593CB150020A116 /* randomIcon_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D77DE1593CB150020A116 /* randomIcon_nonActive.png */; };
@@ -507,6 +509,9 @@
 		4C45B7AB150C1F360039F45B /* SNSplashHighlightView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSplashHighlightView.h; sourceTree = "<group>"; };
 		4C45B7AC150C1F360039F45B /* SNSplashHighlightView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSplashHighlightView.m; sourceTree = "<group>"; };
 		4C4A5749159ECF5C001C05FB /* icon_72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_72x72.png; sourceTree = "<group>"; };
+		4C4C76A815DAF3AE009E0B9B /* AWSiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSiOSSDK.framework; path = SimpleNews/AWSiOSSDK.framework; sourceTree = "<group>"; };
+		4C4C76AB15DB07C3009E0B9B /* SNComposerViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNComposerViewController_iPhone.h; sourceTree = "<group>"; };
+		4C4C76AC15DB07C3009E0B9B /* SNComposerViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNComposerViewController_iPhone.m; sourceTree = "<group>"; };
 		4C4D77DC1593CB150020A116 /* randomIcon_Active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = randomIcon_Active.png; sourceTree = "<group>"; };
 		4C4D77DD1593CB150020A116 /* randomIcon_Active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "randomIcon_Active@2x.png"; sourceTree = "<group>"; };
 		4C4D77DE1593CB150020A116 /* randomIcon_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = randomIcon_nonActive.png; sourceTree = "<group>"; };
@@ -981,6 +986,7 @@
 				4C9E00BC15194B9B00AEB803 /* libUAirship-1.1.1.a in Frameworks */,
 				4C7954F71547AFCF009E40DC /* libGoogleAnalytics.a in Frameworks */,
 				4CB41C5315C0DA4000962CFA /* FBiOSSDK.framework in Frameworks */,
+				4C4C76A915DAF3AE009E0B9B /* AWSiOSSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1289,6 +1295,8 @@
 				4C64DB6F153CA697005C536F /* SNArticleCommentView_iPhone.m */,
 				4C921755153B720800AAD992 /* SNArticleCommentsViewController_iPhone.h */,
 				4C921756153B720D00AAD992 /* SNArticleCommentsViewController_iPhone.m */,
+				4C4C76AB15DB07C3009E0B9B /* SNComposerViewController_iPhone.h */,
+				4C4C76AC15DB07C3009E0B9B /* SNComposerViewController_iPhone.m */,
 			);
 			name = Articles;
 			sourceTree = "<group>";
@@ -1881,6 +1889,7 @@
 		4CDC8BF014F2CDEB00D42EA5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C4C76A815DAF3AE009E0B9B /* AWSiOSSDK.framework */,
 				4CB41C5A15C0DAC200962CFA /* FBiOSSDKResources.bundle */,
 				4CB41C5215C0DA4000962CFA /* FBiOSSDK.framework */,
 				4CD919B5151E9F5B004081B7 /* Accounts.framework */,
@@ -2615,6 +2624,7 @@
 				E4D9001015991014009F71D5 /* MBLPageViewController.m in Sources */,
 				4CF8713B15D7492C00A1C960 /* SNLoginViewController_iPhone.m in Sources */,
 				4C02D16B15DA2F0F002152A5 /* SNFacebookCaller.m in Sources */,
+				4C4C76AD15DB07C3009E0B9B /* SNComposerViewController_iPhone.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

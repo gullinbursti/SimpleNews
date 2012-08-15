@@ -9,11 +9,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "SimpleNews/SimpleNews/iPhone/SNRootViewController_iPhone.m"
-         timestampString = "366620807.143646"
+         timestampString = "366696986.385504"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "637"
-         endingLineNumber = "637"
+         startingLineNumber = "644"
+         endingLineNumber = "644"
          landmarkName = "@implementation SNRootViewController_iPhone"
          landmarkType = "3">
       </FileBreakpoint>

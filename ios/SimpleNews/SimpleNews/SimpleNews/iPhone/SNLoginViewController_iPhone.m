@@ -19,6 +19,10 @@
 - (id)init {
 	if ((self = [super init])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_sessionStateChanged:) name:@"SESSION_STATE_CHANGED" object:nil];
+		
+		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
+		bgImgView.image = [UIImage imageNamed:@"background_timeline.png"];
+		[self.view addSubview:bgImgView];
 	}
 	
 	return (self);

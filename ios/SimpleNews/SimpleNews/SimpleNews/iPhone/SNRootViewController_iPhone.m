@@ -19,6 +19,7 @@
 
 #import "SNProfileViewController_iPhone.h"
 #import "SNWebPageViewController_iPhone.h"
+#import "SNComposerViewController_iPhone.h"
 #import "SNHeaderView_iPhone.h"
 #import "SNListHeaderView.h"
 #import "SNRootTopicViewCell_iPhone.h"
@@ -63,6 +64,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticlePage:) name:@"SHOW_ARTICLE_PAGE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleComments:) name:@"SHOW_ARTICLE_COMMENTS" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showComposer:) name:@"SHOW_COMPOSER" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_timelineReturn:) name:@"TIMELINE_RETURN" object:nil];
@@ -252,12 +254,10 @@
 		 }];		
 	}	
 
-//	// wall
-//	[FBRequest startWithGraphPath:@"me/feed" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+	// wall
+//	[FBRequest startWithGraphPath:@"me/home" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
 //		NSLog(@"%@", (NSDictionary *)result);
 //	}];
-	
-
 }
 
 - (void)viewDidUnload {
@@ -633,6 +633,13 @@
 -(void)_showArticleDetails:(NSNotification *)notification {
 	SNArticleDetailsViewController_iPhone *articleDetailsViewController = [[SNArticleDetailsViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]];
 	[self.navigationController pushViewController:articleDetailsViewController animated:YES];
+}
+
+-(void)_showComposer:(NSNotification *)notification {
+	SNComposerViewController_iPhone *composerViewController = [[SNComposerViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]];
+	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:composerViewController];
+	[navigationController setNavigationBarHidden:YES];
+	[self.navigationController presentModalViewController:navigationController animated:NO];
 }
 
 -(void)_showArticlePage:(NSNotification *)notification {

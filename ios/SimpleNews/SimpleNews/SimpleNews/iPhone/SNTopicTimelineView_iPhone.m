@@ -12,6 +12,7 @@
 
 #import "SNArticleItemView_iPhone.h"
 #import "SNHeaderView_iPhone.h"
+#import "SNNavLogoBtnView.h"
 
 #import "SNHeaderView_iPhone.h"
 #import "SNNavTitleView.h"
@@ -93,6 +94,10 @@
 		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:_listBtnView];
 		
+		SNNavLogoBtnView *rndBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(273.0, 0.0, 44.0, 44.0)];
+		[[rndBtnView btn] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:rndBtnView];
+		
 		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 20.0, self.frame.size.height - 88.0)];
 		//[_overlayView setBackgroundColor:[SNAppDelegate snDebugRedColor]];
 		[self addSubview:_overlayView];
@@ -166,6 +171,10 @@
 		_listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
 		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:_listBtnView];
+		
+		SNNavLogoBtnView *rndBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(273.0, 0.0, 44.0, 44.0)];
+		[[rndBtnView btn] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:rndBtnView];
 		
 		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 20.0, self.frame.size.height - 88.0)];
 		//[_overlayView setBackgroundColor:[SNAppDelegate snDebugRedColor]];
@@ -347,6 +356,10 @@
 
 - (void)_goShow {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TIMELINE" object:nil];
+}
+
+- (void)_goCompose{
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_COMPOSER" object:nil];
 }
 
 #pragma mark - Notification handlers
