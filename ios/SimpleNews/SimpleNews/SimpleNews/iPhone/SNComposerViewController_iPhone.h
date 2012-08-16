@@ -8,23 +8,26 @@
 
 #import <UIKit/UIKit.h>
 
-#import "SNArticleVO.h"
-#import "EGOImageView.h"
+#import "SNComposeTypeView_iPhone.h"
+#import "SNComposeSourceView_iPhone.h"
+#import "SNComposeFriendsView_iPhone.h"
+#import "SNComposeEditorView_iPhone.h"
 
-@interface SNComposerViewController_iPhone : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, EGOImageViewDelegate> {
+#import "SNArticleVO.h"
+
+@interface SNComposerViewController_iPhone : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate> {
 	SNArticleVO *_vo;
-	
-	NSDictionary *_fbHomeFeed;
-	
-	UIButton *_quoteButton;
-	UIButton *_stickerButton;
-	
-	UIButton *_cameraButton;
-	UIButton *_cameraRollButton;
-	UIButton *_fbFriendsButton;
 	
 	BOOL _isQuoteType;
 	BOOL _isCameraPic;
+	BOOL _isCameraSource;
+	BOOL _isFriendsSource;
+	int _composeState;
+	
+	SNComposeTypeView_iPhone *_composeTypeView;
+	SNComposeSourceView_iPhone *_composeSourceView;
+	SNComposeFriendsView_iPhone *_composeFriendsView;
+	SNComposeEditorView_iPhone *_composeEditorView;
 }
 
 - (id)initWithArticleVO:(SNArticleVO *)vo;

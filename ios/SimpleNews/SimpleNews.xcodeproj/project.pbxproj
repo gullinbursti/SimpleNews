@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C02D16B15DA2F0F002152A5 /* SNFacebookCaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C02D16A15DA2F0F002152A5 /* SNFacebookCaller.m */; };
+		4C02F9C815DC8C580001CED2 /* SNComposeEditorView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C02F9C715DC8C580001CED2 /* SNComposeEditorView_iPhone.m */; };
 		4C119B6F1574C64300E663CD /* chevron.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C119B6D1574C64300E663CD /* chevron.png */; };
 		4C119B701574C64300E663CD /* chevron@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C119B6E1574C64300E663CD /* chevron@2x.png */; };
 		4C119B741574C73400E663CD /* background_timeline.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C119B721574C73400E663CD /* background_timeline.png */; };
@@ -79,6 +80,10 @@
 		4C4A574A159ECF5C001C05FB /* icon_72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4A5749159ECF5C001C05FB /* icon_72x72.png */; };
 		4C4C76A915DAF3AE009E0B9B /* AWSiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4C76A815DAF3AE009E0B9B /* AWSiOSSDK.framework */; };
 		4C4C76AD15DB07C3009E0B9B /* SNComposerViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4C76AC15DB07C3009E0B9B /* SNComposerViewController_iPhone.m */; };
+		4C4C76B415DC1FD0009E0B9B /* SNFacebookThumbView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4C76B315DC1FD0009E0B9B /* SNFacebookThumbView.m */; };
+		4C4C76B815DC6D4E009E0B9B /* SNComposeTypeView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4C76B715DC6D4E009E0B9B /* SNComposeTypeView_iPhone.m */; };
+		4C4C76BB15DC6D6A009E0B9B /* SNComposeSourceView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4C76BA15DC6D6A009E0B9B /* SNComposeSourceView_iPhone.m */; };
+		4C4C76BE15DC6D86009E0B9B /* SNComposeFriendsView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4C76BD15DC6D86009E0B9B /* SNComposeFriendsView_iPhone.m */; };
 		4C4D77E01593CB150020A116 /* randomIcon_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D77DC1593CB150020A116 /* randomIcon_Active.png */; };
 		4C4D77E11593CB150020A116 /* randomIcon_Active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D77DD1593CB150020A116 /* randomIcon_Active@2x.png */; };
 		4C4D77E21593CB150020A116 /* randomIcon_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D77DE1593CB150020A116 /* randomIcon_nonActive.png */; };
@@ -388,6 +393,8 @@
 /* Begin PBXFileReference section */
 		4C02D16915DA2F0E002152A5 /* SNFacebookCaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNFacebookCaller.h; sourceTree = "<group>"; };
 		4C02D16A15DA2F0F002152A5 /* SNFacebookCaller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNFacebookCaller.m; sourceTree = "<group>"; };
+		4C02F9C615DC8C580001CED2 /* SNComposeEditorView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNComposeEditorView_iPhone.h; sourceTree = "<group>"; };
+		4C02F9C715DC8C580001CED2 /* SNComposeEditorView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNComposeEditorView_iPhone.m; sourceTree = "<group>"; };
 		4C119B6D1574C64300E663CD /* chevron.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chevron.png; sourceTree = "<group>"; };
 		4C119B6E1574C64300E663CD /* chevron@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron@2x.png"; sourceTree = "<group>"; };
 		4C119B721574C73400E663CD /* background_timeline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background_timeline.png; sourceTree = "<group>"; };
@@ -512,6 +519,14 @@
 		4C4C76A815DAF3AE009E0B9B /* AWSiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSiOSSDK.framework; path = SimpleNews/AWSiOSSDK.framework; sourceTree = "<group>"; };
 		4C4C76AB15DB07C3009E0B9B /* SNComposerViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNComposerViewController_iPhone.h; sourceTree = "<group>"; };
 		4C4C76AC15DB07C3009E0B9B /* SNComposerViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNComposerViewController_iPhone.m; sourceTree = "<group>"; };
+		4C4C76B215DC1FD0009E0B9B /* SNFacebookThumbView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNFacebookThumbView.h; sourceTree = "<group>"; };
+		4C4C76B315DC1FD0009E0B9B /* SNFacebookThumbView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNFacebookThumbView.m; sourceTree = "<group>"; };
+		4C4C76B615DC6D4E009E0B9B /* SNComposeTypeView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNComposeTypeView_iPhone.h; sourceTree = "<group>"; };
+		4C4C76B715DC6D4E009E0B9B /* SNComposeTypeView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNComposeTypeView_iPhone.m; sourceTree = "<group>"; };
+		4C4C76B915DC6D6A009E0B9B /* SNComposeSourceView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNComposeSourceView_iPhone.h; sourceTree = "<group>"; };
+		4C4C76BA15DC6D6A009E0B9B /* SNComposeSourceView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNComposeSourceView_iPhone.m; sourceTree = "<group>"; };
+		4C4C76BC15DC6D86009E0B9B /* SNComposeFriendsView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNComposeFriendsView_iPhone.h; sourceTree = "<group>"; };
+		4C4C76BD15DC6D86009E0B9B /* SNComposeFriendsView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNComposeFriendsView_iPhone.m; sourceTree = "<group>"; };
 		4C4D77DC1593CB150020A116 /* randomIcon_Active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = randomIcon_Active.png; sourceTree = "<group>"; };
 		4C4D77DD1593CB150020A116 /* randomIcon_Active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "randomIcon_Active@2x.png"; sourceTree = "<group>"; };
 		4C4D77DE1593CB150020A116 /* randomIcon_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = randomIcon_nonActive.png; sourceTree = "<group>"; };
@@ -1284,6 +1299,23 @@
 			name = Buttons;
 			sourceTree = "<group>";
 		};
+		4C4C76B515DC6D1F009E0B9B /* Composer */ = {
+			isa = PBXGroup;
+			children = (
+				4C4C76AB15DB07C3009E0B9B /* SNComposerViewController_iPhone.h */,
+				4C4C76AC15DB07C3009E0B9B /* SNComposerViewController_iPhone.m */,
+				4C4C76B615DC6D4E009E0B9B /* SNComposeTypeView_iPhone.h */,
+				4C4C76B715DC6D4E009E0B9B /* SNComposeTypeView_iPhone.m */,
+				4C4C76B915DC6D6A009E0B9B /* SNComposeSourceView_iPhone.h */,
+				4C4C76BA15DC6D6A009E0B9B /* SNComposeSourceView_iPhone.m */,
+				4C4C76BC15DC6D86009E0B9B /* SNComposeFriendsView_iPhone.h */,
+				4C4C76BD15DC6D86009E0B9B /* SNComposeFriendsView_iPhone.m */,
+				4C02F9C615DC8C580001CED2 /* SNComposeEditorView_iPhone.h */,
+				4C02F9C715DC8C580001CED2 /* SNComposeEditorView_iPhone.m */,
+			);
+			name = Composer;
+			sourceTree = "<group>";
+		};
 		4C6B216E15105C1D0027AEE4 /* Articles */ = {
 			isa = PBXGroup;
 			children = (
@@ -1295,8 +1327,6 @@
 				4C64DB6F153CA697005C536F /* SNArticleCommentView_iPhone.m */,
 				4C921755153B720800AAD992 /* SNArticleCommentsViewController_iPhone.h */,
 				4C921756153B720D00AAD992 /* SNArticleCommentsViewController_iPhone.m */,
-				4C4C76AB15DB07C3009E0B9B /* SNComposerViewController_iPhone.h */,
-				4C4C76AC15DB07C3009E0B9B /* SNComposerViewController_iPhone.m */,
 			);
 			name = Articles;
 			sourceTree = "<group>";
@@ -1944,6 +1974,7 @@
 		4CDC8C1214F2D07000D42EA5 /* iPhone */ = {
 			isa = PBXGroup;
 			children = (
+				4C4C76B515DC6D1F009E0B9B /* Composer */,
 				4CE58F8615535B5100668B1E /* Nav */,
 				4CAF9D501506D22C00AB3735 /* Root */,
 				4C2CFC2E15587F9200654D98 /* Profile */,
@@ -1992,6 +2023,8 @@
 				4CE58F9E1553658A00668B1E /* SNNavTitleView.m */,
 				B3F3403715774CCC007537A0 /* SNTwitterAvatarView.h */,
 				B3F3403815774CCC007537A0 /* SNTwitterAvatarView.m */,
+				4C4C76B215DC1FD0009E0B9B /* SNFacebookThumbView.h */,
+				4C4C76B315DC1FD0009E0B9B /* SNFacebookThumbView.m */,
 				E423F8EE1559B9900094042E /* MBLAsyncResource.h */,
 				E423F8EF1559B9900094042E /* MBLAsyncResource.m */,
 				E423F8F01559B9900094042E /* MBLResourceCache.h */,
@@ -2238,7 +2271,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0420;
-				ORGANIZATIONNAME = "Sparkle Mountain, LLC";
+				ORGANIZATIONNAME = "Built in Menlo, LLC";
 			};
 			buildConfigurationList = 4CDC8BE714F2CDEB00D42EA5 /* Build configuration list for PBXProject "SimpleNews" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2625,6 +2658,11 @@
 				4CF8713B15D7492C00A1C960 /* SNLoginViewController_iPhone.m in Sources */,
 				4C02D16B15DA2F0F002152A5 /* SNFacebookCaller.m in Sources */,
 				4C4C76AD15DB07C3009E0B9B /* SNComposerViewController_iPhone.m in Sources */,
+				4C4C76B415DC1FD0009E0B9B /* SNFacebookThumbView.m in Sources */,
+				4C4C76B815DC6D4E009E0B9B /* SNComposeTypeView_iPhone.m in Sources */,
+				4C4C76BB15DC6D6A009E0B9B /* SNComposeSourceView_iPhone.m in Sources */,
+				4C4C76BE15DC6D86009E0B9B /* SNComposeFriendsView_iPhone.m in Sources */,
+				4C02F9C815DC8C580001CED2 /* SNComposeEditorView_iPhone.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
