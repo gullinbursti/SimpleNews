@@ -46,24 +46,23 @@
 - (void)loadView
 {
 	[super loadView];
-	[self.view setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.85]];
+	//[self.view setBackgroundColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.85]];
 	
 	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
 	bgImgView.image = [UIImage imageNamed:@"background_timeline.png"];
-	//[self.view addSubview:bgImgView];
+	[self.view addSubview:bgImgView];
 	
-	SNHeaderView_iPhone *headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Composer"];
-	[self.view addSubview:headerView];	
+	_headerView = [[SNHeaderView_iPhone alloc] initWithTitle:@"Composer"];
+	[self.view addSubview:_headerView];	
 	
-	SNNavBackBtnView *backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 64.0, 44.0)];
-	[[backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:backBtnView];
+	_backBtnView = [[SNNavBackBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 64.0, 44.0)];
+	[[_backBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
 	
 	SNNavDoneBtnView *doneBtnView = [[SNNavDoneBtnView alloc] initWithFrame:CGRectMake(256.0, 0.0, 64.0, 44.0)];
 	[[doneBtnView btn] addTarget:self action:@selector(_goDone) forControlEvents:UIControlEventTouchUpInside];
-	[headerView addSubview:doneBtnView];
+	[_headerView addSubview:doneBtnView];
 	
-	_composeTypeView = [[SNComposeTypeView_iPhone alloc] initWithFrame:self.view.frame];
+	_composeTypeView = [[SNComposeTypeView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0)];
 	[self.view addSubview:_composeTypeView];
 }
 
@@ -88,8 +87,10 @@
 	_composeState++;
 	_isQuoteType = NO;
 	
+	[_headerView addSubview:_backBtnView];
 	[_composeTypeView removeFromSuperview];
-	_composeSourceView = [[SNComposeSourceView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 50.0)];
+	
+	_composeSourceView = [[SNComposeSourceView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0)];
 	[self.view addSubview:_composeSourceView];
 }
 
@@ -97,8 +98,10 @@
 	_composeState++;
 	_isQuoteType = YES;
 	
+	[_headerView addSubview:_backBtnView];
 	[_composeTypeView removeFromSuperview];
-	_composeSourceView = [[SNComposeSourceView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 50.0)];
+	
+	_composeSourceView = [[SNComposeSourceView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0)];
 	[self.view addSubview:_composeSourceView];
 }
 
@@ -107,7 +110,7 @@
 	_isFriendsSource = YES;
 	
 	[_composeSourceView removeFromSuperview];
-	_composeFriendsView = [[SNComposeFriendsView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 50.0)];
+	_composeFriendsView = [[SNComposeFriendsView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0)];
 	[self.view addSubview:_composeFriendsView];
 }
 
@@ -116,7 +119,7 @@
 	_composeState++;
 	
 	[_composeFriendsView removeFromSuperview];
-	_composeEditorView = [[SNComposeEditorView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 50.0) withFriend:(NSDictionary *)[notification object] withType:(int)_isQuoteType];
+	_composeEditorView = [[SNComposeEditorView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0) withFriend:(NSDictionary *)[notification object] withType:(int)_isQuoteType];
 	[self.view addSubview:_composeEditorView];
 }
 
@@ -127,6 +130,7 @@
 	
 	switch (_composeState) {
 		case 0:
+			[_backBtnView removeFromSuperview];
 			[_composeSourceView removeFromSuperview];
 			[self.view addSubview:_composeTypeView];
 			break;
@@ -147,7 +151,7 @@
 }
 
 -(void)_goDone {
-	[self dismissModalViewControllerAnimated:NO];
+	[self dismissModalViewControllerAnimated:YES];
 }
 
 @end

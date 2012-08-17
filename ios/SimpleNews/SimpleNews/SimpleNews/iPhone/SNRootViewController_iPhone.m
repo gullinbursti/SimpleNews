@@ -639,7 +639,7 @@
 	SNComposerViewController_iPhone *composerViewController = [[SNComposerViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]];
 	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:composerViewController];
 	[navigationController setNavigationBarHidden:YES];
-	[self.navigationController presentModalViewController:navigationController animated:NO];
+	[self.navigationController presentModalViewController:navigationController animated:YES];
 }
 
 -(void)_showArticlePage:(NSNotification *)notification {

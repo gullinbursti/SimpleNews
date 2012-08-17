@@ -10,7 +10,7 @@
 
 #import "EGOImageView.h"
 
-@interface SNComposeEditorView_iPhone : UIView <EGOImageViewDelegate> {
+@interface SNComposeEditorView_iPhone : UIView <UITextViewDelegate, EGOImageViewDelegate> {
 	NSDictionary *_fbFriend;
 	
 	UIButton *_cycleButton;
@@ -21,6 +21,9 @@
 	NSMutableArray *_stickerList;
 	
 	UILabel *_quoteLabel;
+	UITextView *_quoteTxtView;
+	
+	UIView *_canvasView;
 }
 
 - (id)initWithFrame:(CGRect)frame withFriend:(NSDictionary *)fbFriend withType:(int)type;

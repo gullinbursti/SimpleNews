@@ -12,6 +12,8 @@
 #import "SNComposeSourceView_iPhone.h"
 #import "SNComposeFriendsView_iPhone.h"
 #import "SNComposeEditorView_iPhone.h"
+#import "SNHeaderView_iPhone.h"
+#import "SNNavBackBtnView.h"
 
 #import "SNArticleVO.h"
 
@@ -24,6 +26,8 @@
 	BOOL _isFriendsSource;
 	int _composeState;
 	
+	SNHeaderView_iPhone *_headerView;
+	SNNavBackBtnView *_backBtnView;
 	SNComposeTypeView_iPhone *_composeTypeView;
 	SNComposeSourceView_iPhone *_composeSourceView;
 	SNComposeFriendsView_iPhone *_composeFriendsView;
