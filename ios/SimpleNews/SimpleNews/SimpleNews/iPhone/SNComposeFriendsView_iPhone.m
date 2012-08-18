@@ -23,6 +23,10 @@
 			[FBRequest startWithGraphPath:@"me/home" parameters:nil HTTPMethod:@"GET" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
 				_fbHomeFeed = (NSDictionary *)result;
 				
+				if (error) {
+					NSLog(@"error:[%@]", error.description);
+				}
+				
 				//NSLog(@"data\n%@", (NSArray *)[_fbHomeFeed objectForKey:@"data"]);
 				
 				_friendHolderView = [[UIView alloc] initWithFrame:CGRectMake(20.0, 50.0, 280.0, 400.0)];

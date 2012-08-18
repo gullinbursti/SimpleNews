@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import <AddressBook/AddressBook.h>
 #import <FBiOSSDK/FacebookSDK.h>
 
 #import "SNComposerViewController_iPhone.h"
@@ -19,7 +20,13 @@
 #import "SNComposeSourceView_iPhone.h"
 #import "SNComposeFriendsView_iPhone.h"
 
+@interface SNComposerViewController_iPhone() <FBFriendPickerDelegate>
+@property (strong, nonatomic) FBFriendPickerViewController *friendPickerController;
+@end
+
 @implementation SNComposerViewController_iPhone
+
+@synthesize friendPickerController = _friendPickerController;
 
 - (id)initWithArticleVO:(SNArticleVO *)vo
 {
@@ -32,6 +39,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_composeTypeQuote:) name:@"COMPOSE_TYPE_QUOTE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_composeSourceFriends:) name:@"COMPOSE_SOURCE_FRIENDS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_fbUserPressed:) name:@"FB_USER_PRESSED" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_composeSubmitted:) name:@"COMPOSE_SUBMITTED" object:nil];
 	}
 	
 	return (self);
@@ -62,8 +70,8 @@
 	[[doneBtnView btn] addTarget:self action:@selector(_goDone) forControlEvents:UIControlEventTouchUpInside];
 	[_headerView addSubview:doneBtnView];
 	
-	_composeTypeView = [[SNComposeTypeView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0)];
-	[self.view addSubview:_composeTypeView];
+	_composeSourceView = [[SNComposeSourceView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0)];
+	[self.view addSubview:_composeSourceView];
 }
 
 - (void)viewDidLoad
@@ -83,35 +91,29 @@
 }
 
 #pragma mark - Notifications
-- (void)_composeTypeSticker:(NSNotification *)notification {
-	_composeState++;
-	_isQuoteType = NO;
-	
-	[_headerView addSubview:_backBtnView];
-	[_composeTypeView removeFromSuperview];
-	
-	_composeSourceView = [[SNComposeSourceView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0)];
-	[self.view addSubview:_composeSourceView];
-}
-
-- (void)_composeTypeQuote:(NSNotification *)notification {
-	_composeState++;
-	_isQuoteType = YES;
-	
-	[_headerView addSubview:_backBtnView];
-	[_composeTypeView removeFromSuperview];
-	
-	_composeSourceView = [[SNComposeSourceView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0)];
-	[self.view addSubview:_composeSourceView];
-}
-
 - (void)_composeSourceFriends:(NSNotification *)notification {
 	_composeState++;
 	_isFriendsSource = YES;
+	[_headerView addSubview:_backBtnView];
 	
-	[_composeSourceView removeFromSuperview];
-	_composeFriendsView = [[SNComposeFriendsView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0)];
-	[self.view addSubview:_composeFriendsView];
+//	[_composeSourceView removeFromSuperview];
+//	_composeFriendsView = [[SNComposeFriendsView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0)];
+//	[self.view addSubview:_composeFriendsView];
+	
+	self.friendPickerController = [[FBFriendPickerViewController alloc] initWithNibName:nil bundle:nil];
+	self.friendPickerController.delegate = self;
+	self.friendPickerController.title = @"Select friends";
+	self.friendPickerController.view.frame = CGRectOffset(self.friendPickerController.view.frame, 0.0, 45.0);
+	
+	ABAddressBookCreate();
+	ABPersonSortOrdering sortOrdering = ABPersonGetSortOrdering();
+	ABPersonCompositeNameFormat nameFormat = ABPersonGetCompositeNameFormat();
+	
+	self.friendPickerController.sortOrdering = (sortOrdering == kABPersonSortByFirstName) ? FBFriendSortByFirstName : FBFriendSortByLastName;
+	self.friendPickerController.displayOrdering = (nameFormat == kABPersonCompositeNameFormatFirstNameFirst) ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName;
+	
+	[self.friendPickerController loadData];
+	[self.navigationController pushViewController:self.friendPickerController animated:NO];
 }
 
 
@@ -119,10 +121,14 @@
 	_composeState++;
 	
 	[_composeFriendsView removeFromSuperview];
-	_composeEditorView = [[SNComposeEditorView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0) withFriend:(NSDictionary *)[notification object] withType:(int)_isQuoteType];
+	_composeEditorView = [[SNComposeEditorView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0) withFriend:(NSDictionary *)[notification object]];
 	[self.view addSubview:_composeEditorView];
 }
 
+
+- (void)_composeSubmitted:(NSNotification *)notification {
+	[self dismissModalViewControllerAnimated:YES];
+}
 
 #pragma mark - Navigation
 -(void)_goBack {
@@ -131,20 +137,28 @@
 	switch (_composeState) {
 		case 0:
 			[_backBtnView removeFromSuperview];
-			[_composeSourceView removeFromSuperview];
-			[self.view addSubview:_composeTypeView];
-			break;
-			
-		case 1:
 			[_composeFriendsView removeFromSuperview];
 			[self.view addSubview:_composeSourceView];
 			break;
 			
-		case 2:
+		case 1:
 			[_composeEditorView removeFromSuperview];
 			
-			if (_isFriendsSource)
-				[self.view addSubview:_composeFriendsView];
+			if (_isFriendsSource) {
+				self.friendPickerController = [[FBFriendPickerViewController alloc] initWithNibName:nil bundle:nil];
+				self.friendPickerController.delegate = self;
+				self.friendPickerController.title = @"Select friends";
+				
+				ABAddressBookCreate();
+				ABPersonSortOrdering sortOrdering = ABPersonGetSortOrdering();
+				ABPersonCompositeNameFormat nameFormat = ABPersonGetCompositeNameFormat();
+				
+				self.friendPickerController.sortOrdering = (sortOrdering == kABPersonSortByFirstName) ? FBFriendSortByFirstName : FBFriendSortByLastName;
+				self.friendPickerController.displayOrdering = (nameFormat == kABPersonCompositeNameFormatFirstNameFirst) ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName;
+				
+				[self.friendPickerController loadData];
+				[self.navigationController pushViewController:self.friendPickerController animated:NO];
+			}
 			
 			break;
 	}
@@ -152,6 +166,25 @@
 
 -(void)_goDone {
 	[self dismissModalViewControllerAnimated:YES];
+}
+
+
+#pragma mark - FBFriendPickerDelegate methods
+- (void)friendPickerViewControllerSelectionDidChange:(FBFriendPickerViewController *)friendPicker {
+	_fiendsList = friendPicker.selection;
+	[friendPicker.navigationController popViewControllerAnimated:NO];
+	
+	_composeState++;
+	
+	id<FBGraphUser> friend = [_fiendsList objectAtIndex:0];
+	
+	NSString *largeImgURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/picture?type=large", friend.id];
+	NSDictionary *friendDict = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:friend.id, friend.name, largeImgURL, nil] forKeys:[NSArray arrayWithObjects:@"id", @"name", @"lg_image", nil]];
+	
+	
+	[_composeFriendsView removeFromSuperview];
+	_composeEditorView = [[SNComposeEditorView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0) withFriend:friendDict];
+	[self.view addSubview:_composeEditorView];
 }
 
 @end

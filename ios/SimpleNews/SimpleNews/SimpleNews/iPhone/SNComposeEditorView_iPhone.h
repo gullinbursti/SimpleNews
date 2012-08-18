@@ -9,23 +9,26 @@
 #import <UIKit/UIKit.h>
 
 #import "EGOImageView.h"
+#import "ASIFormDataRequest.h"
 
-@interface SNComposeEditorView_iPhone : UIView <UITextViewDelegate, EGOImageViewDelegate> {
+@interface SNComposeEditorView_iPhone : UIView <UITextViewDelegate, EGOImageViewDelegate, ASIHTTPRequestDelegate> {
 	NSDictionary *_fbFriend;
 	
 	UIButton *_cycleButton;
-	int _type;
 	int _cnt;
+	BOOL _isQuote;
 	
 	NSMutableArray *_quoteList;
 	NSMutableArray *_stickerList;
 	
-	UILabel *_quoteLabel;
 	UITextView *_quoteTxtView;
 	
 	UIView *_canvasView;
+	
+	UIButton *_quoteToggleButton;
+	UIButton *_stickerToggleButton;
 }
 
-- (id)initWithFrame:(CGRect)frame withFriend:(NSDictionary *)fbFriend withType:(int)type;
+- (id)initWithFrame:(CGRect)frame withFriend:(NSDictionary *)fbFriend;
 
 @end

@@ -89,6 +89,7 @@
 		4C4D77E21593CB150020A116 /* randomIcon_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D77DE1593CB150020A116 /* randomIcon_nonActive.png */; };
 		4C4D77E31593CB150020A116 /* randomIcon_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D77DF1593CB150020A116 /* randomIcon_nonActive@2x.png */; };
 		4C4D77E71593CB2D0020A116 /* SNNavRandomBtnView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4D77E61593CB2D0020A116 /* SNNavRandomBtnView.m */; };
+		4C51DB3B15DF30760058DD7C /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C51DB3A15DF30760058DD7C /* AddressBook.framework */; };
 		4C535F01152C0EB600EBD60E /* SNArticleVideoPlayerView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C535F00152C0EB500EBD60E /* SNArticleVideoPlayerView_iPhone.m */; };
 		4C64DB70153CA697005C536F /* SNArticleCommentView_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C64DB6F153CA697005C536F /* SNArticleCommentView_iPhone.m */; };
 		4C64DB73153CB3F3005C536F /* SNCommentVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C64DB72153CB3F3005C536F /* SNCommentVO.m */; };
@@ -533,6 +534,7 @@
 		4C4D77DF1593CB150020A116 /* randomIcon_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "randomIcon_nonActive@2x.png"; sourceTree = "<group>"; };
 		4C4D77E51593CB2D0020A116 /* SNNavRandomBtnView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNNavRandomBtnView.h; sourceTree = "<group>"; };
 		4C4D77E61593CB2D0020A116 /* SNNavRandomBtnView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNNavRandomBtnView.m; sourceTree = "<group>"; };
+		4C51DB3A15DF30760058DD7C /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		4C535EFF152C0EB500EBD60E /* SNArticleVideoPlayerView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNArticleVideoPlayerView_iPhone.h; sourceTree = "<group>"; };
 		4C535F00152C0EB500EBD60E /* SNArticleVideoPlayerView_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNArticleVideoPlayerView_iPhone.m; sourceTree = "<group>"; };
 		4C64DB6E153CA696005C536F /* SNArticleCommentView_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNArticleCommentView_iPhone.h; sourceTree = "<group>"; };
@@ -979,6 +981,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C51DB3B15DF30760058DD7C /* AddressBook.framework in Frameworks */,
 				4CDC8C7D14F2D84200D42EA5 /* libsqlite3.dylib in Frameworks */,
 				4CDC8C7B14F2D83000D42EA5 /* libz.1.2.5.dylib in Frameworks */,
 				4CDC8C7914F2D82100D42EA5 /* libxml2.dylib in Frameworks */,
@@ -1919,6 +1922,7 @@
 		4CDC8BF014F2CDEB00D42EA5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C51DB3A15DF30760058DD7C /* AddressBook.framework */,
 				4C4C76A815DAF3AE009E0B9B /* AWSiOSSDK.framework */,
 				4CB41C5A15C0DAC200962CFA /* FBiOSSDKResources.bundle */,
 				4CB41C5215C0DA4000962CFA /* FBiOSSDK.framework */,

@@ -21,3 +21,7 @@ foreach ($results as $key => $val) {
 require './_db_close.php'; 
 
 ?>
+
+
+
+*/15	*	*	*	*	/usr/local/bin/content_update.sh >> /var/log/content-retriever.log 2>&1

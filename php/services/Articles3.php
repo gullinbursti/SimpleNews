@@ -6,7 +6,7 @@
 	  	function __construct() {
 		
 			$this->db_conn = mysql_connect('localhost', 'db41232_sn_usr', 'dope911t') or die("Could not connect to database.");
-			mysql_select_db('assemblyDEV') or die("Could not select database.");
+			mysql_select_db('assembly-dev') or die("Could not select database.");
 		}
 	
 		function __destruct() {	

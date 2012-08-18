@@ -26,6 +26,8 @@
 	BOOL _isFriendsSource;
 	int _composeState;
 	
+	NSArray *_fiendsList;
+	
 	SNHeaderView_iPhone *_headerView;
 	SNNavBackBtnView *_backBtnView;
 	SNComposeTypeView_iPhone *_composeTypeView;
