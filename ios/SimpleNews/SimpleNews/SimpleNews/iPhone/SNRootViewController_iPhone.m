@@ -78,6 +78,9 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showDiscovery:) name:@"SHOW_DISCOVERY" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTimeline:) name:@"SHOW_TIMELINE" object:nil];
 		
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_composeSourceCamera:) name:@"COMPOSE_SOURCE_CAMERA" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_composeSourceCameraRoll:) name:@"COMPOSE_SOURCE_CAMERA_ROLL" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_composeSourceFriends:) name:@"COMPOSE_SOURCE_FRIENDS" object:nil];
 	}
 	
 	return self;
@@ -636,7 +639,26 @@
 }
 
 -(void)_showComposer:(NSNotification *)notification {
-	SNComposerViewController_iPhone *composerViewController = [[SNComposerViewController_iPhone alloc] initWithArticleVO:(SNArticleVO *)[notification object]];
+	_composePopOverView = [[SNComposePopOverView_iPhone alloc] initWithFrame:CGRectMake(10.0, 400.0, 300.0, 70.0)];
+	[self.view addSubview:_composePopOverView];
+}
+
+-(void)_composeSourceCamera:(NSNotification *)notification {
+	SNComposerViewController_iPhone *composerViewController = [[SNComposerViewController_iPhone alloc] initWithTypeCamera];
+	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:composerViewController];
+	[navigationController setNavigationBarHidden:YES];
+	[self.navigationController presentModalViewController:navigationController animated:YES];
+}
+
+-(void)_composeSourceCameraRoll:(NSNotification *)notification {
+	SNComposerViewController_iPhone *composerViewController = [[SNComposerViewController_iPhone alloc] initWithTypeCameraRoll];
+	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:composerViewController];
+	[navigationController setNavigationBarHidden:YES];
+	[self.navigationController presentModalViewController:navigationController animated:YES];
+}
+
+-(void)_composeSourceFriends:(NSNotification *)notification {
+	SNComposerViewController_iPhone *composerViewController = [[SNComposerViewController_iPhone alloc] initWithTypeFriends];
 	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:composerViewController];
 	[navigationController setNavigationBarHidden:YES];
 	[self.navigationController presentModalViewController:navigationController animated:YES];
@@ -1392,6 +1414,8 @@
 			}
 		
 		} else if (indexPath.row == 2) {
+			
+			
 			/*
 			if ([SNAppDelegate twitterHandle].length > 0) {
 				NSError *error;

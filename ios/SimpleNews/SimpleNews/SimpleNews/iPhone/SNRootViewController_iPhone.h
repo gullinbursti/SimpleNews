@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
+//#import "Facebook.h"
 
 #import "SNTopicTimelineView_iPhone.h"
 #import "SNDiscoveryListView_iPhone.h"
@@ -18,6 +19,7 @@
 #import "SNArticleVideoPlayerView_iPhone.h"
 #import "SNNavShareBtnView.h"
 #import "SNNavLogoBtnView.h"
+#import "SNComposePopOverView_iPhone.h"
 
 @class MBProgressHUD;
 
@@ -63,6 +65,8 @@
 	BOOL _isIntro;
 	BOOL _isMainShare;
 	BOOL _isMenuCovered;
+	
+	SNComposePopOverView_iPhone *_composePopOverView;
 	
 	
 	int _swipeIndex;

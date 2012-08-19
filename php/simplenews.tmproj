@@ -3,12 +3,10 @@
 <plist version="1.0">
 <dict>
 	<key>currentDocument</key>
-	<string>retriever/index.php</string>
+	<string>services/Composer.php</string>
 	<key>documents</key>
 	<array>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>cms</string>
 			<key>regexFolderFilter</key>
@@ -35,8 +33,6 @@
 			<string>youtube</string>
 		</dict>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>signup</string>
 			<key>regexFolderFilter</key>
@@ -45,8 +41,6 @@
 			<string>signup</string>
 		</dict>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>push_harness</string>
 			<key>regexFolderFilter</key>
@@ -55,8 +49,6 @@
 			<string>push_harness</string>
 		</dict>
 		<dict>
-			<key>expanded</key>
-			<true/>
 			<key>name</key>
 			<string>workers</string>
 			<key>regexFolderFilter</key>
@@ -73,6 +65,26 @@
 			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
 			<key>sourceDirectory</key>
 			<string>retriever</string>
+		</dict>
+		<dict>
+			<key>expanded</key>
+			<true/>
+			<key>name</key>
+			<string>top_list</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>sourceDirectory</key>
+			<string>top_list</string>
+		</dict>
+		<dict>
+			<key>expanded</key>
+			<true/>
+			<key>name</key>
+			<string>facebook</string>
+			<key>regexFolderFilter</key>
+			<string>!.*/(\.[^/]*|CVS|_darcs|_MTN|\{arch\}|blib|.*~\.nib|.*\.(framework|app|pbproj|pbxproj|xcode(proj)?|bundle))$</string>
+			<key>sourceDirectory</key>
+			<string>facebook</string>
 		</dict>
 	</array>
 	<key>fileHierarchyDrawerWidth</key>
@@ -163,14 +175,28 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>retriever/_db_open.php</key>
+		<key>facebook/index.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>31</integer>
+				<integer>8</integer>
 				<key>line</key>
-				<integer>7</integer>
+				<integer>45</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>26</integer>
+		</dict>
+		<key>facebook/ogtest.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>9</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -182,56 +208,60 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>36</integer>
+				<integer>33</integer>
 				<key>line</key>
-				<integer>15</integer>
+				<integer>44</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>10</integer>
-		</dict>
-		<key>retriever/article_transfer.php</key>
-		<dict>
-			<key>caret</key>
+			<integer>41</integer>
+			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>74</integer>
+				<integer>28</integer>
 				<key>line</key>
+				<integer>44</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
 				<integer>35</integer>
+				<key>line</key>
+				<integer>44</integer>
 			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>0</integer>
 		</dict>
-		<key>retriever/index.php</key>
+		<key>retriever/readability.php</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>3</integer>
+				<integer>44</integer>
 				<key>line</key>
-				<integer>145</integer>
+				<integer>124</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>107</integer>
-		</dict>
-		<key>retriever/retweets.php</key>
-		<dict>
-			<key>caret</key>
+			<integer>103</integer>
+			<key>selectFrom</key>
 			<dict>
 				<key>column</key>
-				<integer>36</integer>
+				<integer>2</integer>
 				<key>line</key>
-				<integer>13</integer>
+				<integer>120</integer>
 			</dict>
-			<key>firstVisibleColumn</key>
-			<integer>0</integer>
-			<key>firstVisibleLine</key>
-			<integer>11</integer>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>44</integer>
+				<key>line</key>
+				<integer>124</integer>
+			</dict>
 		</dict>
 		<key>services/Articles.php</key>
 		<dict>
@@ -247,6 +277,36 @@
 			<key>firstVisibleLine</key>
 			<integer>48</integer>
 		</dict>
+		<key>services/Articles3.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>79</integer>
+				<key>line</key>
+				<integer>120</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>110</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>3</integer>
+				<key>line</key>
+				<integer>120</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>79</integer>
+				<key>line</key>
+				<integer>120</integer>
+			</dict>
+		</dict>
 		<key>services/Categories.php</key>
 		<dict>
 			<key>caret</key>
@@ -260,6 +320,20 @@
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>63</integer>
+		</dict>
+		<key>services/Composer.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>32</integer>
+				<key>line</key>
+				<integer>132</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>121</integer>
 		</dict>
 		<key>services/Curators.php</key>
 		<dict>
@@ -333,6 +407,34 @@
 				<integer>258</integer>
 			</dict>
 		</dict>
+		<key>services/Topics2.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>32</integer>
+				<key>line</key>
+				<integer>8</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>services/Users2.php</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>1</integer>
+				<key>line</key>
+				<integer>4</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
 		<key>signup/_oauth_cfg.php</key>
 		<dict>
 			<key>caret</key>
@@ -380,15 +482,18 @@
 	</dict>
 	<key>openDocuments</key>
 	<array>
-		<string>retriever/index.php</string>
-		<string>retriever/retweets.php</string>
-		<string>retriever/article_transfer.php</string>
+		<string>services/Users2.php</string>
+		<string>services/Topics2.php</string>
+		<string>facebook/ogtest.php</string>
+		<string>services/Composer.php</string>
+		<string>services/Articles3.php</string>
+		<string>facebook/index.php</string>
+		<string>retriever/readability.php</string>
 		<string>retriever/app_images.php</string>
-		<string>retriever/_db_open.php</string>
 	</array>
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{788, 61}, {1402, 1022}}</string>
+	<string>{{910, 84}, {1417, 947}}</string>
 </dict>
 </plist>

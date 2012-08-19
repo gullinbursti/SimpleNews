@@ -10,6 +10,7 @@
 
 #import "SNComposeEditorView_iPhone.h"
 #import "SNAppDelegate.h"
+#import "SNStickerVO.h"
 
 @implementation SNComposeEditorView_iPhone
 
@@ -18,7 +19,8 @@
 {
 	if ((self = [super initWithFrame:frame])) {
 		_fbFriend = fbFriend;
-		_cnt = 0;
+		_quoteIndex = 0;
+		_stickerIndex = 0;
 		_isQuote = YES;
 		
 		_quoteList = [NSMutableArray new];
@@ -35,35 +37,36 @@
 		imgView.imageURL = [NSURL URLWithString:[_fbFriend objectForKey:@"lg_image"]];
 		[_canvasView addSubview:imgView];
 		
-		_quoteToggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		[_quoteToggleButton addTarget:self action:@selector(_goQuoteToggle) forControlEvents:UIControlEventTouchUpInside];
-		_quoteToggleButton.frame = CGRectMake(10.0, 10.0, 100.0, 48.0);
-		[_quoteToggleButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
-		[_quoteToggleButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
-		[_quoteToggleButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		_quoteToggleButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-		[_quoteToggleButton setTitle:@"Quote" forState:UIControlStateNormal];
-		[self addSubview:_quoteToggleButton];
+		_quoteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[_quoteButton addTarget:self action:@selector(_goQuote) forControlEvents:UIControlEventTouchUpInside];
+		_quoteButton.frame = CGRectMake(10.0, 10.0, 100.0, 48.0);
+		[_quoteButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
+		[_quoteButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
+		[_quoteButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		_quoteButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		[_quoteButton setTitle:@"Quote" forState:UIControlStateNormal];
+		[self addSubview:_quoteButton];
 		
-		_stickerToggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		[_stickerToggleButton addTarget:self action:@selector(_goStickerToggle) forControlEvents:UIControlEventTouchUpInside];
-		_stickerToggleButton.frame = CGRectMake(210.0, 10.0, 100.0, 48.0);
-		[_stickerToggleButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
-		[_stickerToggleButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
-		[_stickerToggleButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		_stickerToggleButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-		[_stickerToggleButton setTitle:@"Sticker" forState:UIControlStateNormal];
-		[self addSubview:_stickerToggleButton];
+		_stickerButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[_stickerButton addTarget:self action:@selector(_goSticker) forControlEvents:UIControlEventTouchUpInside];
+		_stickerButton.frame = CGRectMake(10.0, 60.0, 100.0, 48.0);
+		[_stickerButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
+		[_stickerButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
+		[_stickerButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		_stickerButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		[_stickerButton setTitle:@"Sticker" forState:UIControlStateNormal];
+		[self addSubview:_stickerButton];
 		
-		_cycleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		[_cycleButton addTarget:self action:@selector(_goCycle) forControlEvents:UIControlEventTouchUpInside];
-		_cycleButton.frame = CGRectMake(10.0, 380.0, 100.0, 48.0);
-		[_cycleButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
-		[_cycleButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
-		[_cycleButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		_cycleButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-		[_cycleButton setTitle:@"Next" forState:UIControlStateNormal];
-		[self addSubview:_cycleButton];
+		UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[clearButton addTarget:self action:@selector(_goClear) forControlEvents:UIControlEventTouchUpInside];
+		clearButton.frame = CGRectMake(10.0, 110.0, 100.0, 48.0);
+		[clearButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
+		[clearButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
+		[clearButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		clearButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		[clearButton setTitle:@"Clear" forState:UIControlStateNormal];
+		[self addSubview:clearButton];
+
 		
 		UIButton *submitButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		[submitButton addTarget:self action:@selector(_goSubmit) forControlEvents:UIControlEventTouchUpInside];
@@ -86,48 +89,103 @@
 		
 		CGSize size = [[_quoteList objectAtIndex:0] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(280.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 		
-		_quoteTxtView = [[UITextView alloc] initWithFrame:CGRectMake(20.0, 150.0, 280.0, size.height + 20.0)];
+		
+		_quoteLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 150.0, 280.0, size.height)];
+		_quoteLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
+		_quoteLabel.textColor = [UIColor whiteColor];
+		_quoteLabel.userInteractionEnabled = YES;
+		_quoteLabel.numberOfLines = 0;
+		_quoteLabel.backgroundColor = [UIColor clearColor];
+		_quoteLabel.textAlignment = UITextAlignmentCenter;
+		_quoteLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.67];
+		_quoteLabel.shadowOffset = CGSizeMake(0.0, -1.0);
+		_quoteLabel.text = [_quoteList objectAtIndex:0];
+		[_canvasView addSubview:_quoteLabel];
+		
+		_customQuoteView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 240.0)];
+		_customQuoteView.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.85];
+		_customQuoteView.hidden = YES;
+		[self addSubview:_customQuoteView];
+		
+		_quoteTxtView = [[UITextView alloc] initWithFrame:CGRectMake(20.0, 200.0, 280.0, size.height)];
 		_quoteTxtView.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
 		_quoteTxtView.textColor = [UIColor whiteColor];
-		//_quoteTxtView.numberOfLines = 0;
+		_quoteTxtView.userInteractionEnabled = YES;
 		_quoteTxtView.backgroundColor = [UIColor clearColor];
 		_quoteTxtView.delegate = self;
 		_quoteTxtView.textAlignment = UITextAlignmentCenter;
 		_quoteTxtView.keyboardType = UIKeyboardTypeDefault;
-		_quoteTxtView.keyboardAppearance = UIKeyboardAppearanceDefault;
+		_quoteTxtView.keyboardAppearance = UIKeyboardAppearanceAlert;
 		[_quoteTxtView setAutocapitalizationType:UITextAutocapitalizationTypeNone];
 		[_quoteTxtView setAutocorrectionType:UITextAutocorrectionTypeNo];
 		[_quoteTxtView setReturnKeyType:UIReturnKeyDone];
-		//_quoteTxtView.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.67];
-		//_quoteTxtView.shadowOffset = CGSizeMake(1.0, 1.0);
-		_quoteTxtView.text = [_quoteList objectAtIndex:0];
-		[_canvasView addSubview:_quoteTxtView];
+		[_customQuoteView addSubview:_quoteTxtView];
+		
+		UITapGestureRecognizer *singleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+		singleTapGestureRecognizer.numberOfTapsRequired = 1;
+		[_quoteLabel addGestureRecognizer:singleTapGestureRecognizer];
+		
+		_stickerDataRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kComposerAPI]]];
+		[_stickerDataRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[_stickerDataRequest setDelegate:self];
+		[_stickerDataRequest startAsynchronous];
+		
+		UIView *testView = [[UIView alloc] initWithFrame:CGRectMake(50.0, 400.0, 50.0, 10.0)];
+		testView.backgroundColor = [UIColor greenColor];
+		//[_canvasView addSubview:testView];
 	}
 	
 	return (self);
 }
 
+- (void)handleSingleTap:(UIGestureRecognizer *)tap {
+	_quoteLabel.hidden = YES;
+	
+	_quoteTxtView.frame = CGRectMake(20.0, 20.0, _quoteLabel.frame.size.width, _quoteLabel.frame.size.height);
+	_quoteTxtView.text = _quoteLabel.text;
+	_customQuoteView.hidden = NO;
+	
+	[_quoteTxtView becomeFirstResponder];
+}
+
 
 #pragma mark - Navigation
-- (void)_goQuoteToggle {
+- (void)_goQuote {
+	_quoteIndex++;
 	_isQuote = YES;
-}
-
-- (void)_goStickerToggle {
-	_isQuote = NO;
-}
-
-- (void)_goCycle {
-	_cnt++;
 	
-	if (_isQuote) {
-		NSString *caption = [_quoteList objectAtIndex:_cnt % [_quoteList count]];
-		
-		CGSize size = [caption sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(280.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		_quoteTxtView.frame = CGRectMake(20.0, 150.0, 280.0, size.height + 20.0);
-		_quoteTxtView.text = caption;
-	}
+	NSString *caption = [_quoteList objectAtIndex:_quoteIndex % [_quoteList count]];
+	CGSize size = [caption sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(280.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+	_quoteLabel.frame = CGRectMake(20.0, 150.0, 280.0, size.height);
+	_quoteLabel.text = caption;
 }
+
+- (void)_goSticker {
+	_stickerIndex++;
+	_isQuote = NO;
+	
+	SNStickerVO *vo = [_stickerList objectAtIndex:_stickerIndex % [_stickerList count]];
+	
+	CGPoint pos = _stickerImgView.frame.origin;
+	
+	if (pos.x == 0.0 && pos.y == 0.0)
+		pos = CGPointMake(100.0, 100.0);
+	
+	[_stickerImgView removeFromSuperview];
+	_stickerImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(pos.x, pos.y, 85.0, 85.0)];
+	_stickerImgView.userInteractionEnabled = YES;
+	_stickerImgView.imageURL = [NSURL URLWithString:vo.url];
+	[_canvasView addSubview:_stickerImgView];
+}
+
+- (void)_goClear {
+	_quoteIndex = 0;
+	_stickerIndex = 0;
+	
+	_quoteLabel.text = @"";
+	[_stickerImgView removeFromSuperview];
+}
+
 
 -(void)_goSubmit {
 	CGSize size = [_canvasView bounds].size;
@@ -224,9 +282,48 @@
 
 }
 
+#pragma mark - Touch controls
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [touches anyObject];
+	
+	NSLog(@"BEGAN %@", [touch view]);
+	
+	CGPoint touchPoint = [touch locationInView:self];
+	if ([touch view] == _stickerImgView) {
+		_diffPt = CGPointMake(_stickerImgView.center.x - touchPoint.x, _stickerImgView.center.y - touchPoint.y);
+	}
+	
+	if ([touch view] == _quoteLabel) {
+		_diffPt = CGPointMake(_quoteLabel.center.x - touchPoint.x, _quoteLabel.center.y - touchPoint.y);
+	}
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+	UITouch *touch = [touches anyObject];
+	
+	CGPoint location = [touch locationInView:self];
+	CGPoint adjPt = CGPointMake(location.x + _diffPt.x, location.y + _diffPt.y);
+	
+	NSLog(@"MOVED %@", [touch view]);
+	
+	if ([touch view] == _stickerImgView) {
+		_stickerImgView.center = adjPt;		
+		return;
+	}
+	
+	if ([touch view] == _quoteLabel) {
+		_quoteLabel.center = CGPointMake(_quoteLabel.center.x, adjPt.y);		
+		return;
+	}
+}
+
 #pragma mark - TextView Delegates
 - (void)textViewDidEndEditing:(UITextView *)textView {
 	[textView resignFirstResponder];
+	
+	_quoteLabel.hidden = NO;
+	_quoteLabel.text = textView.text;
+	_customQuoteView.hidden = YES;
 }
 
 - (void)textViewDidChange:(UITextView *)textView {
@@ -257,8 +354,26 @@
 		NSLog(@"Failed to parse user JSON: %@", [error localizedDescription]);
 	
 	else {
-		NSLog(@"RESULT:[%@]", parsedResult);
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"COMPOSE_SUBMITTED" object:nil];
+		
+		if ([request isEqual:_stickerDataRequest]) {
+			NSArray *parsedLists = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			_stickerList = [NSMutableArray new];
+			
+			NSMutableArray *list = [NSMutableArray array];
+			for (NSDictionary *serverList in parsedLists) {
+				 SNStickerVO *vo = [SNStickerVO stickerWithDictionary:serverList];
+				
+				if (vo != nil)
+					[list addObject:vo];
+			}
+			
+			_stickerList = [list copy];
+			
+			
+		} else {
+			NSLog(@"RESULT:[%@]", parsedResult);
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"COMPOSE_SUBMITTED" object:nil];
+		}
 	}
 }
 

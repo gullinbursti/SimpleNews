@@ -22,9 +22,10 @@
 	
 	BOOL _isQuoteType;
 	BOOL _isCameraPic;
+	
 	BOOL _isCameraSource;
+	BOOL _isCameraRollSource;
 	BOOL _isFriendsSource;
-	int _composeState;
 	
 	NSArray *_fiendsList;
 	
@@ -36,7 +37,8 @@
 	SNComposeEditorView_iPhone *_composeEditorView;
 }
 
-- (id)initWithArticleVO:(SNArticleVO *)vo;
-
+- (id)initWithTypeCamera;
+- (id)initWithTypeCameraRoll;
+- (id)initWithTypeFriends;
 
 @end

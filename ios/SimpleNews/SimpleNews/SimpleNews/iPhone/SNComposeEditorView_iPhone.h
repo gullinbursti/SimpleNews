@@ -14,19 +14,26 @@
 @interface SNComposeEditorView_iPhone : UIView <UITextViewDelegate, EGOImageViewDelegate, ASIHTTPRequestDelegate> {
 	NSDictionary *_fbFriend;
 	
-	UIButton *_cycleButton;
-	int _cnt;
+	int _quoteIndex;
+	int _stickerIndex;
 	BOOL _isQuote;
 	
 	NSMutableArray *_quoteList;
 	NSMutableArray *_stickerList;
 	
+	UILabel *_quoteLabel;
 	UITextView *_quoteTxtView;
 	
 	UIView *_canvasView;
+	UIView *_customQuoteView;
 	
-	UIButton *_quoteToggleButton;
-	UIButton *_stickerToggleButton;
+	UIButton *_quoteButton;
+	UIButton *_stickerButton;
+	
+	ASIFormDataRequest *_stickerDataRequest;
+	EGOImageView *_stickerImgView;
+	
+	CGPoint _diffPt;
 }
 
 - (id)initWithFrame:(CGRect)frame withFriend:(NSDictionary *)fbFriend;

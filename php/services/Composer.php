@@ -134,6 +134,44 @@
 				));				
 			}			
 			
+			$this->sendResponse(200, json_encode($sticker_arr));
+			return (true);
+		}
+		
+		function submitStickerArticle($user_id, $img_url, $sticker_id) {
+			$query = 'SELECT * FROM `tblUsers` WHERE `id` = '. $user_id .';';
+			$user_row = mysql_fetch_row(mysql_query($query));
+			
+			if ($user_row) {
+				$query = 'SELECT `topic_id` FROM `tblComposeStickers` WHERE `sticker_id` = '. $sticker_id .';';
+				$sticker_result = mysql_query($query);
+				$sticker_row = mysql_fetch_row($sticker_result);
+				$topic_id = $sticker_row[0];
+				
+				$query = 'INSERT INTO `tblArticles` (';
+				$query .= '`id`, `type_id`, `tweet_id`, `contributor_id`, `tweet_msg`, `short_url`, `title`, `content_txt`, `content_url`, `image_url`, `retweets`, `image_ratio`, `youtube_id`, `active`, `created`, `added`) ';
+				$query .= 'VALUES (NULL, "2", "0", "'. $user_id .'", "", "", "", "", "", "", "0", "1.0", "", "Y", NOW(), NOW());';	 
+			    $ins1_result = mysql_query($query);
+				$article_id = mysql_insert_id();
+		
+				$query = 'INSERT INTO `tblTopicsArticles` ('; 
+				$query .= '`topic_id`, `article_id`) ';
+				$query .= 'VALUES ("'. $topic_id .'", "'. $article_id .'");';
+				$ins2_result = mysql_query($query);
+				
+				$size_arr = getimagesize($img_url);
+				$img_ratio = $size_arr[1] / $size_arr[0];
+				
+				$query = 'INSERT INTO tblArticleImages (';
+				$query .= '`id`, `type_id`, `article_id`, `url`, `ratio`, `added`) ';
+				$query .= 'VALUES (NULL, 1, "'. $article_id .'", "'. $img_url .'", "'. $img_ratio .'", NOW());';
+				$ins3_result = mysql_query($query);
+				
+				$this->sendResponse(200, json_encode(array(
+					"article_id" => $article_id
+				)));
+			}
+			
 			return (true);
 		}
 		
@@ -160,6 +198,11 @@
 				
 			case "1":
 				$composer->getStickerList();
+				break;
+				
+			case "2":
+				if (isset($_POST['userID']) && isset($_POST['imgURL']) && isset($_POST['stickerID']))
+					$composer->submitStickerArticle($_POST['userID'], $_POST['imgURL'], $_POST['stickerID']);
 				break;
     	}
 	}
