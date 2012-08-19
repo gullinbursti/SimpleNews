@@ -184,6 +184,10 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[url stringByReplacingOccurrencesOfString:@"http:" withString:@"itms-apps:"]]];
 }
 
++ (NSArray *)fbPermissions {
+	return ([NSArray arrayWithObjects:@"publish_actions", @"user_photos", @"read_stream", @"status_update", nil]);
+}
+
 
 +(UIImage *)imageWithFilters:(UIImage *)srcImg filter:(NSArray *)fxList {
 	UIImage *fxImg = srcImg;
@@ -347,8 +351,7 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 
 
 + (void)openSession {
-	NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", @"read_stream", @"status_update", nil];
-	[FBSession sessionOpenWithPermissions:permissions completionHandler:
+	[FBSession sessionOpenWithPermissions:[SNAppDelegate fbPermissions] completionHandler:
 	 ^(FBSession *session, FBSessionState state, NSError *error) {
 		 NSLog(@"STATE:%d", state);
 		 //[self sessionStateChanged:session state:state error:error];

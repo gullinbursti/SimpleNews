@@ -46,6 +46,8 @@
 +(void)writeDeviceToken:(NSString *)token;
 +(NSString *)deviceToken;
 
++ (NSArray *)fbPermissions;
+
 
 +(void)twitterToggle:(BOOL)isSignedIn;
 +(BOOL)twitterEnabled;

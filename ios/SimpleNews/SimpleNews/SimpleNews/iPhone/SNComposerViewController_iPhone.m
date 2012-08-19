@@ -20,7 +20,7 @@
 #import "SNComposeSourceView_iPhone.h"
 #import "SNComposeFriendsView_iPhone.h"
 
-@interface SNComposerViewController_iPhone() <FBFriendPickerDelegate>
+@interface SNComposerViewController_iPhone() <UINavigationControllerDelegate, UIImagePickerControllerDelegate, FBFriendPickerDelegate>
 @property (strong, nonatomic) FBFriendPickerViewController *friendPickerController;
 @end
 
@@ -35,7 +35,9 @@
 		
 		_isCameraSource = NO;
 		_isCameraRollSource = NO;
-		_isFriendsSource = YES;
+		_isFriendsSource = NO;
+		
+		_isFirstAppearance = YES;
 	}
 	
 	return (self);
@@ -89,62 +91,6 @@
 	SNNavDoneBtnView *doneBtnView = [[SNNavDoneBtnView alloc] initWithFrame:CGRectMake(256.0, 0.0, 64.0, 44.0)];
 	[[doneBtnView btn] addTarget:self action:@selector(_goDone) forControlEvents:UIControlEventTouchUpInside];
 	[_headerView addSubview:doneBtnView];
-	
-	if (_isCameraSource) {
-		if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"COMPOSE_SOURCE_CAMERA" object:nil];
-			
-			UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-			imagePicker.sourceType =  UIImagePickerControllerSourceTypeCamera;
-			imagePicker.delegate = self;
-			imagePicker.allowsEditing = YES;
-			
-			[self.navigationController pushViewController:imagePicker animated:NO];
-			
-		} else {
-			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Camera not aviable." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-			[alertView show];
-		}
-	}
-	
-	if (_isCameraRollSource) {
-		if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
-			[[NSNotificationCenter defaultCenter] postNotificationName:@"COMPOSE_SOURCE_CAMERAROLL" object:nil];
-			
-			UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-			imagePicker.sourceType =  UIImagePickerControllerSourceTypePhotoLibrary;
-			imagePicker.delegate = self;
-			imagePicker.allowsEditing = YES;
-			//imagePicker.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage, nil];
-			
-			[self.navigationController pushViewController:imagePicker animated:NO];
-			
-		} else {
-			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Photo roll not available." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-			[alertView show];
-		}
-	}
-	
-	if (_isFriendsSource) {
-		[_headerView addSubview:_backBtnView];
-		
-		self.friendPickerController = [[FBFriendPickerViewController alloc] initWithNibName:nil bundle:nil];
-		self.friendPickerController.delegate = self;
-		self.friendPickerController.allowsMultipleSelection = NO;
-		[self.navigationController setNavigationBarHidden:NO animated:NO];
-		self.friendPickerController.title = @"Select friends";
-		self.friendPickerController.view.frame = CGRectOffset(self.friendPickerController.view.frame, 0.0, 45.0);
-		
-		ABAddressBookCreate();
-		ABPersonSortOrdering sortOrdering = ABPersonGetSortOrdering();
-		ABPersonCompositeNameFormat nameFormat = ABPersonGetCompositeNameFormat();
-		
-		self.friendPickerController.sortOrdering = (sortOrdering == kABPersonSortByFirstName) ? FBFriendSortByFirstName : FBFriendSortByLastName;
-		self.friendPickerController.displayOrdering = (nameFormat == kABPersonCompositeNameFormatFirstNameFirst) ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName;
-		
-		[self.friendPickerController loadData];
-		[self.navigationController pushViewController:self.friendPickerController animated:NO];
-	}
 }
 
 - (void)viewDidLoad
@@ -155,6 +101,70 @@
 - (void)viewDidUnload
 {
 	[super viewDidUnload];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+	[super viewDidAppear:animated];
+	
+	if (_isFirstAppearance) {
+		_isFirstAppearance = NO;
+	
+		if (_isCameraSource) {
+			if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+				[[NSNotificationCenter defaultCenter] postNotificationName:@"COMPOSE_SOURCE_CAMERA" object:nil];
+				
+				UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+				imagePicker.sourceType =  UIImagePickerControllerSourceTypeCamera;
+				imagePicker.delegate = self;
+				imagePicker.allowsEditing = YES;
+				
+				[self.navigationController pushViewController:imagePicker animated:NO];
+				
+			} else {
+				UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Camera not aviable." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+				[alertView show];
+			}
+		}
+		
+		if (_isCameraRollSource) {
+			if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+				[[NSNotificationCenter defaultCenter] postNotificationName:@"COMPOSE_SOURCE_CAMERAROLL" object:nil];
+				
+				UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+				imagePicker.sourceType =  UIImagePickerControllerSourceTypePhotoLibrary;
+				imagePicker.delegate = self;
+				imagePicker.allowsEditing = YES;
+				//imagePicker.mediaTypes = [NSArray arrayWithObjects:(NSString *)kUTTypeImage, nil];
+				
+				[self.navigationController presentViewController:imagePicker animated:NO completion:nil];
+				
+			} else {
+				UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Photo roll not available." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+				[alertView show];
+			}
+		}
+		
+		if (_isFriendsSource) {
+			[_headerView addSubview:_backBtnView];
+			
+			self.friendPickerController = [[FBFriendPickerViewController alloc] initWithNibName:nil bundle:nil];
+			self.friendPickerController.delegate = self;
+			self.friendPickerController.allowsMultipleSelection = NO;
+			[self.navigationController setNavigationBarHidden:NO animated:NO];
+			self.friendPickerController.title = @"Select friends";
+			self.friendPickerController.view.frame = CGRectOffset(self.friendPickerController.view.frame, 0.0, 45.0);
+			
+			ABAddressBookCreate();
+			ABPersonSortOrdering sortOrdering = ABPersonGetSortOrdering();
+			ABPersonCompositeNameFormat nameFormat = ABPersonGetCompositeNameFormat();
+			
+			self.friendPickerController.sortOrdering = (sortOrdering == kABPersonSortByFirstName) ? FBFriendSortByFirstName : FBFriendSortByLastName;
+			self.friendPickerController.displayOrdering = (nameFormat == kABPersonCompositeNameFormatFirstNameFirst) ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName;
+			
+			[self.friendPickerController loadData];
+			[self.navigationController pushViewController:self.friendPickerController animated:NO];
+		}
+	}
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -219,5 +229,16 @@
 	_composeEditorView = [[SNComposeEditorView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0) withFriend:friendDict];
 	[self.view addSubview:_composeEditorView];
 }
+
+#pragma mark - ImagePicker Delegates
+-(void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    [self dismissModalViewControllerAnimated:NO];
+	
+	_composeEditorView = [[SNComposeEditorView_iPhone alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0) withImage:image];
+	[self.view addSubview:_composeEditorView];
+}
+
 
 @end

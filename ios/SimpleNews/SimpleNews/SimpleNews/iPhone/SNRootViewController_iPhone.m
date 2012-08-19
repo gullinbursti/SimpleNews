@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
+#import <FBiOSSDK/FacebookSDK.h>
+
 #import <QuartzCore/QuartzCore.h>
 #import <Twitter/Twitter.h>
 #import <FBiOSSDK/FacebookSDK.h>
@@ -255,7 +257,11 @@
 				 }];
 			 }
 		 }];		
-	}	
+	}
+	
+	FBLoginView *loginview = [[FBLoginView alloc] initWithPermissions:[SNAppDelegate fbPermissions]];
+	loginview.frame = CGRectOffset(loginview.frame, 50.0, 5.0);
+	[self.view addSubview:loginview];
 
 	// wall
 //	[FBRequest startWithGraphPath:@"me/home" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {

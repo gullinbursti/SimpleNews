@@ -19,10 +19,6 @@
 - (id)init {
 	if ((self = [super init])) {
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_sessionStateChanged:) name:@"SESSION_STATE_CHANGED" object:nil];
-		
-		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
-		bgImgView.image = [UIImage imageNamed:@"background_timeline.png"];
-		[self.view addSubview:bgImgView];
 	}
 	
 	return (self);
@@ -38,6 +34,12 @@
 {
 	[super loadView];
 	
+	NSLog(@"LOGIN VIEW");
+	
+	UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:self.view.frame];
+	bgImgView.image = [UIImage imageNamed:@"background_timeline.png"];
+	[self.view addSubview:bgImgView];
+	
 	UIButton *facebookButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	[facebookButton addTarget:self action:@selector(_goFacebook) forControlEvents:UIControlEventTouchUpInside];
 	facebookButton.frame = CGRectMake(30.0, 250.0, 100.0, 48.0);
@@ -46,7 +48,12 @@
 	[facebookButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	facebookButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
 	[facebookButton setTitle:@"Facebook" forState:UIControlStateNormal];
-	[self.view addSubview:facebookButton];
+	//[self.view addSubview:facebookButton];
+	
+	FBLoginView *loginview = [[FBLoginView alloc] initWithPermissions:[SNAppDelegate fbPermissions]];
+	loginview.frame = CGRectOffset(loginview.frame, 30.0, 245.0);
+	[self.view addSubview:loginview];
+
 	
 	UIButton *twitterButton = [UIButton buttonWithType:UIButtonTypeCustom];
 	[twitterButton addTarget:self action:@selector(_goTwitter) forControlEvents:UIControlEventTouchUpInside];
@@ -77,8 +84,7 @@
 
 #pragma mark - Navigation
 - (void)_goFacebook {
-	NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", @"read_stream", @"status_update", nil];
-	[FBSession sessionOpenWithPermissions:permissions completionHandler:
+	[FBSession sessionOpenWithPermissions:[SNAppDelegate fbPermissions] completionHandler:
 	 ^(FBSession *session, FBSessionState state, NSError *error) {
 		 switch (state) {
 			 case FBSessionStateOpen: {

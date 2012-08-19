@@ -37,5 +37,6 @@
 }
 
 - (id)initWithFrame:(CGRect)frame withFriend:(NSDictionary *)fbFriend;
+- (id)initWithFrame:(CGRect)frame withImage:(UIImage *)img;
 
 @end

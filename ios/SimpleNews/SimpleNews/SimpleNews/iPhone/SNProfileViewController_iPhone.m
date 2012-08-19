@@ -76,7 +76,7 @@
 	[self.view addSubview:profileButton];
 	
 	// Create Login View so that the app will be granted "status_update" permission.
-	FBLoginView *loginview = [[FBLoginView alloc] initWithPermissions:[NSArray arrayWithObject:@"status_update"]];
+	FBLoginView *loginview = [[FBLoginView alloc] initWithPermissions:[SNAppDelegate fbPermissions]];
 	
 	loginview.frame = CGRectOffset(loginview.frame, 130.0, 65.0);
 	[self.view addSubview:loginview];

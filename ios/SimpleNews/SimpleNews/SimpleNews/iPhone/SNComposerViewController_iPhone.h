@@ -26,6 +26,7 @@
 	BOOL _isCameraSource;
 	BOOL _isCameraRollSource;
 	BOOL _isFriendsSource;
+	BOOL _isFirstAppearance;
 	
 	NSArray *_fiendsList;
 	
