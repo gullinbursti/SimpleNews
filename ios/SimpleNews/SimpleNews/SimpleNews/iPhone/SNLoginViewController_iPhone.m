@@ -48,11 +48,11 @@
 	[facebookButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
 	facebookButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
 	[facebookButton setTitle:@"Facebook" forState:UIControlStateNormal];
-	//[self.view addSubview:facebookButton];
+	[self.view addSubview:facebookButton];
 	
-	FBLoginView *loginview = [[FBLoginView alloc] initWithPermissions:[SNAppDelegate fbPermissions]];
-	loginview.frame = CGRectOffset(loginview.frame, 30.0, 245.0);
-	[self.view addSubview:loginview];
+//	FBLoginView *loginview = [[FBLoginView alloc] initWithPermissions:[SNAppDelegate fbPermissions]];
+//	loginview.frame = CGRectOffset(loginview.frame, 30.0, 245.0);
+//	[self.view addSubview:loginview];
 
 	
 	UIButton *twitterButton = [UIButton buttonWithType:UIButtonTypeCustom];

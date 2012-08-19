@@ -259,10 +259,6 @@
 		 }];		
 	}
 	
-	FBLoginView *loginview = [[FBLoginView alloc] initWithPermissions:[SNAppDelegate fbPermissions]];
-	loginview.frame = CGRectOffset(loginview.frame, 50.0, 5.0);
-	[self.view addSubview:loginview];
-
 	// wall
 //	[FBRequest startWithGraphPath:@"me/home" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
 //		NSLog(@"%@", (NSDictionary *)result);

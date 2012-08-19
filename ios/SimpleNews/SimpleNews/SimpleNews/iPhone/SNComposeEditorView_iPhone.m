@@ -79,53 +79,6 @@
 		[_quoteList addObject:@"Consequat duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat vel!"];
 		[_quoteList addObject:@"Litterarum formas humanitatis, per seacula quarta decima et quinta decima clari fiant sollemnes in."];
 		[_quoteList addObject:@"Legunt saepius claritas est etiam processus dynamicus qui sequitur mutationem consuetudium."];
-		
-		CGSize size = [[_quoteList objectAtIndex:0] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(280.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
-		
-		
-		_quoteLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 150.0, 280.0, size.height)];
-		_quoteLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
-		_quoteLabel.textColor = [UIColor whiteColor];
-		_quoteLabel.userInteractionEnabled = YES;
-		_quoteLabel.numberOfLines = 0;
-		_quoteLabel.backgroundColor = [UIColor clearColor];
-		_quoteLabel.textAlignment = UITextAlignmentCenter;
-		_quoteLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.67];
-		_quoteLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-		_quoteLabel.text = [_quoteList objectAtIndex:0];
-		[_canvasView addSubview:_quoteLabel];
-		
-		_customQuoteView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 240.0)];
-		_customQuoteView.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.85];
-		_customQuoteView.hidden = YES;
-		[self addSubview:_customQuoteView];
-		
-		_quoteTxtView = [[UITextView alloc] initWithFrame:CGRectMake(20.0, 200.0, 280.0, size.height)];
-		_quoteTxtView.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
-		_quoteTxtView.textColor = [UIColor whiteColor];
-		_quoteTxtView.userInteractionEnabled = YES;
-		_quoteTxtView.backgroundColor = [UIColor clearColor];
-		_quoteTxtView.delegate = self;
-		_quoteTxtView.textAlignment = UITextAlignmentCenter;
-		_quoteTxtView.keyboardType = UIKeyboardTypeDefault;
-		_quoteTxtView.keyboardAppearance = UIKeyboardAppearanceAlert;
-		[_quoteTxtView setAutocapitalizationType:UITextAutocapitalizationTypeNone];
-		[_quoteTxtView setAutocorrectionType:UITextAutocorrectionTypeNo];
-		[_quoteTxtView setReturnKeyType:UIReturnKeyDone];
-		[_customQuoteView addSubview:_quoteTxtView];
-		
-		UITapGestureRecognizer *singleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
-		singleTapGestureRecognizer.numberOfTapsRequired = 1;
-		[_quoteLabel addGestureRecognizer:singleTapGestureRecognizer];
-		
-		_stickerDataRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kComposerAPI]]];
-		[_stickerDataRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
-		[_stickerDataRequest setDelegate:self];
-		[_stickerDataRequest startAsynchronous];
-		
-		UIView *testView = [[UIView alloc] initWithFrame:CGRectMake(50.0, 400.0, 50.0, 10.0)];
-		testView.backgroundColor = [UIColor greenColor];
-		//[_canvasView addSubview:testView];
 	}
 	
 	return (self);
@@ -168,6 +121,117 @@
 		UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(imgPt.x, imgPt.y, scaledSize.width, scaledSize.height)];
 		imgView.image = img;
 		[_canvasView addSubview:imgView];
+		
+		_quoteIndex = 0;
+		_stickerIndex = 0;
+		_isQuote = YES;
+		
+		_quoteList = [NSMutableArray new];
+		_stickerList = [NSMutableArray new];
+		
+		NSLog(@"USER:[%@]", [_fbFriend objectForKey:@"id"]);
+		
+		_canvasView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 435.0)];
+		_canvasView.clipsToBounds = YES;
+		[self addSubview:_canvasView];
+		
+		
+		_quoteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[_quoteButton addTarget:self action:@selector(_goQuote) forControlEvents:UIControlEventTouchUpInside];
+		_quoteButton.frame = CGRectMake(10.0, 10.0, 100.0, 48.0);
+		[_quoteButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
+		[_quoteButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
+		[_quoteButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		_quoteButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		[_quoteButton setTitle:@"Quote" forState:UIControlStateNormal];
+		[self addSubview:_quoteButton];
+		
+		_stickerButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[_stickerButton addTarget:self action:@selector(_goSticker) forControlEvents:UIControlEventTouchUpInside];
+		_stickerButton.frame = CGRectMake(10.0, 60.0, 100.0, 48.0);
+		[_stickerButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
+		[_stickerButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
+		[_stickerButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		_stickerButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		[_stickerButton setTitle:@"Sticker" forState:UIControlStateNormal];
+		[self addSubview:_stickerButton];
+		
+		UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[clearButton addTarget:self action:@selector(_goClear) forControlEvents:UIControlEventTouchUpInside];
+		clearButton.frame = CGRectMake(10.0, 110.0, 100.0, 48.0);
+		[clearButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
+		[clearButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
+		[clearButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		clearButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		[clearButton setTitle:@"Clear" forState:UIControlStateNormal];
+		[self addSubview:clearButton];
+		
+		
+		UIButton *submitButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		[submitButton addTarget:self action:@selector(_goSubmit) forControlEvents:UIControlEventTouchUpInside];
+		submitButton.frame = CGRectMake(210.0, 380.0, 100.0, 48.0);
+		[submitButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
+		[submitButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
+		[submitButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
+		submitButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		[submitButton setTitle:@"Submit" forState:UIControlStateNormal];
+		[self addSubview:submitButton];
+		
+		[_quoteList addObject:@"Euismod tincidunt ut laoreet dolore magna aliquam erat volutpat ut laoreet."];
+		[_quoteList addObject:@"Et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis."];
+		[_quoteList addObject:@"Accumsan dolore te feugait nulla facilisi nam liber tempor cum soluta nobis"];
+		[_quoteList addObject:@"Elit sed diam nonummy nibh nostrud exerci tation ullamcorper?"];
+		[_quoteList addObject:@"Eodem modo typi qui, nunc nobis videntur parum."];
+		[_quoteList addObject:@"Consequat duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat vel!"];
+		[_quoteList addObject:@"Litterarum formas humanitatis, per seacula quarta decima et quinta decima clari fiant sollemnes in."];
+		[_quoteList addObject:@"Legunt saepius claritas est etiam processus dynamicus qui sequitur mutationem consuetudium."];
+		
+		CGSize txtSize = [[_quoteList objectAtIndex:0] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16] constrainedToSize:CGSizeMake(280.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+		
+		
+		_quoteLabel = [[UILabel alloc] initWithFrame:CGRectMake(20.0, 150.0, 280.0, txtSize.height)];
+		_quoteLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
+		_quoteLabel.textColor = [UIColor whiteColor];
+		_quoteLabel.userInteractionEnabled = YES;
+		_quoteLabel.numberOfLines = 0;
+		_quoteLabel.backgroundColor = [UIColor clearColor];
+		_quoteLabel.textAlignment = UITextAlignmentCenter;
+		_quoteLabel.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.67];
+		_quoteLabel.shadowOffset = CGSizeMake(0.0, -1.0);
+		_quoteLabel.text = [_quoteList objectAtIndex:0];
+		[_canvasView addSubview:_quoteLabel];
+		
+		_customQuoteView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 240.0)];
+		_customQuoteView.backgroundColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.85];
+		_customQuoteView.hidden = YES;
+		[self addSubview:_customQuoteView];
+		
+		_quoteTxtView = [[UITextView alloc] initWithFrame:CGRectMake(20.0, 200.0, 280.0, txtSize.height)];
+		_quoteTxtView.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:16];
+		_quoteTxtView.textColor = [UIColor whiteColor];
+		_quoteTxtView.userInteractionEnabled = YES;
+		_quoteTxtView.backgroundColor = [UIColor clearColor];
+		_quoteTxtView.delegate = self;
+		_quoteTxtView.textAlignment = UITextAlignmentCenter;
+		_quoteTxtView.keyboardType = UIKeyboardTypeDefault;
+		_quoteTxtView.keyboardAppearance = UIKeyboardAppearanceAlert;
+		[_quoteTxtView setAutocapitalizationType:UITextAutocapitalizationTypeNone];
+		[_quoteTxtView setAutocorrectionType:UITextAutocorrectionTypeNo];
+		[_quoteTxtView setReturnKeyType:UIReturnKeyDone];
+		[_customQuoteView addSubview:_quoteTxtView];
+		
+		UITapGestureRecognizer *singleTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+		singleTapGestureRecognizer.numberOfTapsRequired = 1;
+		[_quoteLabel addGestureRecognizer:singleTapGestureRecognizer];
+		
+		_stickerDataRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kComposerAPI]]];
+		[_stickerDataRequest setPostValue:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
+		[_stickerDataRequest setDelegate:self];
+		[_stickerDataRequest startAsynchronous];
+		
+		UIView *testView = [[UIView alloc] initWithFrame:CGRectMake(50.0, 400.0, 50.0, 10.0)];
+		testView.backgroundColor = [UIColor greenColor];
+		//[_canvasView addSubview:testView];
 	}
 	
 	return (self);
@@ -187,7 +251,6 @@
 		[_canvasView addSubview:imgView];
 		
 		
-		/*
 		_quoteIndex = 0;
 		_stickerIndex = 0;
 		_isQuote = YES;
@@ -298,7 +361,6 @@
 		UIView *testView = [[UIView alloc] initWithFrame:CGRectMake(50.0, 400.0, 50.0, 10.0)];
 		testView.backgroundColor = [UIColor greenColor];
 		//[_canvasView addSubview:testView];
-		 */
 	}
 	
 	return (self);
@@ -407,35 +469,40 @@
 - (void)imageViewLoadedImage:(EGOImageView *)imageView {
 	CGSize size = imageView.image.size;
 	
-	CGSize ratioSize = CGSizeMake(320.0 / size.width, 435.0 / size.height);
+	if ([imageView isEqual:_stickerImgView]) {
+		imageView.frame = CGRectMake(imageView.frame.origin.x, imageView.frame.origin.y, imageView.image.size.width, imageView.image.size.height);
+	} else {
 	
-	BOOL isWidthScaled = NO;
-	if (ratioSize.width > ratioSize.height)
-		isWidthScaled = YES;
-	
-	CGSize scaledSize;
-	if (isWidthScaled)
-		scaledSize = CGSizeMake(size.width * ratioSize.width, size.height * ratioSize.width);
-	
-	else
-		scaledSize = CGSizeMake(size.width * ratioSize.height, size.height * ratioSize.height);
-	
-	
-	CGPoint imgPt = CGPointZero;
-	if (scaledSize.width > 320.0)
-		imgPt = CGPointMake((scaledSize.width - 320.0) * -0.5, 0.0);
-	
-	else
-		imgPt = CGPointMake((scaledSize.width - 320.0) * 0.5, 0.0);
+		CGSize ratioSize = CGSizeMake(320.0 / size.width, 435.0 / size.height);
+		
+		BOOL isWidthScaled = NO;
+		if (ratioSize.width > ratioSize.height)
+			isWidthScaled = YES;
+		
+		CGSize scaledSize;
+		if (isWidthScaled)
+			scaledSize = CGSizeMake(size.width * ratioSize.width, size.height * ratioSize.width);
+		
+		else
+			scaledSize = CGSizeMake(size.width * ratioSize.height, size.height * ratioSize.height);
+		
+		
+		CGPoint imgPt = CGPointZero;
+		if (scaledSize.width > 320.0)
+			imgPt = CGPointMake((scaledSize.width - 320.0) * -0.5, 0.0);
+		
+		else
+			imgPt = CGPointMake((scaledSize.width - 320.0) * 0.5, 0.0);
 
-	
-	if (scaledSize.height > 435.0)
-		imgPt = CGPointMake(imgPt.x, (scaledSize.height - 435.0) * -0.5);
-	
-	else
-		imgPt = CGPointMake(imgPt.x, (scaledSize.height - 435.0) * 0.5);
-	
-	imageView.frame = CGRectMake(imgPt.x, imgPt.y, scaledSize.width, scaledSize.height);
+		
+		if (scaledSize.height > 435.0)
+			imgPt = CGPointMake(imgPt.x, (scaledSize.height - 435.0) * -0.5);
+		
+		else
+			imgPt = CGPointMake(imgPt.x, (scaledSize.height - 435.0) * 0.5);
+		
+		imageView.frame = CGRectMake(imgPt.x, imgPt.y, scaledSize.width, scaledSize.height);
+	}
 	
 //	NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[userDict objectForKey:@"image"]]];
 //	NSHTTPURLResponse *response;

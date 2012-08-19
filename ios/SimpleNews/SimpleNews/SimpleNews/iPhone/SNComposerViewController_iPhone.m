@@ -118,7 +118,7 @@
 				imagePicker.delegate = self;
 				imagePicker.allowsEditing = YES;
 				
-				[self.navigationController pushViewController:imagePicker animated:NO];
+				[self.navigationController presentViewController:imagePicker animated:NO completion:nil];
 				
 			} else {
 				UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Camera not aviable." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
