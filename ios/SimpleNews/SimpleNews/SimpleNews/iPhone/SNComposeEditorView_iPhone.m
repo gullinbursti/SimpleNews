@@ -23,62 +23,6 @@
 		
 		_quoteList = [NSMutableArray new];
 		_stickerList = [NSMutableArray new];
-		
-		NSLog(@"USER:[%@]", [_fbFriend objectForKey:@"id"]);
-		
-		_canvasView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 435.0)];
-		_canvasView.clipsToBounds = YES;
-		[self addSubview:_canvasView];
-		
-		_quoteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		[_quoteButton addTarget:self action:@selector(_goQuote) forControlEvents:UIControlEventTouchUpInside];
-		_quoteButton.frame = CGRectMake(10.0, 10.0, 100.0, 48.0);
-		[_quoteButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
-		[_quoteButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
-		[_quoteButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		_quoteButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-		[_quoteButton setTitle:@"Quote" forState:UIControlStateNormal];
-		[self addSubview:_quoteButton];
-		
-		_stickerButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		[_stickerButton addTarget:self action:@selector(_goSticker) forControlEvents:UIControlEventTouchUpInside];
-		_stickerButton.frame = CGRectMake(10.0, 60.0, 100.0, 48.0);
-		[_stickerButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
-		[_stickerButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
-		[_stickerButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		_stickerButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-		[_stickerButton setTitle:@"Sticker" forState:UIControlStateNormal];
-		[self addSubview:_stickerButton];
-		
-		UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		[clearButton addTarget:self action:@selector(_goClear) forControlEvents:UIControlEventTouchUpInside];
-		clearButton.frame = CGRectMake(10.0, 110.0, 100.0, 48.0);
-		[clearButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
-		[clearButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
-		[clearButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		clearButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-		[clearButton setTitle:@"Clear" forState:UIControlStateNormal];
-		[self addSubview:clearButton];
-		
-		
-		UIButton *submitButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		[submitButton addTarget:self action:@selector(_goSubmit) forControlEvents:UIControlEventTouchUpInside];
-		submitButton.frame = CGRectMake(210.0, 380.0, 100.0, 48.0);
-		[submitButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_nonActive.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateNormal];
-		[submitButton setBackgroundImage:[[UIImage imageNamed:@"sendButton_Active.png"] stretchableImageWithLeftCapWidth:32.0 topCapHeight:12.0] forState:UIControlStateHighlighted];		
-		[submitButton setTitleColor:[UIColor colorWithWhite:0.396 alpha:1.0] forState:UIControlStateNormal];
-		submitButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
-		[submitButton setTitle:@"Submit" forState:UIControlStateNormal];
-		[self addSubview:submitButton];
-		
-		[_quoteList addObject:@"Euismod tincidunt ut laoreet dolore magna aliquam erat volutpat ut laoreet."];
-		[_quoteList addObject:@"Et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis."];
-		[_quoteList addObject:@"Accumsan dolore te feugait nulla facilisi nam liber tempor cum soluta nobis"];
-		[_quoteList addObject:@"Elit sed diam nonummy nibh nostrud exerci tation ullamcorper?"];
-		[_quoteList addObject:@"Eodem modo typi qui, nunc nobis videntur parum."];
-		[_quoteList addObject:@"Consequat duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat vel!"];
-		[_quoteList addObject:@"Litterarum formas humanitatis, per seacula quarta decima et quinta decima clari fiant sollemnes in."];
-		[_quoteList addObject:@"Legunt saepius claritas est etiam processus dynamicus qui sequitur mutationem consuetudium."];
 	}
 	
 	return (self);
@@ -118,6 +62,10 @@
 		else
 			imgPt = CGPointMake(imgPt.x, (scaledSize.height - 435.0) * 0.5);
 		
+		_canvasView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 435.0)];
+		_canvasView.clipsToBounds = YES;
+		[self addSubview:_canvasView];
+		
 		UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(imgPt.x, imgPt.y, scaledSize.width, scaledSize.height)];
 		imgView.image = img;
 		[_canvasView addSubview:imgView];
@@ -130,11 +78,6 @@
 		_stickerList = [NSMutableArray new];
 		
 		NSLog(@"USER:[%@]", [_fbFriend objectForKey:@"id"]);
-		
-		_canvasView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 435.0)];
-		_canvasView.clipsToBounds = YES;
-		[self addSubview:_canvasView];
-		
 		
 		_quoteButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		[_quoteButton addTarget:self action:@selector(_goQuote) forControlEvents:UIControlEventTouchUpInside];
@@ -245,11 +188,14 @@
 		
 		NSLog(@"USER:[%@]", [_fbFriend objectForKey:@"id"]);
 		
+		_canvasView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 435.0)];
+		_canvasView.clipsToBounds = YES;
+		[self addSubview:_canvasView];
+		
 		EGOImageView *imgView = [[EGOImageView alloc] initWithFrame:CGRectMake(10.0, 50.0, 300.0, 300.0)];
 		imgView.delegate = self;
 		imgView.imageURL = [NSURL URLWithString:[_fbFriend objectForKey:@"lg_image"]];
 		[_canvasView addSubview:imgView];
-		
 		
 		_quoteIndex = 0;
 		_stickerIndex = 0;
@@ -259,11 +205,6 @@
 		_stickerList = [NSMutableArray new];
 		
 		NSLog(@"USER:[%@]", [_fbFriend objectForKey:@"id"]);
-		
-		_canvasView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 435.0)];
-		_canvasView.clipsToBounds = YES;
-		[self addSubview:_canvasView];
-		
 		
 		_quoteButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		[_quoteButton addTarget:self action:@selector(_goQuote) forControlEvents:UIControlEventTouchUpInside];
