@@ -5,7 +5,9 @@
 //  Created by Matthew Holcombe on 08.15.12.
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
-#import <FBiOSSDK/FacebookSDK.h>
+
+//#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 #import "SNComposeFriendsView_iPhone.h"
 #import "SNAppDelegate.h"
@@ -20,7 +22,7 @@
 		if (FBSession.activeSession.isOpen) {
 			//NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObject:@"2012-08-01T00%3A00%3A00%2B0000" forKey:@"since"];
 			
-			[FBRequest startWithGraphPath:@"me/home" parameters:nil HTTPMethod:@"GET" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+			[FBRequestConnection startWithGraphPath:@"me/home" parameters:nil HTTPMethod:@"GET" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
 				_fbHomeFeed = (NSDictionary *)result;
 				
 				if (error) {

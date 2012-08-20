@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <FBiOSSDK/FacebookSDK.h>
+//#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 #import "SNArticleVO.h"
 
@@ -18,5 +19,7 @@
 +(void)postStatus:(NSString *)msg;
 +(void)postToTimeline:(SNArticleVO *)vo;
 +(void)postToTicker:(NSString *)msg;
++(void)postToFriendTimeline:(NSString *)fbID article:(SNArticleVO *)vo;
++(void)postMessageToFriendTimeline:(NSString *)fbID message:(NSString *)msg;
 
 @end

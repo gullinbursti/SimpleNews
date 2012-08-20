@@ -185,7 +185,7 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 }
 
 + (NSArray *)fbPermissions {
-	return ([NSArray arrayWithObjects:@"publish_actions", @"user_photos", @"read_stream", @"status_update", nil]);
+	return ([NSArray arrayWithObjects:@"publish_actions", @"user_photos", @"read_stream", @"status_update", @"publish_stream", nil]);
 }
 
 
@@ -351,7 +351,7 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 
 
 + (void)openSession {
-	[FBSession sessionOpenWithPermissions:[SNAppDelegate fbPermissions] completionHandler:
+	[FBSession openActiveSessionWithPermissions:[SNAppDelegate fbPermissions] allowLoginUI:YES completionHandler:
 	 ^(FBSession *session, FBSessionState state, NSError *error) {
 		 NSLog(@"STATE:%d", state);
 		 //[self sessionStateChanged:session state:state error:error];

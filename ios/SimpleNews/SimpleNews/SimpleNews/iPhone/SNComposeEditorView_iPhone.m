@@ -11,6 +11,7 @@
 #import "SNComposeEditorView_iPhone.h"
 #import "SNAppDelegate.h"
 #import "SNStickerVO.h"
+#import "SNFacebookCaller.h"
 
 @implementation SNComposeEditorView_iPhone
 
@@ -368,6 +369,14 @@
 	
 	@try {
 		
+		if (!_progressHUD) {
+			_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+			_progressHUD.mode = MBProgressHUDModeIndeterminate;
+			_progressHUD.taskInProgress = YES;
+			_progressHUD.graceTime = 5.0;
+		}
+		
+		
 		//NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 		//[formatter setDateFormat:@"yyyyMMdd_HHmmss"];
 		//[formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
@@ -522,8 +531,6 @@
 	NSLog(@"SNComposeEditorView_iPhone [_asiFormRequest responseString]=\n%@\n\n", [request responseString]);
 	
 	NSError *error = nil;
-	NSDictionary *parsedResult = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
-	
 	if (error != nil)
 		NSLog(@"Failed to parse user JSON: %@", [error localizedDescription]);
 	
@@ -545,8 +552,21 @@
 			
 			
 		} else {
-			NSLog(@"RESULT:[%@]", parsedResult);
+			NSDictionary *parsedArticle = [NSJSONSerialization JSONObjectWithData:[request responseData] options:0 error:&error];
+			NSLog(@"ARTICLE:[%@]", parsedArticle);
+			
+			SNArticleVO *vo = [SNArticleVO articleWithDictionary:parsedArticle];
+			[SNFacebookCaller postToTimeline:vo];
+			[SNFacebookCaller postToFriendTimeline:[_fbFriend objectForKey:@"id"] article:vo];
+			
+			
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"COMPOSE_SUBMITTED" object:nil];
+			
+			if (_progressHUD != nil) {
+				_progressHUD.taskInProgress = NO;
+				[_progressHUD hide:YES];
+				_progressHUD = nil;
+			}
 		}
 	}
 }

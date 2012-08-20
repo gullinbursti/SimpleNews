@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <FBiOSSDK/FacebookSDK.h>
+//#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 
 @protocol SNOGArticle<FBGraphObject>

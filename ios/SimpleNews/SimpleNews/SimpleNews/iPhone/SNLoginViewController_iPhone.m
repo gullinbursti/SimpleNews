@@ -9,7 +9,8 @@
 #import "SNLoginViewController_iPhone.h"
 #import "SNRootViewController_iPhone.h"
 #import "SNAppDelegate.h"
-#import <FBiOSSDK/FacebookSDK.h>
+//#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 @interface SNLoginViewController_iPhone () <FBLoginViewDelegate>
 @end
@@ -84,7 +85,7 @@
 
 #pragma mark - Navigation
 - (void)_goFacebook {
-	[FBSession sessionOpenWithPermissions:[SNAppDelegate fbPermissions] completionHandler:
+	[FBSession openActiveSessionWithPermissions:[SNAppDelegate fbPermissions] allowLoginUI:YES completionHandler:
 	 ^(FBSession *session, FBSessionState state, NSError *error) {
 		 switch (state) {
 			 case FBSessionStateOpen: {

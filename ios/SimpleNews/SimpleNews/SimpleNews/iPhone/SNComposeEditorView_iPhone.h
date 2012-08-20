@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+#import "MBProgressHUD.h"
 #import "EGOImageView.h"
 #import "ASIFormDataRequest.h"
 
@@ -34,6 +35,8 @@
 	EGOImageView *_stickerImgView;
 	
 	CGPoint _diffPt;
+	
+	MBProgressHUD *_progressHUD;
 }
 
 - (id)initWithFrame:(CGRect)frame withFriend:(NSDictionary *)fbFriend;

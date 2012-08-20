@@ -6,7 +6,8 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import <FBiOSSDK/FacebookSDK.h>
+//#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 #import "SNSplashViewController_iPhone.h"
 #import "SNRootViewController_iPhone.h"

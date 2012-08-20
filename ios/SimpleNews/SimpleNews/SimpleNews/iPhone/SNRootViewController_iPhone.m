@@ -6,11 +6,11 @@
 //  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
 //
 
-#import <FBiOSSDK/FacebookSDK.h>
 
+#import <FacebookSDK/FacebookSDK.h>
 #import <QuartzCore/QuartzCore.h>
 #import <Twitter/Twitter.h>
-#import <FBiOSSDK/FacebookSDK.h>
+//#import <FBiOSSDK/FacebookSDK.h>
 #import "GANTracker.h"
 
 #import "SNProtocols.h"
@@ -247,8 +247,7 @@
 				 NSLog(@"user.name [%@]", user.name);
 				 
 				 [SNAppDelegate writeFBProfile:user];
-				 
-				 [FBRequest startWithGraphPath:@"me/home" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+				 [FBRequestConnection startWithGraphPath:@"me/home" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
 					 ASIFormDataRequest *feedRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kUsersAPI]]];
 					 [feedRequest setPostValue:[NSString stringWithFormat:@"%d", 8] forKey:@"action"];
 					 [feedRequest setPostValue:[NSString stringWithFormat:@"%@", [[SNAppDelegate fbProfileForUser] objectForKey:@"id"]] forKey:@"fbID"];
@@ -477,7 +476,7 @@
 	[params setObject:[NSString stringWithFormat:@"http://discover.getassembly.com/facebook/opengraph/index.php?aID=%d", vo.article_id] forKey:@"quote"];
 	[params setObject:((SNImageVO *)[vo.images objectAtIndex:0]).url forKey:@"image[0][url]"];
 	
-	[FBRequest startWithGraphPath:[NSString stringWithFormat:@"me/getassembly:%@", action] parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+	[FBRequestConnection startWithGraphPath:[NSString stringWithFormat:@"me/getassembly:%@", action] parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
 		NSLog(@"POSTED TO FEED :[%@]",[result objectForKey:@"id"]);
 	}];
 
@@ -491,7 +490,7 @@
 												  vo.topicTitle, @"caption",
 												  vo.content, @"description", nil];
 	
-	[FBRequest startWithGraphPath:@"me/feed" parameters:postParams HTTPMethod:@"POST" completionHandler:
+	[FBRequestConnection startWithGraphPath:@"me/feed" parameters:postParams HTTPMethod:@"POST" completionHandler:
 	 ^(FBRequestConnection *connection, id result, NSError *error) {
 		 NSString *alertText;
 		 
@@ -508,7 +507,7 @@
 
 - (void)_fbPostStatus:(NSString *)msg {
 	NSDictionary *params = [NSDictionary dictionaryWithObject:msg forKey:@"message"];
-	[FBRequest startWithGraphPath:@"me/feed" parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+	[FBRequestConnection startWithGraphPath:@"me/feed" parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
 		NSLog(@"POSTED STATUS");
 	}];
 }
@@ -1173,7 +1172,7 @@
 			break;
 			
 		case 2:
-			return (3);
+			return (4);
 			break;
 	}
 }
@@ -1264,7 +1263,7 @@
 			break;
 			
 		case 2:
-			titles = [NSArray arrayWithObjects:@"My Likes", @"My Comments", @"Invite All Friends", nil];
+			titles = [NSArray arrayWithObjects:@"My Likes", @"My Comments", @"Invite All Friends", @"Logout", nil];
 			otherCell = [tableView dequeueReusableCellWithIdentifier:[SNRootOtherViewCell_iPhone cellReuseIdentifier]];
 			
 			if (otherCell == nil)
@@ -1416,50 +1415,42 @@
 			}
 		
 		} else if (indexPath.row == 2) {
+			FBFriendPickerViewController *friendPickerController = [[FBFriendPickerViewController alloc] init];
+			friendPickerController.title = @"Pick Friends";
+			[friendPickerController loadData];
 			
-			
-			/*
-			if ([SNAppDelegate twitterHandle].length > 0) {
-				NSError *error;
-				if (![[GANTracker sharedTracker] trackPageview:@"/profile/friends" withError:&error])
-					NSLog(@"error in trackPageview");
-				
-				SNFindFriendsViewController_iPhone *findFriendsViewController = [[SNFindFriendsViewController_iPhone alloc] initAsList];
-				UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:findFriendsViewController];
-				[navigationController setNavigationBarHidden:YES];
-				[self.navigationController presentModalViewController:navigationController animated:YES];
-			} else {
-				UIAlertView *alert = [[UIAlertView alloc] 
-											 initWithTitle:@"Twitter Account" 
-											 message:@"This action requires that you log into Twitter" 
-											 delegate:nil 
-											 cancelButtonTitle:@"OK" 
-											 otherButtonTitles:nil];
-				
-				[alert show];
-			}
-			
+			// Use the modal wrapper method to display the picker.
+			[friendPickerController presentModallyFromViewController:self animated:YES handler:
+			 ^(FBViewController *sender, BOOL donePressed) {
+				 if (!donePressed)
+					 return;
+				 
+				 NSString *message;
+				 
+				 if (friendPickerController.selection.count == 0)
+					 message = @"<No Friends Selected>";
+				 
+				 else {
+					 
+					 NSMutableString *text = [[NSMutableString alloc] init];
+					 
+					 // we pick up the users from the selection, and create a string that we use to update the text view
+					 // at the bottom of the display; note that self.selection is a property inherited from our base class
+					 for (id<FBGraphUser> user in friendPickerController.selection) {
+						 if ([text length])
+							 [text appendString:@", "];
+						 
+						 [text appendString:user.name];
+						 
+						 [SNFacebookCaller postMessageToFriendTimeline:user.id message:@"You've been invited to Assembly"];
+					 }
+					 
+					 message = text;
+				 }
+			 }];
+		
 		} else if (indexPath.row == 3) {
-			if ([SNAppDelegate twitterHandle].length > 0) {
-				NSError *error;
-				if (![[GANTracker sharedTracker] trackPageview:@"/profile/find_friends" withError:&error])
-					NSLog(@"error in trackPageview");
-				
-				SNFindFriendsViewController_iPhone *findFriendsViewController = [[SNFindFriendsViewController_iPhone alloc] initAsFinder];
-				UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:findFriendsViewController];
-				[navigationController setNavigationBarHidden:YES];
-				[self.navigationController presentModalViewController:navigationController animated:YES];
-			} else {
-				UIAlertView *alert = [[UIAlertView alloc] 
-											 initWithTitle:@"Twitter Account" 
-											 message:@"This action requires that you log into Twitter" 
-											 delegate:nil 
-											 cancelButtonTitle:@"OK" 
-											 otherButtonTitles:nil];
-				
-				[alert show];
-			}
-			 */
+			[[FBSession activeSession] closeAndClearTokenInformation];
 		}
 	}
 }

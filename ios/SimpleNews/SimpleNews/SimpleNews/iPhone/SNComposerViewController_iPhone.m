@@ -7,7 +7,8 @@
 //
 
 #import <AddressBook/AddressBook.h>
-#import <FBiOSSDK/FacebookSDK.h>
+//#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 #import "SNComposerViewController_iPhone.h"
 #import "SNAppDelegate.h"

@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <FBiOSSDK/FacebookSDK.h>
+//#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 #import "SNSplashViewController_iPhone.h"
 
 #import "SNRootViewController_iPhone.h"

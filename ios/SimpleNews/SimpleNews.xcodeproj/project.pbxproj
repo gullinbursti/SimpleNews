@@ -21,6 +21,8 @@
 		4C119B8615753FC100E663CD /* profileBackgroundStats@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C119B8415753FC100E663CD /* profileBackgroundStats@2x.png */; };
 		4C119B95157573C100E663CD /* profileBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C119B93157573C100E663CD /* profileBackground.png */; };
 		4C119B96157573C100E663CD /* profileBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C119B94157573C100E663CD /* profileBackground@2x.png */; };
+		4C11B95D15E1CB04007B6E5A /* FacebookSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C11B95C15E1CB04007B6E5A /* FacebookSDKResources.bundle */; };
+		4C11B95F15E1CB5A007B6E5A /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C11B95E15E1CB5A007B6E5A /* FacebookSDK.framework */; };
 		4C23BF451523E32E002D028B /* UABeveledLoadingIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C23BEAC1523E32E002D028B /* UABeveledLoadingIndicator.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4C23BF461523E32E002D028B /* UAInboxAlertHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C23BEAE1523E32E002D028B /* UAInboxAlertHandler.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		4C23BF471523E32E002D028B /* UAInboxMessageListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C23BEB01523E32E002D028B /* UAInboxMessageListCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -166,7 +168,6 @@
 		4CB39171153DF1A500C1324D /* SNArticleDetailsViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB39170153DF1A500C1324D /* SNArticleDetailsViewController_iPhone.m */; };
 		4CB39175153DF1FF00C1324D /* SNWebPageViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB39174153DF1FF00C1324D /* SNWebPageViewController_iPhone.m */; };
 		4CB391C8153F85A800C1324D /* article.html in Resources */ = {isa = PBXBuildFile; fileRef = 4CB391C7153F85A800C1324D /* article.html */; };
-		4CB41C5B15C0DAC200962CFA /* FBiOSSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4CB41C5A15C0DAC200962CFA /* FBiOSSDKResources.bundle */; };
 		4CB61CF0155F333300FF151E /* SNProfileViewCell_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB61CEF155F333300FF151E /* SNProfileViewCell_iPhone.m */; };
 		4CB61D01155F580A00FF151E /* background_plain.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CB61CFF155F580A00FF151E /* background_plain.png */; };
 		4CB61D02155F580A00FF151E /* background_plain@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CB61D00155F580A00FF151E /* background_plain@2x.png */; };
@@ -381,7 +382,6 @@
 		B3F3403415774C63007537A0 /* avatarCorners.png in Resources */ = {isa = PBXBuildFile; fileRef = B3F3403215774C63007537A0 /* avatarCorners.png */; };
 		B3F3403515774C63007537A0 /* avatarCorners@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B3F3403315774C63007537A0 /* avatarCorners@2x.png */; };
 		B3F3403915774CCC007537A0 /* SNTwitterAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = B3F3403815774CCC007537A0 /* SNTwitterAvatarView.m */; };
-		B3FD8AA915E1717100710179 /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3FD8AA815E1717100710179 /* FBiOSSDK.framework */; };
 		E423F8F41559B9900094042E /* MBLAsyncResource.m in Sources */ = {isa = PBXBuildFile; fileRef = E423F8EF1559B9900094042E /* MBLAsyncResource.m */; };
 		E423F8F51559B9900094042E /* MBLResourceCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E423F8F11559B9900094042E /* MBLResourceCache.m */; };
 		E423F8F61559B9900094042E /* MBLResourceLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = E423F8F31559B9900094042E /* MBLResourceLoader.m */; };
@@ -410,6 +410,8 @@
 		4C119B8415753FC100E663CD /* profileBackgroundStats@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "profileBackgroundStats@2x.png"; sourceTree = "<group>"; };
 		4C119B93157573C100E663CD /* profileBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = profileBackground.png; sourceTree = "<group>"; };
 		4C119B94157573C100E663CD /* profileBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "profileBackground@2x.png"; sourceTree = "<group>"; };
+		4C11B95C15E1CB04007B6E5A /* FacebookSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKResources.bundle; path = SimpleNews/FacebookSDKResources.bundle; sourceTree = "<group>"; };
+		4C11B95E15E1CB5A007B6E5A /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = SimpleNews/FacebookSDK.framework; sourceTree = "<group>"; };
 		4C23BEAB1523E32E002D028B /* UABeveledLoadingIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UABeveledLoadingIndicator.h; sourceTree = "<group>"; };
 		4C23BEAC1523E32E002D028B /* UABeveledLoadingIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UABeveledLoadingIndicator.m; sourceTree = "<group>"; };
 		4C23BEAD1523E32E002D028B /* UAInboxAlertHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UAInboxAlertHandler.h; sourceTree = "<group>"; };
@@ -702,7 +704,6 @@
 		4CB39173153DF1FF00C1324D /* SNWebPageViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNWebPageViewController_iPhone.h; sourceTree = "<group>"; };
 		4CB39174153DF1FF00C1324D /* SNWebPageViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNWebPageViewController_iPhone.m; sourceTree = "<group>"; };
 		4CB391C7153F85A800C1324D /* article.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = article.html; sourceTree = "<group>"; };
-		4CB41C5A15C0DAC200962CFA /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBiOSSDKResources.bundle; path = SimpleNews/FBiOSSDKResources.bundle; sourceTree = "<group>"; };
 		4CB61CEE155F333300FF151E /* SNProfileViewCell_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNProfileViewCell_iPhone.h; sourceTree = "<group>"; };
 		4CB61CEF155F333300FF151E /* SNProfileViewCell_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNProfileViewCell_iPhone.m; sourceTree = "<group>"; };
 		4CB61CFF155F580A00FF151E /* background_plain.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background_plain.png; sourceTree = "<group>"; };
@@ -965,7 +966,6 @@
 		B3F3403315774C63007537A0 /* avatarCorners@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "avatarCorners@2x.png"; sourceTree = "<group>"; };
 		B3F3403715774CCC007537A0 /* SNTwitterAvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNTwitterAvatarView.h; sourceTree = "<group>"; };
 		B3F3403815774CCC007537A0 /* SNTwitterAvatarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNTwitterAvatarView.m; sourceTree = "<group>"; };
-		B3FD8AA815E1717100710179 /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = SimpleNews/FBiOSSDK.framework; sourceTree = "<group>"; };
 		E423F8EE1559B9900094042E /* MBLAsyncResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBLAsyncResource.h; sourceTree = "<group>"; };
 		E423F8EF1559B9900094042E /* MBLAsyncResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBLAsyncResource.m; sourceTree = "<group>"; };
 		E423F8F01559B9900094042E /* MBLResourceCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBLResourceCache.h; sourceTree = "<group>"; };
@@ -1010,7 +1010,7 @@
 				4C9E00BC15194B9B00AEB803 /* libUAirship-1.1.1.a in Frameworks */,
 				4C7954F71547AFCF009E40DC /* libGoogleAnalytics.a in Frameworks */,
 				4C4C76A915DAF3AE009E0B9B /* AWSiOSSDK.framework in Frameworks */,
-				B3FD8AA915E1717100710179 /* FBiOSSDK.framework in Frameworks */,
+				4C11B95F15E1CB5A007B6E5A /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1930,10 +1930,10 @@
 		4CDC8BF014F2CDEB00D42EA5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B3FD8AA815E1717100710179 /* FBiOSSDK.framework */,
+				4C11B95E15E1CB5A007B6E5A /* FacebookSDK.framework */,
+				4C11B95C15E1CB04007B6E5A /* FacebookSDKResources.bundle */,
 				4C51DB3A15DF30760058DD7C /* AddressBook.framework */,
 				4C4C76A815DAF3AE009E0B9B /* AWSiOSSDK.framework */,
-				4CB41C5A15C0DAC200962CFA /* FBiOSSDKResources.bundle */,
 				4CD919B5151E9F5B004081B7 /* Accounts.framework */,
 				4CD01B88151440E7005B490C /* Twitter.framework */,
 				4C8B444814FEA88700F89F7C /* AVFoundation.framework */,
@@ -2544,7 +2544,7 @@
 				4CFC2C28159D7EE200585E56 /* sendCommentButton_nonActive.png in Resources */,
 				4CFC2C29159D7EE200585E56 /* sendCommentButton_nonActive@2x.png in Resources */,
 				4C4A574A159ECF5C001C05FB /* icon_72x72.png in Resources */,
-				4CB41C5B15C0DAC200962CFA /* FBiOSSDKResources.bundle in Resources */,
+				4C11B95D15E1CB04007B6E5A /* FacebookSDKResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
