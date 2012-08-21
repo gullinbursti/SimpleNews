@@ -1,0 +1,85 @@
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale = 1.0, user-scalable = no, width = 274.0"/>
+		
+		<style type="text/css" rel="stylesheet">
+			body {
+				margin:0px; 
+				padding:0px; 
+				font-family:"HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosBold', "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif;}
+				background-color:transparent;
+				text-align:justify;
+				text-shadow:1px 1px 1px #ffffff;
+			}
+			
+			#divSandbox { font-size:64px; }
+		</style>
+	</head>
+	<body id="bodPage">
+		<!-- <div id="divSandbox">DERP</div> -->
+		<div id="divContent"></div>
+		
+		<script type="text/javascript">
+			var body_obj = document.getElementById('bodPage')
+			var contentTout_obj = document.getElementById('divContent');
+			
+			function populate(html) {
+				contentTout_obj.innerHTML = html;
+				body_obj.style.textAlign = 'justify';
+				body_obj.style.textShadow = '1px 1px 1px #ffffff';
+				
+				sendValue('state', "POPULATED");
+				sendValue('height', contentTout_obj.offsetHeight);
+			}
+			
+			function goDarkUI() {
+				body_obj.style.color = 'white';
+				body_obj.style.textShadow = '1px 1px 1px #666666';
+				
+				sendValue('theme', "DARK");
+			}
+			
+			function goLightUI() {
+				body_obj.style.color = '#666666';
+				body_obj.style.textShadow = '1px 1px 1px #ffffff';
+				
+				sendValue('theme', "LIGHT");
+			}
+			
+			function changeFontFactor(factor) {
+				var size;
+				
+				switch (factor) {
+					case 0:
+						size = '0.5em';
+						break;
+					
+					case 1:
+						size = '0.75em';
+						break;
+					
+					case 2:
+						size = '1em';
+						break;
+					
+					case 3:
+						size = '1.5em';
+						break;
+					
+				}
+				
+				contentTout_obj.style.fontSize = size;
+				sendValue('height', contentTout_obj.offsetHeight);
+			}
+			
+			function sendValue(key, val) {
+				location.href = 'result://keyval/' + key + '/' + val;
+			}
+		</script>
+		
+		<script type="text/javascript" src="http://s.skimresources.com/js/31981X896314.skimlinks.js"></script>
+	</body>
+</html>
+
+
+<!-- <a href="http://test.skimlinks.com">http://test.skimlinks.com</a>-->

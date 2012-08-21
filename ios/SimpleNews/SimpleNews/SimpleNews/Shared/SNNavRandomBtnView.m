@@ -3,7 +3,7 @@
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 06.21.12.
-//  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
+//  Copyright (c) 2012 Built in Menlo, LLC. All rights reserved.
 //
 
 #import "SNNavRandomBtnView.h"

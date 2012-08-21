@@ -3,15 +3,15 @@
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 02.20.12.
-//  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
+//  Copyright (c) 2012 Built in Menlo, LLC. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 //#import <FBiOSSDK/FacebookSDK.h>
 #import <FacebookSDK/FacebookSDK.h>
-#import "SNSplashViewController_iPhone.h"
+#import "SNSplashViewController.h"
 
-#import "SNRootViewController_iPhone.h"
+#import "SNRootViewController.h"
 #import "UAPushNotificationHandler.h"
 
 #import "ImageFilter.h"
@@ -20,8 +20,8 @@
 @class SNViewController;
 
 @interface SNAppDelegate : UIResponder <UIApplicationDelegate, UIAlertViewDelegate> {
-	SNSplashViewController_iPhone *_splashViewController_iPhone;
-	SNRootViewController_iPhone *_rootViewController_iPhone;
+	SNSplashViewController *_splashViewController_iPhone;
+	SNRootViewController *_rootViewController_iPhone;
 }
 
 //#define kServerPath @"http://ec2-23-20-197-174.compute-1.amazonaws.com/services"

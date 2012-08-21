@@ -3,7 +3,7 @@
 //  SimpleNews
 //
 //  Created by Sparkle Mountain iMac on 5/30/12.
-//  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
+//  Copyright (c) 2012 Built in Menlo, LLC. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

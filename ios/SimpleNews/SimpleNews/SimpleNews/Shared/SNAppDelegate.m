@@ -3,7 +3,7 @@
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 02.20.12.
-//  Copyright (c) 2012 Sparkle Mountain, LLC. All rights reserved.
+//  Copyright (c) 2012 Built in Menlo, LLC. All rights reserved.
 //
 
 #import <AVFoundation/AVFoundation.h>
@@ -12,7 +12,7 @@
 #import "GANTracker.h"
 
 #import "SNAppDelegate.h"
-#import "SNSplashViewController_iPhone.h"
+#import "SNSplashViewController.h"
 #import "SNTwitterCaller.h"
 
 NSString *const kSNProfileInfoKey = @"ProfileInfo";
@@ -181,6 +181,11 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 
 
 + (void)openWithAppStore:(NSString *)url {
+	
+	NSError *error;
+	if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/appstore/%@/", url] withError:&error])
+		NSLog(@"error in trackPageview");	
+	
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[url stringByReplacingOccurrencesOfString:@"http:" withString:@"itms-apps:"]]];
 }
 
@@ -482,7 +487,7 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	UINavigationController *rootNavigationController;
 	
 	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-		_splashViewController_iPhone = [[SNSplashViewController_iPhone alloc] init];
+		_splashViewController_iPhone = [[SNSplashViewController alloc] init];
 		
 		rootNavigationController = [[UINavigationController alloc] initWithRootViewController:_splashViewController_iPhone];
 		[rootNavigationController setNavigationBarHidden:YES];
