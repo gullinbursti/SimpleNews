@@ -97,6 +97,9 @@
 		[[rndBtnView btn] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:rndBtnView];
 		
+		_tabNavView = [[SNTabNavView alloc] initWithFrame:CGRectMake(0.0, 420.0, 320.0, 60.0)];
+		[self addSubview:_tabNavView];
+		
 		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 20.0, self.frame.size.height - 88.0)];
 		//[_overlayView setBackgroundColor:[SNAppDelegate snDebugRedColor]];
 		[self addSubview:_overlayView];
@@ -175,11 +178,92 @@
 		[[rndBtnView btn] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
 		[headerView addSubview:rndBtnView];
 		
+		_tabNavView = [[SNTabNavView alloc] initWithFrame:CGRectMake(0.0, 420.0, 320.0, 60.0)];
+		[self addSubview:_tabNavView];
+		
+		[[_tabNavView feedButton] addTarget:self action:@selector(_goFeed) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView popularButton] addTarget:self action:@selector(_goPopular) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView activityButton] addTarget:self action:@selector(_goActivity) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView profileButton] addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView composeButton] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
+		
 		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 20.0, self.frame.size.height - 88.0)];
 		//[_overlayView setBackgroundColor:[SNAppDelegate snDebugRedColor]];
 		[self addSubview:_overlayView];
 		
 		[self _retrieveProfileListWithType:type];
+	}
+	
+	return (self);
+}
+
+- (id)initAsFeed {
+	if ((self = [self init])) {
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackPageview:@"/feed/" withError:&error])
+			NSLog(@"error in trackPageview");
+		
+		NSString *title;
+		
+		_vo = [SNTopicVO topicWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"0", @"topic_id", @"Feed", @"title", nil, @"hashtags", nil]];
+		
+		
+		_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+		_activityIndicatorView.frame = CGRectMake(15.0, 60.0, 20.0, 20.0);
+		[_activityIndicatorView startAnimating];
+		[self addSubview:_activityIndicatorView];
+		
+		_loaderLabel = [[UILabel alloc] initWithFrame:CGRectMake(45.0, 63.0, 245.0, 16.0)];
+		_loaderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_loaderLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		_loaderLabel.textColor = [UIColor blackColor];
+		_loaderLabel.backgroundColor = [UIColor clearColor];
+		_loaderLabel.text = [NSString stringWithFormat:@"Assembling %@…", title];
+		[self addSubview:_loaderLabel];
+		
+		
+		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
+		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		_scrollView.opaque = NO;
+		_scrollView.scrollsToTop = NO;
+		_scrollView.pagingEnabled = NO;
+		_scrollView.delegate = self;
+		_scrollView.showsVerticalScrollIndicator = YES;
+		_scrollView.alwaysBounceVertical = NO;
+		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
+		[self addSubview:_scrollView];
+		
+		//		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
+		//		_refreshHeaderView.delegate = self;
+		//		[_scrollView addSubview:_refreshHeaderView];
+		//		[_refreshHeaderView refreshLastUpdatedDate];
+		
+		
+		SNHeaderView *headerView = [[SNHeaderView alloc] initWithTitle:_vo.title];
+		[self addSubview:headerView];
+		
+		_listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:_listBtnView];
+		
+		SNNavLogoBtnView *rndBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(273.0, 0.0, 44.0, 44.0)];
+		[[rndBtnView btn] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:rndBtnView];
+		
+		_tabNavView = [[SNTabNavView alloc] initWithFrame:CGRectMake(0.0, 420.0, 320.0, 60.0)];
+		[self addSubview:_tabNavView];
+		
+		[[_tabNavView feedButton] addTarget:self action:@selector(_goFeed) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView popularButton] addTarget:self action:@selector(_goPopular) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView activityButton] addTarget:self action:@selector(_goActivity) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView profileButton] addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView composeButton] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
+		
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 20.0, self.frame.size.height - 88.0)];
+		//[_overlayView setBackgroundColor:[SNAppDelegate snDebugRedColor]];
+		[self addSubview:_overlayView];
+		
+		[self _retrieveProfileListWithType:4];
 	}
 	
 	return (self);
@@ -278,9 +362,12 @@
 		[dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
 		
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
-		[formValues setObject:[NSString stringWithFormat:@"%d", 13] forKey:@"action"];
-		[formValues setObject:[NSString stringWithFormat:@"%d", _vo.topic_id] forKey:@"topicID"];
+		[formValues setObject:[NSString stringWithFormat:@"%d", 12] forKey:@"action"];
+		//[formValues setObject:[NSString stringWithFormat:@"%d", _vo.topic_id] forKey:@"topicID"];
+		[formValues setObject:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];
 		[formValues setObject:[dateFormat stringFromDate:_lastDate] forKey:@"datetime"];
+		
+		NSLog(@"LAST DATE:[%@]", [dateFormat stringFromDate:_lastDate]);
 		
 		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kArticlesAPI];
 		self.updateListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate date]]; // 1 hour expiration for now
@@ -294,16 +381,8 @@
 		NSString *title;
 		
 		switch (type) {
-			case 6:
-				title = @"My Likes";
-				break;
-				
-			case 2:
-				title = @"My Comments";
-				break;
-				
-			case 5:
-				title = @"Shares";
+			case 4:
+				title = @"Feed";
 				break;
 		}
 		
@@ -357,7 +436,23 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TIMELINE" object:nil];
 }
 
-- (void)_goCompose{
+- (void)_goFeed {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_FEED" object:nil];
+}
+
+- (void)_goPopular {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_POPULAR" object:nil];
+}
+
+- (void)_goActivity {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ACTIVITY" object:nil];
+}
+
+- (void)_goProfile {
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_PROFILE" object:nil];
+}
+
+- (void)_goCompose {
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_COMPOSER" object:nil];
 }
 
@@ -395,24 +490,6 @@
 // any offset changes
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-	
-//	for (SNArticleItemView_iPhone *itemView in _articleViews) {
-//		if (scrollView.contentOffset.y + 340.0 > itemView.frame.origin.y && itemView.isFirstAppearance) {
-//			[itemView setIsFirstAppearance:NO];
-//			
-//			[UIView animateWithDuration:0.25 animations:^(void) {
-//				itemView.alpha = 1.0;
-//			}];
-//			
-//			[UIView beginAnimations:nil context:NULL];
-//			[UIView setAnimationDuration:0.25];
-//			[UIView setAnimationDelegate:self];
-//			[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
-//			CGAffineTransform transform = CGAffineTransformMakeScale(1.0, 1.0);
-//			itemView.transform = transform;
-//			[UIView commitAnimations];
-//		}
-//	}
 }
 
 
@@ -527,17 +604,6 @@
 				
 				for (SNArticleItemView *itemView in _articleViews) {
 					[_scrollView addSubview:itemView];
-					
-//					if (itemView.frame.origin.y > 480.0) {
-//						itemView.alpha = 0.0;
-//						[UIView beginAnimations:nil context:NULL];
-//						[UIView setAnimationDuration:0.1];
-//						[UIView setAnimationDelegate:self];
-//						[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
-//						CGAffineTransform transform = CGAffineTransformMakeScale(1.1, 1.1);
-//						itemView.transform = transform;
-//						[UIView commitAnimations];
-//					}
 				}
 				
 				offset += 12.0;
@@ -552,7 +618,7 @@
 					_loadMoreButton.titleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
 					[_loadMoreButton setTitle:@"Load More" forState:UIControlStateNormal];
 					[_scrollView addSubview:_loadMoreButton];
-					offset += 57.0;
+					offset += 80.0;
 				}
 				
 				_scrollView.contentSize = CGSizeMake(_scrollView.contentSize.width, offset);
@@ -656,34 +722,6 @@
 				[_articleViews addObject:articleItemView];
 				
 				[_scrollView addSubview:articleItemView];
-				
-//				if (articleItemView.frame.origin.y > 480.0) {
-//					articleItemView.alpha = 0.0;
-//					[UIView beginAnimations:nil context:NULL];
-//					[UIView setAnimationDuration:0.1];
-//					[UIView setAnimationDelegate:self];
-//					[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
-//					CGAffineTransform transform = CGAffineTransformMakeScale(1.1, 1.1);
-//					articleItemView.transform = transform;
-//					[UIView commitAnimations];
-//				}
-//				
-//				if (tot == 0) {
-//					[articleItemView setIsFirstAppearance:NO];
-//					
-//					[UIView animateWithDuration:0.25 animations:^(void) {
-//						articleItemView.alpha = 1.0;
-//					}];
-//					
-//					[UIView beginAnimations:nil context:NULL];
-//					[UIView setAnimationDuration:0.25];
-//					[UIView setAnimationDelegate:self];
-//					[UIView setAnimationDidStopSelector:@selector(growAnimationDidStop:finished:context:)];
-//					CGAffineTransform transform = CGAffineTransformMakeScale(1.0, 1.0);
-//					articleItemView.transform = transform;
-//					[UIView commitAnimations];
-//				}
-				
 				
 				offset += height;
 				tot++;

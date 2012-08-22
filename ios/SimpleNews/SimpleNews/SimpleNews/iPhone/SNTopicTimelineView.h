@@ -11,6 +11,7 @@
 #import "EGORefreshTableHeaderView.h"
 #import "MBProgressHUD.h"
 #import "MBLAsyncResource.h"
+#import "SNTabNavView.h"
 
 #import "SNTopicVO.h"
 #import "SNArticleVO.h"
@@ -36,6 +37,7 @@
 	SNTopicVO *_vo;
 	
 	SNNavListBtnView *_listBtnView;
+	SNTabNavView *_tabNavView;
 	
 	NSDate *_lastDate;
 	int _lastID;
@@ -45,6 +47,7 @@
 
 -(id)initWithTopicVO:(SNTopicVO *)vo;
 -(id)initWithProfileType:(int)type;
+- (id)initAsFeed;
 
 - (void)interactionEnabled:(BOOL)isEnabled;
 

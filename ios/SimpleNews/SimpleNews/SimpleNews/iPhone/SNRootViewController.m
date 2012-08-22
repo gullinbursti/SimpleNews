@@ -66,7 +66,12 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticlePage:) name:@"SHOW_ARTICLE_PAGE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleDetails:) name:@"SHOW_ARTICLE_DETAILS" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showArticleComments:) name:@"SHOW_ARTICLE_COMMENTS" object:nil];
+		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showComposer:) name:@"SHOW_COMPOSER" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showFeed:) name:@"SHOW_FEED" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showPopular:) name:@"SHOW_POPULAR" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showActivity:) name:@"SHOW_ACTIVITY" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showProfile:) name:@"SHOW_PROFILE" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_timelineReturn:) name:@"TIMELINE_RETURN" object:nil];
@@ -577,12 +582,8 @@
 //			_discoveryListView.view.frame = CGRectMake(226.0, 0.0, 320.0, 480.0);
 //			[_holderView addSubview:_discoveryListView.view];
 			
-			_topicTimelineView = [[SNTopicTimelineView alloc] initWithTopicVO:(SNTopicVO *)[_topicsList objectAtIndex:0]];
+			_topicTimelineView = [[SNTopicTimelineView alloc] initAsFeed];
 			[_holderView addSubview:_topicTimelineView];
-			
-			NSError *error;
-			if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/topics/%@", ((SNTopicVO *)[_topicsList objectAtIndex:0]).title] withError:&error])
-				NSLog(@"error in trackPageview");
 			
 			[UIView animateWithDuration:0.33 animations:^(void) {
 				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
@@ -724,7 +725,7 @@
 }
 
 -(void)_showComposer:(NSNotification *)notification {
-	_composePopOverView = [[SNComposePopOverView alloc] initWithFrame:CGRectMake(10.0, 400.0, 300.0, 70.0)];
+	_composePopOverView = [[SNComposePopOverView alloc] initWithFrame:CGRectMake(10.0, 350.0, 300.0, 70.0)];
 	[self.view addSubview:_composePopOverView];
 }
 
@@ -1147,6 +1148,80 @@
 	}
 }
 
+-(void)_showFeed:(NSNotification *)notification {
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
+	
+	[_topicTimelineView interactionEnabled:NO];
+	[_topicTimelineView removeFromSuperview];
+	_topicTimelineView = nil;
+			
+	_topicTimelineView = [[SNTopicTimelineView alloc] initAsFeed];
+	_topicTimelineView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
+	[_holderView addSubview:_topicTimelineView];
+			
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+		_topicsTableView.contentOffset = CGPointZero;
+		[_topicTimelineView interactionEnabled:YES];
+	}];
+}
+
+-(void)_showPopular:(NSNotification *)notification {
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
+	
+	[_topicTimelineView interactionEnabled:NO];
+	[_topicTimelineView removeFromSuperview];
+	_topicTimelineView = nil;
+	
+	_topicTimelineView = [[SNTopicTimelineView alloc] initWithProfileType:10];
+	_topicTimelineView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
+	[_holderView addSubview:_topicTimelineView];
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+		_topicsTableView.contentOffset = CGPointZero;
+		[_topicTimelineView interactionEnabled:YES];
+	}];
+}
+
+-(void)_showActivity:(NSNotification *)notification {
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
+	
+	[_topicTimelineView interactionEnabled:NO];
+	[_topicTimelineView removeFromSuperview];
+	_topicTimelineView = nil;
+	
+	_topicTimelineView = [[SNTopicTimelineView alloc] initWithProfileType:6];
+	_topicTimelineView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
+	[_holderView addSubview:_topicTimelineView];
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+		_topicsTableView.contentOffset = CGPointZero;
+		[_topicTimelineView interactionEnabled:YES];
+	}];
+}
+
+-(void)_showProfile:(NSNotification *)notification {
+	[self _goProfile];
+}
+
+
 - (void)_showDiscovery:(NSNotification *)notification {
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_discoveryListView.view.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
@@ -1262,15 +1337,15 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	switch (section) {
 		default:
-			return (2);
+			return (0);
 			break;
 			
 		case 0:
-			return ([_topicsList count]);
+			return (3);
 			break;
 			
 		case 1:
-			return (4);
+			return ([_topicsList count]);
 			break;
 	}
 }
@@ -1296,16 +1371,12 @@
 	label.backgroundColor = [UIColor clearColor];
 	
 	switch (section) {
-		default:
-			label.text = @"DISCOVER";
-			break;
-			
 		case 0:
-			label.text = @"TOPICS";
+			label.text = @"SETTINGS";
 			break;
 			
 		case 1:
-			label.text = @"PROFILE";
+			label.text = @"MORE FUN?";
 			break;
 	}
 	
@@ -1321,6 +1392,16 @@
 	
 	switch (indexPath.section) {
 		case 0:
+			titles = [NSArray arrayWithObjects:@"Share Assembly", @"Logout", @"Privacy Policy", nil];
+			otherCell = [tableView dequeueReusableCellWithIdentifier:[SNBaseRootViewCell cellReuseIdentifier]];
+			
+			if (otherCell == nil)
+				otherCell = [[SNBaseRootViewCell alloc] initWithTitle:[titles objectAtIndex:indexPath.row]];
+			
+			[otherCell setSelectionStyle:UITableViewCellSelectionStyleNone];
+			return (otherCell);
+			break;			
+		case 1:
 			topicCell = [tableView dequeueReusableCellWithIdentifier:[SNRootTopicViewCell cellReuseIdentifier]];
 			
 			if (topicCell == nil)
@@ -1332,18 +1413,7 @@
 			
 			return (topicCell);
 			break;
-			
-		case 1:
-			titles = [NSArray arrayWithObjects:@"My Likes", @"My Comments", @"Share Assembly", @"Logout", nil];
-			otherCell = [tableView dequeueReusableCellWithIdentifier:[SNBaseRootViewCell cellReuseIdentifier]];
-			
-			if (otherCell == nil)
-				otherCell = [[SNBaseRootViewCell alloc] initWithTitle:[titles objectAtIndex:indexPath.row]];
-			
-			[otherCell setSelectionStyle:UITableViewCellSelectionStyleNone];
-			return (otherCell);
-			break;
-			
+
 		default:
 			return (nil);
 			break;
@@ -1368,104 +1438,7 @@
 	[((SNBaseRootViewCell *)[tableView cellForRowAtIndexPath:indexPath]) tapped];
 	
 	if (indexPath.section == 0) {
-		[_topicTimelineView removeFromSuperview];
-		_topicTimelineView = nil;
-			
-		[UIView animateWithDuration:0.33 animations:^(void) {
-				
-		} completion:^(BOOL finished) {
-			_topicTimelineView = [[SNTopicTimelineView alloc] initWithTopicVO:(SNTopicVO *)[_topicsList objectAtIndex:indexPath.row]];
-			[_holderView addSubview:_topicTimelineView];
-			
-			NSError *error;
-			if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/topics/%@", ((SNTopicVO *)[_topicsList objectAtIndex:indexPath.row]).title] withError:&error])
-				NSLog(@"error in trackPageview");
-				
-			[UIView animateWithDuration:0.33 animations:^(void) {
-				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
-					
-			} completion:^(BOOL finished) {
-				_topicsTableView.contentOffset = CGPointZero;
-				[_topicTimelineView interactionEnabled:YES];
-			}];
-		}];
-		
-	} else {
 		if (indexPath.row == 0) {
-			if ([SNAppDelegate twitterHandle].length > 0) {
-				[_topicTimelineView removeFromSuperview];
-				_topicTimelineView = nil;
-				
-				NSError *error;
-				if (![[GANTracker sharedTracker] trackPageview:@"/profile/likes" withError:&error])
-					NSLog(@"error in trackPageview");
-				
-				[UIView animateWithDuration:0.33 animations:^(void) {
-					//_shadowImgView.alpha = 0.0;
-					
-				} completion:^(BOOL finished) {
-					_topicTimelineView = [[SNTopicTimelineView alloc] initWithProfileType:6];	
-					[_holderView addSubview:_topicTimelineView];
-					
-					[UIView animateWithDuration:0.33 animations:^(void) {
-						_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-						_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
-						
-					} completion:^(BOOL finished) {
-						_topicsTableView.contentOffset = CGPointZero;
-						[_topicTimelineView interactionEnabled:YES];
-					}];
-				}];
-			} else {
-				UIAlertView *alert = [[UIAlertView alloc] 
-											 initWithTitle:@"Twitter Account" 
-											 message:@"This action requires that you log into Twitter" 
-											 delegate:nil 
-											 cancelButtonTitle:@"OK" 
-											 otherButtonTitles:nil];
-				
-				[alert show];
-			}
-				
-			
-		} else if (indexPath.row == 1) {
-			if ([SNAppDelegate twitterHandle].length > 0) {
-				[_topicTimelineView removeFromSuperview];
-				_topicTimelineView = nil;
-				
-				NSError *error;
-				if (![[GANTracker sharedTracker] trackPageview:@"/profile/comments" withError:&error])
-					NSLog(@"error in trackPageview");
-				
-				[UIView animateWithDuration:0.33 animations:^(void) {
-					//_shadowImgView.alpha = 0.0;
-					
-				} completion:^(BOOL finished) {
-					_topicTimelineView = [[SNTopicTimelineView alloc] initWithProfileType:2];	
-					[_holderView addSubview:_topicTimelineView];
-					
-					[UIView animateWithDuration:0.33 animations:^(void) {
-						_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-						_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
-						
-					} completion:^(BOOL finished) {
-						_topicsTableView.contentOffset = CGPointZero;
-						[_topicTimelineView interactionEnabled:YES];
-					}];
-				}];
-			} else {
-				UIAlertView *alert = [[UIAlertView alloc] 
-											 initWithTitle:@"Twitter Account" 
-											 message:@"This action requires that you log into Twitter" 
-											 delegate:nil 
-											 cancelButtonTitle:@"OK" 
-											 otherButtonTitles:nil];
-				
-				[alert show];
-			}
-		
-		} else if (indexPath.row == 2) {
 			FBFriendPickerViewController *friendPickerController = [[FBFriendPickerViewController alloc] init];
 			friendPickerController.title = @"Pick Friends";
 			[friendPickerController loadData];
@@ -1499,10 +1472,37 @@
 					 message = text;
 				 }
 			 }];
-		
-		} else if (indexPath.row == 3) {
+			
+		} else if (indexPath.row == 1) {
 			[[FBSession activeSession] closeAndClearTokenInformation];
+		
+		} else if (indexPath.row == 2) {
+			
 		}
+		
+	} else {
+		[_topicTimelineView removeFromSuperview];
+		_topicTimelineView = nil;
+		
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			
+		} completion:^(BOOL finished) {
+			_topicTimelineView = [[SNTopicTimelineView alloc] initWithTopicVO:(SNTopicVO *)[_topicsList objectAtIndex:indexPath.row]];
+			[_holderView addSubview:_topicTimelineView];
+			
+			NSError *error;
+			if (![[GANTracker sharedTracker] trackPageview:[NSString stringWithFormat:@"/topics/%@", ((SNTopicVO *)[_topicsList objectAtIndex:indexPath.row]).title] withError:&error])
+				NSLog(@"error in trackPageview");
+			
+			[UIView animateWithDuration:0.33 animations:^(void) {
+				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+				
+			} completion:^(BOOL finished) {
+				_topicsTableView.contentOffset = CGPointZero;
+				[_topicTimelineView interactionEnabled:YES];
+			}];
+		}];
 	}
 }
 

@@ -17,7 +17,6 @@
 #import "SNNavDoneBtnView.h"
 #import "SNNavBackBtnView.h"
 
-#import "SNComposeFriendsView.h"
 
 @interface SNComposerViewController() <UINavigationControllerDelegate, UIImagePickerControllerDelegate, FBFriendPickerDelegate>
 @property (strong, nonatomic) FBFriendPickerViewController *friendPickerController;
@@ -191,7 +190,6 @@
 - (void)_fbUserPressed:(NSNotification *)notification {
 	[self.navigationController setNavigationBarHidden:YES animated:NO];
 	
-	[_composeFriendsView removeFromSuperview];
 	_composeEditorView = [[SNComposeEditorView alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0) withFriend:(NSDictionary *)[notification object]];
 	[self.view addSubview:_composeEditorView];
 }
@@ -239,7 +237,6 @@
 	NSDictionary *friendDict = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:friend.id, friend.name, largeImgURL, nil] forKeys:[NSArray arrayWithObjects:@"id", @"name", @"lg_image", nil]];
 	
 	[self.navigationController setNavigationBarHidden:YES animated:NO];
-	[_composeFriendsView removeFromSuperview];
 	_composeEditorView = [[SNComposeEditorView alloc] initWithFrame:CGRectOffset(self.view.frame, 0.0, 45.0) withFriend:friendDict];
 	[self.view addSubview:_composeEditorView];
 }

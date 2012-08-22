@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "SNComposeFriendsView.h"
 #import "SNComposeEditorView.h"
 #import "SNHeaderView.h"
 #import "SNNavBackBtnView.h"
@@ -31,7 +30,6 @@
 	
 	SNHeaderView *_headerView;
 	SNNavBackBtnView *_backBtnView;
-	SNComposeFriendsView *_composeFriendsView;
 	SNComposeEditorView *_composeEditorView;
 }
 
