@@ -90,9 +90,25 @@
 		   
 		 	$article_arr = array();
 			if ($user_row) {
+				$query = 'SELECT `id` FROM `tblContributors` WHERE `handle` = "'. $user_row[3] .'";';
+				$contrib_result = mysql_query($query);
+				
+				if ($contrib_result) {
+					$contrib_row = mysql_fetch_row($contrib_result);
+					$contrib_id = $contrib_row[0];
+				
+				} else {
+					$query = 'INSERT INTO `tblContributors` (';
+					$query .= '`id`, `handle`, `name`, `avatar_url`, `type_id`, `active`, `added`) ';
+					$query .= 'VALUES (NULL, "'. $user_row[3] .'", "", "https://api.twitter.com/1/users/profile_image?screen_name='. $user_row[3] .'&size=normal", "3", "Y", NOW());';
+					$ins4_result = mysql_query($query);
+					$contrib_id = mysql_insert_id();
+				}
+				
+				
 				$query = 'INSERT INTO `tblArticles` (';
 				$query .= '`id`, `type_id`, `tweet_id`, `contributor_id`, `tweet_msg`, `short_url`, `title`, `content_txt`, `content_url`, `image_url`, `retweets`, `image_ratio`, `youtube_id`, `active`, `created`, `added`) ';
-				$query .= 'VALUES (NULL, "2", "0", "'. $user_id .'", "", "", "", "", "", "", "0", "1.0", "", "Y", NOW(), NOW());';	 
+				$query .= 'VALUES (NULL, "2", "0", "'. $contrib_id .'", "", "", "", "", "", "", "0", "1.0", "", "Y", NOW(), NOW());';	 
 			    $ins1_result = mysql_query($query);
 				$article_id = mysql_insert_id();
 		
@@ -234,10 +250,26 @@
 				$sticker_result = mysql_query($query);
 				$sticker_row = mysql_fetch_row($sticker_result);
 				$topic_id = $sticker_row[0];
+								
+				$query = 'SELECT `id` FROM `tblContributors` WHERE `handle` = "'. $user_row[3] .'";';
+				$contrib_result = mysql_query($query);
+				
+				if ($contrib_result) {
+					$contrib_row = mysql_fetch_row($contrib_result);
+					$contrib_id = $contrib_row[0];
+				
+				} else {
+					$query = 'INSERT INTO `tblContributors` (';
+					$query .= '`id`, `handle`, `name`, `avatar_url`, `type_id`, `active`, `added`) ';
+					$query .= 'VALUES (NULL, "'. $user_row[3] .'", "", "https://api.twitter.com/1/users/profile_image?screen_name='. $user_row[3] .'&size=normal", "3", "Y", NOW());';
+					$ins4_result = mysql_query($query);
+					$contrib_id = mysql_insert_id();
+				}
+				
 				
 				$query = 'INSERT INTO `tblArticles` (';
 				$query .= '`id`, `type_id`, `tweet_id`, `contributor_id`, `tweet_msg`, `short_url`, `title`, `content_txt`, `content_url`, `image_url`, `retweets`, `image_ratio`, `youtube_id`, `active`, `created`, `added`) ';
-				$query .= 'VALUES (NULL, "2", "0", "'. $user_id .'", "", "", "", "", "", "", "0", "1.0", "", "Y", NOW(), NOW());';	 
+				$query .= 'VALUES (NULL, "2", "0", "'. $contrib_id .'", "", "", "", "", "", "", "0", "1.0", "", "Y", NOW(), NOW());';	 
 			    $ins1_result = mysql_query($query);
 				$article_id = mysql_insert_id();
 		

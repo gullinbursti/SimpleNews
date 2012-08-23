@@ -16,6 +16,7 @@
 #import "SNProtocols.h"
 #import "SNRootViewController.h"
 #import "SNTopicVO.h"
+#import "SNNetworkAppVO.h"
 #import "SNImageVO.h"
 #import "SNFacebookCaller.h"
 
@@ -24,7 +25,7 @@
 #import "SNComposerViewController.h"
 #import "SNHeaderView.h"
 #import "SNMenuHeaderView.h"
-#import "SNRootTopicViewCell.h"
+#import "SNNetworkAppViewCell.h"
 #import "SNBaseRootViewCell.h"
 #import "SNAppDelegate.h"
 #import "SNArticleDetailsViewController.h"
@@ -41,9 +42,7 @@
 - (void)_refreshUserAccount;
 - (void)_refreshTopicsList;
 - (void)_hideFullscreenMedia:(NSNotification *)notification;
-- (void)_fbPostToActivity:(SNArticleVO *)vo withAction:(NSString *)action;
-- (void)_fbPostToTimeline:(SNArticleVO *)vo;
-- (void)_fbPostStatus:(NSString *)msg;
+- (void)_cancelPopover;
 @end
 
 @implementation SNRootViewController
@@ -54,7 +53,6 @@
 
 - (id)init {
 	if ((self = [super init])) {
-		_topicCells = [NSMutableArray new];
 		_topicsList = [NSMutableArray new];
 		_profileItems = [NSMutableArray new];
 		
@@ -154,6 +152,7 @@
 	
 	if (_blackMatteView.hidden && _topicTimelineView != nil) {
 		if (touchPoint.x < 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
+			[self _cancelPopover];
 			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
 				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _topicTimelineView.frame.size.width, _topicTimelineView.frame.size.height);
 				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
@@ -304,18 +303,6 @@
 }
 
 #pragma mark - Navigation
-
-- (void)_goCardLists {
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
-		
-	} completion:^(BOOL finished) {
-		_topicsTableView.contentOffset = CGPointZero;
-		[_topicTimelineView interactionEnabled:YES];
-	}];
-}
-
 -(void)_goProfile {
 	
 	if (![SNAppDelegate twitterHandle]) {
@@ -410,6 +397,15 @@
 }
 
 
+- (void)_cancelPopover {
+	[_popoverTimer invalidate];
+	_popoverTimer = nil;
+	
+	[_composePopOverView removeFromSuperview];
+}
+
+
+
 
 #pragma mark - Network Requests
 - (void)setFullscreenImgResource:(MBLAsyncResource *)fullscreenImgResource 
@@ -450,7 +446,7 @@
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
 		[formValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kTopicsAPI];
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kNetworkAppsAPI];
 		self.topicsListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:(60.0 * 60.0 * 24.0)]]; // 1 day expiration for now
 	}
 }
@@ -471,46 +467,6 @@
 }
 
 #pragma mark - Helpers
-- (void)_fbPostToActivity:(SNArticleVO *)vo withAction:(NSString *)action {
-	NSMutableDictionary *params = [NSMutableDictionary new];
-	[params setObject:[NSString stringWithFormat:@"http://discover.getassembly.com/facebook/opengraph/index.php?aID=%d", vo.article_id] forKey:@"quote"];
-	[params setObject:((SNImageVO *)[vo.images objectAtIndex:0]).url forKey:@"image[0][url]"];
-	
-	[FBRequestConnection startWithGraphPath:[NSString stringWithFormat:@"me/getassembly:%@", action] parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-		NSLog(@"POSTED TO FEED :[%@]",[result objectForKey:@"id"]);
-	}];
-
-}
-
-- (void)_fbPostToTimeline:(SNArticleVO *)vo {
-	NSMutableDictionary *postParams = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-												  [NSString stringWithFormat:@"http://discover.getassembly.com/facebook/opengraph/index.php?aID=%d", vo.article_id], @"link",
-												  ((SNImageVO *)[vo.images objectAtIndex:0]).url, @"picture",
-												  vo.title, @"name",
-												  vo.topicTitle, @"caption",
-												  vo.content, @"description", nil];
-	
-	[FBRequestConnection startWithGraphPath:@"me/feed" parameters:postParams HTTPMethod:@"POST" completionHandler:
-	 ^(FBRequestConnection *connection, id result, NSError *error) {
-		 NSString *alertText;
-		 
-		 if (error)
-			 alertText = [NSString stringWithFormat:@"error: description = %@, code = %d", error.description, error.code];
-		 
-		 else
-			 alertText = [NSString stringWithFormat: @"Posted action, id: %@", [result objectForKey:@"id"]];
-		 
-		 
-		 [[[UIAlertView alloc] initWithTitle:@"Result" message:alertText delegate:self cancelButtonTitle:@"OK!" otherButtonTitles:nil] show];
-	}];
-}
-
-- (void)_fbPostStatus:(NSString *)msg {
-	NSDictionary *params = [NSDictionary dictionaryWithObject:msg forKey:@"message"];
-	[FBRequestConnection startWithGraphPath:@"me/feed" parameters:params HTTPMethod:@"POST" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-		NSLog(@"POSTED STATUS");
-	}];
-}
 
 
 #pragma mark - AsyncResource Observers
@@ -565,7 +521,7 @@
 		else {
 			NSMutableArray *list = [NSMutableArray array];
 			for (NSDictionary *serverList in parsedLists) {
-				SNTopicVO *vo = [SNTopicVO topicWithDictionary:serverList];
+				SNNetworkAppVO *vo = [SNNetworkAppVO appWithDictionary:serverList];
 				//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
 				if (vo != nil)
 					[list addObject:vo];
@@ -727,6 +683,8 @@
 -(void)_showComposer:(NSNotification *)notification {
 	_composePopOverView = [[SNComposePopOverView alloc] initWithFrame:CGRectMake(10.0, 350.0, 300.0, 70.0)];
 	[self.view addSubview:_composePopOverView];
+	
+	_popoverTimer = [NSTimer scheduledTimerWithTimeInterval:3.33 target:self selector:@selector(_cancelPopover) userInfo:nil repeats:NO];
 }
 
 -(void)_composeSourceCamera:(NSNotification *)notification {
@@ -734,6 +692,8 @@
 	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:composerViewController];
 	[navigationController setNavigationBarHidden:YES];
 	[self.navigationController presentModalViewController:navigationController animated:YES];
+	
+	[self _cancelPopover];
 }
 
 -(void)_composeSourceCameraRoll:(NSNotification *)notification {
@@ -741,6 +701,8 @@
 	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:composerViewController];
 	[navigationController setNavigationBarHidden:YES];
 	[self.navigationController presentModalViewController:navigationController animated:YES];
+	
+	[self _cancelPopover];
 }
 
 -(void)_composeSourceFriends:(NSNotification *)notification {
@@ -748,6 +710,8 @@
 	UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:composerViewController];
 	[navigationController setNavigationBarHidden:YES];
 	[self.navigationController presentModalViewController:navigationController animated:YES];
+	
+	[self _cancelPopover];
 }
 
 -(void)_composeSourceArticle:(NSNotification *)notification {
@@ -821,6 +785,7 @@
 
 -(void)_timelineReturn:(NSNotification *)notification {
 	[_topicTimelineView interactionEnabled:NO];
+	[self _cancelPopover];
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
 		_topicTimelineView.frame = CGRectMake(kTopicOffset, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
@@ -1387,7 +1352,7 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	SNBaseRootViewCell *otherCell;
-	SNRootTopicViewCell *topicCell;
+	SNNetworkAppViewCell *topicCell;
 	NSArray *titles;
 	
 	switch (indexPath.section) {
@@ -1400,16 +1365,16 @@
 			
 			[otherCell setSelectionStyle:UITableViewCellSelectionStyleNone];
 			return (otherCell);
-			break;			
+			break;
+			
 		case 1:
-			topicCell = [tableView dequeueReusableCellWithIdentifier:[SNRootTopicViewCell cellReuseIdentifier]];
+			topicCell = [tableView dequeueReusableCellWithIdentifier:[SNNetworkAppViewCell cellReuseIdentifier]];
 			
 			if (topicCell == nil)
-				topicCell = [[SNRootTopicViewCell alloc] init];
+				topicCell = [[SNNetworkAppViewCell alloc] init];
 			
-			topicCell.topicVO = (SNTopicVO *)[_topicsList objectAtIndex:indexPath.row];
+			topicCell.networkAppVO = (SNNetworkAppVO *)[_topicsList objectAtIndex:indexPath.row];
 			[topicCell setSelectionStyle:UITableViewCellSelectionStyleNone];
-			[_topicCells addObject:topicCell];
 			
 			return (topicCell);
 			break;
@@ -1423,13 +1388,6 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return (41.0);
-}
-
--(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	[_topicTimelineView removeFromSuperview];
-	_topicTimelineView = nil;
-	
-	return (indexPath);
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1481,6 +1439,11 @@
 		}
 		
 	} else {
+		SNNetworkAppVO *vo = (SNNetworkAppVO *)[_topicsList objectAtIndex:indexPath.row];
+		[SNAppDelegate openWithAppStore:[NSString stringWithFormat:@"http://itunes.apple.com/us/app/id%@?mt=8", vo.appStoreID]];
+		NSLog(@"OPEN APP:[%@]", [NSString stringWithFormat:@"http://itunes.apple.com/us/app/id%@?mt=8", vo.appStoreID]);
+		
+		/*
 		[_topicTimelineView removeFromSuperview];
 		_topicTimelineView = nil;
 		
@@ -1503,6 +1466,7 @@
 				[_topicTimelineView interactionEnabled:YES];
 			}];
 		}];
+		 */
 	}
 }
 

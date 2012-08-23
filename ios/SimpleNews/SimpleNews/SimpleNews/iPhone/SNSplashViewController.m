@@ -14,7 +14,7 @@
 #import "SNLoginViewController.h"
 
 #import "SNAppDelegate.h"
-#import "SNTopicVO.h"
+#import "SNNetworkAppVO.h"
 #import "SNImageVO.h"
 
 #import "MBLResourceLoader.h"
@@ -117,7 +117,7 @@
 	NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
 	[formValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 		
-	NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kTopicsAPI];
+	NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kNetworkAppsAPI];
 	self.topicsListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 60.0]]; // 1 hour for now
 }
 
@@ -157,7 +157,7 @@
 		NSMutableDictionary *formValues = [NSMutableDictionary dictionary];
 		[formValues setObject:[NSString stringWithFormat:@"%d", 1] forKey:@"action"];
 	
-		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kTopicsAPI];
+		NSString *url = [NSString stringWithFormat:@"%@/%@", kServerPath, kNetworkAppsAPI];
 		self.topicsListResource = [[MBLResourceLoader sharedInstance] downloadURL:url withHeaders:nil withPostFields:formValues forceFetch:YES expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 60.0]]; // 1 hour for now
 	}
 	
@@ -271,7 +271,7 @@
 		} else {
 			NSMutableArray *list = [NSMutableArray array];
 			for (NSDictionary *serverList in parsedLists) {
-				SNTopicVO *vo = [SNTopicVO topicWithDictionary:serverList];
+				SNNetworkAppVO *vo = [SNNetworkAppVO appWithDictionary:serverList];
 				if (vo != nil)
 					[list addObject:vo.title];
 			}

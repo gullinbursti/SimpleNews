@@ -40,7 +40,6 @@
 	SNNavLogoBtnView *_detailsBtnView;
 	
 	NSMutableArray *_topicsList;
-	NSMutableArray *_topicCells;
 	NSMutableArray *_profileItems;
 	
 	MBProgressHUD *_hud;
@@ -66,6 +65,7 @@
 	
 	SNComposePopOverView *_composePopOverView;
 	
+	NSTimer *_popoverTimer;
 	
 	int _swipeIndex;
 	

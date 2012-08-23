@@ -100,6 +100,12 @@
 		_tabNavView = [[SNTabNavView alloc] initWithFrame:CGRectMake(0.0, 420.0, 320.0, 60.0)];
 		[self addSubview:_tabNavView];
 		
+		[[_tabNavView feedButton] addTarget:self action:@selector(_goFeed) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView popularButton] addTarget:self action:@selector(_goPopular) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView activityButton] addTarget:self action:@selector(_goActivity) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView profileButton] addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView composeButton] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
+		
 		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 20.0, self.frame.size.height - 88.0)];
 		//[_overlayView setBackgroundColor:[SNAppDelegate snDebugRedColor]];
 		[self addSubview:_overlayView];
@@ -119,17 +125,17 @@
 		
 		NSString *title;
 		
-		switch (type) {
+		switch (type) {				
+			case 4:
+				title = @"Feed";
+				break;
+				
 			case 6:
-				title = @"My Likes";
+				title = @"Activity";
 				break;
 				
-			case 2:
-				title = @"My Comments";
-				break;
-				
-			case 5:
-				title = @"Shares";
+			case 10:
+				title = @"Popular";
 				break;
 		}
 		
@@ -203,10 +209,7 @@
 		if (![[GANTracker sharedTracker] trackPageview:@"/feed/" withError:&error])
 			NSLog(@"error in trackPageview");
 		
-		NSString *title;
-		
 		_vo = [SNTopicVO topicWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"0", @"topic_id", @"Feed", @"title", nil, @"hashtags", nil]];
-		
 		
 		_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 		_activityIndicatorView.frame = CGRectMake(15.0, 60.0, 20.0, 20.0);
@@ -218,7 +221,7 @@
 		_loaderLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
 		_loaderLabel.textColor = [UIColor blackColor];
 		_loaderLabel.backgroundColor = [UIColor clearColor];
-		_loaderLabel.text = [NSString stringWithFormat:@"Assembling %@…", title];
+		_loaderLabel.text = @"Assembling Feed…";
 		[self addSubview:_loaderLabel];
 		
 		
@@ -376,15 +379,24 @@
 
 
 - (void)_retrieveProfileListWithType:(int)type {
-	
 	if (_articleListResource == nil) {
 		NSString *title;
 		
-		switch (type) {
+		switch (type) {				
 			case 4:
 				title = @"Feed";
 				break;
+				
+			case 6:
+				title = @"Activity";
+				break;
+				
+			case 10:
+				title = @"Popular";
+				break;
 		}
+		
+		//NSLog(@"TYPE:[%d] (%@)", type, title);
 		
 		//_progressHUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
 		//_progressHUD.labelText = NSLocalizedString(@"Loading Articles…", @"Status message when loading article list");

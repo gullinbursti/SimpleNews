@@ -35,6 +35,7 @@
 #define kUsersAPI @"Users2.php"
 #define kTopicsAPI @"Topics2.php"
 #define kComposerAPI @"Composer.php"
+#define kNetworkAppsAPI @"NetworkApps.php"
 
 +(SNAppDelegate *)sharedInstance;
 

@@ -519,6 +519,8 @@
 		por.data = imageData;
 		[s3 putObject:por];
 		
+		
+		
 		ASIFormDataRequest *composeSubmitRequest = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", kServerPath, kComposerAPI]]];
 		[composeSubmitRequest setPostValue:[NSString stringWithFormat:@"%d", 0] forKey:@"action"];
 		[composeSubmitRequest setPostValue:[[SNAppDelegate profileForUser] objectForKey:@"id"] forKey:@"userID"];

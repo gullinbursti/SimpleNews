@@ -33,4 +33,5 @@
 	self.handle = nil;
 	self.avatarURL = nil;
 }
+
 @end

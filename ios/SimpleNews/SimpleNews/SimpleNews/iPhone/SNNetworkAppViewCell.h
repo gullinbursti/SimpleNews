@@ -1,5 +1,5 @@
 //
-//  SNRootTopicViewCell.h
+//  SNNetworkAppViewCell.h
 //  SimpleNews
 //
 //  Created by Matthew Holcombe on 05.07.12.
@@ -9,11 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "SNBaseRootViewCell.h"
 #import "SNTopicVO.h"
+#import "SNNetworkAppVO.h"
 
-@interface SNRootTopicViewCell : SNBaseRootViewCell {
+#import "MBLAsyncResource.h"
+
+@interface SNNetworkAppViewCell : SNBaseRootViewCell {
 	UIButton *_followButton;
+	UIImageView *_imgView;
 }
 
-@property(nonatomic, retain) SNTopicVO *topicVO;
+@property(nonatomic, retain) SNNetworkAppVO *networkAppVO;
 
 @end
