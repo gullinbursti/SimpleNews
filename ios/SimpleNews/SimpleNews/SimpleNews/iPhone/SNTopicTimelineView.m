@@ -11,7 +11,6 @@
 #import "ImageFilter.h"
 
 #import "SNArticleItemView.h"
-#import "SNHeaderView.h"
 #import "SNNavLogoBtnView.h"
 
 #import "SNHeaderView.h"
@@ -48,6 +47,7 @@
 		
 		_articles = [NSMutableArray new];
 		_articleViews = [NSMutableArray new];
+		_hasImage = YES;
         
 		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
 		bgImgView.image = [UIImage imageNamed:@"background_timeline.png"];
@@ -95,7 +95,7 @@
 		
 		SNNavLogoBtnView *rndBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(273.0, 0.0, 44.0, 44.0)];
 		[[rndBtnView btn] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
-		[headerView addSubview:rndBtnView];
+		//[headerView addSubview:rndBtnView];
 		
 		_tabNavView = [[SNTabNavView alloc] initWithFrame:CGRectMake(0.0, 420.0, 320.0, 60.0)];
 		[self addSubview:_tabNavView];
@@ -182,7 +182,7 @@
 		
 		SNNavLogoBtnView *rndBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(273.0, 0.0, 44.0, 44.0)];
 		[[rndBtnView btn] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
-		[headerView addSubview:rndBtnView];
+		//[headerView addSubview:rndBtnView];
 		
 		_tabNavView = [[SNTabNavView alloc] initWithFrame:CGRectMake(0.0, 420.0, 320.0, 60.0)];
 		[self addSubview:_tabNavView];
@@ -251,7 +251,7 @@
 		
 		SNNavLogoBtnView *rndBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(273.0, 0.0, 44.0, 44.0)];
 		[[rndBtnView btn] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
-		[headerView addSubview:rndBtnView];
+		//[headerView addSubview:rndBtnView];
 		
 		_tabNavView = [[SNTabNavView alloc] initWithFrame:CGRectMake(0.0, 420.0, 320.0, 60.0)];
 		[self addSubview:_tabNavView];
@@ -271,6 +271,149 @@
 	
 	return (self);
 }
+
+
+- (id)initAsActivity {
+	if ((self = [self init])) {
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackPageview:@"/activity/" withError:&error])
+			NSLog(@"error in trackPageview");
+		
+		_vo = [SNTopicVO topicWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"0", @"topic_id", @"Activity", @"title", nil, @"hashtags", nil]];
+		_hasImage = NO;
+		
+		_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+		_activityIndicatorView.frame = CGRectMake(15.0, 60.0, 20.0, 20.0);
+		[_activityIndicatorView startAnimating];
+		[self addSubview:_activityIndicatorView];
+		
+		_loaderLabel = [[UILabel alloc] initWithFrame:CGRectMake(45.0, 63.0, 245.0, 16.0)];
+		_loaderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_loaderLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		_loaderLabel.textColor = [UIColor blackColor];
+		_loaderLabel.backgroundColor = [UIColor clearColor];
+		_loaderLabel.text = @"Assembling Activity…";
+		[self addSubview:_loaderLabel];
+		
+		
+		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
+		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		_scrollView.opaque = NO;
+		_scrollView.scrollsToTop = NO;
+		_scrollView.pagingEnabled = NO;
+		_scrollView.delegate = self;
+		_scrollView.showsVerticalScrollIndicator = YES;
+		_scrollView.alwaysBounceVertical = NO;
+		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
+		[self addSubview:_scrollView];
+		
+		//		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
+		//		_refreshHeaderView.delegate = self;
+		//		[_scrollView addSubview:_refreshHeaderView];
+		//		[_refreshHeaderView refreshLastUpdatedDate];
+		
+		
+		SNHeaderView *headerView = [[SNHeaderView alloc] initWithTitle:_vo.title];
+		[self addSubview:headerView];
+		
+		_listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:_listBtnView];
+		
+		SNNavLogoBtnView *rndBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(273.0, 0.0, 44.0, 44.0)];
+		[[rndBtnView btn] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
+		//[headerView addSubview:rndBtnView];
+		
+		_tabNavView = [[SNTabNavView alloc] initWithFrame:CGRectMake(0.0, 420.0, 320.0, 60.0)];
+		[self addSubview:_tabNavView];
+		
+		[[_tabNavView feedButton] addTarget:self action:@selector(_goFeed) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView popularButton] addTarget:self action:@selector(_goPopular) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView activityButton] addTarget:self action:@selector(_goActivity) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView profileButton] addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView composeButton] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
+		
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 20.0, self.frame.size.height - 88.0)];
+		//[_overlayView setBackgroundColor:[SNAppDelegate snDebugRedColor]];
+		[self addSubview:_overlayView];
+		
+		[self _retrieveProfileListWithType:6];
+	}
+	
+	return (self);
+}
+
+- (id)initAsProfile {
+	if ((self = [self init])) {
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackPageview:@"/activity/" withError:&error])
+			NSLog(@"error in trackPageview");
+		
+		_vo = [SNTopicVO topicWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"0", @"topic_id", @"Profile", @"title", nil, @"hashtags", nil]];
+		
+		_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+		_activityIndicatorView.frame = CGRectMake(15.0, 60.0, 20.0, 20.0);
+		[_activityIndicatorView startAnimating];
+		[self addSubview:_activityIndicatorView];
+		
+		_loaderLabel = [[UILabel alloc] initWithFrame:CGRectMake(45.0, 63.0, 245.0, 16.0)];
+		_loaderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_loaderLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		_loaderLabel.textColor = [UIColor blackColor];
+		_loaderLabel.backgroundColor = [UIColor clearColor];
+		_loaderLabel.text = @"Assembling Profile…";
+		[self addSubview:_loaderLabel];
+		
+		
+		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
+		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		_scrollView.opaque = NO;
+		_scrollView.scrollsToTop = NO;
+		_scrollView.pagingEnabled = NO;
+		_scrollView.delegate = self;
+		_scrollView.showsVerticalScrollIndicator = YES;
+		_scrollView.alwaysBounceVertical = NO;
+		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
+		[self addSubview:_scrollView];
+		
+		//		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
+		//		_refreshHeaderView.delegate = self;
+		//		[_scrollView addSubview:_refreshHeaderView];
+		//		[_refreshHeaderView refreshLastUpdatedDate];
+		
+		
+		SNHeaderView *headerView = [[SNHeaderView alloc] initWithTitle:_vo.title];
+		[self addSubview:headerView];
+		
+		_listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:_listBtnView];
+		
+		SNNavLogoBtnView *rndBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(273.0, 0.0, 44.0, 44.0)];
+		[[rndBtnView btn] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
+		//[headerView addSubview:rndBtnView];
+		
+		_tabNavView = [[SNTabNavView alloc] initWithFrame:CGRectMake(0.0, 420.0, 320.0, 60.0)];
+		[self addSubview:_tabNavView];
+		
+		[[_tabNavView feedButton] addTarget:self action:@selector(_goFeed) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView popularButton] addTarget:self action:@selector(_goPopular) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView activityButton] addTarget:self action:@selector(_goActivity) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView profileButton] addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView composeButton] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
+		
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 20.0, self.frame.size.height - 88.0)];
+		//[_overlayView setBackgroundColor:[SNAppDelegate snDebugRedColor]];
+		[self addSubview:_overlayView];
+		
+		[self _retrieveProfileListWithType:15];
+	}
+	
+	return (self);
+}
+
+
+
 
 - (void)reloadTableViewDataSource {
 	_reloading = YES;
@@ -579,7 +722,7 @@
 							height--;
 					}
 					
-					if (vo.type_id > 1 && vo.type_id - 4 < 0) {
+					if (vo.type_id > 1 && vo.type_id - 4 < 0 && _hasImage) {
 						height += imgWidth * ((SNImageVO *)[vo.images objectAtIndex:0]).ratio;
 						height += 9; //20
 					}
@@ -600,7 +743,7 @@
 						height += 7; //9
 					}
 					
-					SNArticleItemView *articleItemView = [[SNArticleItemView alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo];
+					SNArticleItemView *articleItemView = [[SNArticleItemView alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo showImage:_hasImage];
 					[_articleViews addObject:articleItemView];
 					
 					offset += height;
@@ -730,7 +873,7 @@
 					height += 7; //9
 				}
 				
-				SNArticleItemView *articleItemView = [[SNArticleItemView alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo];
+				SNArticleItemView *articleItemView = [[SNArticleItemView alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo showImage:_hasImage];
 				[_articleViews addObject:articleItemView];
 				
 				[_scrollView addSubview:articleItemView];

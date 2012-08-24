@@ -41,6 +41,8 @@
 	
 	NSDate *_lastDate;
 	int _lastID;
+	
+	BOOL _hasImage;
 }
 
 @property (nonatomic, retain)UIView *overlayView;
@@ -48,6 +50,8 @@
 -(id)initWithTopicVO:(SNTopicVO *)vo;
 -(id)initWithProfileType:(int)type;
 - (id)initAsFeed;
+- (id)initAsActivity;
+- (id)initAsProfile;
 
 - (void)interactionEnabled:(BOOL)isEnabled;
 

@@ -76,11 +76,9 @@
 	[profileButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:profileButton];
 	
-	// Create Login View so that the app will be granted "status_update" permission.
-	FBLoginView *loginview = [[FBLoginView alloc] initWithPermissions:[SNAppDelegate fbPermissions]];
-	
-	loginview.frame = CGRectOffset(loginview.frame, 130.0, 65.0);
-	[self.view addSubview:loginview];
+//	FBLoginView *loginview = [[FBLoginView alloc] initWithPermissions:[SNAppDelegate fbPermissions]];
+//	loginview.frame = CGRectOffset(loginview.frame, 130.0, 65.0);
+//	[self.view addSubview:loginview];
 	
 	UIImageView *statsBgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 108.0, 320.0, 84.0)];
 	statsBgView.image = [UIImage imageNamed:@"profileBackgroundStats.png"];

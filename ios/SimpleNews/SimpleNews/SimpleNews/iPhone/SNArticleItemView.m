@@ -31,11 +31,12 @@
 @synthesize image2Resource = _image2Resource;
 @synthesize isFirstAppearance = _isFirstAppearance;
 
--(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo {
+-(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo showImage:(BOOL)hasImage {
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
 		_isFirstAppearance = YES;
 		_isFullscreenDblTap = NO;
+		_hasImage = hasImage;
 		
 		int offset = 16;
 		CGSize size;
@@ -146,7 +147,7 @@
 		
 		
 		CGRect imgFrame = CGRectMake(5, offset + 1.0, 290.0, 290.0 * ((SNImageVO *)[_vo.images objectAtIndex:0]).ratio);
-		if (_vo.type_id == 2 || _vo.type_id == 3) {
+		if (_hasImage && (_vo.type_id == 2 || _vo.type_id == 3)) {
 			UIActivityIndicatorView *imgIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 			imgIndicatorView.frame = CGRectMake((imgFrame.size.width * 0.5) - 12.0, offset + (imgFrame.size.height * 0.5) - 12.0, 24.0, 24.0);
 			[imgIndicatorView startAnimating];

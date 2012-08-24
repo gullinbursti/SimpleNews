@@ -19,6 +19,7 @@
 #import "SNArticleVideoPlayerView.h"
 #import "SNNavLogoBtnView.h"
 #import "SNComposePopOverView.h"
+#import "SNUserActivityView.h"
 
 @class MBProgressHUD;
 
@@ -38,6 +39,7 @@
 	SNArticleVO *_articleVO;
 	SNArticleVideoPlayerView *_videoPlayerView;
 	SNNavLogoBtnView *_detailsBtnView;
+	SNUserActivityView *_userActivityView;
 	
 	NSMutableArray *_topicsList;
 	NSMutableArray *_profileItems;

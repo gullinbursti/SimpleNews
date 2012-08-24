@@ -7,7 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SNArticleVO.h"
+#import "SNTabNavView.h"
 
-@interface SNUserActivityView : UIView
+@class MBProgressHUD;
+
+@interface SNUserActivityView : UIView <UITableViewDelegate, UITableViewDataSource> {
+	UITableView *_tableView;
+	NSMutableArray *_articles;
+	MBProgressHUD *_hud;
+	SNTabNavView *_tabNavView;
+}
 
 @end

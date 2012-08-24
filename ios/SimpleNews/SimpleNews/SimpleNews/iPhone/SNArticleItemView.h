@@ -26,11 +26,13 @@
 	ASIFormDataRequest *_likeRequest;
 	
 	BOOL _isFullscreenDblTap;
+	BOOL _hasImage;
+	
 	NSTimer *_dblTapTimer;
 }
 
 @property (nonatomic)BOOL isFirstAppearance;
 
--(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo;
+-(id)initWithFrame:(CGRect)frame articleVO:(SNArticleVO *)vo showImage:(BOOL)hasImage;
 
 @end

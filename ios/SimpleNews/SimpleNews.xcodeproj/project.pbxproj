@@ -349,6 +349,7 @@
 		4CEA763C15E4273400C94324 /* SNTabNavView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEA763B15E4273400C94324 /* SNTabNavView.m */; };
 		4CEA763F15E5646700C94324 /* SNNetworkAppVO.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEA763E15E5646600C94324 /* SNNetworkAppVO.m */; };
 		4CEA764215E600E200C94324 /* SNUserActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEA764115E600E100C94324 /* SNUserActivityView.m */; };
+		4CEA764515E6A3CB00C94324 /* SNActivityViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEA764415E6A3CA00C94324 /* SNActivityViewCell.m */; };
 		4CEE8B2B1596DAAE0039B601 /* articleDetailsLikeBG.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B291596DAAE0039B601 /* articleDetailsLikeBG.png */; };
 		4CEE8B2C1596DAAE0039B601 /* articleDetailsLikeBG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B2A1596DAAE0039B601 /* articleDetailsLikeBG@2x.png */; };
 		4CEE8B301597D12F0039B601 /* leftBottomUIB_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B2E1597D12F0039B601 /* leftBottomUIB_Active.png */; };
@@ -920,6 +921,8 @@
 		4CEA763E15E5646600C94324 /* SNNetworkAppVO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNNetworkAppVO.m; sourceTree = "<group>"; };
 		4CEA764015E600E000C94324 /* SNUserActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNUserActivityView.h; sourceTree = "<group>"; };
 		4CEA764115E600E100C94324 /* SNUserActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNUserActivityView.m; sourceTree = "<group>"; };
+		4CEA764315E6A3CA00C94324 /* SNActivityViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNActivityViewCell.h; sourceTree = "<group>"; };
+		4CEA764415E6A3CA00C94324 /* SNActivityViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNActivityViewCell.m; sourceTree = "<group>"; };
 		4CEE8B291596DAAE0039B601 /* articleDetailsLikeBG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = articleDetailsLikeBG.png; sourceTree = "<group>"; };
 		4CEE8B2A1596DAAE0039B601 /* articleDetailsLikeBG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "articleDetailsLikeBG@2x.png"; sourceTree = "<group>"; };
 		4CEE8B2E1597D12F0039B601 /* leftBottomUIB_Active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leftBottomUIB_Active.png; sourceTree = "<group>"; };
@@ -2197,6 +2200,8 @@
 				4C92175315392C4500AAD992 /* SNArticleItemView.m */,
 				4CEA763A15E4273300C94324 /* SNTabNavView.h */,
 				4CEA763B15E4273400C94324 /* SNTabNavView.m */,
+				4CEA764315E6A3CA00C94324 /* SNActivityViewCell.h */,
+				4CEA764415E6A3CA00C94324 /* SNActivityViewCell.m */,
 				4CEA764015E600E000C94324 /* SNUserActivityView.h */,
 				4CEA764115E600E100C94324 /* SNUserActivityView.m */,
 			);
@@ -2646,6 +2651,7 @@
 				4CEA763C15E4273400C94324 /* SNTabNavView.m in Sources */,
 				4CEA763F15E5646700C94324 /* SNNetworkAppVO.m in Sources */,
 				4CEA764215E600E200C94324 /* SNUserActivityView.m in Sources */,
+				4CEA764515E6A3CB00C94324 /* SNActivityViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1168,7 +1168,13 @@
 	[_topicTimelineView removeFromSuperview];
 	_topicTimelineView = nil;
 	
-	_topicTimelineView = [[SNTopicTimelineView alloc] initWithProfileType:6];
+//	_userActivityView = [[SNUserActivityView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
+//	[_holderView addSubview:_userActivityView];
+	
+	
+	
+	
+	_topicTimelineView = [[SNTopicTimelineView alloc] initAsActivity];
 	_topicTimelineView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
 	[_holderView addSubview:_topicTimelineView];
 	
@@ -1183,7 +1189,27 @@
 }
 
 -(void)_showProfile:(NSNotification *)notification {
-	[self _goProfile];
+	//[self _goProfile];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
+	
+	[_topicTimelineView interactionEnabled:NO];
+	[_topicTimelineView removeFromSuperview];
+	_topicTimelineView = nil;
+	
+	_topicTimelineView = [[SNTopicTimelineView alloc] initAsProfile];
+	_topicTimelineView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
+	[_holderView addSubview:_topicTimelineView];
+	
+	[UIView animateWithDuration:0.33 animations:^(void) {
+		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+		
+	} completion:^(BOOL finished) {
+		_topicsTableView.contentOffset = CGPointZero;
+		[_topicTimelineView interactionEnabled:YES];
+	}];
 }
 
 
