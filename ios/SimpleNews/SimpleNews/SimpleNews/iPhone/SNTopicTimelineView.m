@@ -22,6 +22,8 @@
 #import "SNTopicTimelineView.h"
 #import "MBLResourceLoader.h"
 
+#import "SNProfileStatsView.h"
+
 @interface SNTopicTimelineView () <MBLResourceObserverProtocol>
 @property(nonatomic, strong) MBLAsyncResource *articleListResource;
 @property(nonatomic, strong) MBLAsyncResource *updateListResource;
@@ -48,6 +50,7 @@
 		_articles = [NSMutableArray new];
 		_articleViews = [NSMutableArray new];
 		_hasImage = YES;
+		_isProfile = NO;
         
 		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
 		bgImgView.image = [UIImage imageNamed:@"background_timeline.png"];
@@ -349,6 +352,7 @@
 		if (![[GANTracker sharedTracker] trackPageview:@"/activity/" withError:&error])
 			NSLog(@"error in trackPageview");
 		
+		_isProfile = YES;
 		_vo = [SNTopicVO topicWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"0", @"topic_id", @"Profile", @"title", nil, @"hashtags", nil]];
 		
 		_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -375,6 +379,9 @@
 		_scrollView.alwaysBounceVertical = NO;
 		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
 		[self addSubview:_scrollView];
+		
+		SNProfileStatsView *profileStatsView = [[SNProfileStatsView alloc]initWithFrame:CGRectMake(0.0, 0.0, 320.0, 84.0)];
+		[_scrollView addSubview:profileStatsView];
 		
 		//		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
 		//		_refreshHeaderView.delegate = self;
@@ -694,18 +701,18 @@
 				NSMutableArray *list = [NSMutableArray array];
 				
 				int tot = 0;
-				int offset = 6;
+				int offset = 6 + ((int)_isProfile * 86.0);
 				for (NSDictionary *serverList in parsedLists) {
 					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverList];
 					//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);
 					if (vo != nil)
 						[list addObject:vo];
 					
-					int height;
-					height = 87;
+					int height = 87;
+					
 					CGSize size;
 					
-					if (vo.totalLikes > 0) {
+					if (vo.totalLikes > 0 && _hasImage) {
 						height += 45;
 					}
 					

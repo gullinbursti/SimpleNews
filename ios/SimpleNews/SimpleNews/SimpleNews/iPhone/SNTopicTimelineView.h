@@ -43,6 +43,7 @@
 	int _lastID;
 	
 	BOOL _hasImage;
+	BOOL _isProfile;
 }
 
 @property (nonatomic, retain)UIView *overlayView;
