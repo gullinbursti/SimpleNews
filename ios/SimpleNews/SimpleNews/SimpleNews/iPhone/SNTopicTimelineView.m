@@ -708,46 +708,50 @@
 					if (vo != nil)
 						[list addObject:vo];
 					
-					int height = 87;
+					int height = 50;
 					
 					CGSize size;
 					
-					if (vo.totalLikes > 0 && _hasImage) {
-						height += 45;
-					}
-					
-					int imgWidth = 290;
-	//				if (vo.topicID == 1 || vo.topicID == 2)
-	//					imgWidth = 296;			
-					
-					if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
-//						imgWidth = 145;
-//						//height -= 2;
-						height += 39;
+					if (_hasImage) {
+						height = 87;
 						
-						if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0)
-							height--;
-					}
-					
-					if (vo.type_id > 1 && vo.type_id - 4 < 0 && _hasImage) {
-						height += imgWidth * ((SNImageVO *)[vo.images objectAtIndex:0]).ratio;
-						height += 9; //20
-					}
-					
-					
-					if (vo.topicID == 1 || vo.topicID == 2) {
-						size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:13] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
-						height += size.height + 11;
-					
-					} else if (vo.topicID == 10)
-						height += 6;
-					
-					else
-						height += 4;
-					
-					if (vo.type_id > 3) {
-						height += 217;
-						height += 7; //9
+						if (vo.totalLikes > 0) {
+							height += 45;
+						}
+						
+						int imgWidth = 290;
+		//				if (vo.topicID == 1 || vo.topicID == 2)
+		//					imgWidth = 296;			
+						
+						if ([vo.article_url rangeOfString:@"itunes.apple.com"].length > 0) {
+	//						imgWidth = 145;
+	//						//height -= 2;
+							height += 39;
+							
+							if (((SNImageVO *)[vo.images objectAtIndex:0]).ratio > 1.0)
+								height--;
+						}
+						
+						if (vo.type_id > 1 && vo.type_id - 4 < 0) {
+							height += imgWidth * ((SNImageVO *)[vo.images objectAtIndex:0]).ratio;
+							height += 9; //20
+						}
+						
+						
+						if (vo.topicID == 1 || vo.topicID == 2) {
+							size = [vo.title sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:13] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+							height += size.height + 11;
+						
+						} else if (vo.topicID == 10)
+							height += 6;
+						
+						else
+							height += 4;
+						
+						if (vo.type_id > 3) {
+							height += 217;
+							height += 7; //9
+						}
 					}
 					
 					SNArticleItemView *articleItemView = [[SNArticleItemView alloc] initWithFrame:CGRectMake(10.0, offset, _scrollView.frame.size.width - 20.0, height) articleVO:vo showImage:_hasImage];

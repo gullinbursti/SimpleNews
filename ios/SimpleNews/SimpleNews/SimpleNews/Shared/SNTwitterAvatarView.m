@@ -66,7 +66,8 @@
 		
 	} completion:^(BOOL finished) {
 		[overlayView removeFromSuperview];
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TWITTER_PROFILE" object:_handle];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TWITTER_PROFILE" object:_handle];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ASSEMBLY_PROFILE" object:[NSNumber numberWithInt:1]];
 	}];
 	
 }

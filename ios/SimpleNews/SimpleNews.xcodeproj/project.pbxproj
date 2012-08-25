@@ -351,6 +351,7 @@
 		4CEA764215E600E200C94324 /* SNUserActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEA764115E600E100C94324 /* SNUserActivityView.m */; };
 		4CEA764515E6A3CB00C94324 /* SNActivityViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEA764415E6A3CA00C94324 /* SNActivityViewCell.m */; };
 		4CEA764815E7F80F00C94324 /* SNProfileStatsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEA764715E7F80D00C94324 /* SNProfileStatsView.m */; };
+		4CEA764B15E85F7400C94324 /* SNProfileTimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEA764A15E85F7200C94324 /* SNProfileTimelineViewController.m */; };
 		4CEE8B2B1596DAAE0039B601 /* articleDetailsLikeBG.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B291596DAAE0039B601 /* articleDetailsLikeBG.png */; };
 		4CEE8B2C1596DAAE0039B601 /* articleDetailsLikeBG@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B2A1596DAAE0039B601 /* articleDetailsLikeBG@2x.png */; };
 		4CEE8B301597D12F0039B601 /* leftBottomUIB_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CEE8B2E1597D12F0039B601 /* leftBottomUIB_Active.png */; };
@@ -926,6 +927,8 @@
 		4CEA764415E6A3CA00C94324 /* SNActivityViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNActivityViewCell.m; sourceTree = "<group>"; };
 		4CEA764615E7F80B00C94324 /* SNProfileStatsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNProfileStatsView.h; sourceTree = "<group>"; };
 		4CEA764715E7F80D00C94324 /* SNProfileStatsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNProfileStatsView.m; sourceTree = "<group>"; };
+		4CEA764915E85F6F00C94324 /* SNProfileTimelineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; path = SNProfileTimelineViewController.h; sourceTree = "<group>"; };
+		4CEA764A15E85F7200C94324 /* SNProfileTimelineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNProfileTimelineViewController.m; sourceTree = "<group>"; };
 		4CEE8B291596DAAE0039B601 /* articleDetailsLikeBG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = articleDetailsLikeBG.png; sourceTree = "<group>"; };
 		4CEE8B2A1596DAAE0039B601 /* articleDetailsLikeBG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "articleDetailsLikeBG@2x.png"; sourceTree = "<group>"; };
 		4CEE8B2E1597D12F0039B601 /* leftBottomUIB_Active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leftBottomUIB_Active.png; sourceTree = "<group>"; };
@@ -2209,6 +2212,8 @@
 				4CEA764115E600E100C94324 /* SNUserActivityView.m */,
 				4CEA764615E7F80B00C94324 /* SNProfileStatsView.h */,
 				4CEA764715E7F80D00C94324 /* SNProfileStatsView.m */,
+				4CEA764915E85F6F00C94324 /* SNProfileTimelineViewController.h */,
+				4CEA764A15E85F7200C94324 /* SNProfileTimelineViewController.m */,
 			);
 			name = Timeline;
 			sourceTree = "<group>";
@@ -2658,6 +2663,7 @@
 				4CEA764215E600E200C94324 /* SNUserActivityView.m in Sources */,
 				4CEA764515E6A3CB00C94324 /* SNActivityViewCell.m in Sources */,
 				4CEA764815E7F80F00C94324 /* SNProfileStatsView.m in Sources */,
+				4CEA764B15E85F7400C94324 /* SNProfileTimelineViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

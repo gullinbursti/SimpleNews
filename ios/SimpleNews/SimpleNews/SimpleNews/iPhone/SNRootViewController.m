@@ -32,6 +32,7 @@
 #import "SNArticleCommentsViewController.h"
 #import "SNFindFriendsViewController.h"
 #import "SNDiscoveryListViewController.h"
+#import "SNProfileTimelineViewController.h"
 
 #import "MBProgressHUD.h"
 #import "MBLResourceLoader.h"
@@ -72,6 +73,7 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showProfile:) name:@"SHOW_PROFILE" object:nil];
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTwitterProfile:) name:@"SHOW_TWITTER_PROFILE" object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showAssemblyProfile:) name:@"SHOW_ASSEMBLY_PROFILE" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_timelineReturn:) name:@"TIMELINE_RETURN" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_discoveryReturn:) name:@"DISCOVERY_RETURN" object:nil];
 		
@@ -213,11 +215,11 @@
 	_holderView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
 	[self.view addSubview:_holderView];
 	
-	SNMenuHeaderView *menuHeaderView = [[SNMenuHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, 230.0, 45.0)];
-	[[menuHeaderView btn] addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
-	[_holderView addSubview:menuHeaderView];
+//	SNMenuHeaderView *menuHeaderView = [[SNMenuHeaderView alloc] initWithFrame:CGRectMake(0.0, 0.0, 230.0, 45.0)];
+//	[[menuHeaderView btn] addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
+//	[_holderView addSubview:menuHeaderView];
 	
-	_topicsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 45.0, kTopicOffset, self.view.frame.size.height - 45.0) style:UITableViewStylePlain];
+	_topicsTableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 0.0, kTopicOffset, self.view.frame.size.height - 0.0) style:UITableViewStylePlain];
 	[_topicsTableView setBackgroundColor:[UIColor clearColor]];
 	_topicsTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	_topicsTableView.rowHeight = 50.0;
@@ -780,6 +782,12 @@
 -(void)_showTwitterProfile:(NSNotification *)notification {
 	SNWebPageViewController *webPageViewController = [[SNWebPageViewController alloc] initWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/#!/%@", [notification object]]] title:[NSString stringWithFormat:@"@%@", [notification object]]];
 	[self.navigationController pushViewController:webPageViewController animated:YES];
+}
+
+-(void)_showAssemblyProfile:(NSNotification *)notification {
+	NSNumber *userID = [notification object];
+	SNProfileTimelineViewController *profileTimelineViewController = [[SNProfileTimelineViewController alloc] initWithUserID:[userID intValue]];
+	[self.navigationController pushViewController:profileTimelineViewController animated:YES];
 }
 
 
