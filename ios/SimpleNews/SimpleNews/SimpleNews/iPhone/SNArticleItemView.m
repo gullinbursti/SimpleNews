@@ -83,7 +83,7 @@
 			UIButton *handleButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			[handleButton addTarget:self action:@selector(_goTwitterProfile) forControlEvents:UIControlEventTouchUpInside];
 			handleButton.frame = handleLabel.frame;
-			[self addSubview:handleButton];
+			//[self addSubview:handleButton];
 			
 			size = [@"into " sizeWithFont:[[SNAppDelegate snHelveticaNeueFontMedium] fontWithSize:11] constrainedToSize:CGSizeMake(80.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 			UILabel *inLabel = [[UILabel alloc] initWithFrame:CGRectMake(handleLabel.frame.origin.x + size2.width, offset, size.width, size.height)];

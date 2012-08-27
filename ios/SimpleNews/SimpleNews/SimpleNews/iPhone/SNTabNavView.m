@@ -70,26 +70,4 @@
 }
 
 
-
-#pragma mark - Navigation
-- (void)_goFeed {
-	
-}
-
-- (void)_goPopular {
-	
-}
-
-- (void)_goActivity {
-	
-}
-
-- (void)_goProfile {
-	
-}
-
-- (void)_goComposer {
-	
-}
-
 @end

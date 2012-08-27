@@ -380,7 +380,24 @@
 		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
 		[self addSubview:_scrollView];
 		
-		SNProfileStatsView *profileStatsView = [[SNProfileStatsView alloc]initWithFrame:CGRectMake(0.0, 0.0, 320.0, 84.0)];
+		UIView *profileHolderView = [[UIView alloc] initWithFrame:CGRectMake(12.0, 8.0, 312.0, 40.0)];
+		[_scrollView addSubview:profileHolderView];
+		
+		EGOImageView *profileImgView = [[EGOImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 35.0, 35.0)];
+		profileImgView.imageURL = [NSURL URLWithString:[SNAppDelegate twitterAvatar]];
+		[profileHolderView addSubview:profileImgView];
+		CGSize size = [[NSString stringWithFormat:@"@%@", [SNAppDelegate twitterHandle]] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12] constrainedToSize:CGSizeMake(260.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeClip];
+		
+		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(52.0, 12.0, size.width, size.height)];
+		label.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12];
+		label.textColor = [UIColor colorWithWhite:0.290 alpha:1.0];
+		label.backgroundColor = [UIColor clearColor];
+		label.shadowOffset = CGSizeMake(1.0, 1.0);
+		label.text = [NSString stringWithFormat:@"@%@", [SNAppDelegate twitterHandle]];
+		[profileHolderView addSubview:label];
+		
+		
+		SNProfileStatsView *profileStatsView = [[SNProfileStatsView alloc]initWithFrame:CGRectMake(0.0, 46.0, 320.0, 84.0)];
 		[_scrollView addSubview:profileStatsView];
 		
 		//		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
@@ -701,7 +718,7 @@
 				NSMutableArray *list = [NSMutableArray array];
 				
 				int tot = 0;
-				int offset = 6 + ((int)_isProfile * 86.0);
+				int offset = 6 + ((int)_isProfile * 126.0);
 				for (NSDictionary *serverList in parsedLists) {
 					SNArticleVO *vo = [SNArticleVO articleWithDictionary:serverList];
 					//NSLog(@"LIST \"@%@\" %d", vo.list_name, vo.totalInfluencers);

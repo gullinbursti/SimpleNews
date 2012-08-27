@@ -251,7 +251,7 @@
 		 ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
 			 if (!error) {
 				 NSLog(@"user.id [%@]", [user objectForKey:@"id"]);
-				 NSLog(@"user.name [%@]", user.name);
+				 NSLog(@"user [%@]", user);
 				 
 				 [SNAppDelegate writeFBProfile:user];
 				 [FBRequestConnection startWithGraphPath:@"me/home" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -1199,25 +1199,28 @@
 -(void)_showProfile:(NSNotification *)notification {
 	//[self _goProfile];
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
+	if ([SNAppDelegate fbProfileForUser]) {
 	
-	[_topicTimelineView interactionEnabled:NO];
-	[_topicTimelineView removeFromSuperview];
-	_topicTimelineView = nil;
-	
-	_topicTimelineView = [[SNTopicTimelineView alloc] initAsProfile];
-	_topicTimelineView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
-	[_holderView addSubview:_topicTimelineView];
-	
-	[UIView animateWithDuration:0.33 animations:^(void) {
-		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
 		
-	} completion:^(BOOL finished) {
-		_topicsTableView.contentOffset = CGPointZero;
-		[_topicTimelineView interactionEnabled:YES];
-	}];
+		[_topicTimelineView interactionEnabled:NO];
+		[_topicTimelineView removeFromSuperview];
+		_topicTimelineView = nil;
+		
+		_topicTimelineView = [[SNTopicTimelineView alloc] initAsProfile];
+		_topicTimelineView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
+		[_holderView addSubview:_topicTimelineView];
+		
+		[UIView animateWithDuration:0.33 animations:^(void) {
+			_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+			_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
+			
+		} completion:^(BOOL finished) {
+			_topicsTableView.contentOffset = CGPointZero;
+			[_topicTimelineView interactionEnabled:YES];
+		}];
+	}
 }
 
 

@@ -30,7 +30,7 @@
 		_btn.frame = CGRectMake(0.0, 0.0, 26.0, 26.0);
 		[_btn setBackgroundImage:[UIImage imageNamed:@"avatarCorners.png"] forState:UIControlStateNormal];
 		[_btn setBackgroundImage:[UIImage imageNamed:@"avatarCorners.png"] forState:UIControlStateHighlighted];
-		[_btn addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside]; 
+		//[_btn addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside]; 
 		[self addSubview:_btn];
 		
 		self.imageResource = [[MBLResourceLoader sharedInstance] downloadURL:url forceFetch:NO expiration:[NSDate dateWithTimeIntervalSinceNow:60.0 * 60.0 * 24.0]]; // 1 day expiration
@@ -67,7 +67,7 @@
 	} completion:^(BOOL finished) {
 		[overlayView removeFromSuperview];
 		//[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_TWITTER_PROFILE" object:_handle];
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ASSEMBLY_PROFILE" object:[NSNumber numberWithInt:1]];
+		//[[NSNotificationCenter defaultCenter] postNotificationName:@"SHOW_ASSEMBLY_PROFILE" object:[NSNumber numberWithInt:1]];
 	}];
 	
 }

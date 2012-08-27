@@ -84,7 +84,6 @@
 		4C4456141570B8130010CB8D /* SNProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4456131570B8130010CB8D /* SNProfileViewController.m */; };
 		4C45B7A6150BD8520039F45B /* SNSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C45B7A5150BD8520039F45B /* SNSplashViewController.m */; };
 		4C4A574A159ECF5C001C05FB /* icon_72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4A5749159ECF5C001C05FB /* icon_72x72.png */; };
-		4C4C76A915DAF3AE009E0B9B /* AWSiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C4C76A815DAF3AE009E0B9B /* AWSiOSSDK.framework */; };
 		4C4C76AD15DB07C3009E0B9B /* SNComposerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4C76AC15DB07C3009E0B9B /* SNComposerViewController.m */; };
 		4C4C76B415DC1FD0009E0B9B /* SNFacebookThumbView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4C76B315DC1FD0009E0B9B /* SNFacebookThumbView.m */; };
 		4C4D77E01593CB150020A116 /* randomIcon_Active.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4D77DC1593CB150020A116 /* randomIcon_Active.png */; };
@@ -120,6 +119,7 @@
 		4C8671B71544C4E500E27CCA /* moreButton_Active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C8671B31544C4E300E27CCA /* moreButton_Active@2x.png */; };
 		4C8671B81544C4E500E27CCA /* moreButton_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C8671B41544C4E400E27CCA /* moreButton_nonActive.png */; };
 		4C8671B91544C4E500E27CCA /* moreButton_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C8671B51544C4E400E27CCA /* moreButton_nonActive@2x.png */; };
+		4C884E5D15EAB2B800B0A0F5 /* AWSiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C884E5C15EAB2B800B0A0F5 /* AWSiOSSDK.framework */; };
 		4C8B444714FEA7D300F89F7C /* fpo_tapVideo.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4C8B444614FEA7D300F89F7C /* fpo_tapVideo.mp3 */; };
 		4C8B444A14FEA89600F89F7C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C8B444814FEA88700F89F7C /* AVFoundation.framework */; };
 		4C8F295C15741690008DC20E /* background_boot.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F295A15741690008DC20E /* background_boot.png */; };
@@ -525,7 +525,6 @@
 		4C45B7A4150BD8520039F45B /* SNSplashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNSplashViewController.h; sourceTree = "<group>"; };
 		4C45B7A5150BD8520039F45B /* SNSplashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNSplashViewController.m; sourceTree = "<group>"; };
 		4C4A5749159ECF5C001C05FB /* icon_72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_72x72.png; sourceTree = "<group>"; };
-		4C4C76A815DAF3AE009E0B9B /* AWSiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSiOSSDK.framework; path = SimpleNews/AWSiOSSDK.framework; sourceTree = "<group>"; };
 		4C4C76AB15DB07C3009E0B9B /* SNComposerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNComposerViewController.h; sourceTree = "<group>"; };
 		4C4C76AC15DB07C3009E0B9B /* SNComposerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNComposerViewController.m; sourceTree = "<group>"; };
 		4C4C76B215DC1FD0009E0B9B /* SNFacebookThumbView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNFacebookThumbView.h; sourceTree = "<group>"; };
@@ -574,6 +573,7 @@
 		4C8671B31544C4E300E27CCA /* moreButton_Active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "moreButton_Active@2x.png"; sourceTree = "<group>"; };
 		4C8671B41544C4E400E27CCA /* moreButton_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = moreButton_nonActive.png; sourceTree = "<group>"; };
 		4C8671B51544C4E400E27CCA /* moreButton_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "moreButton_nonActive@2x.png"; sourceTree = "<group>"; };
+		4C884E5C15EAB2B800B0A0F5 /* AWSiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSiOSSDK.framework; path = SimpleNews/AWSiOSSDK.framework; sourceTree = "<group>"; };
 		4C8B444614FEA7D300F89F7C /* fpo_tapVideo.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fpo_tapVideo.mp3; sourceTree = "<group>"; };
 		4C8B444814FEA88700F89F7C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4C8F295A15741690008DC20E /* background_boot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background_boot.png; sourceTree = "<group>"; };
@@ -927,7 +927,7 @@
 		4CEA764415E6A3CA00C94324 /* SNActivityViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNActivityViewCell.m; sourceTree = "<group>"; };
 		4CEA764615E7F80B00C94324 /* SNProfileStatsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNProfileStatsView.h; sourceTree = "<group>"; };
 		4CEA764715E7F80D00C94324 /* SNProfileStatsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNProfileStatsView.m; sourceTree = "<group>"; };
-		4CEA764915E85F6F00C94324 /* SNProfileTimelineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; path = SNProfileTimelineViewController.h; sourceTree = "<group>"; };
+		4CEA764915E85F6F00C94324 /* SNProfileTimelineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNProfileTimelineViewController.h; sourceTree = "<group>"; };
 		4CEA764A15E85F7200C94324 /* SNProfileTimelineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNProfileTimelineViewController.m; sourceTree = "<group>"; };
 		4CEE8B291596DAAE0039B601 /* articleDetailsLikeBG.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = articleDetailsLikeBG.png; sourceTree = "<group>"; };
 		4CEE8B2A1596DAAE0039B601 /* articleDetailsLikeBG@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "articleDetailsLikeBG@2x.png"; sourceTree = "<group>"; };
@@ -1001,8 +1001,8 @@
 				4CD919B7151E9F6B004081B7 /* Accounts.framework in Frameworks */,
 				4C9E00BC15194B9B00AEB803 /* libUAirship-1.1.1.a in Frameworks */,
 				4C7954F71547AFCF009E40DC /* libGoogleAnalytics.a in Frameworks */,
-				4C4C76A915DAF3AE009E0B9B /* AWSiOSSDK.framework in Frameworks */,
 				4C11B95F15E1CB5A007B6E5A /* FacebookSDK.framework in Frameworks */,
+				4C884E5D15EAB2B800B0A0F5 /* AWSiOSSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1931,10 +1931,10 @@
 		4CDC8BF014F2CDEB00D42EA5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4C884E5C15EAB2B800B0A0F5 /* AWSiOSSDK.framework */,
 				4C11B95E15E1CB5A007B6E5A /* FacebookSDK.framework */,
 				4C11B95C15E1CB04007B6E5A /* FacebookSDKResources.bundle */,
 				4C51DB3A15DF30760058DD7C /* AddressBook.framework */,
-				4C4C76A815DAF3AE009E0B9B /* AWSiOSSDK.framework */,
 				4CD919B5151E9F5B004081B7 /* Accounts.framework */,
 				4CD01B88151440E7005B490C /* Twitter.framework */,
 				4C8B444814FEA88700F89F7C /* AVFoundation.framework */,
