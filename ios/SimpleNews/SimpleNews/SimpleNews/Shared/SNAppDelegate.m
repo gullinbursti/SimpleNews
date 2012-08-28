@@ -423,7 +423,7 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	[defaults synchronize];
 	
 	if ([SNAppDelegate canPingServer]) {
-		[[SNTwitterCaller sharedInstance] writeProfile];
+		//[[SNTwitterCaller sharedInstance] writeProfile];
 		
 		if (![defaults objectForKey:@"boot_total"]) {
 			[defaults setObject:[NSNumber numberWithInt:0] forKey:@"boot_total"];
@@ -539,7 +539,7 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	
 	if ([SNAppDelegate hasNetwork]) {
-		[[SNTwitterCaller sharedInstance] writeProfile];
+		//[[SNTwitterCaller sharedInstance] writeProfile];
 		
 		if ([[defaults objectForKey:@"splash_state"] intValue] == 2)
 			[_splashViewController_iPhone restart];

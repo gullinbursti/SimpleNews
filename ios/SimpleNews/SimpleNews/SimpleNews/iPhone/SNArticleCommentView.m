@@ -16,7 +16,7 @@
 	if ((self = [super initWithFrame:frame])) {
 		_vo = vo;
 		
-		SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(10.0, 13.0) imageURL:_vo.avatarURL handle:_vo.handle];
+		SNTwitterAvatarView *avatarImgView = [[SNTwitterAvatarView alloc] initWithPosition:CGPointMake(10.0, 13.0) imageURL:[NSString stringWithFormat:@"http://graph.facebook.com/%@/picture", [[SNAppDelegate fbProfileForUser] objectForKey:@"id"]] handle:[[SNAppDelegate fbProfileForUser] objectForKey:@"username"]];
 		[self addSubview:avatarImgView];
 		
 		UIImageView *bgImgView = [[UIImageView alloc] initWithFrame:CGRectMake(43.0, 12.0, 269.0, frame.size.height)];
@@ -29,7 +29,7 @@
 		twitterNameLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:10];
 		twitterNameLabel.textColor = [SNAppDelegate snLinkColor];
 		twitterNameLabel.backgroundColor = [UIColor clearColor];
-		twitterNameLabel.text = [NSString stringWithFormat:@"@%@", _vo.handle];
+		twitterNameLabel.text = [[SNAppDelegate fbProfileForUser] objectForKey:@"name"];
 		[self addSubview:twitterNameLabel];
 		
 		NSString *timeSince = @"";

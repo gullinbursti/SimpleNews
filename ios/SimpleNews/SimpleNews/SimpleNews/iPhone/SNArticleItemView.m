@@ -72,12 +72,12 @@
 			viaLabel.text = @"via ";
 			[self addSubview:viaLabel];
 			
-			size2 = [[NSString stringWithFormat:@"@%@ ", _vo.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
+			size2 = [[NSString stringWithFormat:@"%@ ", _vo.twitterHandle] sizeWithFont:[[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11] constrainedToSize:CGSizeMake(180.0, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap];
 			UILabel *handleLabel = [[UILabel alloc] initWithFrame:CGRectMake(viaLabel.frame.origin.x + size.width, offset, size2.width, size2.height)];
 			handleLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:11];
 			handleLabel.textColor = [SNAppDelegate snLinkColor];
 			handleLabel.backgroundColor = [UIColor clearColor];
-			handleLabel.text = [NSString stringWithFormat:@"@%@ ", _vo.twitterHandle];
+			handleLabel.text = [NSString stringWithFormat:@"%@ ", _vo.twitterHandle];
 			[self addSubview:handleLabel];
 			
 			UIButton *handleButton = [UIButton buttonWithType:UIButtonTypeCustom];
