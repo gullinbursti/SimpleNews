@@ -120,6 +120,15 @@
 		4C8671B81544C4E500E27CCA /* moreButton_nonActive.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C8671B41544C4E400E27CCA /* moreButton_nonActive.png */; };
 		4C8671B91544C4E500E27CCA /* moreButton_nonActive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C8671B51544C4E400E27CCA /* moreButton_nonActive@2x.png */; };
 		4C884E5D15EAB2B800B0A0F5 /* AWSiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C884E5C15EAB2B800B0A0F5 /* AWSiOSSDK.framework */; };
+		4C884E6F15EDD56400B0A0F5 /* MPCJSONDataSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C884E6215EDD56400B0A0F5 /* MPCJSONDataSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		4C884E7015EDD56400B0A0F5 /* MPCJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C884E6415EDD56400B0A0F5 /* MPCJSONSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		4C884E7115EDD56400B0A0F5 /* MPCSerializedJSONData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C884E6615EDD56400B0A0F5 /* MPCSerializedJSONData.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		4C884E7215EDD56400B0A0F5 /* NSData+MPBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C884E6915EDD56400B0A0F5 /* NSData+MPBase64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		4C884E7315EDD56400B0A0F5 /* MixpanelAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C884E6B15EDD56400B0A0F5 /* MixpanelAPI.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		4C884E7415EDD56400B0A0F5 /* MixpanelEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C884E6E15EDD56400B0A0F5 /* MixpanelEvent.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		4C884E7C15F5476800B0A0F5 /* SNBaseTimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C884E7B15F5476800B0A0F5 /* SNBaseTimelineViewController.m */; };
+		4C884E7F15F5C30E00B0A0F5 /* SNGridTimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C884E7E15F5C30E00B0A0F5 /* SNGridTimelineViewController.m */; };
+		4C884E8215F5C32600B0A0F5 /* SNListTimelineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C884E8115F5C32600B0A0F5 /* SNListTimelineViewController.m */; };
 		4C8B444714FEA7D300F89F7C /* fpo_tapVideo.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4C8B444614FEA7D300F89F7C /* fpo_tapVideo.mp3 */; };
 		4C8B444A14FEA89600F89F7C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C8B444814FEA88700F89F7C /* AVFoundation.framework */; };
 		4C8F295C15741690008DC20E /* background_boot.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C8F295A15741690008DC20E /* background_boot.png */; };
@@ -574,6 +583,25 @@
 		4C8671B41544C4E400E27CCA /* moreButton_nonActive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = moreButton_nonActive.png; sourceTree = "<group>"; };
 		4C8671B51544C4E400E27CCA /* moreButton_nonActive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "moreButton_nonActive@2x.png"; sourceTree = "<group>"; };
 		4C884E5C15EAB2B800B0A0F5 /* AWSiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AWSiOSSDK.framework; path = SimpleNews/AWSiOSSDK.framework; sourceTree = "<group>"; };
+		4C884E6115EDD56400B0A0F5 /* MPCJSONDataSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCJSONDataSerializer.h; sourceTree = "<group>"; };
+		4C884E6215EDD56400B0A0F5 /* MPCJSONDataSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPCJSONDataSerializer.m; sourceTree = "<group>"; };
+		4C884E6315EDD56400B0A0F5 /* MPCJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCJSONSerializer.h; sourceTree = "<group>"; };
+		4C884E6415EDD56400B0A0F5 /* MPCJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPCJSONSerializer.m; sourceTree = "<group>"; };
+		4C884E6515EDD56400B0A0F5 /* MPCSerializedJSONData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCSerializedJSONData.h; sourceTree = "<group>"; };
+		4C884E6615EDD56400B0A0F5 /* MPCSerializedJSONData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPCSerializedJSONData.m; sourceTree = "<group>"; };
+		4C884E6815EDD56400B0A0F5 /* NSData+MPBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+MPBase64.h"; sourceTree = "<group>"; };
+		4C884E6915EDD56400B0A0F5 /* NSData+MPBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+MPBase64.m"; sourceTree = "<group>"; };
+		4C884E6A15EDD56400B0A0F5 /* MixpanelAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MixpanelAPI.h; sourceTree = "<group>"; };
+		4C884E6B15EDD56400B0A0F5 /* MixpanelAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MixpanelAPI.m; sourceTree = "<group>"; };
+		4C884E6C15EDD56400B0A0F5 /* MixpanelAPI_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MixpanelAPI_Private.h; sourceTree = "<group>"; };
+		4C884E6D15EDD56400B0A0F5 /* MixpanelEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MixpanelEvent.h; sourceTree = "<group>"; };
+		4C884E6E15EDD56400B0A0F5 /* MixpanelEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MixpanelEvent.m; sourceTree = "<group>"; };
+		4C884E7A15F5476800B0A0F5 /* SNBaseTimelineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNBaseTimelineViewController.h; sourceTree = "<group>"; };
+		4C884E7B15F5476800B0A0F5 /* SNBaseTimelineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNBaseTimelineViewController.m; sourceTree = "<group>"; };
+		4C884E7D15F5C30E00B0A0F5 /* SNGridTimelineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNGridTimelineViewController.h; sourceTree = "<group>"; };
+		4C884E7E15F5C30E00B0A0F5 /* SNGridTimelineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNGridTimelineViewController.m; sourceTree = "<group>"; };
+		4C884E8015F5C32600B0A0F5 /* SNListTimelineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SNListTimelineViewController.h; sourceTree = "<group>"; };
+		4C884E8115F5C32600B0A0F5 /* SNListTimelineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SNListTimelineViewController.m; sourceTree = "<group>"; };
 		4C8B444614FEA7D300F89F7C /* fpo_tapVideo.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = fpo_tapVideo.mp3; sourceTree = "<group>"; };
 		4C8B444814FEA88700F89F7C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4C8F295A15741690008DC20E /* background_boot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background_boot.png; sourceTree = "<group>"; };
@@ -1370,6 +1398,51 @@
 			path = "SimpleNews/Google Analytics";
 			sourceTree = "<group>";
 		};
+		4C884E5E15EDD56400B0A0F5 /* MPLib */ = {
+			isa = PBXGroup;
+			children = (
+				4C884E5F15EDD56400B0A0F5 /* lib */,
+				4C884E6A15EDD56400B0A0F5 /* MixpanelAPI.h */,
+				4C884E6B15EDD56400B0A0F5 /* MixpanelAPI.m */,
+				4C884E6C15EDD56400B0A0F5 /* MixpanelAPI_Private.h */,
+				4C884E6D15EDD56400B0A0F5 /* MixpanelEvent.h */,
+				4C884E6E15EDD56400B0A0F5 /* MixpanelEvent.m */,
+			);
+			name = MPLib;
+			path = SimpleNews/MPLib;
+			sourceTree = "<group>";
+		};
+		4C884E5F15EDD56400B0A0F5 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				4C884E6015EDD56400B0A0F5 /* JSON */,
+				4C884E6715EDD56400B0A0F5 /* NSData_Base64 */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		4C884E6015EDD56400B0A0F5 /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				4C884E6115EDD56400B0A0F5 /* MPCJSONDataSerializer.h */,
+				4C884E6215EDD56400B0A0F5 /* MPCJSONDataSerializer.m */,
+				4C884E6315EDD56400B0A0F5 /* MPCJSONSerializer.h */,
+				4C884E6415EDD56400B0A0F5 /* MPCJSONSerializer.m */,
+				4C884E6515EDD56400B0A0F5 /* MPCSerializedJSONData.h */,
+				4C884E6615EDD56400B0A0F5 /* MPCSerializedJSONData.m */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
+		4C884E6715EDD56400B0A0F5 /* NSData_Base64 */ = {
+			isa = PBXGroup;
+			children = (
+				4C884E6815EDD56400B0A0F5 /* NSData+MPBase64.h */,
+				4C884E6915EDD56400B0A0F5 /* NSData+MPBase64.m */,
+			);
+			path = NSData_Base64;
+			sourceTree = "<group>";
+		};
 		4C8B444414FEA74D00F89F7C /* SFX */ = {
 			isa = PBXGroup;
 			children = (
@@ -1912,6 +1985,7 @@
 				4CDC8C4814F2D71800D42EA5 /* MBProgressHUD */,
 				E4D9000A15991014009F71D5 /* MBLPageViewController */,
 				4C11B97015E36D4D007B6E5A /* MBLResource */,
+				4C884E5E15EDD56400B0A0F5 /* MPLib */,
 				4CDC8C7414F2D80300D42EA5 /* Reachability */,
 				4CDC8BF714F2CDEB00D42EA5 /* SimpleNews */,
 				4CDC8C8214F2DAF700D42EA5 /* Resources */,
@@ -2214,6 +2288,12 @@
 				4CEA764715E7F80D00C94324 /* SNProfileStatsView.m */,
 				4CEA764915E85F6F00C94324 /* SNProfileTimelineViewController.h */,
 				4CEA764A15E85F7200C94324 /* SNProfileTimelineViewController.m */,
+				4C884E7A15F5476800B0A0F5 /* SNBaseTimelineViewController.h */,
+				4C884E7B15F5476800B0A0F5 /* SNBaseTimelineViewController.m */,
+				4C884E7D15F5C30E00B0A0F5 /* SNGridTimelineViewController.h */,
+				4C884E7E15F5C30E00B0A0F5 /* SNGridTimelineViewController.m */,
+				4C884E8015F5C32600B0A0F5 /* SNListTimelineViewController.h */,
+				4C884E8115F5C32600B0A0F5 /* SNListTimelineViewController.m */,
 			);
 			name = Timeline;
 			sourceTree = "<group>";
@@ -2664,6 +2744,15 @@
 				4CEA764515E6A3CB00C94324 /* SNActivityViewCell.m in Sources */,
 				4CEA764815E7F80F00C94324 /* SNProfileStatsView.m in Sources */,
 				4CEA764B15E85F7400C94324 /* SNProfileTimelineViewController.m in Sources */,
+				4C884E6F15EDD56400B0A0F5 /* MPCJSONDataSerializer.m in Sources */,
+				4C884E7015EDD56400B0A0F5 /* MPCJSONSerializer.m in Sources */,
+				4C884E7115EDD56400B0A0F5 /* MPCSerializedJSONData.m in Sources */,
+				4C884E7215EDD56400B0A0F5 /* NSData+MPBase64.m in Sources */,
+				4C884E7315EDD56400B0A0F5 /* MixpanelAPI.m in Sources */,
+				4C884E7415EDD56400B0A0F5 /* MixpanelEvent.m in Sources */,
+				4C884E7C15F5476800B0A0F5 /* SNBaseTimelineViewController.m in Sources */,
+				4C884E7F15F5C30E00B0A0F5 /* SNGridTimelineViewController.m in Sources */,
+				4C884E8215F5C32600B0A0F5 /* SNListTimelineViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

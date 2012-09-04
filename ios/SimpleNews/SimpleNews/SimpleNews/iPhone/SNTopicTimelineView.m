@@ -919,7 +919,7 @@
 			
 			if ([_articles count] < 250) {
 				_loadMoreButton.alpha = 1.0;
-				_loadMoreButton.frame = CGRectMake(112.0, offset, 96.0, 44.0);
+				_loadMoreButton.frame = CGRectMake(112.0, offset, 84.0, 38.0);
 			}
 			
 			[_activityIndicatorView removeFromSuperview];

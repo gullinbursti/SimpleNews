@@ -10,6 +10,7 @@
 #import <AWSiOSSDK/S3/AmazonS3Client.h>
 #import "Reachability.h"
 #import "GANTracker.h"
+#import "MixpanelAPI.h"
 
 #import "SNAppDelegate.h"
 #import "SNSplashViewController.h"
@@ -424,6 +425,8 @@ static const BOOL kIsGoogleAnalyticsLive = NO;
 	
 	if ([SNAppDelegate canPingServer]) {
 		//[[SNTwitterCaller sharedInstance] writeProfile];
+		
+		[MixpanelAPI sharedAPIWithToken:@"60487d635b4c07d00a866a4a9df03706"];
 		
 		if (![defaults objectForKey:@"boot_total"]) {
 			[defaults setObject:[NSNumber numberWithInt:0] forKey:@"boot_total"];

@@ -75,7 +75,7 @@ function tweetsForTopicID($topic_id) {
 		if (mysql_num_rows(mysql_query($query)) > 0)
 			continue;
 			
-		if ($search_arr[$key]->from_user == "OneWord_kenny")
+		if ($search_arr[$key]->from_user == "OneWord_kenny" || $search_arr[$key]->from_user == "eododuui")
 			continue;
 			
 			
