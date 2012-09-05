@@ -10,6 +10,14 @@
 
 @implementation SNListTimelineViewController
 
+- (id)init {
+	if ((self = [super init])) {
+		
+	}
+	
+	return (self);
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

@@ -11,6 +11,7 @@
 //#import "Facebook.h"
 
 #import "SNTopicTimelineView.h"
+#import "SNBaseTimelineViewController.h"
 #import "SNDiscoveryListViewController.h"
 #import "MBLAsyncResource.h"
 
@@ -33,7 +34,8 @@
 	ASIFormDataRequest *_likeRequest;
 	
 	
-	SNTopicTimelineView *_topicTimelineView;
+	//SNTopicTimelineView *_topicTimelineView;
+	SNBaseTimelineViewController *_baseTimelineViewController;
 	SNDiscoveryListViewController *_discoveryListView;
 	
 	SNArticleVO *_articleVO;

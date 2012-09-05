@@ -51,6 +51,7 @@
 -(id)initWithTopicVO:(SNTopicVO *)vo;
 -(id)initWithProfileType:(int)type;
 - (id)initAsFeed;
+- (id)initAsPopular;
 - (id)initAsActivity;
 - (id)initAsProfile;
 

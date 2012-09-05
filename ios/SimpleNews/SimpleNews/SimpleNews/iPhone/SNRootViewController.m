@@ -80,8 +80,6 @@
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showFullscreenMedia:) name:@"SHOW_FULLSCREEN_MEDIA" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_hideFullscreenMedia:) name:@"HIDE_FULLSCREEN_MEDIA" object:nil];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_changeTopic:) name:@"CHANGE_TOPIC" object:nil];
-		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showDiscovery:) name:@"SHOW_DISCOVERY" object:nil];
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_showTimeline:) name:@"SHOW_TIMELINE" object:nil];
 		
@@ -105,8 +103,8 @@
 	UITouch *touch = [touches anyObject];
 	
 	CGPoint location = [touch locationInView:self.view];
-	if ([touch view] == [_topicTimelineView overlayView]) {
-		_touchPt = CGPointMake(_topicTimelineView.center.x - location.x, _topicTimelineView.center.y - location.y);
+	if ([touch view] == [_baseTimelineViewController overlayView]) {
+		_touchPt = CGPointMake(_baseTimelineViewController.view.center.x - location.x, _baseTimelineViewController.view.center.y - location.y);
 	
 	} else if ([touch view] == [_discoveryListView overlayView]) {
 		_touchPt = CGPointMake(_discoveryListView.view.center.x - location.x, _discoveryListView.view.center.y - location.y);
@@ -120,12 +118,12 @@
 	
 	
 	// If the touch was in the placardView, move the placardView to its location
-	if ([touch view] == [_topicTimelineView overlayView]) {
+	if ([touch view] == [_baseTimelineViewController overlayView]) {
 		CGPoint touchLocation = [touch locationInView:self.view];
-		CGPoint location = CGPointMake(MIN(MAX(_touchPt.x + touchLocation.x, 160.0), 386.0), _topicTimelineView.center.y);
+		CGPoint location = CGPointMake(MIN(MAX(_touchPt.x + touchLocation.x, 160.0), 386.0), _baseTimelineViewController.view.center.y);
 		
-		_topicTimelineView.center = location;
-		_shadowImgView.center = CGPointMake(_topicTimelineView.center.x - 123.0, _shadowImgView.center.y);
+		_baseTimelineViewController.view.center = location;
+		_shadowImgView.center = CGPointMake(_baseTimelineViewController.view.center.x - 123.0, _shadowImgView.center.y);
 		
 		//NSLog(@"TOUCHED:[%f, %f]", _topicTimelineView.center.x, _topicTimelineView.center.y);
 		return;
@@ -152,15 +150,15 @@
 		//NSLog(@"TOUCHED:[%f, %f] BLACK MATTE(%d)", touchPoint.x, touchPoint.y, !_blackMatteView.hidden);
 	}
 	
-	if (_blackMatteView.hidden && _topicTimelineView != nil) {
+	if (_blackMatteView.hidden && _baseTimelineViewController != nil) {
 		if (touchPoint.x < 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
 			[self _cancelPopover];
 			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
-				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _topicTimelineView.frame.size.width, _topicTimelineView.frame.size.height);
+				_baseTimelineViewController.view.frame = CGRectMake(0.0, 0.0, _baseTimelineViewController.view.frame.size.width, _baseTimelineViewController.view.frame.size.height);
 				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
 			} completion:^(BOOL finished) {
-				[_topicTimelineView interactionEnabled:YES];
+				[_baseTimelineViewController interactionEnabled:YES];
 				_topicsTableView.contentOffset = CGPointZero;
 				
 			}];
@@ -168,11 +166,11 @@
 		
 		if (touchPoint.x >= 180.0 && !CGPointEqualToPoint(_touchPt, touchPoint)) {
 			[UIView animateWithDuration:0.25 delay:0.0 options:UIViewAnimationCurveEaseInOut animations:^(void) {
-				_topicTimelineView.frame = CGRectMake(kTopicOffset, 0.0, _topicTimelineView.frame.size.width, _topicTimelineView.frame.size.height);
+				_baseTimelineViewController.view.frame = CGRectMake(kTopicOffset, 0.0, _baseTimelineViewController.view.frame.size.width, _baseTimelineViewController.view.frame.size.height);
 				_shadowImgView.frame = CGRectMake(kTopicOffset - 19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 				
 			} completion:^(BOOL finished) {
-				[_topicTimelineView interactionEnabled:NO];
+				[_baseTimelineViewController interactionEnabled:NO];
 			}];
 		}
 	
@@ -251,7 +249,7 @@
 		 ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
 			 if (!error) {
 				 NSLog(@"user.id [%@]", [user objectForKey:@"id"]);
-				 NSLog(@"user [%@]", user);
+				 //NSLog(@"user [%@]", user);
 				 
 				 [SNAppDelegate writeFBProfile:user];
 				 [FBRequestConnection startWithGraphPath:@"me/home" completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -540,16 +538,16 @@
 //			_discoveryListView.view.frame = CGRectMake(226.0, 0.0, 320.0, 480.0);
 //			[_holderView addSubview:_discoveryListView.view];
 			
-			_topicTimelineView = [[SNTopicTimelineView alloc] initAsFeed];
-			[_holderView addSubview:_topicTimelineView];
+			_baseTimelineViewController = [[SNBaseTimelineViewController alloc] initAsFeed];
+			[_holderView addSubview:_baseTimelineViewController.view];
 			
 			[UIView animateWithDuration:0.33 animations:^(void) {
-				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+				_baseTimelineViewController.view.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 				
 			} completion:^(BOOL finished) {
 				_topicsTableView.contentOffset = CGPointZero;
-				[_topicTimelineView interactionEnabled:YES];
+				[_baseTimelineViewController interactionEnabled:YES];
 			}];
 		}
 	
@@ -792,11 +790,11 @@
 
 
 -(void)_timelineReturn:(NSNotification *)notification {
-	[_topicTimelineView interactionEnabled:NO];
+	[_baseTimelineViewController interactionEnabled:NO];
 	[self _cancelPopover];
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_topicTimelineView.frame = CGRectMake(kTopicOffset, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_baseTimelineViewController.view.frame = CGRectMake(kTopicOffset, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		_shadowImgView.frame = CGRectMake(kTopicOffset - 19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
@@ -1091,56 +1089,27 @@
 	}];
 }
 
--(void)_changeTopic:(NSNotification *)notification {
-	int topicID = [[notification object] intValue];
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
-	
-	for (SNTopicVO *vo in _topicsList) {
-		if (topicID == vo.topic_id) {
-			[_topicTimelineView interactionEnabled:NO];
-			[_topicTimelineView removeFromSuperview];
-			_topicTimelineView = nil;
-			
-			_topicTimelineView = [[SNTopicTimelineView alloc] initWithTopicVO:vo];
-			_topicTimelineView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
-			[_holderView addSubview:_topicTimelineView];
-			
-			[UIView animateWithDuration:0.33 animations:^(void) {
-				_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
-				_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
-				
-			} completion:^(BOOL finished) {
-				_topicsTableView.contentOffset = CGPointZero;
-				[_topicTimelineView interactionEnabled:YES];
-			}];
-			
-			break;
-		}
-	}
-}
 
 -(void)_showFeed:(NSNotification *)notification {
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
 	
-	[_topicTimelineView interactionEnabled:NO];
-	[_topicTimelineView removeFromSuperview];
-	_topicTimelineView = nil;
+	[_baseTimelineViewController interactionEnabled:NO];
+	[_baseTimelineViewController.view removeFromSuperview];
+	_baseTimelineViewController = nil;
 			
-	_topicTimelineView = [[SNTopicTimelineView alloc] initAsFeed];
-	_topicTimelineView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
-	[_holderView addSubview:_topicTimelineView];
+	_baseTimelineViewController = [[SNBaseTimelineViewController alloc] initAsFeed];
+	_baseTimelineViewController.view.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
+	[_holderView addSubview:_baseTimelineViewController.view];
 			
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_baseTimelineViewController.view.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
 		_topicsTableView.contentOffset = CGPointZero;
-		[_topicTimelineView interactionEnabled:YES];
+		[_baseTimelineViewController interactionEnabled:YES];
 	}];
 }
 
@@ -1149,21 +1118,21 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
 	
-	[_topicTimelineView interactionEnabled:NO];
-	[_topicTimelineView removeFromSuperview];
-	_topicTimelineView = nil;
+	[_baseTimelineViewController interactionEnabled:NO];
+	[_baseTimelineViewController.view removeFromSuperview];
+	_baseTimelineViewController = nil;
 	
-	_topicTimelineView = [[SNTopicTimelineView alloc] initWithProfileType:10];
-	_topicTimelineView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
-	[_holderView addSubview:_topicTimelineView];
+	_baseTimelineViewController = [[SNBaseTimelineViewController alloc] initAsPopular];
+	_baseTimelineViewController.view.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
+	[_holderView addSubview:_baseTimelineViewController.view];
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_baseTimelineViewController.view.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
 		_topicsTableView.contentOffset = CGPointZero;
-		[_topicTimelineView interactionEnabled:YES];
+		[_baseTimelineViewController interactionEnabled:YES];
 	}];
 }
 
@@ -1172,9 +1141,9 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
 	
-	[_topicTimelineView interactionEnabled:NO];
-	[_topicTimelineView removeFromSuperview];
-	_topicTimelineView = nil;
+	[_baseTimelineViewController interactionEnabled:NO];
+	[_baseTimelineViewController.view removeFromSuperview];
+	_baseTimelineViewController = nil;
 	
 //	_userActivityView = [[SNUserActivityView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 480.0)];
 //	[_holderView addSubview:_userActivityView];
@@ -1182,17 +1151,17 @@
 	
 	
 	
-	_topicTimelineView = [[SNTopicTimelineView alloc] initAsActivity];
-	_topicTimelineView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
-	[_holderView addSubview:_topicTimelineView];
+	_baseTimelineViewController = [[SNBaseTimelineViewController alloc] initAsActivity];
+	_baseTimelineViewController.view.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
+	[_holderView addSubview:_baseTimelineViewController.view];
 	
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_baseTimelineViewController.view.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
 		_topicsTableView.contentOffset = CGPointZero;
-		[_topicTimelineView interactionEnabled:YES];
+		[_baseTimelineViewController interactionEnabled:YES];
 	}];
 }
 
@@ -1204,21 +1173,21 @@
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"DISCOVERY_RETURN" object:nil];	
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"TIMELINE_RETURN" object:nil];	
 		
-		[_topicTimelineView interactionEnabled:NO];
-		[_topicTimelineView removeFromSuperview];
-		_topicTimelineView = nil;
+		[_baseTimelineViewController interactionEnabled:NO];
+		[_baseTimelineViewController.view removeFromSuperview];
+		_baseTimelineViewController = nil;
 		
-		_topicTimelineView = [[SNTopicTimelineView alloc] initAsProfile];
-		_topicTimelineView.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
-		[_holderView addSubview:_topicTimelineView];
+		_baseTimelineViewController = [[SNBaseTimelineViewController alloc] initAsProfile];
+		_baseTimelineViewController.view.frame = CGRectMake(0.0, 0.0, 320.0, 480.0);
+		[_holderView addSubview:_baseTimelineViewController.view];
 		
 		[UIView animateWithDuration:0.33 animations:^(void) {
-			_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+			_baseTimelineViewController.view.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 			_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 			
 		} completion:^(BOOL finished) {
 			_topicsTableView.contentOffset = CGPointZero;
-			[_topicTimelineView interactionEnabled:YES];
+			[_baseTimelineViewController interactionEnabled:YES];
 		}];
 	}
 }
@@ -1236,11 +1205,11 @@
 
 - (void)_showTimeline:(NSNotification *)notification {
 	[UIView animateWithDuration:0.33 animations:^(void) {
-		_topicTimelineView.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
+		_baseTimelineViewController.view.frame = CGRectMake(0.0, 0.0, _holderView.frame.size.width, _holderView.frame.size.height);
 		_shadowImgView.frame = CGRectMake(-19.0, 0.0, _shadowImgView.frame.size.width, _shadowImgView.frame.size.height);
 		
 	} completion:^(BOOL finished) {
-		[_topicTimelineView interactionEnabled:YES];
+		[_baseTimelineViewController interactionEnabled:YES];
 	}];
 }
 

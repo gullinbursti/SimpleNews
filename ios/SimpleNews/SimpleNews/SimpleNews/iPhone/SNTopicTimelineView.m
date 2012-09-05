@@ -276,6 +276,76 @@
 }
 
 
+- (id)initAsPopular {
+	if ((self = [self init])) {
+		NSError *error;
+		if (![[GANTracker sharedTracker] trackPageview:@"/popular/" withError:&error])
+			NSLog(@"error in trackPageview");
+		
+		_vo = [SNTopicVO topicWithDictionary:[NSDictionary dictionaryWithObjectsAndKeys:@"0", @"topic_id", @"Popular", @"title", nil, @"hashtags", nil]];
+		
+		_activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+		_activityIndicatorView.frame = CGRectMake(15.0, 60.0, 20.0, 20.0);
+		[_activityIndicatorView startAnimating];
+		[self addSubview:_activityIndicatorView];
+		
+		_loaderLabel = [[UILabel alloc] initWithFrame:CGRectMake(45.0, 63.0, 245.0, 16.0)];
+		_loaderLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		_loaderLabel.font = [[SNAppDelegate snHelveticaNeueFontBold] fontWithSize:12.0];
+		_loaderLabel.textColor = [UIColor blackColor];
+		_loaderLabel.backgroundColor = [UIColor clearColor];
+		_loaderLabel.text = @"Assembling Popular…";
+		[self addSubview:_loaderLabel];
+		
+		
+		_scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0.0, 44.0, self.frame.size.width, self.frame.size.height - 44.0)];
+		_scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		_scrollView.opaque = NO;
+		_scrollView.scrollsToTop = NO;
+		_scrollView.pagingEnabled = NO;
+		_scrollView.delegate = self;
+		_scrollView.showsVerticalScrollIndicator = YES;
+		_scrollView.alwaysBounceVertical = NO;
+		_scrollView.contentSize = CGSizeMake(self.frame.size.width, self.frame.size.height);
+		[self addSubview:_scrollView];
+		
+		//		_refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -self.frame.size.height, self.frame.size.width, self.frame.size.height)];
+		//		_refreshHeaderView.delegate = self;
+		//		[_scrollView addSubview:_refreshHeaderView];
+		//		[_refreshHeaderView refreshLastUpdatedDate];
+		
+		
+		SNHeaderView *headerView = [[SNHeaderView alloc] initWithTitle:_vo.title];
+		[self addSubview:headerView];
+		
+		_listBtnView = [[SNNavListBtnView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+		[[_listBtnView btn] addTarget:self action:@selector(_goBack) forControlEvents:UIControlEventTouchUpInside];
+		[headerView addSubview:_listBtnView];
+		
+		SNNavLogoBtnView *rndBtnView = [[SNNavLogoBtnView alloc] initWithFrame:CGRectMake(273.0, 0.0, 44.0, 44.0)];
+		[[rndBtnView btn] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
+		//[headerView addSubview:rndBtnView];
+		
+		_tabNavView = [[SNTabNavView alloc] initWithFrame:CGRectMake(0.0, 420.0, 320.0, 60.0)];
+		[self addSubview:_tabNavView];
+		
+		[[_tabNavView feedButton] addTarget:self action:@selector(_goFeed) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView popularButton] addTarget:self action:@selector(_goPopular) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView activityButton] addTarget:self action:@selector(_goActivity) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView profileButton] addTarget:self action:@selector(_goProfile) forControlEvents:UIControlEventTouchUpInside];
+		[[_tabNavView composeButton] addTarget:self action:@selector(_goCompose) forControlEvents:UIControlEventTouchUpInside];
+		
+		_overlayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 88.0, 20.0, self.frame.size.height - 88.0)];
+		//[_overlayView setBackgroundColor:[SNAppDelegate snDebugRedColor]];
+		[self addSubview:_overlayView];
+		
+		[self _retrieveProfileListWithType:10];
+	}
+	
+	return (self);
+}
+
+
 - (id)initAsActivity {
 	if ((self = [self init])) {
 		NSError *error;
